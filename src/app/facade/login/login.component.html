@@ -1,0 +1,51 @@
+<body>
+    <div class="container">
+        <div class="row marginZero" style="
+            text-align: center;
+            width: max-content;
+            margin: auto; margin-top: 10vh;">
+                <div class="navbar-brand" style="margin-bottom: 15px;">
+                    fellowGenius
+                </div>
+            </div>
+        <div class="row box">
+            <div class="col-sm-5 boxShadow" style="border-right: 1px solid rgb(199, 203, 217);">
+                <img class="picture" src="../../../assets/images/student3.svg" *ngIf="loginDetailsService.loginType=='student'">
+                <img class="picture" src="../../../assets/images/teacher.svg" *ngIf="loginDetailsService.loginType=='tutor'">
+                <h3 style="font-size: 25px; margin-top:2vh" *ngIf="loginDetailsService.loginType=='student'"><b>I am a Student</b></h3>
+                <h3 style="font-size: 25px; margin-top:2vh" *ngIf="loginDetailsService.loginType=='tutor'"><b>I am a Tutor</b></h3>
+                <h5 style="color:rgb(137, 138, 145); font-size: small;">Be a reader, be a writer, be a problem solver.</h5>
+            </div>
+
+
+            <div class="col-sm-5 offset-sm-1 paddingZero">
+                <form (ngSubmit)="onLogin(l)" #l="ngForm">
+                    <div class="form-group">
+                        <input type="email" id="email" class="form-control" ngModel name="email" required>
+                        <label class="form-control-placeholder" for="email">Email Address</label>
+                    </div>
+                    <!-- <div class="form-group">
+                        <input type="password" id="password" class="form-control" required>
+                        <label class="form-control-placeholder" for="password">Password</label>
+                    </div> -->
+                    <div class="form-group" style="position: relative;">
+                        <input type="password" id="password" class="form-control" name="password" ngModel [type]="hide ? 'password':'text'" required>
+                        <label class="form-control-placeholder" for="password">Password</label>
+                        <div class="showPassword">
+                            <i class="material-icons cursor" (click)="hide = !hide" style="color: #ccc;">
+                            {{hide ? 'visibility_off' : 'visibility'}}
+                        </i>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                            <button class="btn signInButton" style="margin-left: auto; margin-right: auto;" type="submit">Sign in</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn signUpButton" style="margin-left: auto; margin-right: auto;" (click)="toSignUp()">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,150 @@
+<body>
+  <!-- CREATING A NAVBAR -->
+  <br />
+  <h4 style="text-align: center;" class="font19">
+    Find a trusted, one-to-one tutor
+  </h4>
+  <hr style="width: 30%;" />
+  <!-- CREATE A SEARCH FILTER -->
+
+  <div class="searchField">
+    <table class="centerTable">
+      <tr>
+        <td>Name</td>
+        <td>Subject</td>
+        <td>Availability</td>
+        <td>Price</td>
+        <td>Gender</td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            type="text"
+            placeholder="name"
+            [(ngModel)]="name"
+            (input)="searchName()"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            placeholder="subject"
+            [(ngModel)]="subject"
+            (input)="searchSubject()"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            placeholder="availability"
+            [(ngModel)]="availability"
+            (input)="searchAvailability()"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            placeholder="price"
+            [(ngModel)]="price"
+            (input)="searchPrice()"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            placeholder="gender"
+            [(ngModel)]="gender"
+            (input)="searchGender()"
+          />
+        </td>
+      </tr>
+    </table>
+    <!-- <table *ngIf="someValue ">
+          <tr>
+              <th>Name</th>
+              <th>Subject</th>
+              <th>Availability</th>
+              <th>Price</th>
+          </tr>
+          <tr *ngFor="let details of filterSearch ">
+              <td>{{details.name}}</td>
+              <td>{{details.subject}}</td>
+              <td>{{details.availability}}</td>
+              <td>{{details.price}}</td>
+          </tr>
+      </table> -->
+  </div>
+
+  <!-- <div *ngFor="let element of filterSearch " class="container "> -->
+
+  <div class="tutorWrapper" *ngFor="let element of filterSearch">
+    <div class="row marginZero">
+      <div class="col-md-2 image">
+        <img
+        [src]="element.profilePictureUrl"
+          class="tutorImage"
+          alt="tutorImage"
+        />
+      </div>
+      <div
+        class="col-md-7 marginZero"
+        style="border-right: 1px solid rgb(203, 211, 205);"
+      >
+        <div class="marginZero">
+          <h3
+            style="
+              font-family: Georgia, 'Times New Roman', Times, serif;
+              text-decoration: solid;
+              padding:0;
+              margin:0;
+            "
+            class="font19"
+          >
+            {{ element.name }}
+          </h3>
+          <p
+            class="marginZero"
+            style="font-size: medium; color: rgb(109, 116, 116);
+            padding-top:1px;"
+          >
+            {{ element.college }}
+          </p>
+          <p
+            class="marginZero"
+            style="font-size: small; color: rgb(182, 192, 192);"
+          >
+            {{ element.description }}
+          </p>
+          <p
+            class="tutorSkillTags"
+            style="font-size: smaller; color: rgb(109, 110, 110);"
+          >
+            {{ element.subject }}
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <p style="font-size: x-large; text-decoration: solid;">
+          ₹{{ element.price }}
+        </p>
+        <div class="stars-outer">
+          <div class="stars-inner" [style.width.%]="element.rating"></div>
+        </div>
+        <a href="#"> {{element.reviewCount}} Reviews</a>
+        <div style="font-size: smaller;">
+         <span class="lessonCompleted">{{element.lessonCompleted}}</span>
+         lessons completed
+        </div>
+        <!-- <br /> -->
+        <button
+          class="btn btn-success"
+          style="margin-top: 4vh;"
+          (click)="viewProfile(element)"
+        >
+          View Profile
+        </button>
+        
+      </div>
+    </div>
+  </div>
+</body>

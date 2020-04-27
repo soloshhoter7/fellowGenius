@@ -1,0 +1,138 @@
+<body style="padding: 50px;">
+    <div class="outer-box">
+        <div class="card" style="width: 70%;">
+            <div class="card-header">
+                Booking Requests
+            </div>
+            <div class="card-body">
+                <div class="" *ngFor="let element of bookingList">
+                    <div class="row">
+                        <div class="col-sm-1">
+                          <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                        </div>
+                        <div class="col-sm-8" style="padding-left: 30px;">
+                        <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
+                        <p style="font-size: medium;
+                        color: rgb(109, 116, 116);
+                        padding-top: 1px; margin:0;">
+                          {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} {{element.duration}} hours
+                         </p>
+                         <p style="font-size: small;
+                         color: rgb(182, 192, 192);">
+                          {{element.description}}
+                         </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-success" style="margin-right:10px" (click)="acceptBooking(element)">Accept</button>
+                            <button class="btn btn-danger" (click)="denyBooking(element)">Deny</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ---------------------------------------- approved Meetings-------------------------------------------- -->
+        <div class="card" style="width: 70%;">
+          <div class="card-header">
+             Upcoming Meetings
+          </div>
+          <div class="card-body">
+              <div class="" *ngFor="let element of meetingList">
+                  <div class="row">
+                      <div class="col-sm-1">
+                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                      </div>
+                      <div class="col-sm-8" style="padding-left: 30px;">
+                      <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
+                      <p style="font-size: medium;
+                      color: rgb(109, 116, 116);
+                      padding-top: 1px; margin:0;">
+                        {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} {{element.duration}}
+                       </p>
+                       <p style="font-size: small;
+                       color: rgb(182, 192, 192);">
+                        {{element.description}}
+                       </p>
+                      </div>
+                      <div class="col-sm-3">
+                          <button class="btn btn-outline-danger"(click)="onHost(element)">join now</button>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+    </div>
+</body>
+  <!-- <div class="tutorWrapper" *ngFor="let element of filterSearch">
+      hello -->
+    <!-- <div class="row marginZero">
+      <div class="col-md-2 image">
+        <img
+        [src]="element.profilePictureUrl"
+          class="tutorImage"
+          alt="tutorImage"
+        />
+      </div>
+      <div
+        class="col-md-7 marginZero"
+        style="border-right: 1px solid rgb(203, 211, 205);"
+      >
+        <div class="marginZero">
+          <h3
+            style="
+              font-family: Georgia, 'Times New Roman', Times, serif;
+              text-decoration: solid;
+              padding:0;
+              margin:0;
+            "
+            class="font19"
+          >
+            {{ element.name }}
+          </h3>
+          <p
+            class="marginZero"
+            style="font-size: medium; color: rgb(109, 116, 116);
+            padding-top:1px;"
+          >
+            {{ element.college }}
+          </p>
+          <p
+            class="marginZero"
+            style="font-size: small; color: rgb(182, 192, 192);"
+          >
+            {{ element.description }}
+          </p>
+          <p
+            class="tutorSkillTags"
+            style="font-size: smaller; color: rgb(109, 110, 110);"
+          >
+            {{ element.subject }}
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <p style="font-size: x-large; text-decoration: solid;">
+          ₹{{ element.price }}
+        </p>
+        <div class="stars-outer">
+          <div class="stars-inner" [style.width.%]="element.rating"></div>
+        </div>
+        <a href="#"> {{element.reviewCount}} Reviews</a>
+        <div style="font-size: smaller;">
+         <span class="lessonCompleted">{{element.lessonCompleted}}</span>
+         lessons completed
+        </div>
+    
+        <button
+          class="btn btn-success"
+          style="margin-top: 4vh;"
+          (click)="viewProfile(element)"
+        >
+          View Profile
+        </button>
+        
+      </div>
+    </div> -->
+  <!-- </div> -->
