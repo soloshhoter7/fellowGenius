@@ -9,7 +9,11 @@ import { FormatTimePipe } from 'src/app/pipes/formatTime';
 import { HomeComponent } from './home/home.component';
 import { MeetingComponent } from './home/meeting/meeting.component';
 import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FindTutorComponent } from './home/find-tutor/find-tutor.component';
 import { MessagesComponent } from './home/messages/messages.component';
 import { BookingsComponent } from './home/bookings/bookings.component';
@@ -29,12 +33,14 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 // import { TutorDashboardComponent } from './home/tutor-dashboard/tutor-dashboard.component';
 import { StudentDashboardComponent } from '../app/home/student-dashboard/student-dashboard.component';
 import { TutorDashboardComponent } from './home/dashboard/tutor-dashboard.component';
+import { ProfileComponent } from './home/profile/profile.component';
 export const appRoutes: Routes = [
 	{
 		path: 'home',
 		component: HomeComponent,
 		children: [
 			{ path: '', component: TutorDashboardComponent },
+			{ path: 'profile', component: ProfileComponent },
 			{ path: 'studentDashboard', component: StudentDashboardComponent },
 			{ path: 'tutorDashboard', component: TutorDashboardComponent },
 			{ path: 'bookings', component: BookingsComponent },
@@ -67,7 +73,8 @@ export const appRoutes: Routes = [
 		LoginComponent,
 		SignUpComponent,
 		TutorDashboardComponent,
-		StudentDashboardComponent
+		StudentDashboardComponent,
+		ProfileComponent
 	],
 	imports: [
 		MatInputModule,
@@ -84,7 +91,11 @@ export const appRoutes: Routes = [
 			provide: DateAdapter,
 			useFactory: adapterFactory
 		}),
-		NgbModule
+		NgbModule,
+		MatChipsModule,
+		ReactiveFormsModule,
+		MatAutocompleteModule,
+		MatIconModule
 	],
 	providers: [],
 	bootstrap: [ AppComponent ]
