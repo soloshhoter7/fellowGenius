@@ -28,7 +28,10 @@ export class SignUpComponent implements OnInit {
 	signUpStudent = false;
 	signUpTutor = false;
 	hide: boolean = true;
-	ngOnInit(): void {}
+	mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
+	passwordPattern="^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$";
+	ngOnInit(): void {
+	}
 	toLoginPage() {
 		this.router.navigate([ 'login' ]);
 	}
@@ -48,6 +51,7 @@ export class SignUpComponent implements OnInit {
 		this.studentProfile.password = form.value.password;
 		this.studentProfile.dateOfBirth = form.value.dateOfBirth;
 		this.studentProfile.contact = form.value.contact;
+		this.studentProfile.subject = form.value.subject;
 		console.log(this.studentProfile);
 		this.httpClient.saveStudentProfile(this.studentProfile).subscribe((res) => {
 			console.log(res);

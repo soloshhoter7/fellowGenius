@@ -5,4 +5,5 @@ export class StudentProfileModel {
 	public contact: string;
 	public dateOfBirth: string;
 	public password: string;
+	public subject: string;
 }
