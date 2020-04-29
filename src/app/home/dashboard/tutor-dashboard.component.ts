@@ -21,9 +21,14 @@ export class TutorDashboardComponent implements OnInit {
 	bookingList: bookingDetails[];
 	meetingList: bookingDetails[];
 	hostMeeting = new meetingDetails();
+	completeProfile = true;
+	condition;
 	ngOnInit(): void {
 		this.fetchTutorBookings();
 		this.fetchTutorApprovedMeetings();
+	}
+	closeCompleteProfile() {
+		this.completeProfile = false;
 	}
 	// -------------------------------------------------------------------------- tutor functions--------------------------------------------
 	acceptBooking(booking: bookingDetails) {
