@@ -26,7 +26,6 @@ import { LoginComponent } from './facade/login/login.component';
 import { SignUpComponent } from './facade/sign-up/sign-up.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AngularDateTimePickerModule } from 'angular2-datetimepicker';
 // import { TutorDashboardComponent } from './home/tutor-dashboard/tutor-dashboard.component';
 import { StudentDashboardComponent } from '../app/home/student-dashboard/student-dashboard.component';
 import { TutorDashboardComponent } from './home/dashboard/tutor-dashboard.component';

@@ -70,7 +70,11 @@ export class TutorProfileComponent implements OnInit {
 		this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
 		this.bookingDetails.tutorName = this.teacherProfile.name;
 		this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
-
+		this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
+			if (res == true) {
+				console.log('booking submitted successfully !');
+			}
+		});
 		console.log(this.bookingDetails);
 	}
 	//for generating the hash code
