@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
 	hide: boolean = true;
 	studentLoginDetails = new StudentLoginModel();
 	tutorLoginDetails = new tutorLoginModel();
+	incorrectLoginDetails : boolean = false;
 	ngOnInit(): void {
 		console.log('login type ->' + this.loginDetailsService.getLoginType());
 		if (this.loginDetailsService.getLoginType() == null) {
@@ -53,6 +54,8 @@ export class LoginComponent implements OnInit {
 						});
 					} else if (res == false) {
 						console.log('login details incorrect !');
+						this.incorrectLoginDetails = true;
+
 					}
 				});
 			} else if (loginType == 'tutor') {
@@ -70,6 +73,7 @@ export class LoginComponent implements OnInit {
 						});
 					} else if (res == false) {
 						console.log('login details incorrect !');
+						this.incorrectLoginDetails = true;
 					}
 				});
 			}

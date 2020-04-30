@@ -4,5 +4,11 @@ export class tutorProfile {
 	public email: string;
 	public contact: string;
 	public dateOfBirth: string;
+	public country: string;
+	public state: string;
+	public addressLine1: string;
+	public addressLine2: string;
+	public profilePictureUrl: string;
 	public password: string;
+	public gradeLevel: string;
 }

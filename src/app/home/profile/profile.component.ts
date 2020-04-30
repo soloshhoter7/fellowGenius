@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ElementRef, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
@@ -13,6 +13,9 @@ import { AngularFireStorageModule } from '@angular/fire/storage/public_api';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { HttpService } from 'src/app/service/http.service';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
@@ -27,7 +30,6 @@ export class ProfileComponent implements OnInit {
 		horizontalPosition: 'center',
 		verticalPosition: 'top'
 	};
-	tutorProfile: tutorProfile;
 	uploadedProfilePicture: File = null;
 	uploadedIdDocument: File = null;
 	uploadedEducationDocument: File = null;
@@ -37,6 +39,10 @@ export class ProfileComponent implements OnInit {
 	profilePictureUrl;
 	actualProfilePicture = null;
 	profilePictureDisabled = false;
+
+	tutorProfileDetails = new tutorProfileDetails();
+	mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+	tutorProfile = new tutorProfile();
 	profileCompleted = false;
 	formProgress = 12;
 	visible = true;
@@ -64,17 +70,34 @@ export class ProfileComponent implements OnInit {
 		private http: HttpClient,
 		private tutorService: TutorService,
 		private firebaseStorage: AngularFireStorage,
-		private snackBar: MatSnackBar
+		private snackBar: MatSnackBar,
+		private httpService: HttpService
 	) {
 		this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
 			startWith(null),
 			map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice()))
 		);
 	}
-	basicInfoComplete() {
+
+	basicInfoComplete(basicInfo: NgForm) {
+		this.tutorProfile = basicInfo.value;
+		this.tutorProfile.tid = this.tutorService.getTutorDetials().tid;
+		console.log(this.tutorProfile);
 		this.formProgress += 25;
+		this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res) => {
+			console.log(res);
+		});
 	}
-	profileComplete() {
+
+	profileComplete(profileForm: NgForm) {
+		// this.tutorProfileDetails.graduationYear = profileForm.value.graduationYear;
+		// this.tutorProfileDetails.workInstitution = profileForm.value.workInstitution;
+		// this.tutorProfileDetails.studyInstitution = profileForm.value.studyInstitution;
+		// this.tutorProfileDetails.workTitle = profileForm.value.workTitle;
+		// this.tutorProfileDetails.majorSubject = profileForm.value.majorSubject;
+		// this.tutorProfileDetails.description = profileForm.value.description;
+		this.tutorProfileDetails = profileForm.value;
+		console.log(this.tutorProfileDetails);
 		this.formProgress += 25;
 	}
 	verificationComplete() {

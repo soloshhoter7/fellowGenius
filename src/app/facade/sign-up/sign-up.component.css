@@ -90,7 +90,8 @@ label {
     /* width: 25vw; */
 }
 
-.form-control-placeholder {
+
+/* .form-control-placeholder {
     position: absolute;
     top: 0;
     padding: 7px 0 0 13px;
@@ -103,6 +104,31 @@ label {
     font-size: 70%;
     transform: translate3d(0, -100%, 0);
     opacity: 1;
+} */
+
+.form-control-placeholder {
+    position: absolute;
+    top: 5px;
+    left: 11px;
+    padding-left: 5px;
+    padding-right: 5px;
+    transition: all 500ms;
+    opacity: 1;
+}
+
+.form-control:focus+.form-control-placeholder,
+.form-control:valid+.form-control-placeholder {
+    font-size: 90%;
+    transform: translate3d(0, -75%, 0);
+}
+
+label {
+    background-color: white;
+    margin: 0;
+}
+
+.form-control {
+    padding-left: 15px;
 }
 
 .showPassword {

@@ -1,5 +1,6 @@
 <body style="padding:20px">
     <div class="outer-box" style="padding-bottom: 20px;" *ngIf="!profileCompleted">
+<<<<<<< HEAD
       <div class="inner-box">
           <div class="form-navigation">
               <div class="row">
@@ -54,211 +55,245 @@
                   </div>
                   </div>
                 </div>
+=======
+        <div class="inner-box">
+            <div class="form-navigation">
+>>>>>>> 4415485b6340c2fa2611143f4f396f3fd6875348
                 <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" id="AddressLine1" name="addressLine1" ngModel class="form-control" required>
-                      <label class="form-control-placeholder" for="AddressLine1">Address Line 1</label>
+                    <div class="col-md-3 navigation-links border-right">
+                        <a>Basic Info</a>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" id="AddressLine2" name="addressLine2" ngModel class="form-control" required>
-                      <label class="form-control-placeholder" for="AddressLine2">Address Line 2</label>
-                  </div>
-                  </div>
+                    <div class="col-md-3 navigation-links border-right">
+                        <a>Profile</a>
+                    </div>
+                    <div class="col-md-3 navigation-links border-right">
+                        <a>Verification</a>
+                    </div>
+                    <div class="col-md-3 navigation-links">
+                        <a>Complete</a>
+                    </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <select class="form-control" ngModel name="country" id="Country"required>
+            </div>
+            <div class="progress-Bar">
+                <div class="outer-progressBar">
+                    <div class="inner-progressBar" [style.width.%]="formProgress"></div>
+                </div>
+            </div>
+            <div class="form-body" style="padding-top:10px ;">
+                <!-- --------------------------------------------- basic info --------------------------------------------------------------- -->
+                <div *ngIf="formProgress==12">
+                    <form (ngSubmit)="basicInfoComplete(basicInfo)" #basicInfo="ngForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="fullName" name="fullName" [ngModel]="tutorProfile.fullName" class="form-control" required>
+                                    <label class="form-control-placeholder" for="fullName">Full Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="email" id="email" name="email" [ngModel]="tutorProfile.email" class="form-control" required email #email="ngModel">
+                                    <label class="form-control-placeholder" for="email">Email Address</label>
+                                    <span class="help-block" *ngIf="!email.valid && email.touched">Invalid email</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="number" id="phoneNumber" name="contact" [ngModel]="tutorProfile.contact" [pattern]="mobNumberPattern" class="form-control" required #contact="ngModel">
+                                    <label class="form-control-placeholder" for="phoneNumber">Phone Number</label>
+                                    <span class="help-block" *ngIf="!contact.valid && contact.touched">Invalid phone number</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="dateOfBirth" [ngModel]="tutorProfile.dateOfBirth" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" required>
+                                    <label class="form-control-placeholder" for="date">Date of Birth</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="AddressLine1" name="addressLine1" [(ngModel)]="tutorProfile.addressLine1" class="form-control" required>
+                                    <label class="form-control-placeholder" for="AddressLine1">Address Line 1</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="AddressLine2" name="addressLine2" [(ngModel)]="tutorProfile.addressLine2" class="form-control" required>
+                                    <label class="form-control-placeholder" for="AddressLine2">Address Line 2</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" [(ngModel)]="tutorProfile.country" name="country" id="Country" required>
                         <option>India</option>
                         <option>USA</option>
                         <option>China</option>
                         <option>UK</option>
                       </select>
-                      <label class="form-control-placeholder" for="Country">Country</label>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <select class="form-control" ngModel name="state" id="state" required>
+                                    <label class="form-control-placeholder" for="Country">Country</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" [(ngModel)]="tutorProfile.state" name="state" id="state" required>
                         <option>Haryana</option>
                         <option>Himachal Pradesh</option>
                         <option>Punjab</option>
                         <option>Kerala</option>
                         <option>Tamil Nadu</option>
                       </select>
-                      <label class="form-control-placeholder" for="state">State</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input #profilePicture hidden="true" type="file" onclick="this.value=null" (change)="profilePictureChange($event)"/>
-                      <button class="btn btn-outline-primary"  (click)="profilePicture.click()" [disabled]="profilePictureDisabled">Upload Profile Picture</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
-                  <h1 style="margin: 0;font-weight: 300; color:#241084">I can Tutor ...</h1>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <mat-form-field class="example-chip-list">
-                      <mat-chip-list #chipList aria-label="Fruit selection">
-                        <mat-chip
-                          *ngFor="let fruit of fruits"
-                          [selectable]="selectable"
-                          [removable]="removable"
-                          (removed)="remove(fruit)">
-                          {{fruit}}
-                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                        </mat-chip>
-                        <input
-                          placeholder="New Subject ..."
-                          #fruitInput
-                          [formControl]="fruitCtrl"
-                          [matAutocomplete]="auto"
-                          [matChipInputFor]="chipList"
-                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                          (matChipInputTokenEnd)="add($event)">
-                      </mat-chip-list>
-                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                        <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
-                          {{fruit}}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-md-6" style="padding-top:8px">
-                    <div class="form-group">
-                      <select class="form-control" ngModel name="gradeLevel" id="gradeLevel" required>
+                                    <label class="form-control-placeholder" for="state">State</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
+                            <h1 style="margin: 0;font-weight: 300; color:#241084">I can Tutor ...</h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="example-chip-list">
+                                    <mat-chip-list #chipList aria-label="Fruit selection">
+                                        <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable" [removable]="removable" (removed)="remove(fruit)" required>
+                                            {{fruit}}
+                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                        </mat-chip>
+                                        <input placeholder="New Subject ..." #fruitInput [formControl]="fruitCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+                                    </mat-chip-list>
+                                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                                        <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                                            {{fruit}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6" style="padding-top:8px">
+                                <div class="form-group">
+                                    <select class="form-control" [(ngModel)]="tutorProfile.gradeLevel" name="gradeLevel" id="gradeLevel" required>
                         <option selected>Elementary</option>
                         <option>Kindergarten</option>
                         <option>Middle School</option>
                         <option>High School</option>
                         <option>College</option>
                       </select>
-                      <label class="form-control-placeholder" for="gradeLevel">Grade level</label>
-                    </div>
-                  </div>
+                                    <label class="form-control-placeholder" for="gradeLevel">Grade level</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-primary" [disabled]="!basicInfo.valid"> Continue </button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row" style="margin-top:5px;">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4">
-                    <button class="btn btn-outline-primary" (click)="basicInfoComplete()"> Continue </button>
-                  </div>
-                  <div class="col-md-4"></div>
+                <!-- ------------------------------------------------------------------------------------------------ -->
+                <!-- ------------------------------------------ profile form ------------------------------------------------- -->
+                <div *ngIf="formProgress==37">
+                    <form (ngSubmit)="profileComplete(profileForm)" #profileForm="ngForm">
+                        <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
+                            <h1 style="margin: 0;font-weight: 300;color:#241084">What Makes You Different ?</h1>
+                        </div>
+                        <div class="row" style="padding-top:20px;">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <textarea style="padding-top: 10px;" class="form-control" id="description" rows="6" name="description" [(ngModel)]="tutorProfileDetails.description" required></textarea>
+                                    <label for="description" class="form-control-placeholder">Description</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="majorSubject" name="majorSubject" [(ngModel)]="tutorProfileDetails.majorSubject" class="form-control" required>
+                                    <label class="form-control-placeholder" for="majorSubject">Your Major</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="studyInstitution" name="studyInstitution" [(ngModel)]="tutorProfileDetails.studyInstitution" class="form-control" required>
+                                    <label class="form-control-placeholder" for="studyInstitution">Institution Name</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" min="1987" max="2025" id="graduationYear" name="graduationYear" [(ngModel)]="tutorProfileDetails.graduationYear" class="form-control" required>
+                                    <label class="form-control-placeholder" for="graduationYear">Graduation Year</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
+                            <h1 style="margin: 0;font-weight: 300;color:#241084">Professional Background &nbsp;<sup style="font-size: 60%;">*optional</sup></h1>
+                        </div>
+                        <div class="row" style="padding-top: 20px;">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="workTitle" name="workTitle" [(ngModel)]="tutorProfileDetails.workTitle" class="form-control">
+                                    <label class="form-control-placeholder" for="workTitle">Work Title</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="workInstitution" name="workInstitution" [(ngModel)]="tutorProfileDetails.workInstitution" class="form-control">
+                                    <label class="form-control-placeholder" for="workInstitution">Institution Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-primary" [disabled]="!profileForm.valid"> Continue </button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    </form>
                 </div>
-              </form>
-            </div>
-            <!-- ------------------------------------------------------------------------------------------------ -->
-            <!-- ------------------------------------------ profile form ------------------------------------------------- -->
-            <div *ngIf="formProgress==37">
-              <form>
-                <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
-                  <h1 style="margin: 0;font-weight: 300;color:#241084">What Makes You Different ?</h1>
-                </div>
-                <div class="row" style="padding-top:20px;">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <textarea style="padding-top: 10px;"
-                        class="form-control"
-                        id="description"
-                        rows="6"
-                        name="description"
-                        ngModel
-                        required
-                      ></textarea>
-                      <label for="description" class="form-control-placeholder">Description</label>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" id="majorSubject" name="majorSubject" ngModel class="form-control" required>
-                      <label class="form-control-placeholder" for="majorSubject">Your Major</label>
-                    </div>
-                    <div class="form-group">
-                      <input type="text" id="studyInstitution" name="studyInstitution" ngModel class="form-control" required>
-                      <label class="form-control-placeholder" for="studyInstitution">Institution Name</label>
-                    </div>
-                    <div class="form-group">
-                      <input type="number" min="1987" max="2025" id="graduationYear" name="graduationYear" ngModel class="form-control" required>
-                      <label class="form-control-placeholder" for="graduationYear">Graduation Year</label>
-                    </div>                    
-                  </div>
-                </div>
-                <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
-                  <h1 style="margin: 0;font-weight: 300;color:#241084">Professional Background &nbsp;<sup style="font-size: 60%;">*optional</sup></h1>
-                </div>
-                <div class="row" style="padding-top: 20px;">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" id="workTitle" name="workTitle" ngModel class="form-control" >
-                      <label class="form-control-placeholder" for="workTitle">Work Title</label>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" id="workInstitution" name="workInstitution" ngModel class="form-control" >
-                      <label class="form-control-placeholder" for="workInstitution">Institution Name</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" style="margin-top:5px;">
-                  <div class="col-md-4"></div>
-                  <div class="col-md-4">
-                    <button class="btn btn-outline-primary" (click)="profileComplete()"> Continue </button>
-                  </div>
-                  <div class="col-md-4"></div>
-                </div>
-              </form>
-            </div>
-      <!-- -------------------------------------------- Verification Form ------------------------------------------------------------------ -->
-      <div *ngIf="formProgress==62">
-        <form>
-          <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
-            <img src="../../../assets/icons/info.svg" alt="info" style="width: 20px; height: 20px;"><p style="margin-left: 10px;font-weight: 300;color:#241084">Once approved, your new verified Status also means you will rank higher in search results , attracting more students</p>
-          </div>
-          <div class="row" style="padding-left: 15px;margin-bottom: 20px;">
-            <h1 style="margin: 0;font-weight: 300;color:#241084">Upload Id Documents</h1>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <select class="form-control" ngModel name="country" id="Country" required>
+                <!-- -------------------------------------------- Verification Form ------------------------------------------------------------------ -->
+                <div *ngIf="formProgress==62">
+                    <form>
+                        <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
+                            <img src="../../../assets/icons/info.svg" alt="info" style="width: 20px; height: 20px;">
+                            <p style="margin-left: 10px;font-weight: 300;color:#241084">Once approved, your new verified Status also means you will rank higher in search results , attracting more students</p>
+                        </div>
+                        <div class="row" style="padding-left: 15px;margin-bottom: 20px;">
+                            <h1 style="margin: 0;font-weight: 300;color:#241084">Upload Id Documents</h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" ngModel name="country" id="Country" required>
                   <option>India</option>
                   <option>USA</option>
                   <option>China</option>
                   <option>UK</option>
                 </select>
-                <label class="form-control-placeholder" for="country">Country</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <select class="form-control" ngModel name="state" id="state" required>
+                                    <label class="form-control-placeholder" for="country">Country</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" ngModel name="state" id="state" required>
                   <option>Haryana</option>
                   <option>Himachal Pradesh</option>
                   <option>Punjab</option>
                   <option>Kerala</option>
                   <option>Tamil Nadu</option>
                 </select>
-                <label class="form-control-placeholder" for="state">State</label>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <select class="form-control" ngModel name="idType" id="idType" required>
+                                    <label class="form-control-placeholder" for="state">State</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" ngModel name="idType" id="idType" required>
                   <option>Aadhar Card</option>
                   <option>Student Id</option>
                   <option>Driving License</option>
                   <option>Other Govt authorised Id</option>
                 </select>
+<<<<<<< HEAD
                 <label class="form-control-placeholder" for="idType">Type</label>
               </div>
             </div>
@@ -284,6 +319,33 @@
             <div class="col-md-6">
               <div class="form-group">
                 <select class="form-control" ngModel name="educationType" id="educationType" required>
+=======
+                                    <label class="form-control-placeholder" for="idType">Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="idNumber" name="idNumber" ngModel class="form-control" required>
+                                    <label class="form-control-placeholder" for="idNumber">Id Number</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" />
+                                    <button class="btn btn-outline-primary" (click)="csvInput.click()">Upload Documents</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-left: 15px;margin-bottom: 20px;">
+                            <h1 style="margin: 0;font-weight: 300;color:#241084">Upload Student Documents</h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" ngModel name="educationType" id="educationType" required>
+>>>>>>> 4415485b6340c2fa2611143f4f396f3fd6875348
                   <option>Diploma</option>
                   <option>Associate</option>
                   <option>Bachelor</option>
@@ -293,6 +355,7 @@
                   <option>Post Graduate</option>
                   <option>Other</option>
                 </select>
+<<<<<<< HEAD
                 <label class="form-control-placeholder" for="educationType">Education Type</label>
               </div>
             </div>
@@ -321,13 +384,43 @@
             <div class="col-md-4"></div>
             <div class="col-md-4">
               <button class="btn btn-outline-success" (click)="verificationComplete()"> Continue </button>
+=======
+                                    <label class="form-control-placeholder" for="educationType">Education Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="educationInstitution" name="educationInstitution" ngModel class="form-control" required>
+                                    <label class="form-control-placeholder" for="educationInstitution">Institution Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="fieldOfStudy" name="fieldOfStudy" ngModel class="form-control" required>
+                                    <label class="form-control-placeholder" for="fieldOfStudy">Field Of Study</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="studentDocument($event)" />
+                                    <button class="btn btn-outline-primary" (click)="studentDocument.click()">Upload latest Marksheet or degree</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-success" (click)="verificationComplete()"> Continue </button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    </form>
+                </div>
+                <!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
+>>>>>>> 4415485b6340c2fa2611143f4f396f3fd6875348
             </div>
-            <div class="col-md-4"></div>
-          </div>
-        </form>
-      </div>
-      <!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
-          </div>
-      </div>
+        </div>
     </div>
 </body>

@@ -33,6 +33,12 @@ export class HttpService {
 	saveTutorProfile(tutorModel: tutorProfile): Observable<Object> {
 		return this.http.post('http://localhost:8080/fellowGenius/registerTutor', tutorModel);
 	}
+
+	//for updating tutor profile after completing basic info form
+	updateTutorProfile(basicInfo: tutorProfile){
+		return this.http.post('http://localhost:8080/fellowGenius/updateTutorBasicInfo', basicInfo)
+
+	}
 	// for checking tutor login
 	checkTutorLogin(tutorLoginModel: tutorLoginModel): Observable<Object> {
 		return this.http.post('http://localhost:8080/fellowGenius/loginTutor', tutorLoginModel);
