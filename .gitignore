@@ -1,3 +1,6 @@
 abc/*
-fellowGenius-spring/src/main/resources/application.properties
-fellowGenius-spring/target/classes/application.properties
+fellowGenius-spring/*
+!fellowGenius-spring/src
+fellowGenius-spring/src/main/resources/*
+
+
