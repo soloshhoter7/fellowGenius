@@ -1,2 +1,2 @@
-# fellowGenius-angular
-fellowGenius angular application
+# fellowGenius
+fellowGenius application
