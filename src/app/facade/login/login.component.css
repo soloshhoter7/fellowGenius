@@ -1,147 +1,147 @@
 .box {
-    padding-top: 5vh;
-    padding-bottom: 5vh;
-    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-    background-color: white;
-    margin-top: 0;
-    margin-left: 10%;
-    margin-right: 10%;
-    /* position: absolute; */
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+  background-color: white;
+  margin-top: 0;
+  margin-left: 10%;
+  margin-right: 10%;
+  /* position: absolute; */
 }
 
 h1 {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 8vh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 8vh;
 }
 
 h3,
 h5 {
-    text-align: center;
+  text-align: center;
 }
 
 body {
-    height: 100%;
-    width: 100%;
-    padding: 10px;
-    background-color: rgb(249, 250, 251);
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  background-color: rgb(249, 250, 251);
 }
 
 .container {
-    width: 70vw;
-    margin-top: 5vh;
-    margin: auto;
+  width: 70vw;
+  margin-top: 5vh;
+  margin: auto;
 }
 
 .picture {
-    width: 20vw;
-    height: 20vh;
-    border-radius: 4px;
-    padding-left: 2vw;
+  width: 20vw;
+  height: 20vh;
+  border-radius: 4px;
+  padding-left: 2vw;
 }
 
 .form-group {
-    position: relative;
-    margin-bottom: 1.5rem;
-    /* width: 25vw; */
+  position: relative;
+  margin-bottom: 1.5rem;
+  /* width: 25vw; */
 }
 
 .form-control-placeholder {
-    position: absolute;
-    top: 0;
-    padding: 7px 0 0 13px;
-    transition: all 500ms;
-    opacity: 0.5;
+  position: absolute;
+  top: 0;
+  padding: 7px 0 0 13px;
+  transition: all 500ms;
+  opacity: 0.5;
 }
 
-.form-control:focus+.form-control-placeholder,
-.form-control:valid+.form-control-placeholder {
-    font-size: 90%;
-    transform: translate3d(0, -100%, 0);
-    opacity: 1;
+.form-control:focus + .form-control-placeholder,
+.form-control:valid + .form-control-placeholder {
+  font-size: 90%;
+  transform: translate3d(0, -100%, 0);
+  opacity: 1;
 }
 
 .form-control-placeholder.ng-dirty {
-    opacity: 0;
+  opacity: 0;
 }
-
 input {
-    margin-left: auto;
-    margin-right: auto;
-    width: 25vw;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25vw;
 }
 
 .signInButton {
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
-    background-color: rgb(255, 255, 255);
-    color: #241084;
-    border: 1px solid #241084;
-    border-radius: 0;
-    margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  background-color: rgb(255, 255, 255);
+  color: #241084;
+  border: 1px solid #241084;
+  border-radius: 0;
+  margin-bottom: 10px;
 }
 
 .signInButton:hover {
-    background-color: #241084;
-    color: white;
+  background-color: #241084;
+  color: white;
 }
 
 .signUpButton {
-    background-color: #241084;
-    color: white;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
-    border-radius: 0;
+  background-color: #241084;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border-radius: 0;
 }
 
 .signUpButton:hover {
-    background-color: white;
-    border: 1px solid #241084;
-    color: #241084;
+  background-color: white;
+  border: 1px solid #241084;
+  color: #241084;
 }
 
 .paddingZero {
-    padding: 0;
+  padding: 0;
 }
 
 hr {
-    width: 50%;
-    color: teal;
+  width: 50%;
+  color: teal;
 }
 
 .showPassword {
-    position: absolute;
-    right: 0;
-    cursor: pointer;
-    top: 7px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  top: 7px;
 }
 
 .navbar-brand {
-    color: #241084;
-    font-size: 38px;
-    font-weight: 500;
-    margin-left: 10px;
-    border-radius: 5px;
-    font-family: custom;
+  color: #241084;
+  font-size: 38px;
+  font-weight: 500;
+  margin-left: 10px;
+  border-radius: 5px;
+  font-family: custom;
 }
 
 .marginZero {
-    margin: 0;
+  margin: 0;
 }
 
 input.ng-invalid.ng-touched {
-    border-left-color: red;
-    border-left-width: 3px;
+  border-left-color: red;
+  border-left-width: 3px;
 }
 
 input.ng-valid {
-    border-left-color: rgb(100, 236, 100);
-    border-left-width: 3px;
+  border-left-color: rgb(100, 236, 100);
+  border-left-width: 3px;
 }
 
 .form-control:focus {
-    border-color: #8093eb;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(131, 137, 221, 0.5);
+  border-color: #8093eb;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset,
+    0px 0px 8px rgba(131, 137, 221, 0.5);
 }

@@ -29,13 +29,13 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <input type="text" id="fullName" name="fullName" [(ngModel)]="fullName" class="form-control" required>
+                      <input type="text" id="fullName" name="fullName" [(ngModel)]="tutorProfile.fullName" class="form-control" required>
                       <label class="form-control-placeholder" for="fullName">Full Name</label>
                   </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <input type="email" id="email" name="email" ngModel class="form-control" required>
+                      <input type="email" id="email" name="email" [(ngModel)]="tutorProfile.email" class="form-control" required>
                       <label class="form-control-placeholder" for="email">Email Address</label>
                   </div>
                   </div>
@@ -43,13 +43,13 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <input type="number" id="phoneNumber" name="contact" ngModel class="form-control" required>
+                      <input type="number" id="phoneNumber" name="contact" [(ngModel)]="tutorProfile.contact" class="form-control" required>
                       <label class="form-control-placeholder" for="phoneNumber">Phone Number</label>
                   </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <input class="form-control" type="text" name="dateOfBirth" ngModel onfocus="(this.type='date')" onblur="(this.type='text')" id="date" required>
+                      <input class="form-control" type="text" name="dateOfBirth" [(ngModel)]="tutorProfile.dateOfBirth" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" required>
                       <label class="form-control-placeholder" for="date">Date of Birth</label>
                   </div>
                   </div>
@@ -90,6 +90,14 @@
                         <option>Tamil Nadu</option>
                       </select>
                       <label class="form-control-placeholder" for="state">State</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <input #profilePicture hidden="true" type="file" onclick="this.value=null" (change)="profilePictureChange($event)"/>
+                      <button class="btn btn-outline-primary"  (click)="profilePicture.click()" [disabled]="profilePictureDisabled">Upload Profile Picture</button>
                     </div>
                   </div>
                 </div>
@@ -264,8 +272,8 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)"/>
-                <button class="btn btn-outline-primary"  (click)="csvInput.click()">Upload Documents</button>
+                <input #idDocument hidden="true" type="file" onclick="this.value=null" (change)="idDocumentChange($event)"/>
+                <button class="btn btn-outline-primary"  (click)="idDocument.click()">Upload id Documents</button>
               </div>
             </div>
           </div>
@@ -304,7 +312,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="studentDocument($event)"/>
+                <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="educationDocumentChange($event)"/>
                 <button class="btn btn-outline-primary"  (click)="studentDocument.click()">Upload latest Marksheet or degree</button>
               </div>
             </div>
