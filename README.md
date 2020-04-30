@@ -1,2 +1,0 @@
-# fellowGenius
-fellowGenius application
