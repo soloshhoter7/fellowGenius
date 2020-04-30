@@ -37,6 +37,7 @@ public class userController {
 	// for checking student login
 	@RequestMapping(value = "/loginStudent")
 	public boolean onLoginStudent(@RequestBody StudentLoginModel studentLoginModel) {
+		System.out.println("student login");
 		return service.onStudentLogin(studentLoginModel);
 	}
     // for getting student details after login
