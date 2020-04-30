@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class TutorProfile {
@@ -19,7 +18,42 @@ public class TutorProfile {
 	@Column(name="DOB")
 	String dateOfBirth;
 	String contact;
+	String addressLine1;
+	String addressLine2;
+	String country;
+	String state;
+	String profilePictureUrl;
 	
+	public String getAddressLine1() {
+		return addressLine1;
+	}
+	public void setAddressLine1(String addressLine1) {
+		this.addressLine1 = addressLine1;
+	}
+	public String getAddressLine2() {
+		return addressLine2;
+	}
+	public void setAddressLine2(String addressLine2) {
+		this.addressLine2 = addressLine2;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getProfilePictureUrl() {
+		return profilePictureUrl;
+	}
+	public void setProfilePictureUrl(String profilePictureUrl) {
+		this.profilePictureUrl = profilePictureUrl;
+	}
 	public Integer getTid() {
 		return tid;
 	}
@@ -52,8 +86,11 @@ public class TutorProfile {
 	}
 	@Override
 	public String toString() {
-		return "TutorProfileModel [tid=" + tid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + "]";
+		return "TutorProfile [tid=" + tid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
+				+ dateOfBirth + ", contact=" + contact + ", addressLine1=" + addressLine1 + ", addressLine2="
+				+ addressLine2 + ", country=" + country + ", state=" + state + ", profilePictureUrl="
+				+ profilePictureUrl + "]";
 	}
+
 	
 }

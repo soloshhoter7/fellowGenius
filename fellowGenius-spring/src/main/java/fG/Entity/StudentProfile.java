@@ -18,10 +18,14 @@ public class StudentProfile {
 	@Column(name = "DOB")
 	String dateOfBirth;
 	String contact;
-//	@Column(name = "userName")
-//	String userName;
-//	String password;
+	String subject1;
 	
+	public String getSubject1() {
+		return subject1;
+	}
+	public void setSubject1(String subject1) {
+		this.subject1 = subject1;
+	}
 	public Integer getSid() {
 		return sid;
 	}

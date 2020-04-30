@@ -80,6 +80,14 @@ public class dao {
 		}
 	}
 
+	// for updating basic info of tutor
+	public void updateTutorBasicInfo(TutorProfile tutorProfile) {
+		repTutorProfile.updateBasicInfo(tutorProfile.getFullName(), tutorProfile.getEmail(), tutorProfile.getContact(),
+				tutorProfile.getDateOfBirth(), tutorProfile.getAddressLine1(), tutorProfile.getAddressLine2(),
+				tutorProfile.getCountry(), tutorProfile.getState(), tutorProfile.getProfilePictureUrl(), tutorProfile.getTid()); 
+	
+	}
+
 	// for saving tutor login credentials
 	public void saveTutorLogin(TutorLogin tutorLogin) {
 		repTutorLogin.save(tutorLogin);
@@ -111,14 +119,15 @@ public class dao {
 		return repTutorProfileDetails.findAll();
 	}
 
-	//for getting tutor details using email
+	// for getting tutor details using email
 	public TutorProfile getTutorDetails(String email) {
 		return repTutorProfile.emailExist(email);
 	}
-    
-	//for saving tutor profile details
+
+	// for saving tutor profile details
 	public void saveTutorID(TutorProfileDetails tutDetails) {
 		repTutorProfileDetails.save(tutDetails);
 
 	}
+
 }

@@ -30,7 +30,8 @@ public class UserService {
 		studentProfile.setContact(studentModel.getContact());
 		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
 		studentProfile.setEmail(studentModel.getEmail());
-		studentProfile.setFullName(studentModel.getFullName());		
+		studentProfile.setFullName(studentModel.getFullName());	
+		studentProfile.setSubject1(studentModel.getSubject1());
 		if(dao.saveStudentProfile(studentProfile)) {
 			StudentLogin studentLogin = new StudentLogin();
 			studentLogin.setPassword(studentModel.getPassword());
@@ -84,6 +85,7 @@ public class UserService {
 			tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
 			tutorProfile.setEmail(tutorModel.getEmail());
 			tutorProfile.setFullName(tutorModel.getFullName());		
+
 			if(dao.saveTutorProfile(tutorProfile)) {
 				TutorLogin tutorLogin = new TutorLogin();
 				tutorLogin.setPassword(tutorModel.getPassword());
@@ -102,6 +104,24 @@ public class UserService {
 			
 		}
 
+		//for updating tutor basic info
+		public void updateTutorBasicInfo(TutorProfileModel tutorModel) {
+			TutorProfile tutorProfile = new TutorProfile();
+			tutorProfile.setTid(tutorModel.getTid());
+			tutorProfile.setContact(tutorModel.getContact());
+			tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
+			tutorProfile.setEmail(tutorModel.getEmail());
+			tutorProfile.setFullName(tutorModel.getFullName());		
+			tutorProfile.setAddressLine1(tutorModel.getAddressLine1());
+			tutorProfile.setAddressLine2(tutorModel.getAddressLine2());
+			tutorProfile.setCountry(tutorModel.getCountry());
+			tutorProfile.setState(tutorModel.getState());
+			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			System.out.println("profile picture in entity ..............."+tutorProfile.getProfilePictureUrl());
+			dao.updateTutorBasicInfo(tutorProfile);
+			
+		}
+		
 		// validation of tutor login 
 		public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
 			if(dao.onTutorLogin(tutorLoginModel)) {
@@ -128,4 +148,5 @@ public class UserService {
 		public List<?> getTutorList() {
 			return dao.getTutorList();
 		}
+
 }

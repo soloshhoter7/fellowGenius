@@ -35,7 +35,7 @@ public class meetingController {
 	public boolean updateBookingStatus(String bid,String approvalStatus) {
 		return meetingService.updateBookingStatus(bid,approvalStatus);
 	}
-//	---------------------------------------------------
+
 	//find student pending bookings 
 	@RequestMapping(value="/findStudentBookings")
 	@ResponseBody
@@ -57,13 +57,13 @@ public class meetingController {
 	}
 	
 	// for fetching approved bookings list
-		@RequestMapping(value="/fetchApprovedListTutor")
-		@ResponseBody
-		public List<?> fetchApprovedStudentList(String tutorId){
-			Integer tid = Integer.valueOf(tutorId);
-			List<?> bookingDetails = meetingService.fetchApprovedListTutor(tid);
-			System.out.println("step1" + bookingDetails);
-			return bookingDetails;
-		}
+	@RequestMapping(value="/fetchApprovedListTutor")
+	@ResponseBody
+	public List<?> fetchApprovedStudentList(String tutorId){
+		Integer tid = Integer.valueOf(tutorId);
+		List<?> bookingDetails = meetingService.fetchApprovedListTutor(tid);
+		System.out.println("step1" + bookingDetails);
+		return bookingDetails;
+	}
 
 }
