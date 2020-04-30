@@ -6,15 +6,13 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { TutorService } from 'src/app/service/tutor.service';
 import { tutorProfile } from 'src/app/model/tutorProfile';
-import { AngularFireStorageModule } from '@angular/fire/storage/public_api';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize } from 'rxjs/operators';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { HttpService } from 'src/app/service/http.service';
 import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-profile',
@@ -22,14 +20,13 @@ import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 	styleUrls: [ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit {
+
 	ngOnInit(): void {
-		this.tutorProfile = this.tutorService.getTutorDetials();
+		 this.tutorProfile = this.tutorService.getTutorDetials();
+
 	}
-	config: MatSnackBarConfig = {
-		duration: 2000,
-		horizontalPosition: 'center',
-		verticalPosition: 'top'
-	};
+
+	//firebase connection
 	uploadedProfilePicture: File = null;
 	uploadedIdDocument: File = null;
 	uploadedEducationDocument: File = null;
@@ -39,9 +36,14 @@ export class ProfileComponent implements OnInit {
 	profilePictureUrl;
 	actualProfilePicture = null;
 	profilePictureDisabled = false;
+	config: MatSnackBarConfig = {
+		duration: 2000,
+		horizontalPosition: 'center',
+		verticalPosition: 'top'
+	};
 
 	tutorProfileDetails = new tutorProfileDetails();
-	mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+	mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
 	tutorProfile = new tutorProfile();
 	profileCompleted = false;
 	formProgress = 12;
@@ -67,35 +69,34 @@ export class ProfileComponent implements OnInit {
 	@ViewChild('auto') matAutocomplete: MatAutocomplete;
 
 	constructor(
-		private http: HttpClient,
 		private tutorService: TutorService,
+		private httpService: HttpService,
 		private firebaseStorage: AngularFireStorage,
 		private snackBar: MatSnackBar,
-		private httpService: HttpService
-	) {
+	) 
+	{
 		this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
 			startWith(null),
 			map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice()))
 		);
 	}
 
-	basicInfoComplete(basicInfo: NgForm) {
+	basicInfoComplete(basicInfo: NgForm){
 		this.tutorProfile = basicInfo.value;
 		this.tutorProfile.tid = this.tutorService.getTutorDetials().tid;
-		console.log(this.tutorProfile);
-		this.formProgress += 25;
-		this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res) => {
-			console.log(res);
-		});
+		if(this.profilePictureUrl == null){
+			console.log("Unable to upload");
+		}
+		else{console.log(this.tutorProfile);
+			this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+			console.log(this.tutorProfile)
+			this.formProgress += 25;
+			this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res)=>{
+				console.log(res);
+			})}
 	}
 
 	profileComplete(profileForm: NgForm) {
-		// this.tutorProfileDetails.graduationYear = profileForm.value.graduationYear;
-		// this.tutorProfileDetails.workInstitution = profileForm.value.workInstitution;
-		// this.tutorProfileDetails.studyInstitution = profileForm.value.studyInstitution;
-		// this.tutorProfileDetails.workTitle = profileForm.value.workTitle;
-		// this.tutorProfileDetails.majorSubject = profileForm.value.majorSubject;
-		// this.tutorProfileDetails.description = profileForm.value.description;
 		this.tutorProfileDetails = profileForm.value;
 		console.log(this.tutorProfileDetails);
 		this.formProgress += 25;
@@ -103,6 +104,9 @@ export class ProfileComponent implements OnInit {
 	verificationComplete() {
 		this.formProgress = 99;
 	}
+
+	//-----------------------------------------firebase management-------------------------
+
 	//profile picture change function
 	profilePictureChange(event) {
 		// this.profilePictureDisabled = true;
@@ -177,6 +181,7 @@ export class ProfileComponent implements OnInit {
 			)
 			.subscribe();
 	}
+
 	// ------------------------------------------- for chips --------------------------------------------------------------------------
 	add(event: MatChipInputEvent): void {
 		const input = event.input;

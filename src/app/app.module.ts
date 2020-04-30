@@ -6,8 +6,6 @@ import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { NgxAgoraModule } from 'ngx-agora';
 import { FormatTimePipe } from 'src/app/pipes/formatTime';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireStorageModule } from '@angular/fire/storage';
 import { HomeComponent } from './home/home.component';
 import { MeetingComponent } from './home/meeting/meeting.component';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +19,6 @@ import { MessagesComponent } from './home/messages/messages.component';
 import { BookingsComponent } from './home/bookings/bookings.component';
 import { BookingComponent } from './home/bookings/booking/booking.component';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { AccordionModule } from 'primeng/accordion'; //accordion and accordion tab
 import { MenuItem } from 'primeng/api';
@@ -37,6 +34,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StudentDashboardComponent } from '../app/home/student-dashboard/student-dashboard.component';
 import { TutorDashboardComponent } from './home/dashboard/tutor-dashboard.component';
 import { ProfileComponent } from './home/profile/profile.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 export const appRoutes: Routes = [
 	{
 		path: 'home',

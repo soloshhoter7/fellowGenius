@@ -3,11 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-	production: false,
-	agora: {
-		appId: '45f3ee50e0fd491aa46bd17c05fc7073'
-	},
-	firebaseConfig: {
+  production: false,
+  agora: {
+    appId: '45f3ee50e0fd491aa46bd17c05fc7073'
+  },
+  firebaseConfig: {
 		apiKey: 'AIzaSyCltKxu01z70siY0DplpPBcaTXXL2VCHSQ',
 		authDomain: 'fellowgenius-8606c.firebaseapp.com',
 		databaseURL: 'https://fellowgenius-8606c.firebaseio.com',

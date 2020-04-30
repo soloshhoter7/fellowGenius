@@ -1,64 +1,7 @@
 <body style="padding:20px">
     <div class="outer-box" style="padding-bottom: 20px;" *ngIf="!profileCompleted">
-<<<<<<< HEAD
-      <div class="inner-box">
-          <div class="form-navigation">
-              <div class="row">
-                  <div class="col-md-3 navigation-links border-right">
-                      <a>Basic Info</a>
-                  </div>
-                  <div class="col-md-3 navigation-links border-right">
-                      <a>Profile</a>
-                  </div>
-                  <div class="col-md-3 navigation-links border-right">
-                      <a>Verification</a>
-                  </div>
-                  <div class="col-md-3 navigation-links">
-                    <a>Complete</a>
-                </div>
-              </div>
-          </div>
-          <div class="progress-Bar">
-            <div class="outer-progressBar">
-              <div class="inner-progressBar" [style.width.%]="formProgress"></div>
-            </div>
-          </div>
-          <div class="form-body" style="padding-top:10px ;">
-            <!-- --------------------------------------------- basic info --------------------------------------------------------------- -->
-            <div *ngIf="formProgress==12">
-              <form>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="text" id="fullName" name="fullName" [(ngModel)]="tutorProfile.fullName" class="form-control" required>
-                      <label class="form-control-placeholder" for="fullName">Full Name</label>
-                  </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="email" id="email" name="email" [(ngModel)]="tutorProfile.email" class="form-control" required>
-                      <label class="form-control-placeholder" for="email">Email Address</label>
-                  </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input type="number" id="phoneNumber" name="contact" [(ngModel)]="tutorProfile.contact" class="form-control" required>
-                      <label class="form-control-placeholder" for="phoneNumber">Phone Number</label>
-                  </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <input class="form-control" type="text" name="dateOfBirth" [(ngModel)]="tutorProfile.dateOfBirth" onfocus="(this.type='date')" onblur="(this.type='text')" id="date" required>
-                      <label class="form-control-placeholder" for="date">Date of Birth</label>
-                  </div>
-                  </div>
-                </div>
-=======
         <div class="inner-box">
             <div class="form-navigation">
->>>>>>> 4415485b6340c2fa2611143f4f396f3fd6875348
                 <div class="row">
                     <div class="col-md-3 navigation-links border-right">
                         <a>Basic Info</a>
@@ -82,7 +25,7 @@
             <div class="form-body" style="padding-top:10px ;">
                 <!-- --------------------------------------------- basic info --------------------------------------------------------------- -->
                 <div *ngIf="formProgress==12">
-                    <form (ngSubmit)="basicInfoComplete(basicInfo)" #basicInfo="ngForm">
+                    <form #basicInfo="ngForm">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -152,6 +95,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input #profilePicture hidden="true" type="file" onclick="this.value=null" (change)="profilePictureChange($event)" required/>
+                                    <button class="btn btn-outline-primary" (click)="profilePicture.click()">Upload profile picture</button>
+                                    <!-- <button class="btn">CLICK</button> -->
+                                </div>
+                            </div>
+                        </div>
                         <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
                             <h1 style="margin: 0;font-weight: 300; color:#241084">I can Tutor ...</h1>
                         </div>
@@ -188,7 +140,7 @@
                         <div class="row" style="margin-top:5px;">
                             <div class="col-md-4"></div>
                             <div class="col-md-4">
-                                <button class="btn btn-outline-primary" [disabled]="!basicInfo.valid"> Continue </button>
+                                <button (click)="basicInfoComplete(basicInfo)" class="btn btn-outline-primary" [disabled]="!basicInfo.valid"> Continue </button>
                             </div>
                             <div class="col-md-4"></div>
                         </div>
@@ -293,33 +245,6 @@
                   <option>Driving License</option>
                   <option>Other Govt authorised Id</option>
                 </select>
-<<<<<<< HEAD
-                <label class="form-control-placeholder" for="idType">Type</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <input type="text" id="idNumber" name="idNumber" ngModel class="form-control" required>
-                <label class="form-control-placeholder" for="idNumber">Id Number</label>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <input #idDocument hidden="true" type="file" onclick="this.value=null" (change)="idDocumentChange($event)"/>
-                <button class="btn btn-outline-primary"  (click)="idDocument.click()">Upload id Documents</button>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="padding-left: 15px;margin-bottom: 20px;">
-            <h1 style="margin: 0;font-weight: 300;color:#241084">Upload Student Documents</h1>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <select class="form-control" ngModel name="educationType" id="educationType" required>
-=======
                                     <label class="form-control-placeholder" for="idType">Type</label>
                                 </div>
                             </div>
@@ -333,8 +258,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" />
-                                    <button class="btn btn-outline-primary" (click)="csvInput.click()">Upload Documents</button>
+                                    <input #idDocument hidden="true" type="file" onclick="this.value=null" (change)="idDocumentChange($event)" />
+                                    <button class="btn btn-outline-primary" (click)="idDocument.click()">Upload id Documents</button>
                                 </div>
                             </div>
                         </div>
@@ -345,7 +270,6 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <select class="form-control" ngModel name="educationType" id="educationType" required>
->>>>>>> 4415485b6340c2fa2611143f4f396f3fd6875348
                   <option>Diploma</option>
                   <option>Associate</option>
                   <option>Bachelor</option>
@@ -355,36 +279,6 @@
                   <option>Post Graduate</option>
                   <option>Other</option>
                 </select>
-<<<<<<< HEAD
-                <label class="form-control-placeholder" for="educationType">Education Type</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <input type="text" id="educationInstitution" name="educationInstitution" ngModel class="form-control" required>
-                <label class="form-control-placeholder" for="educationInstitution">Institution Name</label>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <input type="text" id="fieldOfStudy" name="fieldOfStudy" ngModel class="form-control" required>
-                <label class="form-control-placeholder" for="fieldOfStudy">Field Of Study</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="educationDocumentChange($event)"/>
-                <button class="btn btn-outline-primary"  (click)="studentDocument.click()">Upload latest Marksheet or degree</button>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="margin-top:5px;">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <button class="btn btn-outline-success" (click)="verificationComplete()"> Continue </button>
-=======
                                     <label class="form-control-placeholder" for="educationType">Education Type</label>
                                 </div>
                             </div>
@@ -404,7 +298,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="studentDocument($event)" />
+                                    <!-- <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="studentDocument($event)" />
+                                    <button class="btn btn-outline-primary" (click)="studentDocument.click()">Upload latest Marksheet or degree</button> -->
+                                    <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="educationDocumentChange($event)" />
                                     <button class="btn btn-outline-primary" (click)="studentDocument.click()">Upload latest Marksheet or degree</button>
                                 </div>
                             </div>
@@ -419,7 +315,6 @@
                     </form>
                 </div>
                 <!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
->>>>>>> 4415485b6340c2fa2611143f4f396f3fd6875348
             </div>
         </div>
     </div>
