@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ElementRef, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { TutorService } from 'src/app/service/tutor.service';
+import { tutorProfile } from 'src/app/model/tutorProfile';
+import { HttpService } from 'src/app/service/http.service';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 
 @Component({
 	selector: 'app-profile',
@@ -13,7 +17,15 @@ import { map, startWith } from 'rxjs/operators';
 	styleUrls: [ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit {
-	ngOnInit(): void {}
+
+	ngOnInit(): void {
+		 this.tutorProfile = this.tutorService.getTutorDetials();
+		//  console.log(this.tutorService.getTutorProfileDetails());
+		//  this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+	}
+	tutorProfileDetails = new tutorProfileDetails();
+	mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
+	tutorProfile = new tutorProfile();
 	profileCompleted = false;
 	formProgress = 12;
 	visible = true;
@@ -37,16 +49,36 @@ export class ProfileComponent implements OnInit {
 	@ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
 	@ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-	constructor() {
+	constructor(
+		private tutorService: TutorService,
+		private httpService: HttpService
+	) 
+	{
 		this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
 			startWith(null),
 			map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice()))
 		);
 	}
-	basicInfoComplete() {
+
+	basicInfoComplete(basicInfo: NgForm){
+		this.tutorProfile = basicInfo.value;
+		this.tutorProfile.tid = this.tutorService.getTutorDetials().tid;
+		console.log(this.tutorProfile);
 		this.formProgress += 25;
+		this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res)=>{
+			console.log(res);
+		})
 	}
-	profileComplete() {
+
+	profileComplete(profileForm: NgForm) {
+		// this.tutorProfileDetails.graduationYear = profileForm.value.graduationYear;
+		// this.tutorProfileDetails.workInstitution = profileForm.value.workInstitution;
+		// this.tutorProfileDetails.studyInstitution = profileForm.value.studyInstitution;
+		// this.tutorProfileDetails.workTitle = profileForm.value.workTitle;
+		// this.tutorProfileDetails.majorSubject = profileForm.value.majorSubject;
+		// this.tutorProfileDetails.description = profileForm.value.description;
+		this.tutorProfileDetails = profileForm.value;
+		console.log(this.tutorProfileDetails);
 		this.formProgress += 25;
 	}
 	verificationComplete() {

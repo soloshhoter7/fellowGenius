@@ -48,21 +48,32 @@ body {
 
 .form-control-placeholder {
     position: absolute;
-    top: 0;
-    padding: 7px 0 0 13px;
+    top: 5px;
+    left: 11px;
+    padding-left: 5px;
+    padding-right: 5px;
     transition: all 500ms;
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .form-control:focus+.form-control-placeholder,
 .form-control:valid+.form-control-placeholder {
     font-size: 90%;
-    transform: translate3d(0, -100%, 0);
-    opacity: 1;
+    transform: translate3d(0, -75%, 0);
 }
 
-.form-control-placeholder.ng-dirty {
-    opacity: 0;
+input.ng-touched+input.ng-dirty {
+    font-size: 90%;
+    transform: translate3d(0, -75%, 0);
+}
+
+label {
+    background-color: white;
+    margin: 0;
+}
+
+.form-control {
+    padding-left: 15px;
 }
 
 input {
@@ -137,11 +148,18 @@ input.ng-invalid.ng-touched {
 }
 
 input.ng-valid {
-    border-left-color: rgb(100, 236, 100);
+    border-left-color: green;
     border-left-width: 3px;
 }
 
 .form-control:focus {
     border-color: #8093eb;
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(131, 137, 221, 0.5);
+}
+
+.alert {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 50px;
 }
