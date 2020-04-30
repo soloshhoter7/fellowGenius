@@ -1,0 +1,95 @@
+.local {
+	position: fixed;
+	left: 1rem;
+	bottom: 1rem;
+	width: 20vw;
+	height: 20vh;
+	border-radius: 5px;
+	overflow: hidden;
+	z-index: 5;
+}
+
+.remote {
+	position: fixed;
+	left: 1rem;
+	bottom: 11rem;
+	width: 20vw;
+	height: 20vh;
+	border-radius: 5px;
+	overflow: hidden;
+	z-index: 5;
+}
+.screen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 4;
+}
+button {
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.control-icons {
+	margin-top: 5px;
+	font-size: 20px;
+}
+.control-nav {
+	background: rgb(57, 57, 57);
+	width: fit-content;
+	border-radius: 5px;
+	position: fixed;
+	bottom: 15vh;
+	left: 40vw;
+	z-index: 1000;
+	/* box-shadow: 0px 15px 8px rgb(199, 203, 217, 0.5); */
+}
+.timer {
+	color: #c0c0c0;
+	font-size: 25px;
+	margin-left: 10px;
+	border-right: 1px solid #c0c0c0;
+	padding-right: 10px;
+}
+.bg-image {
+	/* The image used */
+	background-color: #337ab8;
+	text-align: center;
+	z-index: 6;
+}
+.blurred-icons {
+	/* color: #337ab8; */
+	color: white;
+	font-size: 50px;
+	margin-top: 50px;
+}
+.short-name {
+	position: relative;
+	z-index: 3;
+	border-radius: 100%;
+	background-color: rgb(199, 203, 217);
+	top: 20vh;
+	margin-left: 42vw;
+	box-shadow: 0px 0px 50px rgb(113, 113, 172);
+	width: 15vw;
+	height: 15vw;
+	font-size: 100px;
+	text-align: center;
+	/* padding-top: 6vh; */
+	border-radius: 3px solid blue;
+	border-style: hidden;
+}
+.container {
+	width: 100vw;
+	height: 100vh;
+	background-image: linear-gradient(to bottom, rgba(26, 34, 56, 0.9), rgba(26, 34, 56, 1));
+	position: fixed;
+}
+.box {
+	width: 100vw;
+	height: 100vh;
+	background-image: linear-gradient(to bottom, rgba(26, 34, 56, 0.9), rgba(26, 34, 56, 1));
+	position: fixed;
+}
