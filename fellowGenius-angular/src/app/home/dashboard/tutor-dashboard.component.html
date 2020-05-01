@@ -1,16 +1,16 @@
 <body style="padding: 50px;">
     <div class="outer-box">
-        <div class="card" >
+        <div class="card">
           <div class="card-header">
             <h2 style="font-weight: 400; display: inline;">Complete Profile</h2>
             <span class="" style="float:right"><button class="btn btn-outline-primary"(click)="closeCompleteProfile()">close</button></span>
           </div>
           <div class="card-body">
-            <h1 style="display: inline;">33% completed</h1>
+            <h1 style="display: inline;">{{tutorProfileDetails.profileCompleted}}% completed</h1>
             <a routerLink="/home/profile" class="completeProfileLink" style="margin-left: 20px;"><h2>Complete your profile</h2></a>
             <div class="progress-Bar">
               <div class="outer-progressBar">
-                <div class="inner-progressBar"></div>
+                <div class="inner-progressBar" [style.width.%]="tutorProfileDetails.profileCompleted"></div>
               </div>
             </div>
           </div>

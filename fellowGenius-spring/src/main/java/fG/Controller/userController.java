@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fG.Entity.TutorProfileDetails;
 import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorLoginModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
+import fG.Model.TutorVerificationModel;
 import fG.Service.UserService;
 
 @RestController
@@ -54,6 +56,11 @@ public class userController {
 		return service.getTutorDetails(email);
 	}
 	
+	//for getting tutor profile details after login
+	@RequestMapping(value="/getTutorProfileDetails",produces= {"application/json"})
+	public TutorProfileDetails getTutorProfileDetails(String tid) {
+		return service.getTutorProfileDetails(Integer.valueOf(tid));
+	}
 	// for saving tutor registration details
 	@RequestMapping(value = "/registerTutor")
 	public boolean saveTutorProfile(@RequestBody TutorProfileModel tutorModel)throws IOException {
@@ -68,28 +75,28 @@ public class userController {
 	//for updating basic info of tutor
 	@RequestMapping(value = "/updateTutorBasicInfo")
 	public void updateTutorBasicInfo(@RequestBody TutorProfileModel tutorProfileModel) throws IOException{
-		System.out.println("..............................................................................................................."+tutorProfileModel.getProfilePictureUrl());
 		service.updateTutorBasicInfo(tutorProfileModel);
 
 	}
 
+	//for updating tutor details
+		@RequestMapping(value = "/updateTutor",produces = "application/JSON")
+		public void updateTutorProfile(@RequestBody TutorProfileDetailsModel tutorDetailsModel)throws IOException {
+			service.updateTutorProfile(tutorDetailsModel);
+			
+		}
+	//for updating tutor Verification
+		@RequestMapping(value = "/updateTutorVerification",produces = "application/JSON")
+		public void updateTutorVerification(@RequestBody TutorVerificationModel tutorVerify)throws IOException {
+			System.out.println(tutorVerify.getTid());
+			service.updateTutorVerification(tutorVerify);
+		}
 	//for checking tutor login
 	@RequestMapping(value = "/loginTutor",produces = "application/JSON")
 	public boolean onLoginTutor(@RequestBody TutorLoginModel tutorLoginModel) {
 		return service.onTutorLogin(tutorLoginModel);
 	}
 	
-	//for updating tutor details
-	@RequestMapping(value = "/updateTutor",produces = "application/JSON")
-	@ResponseBody
-	public boolean updateTutorProfile(TutorProfileDetailsModel tutorDetailsModel)throws IOException {
-		if(service.updateTutorProfile(tutorDetailsModel)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 	
 	//fetch list of all teachers
 	@RequestMapping(value= "/fetchTutorList", produces = "application/JSON")

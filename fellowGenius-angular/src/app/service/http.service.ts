@@ -7,6 +7,7 @@ import { tutorLoginModel } from '../model/tutorLoginModel';
 import { tutorProfile } from '../model/tutorProfile';
 import { tutorProfileDetails } from '../model/tutorProfileDetails';
 import { bookingDetails } from '../model/bookingDetails';
+import { TutorVerification } from '../model/tutorVerification';
 
 @Injectable({
 	providedIn: 'root'
@@ -35,9 +36,15 @@ export class HttpService {
 	}
 
 	//for updating tutor profile after completing basic info form
-	updateTutorProfile(basicInfo: tutorProfile){
-		return this.http.post('http://localhost:8080/fellowGenius/updateTutorBasicInfo', basicInfo)
-
+	updateTutorProfile(basicInfo: tutorProfile) {
+		return this.http.post('http://localhost:8080/fellowGenius/updateTutorBasicInfo', basicInfo);
+	}
+	//for updating tutor profile details after completing tutor profile details form
+	updateTutorProfileDetails(tutorProfileDetails: tutorProfileDetails) {
+		return this.http.post('http://localhost:8080/fellowGenius/updateTutor', tutorProfileDetails);
+	}
+	updateTutorVerification(tutorVerification: TutorVerification) {
+		return this.http.post('http://localhost:8080/fellowGenius/updateTutorVerification', tutorVerification);
 	}
 	// for checking tutor login
 	checkTutorLogin(tutorLoginModel: tutorLoginModel): Observable<Object> {
@@ -51,6 +58,7 @@ export class HttpService {
 			}
 		});
 	}
+
 	//fetch all the tutors for find tutor page
 	getTutorList() {
 		return this.http.get<tutorProfileDetails[]>('http://localhost:8080/fellowGenius/fetchTutorList');
@@ -72,6 +80,14 @@ export class HttpService {
 			params: {
 				bid: bid.toString(),
 				approvalStatus: approvalStatus
+			}
+		});
+	}
+
+	getTutorProfileDetails(tid: number): Observable<tutorProfileDetails> {
+		return this.http.get<tutorProfileDetails>('http://localhost:8080/fellowGenius/getTutorProfileDetails', {
+			params: {
+				tid: tid.toString()
 			}
 		});
 	}

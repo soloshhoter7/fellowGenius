@@ -68,7 +68,7 @@ export class TutorProfileComponent implements OnInit {
 		this.bookingDetails.meetingId = this.onGenerateString(10);
 		this.bookingDetails.tutorId = this.teacherProfile.tid;
 		this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
-		this.bookingDetails.tutorName = this.teacherProfile.name;
+		this.bookingDetails.tutorName = this.teacherProfile.fullName;
 		this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
 		this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
 			if (res == true) {

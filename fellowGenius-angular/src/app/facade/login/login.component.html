@@ -8,7 +8,9 @@
                 fellowGenius
             </div>
         </div>
-
+        <div class="alert alert-danger" role="alert" *ngIf="incorrectLoginDetails">
+            <p style="text-align: center;">Incorrect email or password !</p>
+            </div>
         <div class="row box">
             <div class="col-sm-5 boxShadow" style="border-right: 1px solid rgb(199, 203, 217);">
                 <img class="picture" src="../../../assets/images/student3.svg" *ngIf="loginDetailsService.loginType=='student'">
@@ -20,9 +22,7 @@
 
 
             <div class="col-sm-5 offset-sm-1 paddingZero">
-                <!-- <div class="alert alert-danger" role="alert" *ngIf="incorrectLoginDetails"> -->
-                <p style="margin-left:120px">Wrong credentials !</p>
-                <!-- </div> -->
+              
                 <form (ngSubmit)="onLogin(l)" #l="ngForm">
                     <div class="form-group">
                         <input type="email" id="email" class="form-control" ngModel name="email" required email #email="ngModel">

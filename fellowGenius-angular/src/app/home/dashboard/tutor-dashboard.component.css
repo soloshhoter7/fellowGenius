@@ -16,7 +16,7 @@
 .inner-progressBar {
 	background-color: #241084;
 	height: inherit;
-	width: 33%;
+	width: 0;
 	border-radius: 8px;
 }
 .completeProfileLink {

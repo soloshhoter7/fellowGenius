@@ -9,6 +9,7 @@ import { StudentProfileModel } from 'src/app/model/studentProfile';
 import { StudentService } from 'src/app/service/student.service';
 import { tutorProfile } from 'src/app/model/tutorProfile';
 import { TutorService } from 'src/app/service/tutor.service';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
@@ -24,10 +25,11 @@ export class LoginComponent implements OnInit {
 	) {}
 	studentProfile: StudentProfileModel;
 	tutorProfile: tutorProfile;
+	tutorProfileDetails: tutorProfileDetails;
 	hide: boolean = true;
 	studentLoginDetails = new StudentLoginModel();
 	tutorLoginDetails = new tutorLoginModel();
-	incorrectLoginDetails : boolean = false;
+	incorrectLoginDetails: boolean = false;
 	ngOnInit(): void {
 		console.log('login type ->' + this.loginDetailsService.getLoginType());
 		if (this.loginDetailsService.getLoginType() == null) {
@@ -55,7 +57,6 @@ export class LoginComponent implements OnInit {
 					} else if (res == false) {
 						console.log('login details incorrect !');
 						this.incorrectLoginDetails = true;
-
 					}
 				});
 			} else if (loginType == 'tutor') {
@@ -69,7 +70,13 @@ export class LoginComponent implements OnInit {
 							this.tutorProfile = res;
 							this.tutorService.setTutorDetails(this.tutorProfile);
 							console.log(this.tutorService.getTutorDetials());
-							this.router.navigate([ 'home' ]);
+							this.httpService.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
+								this.tutorProfileDetails = res;
+								this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+								console.log('-------------------->');
+								console.log(this.tutorProfileDetails.profileCompleted);
+								this.router.navigate([ 'home' ]);
+							});
 						});
 					} else if (res == false) {
 						console.log('login details incorrect !');

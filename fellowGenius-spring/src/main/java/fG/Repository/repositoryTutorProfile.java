@@ -24,5 +24,4 @@ public interface repositoryTutorProfile extends JpaRepository<TutorProfile, Inte
 			String dob, String address1, String address2, String country,
 			String state, String profile_Picture_url, Integer tid);
 
-
 }

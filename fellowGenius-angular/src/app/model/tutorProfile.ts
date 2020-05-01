@@ -10,5 +10,4 @@ export class tutorProfile {
 	public addressLine2: string;
 	public profilePictureUrl: string;
 	public password: string;
-	public gradeLevel: string;
 }

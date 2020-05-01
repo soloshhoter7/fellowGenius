@@ -10,14 +10,17 @@ import fG.Entity.StudentProfile;
 import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
+import fG.Entity.TutorVerification;
 import fG.Model.StudentLoginModel;
 import fG.Model.TutorLoginModel;
 import fG.Model.TutorProfileDetailsModel;
+import fG.Model.TutorVerificationModel;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
+import fG.Repository.repositoryTutorVerification;
 
 @Component
 public class dao {
@@ -35,6 +38,9 @@ public class dao {
 
 	@Autowired
 	repositoryTutorLogin repTutorLogin;
+	
+	@Autowired
+	repositoryTutorVerification repTutorVerification;
 
 	// for saving student profile details
 	public boolean saveStudentProfile(StudentProfile studentProfile) {
@@ -103,15 +109,16 @@ public class dao {
 	}
 
 	// for updating tutor profile details
-	public boolean updateTutorProfile(TutorProfileDetailsModel tutorModel) {
-		if (repTutorProfileDetails.saveUpdate(tutorModel.getName(), tutorModel.getAvailability(),
-				tutorModel.getSubject(), tutorModel.getGender(), tutorModel.getPrice(), tutorModel.getCollege(),
-				tutorModel.getDescription(), tutorModel.getRating(), tutorModel.getReviewCount(),
-				tutorModel.getLessonCompleted(), tutorModel.getProfilePictureUrl(), tutorModel.getTid())) {
-			return true;
-		} else {
-			return false;
-		}
+	public void updateTutorProfile(TutorProfileDetailsModel tutorModel) {
+		repTutorProfileDetails.saveUpdate(
+				tutorModel.getFullName(),
+				tutorModel.getSubject1(),
+				tutorModel.getSubject2(),tutorModel.getSubject3(),
+				tutorModel.getPrice1(),tutorModel.getPrice2(),tutorModel.getPrice3(),
+				tutorModel.getStudyInstitution(),tutorModel.getMajorSubject(),	tutorModel.getGraduationYear(),
+				tutorModel.getWorkTitle(),tutorModel.getWorkInstitution(),tutorModel.getDescription(),tutorModel.getRating(),
+				tutorModel.getReviewCount(),tutorModel.getLessonCompleted(),tutorModel.getProfilePictureUrl(),tutorModel.getProfileCompleted(),tutorModel.getGradeLevel(),
+				tutorModel.getTid());
 	}
 
 	// for getting tutors list for finding tutors
@@ -128,6 +135,24 @@ public class dao {
 	public void saveTutorID(TutorProfileDetails tutDetails) {
 		repTutorProfileDetails.save(tutDetails);
 
+	}
+	//for saving tutor Verification Details
+	public void saveTutorVerification(TutorVerification tutorVerification) {
+		repTutorVerification.save(tutorVerification);
+	}
+
+	public boolean updateTutorVerification(TutorVerificationModel tutorVerify) {
+        repTutorVerification.updateTutorVerification(tutorVerify.getCountry(), tutorVerify.getState(), tutorVerify.getIdType(), tutorVerify.getIdNumber(),
+        		tutorVerify.getIdDocUrl(), tutorVerify.getEducationType(), tutorVerify.getEducationInstitution(), tutorVerify.getFieldOfStudy(), tutorVerify.getEducationDocUrl(),tutorVerify.getTid());
+        return true;
+	}
+
+	public TutorProfileDetails getTutorProfileDetails(Integer tid) {
+		return repTutorProfileDetails.idExist(tid);
+	}
+	
+	public void updateProfileCompleted(Integer profileCompleted) {
+	    repTutorProfileDetails.updateProfileCompleted(profileCompleted);
 	}
 
 }

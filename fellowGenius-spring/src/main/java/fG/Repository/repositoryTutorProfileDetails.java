@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfileDetails;
 
 @Repository
@@ -14,10 +15,20 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 	
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE tutor_profile_details SET name=?1, availability=?2, subject=?3, gender=?4, price=?5, college=?6, description=?7, rating=?8, reviewCount=?9, lessonCompleted=?10, profilePictureUrl=?11 WHERE tid=?12", nativeQuery = true)
-	public boolean saveUpdate(String name, String availability, String subject, 
-			String gender, String price, String college, String description,
-			Integer rating, Integer reviewCount, Integer lessonCompleted,
-			String profilePictureUrl, Integer tid);
-
+	@Query(value = "UPDATE tutor_profile_details SET full_name=?1,subject1=?2,subject2=?3,subject3=?4,price1=?5,price2=?6,price3=?7,study_institution=?8,major_subject=?9,graduation_year=?10,work_title=?11,work_institution=?12,description=?13,rating=?14,review_count=?15,lesson_completed=?16,profile_picture_url=?17,profile_completed=?18,grade_level=?19 WHERE tid=?20", nativeQuery = true)
+	public void saveUpdate(String fullName,String subject1,
+			String subject2,String subject3,String price1,String price2,String price3,
+			String studyInstitution,String majorSubject,String graduationYear,
+			String workTitle,String workInstitution,String description,Integer rating,
+			Integer reviewCount,Integer lessonCompleted,String profilePictureUrl,Integer profileCompleted,
+			String gradeLevel,
+			Integer tid);
+   
+	@Query(value = "SELECT * FROM tutor_profile_details WHERE tid=?1", nativeQuery = true)
+	TutorProfileDetails idExist(Integer tid);
+	
+	@Transactional
+	@Modifying
+	@Query(value ="UPDATE tutor_profile_details SET profile_completed=?1", nativeQuery = true)
+	void updateProfileCompleted(Integer profileCompleted);
 }

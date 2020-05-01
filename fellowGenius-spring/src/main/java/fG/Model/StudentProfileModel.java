@@ -8,6 +8,7 @@ public class StudentProfileModel {
 	String contact;
 	String password;
 	String subject1;
+	String profilePictureUrl;
 	
 	public String getSubject1() {
 		return subject1;
@@ -51,10 +52,18 @@ public class StudentProfileModel {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getProfilePictureUrl() {
+		return profilePictureUrl;
+	}
+	public void setProfilePictureUrl(String profilePictureUrl) {
+		this.profilePictureUrl = profilePictureUrl;
+	}
 	@Override
 	public String toString() {
 		return "StudentProfileModel [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", password=" + password + "]";
+				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", subject1=" + subject1
+				+ ", profilePictureUrl=" + profilePictureUrl + "]";
 	}
-	
+    
 }

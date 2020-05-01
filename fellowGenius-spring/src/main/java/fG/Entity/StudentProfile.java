@@ -19,6 +19,7 @@ public class StudentProfile {
 	String dateOfBirth;
 	String contact;
 	String subject1;
+	String profilePictureUrl;
 	
 	public String getSubject1() {
 		return subject1;
@@ -56,22 +57,18 @@ public class StudentProfile {
 	public void setContact(String contact) {
 		this.contact = contact;
 	}
-//	public String getUserName() {
-//		return userName;
-//	}
-//	public void setUserName(String userName) {
-//		this.userName = userName;
-//	}
-//	public String getPassword() {
-//		return password;
-//	}
-//	public void setPassword(String password) {
-//		this.password = password;
-//	}
+	public String getProfilePictureUrl() {
+		return profilePictureUrl;
+	}
+	public void setProfilePictureUrl(String profilePictureUrl) {
+		this.profilePictureUrl = profilePictureUrl;
+	}
 	@Override
 	public String toString() {
-		return "studentProfile [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + "]";
-	}
+		return "StudentProfile [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
+				+ dateOfBirth + ", contact=" + contact + ", subject1=" + subject1 + ", profilePictureUrl="
+				+ profilePictureUrl + "]";
+	} 
+	
 	
 }

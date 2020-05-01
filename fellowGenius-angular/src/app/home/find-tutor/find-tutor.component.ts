@@ -59,7 +59,7 @@ export class FindTutorComponent implements OnInit {
 		if (this.name != '') {
 			// this.someValue = true;
 			this.filterSearch = this.filterSearch.filter((res) => {
-				return res.name.toLocaleLowerCase().match(this.name.toLocaleLowerCase());
+				return res.fullName.toLocaleLowerCase().match(this.name.toLocaleLowerCase());
 			});
 		} else {
 			this.someValue = false;
@@ -67,50 +67,50 @@ export class FindTutorComponent implements OnInit {
 		}
 	}
 
-	searchSubject() {
-		if (this.subject != '') {
-			// this.someValue = true;
-			this.filterSearch = this.filterSearch.filter((res) => {
-				return res.subject.toLocaleLowerCase().match(this.subject.toLocaleLowerCase());
-			});
-		} else {
-			this.someValue = false;
-			this.ngOnInit();
-		}
-	}
+	// searchSubject() {
+	// 	if (this.subject != '') {
+	// 		// this.someValue = true;
+	// 		this.filterSearch = this.filterSearch.filter((res) => {
+	// 			return res.subject.toLocaleLowerCase().match(this.subject.toLocaleLowerCase());
+	// 		});
+	// 	} else {
+	// 		this.someValue = false;
+	// 		this.ngOnInit();
+	// 	}
+	// }
 
-	searchAvailability() {
-		if (this.availability != '') {
-			// this.someValue = true;
-			this.filterSearch = this.filterSearch.filter((res) => {
-				return res.availability.toLocaleLowerCase().match(this.availability.toLocaleLowerCase());
-			});
-		} else {
-			this.someValue = false;
-			this.ngOnInit();
-		}
-	}
-	searchPrice() {
-		if (this.price != '') {
-			//this.someValue = true;
-			this.filterSearch = this.filterSearch.filter((res) => {
-				return res.price.toLocaleLowerCase().match(this.price.toLocaleLowerCase());
-			});
-		} else {
-			this.someValue = false;
-			this.ngOnInit();
-		}
-	}
+	// searchAvailability() {
+	// 	if (this.availability != '') {
+	// 		// this.someValue = true;
+	// 		this.filterSearch = this.filterSearch.filter((res) => {
+	// 			return res.availability.toLocaleLowerCase().match(this.availability.toLocaleLowerCase());
+	// 		});
+	// 	} else {
+	// 		this.someValue = false;
+	// 		this.ngOnInit();
+	// 	}
+	// }
+	// searchPrice() {
+	// 	if (this.price != '') {
+	// 		//this.someValue = true;
+	// 		this.filterSearch = this.filterSearch.filter((res) => {
+	// 			return res.price.toLocaleLowerCase().match(this.price.toLocaleLowerCase());
+	// 		});
+	// 	} else {
+	// 		this.someValue = false;
+	// 		this.ngOnInit();
+	// 	}
+	// }
 
-	searchGender() {
-		if (this.gender != '') {
-			// this.someValue = true;
-			this.filterSearch = this.filterSearch.filter((res) => {
-				return res.gender.toLocaleLowerCase().match(this.gender.toLocaleLowerCase());
-			});
-		} else {
-			this.someValue = false;
-			this.ngOnInit();
-		}
-	}
+	// searchGender() {
+	// 	if (this.gender != '') {
+	// 		// this.someValue = true;
+	// 		this.filterSearch = this.filterSearch.filter((res) => {
+	// 			return res.gender.toLocaleLowerCase().match(this.gender.toLocaleLowerCase());
+	// 		});
+	// 	} else {
+	// 		this.someValue = false;
+	// 		this.ngOnInit();
+	// 	}
+	// }
 }

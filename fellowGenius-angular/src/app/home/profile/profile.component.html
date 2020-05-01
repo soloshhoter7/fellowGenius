@@ -115,7 +115,7 @@
                                             {{fruit}}
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                         </mat-chip>
-                                        <input placeholder="New Subject ..." #fruitInput [formControl]="fruitCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+                                        <input placeholder="New Subject ... Max 3" #fruitInput [formControl]="fruitCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
                                     </mat-chip-list>
                                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                                         <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
@@ -203,7 +203,7 @@
                 </div>
                 <!-- -------------------------------------------- Verification Form ------------------------------------------------------------------ -->
                 <div *ngIf="formProgress==62">
-                    <form>
+                    <form #verificationForm="ngForm">
                         <div class="row" style="padding-left: 15px;margin-bottom: 5px;">
                             <img src="../../../assets/icons/info.svg" alt="info" style="width: 20px; height: 20px;">
                             <p style="margin-left: 10px;font-weight: 300;color:#241084">Once approved, your new verified Status also means you will rank higher in search results , attracting more students</p>
@@ -308,7 +308,7 @@
                         <div class="row" style="margin-top:5px;">
                             <div class="col-md-4"></div>
                             <div class="col-md-4">
-                                <button class="btn btn-outline-success" (click)="verificationComplete()"> Continue </button>
+                                <button class="btn btn-outline-success" (click)="verificationComplete(verificationForm)" [disabled]="!verificationForm.valid"> Submit </button>
                             </div>
                             <div class="col-md-4"></div>
                         </div>

@@ -11,11 +11,13 @@ import fG.Entity.StudentProfile;
 import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
+import fG.Entity.TutorVerification;
 import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorLoginModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
+import fG.Model.TutorVerificationModel;
 
 @Service
 public class UserService {
@@ -68,15 +70,16 @@ public class UserService {
 	}
 	
 	// saving updating details of tutor
-		public boolean updateTutorProfile(TutorProfileDetailsModel tutorModel) {
-			
-			if(dao.updateTutorProfile(tutorModel) == true) {
-				return true;
-			}
-			else {
-			return false;
-			}
+		public void updateTutorProfile(TutorProfileDetailsModel tutorModel) {
+			     dao.updateTutorProfile(tutorModel);
+			     if(tutorModel.getStudyInstitution()==null) {
+			    	 dao.updateProfileCompleted(37);
+			     }else {
+				 dao.updateProfileCompleted(62);
+			     }
 		}
+		
+		
 
 		// saving registration details of tutor
 		public boolean saveTutorProfile(TutorProfileModel tutorModel) {
@@ -94,8 +97,11 @@ public class UserService {
 				dao.saveTutorLogin(tutorLogin);
 				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 				tutProfileDetails.setTid(tutorProfile.getTid());
-				tutProfileDetails.setName(tutorProfile.getFullName());
+				tutProfileDetails.setProfileCompleted(12);
 				dao.saveTutorID(tutProfileDetails);
+				TutorVerification tutVerify = new  TutorVerification();
+				tutVerify.setTid(tutorProfile.getTid());
+				dao.saveTutorVerification(tutVerify);
 				return true;
 			}
 			else {
@@ -117,9 +123,8 @@ public class UserService {
 			tutorProfile.setCountry(tutorModel.getCountry());
 			tutorProfile.setState(tutorModel.getState());
 			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-			System.out.println("profile picture in entity ..............."+tutorProfile.getProfilePictureUrl());
 			dao.updateTutorBasicInfo(tutorProfile);
-			
+			dao.updateProfileCompleted(37);
 		}
 		
 		// validation of tutor login 
@@ -147,6 +152,20 @@ public class UserService {
 		// for getting the list of teachers
 		public List<?> getTutorList() {
 			return dao.getTutorList();
+		}
+
+		public boolean updateTutorVerification(TutorVerificationModel tutorVerify) {
+			if(dao.updateTutorVerification(tutorVerify) == true) {
+				dao.updateProfileCompleted(99);
+				return true;
+			}
+			else {
+			return false;
+			}
+		}
+        //getting tutor profile details with tid
+		public TutorProfileDetails getTutorProfileDetails(Integer tid) {
+			return dao.getTutorProfileDetails(tid);
 		}
 
 }

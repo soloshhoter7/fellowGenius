@@ -13,6 +13,7 @@ import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
+import { TutorVerification } from 'src/app/model/tutorVerification';
 
 @Component({
 	selector: 'app-profile',
@@ -20,12 +21,12 @@ import { finalize } from 'rxjs/operators';
 	styleUrls: [ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit {
-
 	ngOnInit(): void {
-		 this.tutorProfile = this.tutorService.getTutorDetials();
-
+		this.formProgress = this.tutorService.getTutorProfileDetails().profileCompleted;
+		this.tutorProfile = this.tutorService.getTutorDetials();
 	}
-
+	basicTutorProfileDetails = new tutorProfileDetails();
+	gradeLevel;
 	//firebase connection
 	uploadedProfilePicture: File = null;
 	uploadedIdDocument: File = null;
@@ -41,10 +42,10 @@ export class ProfileComponent implements OnInit {
 		horizontalPosition: 'center',
 		verticalPosition: 'top'
 	};
-
-	tutorProfileDetails = new tutorProfileDetails();
-	mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
+	mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
 	tutorProfile = new tutorProfile();
+	tutorProfileDetails = new tutorProfileDetails();
+	tutorVerification = new TutorVerification();
 	profileCompleted = false;
 	formProgress = 12;
 	visible = true;
@@ -64,7 +65,6 @@ export class ProfileComponent implements OnInit {
 		'java',
 		'Internet Fundamentals'
 	];
-
 	@ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
 	@ViewChild('auto') matAutocomplete: MatAutocomplete;
 
@@ -72,37 +72,73 @@ export class ProfileComponent implements OnInit {
 		private tutorService: TutorService,
 		private httpService: HttpService,
 		private firebaseStorage: AngularFireStorage,
-		private snackBar: MatSnackBar,
-	) 
-	{
+		private snackBar: MatSnackBar
+	) {
 		this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
 			startWith(null),
 			map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice()))
 		);
 	}
 
-	basicInfoComplete(basicInfo: NgForm){
+	updateBasicTutorProfile(profilePictureUrl) {
+		console.log(this.tutorService.getTutorDetials().profilePictureUrl);
+		this.basicTutorProfileDetails.subject1 = this.fruits[0];
+		this.basicTutorProfileDetails.subject2 = this.fruits[1];
+		this.basicTutorProfileDetails.subject3 = this.fruits[2];
+		this.basicTutorProfileDetails.gradeLevel = this.gradeLevel;
+		this.basicTutorProfileDetails.tid = this.tutorService.getTutorDetials().tid;
+		this.basicTutorProfileDetails.profilePictureUrl = profilePictureUrl;
+		this.tutorService.setTutorProfileDetails(this.basicTutorProfileDetails);
+		console.log(this.basicTutorProfileDetails);
+		this.httpService.updateTutorProfileDetails(this.basicTutorProfileDetails).subscribe((res) => {});
+	}
+
+	basicInfoComplete(basicInfo: NgForm) {
+		this.gradeLevel = basicInfo.value.gradeLevel;
 		this.tutorProfile = basicInfo.value;
 		this.tutorProfile.tid = this.tutorService.getTutorDetials().tid;
-		if(this.profilePictureUrl == null){
-			console.log("Unable to upload");
-		}
-		else{console.log(this.tutorProfile);
+		if (this.profilePictureUrl == null) {
+			console.log('Unable to upload');
+		} else {
+			console.log(this.basicTutorProfileDetails);
 			this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
-			console.log(this.tutorProfile)
+			console.log('basic info details ->');
+			console.log(this.tutorProfile);
 			this.formProgress += 25;
-			this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res)=>{
-				console.log(res);
-			})}
+			this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res) => {
+				this.updateBasicTutorProfile(this.tutorProfile.profilePictureUrl);
+			});
+		}
 	}
 
 	profileComplete(profileForm: NgForm) {
 		this.tutorProfileDetails = profileForm.value;
 		console.log(this.tutorProfileDetails);
+		this.tutorProfileDetails.subject1 = this.tutorService.getTutorProfileDetails().subject1;
+		this.tutorProfileDetails.subject2 = this.tutorService.getTutorProfileDetails().subject2;
+		this.tutorProfileDetails.subject3 = this.tutorService.getTutorProfileDetails().subject3;
+		this.tutorProfileDetails.tid = this.tutorService.getTutorProfileDetails().tid;
+		this.tutorProfileDetails.gradeLevel = this.tutorService.getTutorProfileDetails().gradeLevel;
+		this.tutorProfileDetails.profilePictureUrl = this.tutorService.getTutorDetials().profilePictureUrl;
+		this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
+			console.log(res);
+			console.log('profile details have been updated !');
+		});
 		this.formProgress += 25;
 	}
-	verificationComplete() {
+	verificationComplete(verificationForm: NgForm) {
 		this.formProgress = 99;
+		this.tutorVerification = verificationForm.value;
+		this.tutorVerification.idDocUrl = this.idDocUrl;
+		this.tutorVerification.educationDocUrl = this.educationDocUrl;
+		this.tutorVerification.tid = this.tutorService.getTutorDetials().tid;
+		console.log(this.tutorVerification);
+		if (this.idDocUrl == null && this.educationDocUrl == null) {
+			console.log('verification not possible !');
+		} else {
+			console.log('verification possible' + this.tutorVerification.tid);
+			this.httpService.updateTutorVerification(this.tutorVerification).subscribe();
+		}
 	}
 
 	//-----------------------------------------firebase management-------------------------
