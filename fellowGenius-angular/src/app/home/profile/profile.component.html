@@ -98,9 +98,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <input type="text" id="city" name="city" ngModel class="form-control" required>
+                                    <label class="form-control-placeholder" for="city">City</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <input #profilePicture hidden="true" type="file" onclick="this.value=null" (change)="profilePictureChange($event)" required/>
                                     <button class="btn btn-outline-primary" (click)="profilePicture.click()">Upload profile picture</button>
-                                    <!-- <button class="btn">CLICK</button> -->
                                 </div>
                             </div>
                         </div>
@@ -317,5 +322,120 @@
                 <!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
             </div>
         </div>
+    </div>
+
+    <!-- after profile Completed  -->
+    <div class="container " *ngIf="formProgress==99">
+        <!-- <div class="row">
+       {{tutorProfile.fullName}},,{{tutorProfile.email}}
+       <br>
+       {{tutorProfile.profilePictureUrl}},{{tutorProfile.addressLine1}},,{{tutorProfile.addressLine2}}
+       <br>
+       {{tutorProfile.state}},{{tutorProfile.country}}
+    </div> -->
+       <div class="row">
+           <div class="col-md-8">
+                <!-- for profile picture -->
+               <div class="row Box">
+                <div class="col-md-2" style="margin-right: 30px;">
+                    <img [src]="profilePictureDisplay" alt="profilePicture" style="width:100px;height:100px;border-radius: 5px;">
+                </div>   
+                <div class="col-md-9">
+                    <div class="row">
+                        <p style="font-size: 2.4rem;line-height: 1.333;font-weight: 300;margin:0;width: 100%;">{{ tutorProfile.fullName }}</p>
+                        <p style="font-size: 1.2rem;line-height: 1.5;font-weight:300;margin:0;width: 100%;">{{tutorProfile.email}}</p>
+                        <p style="font-size: 1.2rem;line-height: 1.5;font-weight:200;margin:0;width: 100%;">{{tutorProfile.city}} , {{ tutorProfile.state}}</p>
+                    </div>
+                </div>
+               </div>
+               <!-- for public Profile -->
+               <div class="row Box">
+                <div class="row marginZero" style="width: 100%;">
+                  <h1>My Public Profile</h1>
+                </div>
+                <div style="width: 100%;">
+                    <div><h2>Description</h2></div>
+                    <div><p>{{ tutorFormDetails.description }}</p></div>
+                </div>
+                <div style="width: 100%;">
+                    <div><h2>My specialities</h2></div>
+                    <div><p>Add Something about your teaching specialities</p></div>
+                </div>
+            </div>
+               <!-- for subjects -->
+            <div class="row Box">
+                <div class="row marginZero" style="width: 100%;">
+                  <h1>My Subjects</h1>
+                </div>
+                <div class="content-box">
+                    <div style="width: 100%;">
+                        <div><h2>Grade i can tutor</h2></div>
+                        <div><p>{{  tutorFormDetails.gradeLevel }}</p></div>
+                    </div>
+                    <div style="width: 100%;">
+                        <div><h2>Subjects I can teach</h2></div>
+                        <div><div class="displaySubjects">{{ tutorFormDetails.subject1 }}</div> <div class="displaySubjects">{{ tutorFormDetails.subject2}}</div> <div class="displaySubjects">{{ tutorFormDetails.subject3 }}</div></div>
+                    </div>
+                </div>
+                
+            </div>
+              <!-- for education and certificates -->
+           <div class="row Box">
+            <div class="row marginZero" style="width: 100%;">
+              <h1>My Education & Certificates</h1>
+            </div>
+            <div style="width: 100%;">
+                <div><h2>B.tech, {{ tutorFormDetails.majorSubject}}</h2></div>
+                <div><p>{{ tutorFormDetails.studyInstitution }}</p></div>
+            </div>
+            <div style="width: 100%;">
+                <div><p style="display: inline;">2017</p>&nbsp;-&nbsp;<p style="display: inline;">{{tutorFormDetails.graduationYear}}</p></div>
+            </div>
+            </div>
+
+
+        <div class="row Box">
+            <div class="row marginZero" style="width: 100%;">
+              <h1>Basic Info</h1>
+            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div style="width: 100%;">
+                           <div><h3 style="font-weight: 500;">Name</h3></div>
+                           <div><p>{{tutorProfile.fullName}}</p></div>
+                        </div>
+                        <div style="width: 100%;">
+                            <div><h3 style="font-weight: 500;">Contact</h3></div>
+                            <div><p>{{ tutorProfile.contact }}</p>
+                            </div>
+                        </div>
+                        <div style="width: 100%;">
+                            <div><h3 style="font-weight: 500;">Date Of Birth</h3></div>
+                            <div><p>{{ tutorProfile.dateOfBirth }}</p></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="width: 100%;">
+                            <div><h3 style="font-weight: 500;">Address</h3></div>
+                            <div>
+                                <p>{{ tutorProfile.addressLine1 }}</p>
+                                <p>{{ tutorProfile.addressLine2 }}</p>
+                            </div>
+                        </div>
+                        <div style="width: 100%;">
+                            <div><h3 style="font-weight: 500;">Email</h3></div>
+                            <div><p>{{ tutorProfile.email }}</p></div>
+                        </div>
+                    </div>
+                </div>    
+         </div>   
+        <!-- ------------------------------------------------ -->
+        </div>
+           <div class="col-md-1"></div>
+           <div class="col-md-3 Box" style="height: 400px;padding: 20px;">
+            <h1 style="font-weight: 300;font-weight: 2.4rem;">Verification</h1>
+            <p  style="font-weight: 1.2rem;line-height: 1.5;font-weight: 200;">Status : Pending</p>
+            </div>
+       </div>
     </div>
 </body>

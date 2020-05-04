@@ -1,7 +1,9 @@
 abc/*
+fellowGenius-angular/*
 fellowGenius-spring/*
 !fellowGenius-spring/src
 
 fellowGenius-spring/src/main/resources/*
+
 
 

@@ -7,14 +7,22 @@ public class StudentProfileModel {
 	String dateOfBirth;
 	String contact;
 	String password;
-	String subject1;
+	String subject;
 	String profilePictureUrl;
+	String gradeLevel;
 	
-	public String getSubject1() {
-		return subject1;
+	public String getGradeLevel() {
+		return gradeLevel;
 	}
-	public void setSubject1(String subject1) {
-		this.subject1 = subject1;
+	public void setGradeLevel(String gradeLevel) {
+		this.gradeLevel = gradeLevel;
+	}
+	
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	public Integer getSid() {
 		return sid;
@@ -62,8 +70,7 @@ public class StudentProfileModel {
 	@Override
 	public String toString() {
 		return "StudentProfileModel [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", subject1=" + subject1
-				+ ", profilePictureUrl=" + profilePictureUrl + "]";
+				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", subject=" + subject
+				+ ", profilePictureUrl=" + profilePictureUrl + ", gradeLevel=" + gradeLevel + "]";
 	}
-    
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { StudentProfileModel } from '../../model/studentProfile';
@@ -22,16 +22,19 @@ export class SignUpComponent implements OnInit {
 		private tutorService: TutorService,
 		private loginService: LoginDetailsService
 	) {}
+
+	@ViewChild('loginRef', { static: true })
+	loginElement: ElementRef;
 	studentProfile = new StudentProfileModel();
 	tutorProfile = new tutorProfile();
 	signUpHide = false;
 	signUpStudent = false;
 	signUpTutor = false;
 	hide: boolean = true;
-	mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
-	passwordPattern="^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$";
-	ngOnInit(): void {
-	}
+	mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+	passwordPattern = '^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$';
+	ngOnInit(): void {}
+
 	toLoginPage() {
 		this.router.navigate([ 'login' ]);
 	}
@@ -41,9 +44,10 @@ export class SignUpComponent implements OnInit {
 		this.signUpStudent = true;
 	}
 	onTutor() {
-		this.signUpHide = true;
-		this.signUpStudent = false;
-		this.signUpTutor = true;
+		// this.signUpHide = true;
+		// this.signUpStudent = false;
+		// this.signUpTutor = true;
+		this.router.navigate([ 'signUpTutor' ]);
 	}
 	onSignUpStudent(form: NgForm) {
 		this.studentProfile.fullName = form.value.fullName;
@@ -52,6 +56,7 @@ export class SignUpComponent implements OnInit {
 		this.studentProfile.dateOfBirth = form.value.dateOfBirth;
 		this.studentProfile.contact = form.value.contact;
 		this.studentProfile.subject = form.value.subject;
+		this.studentProfile.gradeLevel = form.value.gradeLevel;
 		console.log(this.studentProfile);
 		this.httpClient.saveStudentProfile(this.studentProfile).subscribe((res) => {
 			console.log(res);
@@ -65,21 +70,21 @@ export class SignUpComponent implements OnInit {
 		});
 		0;
 	}
-	onSignUpTutor(form: NgForm) {
-		this.tutorProfile.fullName = form.value.fullName;
-		this.tutorProfile.email = form.value.email;
-		this.tutorProfile.password = form.value.password;
-		this.tutorProfile.dateOfBirth = form.value.dateOfBirth;
-		this.tutorProfile.contact = form.value.contact;
-		console.log(this.tutorProfile);
-		this.httpClient.saveTutorProfile(this.tutorProfile).subscribe((res) => {
-			if (res == true) {
-				this.tutorService.setTutorDetails(this.tutorProfile);
-				this.loginService.setLoginType('tutor');
-				this.router.navigate([ 'home' ]);
-			} else {
-				console.log('tutor registration not successful! email already exists !');
-			}
-		});
-	}
+	// onSignUpTutor(form: NgForm) {
+	// 	this.tutorProfile.fullName = form.value.fullName;
+	// 	this.tutorProfile.email = form.value.email;
+	// 	this.tutorProfile.password = form.value.password;
+	// 	this.tutorProfile.dateOfBirth = form.value.dateOfBirth;
+	// 	this.tutorProfile.contact = form.value.contact;
+	// 	console.log(this.tutorProfile);
+	// 	this.httpClient.saveTutorProfile(this.tutorProfile).subscribe((res) => {
+	// 		if (res == true) {
+	// 			this.tutorService.setTutorDetails(this.tutorProfile);
+	// 			this.loginService.setLoginType('tutor');
+	// 			this.router.navigate([ 'home' ]);
+	// 		} else {
+	// 			console.log('tutor registration not successful! email already exists !');
+	// 		}
+	// 	});
+	// }
 }

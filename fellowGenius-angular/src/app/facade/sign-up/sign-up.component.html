@@ -1,178 +1,266 @@
 <body>
-    <div class="row marginZero" style="padding-top: 14vh;" *ngIf="!signUpHide">
-        <div class="row marginZero" style="    
-        text-align: center;
-        width: max-content;
-        margin: auto;">
-            <div class="col">
-                <div class="navbar-brand" style="margin-bottom: 15px;">
-                    fellowGenius
-                </div>
-                <div class="box">
-                    <div class="row marginZero" style="font-size: 25px;">
-                        <a routerLink=""><i class="fas fa-arrow-left" style="color: #8f98a4;margin-top: 5px;margin-right: 20px;"></i></a>
-                        <span style="  
+  <div class="row marginZero" style="padding-top: 14vh;" *ngIf="!signUpHide">
+    <div
+      class="row marginZero"
+      style="text-align: center; width: max-content; margin: auto;"
+    >
+      <div class="col">
+        <div class="navbar-brand" style="margin-bottom: 15px;">
+          fellowGenius
+        </div>
+        <div class="box">
+          <div class="row marginZero" style="font-size: 25px;">
+            <a routerLink=""
+              ><i
+                class="fas fa-arrow-left"
+                style="color: #8f98a4; margin-top: 5px; margin-right: 20px;"
+              ></i
+            ></a>
+            <span
+              style="
                 color: #3b3936;
                 width: max-content;
                 margin: auto;
-                font-weight: 300;">Sign Up</span>
-                        <button type="button" class="btn btn-outline-success" style="font-size: small;" (click)="toLoginPage()">Login</button>
-                    </div>
-                    <div class="buttonGroup" style="margin-top:40px">
-                        <div><button class="registrationButtons" (click)="onStudent()">I am a Student</button></div>
-                        <div><button class="registrationButtons" (click)="onTutor()">I am a Tutor</button></div>
-                    </div>
+                font-weight: 300;
+              "
+              >Sign Up</span
+            >
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              style="font-size: small;"
+              (click)="toLoginPage()"
+            >
+              Login
+            </button>
+          </div>
+          <div class="buttonGroup" style="margin-top: 40px;">
+            <div>
+              <button class="registrationButtons" (click)="onStudent()">
+                I am a Student
+              </button>
+            </div>
+            <div>
+              <button class="registrationButtons" (click)="onTutor()">
+                I am a Tutor
+              </button>
+            </div>
+          </div>
 
-                    <!-- <button type="button" class="btn btn-outline-success">Login</button> -->
-                </div>
-            </div>
-
+          <!-- <button type="button" class="btn btn-outline-success">Login</button> -->
         </div>
+      </div>
     </div>
-    <!-- -------------------------------------- student signUp------------------------------------------------------------------ -->
-    <div class="row marginZero" *ngIf="signUpHide&&signUpStudent">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-            <div class="row marginZero" style="
-            text-align: center;
-            width: max-content;
-            margin: auto;">
-                <div class="navbar-brand" style="margin-bottom: 15px;">
-                    fellowGenius
-                </div>
-            </div>
-            <div class="row">
-                <div class="signupBox" style="margin:auto">
-                    <div class="row marginZero" style="font-size: 25px;">
-                        <a routerLink=""><i class="fas fa-arrow-left" style="color: #8f98a4;font-size: large;margin-right: 20px;"></i></a>
-                        <span style="  
-                        color: #545174;
-                        width: max-content;
-                        margin: auto;
-                        font-weight: 400;">Student Sign Up</span>
-                        <button type="button" class="btn btn-outline-success" style="font-size: small;" (click)="toLoginPage()">Login</button>
-                    </div>
-                    <div class="row" style="padding: 20px; margin-top: 5px;">
-                        <form style="width: 100%;" (ngSubmit)="onSignUpStudent(s)" #s="ngForm">
-                            <div class="form-group">
-                                <input type="text" id="fullName" name="fullName" ngModel class="form-control" required #fullName="ngModel">
-                                <label class="form-control-placeholder" for="fullName">Full Name</label>
-                                <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" id="email" name="email" ngModel class="form-control" required email #email="ngModel">
-                                <label class="form-control-placeholder" for="email">Email Address</label>
-                                <span *ngIf="!email.valid && email.touched" class="help-block">Invalid email</span>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6" style="padding-right:10px">
-                                    <div class="form-group">
-                                        <input type="text" id="contact" class="form-control" ngModel name="contact" required [pattern]="mobNumberPattern" #contact="ngModel">
-                                        <label class="form-control-placeholder" for="contact">Mobile Number</label>
-                                        <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6" style="padding-left: 0;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="dateOfBirth" ngModel onfocus="(this.type='date')" onblur="(this.type='text')" id="date" required>
-                                        <label class="form-control-placeholder" for="date">Date of Birth</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="password" id="password" class="form-control" name="password" ngModel [type]="hide ? 'password':'text'" required [pattern]="passwordPattern" minlength="8" maxlength="20" #password="ngModel">
-                                <label class="form-control-placeholder" for="password">Password</label>
-                                <div class="showPassword">
-                                    <i class="material-icons cursor" style="color:#ccc" (click)="hide = !hide">
-                            {{hide ? 'visibility_off' : 'visibility'}}
-                        </i>
-                                </div>
-                                <span *ngIf="!password.valid && password.touched" class="help-block">password field must be minimum of 8 characters with atleast one special character</span>
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control" name="subject" required>
-                                    <option value="english">English</option>
-                                    <option value="science">Science</option>
-                                    <option value="mathematics">Mathematics</option>
-                                </select>
-                                <label class="form-control-placeholder" for="subject">Choose Subject</label>
-                            </div>
-                            <button type="submit" class="btn btn-outline-primary continueButton" [disabled]="!s.valid">Continue</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+  </div>
+  <!-- -------------------------------------- student signUp------------------------------------------------------------------ -->
+  <div class="row marginZero" *ngIf="signUpHide && signUpStudent">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+      <div
+        class="row marginZero"
+        style="text-align: center; width: max-content; margin: auto;"
+      >
+        <div class="navbar-brand" style="margin-bottom: 15px;">
+          fellowGenius
         </div>
-        <div class="col-sm-4"></div>
-    </div>
-    <!-- ------------------------------------------- for tutor Sign up ------------------------------------------------------------ -->
-    <div class="row marginZero" *ngIf="signUpHide&&signUpTutor">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-            <div class="row marginZero" style="
-            text-align: center;
-            width: max-content;
-            margin: auto;">
-                <div class="navbar-brand" style="margin-bottom: 15px;">
-                    fellowGenius
+      </div>
+      <div class="row">
+        <div class="signupBox" style="margin: auto;">
+          <div class="row marginZero" style="font-size: 25px;">
+            <a routerLink=""
+              ><i
+                class="fas fa-arrow-left"
+                style="color: #8f98a4; font-size: large; margin-right: 20px;"
+              ></i
+            ></a>
+            <span
+              style="
+                color: #545174;
+                width: max-content;
+                margin: auto;
+                font-weight: 400;
+              "
+              >Student Sign Up</span
+            >
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              style="font-size: small;"
+              (click)="toLoginPage()"
+            >
+              Login
+            </button>
+          </div>
+          <div class="row" style="padding: 20px; margin-top: 5px;">
+            <form
+              style="width: 100%;"
+              (ngSubmit)="onSignUpStudent(s)"
+              #s="ngForm"
+            >
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  ngModel
+                  class="form-control"
+                  required
+                  #fullName="ngModel"
+                />
+                <label class="form-control-placeholder" for="fullName"
+                  >Full Name</label
+                >
+                <span
+                  class="help-block"
+                  *ngIf="!fullName.valid && fullName.touched"
+                  >Invalid Name</span
+                >
+              </div>
+              <div class="form-group">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  ngModel
+                  class="form-control"
+                  required
+                  email
+                  #email="ngModel"
+                />
+                <label class="form-control-placeholder" for="email"
+                  >Email Address</label
+                >
+                <span *ngIf="!email.valid && email.touched" class="help-block"
+                  >Invalid email</span
+                >
+              </div>
+              <div class="row">
+                <div class="col-sm-6" style="padding-right: 10px;">
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      id="contact"
+                      class="form-control"
+                      ngModel
+                      name="contact"
+                      required
+                      [pattern]="mobNumberPattern"
+                      #contact="ngModel"
+                    />
+                    <label class="form-control-placeholder" for="contact"
+                      >Mobile Number</label
+                    >
+                    <span
+                      *ngIf="!contact.valid && contact.touched"
+                      class="help-block"
+                      >Invalid contact</span
+                    >
+                  </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="signupBox" style="margin:auto">
-                    <div class="row marginZero" style="font-size: 25px;">
-                        <a routerLink=""><i class="fas fa-arrow-left" style="color: #8f98a4;font-size: large;margin-right: 20px;"></i></a>
-                        <span style="  
-                        color: #545174;
-                        width: max-content;
-                        margin: auto;
-                        font-weight: 400;">Tutor Sign Up</span>
-                        <button type="button" class="btn btn-outline-success" style="font-size: small;" (click)="toLoginPage()">Login</button>
-                    </div>
-                    <div class="row" style="padding: 20px; margin-top: 5px;">
-                        <form style="width: 100%;" (ngSubmit)="onSignUpTutor(t)" #t="ngForm">
-                            <div class="form-group">
-                                <input type="text" id="fullName" name="fullName" ngModel class="form-control" required #fullName="ngModel">
-                                <label class="form-control-placeholder" for="fullName">Full Name</label>
-                                <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" id="email" name="email" ngModel class="form-control" required email #email="ngModel">
-                                <label class="form-control-placeholder" for="email">Email Address</label>
-                                <span class="help-block" *ngIf="!email.valid && email.touched">Invalid email</span>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6" style="padding-right:10px">
-                                    <div class="form-group">
-                                        <input id="contact" class="form-control" ngModel name="contact" [pattern]="mobNumberPattern" required #contact="ngModel">
-                                        <label class="form-control-placeholder" for="contact">Mobile Number</label>
-                                        <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6" style="padding-left: 0;">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="dateOfBirth" ngModel onfocus="(this.type='date')" onblur="(this.type='text')" id="date" required>
-                                        <label class="form-control-placeholder" for="date">Date of Birth</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="password" id="password" class="form-control" name="password" ngModel [type]="hide ? 'password':'text'" required [pattern]="passwordPattern" minlength="8" maxlength="20" #password="ngModel">
-                                <label class="form-control-placeholder" for="password">Password</label>
-                                <div class="showPassword">
-                                    <i class="material-icons cursor" style="color:#ccc" (click)="hide = !hide">
-                            {{hide ? 'visibility_off' : 'visibility'}}
-                        </i>
-                                </div>
-                                <span *ngIf="!password.valid && password.touched" class="help-block">password field must be minimum of 8 characters with atleast one special character</span>
-                            </div>
-                            <div class="form-group">
-                            </div>
-                            <button type="submit" class="btn btn-outline-primary continueButton" [disabled]="!t.valid">Continue</button>
-                        </form>
-                    </div>
+                <div class="col-sm-6" style="padding-left: 0;">
+                  <div class="form-group">
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="dateOfBirth"
+                      ngModel
+                      onfocus="(this.type='date')"
+                      onblur="(this.type='text')"
+                      id="date"
+                      required
+                    />
+                    <label class="form-control-placeholder" for="date"
+                      >Date of Birth</label
+                    >
+                  </div>
                 </div>
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  name="password"
+                  ngModel
+                  [type]="hide ? 'password' : 'text'"
+                  required
+                  [pattern]="passwordPattern"
+                  minlength="8"
+                  maxlength="20"
+                  #password="ngModel"
+                />
+                <label class="form-control-placeholder" for="password"
+                  >Password</label
+                >
+                <div class="showPassword">
+                  <i
+                    class="material-icons cursor"
+                    style="color: #ccc;"
+                    (click)="hide = !hide"
+                  >
+                    {{ hide ? "visibility_off" : "visibility" }}
+                  </i>
+                </div>
+                <span
+                  *ngIf="!password.valid && password.touched"
+                  class="help-block"
+                  >password field must be minimum of 8 characters with atleast
+                  one special character</span
+                >
+              </div>
+              <div class="form-group">
+                <select class="form-control" name="subject" required>
+                  <option value="english">English</option>
+                  <option value="science">Science</option>
+                  <option value="mathematics">Mathematics</option>
+                </select>
+                <label class="form-control-placeholder" for="subject"
+                  >Choose Subject</label
+                >
+              </div>
+              <div class="form-group">
+                <select class="form-control" name="gradeLevel" ngModel required>
+                    <option class="dropdown-header" disabled>School</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option class="divider" disabled></option>
+                    <option class="dropdown-header" disabled>Engineering</option>
+                    <option>Computer Science</option>
+                    <option>Information Technology</option>
+                    <option>Mechanical</option>
+                    <option>Civil</option>
+                    <option>Textile</option>
+                    <option class="divider" disabled></option>
+                    <option class="dropdown-header" disabled>Medical</option>
+                    <option>MBBS</option>
+                    <option>BDS</option>
+                </select>
+                <label class="form-control-placeholder" for="gradeLevel">Select Grade</label>
             </div>
+              <button
+                type="submit"
+                class="btn btn-outline-primary continueButton"
+                [disabled]="!s.valid"
+              >
+                Continue
+              </button>
+            </form>
+          </div>
         </div>
-        <div class="col-sm-4"></div>
+      </div>
     </div>
+    <div class="col-sm-4"></div>
+  </div>
+  <!-- ------------------------------------------- for tutor Sign up ------------------------------------------------------------ -->
+  
 </body>

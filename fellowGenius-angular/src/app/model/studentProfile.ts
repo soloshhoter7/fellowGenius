@@ -6,4 +6,5 @@ export class StudentProfileModel {
 	public dateOfBirth: string;
 	public password: string;
 	public subject: string;
+	public gradeLevel: string;
 }

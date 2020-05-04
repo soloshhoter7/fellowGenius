@@ -23,7 +23,14 @@ public class TutorProfile {
 	String country;
 	String state;
 	String profilePictureUrl;
+	String city;
 	
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
 	public String getAddressLine1() {
 		return addressLine1;
 	}
@@ -84,13 +91,14 @@ public class TutorProfile {
 	public void setContact(String contact) {
 		this.contact = contact;
 	}
+	
 	@Override
 	public String toString() {
 		return "TutorProfile [tid=" + tid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
 				+ dateOfBirth + ", contact=" + contact + ", addressLine1=" + addressLine1 + ", addressLine2="
 				+ addressLine2 + ", country=" + country + ", state=" + state + ", profilePictureUrl="
-				+ profilePictureUrl + "]";
+				+ profilePictureUrl + ", city=" + city + "]";
 	}
-
+   
 	
 }

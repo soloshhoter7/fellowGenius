@@ -37,6 +37,24 @@ import { ProfileComponent } from './home/profile/profile.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SignUpTutorComponent } from './facade/sign-up/sign-up-tutor/sign-up-tutor.component';
+// const oauthConfig = new AuthServiceConfig([
+// 	{
+// 		id:GoogleLoginProvider.PROVIDER_ID,
+// 		provider: new GoogleLoginProvider('254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com')
+// 	},
+// 	{
+// 		id:FacebookLoginProvider.PROVIDER_ID,
+// 		provider:new FacebookLoginProvider('243084226929873')
+// 	},
+// 	{
+// 		id:LinkedinLoginProvider.PROVIDER_ID,
+// 		provider:new LinkedinLoginProvider('86ocgdr93o7khl')
+// 	}
+// // ],false);
+// export function provideOauthConfig() {
+//   return oauthConfig;
+// }
 
 export const appRoutes: Routes = [
 	{
@@ -58,6 +76,7 @@ export const appRoutes: Routes = [
 	},
 	{ path: 'login', component: LoginComponent },
 	{ path: 'signUp', component: SignUpComponent },
+	{ path: 'signUpTutor', component: SignUpTutorComponent },
 	{ path: 'meeting', component: MeetingComponent },
 	{ path: '', redirectTo: '/facade', pathMatch: 'full' }
 ];
@@ -78,7 +97,8 @@ export const appRoutes: Routes = [
 		SignUpComponent,
 		TutorDashboardComponent,
 		StudentDashboardComponent,
-		ProfileComponent
+		ProfileComponent,
+		SignUpTutorComponent
 	],
 	imports: [
 		MatInputModule,

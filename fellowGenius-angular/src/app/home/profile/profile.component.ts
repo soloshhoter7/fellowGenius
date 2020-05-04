@@ -21,10 +21,19 @@ import { TutorVerification } from 'src/app/model/tutorVerification';
 	styleUrls: [ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit {
+	profilePictureDisplay = '../../../assets/icons/user-square.svg';
 	ngOnInit(): void {
-		this.formProgress = this.tutorService.getTutorProfileDetails().profileCompleted;
 		this.tutorProfile = this.tutorService.getTutorDetials();
+		this.profilePictureDisplay = this.tutorProfile.profilePictureUrl;
+		this.tutorFormDetails = this.tutorService.getTutorProfileDetails();
+		console.log(this.tutorProfile);
+		console.log(this.tutorFormDetails);
+		this.formProgress = this.tutorService.getTutorProfileDetails().profileCompleted;
+		if (this.formProgress == 99) {
+			this.profileCompleted = true;
+		}
 	}
+
 	basicTutorProfileDetails = new tutorProfileDetails();
 	gradeLevel;
 	//firebase connection
@@ -45,6 +54,7 @@ export class ProfileComponent implements OnInit {
 	mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
 	tutorProfile = new tutorProfile();
 	tutorProfileDetails = new tutorProfileDetails();
+	tutorFormDetails = new tutorProfileDetails();
 	tutorVerification = new TutorVerification();
 	profileCompleted = false;
 	formProgress = 12;
@@ -119,10 +129,14 @@ export class ProfileComponent implements OnInit {
 		this.tutorProfileDetails.subject3 = this.tutorService.getTutorProfileDetails().subject3;
 		this.tutorProfileDetails.tid = this.tutorService.getTutorProfileDetails().tid;
 		this.tutorProfileDetails.gradeLevel = this.tutorService.getTutorProfileDetails().gradeLevel;
+		this.tutorProfileDetails.fullName = this.tutorService.getTutorDetials().fullName;
 		this.tutorProfileDetails.profilePictureUrl = this.tutorService.getTutorDetials().profilePictureUrl;
+		console.log(this.tutorService.getTutorDetials().profilePictureUrl);
+		console.log(this.tutorFormDetails);
 		this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
 			console.log(res);
 			console.log('profile details have been updated !');
+			this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
 		});
 		this.formProgress += 25;
 	}
@@ -137,7 +151,10 @@ export class ProfileComponent implements OnInit {
 			console.log('verification not possible !');
 		} else {
 			console.log('verification possible' + this.tutorVerification.tid);
-			this.httpService.updateTutorVerification(this.tutorVerification).subscribe();
+			this.httpService.updateTutorVerification(this.tutorVerification).subscribe((res) => {
+				this.profileCompleted = true;
+				this.tutorFormDetails = this.tutorService.getTutorProfileDetails();
+			});
 		}
 	}
 

@@ -12,8 +12,15 @@ public class TutorProfileModel {
 	String country;
 	String state;
 	String profilePictureUrl;
+	String city;
 	
 	
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
 	public String getProfilePictureUrl() {
 		return profilePictureUrl;
 	}
@@ -86,8 +93,6 @@ public class TutorProfileModel {
 		return "TutorProfileModel [tid=" + tid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
 				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", addressLine1=" + addressLine1
 				+ ", addressLine2=" + addressLine2 + ", country=" + country + ", state=" + state
-				+ ", profilePictureUrl=" + profilePictureUrl + "]";
+				+ ", profilePictureUrl=" + profilePictureUrl + ", city=" + city + "]";
 	}
-	
-	
 }

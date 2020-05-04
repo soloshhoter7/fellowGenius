@@ -18,14 +18,22 @@ public class StudentProfile {
 	@Column(name = "DOB")
 	String dateOfBirth;
 	String contact;
-	String subject1;
+	String subject;
 	String profilePictureUrl;
+	String gradeLevel;
 	
-	public String getSubject1() {
-		return subject1;
+	public String getGradeLevel() {
+		return gradeLevel;
 	}
-	public void setSubject1(String subject1) {
-		this.subject1 = subject1;
+	public void setGradeLevel(String gradeLevel) {
+		this.gradeLevel = gradeLevel;
+	}
+	
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	public Integer getSid() {
 		return sid;
@@ -66,9 +74,9 @@ public class StudentProfile {
 	@Override
 	public String toString() {
 		return "StudentProfile [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", subject1=" + subject1 + ", profilePictureUrl="
-				+ profilePictureUrl + "]";
-	} 
+				+ dateOfBirth + ", contact=" + contact + ", subject=" + subject + ", profilePictureUrl="
+				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + "]";
+	}
 	
 	
 }

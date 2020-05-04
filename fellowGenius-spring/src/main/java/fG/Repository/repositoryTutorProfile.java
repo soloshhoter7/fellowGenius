@@ -19,9 +19,9 @@ public interface repositoryTutorProfile extends JpaRepository<TutorProfile, Inte
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE tutor_profile SET fullname=?1, email=?2, contact=?3, dob=?4, address_line1=?5, address_line2=?6, country=?7, state=?8, profile_picture_url=?9 WHERE tid=?10", nativeQuery = true)
+	@Query(value = "UPDATE tutor_profile SET fullname=?1, email=?2, contact=?3, dob=?4, address_line1=?5, address_line2=?6, country=?7, state=?8, profile_picture_url=?9,city=?10 WHERE tid=?11", nativeQuery = true)
 	public void updateBasicInfo(String fullname, String email, String contact, 
 			String dob, String address1, String address2, String country,
-			String state, String profile_Picture_url, Integer tid);
+			String state, String profile_Picture_url,String city, Integer tid);
 
 }

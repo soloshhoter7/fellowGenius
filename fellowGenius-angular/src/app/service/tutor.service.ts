@@ -8,6 +8,9 @@ import { tutorProfile } from '../model/tutorProfile';
 	providedIn: 'root'
 })
 export class TutorService {
+	getTutorProfile() {
+		throw new Error('Method not implemented.');
+	}
 	tutorProfileDetails = new tutorProfileDetails();
 	tutorProfile = new tutorProfile();
 	tutorLogin = new tutorLoginModel();

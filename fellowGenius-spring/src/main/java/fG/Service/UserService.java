@@ -33,7 +33,8 @@ public class UserService {
 		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
 		studentProfile.setEmail(studentModel.getEmail());
 		studentProfile.setFullName(studentModel.getFullName());	
-		studentProfile.setSubject1(studentModel.getSubject1());
+		studentProfile.setSubject(studentModel.getSubject());
+		studentProfile.setGradeLevel(studentModel.getGradeLevel());
 		if(dao.saveStudentProfile(studentProfile)) {
 			StudentLogin studentLogin = new StudentLogin();
 			studentLogin.setPassword(studentModel.getPassword());
@@ -123,6 +124,7 @@ public class UserService {
 			tutorProfile.setCountry(tutorModel.getCountry());
 			tutorProfile.setState(tutorModel.getState());
 			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			tutorProfile.setCity(tutorModel.getCity());
 			dao.updateTutorBasicInfo(tutorProfile);
 			dao.updateProfileCompleted(37);
 		}
@@ -146,6 +148,12 @@ public class UserService {
 			tutorProfileModel.setFullName(tutorProfile.getFullName());
 			tutorProfileModel.setPassword("");
 			tutorProfileModel.setTid(tutorProfile.getTid());
+			tutorProfileModel.setAddressLine1(tutorProfile.getAddressLine1());
+			tutorProfileModel.setAddressLine2(tutorProfile.getAddressLine2());
+			tutorProfileModel.setCountry(tutorProfile.getCountry());
+			tutorProfileModel.setState(tutorProfile.getState());
+			tutorProfileModel.setProfilePictureUrl(tutorProfile.getProfilePictureUrl());
+			tutorProfileModel.setCity(tutorProfile.getCity());
 			return tutorProfileModel;
 		}
 		

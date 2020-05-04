@@ -90,7 +90,7 @@ public class dao {
 	public void updateTutorBasicInfo(TutorProfile tutorProfile) {
 		repTutorProfile.updateBasicInfo(tutorProfile.getFullName(), tutorProfile.getEmail(), tutorProfile.getContact(),
 				tutorProfile.getDateOfBirth(), tutorProfile.getAddressLine1(), tutorProfile.getAddressLine2(),
-				tutorProfile.getCountry(), tutorProfile.getState(), tutorProfile.getProfilePictureUrl(), tutorProfile.getTid()); 
+				tutorProfile.getCountry(), tutorProfile.getState(), tutorProfile.getProfilePictureUrl(),tutorProfile.getCity(), tutorProfile.getTid()); 
 	
 	}
 
