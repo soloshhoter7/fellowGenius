@@ -14,7 +14,7 @@
         <div class="row box">
             <div class="col-sm-5 boxShadow" style="border-right: 1px solid rgb(199, 203, 217);">
                 <img class="picture" src="../../../assets/images/student3.svg" *ngIf="loginDetailsService.loginType=='student'">
-                <img class="picture" src="../../../assets/images/teacher.svg" *ngIf="loginDetailsService.loginType=='tutor'">
+                <img class="picture" src="../../../assets/images/teacher.svg" *ngIf="loginDetailsService.loginType=='tutor'" style="margin-top: 35px;">
                 <h3 style="font-size: 25px; margin-top:2vh" *ngIf="loginDetailsService.loginType=='student'"><b>I am a Student</b></h3>
                 <h3 style="font-size: 25px; margin-top:2vh" *ngIf="loginDetailsService.loginType=='tutor'"><b>I am a Tutor</b></h3>
                 <h5 style="color:rgb(137, 138, 145); font-size: small;">Be a reader, be a writer, be a problem solver.</h5>
@@ -41,8 +41,6 @@
                         </i>
                         </div>
                     </div>
-
-                    <hr>
                     <div class="row">
                         <button class="btn signInButton" style="margin-left: auto; margin-right: auto;" type="submit" [disabled]="!l.valid ">Sign in</button>
                         <!-- <button class="btn btn-primary" style="margin-left: auto; margin-right: auto;" type="submit" [disabled]="!l.valid ">Sign in</button> -->
@@ -51,6 +49,13 @@
                         <button class="btn signUpButton" style="margin-left: auto; margin-right: auto;" (click)="toSignUp()">Sign Up</button>
                     </div>
                 </form>
+                <hr>
+                <div class="inner-box">
+                    <button class="btn btn-primary social-buttons" style="background-color: #c63d2d; border-color: #c63d2d;"(click)="prepareLoginButton()" #googleSignUp><i class="fa fa-google social-icons"></i></button>
+                    <button class="btn btn-primary social-buttons" style="background-color: #385998; border-color: #385998;" (click)="signIn()"><i class="fa fa-facebook social-icons"></i></button>
+                    <button class="btn btn-primary social-buttons" style="background-color: #4875b4; border-color: #4875b4;"><i class="fa fa-linkedin social-icons"></i></button>
+                </div>
+            
             </div>
         </div>
     </div>

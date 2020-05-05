@@ -38,6 +38,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SignUpTutorComponent } from './facade/sign-up/sign-up-tutor/sign-up-tutor.component';
+import { SignUpStudentComponent } from './facade/sign-up/sign-up-student/sign-up-student.component';
 // const oauthConfig = new AuthServiceConfig([
 // 	{
 // 		id:GoogleLoginProvider.PROVIDER_ID,
@@ -98,7 +99,8 @@ export const appRoutes: Routes = [
 		TutorDashboardComponent,
 		StudentDashboardComponent,
 		ProfileComponent,
-		SignUpTutorComponent
+		SignUpTutorComponent,
+		SignUpStudentComponent
 	],
 	imports: [
 		MatInputModule,

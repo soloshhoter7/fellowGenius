@@ -8,6 +8,7 @@ import { tutorProfile } from '../model/tutorProfile';
 import { tutorProfileDetails } from '../model/tutorProfileDetails';
 import { bookingDetails } from '../model/bookingDetails';
 import { TutorVerification } from '../model/tutorVerification';
+import { socialLogin } from '../model/socialModel';
 
 @Injectable({
 	providedIn: 'root'
@@ -112,6 +113,20 @@ export class HttpService {
 		return this.http.get<bookingDetails[]>('http://localhost:8080/fellowGenius/meeting/fetchApprovedListTutor', {
 			params: {
 				tutorId: tid.toString()
+			}
+		});
+	}
+
+	//for saving using social login details
+	saveSocialLogin(socialLogin: socialLogin): Observable<object> {
+		return this.http.post('http://localhost:8080/fellowGenius/registerSocialLogin', socialLogin);
+	}
+
+	//for login using social login details
+	checkSocialLogin(id: string): Observable<Object> {
+		return this.http.get('http://localhost:8080/fellowGenius/checkSocialLogin', {
+			params: {
+				socialId: id
 			}
 		});
 	}
