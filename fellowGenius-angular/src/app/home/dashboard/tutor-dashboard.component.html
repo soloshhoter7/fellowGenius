@@ -1,41 +1,80 @@
 <body style="padding: 50px;">
     <div class="outer-box">
-        <div class="card">
-          <div class="card-header">
-            <h2 style="font-weight: 400; display: inline;">Complete Profile</h2>
-            <span class="" style="float:right"><button class="btn btn-outline-primary"(click)="closeCompleteProfile()">close</button></span>
-          </div>
-          <div class="card-body">
-            <h1 style="display: inline;">{{tutorProfileDetails.profileCompleted}}% completed</h1>
-            <a routerLink="/home/profile" class="completeProfileLink" style="margin-left: 20px;"><h2>Complete your profile</h2></a>
-            <div class="progress-Bar">
-              <div class="outer-progressBar">
-                <div class="inner-progressBar" [style.width.%]="tutorProfileDetails.profileCompleted"></div>
-              </div>
+        <div class="card" *ngIf="tutorProfileDetails.profileCompleted!=99">
+            <div class="card-header">
+                <h2 style="font-weight: 400; display: inline;">Complete Profile</h2>
+                <span class="" style="float:right"><button class="btn btn-outline-primary"(click)="closeCompleteProfile()">close</button></span>
             </div>
-          </div>
+            <div class="card-body">
+                <h1 style="display: inline;">{{tutorProfileDetails.profileCompleted}}% completed</h1>
+                <a routerLink="/home/profile" class="completeProfileLink" style="margin-left: 20px;">
+                    <h2>Complete your profile</h2>
+                </a>
+                <div class="progress-Bar">
+                    <div class="outer-progressBar">
+                        <div class="inner-progressBar" [style.width.%]="tutorProfileDetails.profileCompleted"></div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div class="card">
+            <div class="card-header">
+                Live Meetings
+            </div>
+            <div class="card-body">
+                <p>{{ liveMeetingsMessage }}</p>
+                <div class="" *ngFor="let element of liveMeetingList">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                        </div>
+                        <div class="col-sm-8" style="padding-left: 30px;">
+                            <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
+                            <p style="font-size: medium;
+                      color: rgb(109, 116, 116);
+                      padding-top: 1px; margin:0;">
+                                {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}})
+                            </p>
+                            <p style="font-size: small;
+                       color: rgb(182, 192, 192);">
+                                {{element.description}}
+                            </p>
+                            <p style="font-size: medium;
+                            color: rgb(109, 116, 116);">
+                                     {{element.timeLeft}}
+                                 </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-outline-danger" (click)="onJoin(element)">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 Booking Requests
             </div>
             <div class="card-body">
+                <p>{{ bookingRequestMessage }}</p>
                 <div class="" *ngFor="let element of bookingList">
                     <div class="row">
                         <div class="col-sm-1">
-                          <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
                         </div>
                         <div class="col-sm-8" style="padding-left: 30px;">
-                        <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
-                        <p style="font-size: medium;
+                            <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
+                            <p style="font-size: medium;
                         color: rgb(109, 116, 116);
                         padding-top: 1px; margin:0;">
-                          {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} {{element.duration}} hours
-                         </p>
-                         <p style="font-size: small;
+                                {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}} minutes)
+                            </p>
+                            <p style="font-size: small;
                          color: rgb(182, 192, 192);">
-                          {{element.description}}
-                         </p>
+                                {{element.description}}
+                            </p>
                         </div>
                         <div class="col-sm-3">
                             <button class="btn btn-success" style="margin-right:10px" (click)="acceptBooking(element)">Accept</button>
@@ -49,34 +88,38 @@
 
         <!-- ---------------------------------------- approved Meetings-------------------------------------------- -->
         <div class="card">
-          <div class="card-header">
-             Upcoming Meetings
-          </div>
-          <div class="card-body">
-              <div class="" *ngFor="let element of meetingList">
-                  <div class="row">
-                      <div class="col-sm-1">
-                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
-                      </div>
-                      <div class="col-sm-8" style="padding-left: 30px;">
-                      <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
-                      <p style="font-size: medium;
+            <div class="card-header">
+                Upcoming Meetings
+            </div>
+            <div class="card-body">
+                <p>{{ approvedMeetingsMessage }}</p>
+                <div class="" *ngFor="let element of meetingList">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                        </div>
+                        <div class="col-sm-8" style="padding-left: 30px;">
+                            <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
+                            <p style="font-size: medium;
                       color: rgb(109, 116, 116);
                       padding-top: 1px; margin:0;">
-                        {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} {{element.duration}}
-                       </p>
-                       <p style="font-size: small;
+                                {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}})
+                            </p>
+                            <p style="font-size: small;
                        color: rgb(182, 192, 192);">
-                        {{element.description}}
-                       </p>
-                      </div>
-                      <div class="col-sm-3">
-                          <button class="btn btn-outline-danger"(click)="onHost(element)">join now</button>
-                      </div>
-                  </div>
-
-              </div>
-          </div>
-      </div>
+                                {{element.description}}
+                            </p>
+                            <p style="font-size: medium;
+                            color: rgb(109, 116, 116);">
+                                     {{element.timeLeft}}
+                                 </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-outline-danger" (click)="onHost(element)" >Join now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </body>
+</body>

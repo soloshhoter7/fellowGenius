@@ -34,14 +34,22 @@ public class MeetingDao {
 	}
 
 	public List<?> fetchApprovedList(Integer sid) {
-		System.out.println("Step 2" + repBooking.fetchApprovedList(sid));
+		System.out.println(repBooking.fetchApprovedList(sid));
 		return repBooking.fetchApprovedList(sid);
 		
 	}
 
 	public List<?> fetchApprovedListTutor(Integer tid) {
-		System.out.println("Step 2" + repBooking.fetchApprovedList(tid));
+		System.out.println(repBooking.fetchApprovedList(tid));
 		return repBooking.fetchApprovedListTutor(tid);
 		
+	}
+
+	public List<?> fetchLiveMeetingListTutor(Integer tid) {
+		return repBooking.fetchLiveMeetingListTutor(tid);
+	}
+	
+	public List<?> fetchLiveMeetingListStudent(Integer sid){
+		return repBooking.fetchLiveMeetingListStudent(sid);
 	}
 }

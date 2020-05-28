@@ -100,14 +100,14 @@
             "
             class="font19"
           >
-            {{ element.name }}
+            {{ element.fullName }}
           </h3>
           <p
             class="marginZero"
             style="font-size: medium; color: rgb(109, 116, 116);
             padding-top:1px;"
           >
-            {{ element.college }}
+            {{ element.studyInstitution }}
           </p>
           <p
             class="marginZero"
@@ -119,13 +119,25 @@
             class="tutorSkillTags"
             style="font-size: smaller; color: rgb(109, 110, 110);"
           >
-            {{ element.subject }}
+            {{ element.subject1 }}
           </p>
+          <p
+          class="tutorSkillTags"
+          style="font-size: smaller; color: rgb(109, 110, 110);"
+        >
+          {{ element.subject2 }}
+        </p>
+        <p
+        class="tutorSkillTags"
+        style="font-size: smaller; color: rgb(109, 110, 110);"
+      >
+        {{ element.subject3 }}
+      </p>
         </div>
       </div>
       <div class="col-md-3">
         <p style="font-size: x-large; text-decoration: solid;">
-          ₹{{ element.price }}
+          ₹{{ element.price1 }} /hr
         </p>
         <div class="stars-outer">
           <div class="stars-inner" [style.width.%]="element.rating"></div>

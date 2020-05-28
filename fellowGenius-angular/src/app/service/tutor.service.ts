@@ -3,18 +3,22 @@ import { tutorProfileDetails } from '../model/tutorProfileDetails';
 import { tutorLoginModel } from '../model/tutorLoginModel';
 import { TutorProfileComponent } from '../home/find-tutor/tutor-profile/tutor-profile.component';
 import { tutorProfile } from '../model/tutorProfile';
+import { tutorAvailabilitySchedule } from '../model/tutorAvailabilitySchedule';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class TutorService {
-	getTutorProfile() {
-		throw new Error('Method not implemented.');
-	}
+	personalAvailablitySchedule: tutorAvailabilitySchedule;
 	tutorProfileDetails = new tutorProfileDetails();
 	tutorProfile = new tutorProfile();
 	tutorLogin = new tutorLoginModel();
 	tutorList: tutorProfileDetails[];
+
+	editVariable: string;
+
+	constructor() {}
+
 	setTutorLogin(tutorLogin: tutorLoginModel) {
 		this.tutorLogin = tutorLogin;
 	}
@@ -33,5 +37,16 @@ export class TutorService {
 	getTutorProfileDetails() {
 		return this.tutorProfileDetails;
 	}
-	constructor() {}
+	setEditFuntion(editFunction: string) {
+		this.editVariable = editFunction;
+	}
+	getEditFunction() {
+		return this.editVariable;
+	}
+	setPersonalAvailabilitySchedule(tutorAvailabilitySchedule: tutorAvailabilitySchedule) {
+		this.personalAvailablitySchedule = tutorAvailabilitySchedule;
+	}
+	getPersonalAvailabilitySchedule() {
+		return this.personalAvailablitySchedule;
+	}
 }

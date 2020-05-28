@@ -1,19 +1,32 @@
 package fG.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fG.DAO.MeetingDao;
 import fG.DAO.dao;
+import fG.Entity.BookingDetails;
+import fG.Entity.ScheduleData;
+import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
+import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
+import fG.Model.ScheduleDataModel;
+import fG.Model.ScheduleTime;
+import fG.Model.SocialLoginModel;
 import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
+import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorLoginModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
@@ -25,6 +38,11 @@ public class UserService {
 	@Autowired
 	dao dao;
 
+	@Autowired
+	ScheduleService scheduleService;
+	
+	@Autowired
+	MeetingDao meetingDao;
 	
 	// saving student registration details
 	public boolean saveStudentProfile(StudentProfileModel studentModel) {
@@ -70,16 +88,64 @@ public class UserService {
 		return stuProfileModel;
 	}
 	
-	// saving updating details of tutor
-		public void updateTutorProfile(TutorProfileDetailsModel tutorModel) {
-			     dao.updateTutorProfile(tutorModel);
+	    // saving updating details of tutor
+		public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel) throws IllegalArgumentException, IllegalAccessException {
+			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			tutProfileDetails.setDescription(tutorModel.getDescription());
+			tutProfileDetails.setFullName(tutorModel.getFullName());
+			tutProfileDetails.setGradeLevel(tutorModel.getGradeLevel());
+			tutProfileDetails.setGraduationYear(tutorModel.getGraduationYear());
+			tutProfileDetails.setLessonCompleted(tutorModel.getLessonCompleted());
+			tutProfileDetails.setMajorSubject(tutorModel.getMajorSubject());
+			tutProfileDetails.setPrice1(tutorModel.getPrice1());
+			tutProfileDetails.setPrice2(tutorModel.getPrice2());
+			tutProfileDetails.setPrice3(tutorModel.getPrice3());
+			tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
+			tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			tutProfileDetails.setRating(tutorModel.getRating());
+			tutProfileDetails.setReviewCount(tutorModel.getReviewCount());
+			tutProfileDetails.setStudyInstitution(tutorModel.getStudyInstitution());
+			tutProfileDetails.setSubject1(tutorModel.getSubject1());
+			tutProfileDetails.setSubject2(tutorModel.getSubject2());
+			tutProfileDetails.setSubject3(tutorModel.getSubject3());
+			tutProfileDetails.setTid(tutorModel.getTid());
+			tutProfileDetails.setWorkInstitution(tutorModel.getWorkInstitution());
+			tutProfileDetails.setWorkTitle(tutorModel.getWorkTitle());
+			tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
+			dao.updateTutorProfile(tutProfileDetails);
 			     if(tutorModel.getStudyInstitution()==null) {
-			    	 dao.updateProfileCompleted(37);
+			    	 dao.updateProfileCompleted(37,tutorModel.getTid());
 			     }else {
-				 dao.updateProfileCompleted(62);
+				 dao.updateProfileCompleted(62,tutorModel.getTid());
 			     }
 		}
 		
+		//for editing tutor profile details
+		public void editTutorProfileDetails(TutorProfileDetailsModel tutorModel) throws IllegalArgumentException, IllegalAccessException {
+			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			tutProfileDetails.setDescription(tutorModel.getDescription());
+			tutProfileDetails.setFullName(tutorModel.getFullName());
+			tutProfileDetails.setGradeLevel(tutorModel.getGradeLevel());
+			tutProfileDetails.setGraduationYear(tutorModel.getGraduationYear());
+			tutProfileDetails.setLessonCompleted(tutorModel.getLessonCompleted());
+			tutProfileDetails.setMajorSubject(tutorModel.getMajorSubject());
+			tutProfileDetails.setPrice1(tutorModel.getPrice1());
+			tutProfileDetails.setPrice2(tutorModel.getPrice2());
+			tutProfileDetails.setPrice3(tutorModel.getPrice3());
+			tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
+			tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			tutProfileDetails.setRating(tutorModel.getRating());
+			tutProfileDetails.setReviewCount(tutorModel.getReviewCount());
+			tutProfileDetails.setStudyInstitution(tutorModel.getStudyInstitution());
+			tutProfileDetails.setSubject1(tutorModel.getSubject1());
+			tutProfileDetails.setSubject2(tutorModel.getSubject2());
+			tutProfileDetails.setSubject3(tutorModel.getSubject3());
+			tutProfileDetails.setTid(tutorModel.getTid());
+			tutProfileDetails.setWorkInstitution(tutorModel.getWorkInstitution());
+			tutProfileDetails.setWorkTitle(tutorModel.getWorkTitle());
+			tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
+			dao.updateTutorProfile(tutProfileDetails);
+		}
 		
 
 		// saving registration details of tutor
@@ -103,6 +169,10 @@ public class UserService {
 				TutorVerification tutVerify = new  TutorVerification();
 				tutVerify.setTid(tutorProfile.getTid());
 				dao.saveTutorVerification(tutVerify);
+				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+				tutSchedule.setTid(tutorProfile.getTid());
+				tutSchedule.setFullName(tutorProfile.getFullName());
+				dao.saveTutorAvailbilitySchedule(tutSchedule);
 				return true;
 			}
 			else {
@@ -126,7 +196,27 @@ public class UserService {
 			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
 			tutorProfile.setCity(tutorModel.getCity());
 			dao.updateTutorBasicInfo(tutorProfile);
-			dao.updateProfileCompleted(37);
+			if(tutorProfile.getCity()!=null&&tutorProfile.getAddressLine1()!=null) {
+				dao.updateProfileCompleted(37,tutorProfile.getTid());
+			}
+			
+		}
+		
+		//for editing tutor Basic info
+		public void editTutorBasicInfo(TutorProfileModel tutorModel) {
+			TutorProfile tutorProfile = new TutorProfile();
+			tutorProfile.setTid(tutorModel.getTid());
+			tutorProfile.setContact(tutorModel.getContact());
+			tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
+			tutorProfile.setEmail(tutorModel.getEmail());
+			tutorProfile.setFullName(tutorModel.getFullName());		
+			tutorProfile.setAddressLine1(tutorModel.getAddressLine1());
+			tutorProfile.setAddressLine2(tutorModel.getAddressLine2());
+			tutorProfile.setCountry(tutorModel.getCountry());
+			tutorProfile.setState(tutorModel.getState());
+			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			tutorProfile.setCity(tutorModel.getCity());
+			dao.updateTutorBasicInfo(tutorProfile);
 		}
 		
 		// validation of tutor login 
@@ -138,6 +228,7 @@ public class UserService {
 				return false;
 			}
 		}
+		
         // getting tutor details after login
 		public TutorProfileModel getTutorDetails(String email) {
 			TutorProfileModel tutorProfileModel = new TutorProfileModel();
@@ -164,7 +255,7 @@ public class UserService {
 
 		public boolean updateTutorVerification(TutorVerificationModel tutorVerify) {
 			if(dao.updateTutorVerification(tutorVerify) == true) {
-				dao.updateProfileCompleted(99);
+				dao.updateProfileCompleted(99,tutorVerify.getTid());
 				return true;
 			}
 			else {
@@ -175,5 +266,74 @@ public class UserService {
 		public TutorProfileDetails getTutorProfileDetails(Integer tid) {
 			return dao.getTutorProfileDetails(tid);
 		}
+
+		public boolean registerSocialLogin(SocialLoginModel socialLoginModel) {
+			SocialLogin socialLogin = new SocialLogin();
+			socialLogin.setEmail(socialLoginModel.getEmail());
+			socialLogin.setFullName(socialLoginModel.getFullName());
+			socialLogin.setId(socialLoginModel.getId());
+			if(dao.saveSocialLogin(socialLogin)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		public boolean checkSocialLogin(String email) {
+			if(dao.checkSocialLogin(email)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		// for saving tutor Availability Schedule
+		public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
+			ArrayList<String> availableSchedules = new ArrayList<String>();
+			for(ScheduleData schedule:tutorAvailabilityScheduleModel.getAllAvailabilitySchedule()) {
+				availableSchedules.add(schedule.serialize());
+			}
+			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+			tutSchedule.setAllAvailabilitySchedule(availableSchedules);
+			tutSchedule.setFullName(tutorAvailabilityScheduleModel.getFullName());
+			tutSchedule.setTid(tutorAvailabilityScheduleModel.getTid());
+			dao.saveTutorAvailbilitySchedule(tutSchedule);
+		}
+		
+		// for getting tutor Availability Schedule after login
+		public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) throws ParseException{
+			TutorAvailabilityScheduleModel tutAvailModel = new TutorAvailabilityScheduleModel();
+			tutAvailModel = dao.getTutorAvailabilitySchedule(tid);
+			ArrayList<BookingDetails> bookings = (ArrayList<BookingDetails>) meetingDao.fetchApprovedListTutor(tid);
+			ArrayList<ScheduleData> bookingSchedule = new ArrayList<ScheduleData>();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			for(int i=0; i<bookings.size(); i++) {
+				BookingDetails booking = bookings.get(i);
+				
+				Date startDate = formatter.parse(booking.getDateOfMeeting());
+				
+				startDate.setHours(booking.getStartTimeHour());
+				startDate.setMinutes(booking.getStartTimeMinute());
+				Date endDate = formatter.parse(booking.getDateOfMeeting());
+				endDate.setHours(booking.getEndTimeHour());
+				endDate.setMinutes(booking.getEndTimeMinute());
+				ScheduleData schedule = new ScheduleData();
+				schedule.setStartTime(startDate.toString());
+				schedule.setEndTime(endDate.toString());
+				schedule.setId(i+1);
+				schedule.setSubject(booking.getStudentName());
+				System.out.println("DEKHO MAI AAGYA" + schedule);
+				bookingSchedule.add(schedule);
+			}
+			tutAvailModel.setAllMeetingsSchedule(bookingSchedule);
+			return tutAvailModel; 
+		}
+
+		public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) {
+			TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
+			return scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(),Integer.valueOf(tid));
+		}
+
 
 }

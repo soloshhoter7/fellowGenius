@@ -33,6 +33,8 @@ export class FindTutorComponent implements OnInit {
 		// this.fetchTutorList();
 		this.filterSearch = this.tutorService.tutorList;
 	}
+
+
 	fetchTutorList() {
 		this.httpService.getTutorList().subscribe((req) => {
 			this.filterSearch = req;

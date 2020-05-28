@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
     <div class="box">
         <h2 style="text-align: center;"> BOOKING REQUESTS</h2>
         <div class="container" *ngFor="let list of bookingList">
@@ -19,4 +19,113 @@
             <button class="btn btn-danger" (click)="onJoin(list)">Join now</button>
         </div>
     </div>
-</div>
+</div> -->
+
+<body>
+
+    <div class="card">
+        <div class="card-header">
+            Live Meetings
+        </div>
+        <div class="card-body">
+            <div *ngIf="emptyLiveList">No Live meetings yet</div>
+            <div class="" *ngFor="let element of liveMeetingList">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                    </div>
+                    <div class="col-sm-8" style="padding-left: 30px;">
+                        <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
+                        <p style="font-size: medium;
+                  color: rgb(109, 116, 116);
+                  padding-top: 1px; margin:0;">
+                            {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}})
+                        </p>
+                        <p style="font-size: small;
+                   color: rgb(182, 192, 192);">
+                            {{element.description}}
+                        </p>
+                        <p style="font-size: medium;
+                        color: rgb(109, 116, 116);">
+                                 {{element.timeLeft}}
+                             </p>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-outline-danger" (click)="onJoin(element)">Join</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Booking Requests
+        </div>
+        <div class="card-body">
+            <div *ngIf="emptyBookingList">No Booking Requests</div>
+            <div class="" *ngFor="let element of bookingList">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="tutorImage">
+                    </div>
+                    <div class="col-sm-8" style="padding-left: 30px;">
+                        <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
+                        <p>
+                            {{element.dateOfMeeting}}
+                        </p>
+                        <p style="font-size: medium;
+                color: rgb(109, 116, 116);
+                padding-top: 1px; margin:0;">
+                            {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}} minutes)
+                        </p>
+                        <p>{{element.approvalStatus}}</p>
+                        <p style="font-size: small;
+                 color: rgb(182, 192, 192);">
+                            {{element.description}}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ---------------------------------------- approved Meetings-------------------------------------------- -->
+    <div class="card">
+        <div class="card-header">
+            Upcoming Meetings
+        </div>
+        <div class="card-body">
+            <div *ngIf="emptyApprovedList">No Upcoming meetings</div>
+            <div class="" *ngFor="let element of approvedList">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                    </div>
+
+                    <div class="col-sm-8" style="padding-left: 30px;">
+                        <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
+                        <p>
+                            {{element.dateOfMeeting}}
+                        </p>
+                        <p style="font-size: medium;
+              color: rgb(109, 116, 116);
+              padding-top: 1px; margin:0;">
+                            {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}} minutes)
+                        </p>
+                        <p>
+                            {{element.approvalStatus}}
+                        </p>
+                        <p style="font-size: small;
+               color: rgb(182, 192, 192);">
+                            {{element.description}}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>

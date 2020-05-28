@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfileDetails;
 
 @Repository
@@ -29,6 +27,11 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 	
 	@Transactional
 	@Modifying
-	@Query(value ="UPDATE tutor_profile_details SET profile_completed=?1", nativeQuery = true)
-	void updateProfileCompleted(Integer profileCompleted);
+	@Query(value ="UPDATE tutor_profile_details SET profile_completed=?1 where tid =?2", nativeQuery = true)
+	void updateProfileCompleted(Integer profileCompleted,Integer tid);
+	
+	@Transactional
+	@Modifying
+	@Query(value ="UPDATE tutor_profile_details SET ?1 where tid =?2", nativeQuery = true)
+	public void saveUpdateNew(Object query, Integer tid);
 }

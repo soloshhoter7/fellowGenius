@@ -6,7 +6,7 @@ import { StudentLoginModel } from '../model/studentLoginModel';
 })
 export class LoginDetailsService {
 	studentLoginModel = new StudentLoginModel();
-
+	trType: string;
 	loginType: string;
 	constructor() {}
 
@@ -15,5 +15,11 @@ export class LoginDetailsService {
 	}
 	getLoginType() {
 		return this.loginType;
+	}
+	setTrType(trType: string) {
+		this.trType = trType;
+	}
+	getTrType() {
+		return this.trType;
 	}
 }

@@ -54,5 +54,12 @@ public class MeetingService {
 	public List<?> fetchApprovedListTutor(Integer tid) {
 		return meetingDao.fetchApprovedListTutor(tid);
 	}
-
+    // fetch live bookings tutor
+	public List<?> fetchLiveMeetingListTutor(Integer tid) {
+		return meetingDao.fetchLiveMeetingListTutor(tid);
+	}
+   
+	public List<?>  fetchLiveMeetingListStudent(Integer sid){
+		return meetingDao.fetchLiveMeetingListStudent(sid);
+	}
 }

@@ -1,22 +1,30 @@
 package fG.DAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+
+import fG.Entity.ScheduleData;
+import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
+import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
 import fG.Model.StudentLoginModel;
+import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorLoginModel;
-import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorVerificationModel;
+import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
+import fG.Repository.repositoryTutorAvailabilitySchedule;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
@@ -41,7 +49,13 @@ public class dao {
 	
 	@Autowired
 	repositoryTutorVerification repTutorVerification;
+	
+	@Autowired
+	repositorySocialLogin repSocialLogin;
 
+	@Autowired
+	repositoryTutorAvailabilitySchedule repTutorSchedule;
+	
 	// for saving student profile details
 	public boolean saveStudentProfile(StudentProfile studentProfile) {
 		if (repStudentProfile.emailExist(studentProfile.getEmail()) == null) {
@@ -88,10 +102,10 @@ public class dao {
 
 	// for updating basic info of tutor
 	public void updateTutorBasicInfo(TutorProfile tutorProfile) {
-		repTutorProfile.updateBasicInfo(tutorProfile.getFullName(), tutorProfile.getEmail(), tutorProfile.getContact(),
-				tutorProfile.getDateOfBirth(), tutorProfile.getAddressLine1(), tutorProfile.getAddressLine2(),
-				tutorProfile.getCountry(), tutorProfile.getState(), tutorProfile.getProfilePictureUrl(),tutorProfile.getCity(), tutorProfile.getTid()); 
-	
+//		repTutorProfile.updateBasicInfo(tutorProfile.getFullName(), tutorProfile.getEmail(), tutorProfile.getContact(),
+//				tutorProfile.getDateOfBirth(), tutorProfile.getAddressLine1(), tutorProfile.getAddressLine2(),
+//				tutorProfile.getCountry(), tutorProfile.getState(), tutorProfile.getProfilePictureUrl(),tutorProfile.getCity(), tutorProfile.getTid()); 
+	     repTutorProfile.save(tutorProfile);
 	}
 
 	// for saving tutor login credentials
@@ -109,16 +123,17 @@ public class dao {
 	}
 
 	// for updating tutor profile details
-	public void updateTutorProfile(TutorProfileDetailsModel tutorModel) {
-		repTutorProfileDetails.saveUpdate(
-				tutorModel.getFullName(),
-				tutorModel.getSubject1(),
-				tutorModel.getSubject2(),tutorModel.getSubject3(),
-				tutorModel.getPrice1(),tutorModel.getPrice2(),tutorModel.getPrice3(),
-				tutorModel.getStudyInstitution(),tutorModel.getMajorSubject(),	tutorModel.getGraduationYear(),
-				tutorModel.getWorkTitle(),tutorModel.getWorkInstitution(),tutorModel.getDescription(),tutorModel.getRating(),
-				tutorModel.getReviewCount(),tutorModel.getLessonCompleted(),tutorModel.getProfilePictureUrl(),tutorModel.getProfileCompleted(),tutorModel.getGradeLevel(),
-				tutorModel.getTid());
+	public void updateTutorProfile(TutorProfileDetails tutor) {
+		repTutorProfileDetails.save(tutor);
+//		repTutorProfileDetails.saveUpdate(
+//				tutorModel.getFullName(),
+//				tutorModel.getSubject1(),
+//				tutorModel.getSubject2(),tutorModel.getSubject3(),
+//				tutorModel.getPrice1(),tutorModel.getPrice2(),tutorModel.getPrice3(),
+//				tutorModel.getStudyInstitution(),tutorModel.getMajorSubject(),	tutorModel.getGraduationYear(),
+//				tutorModel.getWorkTitle(),tutorModel.getWorkInstitution(),tutorModel.getDescription(),tutorModel.getRating(),
+//				tutorModel.getReviewCount(),tutorModel.getLessonCompleted(),tutorModel.getProfilePictureUrl(),tutorModel.getProfileCompleted(),tutorModel.getGradeLevel(),
+//				tutorModel.getTid());
 	}
 
 	// for getting tutors list for finding tutors
@@ -151,8 +166,81 @@ public class dao {
 		return repTutorProfileDetails.idExist(tid);
 	}
 	
-	public void updateProfileCompleted(Integer profileCompleted) {
-	    repTutorProfileDetails.updateProfileCompleted(profileCompleted);
+	public void updateProfileCompleted(Integer profileCompleted,Integer tid) {
+	    repTutorProfileDetails.updateProfileCompleted(profileCompleted,tid);
 	}
 
+	public boolean saveSocialLogin(SocialLogin socialLogin) {
+		
+		if(repTutorProfile.emailExist(socialLogin.getEmail()) != null) {
+			return false;
+		}
+		else {
+			TutorProfile tutProf = new TutorProfile();
+			tutProf.setEmail(socialLogin.getEmail());
+			tutProf.setFullName(socialLogin.getFullName());
+			repTutorProfile.save(tutProf);
+			TutorProfile tProfile = repTutorProfile.emailExist(socialLogin.getEmail());
+			Integer tid = tProfile.getTid();
+			socialLogin.setTid(tid);
+			
+			repSocialLogin.save(socialLogin) ;
+
+			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			tutProfileDetails.setTid(tid);
+			tutProfileDetails.setFullName(socialLogin.getFullName());
+			tutProfileDetails.setProfileCompleted(12);
+			repTutorProfileDetails.save(tutProfileDetails);
+			
+			
+			TutorVerification tutVerification = new TutorVerification();
+			tutVerification.setTid(tid);
+			repTutorVerification.save(tutVerification);
+			
+			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+			tutSchedule.setTid(tid);
+			tutSchedule.setFullName(socialLogin.getFullName());
+			repTutorSchedule.save(tutSchedule);
+			return true;
+		}
+		
+	}
+
+	public boolean checkSocialLogin(String email) {
+		System.out.println(repSocialLogin.checkSocialLogin((email)));
+		if(repSocialLogin.checkSocialLogin(email)!=null) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	}
+
+	public void updateTutorProfileNew(Object query, Integer tid) {
+		repTutorProfileDetails.saveUpdateNew(query,tid);
+	}
+
+    // for saving and updating tutor availability schedule 
+	public void saveTutorAvailbilitySchedule(TutorAvailabilitySchedule tutSchedule) {
+		System.out.println(tutSchedule);
+		repTutorSchedule.save(tutSchedule);
+	}
+    //for receiving tutor availability schedule 
+	public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) {
+		TutorAvailabilityScheduleModel tutScheduleModel = new TutorAvailabilityScheduleModel();
+		ArrayList<ScheduleData> availableSchedules = new ArrayList<ScheduleData>();
+		TutorAvailabilitySchedule Schedule = repTutorSchedule.idExist(tid);
+		System.out.println(Schedule);
+		if(Schedule.getAllAvailabilitySchedule()!=null) {
+		for(String schd:Schedule.getAllAvailabilitySchedule()) {
+			availableSchedules.add(new Gson().fromJson(schd,ScheduleData.class));
+		}
+		}
+		tutScheduleModel.setAllAvailabilitySchedule(availableSchedules);
+		tutScheduleModel.setFullName(Schedule.getFullName());
+		tutScheduleModel.setTid(Schedule.getTid());
+		System.out.println(tutScheduleModel);
+		return tutScheduleModel;
+	}
 }

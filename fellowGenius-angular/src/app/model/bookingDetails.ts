@@ -15,4 +15,6 @@ export class bookingDetails {
 	public studentName: string;
 	public tutorName: string;
 	public approvalStatus: string = 'Pending';
+	public isLive: boolean = false;
+	public timeLeft: String = '';
 }

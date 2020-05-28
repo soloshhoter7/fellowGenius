@@ -14,6 +14,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
 import { TutorVerification } from 'src/app/model/tutorVerification';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateboxComponent } from '../profile/updatebox/updatebox.component';
 
 @Component({
 	selector: 'app-profile',
@@ -82,7 +84,8 @@ export class ProfileComponent implements OnInit {
 		private tutorService: TutorService,
 		private httpService: HttpService,
 		private firebaseStorage: AngularFireStorage,
-		private snackBar: MatSnackBar
+		private snackBar: MatSnackBar,
+		private matDialog: MatDialog
 	) {
 		this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
 			startWith(null),
@@ -117,13 +120,13 @@ export class ProfileComponent implements OnInit {
 			this.formProgress += 25;
 			this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res) => {
 				this.updateBasicTutorProfile(this.tutorProfile.profilePictureUrl);
+				this.tutorService.setTutorDetails(this.tutorProfile);
 			});
 		}
 	}
 
 	profileComplete(profileForm: NgForm) {
 		this.tutorProfileDetails = profileForm.value;
-		console.log(this.tutorProfileDetails);
 		this.tutorProfileDetails.subject1 = this.tutorService.getTutorProfileDetails().subject1;
 		this.tutorProfileDetails.subject2 = this.tutorService.getTutorProfileDetails().subject2;
 		this.tutorProfileDetails.subject3 = this.tutorService.getTutorProfileDetails().subject3;
@@ -131,8 +134,7 @@ export class ProfileComponent implements OnInit {
 		this.tutorProfileDetails.gradeLevel = this.tutorService.getTutorProfileDetails().gradeLevel;
 		this.tutorProfileDetails.fullName = this.tutorService.getTutorDetials().fullName;
 		this.tutorProfileDetails.profilePictureUrl = this.tutorService.getTutorDetials().profilePictureUrl;
-		console.log(this.tutorService.getTutorDetials().profilePictureUrl);
-		console.log(this.tutorFormDetails);
+		console.log(this.tutorProfileDetails.profilePictureUrl);
 		this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
 			console.log(res);
 			console.log('profile details have been updated !');
@@ -154,6 +156,7 @@ export class ProfileComponent implements OnInit {
 			this.httpService.updateTutorVerification(this.tutorVerification).subscribe((res) => {
 				this.profileCompleted = true;
 				this.tutorFormDetails = this.tutorService.getTutorProfileDetails();
+				this.profilePictureDisplay = this.tutorService.getTutorDetials().profilePictureUrl;
 			});
 		}
 	}
@@ -234,7 +237,49 @@ export class ProfileComponent implements OnInit {
 			)
 			.subscribe();
 	}
+	// -------------------------------------------------------------------------------------------------------------------------------------
 
+	// Edit profile functions
+
+	basicInfoEdit() {
+		this.tutorService.setEditFuntion('EditBasicInfo');
+		this.matDialog.open(UpdateboxComponent, {
+			width: 'auto',
+			height: 'auto'
+		});
+	}
+
+	tutProfileDetailsEdit() {
+		this.tutorService.setEditFuntion('tutProfileDetailsEdit');
+		this.matDialog.open(UpdateboxComponent, {
+			width: 'auto',
+			height: 'auto'
+		});
+	}
+
+	tutProfileDetailsEdit2() {
+		this.tutorService.setEditFuntion('tutProfileDetailsEdit2');
+		this.matDialog.open(UpdateboxComponent, {
+			width: 'auto',
+			height: 'auto'
+		});
+	}
+
+	tutProfileDetailsEdit3() {
+		this.tutorService.setEditFuntion('tutProfileDetailsEdit3');
+		this.matDialog.open(UpdateboxComponent, {
+			width: 'auto',
+			height: 'auto'
+		});
+	}
+
+	tutProfileDetailsEdit4() {
+		this.tutorService.setEditFuntion('tutProfileDetailsEdit4');
+		this.matDialog.open(UpdateboxComponent, {
+			width: 'auto',
+			height: 'auto'
+		});
+	}
 	// ------------------------------------------- for chips --------------------------------------------------------------------------
 	add(event: MatChipInputEvent): void {
 		const input = event.input;

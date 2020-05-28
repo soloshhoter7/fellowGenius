@@ -8,6 +8,10 @@ import { StudentService } from '../service/student.service';
 import { tutorProfile } from '../model/tutorProfile';
 import { LoginDetailsService } from '../service/login-details.service';
 import { TutorService } from '../service/tutor.service';
+import { WelcomeComponent } from '../home/welcome/welcome.component';
+import { MatDialog } from '@angular/material/dialog';
+import { HttpService } from '../service/http.service';
+import { StudentLoginModel } from '../model/studentLoginModel';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
@@ -20,6 +24,7 @@ export class HomeComponent implements OnInit {
 	tutorProfile = new tutorProfile();
 	dashboardUrl: string = '/home/studentDashboard';
 	loginType;
+	studentLoginDetails = new StudentLoginModel();
 	@ViewChild('r', { static: false })
 	@ViewChild('f', { static: false })
 	RegisterForm: NgForm;
@@ -28,11 +33,20 @@ export class HomeComponent implements OnInit {
 		public meetingService: MeetingService,
 		private studentServce: StudentService,
 		private loginService: LoginDetailsService,
-		private tutorService: TutorService
+		private tutorService: TutorService,
+		private dialog: MatDialog,
+		private httpService: HttpService,
+		private studentService: StudentService,
+		private loginDetailsService: LoginDetailsService
 	) {}
 
 	ngOnInit() {
 		this.loginType = this.loginService.getLoginType();
+		// this.httpService.getStudentDetails(this.studentLoginDetails).subscribe((res) => {
+		// 	this.studentProfile = res;
+		// 	this.studentService.setStudentProfileDetails(this.studentProfile);
+		// 	console.log("SID IS " + this.studentService.getStudentProfileDetails().sid);
+		// });
 		if (this.loginType == 'student') {
 			this.studentProfile = this.studentServce.getStudentProfileDetails();
 			console.log('student Id:' + this.studentServce.getStudentProfileDetails().sid);
@@ -42,6 +56,12 @@ export class HomeComponent implements OnInit {
 			this.tutorProfile = this.tutorService.getTutorDetials();
 			this.dashboardUrl = '/home/tutorDashboard';
 			this.router.navigate([ 'home/tutorDashboard' ]);
+		}
+		if (this.loginService.getTrType() == 'signUp') {
+			this.dialog.open(WelcomeComponent, {
+				width: '70vw',
+				height: '90vh'
+			});
 		}
 	}
 	onJoin() {

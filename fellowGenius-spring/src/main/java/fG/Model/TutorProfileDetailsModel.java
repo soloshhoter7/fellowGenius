@@ -15,12 +15,21 @@ public class TutorProfileDetailsModel {
 	String  workTitle;
 	String  workInstitution;
 	String  description;
+	String  speciality;
 	Integer rating;
 	Integer reviewCount;
 	Integer lessonCompleted;
 	String  profilePictureUrl;
 	Integer profileCompleted;
 	String gradeLevel;
+	
+	
+	public String getSpeciality() {
+		return speciality;
+	}
+	public void setSpeciality(String speciality) {
+		this.speciality = speciality;
+	}
 	public Integer getTid() {
 		return tid;
 	}
@@ -148,10 +157,9 @@ public class TutorProfileDetailsModel {
 				+ ", subject2=" + subject2 + ", subject3=" + subject3 + ", price1=" + price1 + ", price2=" + price2
 				+ ", price3=" + price3 + ", studyInstitution=" + studyInstitution + ", majorSubject=" + majorSubject
 				+ ", graduationYear=" + graduationYear + ", workTitle=" + workTitle + ", workInstitution="
-				+ workInstitution + ", description=" + description + ", rating=" + rating + ", reviewCount="
-				+ reviewCount + ", lessonCompleted=" + lessonCompleted + ", profilePictureUrl=" + profilePictureUrl
-				+ ", profileCompleted=" + profileCompleted + ", gradeLevel=" + gradeLevel + "]";
+				+ workInstitution + ", description=" + description + ", speciality=" + speciality + ", rating=" + rating
+				+ ", reviewCount=" + reviewCount + ", lessonCompleted=" + lessonCompleted + ", profilePictureUrl="
+				+ profilePictureUrl + ", profileCompleted=" + profileCompleted + ", gradeLevel=" + gradeLevel + "]";
 	}
-	
-	
+
 }

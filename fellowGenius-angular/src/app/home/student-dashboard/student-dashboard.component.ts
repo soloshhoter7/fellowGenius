@@ -18,7 +18,12 @@ export class StudentDashboardComponent implements OnInit {
 	sid: number;
 	bookingList: bookingDetails[];
 	approvedList: bookingDetails[];
+	liveMeetingList: bookingDetails[];
 	filterSearch: tutorProfileDetails[];
+	emptyBookingList: boolean = false;
+	emptyApprovedList: boolean = false;
+	emptyLiveList: boolean = false;
+
 	constructor(
 		private httpService: HttpService,
 		private studentService: StudentService,
@@ -33,6 +38,7 @@ export class StudentDashboardComponent implements OnInit {
 		this.fetchTutorList();
 		this.findStudentBookings();
 		this.fetchApprovedMeetings();
+		this.fetchLiveMeetings();
 	}
 
 	fetchTutorList() {
@@ -45,13 +51,31 @@ export class StudentDashboardComponent implements OnInit {
 		this.httpService.findStudentBookings(this.sid).subscribe((req) => {
 			console.log('THESE ARE Pending MEETINGS' + req);
 			this.bookingList = req;
+			if (this.bookingList.length == 0) {
+				this.emptyBookingList = true;
+			}
 		});
 	}
 
 	fetchApprovedMeetings() {
 		this.httpService.fetchApprovedMeetings(this.sid).subscribe((req) => {
-			console.log('THESE ARE APPROVED MEETINGS' + req);
+			console.log('THESE ARE APPROVED MEETINGS');
+			console.log(req);
 			this.approvedList = req;
+			console.log(this.approvedList.length);
+			if (this.approvedList.length == 0) {
+				this.emptyApprovedList = true;
+			}
+		});
+	}
+
+	fetchLiveMeetings() {
+		this.httpService.fetchLiveMeetingsStudent(this.sid).subscribe((res) => {
+			console.log(' live meetings list');
+			this.liveMeetingList = res;
+			if (this.liveMeetingList.length == 0) {
+				this.emptyLiveList = true;
+			}
 		});
 	}
 	onJoin(booking: bookingDetails) {

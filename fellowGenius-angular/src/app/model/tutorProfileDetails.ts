@@ -10,6 +10,7 @@ export class tutorProfileDetails {
 	public price2: string;
 	public price3: string;
 	public description: string;
+	public speciality: string;
 	public rating: number;
 	public reviewCount: number;
 	public lessonCompleted: number;

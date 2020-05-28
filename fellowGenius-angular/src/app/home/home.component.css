@@ -19,7 +19,7 @@ body {
 .navbar-brand {
 	margin-left: 3vw;
 	margin-right: 22vw;
-	color: aqua;
+	color: white;
 }
 
 .marginZero {
@@ -62,4 +62,15 @@ a {
 .userButton:hover {
 	border: 1px solid #ccc;
 	border-radius: 4px;
+}
+.navbar-brand {
+	color: white;
+	font-size: 30px;
+	font-weight: 500;
+	margin-left: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.berlinText {
+	font-family: custom;
 }

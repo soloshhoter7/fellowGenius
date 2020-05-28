@@ -1,18 +1,19 @@
 <body>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <a class="navbar-brand" routerLink="/home">fellow Genius</a>
+        <a class="navbar-brand berlinText" routerLink="/home">fellowGenius</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
 
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" style="font-size: large;">
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="dashboardUrl" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a
           >
         </li>
-        <li class="nav-item" *ngIf="loginType == 'student'">
+        <!-- <li class="nav-item" *ngIf="loginType == 'student'"> -->
+        <li class="nav-item">
           <a
             class="nav-link"
             routerLink="/home/findTutor"
@@ -39,13 +40,13 @@
             >Bookings</a
           >
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="loginType=='tutor'">
           <a
             class="nav-link"
-            routerLink="#"
+            routerLink="tutorSchedule"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
-            >Wallet</a
+            >Schedule</a
           >
         </li>
       </ul>
@@ -57,12 +58,13 @@
           ><span style="font-size:larger;font-weight: 300;" *ngIf="loginType == 'student'">{{ studentProfile.fullName }}</span>
           <span style="font-size:larger;font-weight: 300;" *ngIf="loginType == 'tutor'">{{ tutorProfile.fullName }}</span>
           <i style="margin-left: 10px;font-size: larger;" class="fas fa-user-circle"></i></button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" routerLink="/home/profile"><i class="fas fa-user" style="margin: 5px;"></i> Your Profile</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-users" style="margin: 5px;"></i>Your Students</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 200px;">
+                    <a class="dropdown-item" routerLink="/home/profile" *ngIf="loginType == 'tutor'"><i class="fas fa-user" style="margin: 5px;color: #8d89aa;"></i> Your Profile</a>
+                    <a class="dropdown-item" routerLink="/home/studentProfile" *ngIf="loginType == 'student'"><i class="fas fa-user" style="margin: 5px;color: #8d89aa;"></i> Your Profile</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-users" style="margin: 5px;color: #8d89aa"></i>Your Students</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i class="fas fa-info-circle" style="margin: 5px;" ></i> Contact Us</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt" style="margin:5px"></i> Sign Out</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-info-circle" style="margin: 5px;color: #8d89aa" ></i> Contact Us</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt" style="margin:5px;color: #8d89aa"></i> Sign Out</a>
         </div>
         </div>
         </li>

@@ -9,8 +9,8 @@
             </div>
         </div>
         <div class="alert alert-danger" role="alert" *ngIf="incorrectLoginDetails">
-            <p style="text-align: center;">Incorrect email or password !</p>
-            </div>
+            <p style="text-align: center;">{{errorText}}</p>
+        </div>
         <div class="row box">
             <div class="col-sm-5 boxShadow" style="border-right: 1px solid rgb(199, 203, 217);">
                 <img class="picture" src="../../../assets/images/student3.svg" *ngIf="loginDetailsService.loginType=='student'">
@@ -50,7 +50,7 @@
                     </div>
                 </form>
                 <hr>
-                <div class="inner-box">
+                <div class="inner-box" [class]="hideSocialLogin">
                     <button class="btn btn-primary social-buttons" style="background-color: #c63d2d; border-color: #c63d2d;"(click)="prepareLoginButton()" #googleSignUp><i class="fa fa-google social-icons"></i></button>
                     <button class="btn btn-primary social-buttons" style="background-color: #385998; border-color: #385998;" (click)="signIn()"><i class="fa fa-facebook social-icons"></i></button>
                     <button class="btn btn-primary social-buttons" style="background-color: #4875b4; border-color: #4875b4;"><i class="fa fa-linkedin social-icons"></i></button>
