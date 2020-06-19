@@ -13,6 +13,9 @@ import fG.Entity.BookingDetails;
 
 @Repository
 public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>{
+	@Query(value = "SELECT * FROM booking_details WHERE bid=?1",nativeQuery=true)
+	BookingDetails bidExists(Integer bid);
+	
 	@Query(value = "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='Pending'", nativeQuery = true)   
 	List<BookingDetails> bookingExist(String tutorId);
 	
@@ -35,5 +38,16 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
     
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='live'", nativeQuery=true)
 	List<BookingDetails> fetchLiveMeetingListStudent(Integer sid);
+
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='Pending'", nativeQuery=true)
+	List<BookingDetails> fetchAllTutorBookings(Integer tid);
+	
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND NOT approval_status='Pending'", nativeQuery=true)
+	List<BookingDetails> fetchAllStudentBookings(Integer sid);
+
+	@Transactional
+	@Modifying
+	@Query(value = "DELETE from booking_details WHERE bid=?1 AND approval_status='Pending'", nativeQuery = true)
+	Integer deleteMyBooking(Integer bookingId);
 }
 

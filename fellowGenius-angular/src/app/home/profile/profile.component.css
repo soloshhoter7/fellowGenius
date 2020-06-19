@@ -22,6 +22,12 @@ button {
 	width: 100%;
 }
 
+.setLength {
+	float: right;
+	color: gray;
+	font-size: small;
+}
+
 .navigation-links {
 	text-align: center;
 	cursor: pointer;
@@ -142,6 +148,7 @@ label {
 	background-color: white;
 	position: relative;
 }
+
 .marginZero {
 	margin: 0;
 }
@@ -154,9 +161,11 @@ label {
 	padding: 7px;
 	border-radius: 5px;
 }
+
 .content-Box {
 	padding-left: 10px;
 }
+
 .editIconButton {
 	background-color: white;
 	border: none;
@@ -170,23 +179,34 @@ label {
 	color: #8d89aa;
 	outline: none;
 }
+
 .editIconButton:hover {
 	background-color: #ccc;
 	border-radius: 50%;
 	color: black;
 }
+
 .editIcon {
 	position: absolute;
 	top: 13px;
 	left: 13px;
 }
+
 h1 {
 	font-weight: 400 !important;
 }
+
 h2 {
 	font-weight: 400 !important;
 	margin: 0 0 10px !important;
 }
+
 p {
 	font-weight: 300 !important;
+}
+.errorMessage {
+	color: red;
+}
+.hideBlock {
+	display: none;
 }

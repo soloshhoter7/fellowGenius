@@ -12,12 +12,17 @@ import { WelcomeComponent } from '../home/welcome/welcome.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpService } from '../service/http.service';
 import { StudentLoginModel } from '../model/studentLoginModel';
+import { ThemePalette } from '@angular/material/core';
+import { LocationStrategy } from '@angular/common';
+
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: [ './home.component.css' ]
 })
 export class HomeComponent implements OnInit {
+	color: ThemePalette;
+	checked = false;
 	joinMeeting = new meetingDetails();
 	hostMeeting = new meetingDetails();
 	studentProfile = new StudentProfileModel();
@@ -25,8 +30,6 @@ export class HomeComponent implements OnInit {
 	dashboardUrl: string = '/home/studentDashboard';
 	loginType;
 	studentLoginDetails = new StudentLoginModel();
-	@ViewChild('r', { static: false })
-	@ViewChild('f', { static: false })
 	RegisterForm: NgForm;
 	constructor(
 		public router: Router,
@@ -37,36 +40,56 @@ export class HomeComponent implements OnInit {
 		private dialog: MatDialog,
 		private httpService: HttpService,
 		private studentService: StudentService,
-		private loginDetailsService: LoginDetailsService
+		private loginDetailsService: LoginDetailsService,
+		private locationStrategy: LocationStrategy
 	) {}
 
 	ngOnInit() {
-		this.loginType = this.loginService.getLoginType();
-		// this.httpService.getStudentDetails(this.studentLoginDetails).subscribe((res) => {
-		// 	this.studentProfile = res;
-		// 	this.studentService.setStudentProfileDetails(this.studentProfile);
-		// 	console.log("SID IS " + this.studentService.getStudentProfileDetails().sid);
-		// });
-		if (this.loginType == 'student') {
-			this.studentProfile = this.studentServce.getStudentProfileDetails();
-			console.log('student Id:' + this.studentServce.getStudentProfileDetails().sid);
-			this.router.navigate([ 'home/studentDashboard' ]);
-		} else if (this.loginType == 'tutor') {
-			console.log('tutor Id:' + this.tutorService.getTutorDetials().tid);
-			this.tutorProfile = this.tutorService.getTutorDetials();
-			this.dashboardUrl = '/home/tutorDashboard';
-			this.router.navigate([ 'home/tutorDashboard' ]);
+		if (this.loginService.getTrType() != null) {
+			this.loginType = this.loginService.getLoginType();
+			if (this.loginType == 'student') {
+				this.studentProfile = this.studentServce.getStudentProfileDetails();
+				// this.dashboardUrl = '/home/studentDashboard';
+				this.router.navigate([ 'home/studentDashboard' ]);
+			} else if (this.loginType == 'tutor') {
+				this.tutorProfile = this.tutorService.getTutorDetials();
+				if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
+					this.checked = true;
+				} else {
+					this.checked = false;
+				}
+				// this.dashboardUrl = '/home/tutorDashboard';
+				this.router.navigate([ 'home/tutorDashboard' ]);
+			}
+			if (this.loginService.getTrType() == 'signUp') {
+				this.dialog.open(WelcomeComponent, {
+					width: '70vw',
+					height: '90vh'
+				});
+			}
+		} else {
+			// this.router.navigate([ '' ]);
 		}
-		if (this.loginService.getTrType() == 'signUp') {
-			this.dialog.open(WelcomeComponent, {
-				width: '70vw',
-				height: '90vh'
-			});
+		this.preventBackButton();
+		this.preventRefreshButton();
+	}
+	toggleAvailability() {
+		if (this.checked == true) {
+			this.checked = false;
+			this.tutorService.personalAvailablitySchedule.isAvailable = 'no';
+		} else {
+			this.checked = true;
+			this.tutorService.personalAvailablitySchedule.isAvailable = 'yes';
 		}
+		this.httpService
+			.changeAvailabilityStatus(
+				this.tutorService.getPersonalAvailabilitySchedule().tid,
+				this.tutorService.getPersonalAvailabilitySchedule().isAvailable
+			)
+			.subscribe((res) => {});
 	}
 	onJoin() {
 		this.joinMeeting.role = 'student';
-		console.log(this.joinMeeting);
 		this.meetingService.setMeeting(this.joinMeeting);
 		this.router.navigate([ 'meeting' ]);
 	}
@@ -74,15 +97,26 @@ export class HomeComponent implements OnInit {
 		this.hostMeeting.roomId = 123;
 		this.hostMeeting.role = 'host';
 		this.hostMeeting.roomName = 'abc';
-		console.log(this.hostMeeting);
 		this.meetingService.setMeeting(this.hostMeeting);
 		this.router.navigate([ 'meeting' ]);
 	}
 	openNav() {
-		console.log('hey');
 		document.getElementById('mySidenav').style.width = '250px';
 	}
 	closeNav() {
 		document.getElementById('mySidenav').style.width = '0';
+	}
+	preventBackButton() {
+		history.pushState(null, null, location.href);
+		this.locationStrategy.onPopState(() => {
+			history.pushState(null, null, location.href);
+		});
+	}
+	preventRefreshButton() {
+		window.addEventListener('beforeunload', function(e) {
+			var confirmationMessage = 'o/';
+			e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+			return confirmationMessage; // Gecko, WebKit, Chrome <34
+		});
 	}
 }

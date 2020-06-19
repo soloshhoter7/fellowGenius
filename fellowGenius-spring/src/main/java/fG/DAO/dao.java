@@ -18,6 +18,7 @@ import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
 import fG.Model.StudentLoginModel;
+import fG.Model.StudentProfileModel;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorLoginModel;
 import fG.Model.TutorVerificationModel;
@@ -38,6 +39,7 @@ public class dao {
 
 	@Autowired
 	repositoryStudentLogin repStudentLogin;
+
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
 
@@ -46,16 +48,16 @@ public class dao {
 
 	@Autowired
 	repositoryTutorLogin repTutorLogin;
-	
+
 	@Autowired
 	repositoryTutorVerification repTutorVerification;
-	
+
 	@Autowired
 	repositorySocialLogin repSocialLogin;
 
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorSchedule;
-	
+
 	// for saving student profile details
 	public boolean saveStudentProfile(StudentProfile studentProfile) {
 		if (repStudentProfile.emailExist(studentProfile.getEmail()) == null) {
@@ -65,10 +67,14 @@ public class dao {
 			return false;
 		}
 	}
+	
+	// for getting tutor profile with tid
+	public TutorProfile getTutorProfile(Integer tid) {
+		return repTutorProfile.idExist(tid);
+	}
 
 	// for saving student login details
 	public boolean saveStudentLogin(StudentLogin studentLogin) {
-
 		if (repStudentLogin.save(studentLogin) != null) {
 			return true;
 		} else {
@@ -102,10 +108,7 @@ public class dao {
 
 	// for updating basic info of tutor
 	public void updateTutorBasicInfo(TutorProfile tutorProfile) {
-//		repTutorProfile.updateBasicInfo(tutorProfile.getFullName(), tutorProfile.getEmail(), tutorProfile.getContact(),
-//				tutorProfile.getDateOfBirth(), tutorProfile.getAddressLine1(), tutorProfile.getAddressLine2(),
-//				tutorProfile.getCountry(), tutorProfile.getState(), tutorProfile.getProfilePictureUrl(),tutorProfile.getCity(), tutorProfile.getTid()); 
-	     repTutorProfile.save(tutorProfile);
+		repTutorProfile.save(tutorProfile);
 	}
 
 	// for saving tutor login credentials
@@ -125,20 +128,11 @@ public class dao {
 	// for updating tutor profile details
 	public void updateTutorProfile(TutorProfileDetails tutor) {
 		repTutorProfileDetails.save(tutor);
-//		repTutorProfileDetails.saveUpdate(
-//				tutorModel.getFullName(),
-//				tutorModel.getSubject1(),
-//				tutorModel.getSubject2(),tutorModel.getSubject3(),
-//				tutorModel.getPrice1(),tutorModel.getPrice2(),tutorModel.getPrice3(),
-//				tutorModel.getStudyInstitution(),tutorModel.getMajorSubject(),	tutorModel.getGraduationYear(),
-//				tutorModel.getWorkTitle(),tutorModel.getWorkInstitution(),tutorModel.getDescription(),tutorModel.getRating(),
-//				tutorModel.getReviewCount(),tutorModel.getLessonCompleted(),tutorModel.getProfilePictureUrl(),tutorModel.getProfileCompleted(),tutorModel.getGradeLevel(),
-//				tutorModel.getTid());
 	}
 
-	// for getting tutors list for finding tutors
-	public List<?> getTutorList() {
-		return repTutorProfileDetails.findAll();
+	// for getting tutors list whose profile completed is 100% for finding tutors 
+	public List<TutorProfileDetails> getTutorList() {
+		return repTutorProfileDetails.findAllTutors();
 	}
 
 	// for getting tutor details using email
@@ -151,31 +145,36 @@ public class dao {
 		repTutorProfileDetails.save(tutDetails);
 
 	}
-	//for saving tutor Verification Details
+
+	// for saving tutor Verification Details
 	public void saveTutorVerification(TutorVerification tutorVerification) {
 		repTutorVerification.save(tutorVerification);
 	}
 
+	// for updating tutor verification
 	public boolean updateTutorVerification(TutorVerificationModel tutorVerify) {
-        repTutorVerification.updateTutorVerification(tutorVerify.getCountry(), tutorVerify.getState(), tutorVerify.getIdType(), tutorVerify.getIdNumber(),
-        		tutorVerify.getIdDocUrl(), tutorVerify.getEducationType(), tutorVerify.getEducationInstitution(), tutorVerify.getFieldOfStudy(), tutorVerify.getEducationDocUrl(),tutorVerify.getTid());
-        return true;
+		repTutorVerification.updateTutorVerification(tutorVerify.getCountry(), tutorVerify.getState(),
+				tutorVerify.getIdType(), tutorVerify.getIdNumber(), tutorVerify.getIdDocUrl(),
+				tutorVerify.getEducationType(), tutorVerify.getEducationInstitution(), tutorVerify.getFieldOfStudy(),
+				tutorVerify.getEducationDocUrl(), tutorVerify.getTid());
+		return true;
 	}
 
+	// for getting tutor profile details
 	public TutorProfileDetails getTutorProfileDetails(Integer tid) {
 		return repTutorProfileDetails.idExist(tid);
 	}
-	
-	public void updateProfileCompleted(Integer profileCompleted,Integer tid) {
-	    repTutorProfileDetails.updateProfileCompleted(profileCompleted,tid);
+
+	// for updating profile completed %
+	public void updateProfileCompleted(Integer profileCompleted, Integer tid) {
+		repTutorProfileDetails.updateProfileCompleted(profileCompleted, tid);
 	}
 
+	// for saving social login details
 	public boolean saveSocialLogin(SocialLogin socialLogin) {
-		
-		if(repTutorProfile.emailExist(socialLogin.getEmail()) != null) {
+		if (repTutorProfile.emailExist(socialLogin.getEmail()) != null) {
 			return false;
-		}
-		else {
+		} else {
 			TutorProfile tutProf = new TutorProfile();
 			tutProf.setEmail(socialLogin.getEmail());
 			tutProf.setFullName(socialLogin.getFullName());
@@ -183,64 +182,106 @@ public class dao {
 			TutorProfile tProfile = repTutorProfile.emailExist(socialLogin.getEmail());
 			Integer tid = tProfile.getTid();
 			socialLogin.setTid(tid);
-			
-			repSocialLogin.save(socialLogin) ;
+
+			repSocialLogin.save(socialLogin);
 
 			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 			tutProfileDetails.setTid(tid);
 			tutProfileDetails.setFullName(socialLogin.getFullName());
 			tutProfileDetails.setProfileCompleted(12);
 			repTutorProfileDetails.save(tutProfileDetails);
-			
-			
+
 			TutorVerification tutVerification = new TutorVerification();
 			tutVerification.setTid(tid);
 			repTutorVerification.save(tutVerification);
-			
+
 			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
 			tutSchedule.setTid(tid);
 			tutSchedule.setFullName(socialLogin.getFullName());
+			tutSchedule.setIsAvailable("yes");
 			repTutorSchedule.save(tutSchedule);
 			return true;
 		}
-		
-	}
 
+	}
+	
+	// for checking social login if id already exists
 	public boolean checkSocialLogin(String email) {
-		System.out.println(repSocialLogin.checkSocialLogin((email)));
-		if(repSocialLogin.checkSocialLogin(email)!=null) {
+		if (repSocialLogin.checkSocialLogin(email) != null) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
-		
+
 	}
 
-	public void updateTutorProfileNew(Object query, Integer tid) {
-		repTutorProfileDetails.saveUpdateNew(query,tid);
-	}
-
-    // for saving and updating tutor availability schedule 
+	// for saving and updating tutor availability schedule
 	public void saveTutorAvailbilitySchedule(TutorAvailabilitySchedule tutSchedule) {
-		System.out.println(tutSchedule);
 		repTutorSchedule.save(tutSchedule);
 	}
-    //for receiving tutor availability schedule 
+
+	// for receiving tutor availability schedule
 	public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) {
 		TutorAvailabilityScheduleModel tutScheduleModel = new TutorAvailabilityScheduleModel();
 		ArrayList<ScheduleData> availableSchedules = new ArrayList<ScheduleData>();
 		TutorAvailabilitySchedule Schedule = repTutorSchedule.idExist(tid);
-		System.out.println(Schedule);
-		if(Schedule.getAllAvailabilitySchedule()!=null) {
-		for(String schd:Schedule.getAllAvailabilitySchedule()) {
-			availableSchedules.add(new Gson().fromJson(schd,ScheduleData.class));
-		}
+		if (Schedule.getAllAvailabilitySchedule() != null) {
+			for (String schd : Schedule.getAllAvailabilitySchedule()) {
+				availableSchedules.add(new Gson().fromJson(schd, ScheduleData.class));
+			}
 		}
 		tutScheduleModel.setAllAvailabilitySchedule(availableSchedules);
 		tutScheduleModel.setFullName(Schedule.getFullName());
 		tutScheduleModel.setTid(Schedule.getTid());
-		System.out.println(tutScheduleModel);
+		tutScheduleModel.setIsAvailable(Schedule.getIsAvailable());
 		return tutScheduleModel;
 	}
+
+	// for updating student profile
+	public boolean updateStudentProfile(StudentProfile studentProfile) {
+		repStudentProfile.save(studentProfile);
+		return true;
+
+	}
+
+	// for fetching top tutor list
+	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject) {
+		ArrayList<TutorProfileDetails> topTutors = repTutorProfileDetails.fetchTopTutorList(subject);
+		ArrayList<TutorProfileDetails> eliminatingTutors = new ArrayList<TutorProfileDetails>();
+		for (TutorProfileDetails availableTeacher : topTutors) {
+			int index = topTutors.indexOf(availableTeacher);
+
+			if (checkTutorAvailability(availableTeacher.getTid()) == false) {
+
+				eliminatingTutors.add(availableTeacher);
+			}
+		}
+		topTutors.removeAll(eliminatingTutors);
+		return topTutors;
+	}
+
+	// for checking tutor availability status
+	public boolean checkTutorAvailability(Integer tid) {
+		TutorAvailabilitySchedule schedule = new TutorAvailabilitySchedule();
+		schedule = repTutorSchedule.fetchAvailableTutor(tid);
+
+		if (schedule == null) {
+			System.out.println("found null");
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	// for changing availability status of tutor
+	public void changeAvailabilityStatus(int tid, String availabilityStatus) {
+		repTutorSchedule.changeAvailabilityStatus(availabilityStatus, tid);
+	}
+	
+	// for getting student profile
+	public StudentProfile getStudentProfile(Integer sid) {
+		return repStudentProfile.idExist(sid);
+	}
+
 }

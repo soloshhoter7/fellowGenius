@@ -24,7 +24,15 @@ public class BookingDetails {
 	  String approvalStatus;
 	  String studentName;
 	  String tutorName;
+	  Integer bookingCase;
 	  
+	  
+	public Integer getBookingCase() {
+		return bookingCase;
+	}
+	public void setBookingCase(Integer bookingCase) {
+		this.bookingCase = bookingCase;
+	}
 	public Integer getBid() {
 		return bid;
 	}
@@ -115,8 +123,11 @@ public class BookingDetails {
 		return "BookingDetails [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute
 				+ ", duration=" + duration + ", dateOfMeeting=" + dateOfMeeting + ", startTimeHour=" + startTimeHour
 				+ ", startTimeMinute=" + startTimeMinute + ", description=" + description + ", studentId=" + studentId
-				+ ", tutorId=" + tutorId + ", meetingId=" + meetingId + ", approvalStatus=" + approvalStatus + "]";
+				+ ", tutorId=" + tutorId + ", meetingId=" + meetingId + ", approvalStatus=" + approvalStatus
+				+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase + "]";
 	}
+
+	
 	
 	  
 }

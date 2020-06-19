@@ -6,7 +6,10 @@ import { bookingDetails } from '../model/bookingDetails';
 	providedIn: 'root'
 })
 export class MeetingService {
+	deleteBooking: string;
 	bookingDetails: bookingDetails;
+	cancelBooking = new bookingDetails
+	pendingRequests: bookingDetails[];
 	setBooking(bookingDetails: bookingDetails) {
 		this.bookingDetails = bookingDetails;
 	}
@@ -24,5 +27,27 @@ export class MeetingService {
 
 	getMeeting() {
 		return this.meeting;
+	}
+	setDeleteBooking(booking: bookingDetails){
+		this.cancelBooking = booking;
+	}
+	getDeleteBooking(){
+		return this.cancelBooking;
+	}
+
+	refreshBookingList(del:string){
+		this.deleteBooking = del;
+	}
+
+	getNewBookingList(){
+		return this.deleteBooking;
+	}
+
+	studentPendingRequests(bookingList: bookingDetails[]){
+		this.pendingRequests = bookingList;
+	}
+
+	getStudentPendingRequests(){
+		return this.pendingRequests;
 	}
 }

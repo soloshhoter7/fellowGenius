@@ -169,15 +169,19 @@ input.ng-valid {
 	padding: 15px;
 	border-radius: 5px;
 	margin-right: 13px;
-	width: 70px;
+	width: auto;
 }
+
 .inner-box {
 	width: max-content;
 	margin: auto;
 }
+
 .social-icons {
-	font-size: xx-large;
+	font-size: larger;
+	margin-right: 10px;
 }
+
 .hideBlock {
 	display: none;
 }

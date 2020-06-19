@@ -17,4 +17,5 @@ export class bookingDetails {
 	public approvalStatus: string = 'Pending';
 	public isLive: boolean = false;
 	public timeLeft: String = '';
+	public bookingCase: number;
 }

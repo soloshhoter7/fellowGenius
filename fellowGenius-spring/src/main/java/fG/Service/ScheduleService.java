@@ -1,9 +1,11 @@
 package fG.Service;
-
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,8 @@ public class ScheduleService {
 		// date array which contains the next 7 dates in dd/MM/yyyy format
 		ArrayList<Date> dateArray = next7Dates();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
 		//todayDate string
 		 Date todayDate = new Date();
 		 String todayDateString = formatter.format(todayDate);
@@ -56,14 +60,40 @@ public class ScheduleService {
 				System.out.println("new schedule");
 
 				// dates with time
+				
 				Date startTimeSchedule = new Date(schedule.StartTime);
+				System.out.println(startTimeSchedule);
+				
 				Date endTimeSchedule = new Date(schedule.EndTime);
+				System.out.println(endTimeSchedule);
+		
+				String istStartDate =  sdf.format(new Date(schedule.StartTime).getTime());
+				System.out.println(istStartDate);
+				
+				String istEndDate =  sdf.format(new Date(schedule.EndTime).getTime());
+				System.out.println(istEndDate);
+				
+				String[] stSplitSpaces= istStartDate.split(" ");
+				String[] stSplitColons = stSplitSpaces[1].split(":");
+				System.out.println("start hrs ="+stSplitColons[0]);
+				System.out.println("start mins ="+stSplitColons[1]);
+				
+				String[] etSplitSpaces= istEndDate.split(" ");
+				String[] etSplitColons = etSplitSpaces[1].split(":");
+				System.out.println("end hrs ="+etSplitColons[0]);
+				System.out.println("end minutes ="+etSplitColons[1]);
+				
+			
+				System.out.println("start hours ->" + Integer.valueOf(stSplitColons[0])); //stSplitColons[0]
+				System.out.println("start minutes ->" +Integer.valueOf(stSplitColons[1])); //stSplitColons[1]
+				System.out.println("end hours ->" + Integer.valueOf(etSplitColons[0])); // etSplitColons[0]
+				System.out.println("end minutes ->" + Integer.valueOf(etSplitColons[1]));// etSplitColons[1]
 
-				System.out.println("start hours ->" + startTimeSchedule.getHours());
-				System.out.println("start minutes ->" + startTimeSchedule.getMinutes());
-				System.out.println("end hours ->" + endTimeSchedule.getHours());
-				System.out.println("end minutes ->" + endTimeSchedule.getMinutes());
-
+				
+				Integer startHours =Integer.valueOf(stSplitColons[0]);
+				Integer startMinutes = Integer.valueOf(stSplitColons[1]);
+				Integer endHours = Integer.valueOf(etSplitColons[0]);
+				Integer endMinutes= Integer.valueOf(etSplitColons[1]);
 				// formatted date strings
 				String startTimeString = formatter.format(startTimeSchedule);
 				String endTimeString = formatter.format(endTimeSchedule);
@@ -88,10 +118,10 @@ public class ScheduleService {
 						// if all day is false
 					} else {
 						ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
-						sh = startTimeSchedule.getHours();
-						sm = startTimeSchedule.getMinutes();
-						eh = endTimeSchedule.getHours();
-						em = endTimeSchedule.getMinutes();
+						sh = startHours;
+						sm = startMinutes;
+						eh = endHours;
+						em = endMinutes;
 						System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em);
 						timeSlots = createTimeSlots(sh, sm, eh, em, currentDateString);
 						for (ScheduleTime tp : timeSlots) {
@@ -102,8 +132,8 @@ public class ScheduleService {
 				} else if ((date.compareTo(startTimeSchedule) == 0) && (date.compareTo(endTimeSchedule)) != 0) {
 					ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
 					System.out.println();
-					sh = startTimeSchedule.getHours();
-					sm = startTimeSchedule.getMinutes();
+					sh = startHours;
+					sm = startMinutes;
 					eh = 0;
 					em = 0;
 					System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em);
@@ -148,10 +178,10 @@ public class ScheduleService {
 					if (flag == 0) {
 						if ((schedule.RecurrenceRule != null) && (schedule.RecurrenceID == null)) {
 							ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
-							sh = startTimeSchedule.getHours();
-							sm = startTimeSchedule.getMinutes();
-							eh = endTimeSchedule.getHours();
-							em = endTimeSchedule.getMinutes();
+							sh = startHours;
+							sm = startMinutes;
+							eh = endHours;
+							em = endMinutes;
 							System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em);
 							timeSlots = createTimeSlots(sh, sm, eh, em, currentDateString);
 							for (ScheduleTime tp : timeSlots) {
@@ -165,8 +195,9 @@ public class ScheduleService {
 		}
 		System.out.println("-----------------------------------------------------------");
 		System.out.println("calling delete Bookings slots");
-		timeArray = deleteBookingsFromTimeSlots(timeArray,tid);
+		
 		timeArray = eliminateBeforeTimeBookings(timeArray);
+		timeArray = deleteBookingsFromTimeSlots(timeArray,tid);
 		System.out.println(timeArray);
 		return timeArray;
 	}
@@ -211,16 +242,24 @@ public class ScheduleService {
 		return timeArray;
 
 	}
+	
+	// for eliminating before time slots
     public ArrayList<ScheduleTime> eliminateBeforeTimeBookings(ArrayList<ScheduleTime> timeSlots){
     	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    	formatter.setTimeZone(TimeZone.getTimeZone("IST"));
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
     	ArrayList<ScheduleTime> eliminateArray = new ArrayList<ScheduleTime>();
 		//todayDate string
 		 Date todayDate = new Date();
+		 ZoneId zoneId = ZoneId.of("Asia/Kolkata");
+		 LocalTime time = LocalTime.now(zoneId);
 		 String todayDateString = formatter.format(todayDate);
 		 for(ScheduleTime tp:timeSlots) {
 			 if(tp.date.equals(todayDateString)) {
 			
-				 int totalCurrentMinutes = (todayDate.getHours()*60)+todayDate.getMinutes();
+				 int totalCurrentMinutes = (time.getHour()*60)+time.getMinute();
+				 System.out.println("hours :"+time.getHour()+"minutes :"+time.getMinute());
 				 int tpTotalMinutes = (tp.getHours()*60)+tp.getMinutes();
 				 if(tpTotalMinutes<totalCurrentMinutes) {
                      System.out.println("today's date before time");
@@ -232,6 +271,8 @@ public class ScheduleService {
 		 timeSlots.removeAll(eliminateArray);
 		 return timeSlots; 
     }
+    
+    // for deleting bookings from time slots
 	public ArrayList<ScheduleTime> deleteBookingsFromTimeSlots(ArrayList<ScheduleTime> timeSlots,Integer tid){
 		System.out.println("-----------------------------------------------------------");
 		System.out.println("in delete bookings from time slots");
@@ -245,7 +286,7 @@ public class ScheduleService {
 		ArrayList<ScheduleTime> bookingArray = new ArrayList<ScheduleTime>();
 		
 		//fetching the list of all the approved tutor meetings
-		ArrayList<BookingDetails> tutorBookings = (ArrayList<BookingDetails>) meetingDao.fetchApprovedListTutor(tid);
+		ArrayList<BookingDetails> tutorBookings = (ArrayList<BookingDetails>) meetingDao.fetchAllTutorBookings(tid);
 		
 		// for finding all the bookings, converting them to slots and then adding them to booking array
 		for(Date currentDate:dateArray) {
@@ -266,19 +307,59 @@ public class ScheduleService {
 						
 						ArrayList<ScheduleTime> bookingSlots = new ArrayList<ScheduleTime>();
 						
-						bookingSlots = createTimeSlots(booking.getStartTimeHour(),booking.getStartTimeMinute(),booking.getEndTimeHour(),booking.getEndTimeMinute(),booking.getDateOfMeeting());
 						
-					    for(ScheduleTime slot:bookingSlots) {
-					    	bookingArray.add(slot);
-					    }
+						// case 1
+						if(booking.getBookingCase()==1) {
+							if(booking.getEndTimeMinute()==0) {
+								booking.setEndTimeMinute(30);
+								booking.setEndTimeHour(booking.getEndTimeHour()-1);
+							}else {
+								booking.setEndTimeMinute(0);
+							}	
+							bookingSlots = createTimeSlots(booking.getStartTimeHour(),booking.getStartTimeMinute(),booking.getEndTimeHour(),booking.getEndTimeMinute(),booking.getDateOfMeeting());
+						}
+						//case 2
+						else if(booking.getBookingCase()==2) {
+							if(booking.getStartTimeMinute()==0) {
+								booking.setStartTimeMinute(30);
+							}else {
+								booking.setStartTimeHour(booking.getStartTimeHour()+1);
+								booking.setStartTimeMinute(0);
+							}
+							bookingSlots = createTimeSlots(booking.getStartTimeHour(),booking.getStartTimeMinute(),booking.getEndTimeHour(),booking.getEndTimeMinute(),booking.getDateOfMeeting());
+						}
+						// case 3
+						else if(booking.getBookingCase()==3) {
+							bookingSlots = createTimeSlots(booking.getStartTimeHour(),booking.getStartTimeMinute(),booking.getEndTimeHour(),booking.getEndTimeMinute(),booking.getDateOfMeeting());
+						}
+						// case 5
+						else if(booking.getBookingCase()==5) {
+							if(booking.getStartTimeMinute()==0) {
+								booking.setStartTimeMinute(30);
+							}else {
+								booking.setStartTimeHour(booking.getStartTimeHour()+1);
+								booking.setStartTimeMinute(0);
+							}
+							if(booking.getEndTimeMinute()==0) {
+								booking.setEndTimeMinute(30);
+								booking.setEndTimeHour(booking.getEndTimeHour()-1);
+							}else {
+								booking.setEndTimeMinute(0);
+							}	
+							bookingSlots = createTimeSlots(booking.getStartTimeHour(),booking.getStartTimeMinute(),booking.getEndTimeHour(),booking.getEndTimeMinute(),booking.getDateOfMeeting());
+						}
+					
+						for(ScheduleTime slot:bookingSlots) {
+						    	bookingArray.add(slot);
+						    }
 					}
 				}
 			}else {
 				System.out.println("no approved meetings ! for date ->"+currentDateString);
 			}
 		 }	
-		//removing slots of bookings
 		
+		//removing slots of bookings
 		System.out.println("booking array ->"+bookingArray);
         timeSlots.removeAll(bookingArray);
         System.out.println("time array ->"+timeSlots);
@@ -286,8 +367,4 @@ public class ScheduleService {
 	}
 	
 	
-//	public static void main(String[] args) throws ParseException 
-//    { 
-//        compareDates(); 
-//    } 
 }

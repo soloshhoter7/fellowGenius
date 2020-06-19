@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { StudentLoginModel } from '../model/studentLoginModel';
 import { StudentProfileModel } from '../model/studentProfile';
+import { scheduleData } from '../model/scheduleData';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class StudentService {
 	studentProfile = new StudentProfileModel();
+	studentBookings: scheduleData[];
 	editVariable: string;
 	setEditFuntion(editFunction: string) {
 		this.editVariable = editFunction;
@@ -20,5 +22,19 @@ export class StudentService {
 	getStudentProfileDetails() {
 		return this.studentProfile;
 	}
-	constructor() {}
+	setStudentBookings(schedule: scheduleData[]) {
+		this.studentBookings = schedule;
+		this.manipulateMeetingSchedule();
+	}
+	getStudentBookings() {
+		return this.studentBookings;
+	}
+	manipulateMeetingSchedule() {
+		for (let schedule of this.studentBookings) {
+			var startDate: Date = new Date(schedule.StartTime.toString());
+			var endDate: Date = new Date(schedule.EndTime.toString());
+			schedule.StartTime = startDate.toString();
+			schedule.EndTime = endDate.toString();
+		}
+	}
 }

@@ -16,21 +16,20 @@ public class TutorAvailabilitySchedule {
 	@Column(columnDefinition="BLOB")
 	ArrayList<String> allAvailabilitySchedule;
 	String fullName;
+	String isAvailable;
 	
+	public String getIsAvailable() {
+		return isAvailable;
+	}
+	public void setIsAvailable(String isAvailable) {
+		this.isAvailable = isAvailable;
+	}
 	public Integer getTid() {
 		return tid;
 	}
 	public void setTid(Integer tid) {
 		this.tid = tid;
 	}
-	
-//	public List<String> getAllAvailabilitySchedule() {
-//		return allAvailabilitySchedule;
-//	}
-//
-//	public void setAllAvailabilitySchedule(ArrayList<String> allAvailabilitySchedule) {
-//		this.allAvailabilitySchedule = allAvailabilitySchedule;
-//	}
 	
 	public String getFullName() {
 		return fullName;
@@ -45,12 +44,13 @@ public class TutorAvailabilitySchedule {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	
 	@Override
 	public String toString() {
 		return "TutorAvailabilitySchedule [tid=" + tid + ", allAvailabilitySchedule=" + allAvailabilitySchedule
-				+ ", fullName=" + fullName + "]";
+				+ ", fullName=" + fullName + ", isAvailable=" + isAvailable + "]";
 	}
+	
+
 	
 	
 	

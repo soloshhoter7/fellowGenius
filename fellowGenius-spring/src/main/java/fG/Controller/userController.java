@@ -1,7 +1,9 @@
 package fG.Controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +23,8 @@ import fG.Model.TutorVerificationModel;
 import fG.Service.UserService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://fellowgenius.com")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/fellowGenius")
 public class userController {
 
@@ -38,6 +41,12 @@ public class userController {
 		}
 	}
 
+	//for updating student profile
+	@RequestMapping(value= "/updateStudentProfile")
+	public boolean updateStudentProfile(@RequestBody StudentProfileModel stuModel) throws IOException {
+		service.updateStudentProfile(stuModel);
+		return true;
+	}
 	// for checking student login
 	@RequestMapping(value = "/loginStudent")
 	public boolean onLoginStudent(@RequestBody StudentLoginModel studentLoginModel) {
@@ -62,6 +71,14 @@ public class userController {
 		return service.getTutorProfileDetails(Integer.valueOf(tid));
 	}
 
+	//fetch top tutor details
+	@RequestMapping(value="/fetchTopTutorList")
+	@ResponseBody
+	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject) {
+		ArrayList<TutorProfileDetails> topTutors = service.fetchTopTutorList(subject);
+		return topTutors;
+	}
+	
 	// for saving tutor registration details
 	@RequestMapping(value = "/registerTutor")
 	public boolean saveTutorProfile(@RequestBody TutorProfileModel tutorModel) throws IOException {
@@ -115,11 +132,11 @@ public class userController {
 		return service.onTutorLogin(tutorLoginModel);
 	}
 
-	// fetch list of all teachers
+	// for getting the list of teachers with 100% profile completion
 	@RequestMapping(value = "/fetchTutorList", produces = "application/JSON")
 	@ResponseBody
-	public List<?> tutorList() {
-		List<?> tutorProfileDetails = service.getTutorList();
+	public List<TutorProfileDetails> tutorList() {
+		List<TutorProfileDetails> tutorProfileDetails = service.getTutorList();
 		return tutorProfileDetails;
 	}
 
@@ -136,4 +153,19 @@ public class userController {
 		System.out.println("In check social login" + email);
 		return service.checkSocialLogin(email);
 	}
+	
+	// to change tutor availability status
+	@RequestMapping(value="/changeAvailabilityStatus")
+	@ResponseBody
+	public void changeAvailabilityStatus(String tid, String isAavailable) {
+		int tutorId = Integer.parseInt(tid);
+		service.changeAvailabilityStatus(tutorId, isAavailable);
+	}
+	
+	@RequestMapping(value="/helloKarma")
+	@ResponseBody
+	public String helloKarma() {
+		return "Hello world ! the server is up and running";
+	}
+	
 }

@@ -1,48 +1,36 @@
 <body style="padding: 20px;">
-  <div
-    class="outer-box"
-    style="padding-bottom: 20px;"
-    *ngIf="!profileCompleted"
-  >
-    <div class="inner-box">
-      <div class="form-navigation">
-        <div class="row">
-          <div class="col-md-3 navigation-links border-right">
-            <a>Basic Info</a>
-          </div>
-          <div class="col-md-3 navigation-links border-right">
-            <a>Profile</a>
-          </div>
-          <div class="col-md-3 navigation-links border-right">
-            <a>Verification</a>
-          </div>
-          <div class="col-md-3 navigation-links">
-            <a>Complete</a>
-          </div>
-        </div>
-      </div>
-      <div class="progress-Bar">
-        <div class="outer-progressBar">
-          <div class="inner-progressBar" [style.width.%]="formProgress"></div>
-        </div>
-      </div>
-      <div class="form-body" style="padding-top: 10px;">
-        <!-- --------------------------------------------- basic info --------------------------------------------------------------- -->
-        <div *ngIf="formProgress == 12">
-          <form #basicInfo="ngForm">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    [ngModel]="tutorProfile.fullName"
-                    class="form-control"
-                    required
-                  />
-                  <label class="form-control-placeholder" for="fullName"
-                    >Full Name</label
+    <div class="outer-box" style="padding-bottom: 20px;" *ngIf="formProgress<99">
+        <div class="inner-box">
+            <div class="form-navigation">
+                <div class="row">
+                    <div class="col-md-3 navigation-links border-right">
+                        <a>Basic Info</a>
+                    </div>
+                    <div class="col-md-3 navigation-links border-right">
+                        <a>Profile</a>
+                    </div>
+                    <div class="col-md-3 navigation-links border-right">
+                        <a>Verification</a>
+                    </div>
+                    <div class="col-md-3 navigation-links">
+                        <a>Complete</a>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-Bar">
+                <div class="outer-progressBar">
+                    <div class="inner-progressBar" [style.width.%]="formProgress"></div>
+                </div>
+            </div>
+            <div class="form-body" style="padding-top: 10px;">
+                <!-- --------------------------------------------- basic info --------------------------------------------------------------- -->
+                <div *ngIf="formProgress == 12">
+                    <form #basicInfo="ngForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" id="fullName" name="fullName" [ngModel]="tutorProfile.fullName" class="form-control" required />
+                                    <label class="form-control-placeholder" for="fullName">Full Name</label
                   >
                 </div>
               </div>
@@ -57,8 +45,13 @@
                     required
                     email
                     #email="ngModel"
+                    disabled
                   />
-                  <label class="form-control-placeholder" for="email"
+                  <label style="
+                  position: absolute;
+                  top: -17px;
+                  left: 10px;" 
+                  for="email"
                     >Email Address</label
                   >
                   <span class="help-block" *ngIf="!email.valid && email.touched"
@@ -105,6 +98,9 @@
                   <label class="form-control-placeholder" for="date"
                     >Date of Birth</label
                   >
+                  <span class="help-block" *ngIf="showDateError">
+                    Please enter valid DOB
+                  </span>
                 </div>
               </div>
             </div>
@@ -169,11 +165,42 @@
                     id="state"
                     required
                   >
-                    <option>Haryana</option>
-                    <option>Himachal Pradesh</option>
-                    <option>Punjab</option>
-                    <option>Kerala</option>
-                    <option>Tamil Nadu</option>
+                  <option >Andhra Pradesh</option>
+<option >Andaman and Nicobar Islands</option>
+<option >Arunachal Pradesh</option>
+<option >Assam</option>
+<option >Bihar</option>
+<option >Chandigarh</option>
+<option >Chhattisgarh</option>
+<option >Dadar and Nagar Haveli</option>
+<option >Daman and Diu</option>
+<option >Delhi</option>
+<option >Lakshadweep</option>
+<option >Puducherry</option>
+<option >Goa</option>
+<option >Gujarat</option>
+<option >Haryana</option>
+<option >Himachal Pradesh</option>
+<option >Jammu and Kashmir</option>
+<option >Jharkhand</option>
+<option >Karnataka</option>
+<option >Kerala</option>
+<option >Madhya Pradesh</option>
+<option >Maharashtra</option>
+<option >Manipur</option>
+<option >Meghalaya</option>
+<option >Mizoram</option>
+<option >Nagaland</option>
+<option >Odisha</option>
+<option >Punjab</option>
+<option >Rajasthan</option>
+<option >Sikkim</option>
+<option >Tamil Nadu</option>
+<option >Telangana</option>
+<option >Tripura</option>
+<option >Uttar Pradesh</option>
+<option >Uttarakhand</option>
+<option >West Bengal</option>
                   </select>
                   <label class="form-control-placeholder" for="state"
                     >State</label
@@ -259,12 +286,47 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
+                <div class="errorMessage" *ngIf="!subjectsValid">Enter valid Subjects</div>
+                <div class="errorMessage" *ngIf="only3Subjects"> You are required to select 3 subjects only
+                  and no 2 subjects can be same
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                  <select
+                    class="form-control"
+                    [(ngModel)]="tutorFormDetails.price1"
+                    name="price1"
+                    id="price1"
+                    required
+                  >
+                    <option selected>100</option>
+                    <option>200</option>
+                    <option>300</option>
+                    <option>400</option>
+                    <option>500</option>
+                    <option>600</option>
+                    <option>700</option>
+                    <option>800</option>
+                    <option>900</option>
+                    <option>1000</option>
+                    <option>1500</option>
+                    <option>2000</option>
+                    <option>2500</option>
+                    <option>3000</option>
+                    <option>3500</option>
+                    <option>4000</option>
+                    <option>4500</option>
+                    <option>5000</option>
+                  </select>
+                  <label class="form-control-placeholder" for="price1"
+                    >Price per hour (in Rupees)</label
+                  >
+                </div>
               </div>
               <div class="col-md-6" style="padding-top: 8px;">
                 <div class="form-group">
                   <select
                     class="form-control"
-                    [(ngModel)]="tutorProfile.gradeLevel"
+                    [(ngModel)]="tutorFormDetails.gradeLevel"
                     name="gradeLevel"
                     id="gradeLevel"
                     required
@@ -312,15 +374,37 @@
                     style="padding-top: 10px;"
                     class="form-control"
                     id="description"
-                    rows="6"
+                    rows="3"
                     name="description"
-                    [(ngModel)]="tutorProfileDetails.description"
+                    maxlength="250"
+                    [ngModel]="tutorProfileDetails.description"
+                    #tutorProfileDescription
                     required
                   ></textarea>
                   <label for="description" class="form-control-placeholder"
                     >Description</label
                   >
+                  <span class="setLength">{{tutorProfileDescription.value.length}}/250</span>
                 </div>
+                <!-- ............................ -->
+                <div class="form-group">
+                  <textarea
+                    style="padding-top: 10px;"
+                    class="form-control"
+                    id="speciality"
+                    rows="3"
+                    name="speciality"
+                    maxlength="250"
+                    [ngModel]="tutorProfileDetails.speciality"
+                    #tutorProfileSpeciality
+                    required
+                  ></textarea>
+                  <label for="speciality" class="form-control-placeholder"
+                    >Speciality</label
+                  >
+                  <span class="setLength">{{tutorProfileSpeciality.value.length}}/250</span>
+                </div>
+
               </div>
               <div class="col-md-6">
                 <div class="form-group">
@@ -352,8 +436,8 @@
                 <div class="form-group">
                   <input
                     type="number"
-                    min="1987"
-                    max="2025"
+                    min="1950"
+                    [max]="maxGraduationYear"
                     id="graduationYear"
                     name="graduationYear"
                     [(ngModel)]="tutorProfileDetails.graduationYear"
@@ -465,11 +549,43 @@
                     id="state"
                     required
                   >
-                    <option>Haryana</option>
-                    <option>Himachal Pradesh</option>
-                    <option>Punjab</option>
-                    <option>Kerala</option>
-                    <option>Tamil Nadu</option>
+                  <option >Andhra Pradesh</option>
+                  <option >Andaman and Nicobar Islands</option>
+                  <option >Arunachal Pradesh</option>
+                  <option >Assam</option>
+                  <option >Bihar</option>
+                  <option >Chandigarh</option>
+                  <option >Chhattisgarh</option>
+                  <option >Dadar and Nagar Haveli</option>
+                  <option >Daman and Diu</option>
+                  <option >Delhi</option>
+                  <option >Lakshadweep</option>
+                  <option >Puducherry</option>
+                  <option >Goa</option>
+                  <option >Gujarat</option>
+                  <option >Haryana</option>
+                  <option >Himachal Pradesh</option>
+                  <option >Jammu and Kashmir</option>
+                  <option >Jharkhand</option>
+                  <option >Karnataka</option>
+                  <option >Kerala</option>
+                  <option >Madhya Pradesh</option>
+                  <option >Maharashtra</option>
+                  <option >Manipur</option>
+                  <option >Meghalaya</option>
+                  <option >Mizoram</option>
+                  <option >Nagaland</option>
+                  <option >Odisha</option>
+                  <option >Punjab</option>
+                  <option >Rajasthan</option>
+                  <option >Sikkim</option>
+                  <option >Tamil Nadu</option>
+                  <option >Telangana</option>
+                  <option >Tripura</option>
+                  <option >Uttar Pradesh</option>
+                  <option >Uttarakhand</option>
+                  <option >West Bengal</option>
+                                   
                   </select>
                   <label class="form-control-placeholder" for="state"
                     >State</label
@@ -522,6 +638,7 @@
                     type="file"
                     onclick="this.value=null"
                     (change)="idDocumentChange($event)"
+                    required
                   />
                   <button
                     class="btn btn-outline-primary"
@@ -597,14 +714,13 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <!-- <input #studentDocument hidden="true" type="file" onclick="this.value=null" (change)="studentDocument($event)" />
-                                    <button class="btn btn-outline-primary" (click)="studentDocument.click()">Upload latest Marksheet or degree</button> -->
                   <input
                     #studentDocument
                     hidden="true"
                     type="file"
                     onclick="this.value=null"
                     (change)="educationDocumentChange($event)"
+                    required
                   />
                   <button
                     class="btn btn-outline-primary"
@@ -621,7 +737,7 @@
                 <button
                   class="btn btn-outline-success"
                   (click)="verificationComplete(verificationForm)"
-                  [disabled]="!verificationForm.valid"
+                  [disabled]="!verificationForm.valid || !disableContinue1 || !disableContinue2"
                 >
                   Submit
                 </button>
@@ -636,7 +752,7 @@
   </div>
 
   <!-- after profile Completed  -->
-  <div class="container" *ngIf="formProgress == 99">
+  <div class="container" *ngIf="formProgress>=99">
     <div class="row">
       <div class="col-md-8">
         <!-- for profile picture -->
@@ -651,12 +767,24 @@
           </button>
           <div class="col-md-2" style="margin-right: 30px;">
             <img
-              src="../../../assets/icons/user-square.svg"
+              [src]="tutorProfile.profilePictureUrl"
               alt="profilePicture"
               style="width: 100px; height: 100px; border-radius: 5px;"
+              (click)="profilePicture.click()"
+              title="update profile picture"
             />
+            <div class="form-group" style="margin-top: 5px;">
+              <input
+                #profilePicture
+                hidden="true"
+                type="file"
+                onclick="this.value=null"
+                (change)="profilePictureChangeCompleted($event)"
+                required
+              />
+            </div>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-8">
             <div class="row">
               <p
                 style="
@@ -776,9 +904,8 @@
           </div>
           <div style="width: 100%;">
             <div>
-              <p style="display: inline;">2017</p>
-              &nbsp;-&nbsp;
-              <p style="display: inline;">
+              <h2>Graduation year</h2>
+                <p style="display: inline;">
                 {{ tutorFormDetails.graduationYear }}
               </p>
             </div>

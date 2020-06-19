@@ -10,7 +10,14 @@ public class TutorAvailabilityScheduleModel {
 	ArrayList<ScheduleData> allAvailabilitySchedule;
 	ArrayList<ScheduleData> allMeetingsSchedule;
 	String fullName;
+	String isAvailable;	
 	
+	public String getIsAvailable() {
+		return isAvailable;
+	}
+	public void setIsAvailable(String isAvailable) {
+		this.isAvailable = isAvailable;
+	}
 	public Integer getTid() {
 		return tid;
 	}
@@ -36,11 +43,13 @@ public class TutorAvailabilityScheduleModel {
 	public void setAllMeetingsSchedule(ArrayList<ScheduleData> allMeetingsSchedule) {
 		this.allMeetingsSchedule = allMeetingsSchedule;
 	}
-	
 	@Override
 	public String toString() {
 		return "TutorAvailabilityScheduleModel [tid=" + tid + ", allAvailabilitySchedule=" + allAvailabilitySchedule
-				+ ", allMeetingsSchedule=" + allMeetingsSchedule + ", fullName=" + fullName + "]";
+				+ ", allMeetingsSchedule=" + allMeetingsSchedule + ", fullName=" + fullName + ", isAvailable="
+				+ isAvailable + "]";
 	}
+	
+
 	
 }

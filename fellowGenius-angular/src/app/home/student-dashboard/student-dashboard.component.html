@@ -1,131 +1,165 @@
-<!-- <div class="container-fluid">
-    <div class="box">
-        <h2 style="text-align: center;"> BOOKING REQUESTS</h2>
-        <div class="container" *ngFor="let list of bookingList">
-            <img src="../../../assets/images/teacher.svg">
-            <br> {{list.tutorName}}
-            <br> {{list.startTimeHour}}:{{list.startTimeMinute}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{list.endTimeHour}}:{{list.endTimeMinute}}
-            <br> {{list.approvalStatus}}
-        </div>
-    </div>
-    <hr>
-    <div class="box">
-        <h2 style="text-align: center;"> YOUR MEETINGS</h2>
-        <div class="container approved" *ngFor="let list of approvedList">
-            <img src="../../../assets/images/teacher.svg">
-            <br> {{list.tutorName}}
-            <br> {{list.startTimeHour}}:{{list.startTimeMinute}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{list.endTimeHour}}:{{list.endTimeMinute}}
-            <br> {{list.approvalStatus}}
-            <button class="btn btn-danger" (click)="onJoin(list)">Join now</button>
-        </div>
-    </div>
-</div> -->
-
 <body>
-
-    <div class="card">
-        <div class="card-header">
-            Live Meetings
-        </div>
-        <div class="card-body">
-            <div *ngIf="emptyLiveList">No Live meetings yet</div>
-            <div class="" *ngFor="let element of liveMeetingList">
-                <div class="row">
-                    <div class="col-sm-1">
-                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
-                    </div>
-                    <div class="col-sm-8" style="padding-left: 30px;">
-                        <h1 style="font-size: 19px;margin: 0;">{{element.studentName}}</h1>
-                        <p style="font-size: medium;
+    <div class="col-md-8 align">
+        <div class="card">
+            <div class="card-header">
+                Live Meetings
+            </div>
+            <div class="card-body">
+                <div *ngIf="emptyLiveList">No Live meetings yet</div>
+                <div class="" *ngFor="let element of liveMeetingList">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                        </div>
+                        <div class="col-sm-8" style="padding-left: 30px;">
+                            <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
+                            <p style="font-size: medium;
                   color: rgb(109, 116, 116);
                   padding-top: 1px; margin:0;">
-                            {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}})
-                        </p>
-                        <p style="font-size: small;
+                                {{element.startTimeHour}}:{{element.startTimeMinute|zero}} - {{element.endTimeHour}}:{{element.endTimeMinute|zero}} ({{element.duration}} minutes)
+                            </p>
+                            <p>{{element.dateOfMeeting}}</p>
+                            <p style="font-size: small;
                    color: rgb(182, 192, 192);">
-                            {{element.description}}
-                        </p>
-                        <p style="font-size: medium;
-                        color: rgb(109, 116, 116);">
-                                 {{element.timeLeft}}
-                             </p>
-                    </div>
-                    <div class="col-sm-3">
-                        <button class="btn btn-outline-danger" (click)="onJoin(element)">Join</button>
+                                {{element.description}}
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-outline-danger" (click)="onJoin(element)">Join</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="card-header">
-            Booking Requests
-        </div>
-        <div class="card-body">
-            <div *ngIf="emptyBookingList">No Booking Requests</div>
-            <div class="" *ngFor="let element of bookingList">
-                <div class="row">
-                    <div class="col-sm-1">
-                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="tutorImage">
-                    </div>
-                    <div class="col-sm-8" style="padding-left: 30px;">
-                        <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
-                        <p>
-                            {{element.dateOfMeeting}}
-                        </p>
-                        <p style="font-size: medium;
+        <!-- ---------------------------------------- Pending Requests-------------------------------------------- -->
+        <div class="card">
+            <div class="card-header">
+                Booking Requests
+            </div>
+            <div class="card-body">
+                <div *ngIf="emptyBookingList || meetingService.deleteBooking == 'delete'">No Booking Requests</div>
+                <!-- <div *ngIf="meetingService.deleteBooking == 'delete'">No Booking Requests</div> -->
+                <div class="" *ngFor="let element of bookingList">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="tutorImage">
+                        </div>
+                        <div class="col-sm-8" style="padding-left: 30px;">
+                            <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
+                            <p>
+                                {{element.dateOfMeeting}}
+                            </p>
+                            <p style="font-size: medium;
                 color: rgb(109, 116, 116);
                 padding-top: 1px; margin:0;">
-                            {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}} minutes)
-                        </p>
-                        <p>{{element.approvalStatus}}</p>
-                        <p style="font-size: small;
+                                {{element.startTimeHour}}:{{element.startTimeMinute|zero}} - {{element.endTimeHour}}:{{element.endTimeMinute|zero}} ({{element.duration}} minutes)
+                            </p>
+                            <p style="font-size: small;
                  color: rgb(182, 192, 192);">
-                            {{element.description}}
-                        </p>
+                                {{element.description}}
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p style=" 
+                            width: max-content;
+                            padding: 2px;
+                            background-color: #337ab7;
+                            color: white;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                            border-radius: 5px;">
+                                {{element.approvalStatus}}
+                            </p>
+                            <button class="btn btn-danger" *ngIf="element.approvalStatus == 'Pending'" (click)="deleteBooking(element)" style="padding: 1px;
+                                   width: 67px;
+                                   margin-top: 2px;">Cancel</button>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- ---------------------------------------- approved Meetings-------------------------------------------- -->
-    <div class="card">
-        <div class="card-header">
-            Upcoming Meetings
-        </div>
-        <div class="card-body">
-            <div *ngIf="emptyApprovedList">No Upcoming meetings</div>
-            <div class="" *ngFor="let element of approvedList">
-                <div class="row">
-                    <div class="col-sm-1">
-                        <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
-                    </div>
+        <!-- ---------------------------------------- approved Meetings-------------------------------------------- -->
+        <div class="card">
+            <div class="card-header">
+                Upcoming Meetings
+            </div>
+            <div class="card-body">
+                <div *ngIf="emptyApprovedList">No Upcoming meetings</div>
+                <div class="" *ngFor="let element of approvedList">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                        </div>
 
-                    <div class="col-sm-8" style="padding-left: 30px;">
-                        <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
-                        <p>
-                            {{element.dateOfMeeting}}
-                        </p>
-                        <p style="font-size: medium;
+                        <div class="col-sm-8" style="padding-left: 30px;">
+                            <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
+                            <p>
+                                {{element.dateOfMeeting}}
+                            </p>
+                            <p style="font-size: medium;
               color: rgb(109, 116, 116);
               padding-top: 1px; margin:0;">
-                            {{element.startTimeHour}}:{{element.startTimeMinute}} - {{element.endTimeHour}}:{{element.endTimeMinute}} ({{element.duration}} minutes)
-                        </p>
-                        <p>
-                            {{element.approvalStatus}}
-                        </p>
-                        <p style="font-size: small;
+                                {{element.startTimeHour}}:{{element.startTimeMinute|zero}} - {{element.endTimeHour}}:{{element.endTimeMinute|zero}} ({{element.duration}} minutes)
+                            </p>
+                            <p style="font-size: small;
                color: rgb(182, 192, 192);">
-                            {{element.description}}
-                        </p>
+                                {{element.description}}
+                            </p>
+                            <p style="font-size: medium;
+                            color: rgb(109, 116, 116);">
+                                {{element.timeLeft}}
+                            </p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p style=" 
+                            width: max-content;
+                            padding: 2px;
+                            background-color: teal;
+                            color: white;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                            border-radius: 5px;">
+                                {{element.approvalStatus}}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
 
+    <div class="col-md-3 align leftMarginZero card2">
+        <div class="tutorBox">
+            <div class="card-header">
+                <p style="text-align: center; text-decoration: solid;"> Recommended Tutors</p>
+            </div>
+
+            <div class="tutor-card-body">
+                <div *ngFor="let tutorList of topTutors" class="divBox">
+                    <div class="row tutorProfilerow">
+                        <div class="col-sm-4 rightPaddingZero">
+                            <img [src]="tutorList.profilePictureUrl">
+                        </div>
+                        <div class="col-sm-5 paddingZero">
+                            <p style="font-family: Georgia, 'Times New Roman', Times, serif;
+                            text-decoration: solid;">{{tutorList.fullName}}</p>
+                            <p class="tutorSkillTags" style="font-size: smaller; color: rgb(109, 110, 110); background-color: rgb(183, 208, 231);">{{tutorList.subject1}}</p>
+                            <p class="tutorSkillTags" style="font-size: smaller; color: rgb(109, 110, 110); background-color: rgb(183, 208, 231);">{{tutorList.subject2}}</p><br>
+                            <p class="tutorSkillTags" style="font-size: smaller; color: rgb(109, 110, 110); background-color: rgb(183, 208, 231);">{{tutorList.subject3}}</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p>₹‎{{tutorList.price1}}/hr</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-outline-success request-buttons" (click)="openTutorProfile(tutorList)">View Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>

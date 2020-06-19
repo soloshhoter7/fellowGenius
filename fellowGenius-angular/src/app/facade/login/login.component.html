@@ -1,5 +1,8 @@
 <body>
-    <div class="container">
+    <div *ngIf="isLoading" style="text-align: center; margin-top:27%; z-index: 5">
+        <app-loading></app-loading>
+    </div>
+    <div class="container" [class]="hideContainer">
         <div class="row marginZero" style="
             text-align: center;
             width: max-content;
@@ -22,7 +25,7 @@
 
 
             <div class="col-sm-5 offset-sm-1 paddingZero">
-              
+
                 <form (ngSubmit)="onLogin(l)" #l="ngForm">
                     <div class="form-group">
                         <input type="email" id="email" class="form-control" ngModel name="email" required email #email="ngModel">
@@ -51,11 +54,11 @@
                 </form>
                 <hr>
                 <div class="inner-box" [class]="hideSocialLogin">
-                    <button class="btn btn-primary social-buttons" style="background-color: #c63d2d; border-color: #c63d2d;"(click)="prepareLoginButton()" #googleSignUp><i class="fa fa-google social-icons"></i></button>
-                    <button class="btn btn-primary social-buttons" style="background-color: #385998; border-color: #385998;" (click)="signIn()"><i class="fa fa-facebook social-icons"></i></button>
-                    <button class="btn btn-primary social-buttons" style="background-color: #4875b4; border-color: #4875b4;"><i class="fa fa-linkedin social-icons"></i></button>
+                    <button class="btn btn-primary social-buttons" style="background-color: #c63d2d; border-color: #c63d2d;" (click)="prepareLoginButton()" #googleSignUp><i class="fa fa-google social-icons"></i><p style="display: inline;font-size: larger;">Login Using Google</p></button>
+                    <!-- <button class="btn btn-primary social-buttons" style="background-color: #385998; border-color: #385998;" (click)="signIn()"><i class="fa fa-facebook social-icons"></i></button> -->
+                    <!-- <button class="btn btn-primary social-buttons" style="background-color: #4875b4; border-color: #4875b4;"><i class="fa fa-linkedin social-icons"></i></button> -->
                 </div>
-            
+
             </div>
         </div>
     </div>
