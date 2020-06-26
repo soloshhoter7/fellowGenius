@@ -30,7 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 @RestController
-@CrossOrigin(origins = "https://fellowgenius.com")
+//@CrossOrigin(origins = "https://fellowgenius.com")
 //@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/fellowGenius/meeting")
 public class meetingController {

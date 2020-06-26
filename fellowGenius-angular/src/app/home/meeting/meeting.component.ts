@@ -562,7 +562,8 @@ export class MeetingComponent implements OnInit {
 
 	connectToMeetingWebSocket(bookingId) {
 		// let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
-		let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
+		// let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
+		let socket = new SockJS('http://localhost:5000/fellowGenius');
 		this.ws = Stomp.over(socket);
 		let that = this;
 		this.ws.connect(
