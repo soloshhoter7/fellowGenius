@@ -8,7 +8,7 @@ import { bookingDetails } from '../model/bookingDetails';
 export class MeetingService {
 	deleteBooking: string;
 	bookingDetails: bookingDetails;
-	cancelBooking = new bookingDetails
+	cancelBooking = new bookingDetails();
 	pendingRequests: bookingDetails[];
 	setBooking(bookingDetails: bookingDetails) {
 		this.bookingDetails = bookingDetails;
@@ -23,31 +23,32 @@ export class MeetingService {
 		this.meeting.roomId = meeting.roomId;
 		this.meeting.roomName = meeting.roomName;
 		this.meeting.userName = meeting.userName;
+		this.meeting.userId = meeting.userId;
 	}
 
 	getMeeting() {
 		return this.meeting;
 	}
-	setDeleteBooking(booking: bookingDetails){
+	setDeleteBooking(booking: bookingDetails) {
 		this.cancelBooking = booking;
 	}
-	getDeleteBooking(){
+	getDeleteBooking() {
 		return this.cancelBooking;
 	}
 
-	refreshBookingList(del:string){
+	refreshBookingList(del: string) {
 		this.deleteBooking = del;
 	}
 
-	getNewBookingList(){
+	getNewBookingList() {
 		return this.deleteBooking;
 	}
 
-	studentPendingRequests(bookingList: bookingDetails[]){
+	studentPendingRequests(bookingList: bookingDetails[]) {
 		this.pendingRequests = bookingList;
 	}
 
-	getStudentPendingRequests(){
+	getStudentPendingRequests() {
 		return this.pendingRequests;
 	}
 }

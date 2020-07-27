@@ -8,7 +8,8 @@ import {
 	MonthService,
 	View,
 	EventRenderedArgs,
-	ActionEventArgs
+	ActionEventArgs,
+	setTime
 } from '@syncfusion/ej2-angular-schedule';
 
 import { Button } from '../../../../node_modules/@syncfusion/ej2-buttons';
@@ -26,17 +27,33 @@ import { TutorService } from 'src/app/service/tutor.service';
 	styleUrls: [ './bookings.component.css' ]
 })
 export class BookingsComponent implements OnInit {
-	constructor(private tutorService: TutorService) {}
-
+	constructor(private tutorService: TutorService, private httpService: HttpService) {}
+	personalAvailabilitySchedule: tutorAvailabilitySchedule;
+	meetingSchedule: scheduleData[];
 	ngOnInit() {}
 
+	ngAfterViewInit() {
+		this.personalAvailabilitySchedule = this.tutorService.getPersonalAvailabilitySchedule();
+		if (this.personalAvailabilitySchedule) {
+			this.meetingSchedule = this.personalAvailabilitySchedule.allMeetingsSchedule;
+		} else {
+			this.handleRefresh();
+		}
+	}
 	@ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
-	@ViewChild('addButton') public addButton: Button;
+
 	public scheduleViews: View[] = [ 'Day', 'Week', 'WorkWeek', 'Month' ];
 	tutorAvailabilitySchedule = new tutorAvailabilitySchedule();
 	availabilitySchedule: Array<Object> = [];
 	availableSchedules: scheduleData[] = [];
-	public eventSettings: EventSettingsModel = {
-		dataSource: this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule
-	};
+
+	handleRefresh() {
+		setTimeout(() => {
+			this.httpService.getScheduleData(this.tutorService.getTutorDetials().tid).subscribe((res) => {
+				this.tutorService.setPersonalAvailabilitySchedule(res);
+				this.meetingSchedule = res.allMeetingsSchedule;
+				this.scheduleObj.eventSettings.dataSource = this.meetingSchedule;
+			});
+		}, 1000);
+	}
 }

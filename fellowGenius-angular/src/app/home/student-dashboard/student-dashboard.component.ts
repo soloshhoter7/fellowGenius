@@ -46,13 +46,15 @@ export class StudentDashboardComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.sid = this.studentService.getStudentProfileDetails().sid;
-		this.fetchTutorList();
-		this.findStudentPendingBookings();
-		this.fetchApprovedMeetings();
-		this.fetchLiveMeetings();
-		this.fetchTopTutors();
-		if (this.meetingService.getNewBookingList() == 'delete') {
-			this.emptyBookingList = true;
+		if (this.sid) {
+			this.fetchTutorList();
+			this.findStudentPendingBookings();
+			this.fetchApprovedMeetings();
+			this.fetchLiveMeetings();
+			this.fetchTopTutors();
+			this.handleRefresh();
+		} else {
+			this.handleRefresh();
 		}
 	}
 	// -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
@@ -94,28 +96,6 @@ export class StudentDashboardComponent implements OnInit {
 	}
 
 	// --------------------------------------------------meeting operations-----------------------------------------------------------------------------
-
-	// // to check if the meeting is before the current date
-	// isBeforeDate(booking: bookingDetails) {
-	// 	var dateParts: any = booking.dateOfMeeting.split('/');
-	// 	var bookingDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-	// 	var bookingDateOfMeeting = new Date(booking.dateOfMeeting);
-	// 	var currentDate: string = new Date().toUTCString();
-	// 	var currDate: Date = new Date(currentDate);
-	// 	// currDate.setHours(0);
-	// 	// currDate.setMinutes(0);
-	// 	// currDate.setSeconds(0);
-	// 	// currDate.setMilliseconds(0);
-	// 	console.log(bookingDate + ':' + currDate);
-	// 	// console.log(bookingDate.getTime() + ':' + currDate.getTime());
-	// 	if (bookingDateOfMeeting.getMilliseconds() < currDate.getMilliseconds()) {
-	// 		console.log('booking date is less');
-	// 		return true;
-	// 	} else {
-	// 		console.log('booking date is more!');
-	// 		return false;
-	// 	}
-	// }
 
 	//to calculate the time left
 	timeLeft(booking: bookingDetails) {
@@ -165,43 +145,12 @@ export class StudentDashboardComponent implements OnInit {
 			}, 5000);
 		}
 	}
-
-	// //to check if the meeting is before current time
-	// isTimeCompleted(booking, list: bookingDetails[]) {
-	// 	var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
-	// 	if (currentDate == booking.dateOfMeeting) {
-	// 		console.log('live date Matches');
-	// 		var startMinutes: number = booking.startTimeHour * 60 + booking.startTimeMinute;
-	// 		var bookingDuration: number = booking.duration + 10;
-	// 		var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
-	// 		var differenceMinutes: number = startMinutes - currentMinutes;
-	// 		console.log('difference minutes->' + differenceMinutes);
-	// 		if (differenceMinutes <= 0) {
-	// 			if (Math.abs(differenceMinutes) > bookingDuration) {
-	// 				console.log('spliced');
-	// 				list.splice(list.indexOf(booking), 1);
-	// 			}
-	// 		}
-	// 		setInterval(() => {
-	// 			currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
-	// 			differenceMinutes = startMinutes - currentMinutes;
-	// 			if (differenceMinutes <= 0) {
-	// 				if (Math.abs(differenceMinutes) > bookingDuration) {
-	// 					if (list.indexOf(booking) != -1) {
-	// 						list.splice(list.indexOf(booking), 1);
-	// 					}
-	// 				}
-	// 			}
-	// 		}, 5000);
-	// 	}
-	// }
-
 	// -------------------------------------------------------------------------------------------------------------------------------------------------
 	fetchTopTutors() {
 		this.httpService.fetchTopTutors(this.studentService.getStudentProfileDetails().subject).subscribe((res) => {
 			this.topTutors = res;
 			if (this.topTutors.length == 0) {
-				this.noTutorMessage = 'No tutors for your registered subject right now';
+				this.noTutorMessage = 'No recommended tutors right now';
 			}
 		});
 	}
@@ -216,6 +165,7 @@ export class StudentDashboardComponent implements OnInit {
 		this.joinMeeting.roomId = 123;
 		this.joinMeeting.roomName = booking.meetingId;
 		this.joinMeeting.userName = booking.studentName;
+		this.joinMeeting.userId = booking.studentId;
 		this.meetingService.setMeeting(this.joinMeeting);
 		this.meetingService.setBooking(booking);
 		this.router.navigate([ 'meeting' ]);
@@ -236,5 +186,21 @@ export class StudentDashboardComponent implements OnInit {
 			width: '400px',
 			height: '150px'
 		});
+		this.dialog.afterAllClosed.subscribe(() => {
+			if (this.bookingList.length == 0) {
+				this.emptyBookingList = true;
+			}
+		});
+	}
+	handleRefresh() {
+		setTimeout(() => {
+			this.sid = this.studentService.getStudentProfileDetails().sid;
+
+			this.fetchTutorList();
+			this.findStudentPendingBookings();
+			this.fetchApprovedMeetings();
+			this.fetchLiveMeetings();
+			this.fetchTopTutors();
+		}, 1000);
 	}
 }

@@ -9,16 +9,23 @@
                 <div class="" *ngFor="let element of liveMeetingList">
                     <div class="row">
                         <div class="col-sm-1">
-                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                            <img
+                src="../../../assets/icons/user-square.svg"
+                style="width: 66px;
+                height: 66px;
+                margin-top: 7px;
+                border-radius: 5px;"
+                alt="studentImage"
+              />
                         </div>
                         <div class="col-sm-8" style="padding-left: 30px;">
                             <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
+                            <p style="color: rgb(109, 116, 116);">{{element.dateOfMeeting}}</p>
                             <p style="font-size: medium;
-                  color: rgb(109, 116, 116);
+                  /* color: rgb(109, 116, 116); */
                   padding-top: 1px; margin:0;">
                                 {{element.startTimeHour}}:{{element.startTimeMinute|zero}} - {{element.endTimeHour}}:{{element.endTimeMinute|zero}} ({{element.duration}} minutes)
                             </p>
-                            <p>{{element.dateOfMeeting}}</p>
                             <p style="font-size: small;
                    color: rgb(182, 192, 192);">
                                 {{element.description}}
@@ -38,16 +45,23 @@
                 Booking Requests
             </div>
             <div class="card-body">
-                <div *ngIf="emptyBookingList || meetingService.deleteBooking == 'delete'">No Booking Requests</div>
+                <div *ngIf="emptyBookingList">No Booking Requests</div>
                 <!-- <div *ngIf="meetingService.deleteBooking == 'delete'">No Booking Requests</div> -->
                 <div class="" *ngFor="let element of bookingList">
                     <div class="row">
                         <div class="col-sm-1">
-                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="tutorImage">
+                            <img
+                src="../../../assets/icons/user-square.svg"
+                style="width: 66px;
+                height: 66px;
+                margin-top: 7px;
+                border-radius: 5px;"
+                alt="studentImage"
+              />
                         </div>
                         <div class="col-sm-8" style="padding-left: 30px;">
                             <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
-                            <p>
+                            <p style="color: rgb(109, 116, 116);">
                                 {{element.dateOfMeeting}}
                             </p>
                             <p style="font-size: medium;
@@ -91,12 +105,19 @@
                 <div class="" *ngFor="let element of approvedList">
                     <div class="row">
                         <div class="col-sm-1">
-                            <img src="../../../assets/icons/user.svg" style="width: 50px; height: 50px;" alt="studentImage">
+                            <img
+                src="../../../assets/icons/user-square.svg"
+                style="width: 66px;
+                height: 66px;
+                margin-top: 7px;
+                border-radius: 5px;"
+                alt="studentImage"
+              />
                         </div>
 
                         <div class="col-sm-8" style="padding-left: 30px;">
                             <h1 style="font-size: 19px;margin: 0;">{{element.tutorName}}</h1>
-                            <p>
+                            <p style="color: rgb(109, 116, 116);">
                                 {{element.dateOfMeeting}}
                             </p>
                             <p style="font-size: medium;
@@ -139,6 +160,7 @@
             </div>
 
             <div class="tutor-card-body">
+                <p *ngIf ="noTutorMessage!=''" style="width: 100%;text-align: center;padding: 20px;">{{noTutorMessage}}</p>
                 <div *ngFor="let tutorList of topTutors" class="divBox">
                     <div class="row tutorProfilerow">
                         <div class="col-sm-4 rightPaddingZero">

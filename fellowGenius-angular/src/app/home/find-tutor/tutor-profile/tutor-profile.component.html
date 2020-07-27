@@ -43,9 +43,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea style="padding-top: 5px;" class="form-control" id="description" rows="3" name="description" [(ngModel)]="bookingDetails.description" #desc required></textarea>
-                            <label for="description" class="form-control-placeholder">Description</label
+                            <textarea style="padding-top: 5px;" class="form-control" id="description" rows="3" name="description" [(ngModel)]="bookingDetails.description" maxlength="100" #desc ngModel required></textarea>
+                            <label for="description" class="form-control-placeholder">Description<sup>*</sup></label
                         >
+                        <span style="float: right;" class="setLength">{{desc.value.length}}/100</span>
                       </div>
                     <button class="btn btn-outline-success" style="
                     width: 40%;
@@ -124,13 +125,10 @@
           </button> -->
                     <hr />
                     <button type="button" class="btn btn-outline-primary" style="width: 100%; margin-bottom: 10px;" (click)="openSideNav()">
-            Book free Meeting
+            Book Meeting
           </button>
                 </div>
             </div>
         </div>
     </div>
 </body>
-<ng-template #notExist>
-    No available schedules
-</ng-template>

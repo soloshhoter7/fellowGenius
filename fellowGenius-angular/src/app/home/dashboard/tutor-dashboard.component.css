@@ -1,3 +1,9 @@
+body {
+	/* background-color: rgb(143, 142, 138); */
+	background-color: #f9fafc;
+	height: 100%;
+}
+
 .card {
 	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
 	width: 70%;
@@ -27,4 +33,9 @@
 .completeProfileLink:hover {
 	text-decoration: underline;
 	color: #241084;
+}
+.dashboardIcons {
+	width: 18px;
+	height: 18px;
+	margin-right: 5px;
 }

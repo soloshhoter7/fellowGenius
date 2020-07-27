@@ -38,7 +38,8 @@ import { DataSource } from '@angular/cdk/collections';
 import { LocationStrategy } from '@angular/common';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { HttpService } from 'src/app/service/http.service';
-
+import { CookieService } from 'ngx-cookie-service';
+import * as jwt_decode from 'jwt-decode';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -55,7 +56,8 @@ export class MeetingComponent implements OnInit {
 		private sanitizer: DomSanitizer,
 		private locationStrategy: LocationStrategy,
 		private loginService: LoginDetailsService,
-		private httpService: HttpService
+		private httpService: HttpService,
+		private cookieService: CookieService
 	) {
 		this.uid = Math.floor(Math.random() * 100);
 		this.sid = 76;
@@ -63,12 +65,12 @@ export class MeetingComponent implements OnInit {
 	//   ---------------------
 	@ViewChild('canvas') public canvas: ElementRef;
 	@ViewChild('canvasScreenShare') public canvasScreenShare: ElementRef;
-
+	@ViewChild('chatWindow') private chatWindow: ElementRef;
 	@Input() public width = 1175;
 	@Input() public height = 650;
 
 	private cx: CanvasRenderingContext2D;
-
+	newMessageNotification: boolean = false;
 	meetingChat: MessageModel[] = [];
 	greetings: string[] = [];
 	showConversation: boolean = false;
@@ -103,23 +105,30 @@ export class MeetingComponent implements OnInit {
 	bookingDetails: bookingDetails;
 	subscription: Subscription;
 	message = new MessageModel();
+	fileMessage = new MessageModel();
 	messageText: string;
 	messageToAdd = new MessageModel();
 	senderName: string;
+	fileUploadedBox = false;
+	fileSizeExceeded = false;
+	fileName = '';
+	fileSize = '';
+	uploadedFile: File;
 	private client: AgoraClient;
 	private screenClient: AgoraClient;
 	private localStream: Stream;
 	private screenStream: Stream;
 	private uid: number;
 	private sid: number;
+	senderId;
 	canvasEl: HTMLCanvasElement;
 	canvasScreenShareEl: HTMLCanvasElement;
 	config: MatSnackBarConfig = {
-		duration: 2000,
+		duration: 7000,
 		horizontalPosition: 'center',
 		verticalPosition: 'top'
 	};
-
+	fileType: string;
 	ngAfterViewInit() {
 		this.canvasEl = this.canvas.nativeElement;
 		this.cx = this.canvasEl.getContext('2d');
@@ -137,14 +146,16 @@ export class MeetingComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.loginService.getTrType() == null) {
-			this.router.navigate([ 'facade' ]);
+			this.handleRefresh();
 		}
 		this.preventBackButton();
 		this.width = window.screen.width / 100 * 97;
 		this.height = window.screen.height / 100 * 80;
 
 		this.meeting = this.meetingService.getMeeting();
+
 		this.senderName = this.meeting.userName;
+		this.senderId = this.meeting.userId;
 		this.bookingDetails = this.meetingService.getBooking();
 		this.timelimit = this.calculateRemainingTime() * 60;
 		this.shortName();
@@ -163,6 +174,14 @@ export class MeetingComponent implements OnInit {
 		this.assignLocalStreamHandlers();
 		// this.initLocalStream();
 		this.initLocalStream(() => this.join((uid) => this.publish(), (error) => console.error(error)));
+	}
+
+	handleRefresh() {
+		if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'STUDENT') {
+			this.router.navigate([ 'home/studentDashboard' ]);
+		} else if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'TUTOR') {
+			this.router.navigate([ 'home/tutorDashboard' ]);
+		}
 	}
 	calculateRemainingTime() {
 		var endTime = this.bookingDetails.endTimeHour * 60 + this.bookingDetails.endTimeMinute;
@@ -212,7 +231,12 @@ export class MeetingComponent implements OnInit {
 		this.localStream.stop();
 		this.localStream.close();
 
-		this.router.navigate([ '' ]);
+		if (this.meeting.role == 'host') {
+			this.router.navigate([ 'home/tutorDashboard' ]);
+		} else if (this.meeting.role == 'student') {
+			this.router.navigate([ 'home/studentDashboard' ]);
+		}
+		// this.router.navigate([ 'home' ]);
 	}
 	limitStream() {
 		this.remoteJoined = true;
@@ -220,7 +244,9 @@ export class MeetingComponent implements OnInit {
 		this.subscription = numbers.subscribe((x) => {
 			this.timeLeft = this.timelimit - x;
 			if (x == before10Minutes) {
-				this.snackbar.open('10 Minutes Left ! Hurry up', 'close', this.config);
+				if (this.router.url === '/meeting') {
+					this.snackbar.open('10 Minutes Left ! Hurry up', 'close', this.config);
+				}
 			}
 			if (x == this.timelimit) {
 				this.httpService.updateBookingStatus(this.bookingDetails.bid, 'Successful').subscribe((res) => {
@@ -388,6 +414,7 @@ export class MeetingComponent implements OnInit {
 			this.muteHostAudioStatus = 'mute host mic';
 		}
 	}
+
 	screenShare() {
 		if (this.hostScreenShareStatus == false) {
 			this.hostScreenShareStatus = true;
@@ -425,10 +452,17 @@ export class MeetingComponent implements OnInit {
 		if (this.chatOpen == false) {
 			this.openSideNav();
 			this.chatOpen = true;
+			this.newMessageNotification = false;
+			// this.scrollToBottom;
 		} else {
 			this.chatOpen = false;
 			this.closeSideNav();
 		}
+	}
+	scrollToBottom(): void {
+		try {
+			this.chatWindow.nativeElement.scrollTop = this.chatWindow.nativeElement.scrollHeight;
+		} catch (err) {}
 	}
 	openSideNav() {
 		document.getElementById('mySidenav').style.width = '400px';
@@ -436,6 +470,7 @@ export class MeetingComponent implements OnInit {
 	closeSideNav() {
 		document.getElementById('mySidenav').style.width = '0';
 		this.chatOpen = false;
+		this.newMessageNotification = false;
 	}
 	//-------------------------------------------------------------------------------------------------------------------
 	captureEvents(canvasEl: HTMLCanvasElement) {
@@ -562,8 +597,8 @@ export class MeetingComponent implements OnInit {
 
 	connectToMeetingWebSocket(bookingId) {
 		// let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
-		// let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
-		let socket = new SockJS('http://localhost:5000/fellowGenius');
+		let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
+		// let socket = new SockJS('http://localhost:5000/fellowGenius');
 		this.ws = Stomp.over(socket);
 		let that = this;
 		this.ws.connect(
@@ -617,11 +652,19 @@ export class MeetingComponent implements OnInit {
 					var msg: MessageModel = new MessageModel();
 					msg.messageText = res.message.messageText;
 					msg.senderName = res.message.senderName;
-
+					msg.senderId = res.message.senderId;
 					msg.dataSource = res.message.dataSource;
 					msg.fileName = res.message.fileName;
 					msg.fileType = res.message.fileType;
-
+					that.scrollToBottom();
+					// if(msg.senderId!=this.senderId && this.openChat==false){
+					//   this.newMessageNotification=true;
+					// }
+					// console.log('message ->' + msg);
+					// console.log(msg.senderId);
+					if (msg.senderId != that.meeting.userId && that.chatOpen == false) {
+						that.newMessageNotification = true;
+					}
 					if (msg.messageText == null) {
 						that.openBlob(msg);
 					}
@@ -629,7 +672,11 @@ export class MeetingComponent implements OnInit {
 				});
 			},
 			(error) => {
-				alert('STOMP error ' + error);
+				// alert('STOMP error ' + error);
+				console.log('re initiating the connection !');
+				setTimeout(() => {
+					this.connectToMeetingWebSocket(this.meeting.roomName);
+				}, 5000);
 			}
 		);
 	}
@@ -654,13 +701,18 @@ export class MeetingComponent implements OnInit {
 	//--------------------------------------------- chat functions--------------------------------------------------
 	sendChatMessage() {
 		var senderId: number;
-		this.message.messageText = this.messageText;
-		this.message.senderId = senderId;
-		this.message.senderName = this.senderName;
-		this.message.sentTime = new Date().toTimeString();
-		this.message.date = new Date().toLocaleString();
-		this.sendMessageToMeeting(this.message, this.meeting.roomName);
-		this.messageText = '';
+		if (this.messageText != '') {
+			this.message.messageText = this.messageText;
+			this.message.senderId = this.senderId;
+			this.message.senderName = this.senderName;
+			this.message.sentTime = new Date().toTimeString();
+			this.message.date = new Date().toLocaleString();
+			// this.scrollToBottom();
+			this.sendMessageToMeeting(this.message, this.meeting.roomName);
+			this.messageText = '';
+		}
+
+		// this.scrollToBottom();
 	}
 
 	//for sending message to the booking
@@ -679,19 +731,34 @@ export class MeetingComponent implements OnInit {
 
 	handleFileInput(files: FileList) {
 		var file: File = files.item(0);
-		this.getBase64(file);
+		this.uploadedFile = file;
+
+		this.fileUploadedBox = true;
+		this.fileName = file.name;
+		if (file.size <= 100 * 1024 * 1024) {
+			if (file.size > 1024 * 1024) {
+				this.fileSize = (file.size / (1024 * 1024)).toFixed(2).toString() + ' MB';
+			} else {
+				this.fileSize = (file.size / 1024).toFixed(2).toString() + ' KB';
+			}
+			// this.getBase64(file);
+		} else {
+			this.fileSizeExceeded = true;
+		}
 	}
-	getBase64(file) {
+	getBase64() {
 		var url;
 		var reader = new FileReader();
-		reader.readAsDataURL(file);
+		reader.readAsDataURL(this.uploadedFile);
 		reader.onload = () => {
 			var fileData = reader.result as string;
 			var message = new MessageModel();
 			message.senderName = this.senderName;
 			message.dataSource = fileData;
-			message.fileName = file.name;
-			message.fileType = file.type;
+			message.fileName = this.uploadedFile.name;
+			message.fileType = this.uploadedFile.type;
+			this.fileType = message.fileType;
+			message.senderId = this.senderId;
 			this.sendFile(message, this.meeting.roomName);
 		};
 		reader.onerror = function(error) {};
@@ -719,6 +786,13 @@ export class MeetingComponent implements OnInit {
 			message: message
 		});
 		this.ws.send('/sendChat/' + bookingId, {}, data);
+		// this.ws.send()
+		this.closeFileUploadedBox();
+	}
+	closeFileUploadedBox() {
+		this.uploadedFile = null;
+		this.fileUploadedBox = false;
+		this.fileSizeExceeded = false;
 	}
 	//--------------------------------------------------------------------------------------------------------------
 	//--------------------------------- for short Name ------------------------------------------------------------------

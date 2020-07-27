@@ -14,7 +14,9 @@ import { HttpService } from '../service/http.service';
 import { StudentLoginModel } from '../model/studentLoginModel';
 import { ThemePalette } from '@angular/material/core';
 import { LocationStrategy } from '@angular/common';
-
+import { SocialAuthService } from 'angularx-social-login';
+import { CookieService } from 'ngx-cookie-service';
+import * as jwt_decode from 'jwt-decode';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
@@ -31,6 +33,7 @@ export class HomeComponent implements OnInit {
 	loginType;
 	studentLoginDetails = new StudentLoginModel();
 	RegisterForm: NgForm;
+	userId;
 	constructor(
 		public router: Router,
 		public meetingService: MeetingService,
@@ -41,37 +44,76 @@ export class HomeComponent implements OnInit {
 		private httpService: HttpService,
 		private studentService: StudentService,
 		private loginDetailsService: LoginDetailsService,
-		private locationStrategy: LocationStrategy
+		private locationStrategy: LocationStrategy,
+		private authService: SocialAuthService,
+		private cookieService: CookieService
 	) {}
 
 	ngOnInit() {
-		if (this.loginService.getTrType() != null) {
+		if (this.isTokenValid()) {
 			this.loginType = this.loginService.getLoginType();
-			if (this.loginType == 'student') {
-				this.studentProfile = this.studentServce.getStudentProfileDetails();
-				// this.dashboardUrl = '/home/studentDashboard';
-				this.router.navigate([ 'home/studentDashboard' ]);
-			} else if (this.loginType == 'tutor') {
-				this.tutorProfile = this.tutorService.getTutorDetials();
-				if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
-					this.checked = true;
-				} else {
-					this.checked = false;
+			if (this.loginType) {
+				if (this.loginType == 'student') {
+					this.studentProfile = this.studentServce.getStudentProfileDetails();
+					this.router.navigate([ 'home/studentDashboard' ]);
+				} else if (this.loginType == 'tutor') {
+					this.tutorProfile = this.tutorService.getTutorDetials();
+					if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
+						this.checked = true;
+					} else {
+						this.checked = false;
+					}
+					// this.dashboardUrl = '/home/tutorDashboard';
+					this.router.navigate([ 'home/tutorDashboard' ]);
 				}
-				// this.dashboardUrl = '/home/tutorDashboard';
-				this.router.navigate([ 'home/tutorDashboard' ]);
-			}
-			if (this.loginService.getTrType() == 'signUp') {
-				this.dialog.open(WelcomeComponent, {
-					width: '70vw',
-					height: '90vh'
-				});
+				if (this.loginService.getTrType() == 'signUp') {
+					this.dialog.open(WelcomeComponent, {
+						width: '70vw',
+						height: '90vh'
+					});
+				}
+			} else {
+				this.handleRefresh();
+				// setTimeout(() => {
+				// 	console.log('hello');
+				// }, 1000);
 			}
 		} else {
-			// this.router.navigate([ '' ]);
+			this.router.navigate([ 'facade' ]);
 		}
-		this.preventBackButton();
-		this.preventRefreshButton();
+	}
+
+	isTokenValid() {
+		if (this.cookieService.get('token') && !this.isTokenExpired()) {
+			return true;
+		} else {
+			this.cookieService.delete('token');
+			this.cookieService.delete('userId');
+			return false;
+		}
+	}
+
+	isTokenExpired(token?: string): boolean {
+		if (!token) token = this.getToken();
+		if (!token) return true;
+
+		const date = this.getTokenExpirationDate(token);
+		if (date === undefined) return false;
+		return !(date.valueOf() > new Date().valueOf());
+	}
+	1;
+	getTokenExpirationDate(token: string): Date {
+		const decoded = jwt_decode(token);
+
+		if (decoded['exp'] === undefined) return null;
+
+		const date = new Date(0);
+		date.setUTCSeconds(decoded['exp']);
+		return date;
+	}
+
+	getToken(): string {
+		return this.cookieService.get('token');
 	}
 	toggleAvailability() {
 		if (this.checked == true) {
@@ -100,23 +142,55 @@ export class HomeComponent implements OnInit {
 		this.meetingService.setMeeting(this.hostMeeting);
 		this.router.navigate([ 'meeting' ]);
 	}
+
+	onSignOut() {
+		this.cookieService.delete('token');
+		this.cookieService.delete('userId');
+		this.router.navigate([ '' ]);
+	}
 	openNav() {
 		document.getElementById('mySidenav').style.width = '250px';
 	}
 	closeNav() {
 		document.getElementById('mySidenav').style.width = '0';
 	}
-	preventBackButton() {
-		history.pushState(null, null, location.href);
-		this.locationStrategy.onPopState(() => {
-			history.pushState(null, null, location.href);
-		});
-	}
-	preventRefreshButton() {
-		window.addEventListener('beforeunload', function(e) {
-			var confirmationMessage = 'o/';
-			e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-			return confirmationMessage; // Gecko, WebKit, Chrome <34
-		});
+	// signOut() {
+	// 	this.authService.signOut();
+	// 	this.router.navigate([ '#' ]);
+	// }
+	handleRefresh() {
+		this.userId = this.cookieService.get('userId');
+		if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'STUDENT') {
+			this.loginType = 'student';
+			this.loginService.setTrType('login');
+			this.httpService.getStudentDetails(this.userId).subscribe((res) => {
+				this.studentProfile = res;
+
+				this.studentService.setStudentProfileDetails(this.studentProfile);
+				this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
+					this.studentService.setStudentBookings(res);
+					// this.router.navigate([ 'home/studentDashboard' ]);
+				});
+			});
+		} else if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'TUTOR') {
+			this.loginType = 'tutor';
+			this.loginService.setTrType('login');
+			this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+				this.tutorProfile = res;
+				this.tutorService.setTutorDetails(this.tutorProfile);
+
+				this.httpService.getTutorProfileDetails(this.userId).subscribe((res) => {
+					this.tutorService.setTutorProfileDetails(res);
+					this.httpService.getScheduleData(this.userId).subscribe((res) => {
+						this.tutorService.setPersonalAvailabilitySchedule(res);
+						if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
+							this.checked = true;
+						} else {
+							this.checked = false;
+						}
+					});
+				});
+			});
+		}
 	}
 }

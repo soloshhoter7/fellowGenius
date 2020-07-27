@@ -14,5 +14,8 @@ public interface repositoryStudentLogin extends JpaRepository<StudentLogin, Stri
 	
 	@Query(value = "SELECT * FROM student_login WHERE email=?1 AND password=?2", nativeQuery = true)   
 	StudentLogin validation(String email, String password);
+	
+	@Query(value = "SELECT * FROM student_login WHERE sid=?1", nativeQuery = true)
+	StudentLogin idExists(Integer sid);
 
 }

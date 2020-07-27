@@ -47,3 +47,6 @@
 	max-height: -webkit-fill-available;
 	margin-top: 10%;
 }
+.dropdown-menu {
+	left: -72px;
+}

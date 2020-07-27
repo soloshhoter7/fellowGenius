@@ -4,6 +4,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -21,6 +23,7 @@ public class ScheduleService {
 	@Autowired
 	MeetingDao meetingDao;
 	
+	static Integer nextDateValue=0;
 	// for getting next 7 days
 	public ArrayList<Date> next7Dates() {
 		ArrayList<Date> dateArray = new ArrayList<Date>();
@@ -36,11 +39,12 @@ public class ScheduleService {
 
 	// for getting time Array
 	public ArrayList<ScheduleTime> getTimeArray(ArrayList<ScheduleData> availableSchedules,Integer tid) {
-       
+        nextDateValue=0;
 		// time array
 		ArrayList<ScheduleTime> timeArray = new ArrayList<ScheduleTime>();
 
 		// date array which contains the next 7 dates in dd/MM/yyyy format
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 		ArrayList<Date> dateArray = next7Dates();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -50,6 +54,7 @@ public class ScheduleService {
 		 String todayDateString = formatter.format(todayDate);
 		// outer loop call itself for every date in date array
 		for (Date date : dateArray) {
+			nextDateValue+=1440;
 			System.out.println("-----------------------------------------------------------");
 			System.out.println("iteration -> " + formatter.format(date));
 			System.out.println("-----------------------------------------------------------");
@@ -193,11 +198,11 @@ public class ScheduleService {
 			}
 			System.out.println(formatter.format(date));
 		}
-		System.out.println("-----------------------------------------------------------");
-		System.out.println("calling delete Bookings slots");
 		
 		timeArray = eliminateBeforeTimeBookings(timeArray);
 		timeArray = deleteBookingsFromTimeSlots(timeArray,tid);
+		System.out.println("going to enter organise time slots");
+		timeArray = organiseTimeSlots(timeArray);
 		System.out.println(timeArray);
 		return timeArray;
 	}
@@ -212,6 +217,7 @@ public class ScheduleService {
 		initialTimePacket.setHours(sh);
 		initialTimePacket.setMinutes(sm);
 		initialTimePacket.setDate(date);
+		initialTimePacket.setTotalMinutes((sh*60)+sm+nextDateValue);
 		timeArray.add(initialTimePacket);
 
 //    	ScheduleTime timePacket = new ScheduleTime();
@@ -235,6 +241,7 @@ public class ScheduleService {
 			timePacket.setHours(sh);
 			timePacket.setMinutes(sm);
 			timePacket.setDate(date.toString());
+			timePacket.setTotalMinutes((sh*60)+sm+nextDateValue);
 			System.out.println("time Packet ->" + timePacket);
 			timeArray.add(timePacket);
 		}
@@ -245,10 +252,11 @@ public class ScheduleService {
 	
 	// for eliminating before time slots
     public ArrayList<ScheduleTime> eliminateBeforeTimeBookings(ArrayList<ScheduleTime> timeSlots){
+    	TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
     	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-    	formatter.setTimeZone(TimeZone.getTimeZone("IST"));
+    	formatter.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+		sdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
     	ArrayList<ScheduleTime> eliminateArray = new ArrayList<ScheduleTime>();
 		//todayDate string
 		 Date todayDate = new Date();
@@ -363,6 +371,28 @@ public class ScheduleService {
 		System.out.println("booking array ->"+bookingArray);
         timeSlots.removeAll(bookingArray);
         System.out.println("time array ->"+timeSlots);
+		return timeSlots;
+	}
+	
+	public ArrayList<ScheduleTime> organiseTimeSlots(ArrayList<ScheduleTime> timeSlots){
+	    ArrayList<ScheduleTime> nonDuplicateSlots = new ArrayList<ScheduleTime>();
+	    //for removing duplicates from timeSlots
+		for(ScheduleTime slot:timeSlots) {
+			if(!nonDuplicateSlots.contains(slot)) {
+				nonDuplicateSlots.add(slot);
+			}
+		}
+	  
+		//for placing them in ascending order
+        
+		Collections.sort(nonDuplicateSlots, new Comparator<ScheduleTime>() {
+			@Override
+			public int compare(ScheduleTime o1, ScheduleTime o2) {
+				return o1.getTotalMinutes() - o2.getTotalMinutes();
+			}
+		});
+		timeSlots = nonDuplicateSlots;
+		System.out.println(" time slots after reform ->"+timeSlots);
 		return timeSlots;
 	}
 	

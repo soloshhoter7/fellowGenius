@@ -3,14 +3,23 @@
       <a class="navbar-brand berlinText">fellowGenius</a>
       <div class="buttonGroup" style="margin:10px;">
           <div class="dropdown" style="display: inline;">
-              <button class="btn  homeButtons dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">login</button>
+              <button class="btn  homeButtons dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign In</button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-top: 20px;">
                   <a class="dropdown-item" (click)="onLoginStudent()" style="cursor: pointer;"><img src="../../assets/icons/studentIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Student</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" (click)="onLoginTutor()" style="cursor: pointer;"><img src="../../assets/icons/teacherIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Tutor</a>
               </div>
           </div>
-          <button type="button" class="btn  homeButtons" (click)="onSignUp()">sign up</button>
+
+          <div class="dropdown" style="display: inline;">
+            <button class="btn  homeButtons dropdown-toggle" type="button" id="SignUpDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign Up</button>
+            <div class="dropdown-menu" aria-labelledby="SignUpDropdownMenuButton" style="margin-top: 20px;">
+                <a class="dropdown-item" routerLink="/signUpStudent" style="cursor: pointer;"><img src="../../assets/icons/studentIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Student</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" routerLink="/signUpTutor" style="cursor: pointer;"><img src="../../assets/icons/teacherIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Tutor</a>
+            </div>
+        </div>
+          <!-- <button type="button" class="btn  homeButtons" (click)="onSignUp()">Sign Up</button> -->
       </div>
 
   </nav>

@@ -90,10 +90,17 @@ public class dao {
 			return false;
 		}
 	}
-
+    
+	public boolean findStudentBySid(Integer sid) {
+		if(repStudentLogin.idExists(sid)!=null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 	// for getting student details after login
-	public StudentProfile getStudentDetails(String email) {
-		return repStudentProfile.emailExist(email);
+	public StudentProfile getStudentDetails(String userId) {
+		return repStudentProfile.idExist(Integer.valueOf(userId));
 	}
 
 	// for saving tutor registration details
@@ -116,14 +123,14 @@ public class dao {
 		repTutorLogin.save(tutorLogin);
 	}
 
-	// for validating tutor
-	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
-		if (repTutorLogin.validation(tutorLoginModel.getEmail(), tutorLoginModel.getPassword()) != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	// for validating tutor
+//	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
+//		if (repTutorLogin.validation(tutorLoginModel.getEmail(), tutorLoginModel.getPassword()) != null) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	// for updating tutor profile details
 	public void updateTutorProfile(TutorProfileDetails tutor) {
@@ -136,8 +143,8 @@ public class dao {
 	}
 
 	// for getting tutor details using email
-	public TutorProfile getTutorDetails(String email) {
-		return repTutorProfile.emailExist(email);
+	public TutorProfile getTutorDetails(String userId) {
+		return repTutorProfile.idExist(Integer.valueOf(userId));
 	}
 
 	// for saving tutor profile details
@@ -205,15 +212,15 @@ public class dao {
 
 	}
 	
-	// for checking social login if id already exists
-	public boolean checkSocialLogin(String email) {
-		if (repSocialLogin.checkSocialLogin(email) != null) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
+//	// for checking social login if id already exists
+//	public boolean checkSocialLogin(String email) {
+//		if (repSocialLogin.checkSocialLogin(email) != null) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//
+//	}
 
 	// for saving and updating tutor availability schedule
 	public void saveTutorAvailbilitySchedule(TutorAvailabilitySchedule tutSchedule) {

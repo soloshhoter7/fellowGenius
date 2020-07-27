@@ -38,7 +38,7 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 	@Query(value ="UPDATE tutor_profile_details SET ?1 where tid =?2", nativeQuery = true)
 	public void saveUpdateNew(Object query, Integer tid);
 
-	@Query(value = "SELECT * FROM tutor_profile_details WHERE rating >=90 AND subject1 = ?1 OR subject2 = ?1 OR subject3 =?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM tutor_profile_details WHERE rating >=90 AND profile_completed=100 AND (subject1 = ?1 OR subject2 = ?1 OR subject3 =?1)", nativeQuery = true)
 	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject);
 
 	@Query(value="SELECT * FROM tutor_profile_details WHERE profile_completed = 100", nativeQuery = true)

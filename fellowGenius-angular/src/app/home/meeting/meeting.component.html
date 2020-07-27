@@ -14,9 +14,27 @@
       <div class="sideNavHeader">
         <h1 style="margin: 0;">Meeting Chat</h1>
       </div>
-      <div class="sideNavBody">
+      <div #chatWindow [scrollTop]="chatWindow.scrollHeight" class="sideNavBody" style="position:relative">
+        <div style="
+        position: absolute;
+        bottom: 5px;
+        width: 98%;
+        left: 3px;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);"
+        *ngIf = "fileUploadedBox"> 
+        <div *ngIf ="fileSizeExceeded" style="color: red;">File size exceeded..upload upto 100 MB</div>
+        <div>{{fileName}}</div>
+        <div>{{fileSize}}</div>
+        <div style="float: right;">
+          <button class="btn btn-outline-secondary" (click)="closeFileUploadedBox()">Close</button>
+          <button class="btn btn-outline-primary"(click)="getBase64()" [disabled]="fileSizeExceeded">Send</button>
+        </div>
+       </div>
+
         <div *ngFor="let message of meetingChat">
-          <div class="incoming_msg" *ngIf="message.senderName != senderName">
+          <div class="incoming_msg" *ngIf="message.senderId != senderId">
             <div class="received_msg">
               <div class="received_withd_msg">
                 <b style="color: black;">{{ message.senderName }}</b> &emsp;
@@ -48,7 +66,7 @@
             </div>
           </div>
 
-          <div class="outgoing_msg" *ngIf="message.senderName == senderName">
+          <div class="outgoing_msg" *ngIf="message.senderId == senderId">
             <div class="sent_msg">
               <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
               <div class="fileWrapper" *ngIf="!message.messageText">
@@ -225,8 +243,17 @@
     </button>
 
     <!-- chat -->
-    <button class="btn btn-success" (click)="openChatWindow()">
+    <button class="btn btn-success" (click)="openChatWindow()" style="position: relative;">
       <span class="material-icons control-icons">chat </span>
+      <span style=
+   " background-color: #32CD32;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;"
+    *ngIf="newMessageNotification"></span>
     </button>
     <!-- end call button  -->
     <button
@@ -264,9 +291,25 @@
       <div class="sideNavHeader">
         <h1 style="margin: 0;">Meeting Chat</h1>
       </div>
-      <div class="sideNavBody">
+      <div #chatWindow [scrollTop]="chatWindow.scrollHeight" class="sideNavBody" style="position: relative;">
+        <div style="
+        position: absolute;
+        bottom: 5px;
+        width: 98%;
+        left: 3px;
+        padding: 20px;
+        box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);"
+        *ngIf = "fileUploadedBox"> 
+        <div *ngIf ="fileSizeExceeded" style="color: red;">File size exceeded..upload upto 100 MB</div>
+        <div>{{fileName}}</div>
+        <div>{{fileSize}}</div>
+        <div style="float: right;">
+          <button class="btn btn-outline-secondary" (click)="closeFileUploadedBox()">Close</button>
+          <button class="btn btn-outline-primary"(click)="getBase64()" [disabled]="fileSizeExceeded">Send</button>
+        </div>
+       </div>
         <div *ngFor="let message of meetingChat">
-          <div class="incoming_msg" *ngIf="message.senderName != senderName">
+          <div class="incoming_msg" *ngIf="message.senderId != senderId">
             <div class="received_msg">
               <div class="received_withd_msg">
                 <b style="color: black;">{{ message.senderName }}</b> &emsp;
@@ -298,7 +341,7 @@
             </div>
           </div>
 
-          <div class="outgoing_msg" *ngIf="message.senderName == senderName">
+          <div class="outgoing_msg" *ngIf="message.senderId == senderId">
             <div class="sent_msg">
               <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
               <div class="fileWrapper" *ngIf="!message.messageText">
@@ -358,15 +401,6 @@
 
   <div [class]="myClass" class="canvasWrapper">
     <div class="canvas-body">
-      <!-- <div class="tools" >
-        <button class="toolButtons" (click)="erase()"><img src="../../../assets/icons/rubber.svg" style="width: 30px;height:30px;"></button>
-        <button class="toolButtons" (click)="pencil($event,'red')"><img src="../../../assets/icons/redPencil.svg" style="width: 30px;height:30px;"></button>
-        <button class="toolButtons" (click)="pencil($event,'blue')"><img src="../../../assets/icons/bluePencil.svg" style="width: 30px;height:30px;"></button>
-        <button class="toolButtons" (click)="pencil($event,'black')"><img src="../../../assets/icons/blackPencil.svg" style="width: 30px;height:30px;"></button>
-        <button class="toolButtons" (click)="undo()" ><img src="../../../assets/icons/undo.svg" style="width: 30px;height:30px;"></button>
-        <button class="toolButtons" (click)="redo()"><img src="../../../assets/icons/redo.svg" style="width: 30px;height:30px;"></button>
-        <button class="toolButtons" (click)="reset()" style="width: 70px;">Reset</button>
-      </div> -->
       <canvas #canvas></canvas>
     </div>
   </div>
@@ -430,8 +464,17 @@
       </span>
     </button>
     <!-- chats -->
-    <button class="btn btn-success" (click)="openChatWindow()">
+    <button class="btn btn-success" (click)="openChatWindow()" style="position: relative;">
       <span class="material-icons control-icons">chat </span>
+      <span style=
+   " background-color: #32CD32;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;"
+    *ngIf="newMessageNotification"></span>
     </button>
     <!-- end call button  -->
     <button

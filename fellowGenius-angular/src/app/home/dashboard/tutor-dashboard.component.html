@@ -47,8 +47,11 @@
           <div class="row">
             <div class="col-sm-1">
               <img
-                src="../../../assets/icons/user.svg"
-                style="width: 50px; height: 50px;"
+                src="../../../assets/icons/user-square.svg"
+                style="width: 66px;
+                height: 66px;
+                margin-top: 7px;
+                border-radius: 5px;"
                 alt="studentImage"
               />
             </div>
@@ -56,6 +59,16 @@
               <h1 style="font-size: 19px; margin: 0;">
                 {{ element.studentName }}
               </h1>
+              <p 
+              style="
+                  font-size: medium;
+                  color: rgb(109, 116, 116);
+                  padding-top: 1px;
+                  margin: 0;
+                "
+              >
+                {{ element.dateOfMeeting }}
+              </p>
               <p
                 style="
                   font-size: medium;
@@ -99,8 +112,11 @@
           <div class="row">
             <div class="col-sm-1">
               <img
-                src="../../../assets/icons/user.svg"
-                style="width: 50px; height: 50px;"
+                src="../../../assets/icons/user-square.svg"
+                style="width: 66px;
+                height: 66px;
+                margin-top: 7px;
+                border-radius: 5px;"
                 alt="studentImage"
               />
             </div>
@@ -108,14 +124,13 @@
               <h1 style="font-size: 19px; margin: 0;">
                 {{ element.studentName }}
               </h1>
-              <p>
+              <p style="margin: 0;">
                 {{ element.dateOfMeeting }}
               </p>
               <p
                 style="
                   font-size: medium;
                   color: rgb(109, 116, 116);
-                  padding-top: 1px;
                   margin: 0;
                 "
               >
@@ -159,8 +174,11 @@
           <div class="row">
             <div class="col-sm-1">
               <img
-                src="../../../assets/icons/user.svg"
-                style="width: 50px; height: 50px;"
+                src="../../../assets/icons/user-square.svg"
+                style="width: 66px;
+                height: 66px;
+                margin-top: 7px;
+                border-radius: 5px;"
                 alt="studentImage"
               />
             </div>
@@ -196,6 +214,7 @@
             </div>
             <div class="col-sm-3">
               <button class="btn btn-outline-danger" (click)="onHost(element)" [disabled]="!element.isLive">
+                <!-- <button class="btn btn-outline-danger" (click)="onHost(element)"> -->
                 Join now
               </button>
             </div>

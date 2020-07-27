@@ -6,12 +6,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 public class TutorProfile {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "id_seq")
+	@GenericGenerator(
+			name = "id_seq", 
+			strategy = "fG.Service.IdGenerator")
 	Integer tid;
+	
+	@GeneratedValue(generator = "id_seq")
+	@GenericGenerator(
+			name = "id_seq", 
+			strategy = "fG.Service.IdGenerator")
+	Integer userBookingId;
+	
 	@Column(name="fullname")
 	String fullName;
 	String email;
@@ -92,13 +104,18 @@ public class TutorProfile {
 		this.contact = contact;
 	}
 	
+	public Integer getUserBookingId() {
+		return userBookingId;
+	}
+	public void setUserBookingId(Integer userBookingId) {
+		this.userBookingId = userBookingId;
+	}
 	@Override
 	public String toString() {
-		return "TutorProfile [tid=" + tid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", addressLine1=" + addressLine1 + ", addressLine2="
-				+ addressLine2 + ", country=" + country + ", state=" + state + ", profilePictureUrl="
-				+ profilePictureUrl + ", city=" + city + "]";
+		return "TutorProfile [tid=" + tid + ", userBookingId=" + userBookingId + ", fullName=" + fullName + ", email="
+				+ email + ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", addressLine1=" + addressLine1
+				+ ", addressLine2=" + addressLine2 + ", country=" + country + ", state=" + state
+				+ ", profilePictureUrl=" + profilePictureUrl + ", city=" + city + "]";
 	}
-   
 	
 }

@@ -4,6 +4,15 @@ public class ScheduleTime {
 	public String date;
 	public Integer hours;
 	public Integer minutes;
+    public Integer totalMinutes;
+    
+	public Integer getTotalMinutes() {
+		return totalMinutes;
+	}
+
+	public void setTotalMinutes(Integer totalMinutes) {
+		this.totalMinutes = totalMinutes;
+	}
 
 	public String getDate() {
 		return date;
@@ -29,11 +38,13 @@ public class ScheduleTime {
 		this.minutes = minutes;
 	}
 
+	
 	@Override
 	public String toString() {
-		return "ScheduleTime [date=" + date + ", hours=" + hours + ", minutes=" + minutes + "]";
+		return "ScheduleTime [date=" + date + ", hours=" + hours + ", minutes=" + minutes + ", totalMinutes="
+				+ totalMinutes + "]";
 	}
-	
+
 	@Override
     public boolean equals(Object anObject) {
         if (!(anObject instanceof ScheduleTime)) {
@@ -43,24 +54,6 @@ public class ScheduleTime {
         return ( (otherMember.getDate().equals(this.getDate())) && (otherMember.getHours().equals(this.getHours())) && (otherMember.getMinutes().equals(this.getMinutes())));
     }
 
-//	 @Override
-//	    public boolean equals(Object obj) {
-//	        if (obj == null || !(obj instanceof ScheduleTime)) {
-//	            return false;
-//	        }
-//	        ScheduleTime other = (ScheduleTime) obj;
-//	        return this.date == other.date && this.hours == other.hours && this.minutes == other.minutes;
-//	    }
-//
-//	    @Override
-//	    public int hashCode() {
-//	        final int prime = 31;
-//	        int result = 1;
-//	        result = prime * result + this.hours;
-//	        result = prime * result + this.minutes;
-//	        result = prime * result + ((name == null) ? 0 : name.hashCode());
-//	        return result;
-//	    }
 }
 
 

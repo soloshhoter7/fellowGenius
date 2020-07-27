@@ -25,7 +25,7 @@ export class TutorProfileComponent implements OnInit {
 		duration: 5000,
 		horizontalPosition: 'center',
 		verticalPosition: 'top',
-		panelClass: ['snackbar'],
+		panelClass: [ 'snackbar' ]
 	};
 	startDisabled: boolean;
 	endDisabled: boolean;
@@ -55,16 +55,16 @@ export class TutorProfileComponent implements OnInit {
 		eh: -1,
 		em: -1
 	};
-	case1a:boolean = false;
-	case1b:boolean = false;
-	case2a:boolean = false;
-	case2b:boolean = false;
-	case3a:boolean = false;
-	case3b:boolean = false;
-	case4a:boolean = false;
-	case4b:boolean = false;
-	case5a:boolean = false;
-	case5b:boolean = false;
+	case1a: boolean = false;
+	case1b: boolean = false;
+	case2a: boolean = false;
+	case2b: boolean = false;
+	case3a: boolean = false;
+	case3b: boolean = false;
+	case4a: boolean = false;
+	case4b: boolean = false;
+	case5a: boolean = false;
+	case5b: boolean = false;
 	dates = [];
 	scheduleDates: dateModel[] = [];
 	model: NgbDateStruct;
@@ -79,6 +79,8 @@ export class TutorProfileComponent implements OnInit {
 	};
 	ScheduleTime: ScheduleTime[] = [];
 	fullDate = [];
+	clickedIndex1: number;
+	clickedIndex2: number;
 	constructor(
 		private profileService: ProfileService,
 		private meetingSevice: MeetingService,
@@ -89,6 +91,8 @@ export class TutorProfileComponent implements OnInit {
 		private dialogRef: MatDialog
 	) {}
 	ngOnInit(): void {
+		this.startDisabled = true;
+		this.endDisabled = true;
 		this.teacherProfile = this.profileService.getProfile();
 		this.httpService.getTutorIsAvailable(this.teacherProfile.tid).subscribe((res) => {
 			if (res == true) {
@@ -96,7 +100,6 @@ export class TutorProfileComponent implements OnInit {
 				this.timeFrom(-7);
 				this.timeFrom2(-7);
 				this.httpService.getTutorTimeAvailabilityTimeArray(this.teacherProfile.tid).subscribe((res) => {
-					
 					this.ScheduleTime = res;
 					this.manipulateTimeSlots();
 				});
@@ -108,9 +111,11 @@ export class TutorProfileComponent implements OnInit {
 
 	timeSelector(event, index: number, todayDate: string) {
 		this.clickedIndex = index;
+
+		// if start time and end time are null
 		if (this.st.sh == -1 && this.st.sm == -1 && this.et.eh == -1 && this.et.em == -1) {
+			this.clickedIndex1 = index;
 			this.startDisabled = false;
-			this.endDisabled = true;
 			this.startDate = event.date;
 			this.st.sh = event.hours;
 			this.st.sm = event.minutes;
@@ -122,113 +127,145 @@ export class TutorProfileComponent implements OnInit {
 				this.startTimeString = this.st.sh + ':' + this.st.sm;
 			}
 			this.errorMessage = '';
-			
+
 			//case 1 or case 3
-			if(this.tempArray.clickIndex1 == null && this.tempArray.clickIndex2 == null && (this.clickedIndex-1 ==-1 || this.ScheduleTime[this.clickedIndex-1].date != event.date)){
-				if(this.clickedIndex-1 == -1){
-					
+			if (
+				this.tempArray.clickIndex1 == null &&
+				this.tempArray.clickIndex2 == null &&
+				(this.clickedIndex - 1 == -1 || this.ScheduleTime[this.clickedIndex - 1].date != event.date)
+			) {
+				if (this.clickedIndex - 1 == -1) {
 				}
 				this.tempArray.clickIndex1 = index;
-					
+
 				this.case1a = true;
 				this.case3a = true;
-			}
-			//case 2 or case 4 or case 5
-			else if(this.tempArray.clickIndex1 == null && this.tempArray.clickIndex2==null && (this.ScheduleTime[this.clickedIndex-1].date == event.date)){
+			} else if (
+				this.tempArray.clickIndex1 == null &&
+				this.tempArray.clickIndex2 == null &&
+				this.ScheduleTime[this.clickedIndex - 1].date == event.date
+			) {
+				//case 2 or case 4 or case 5
 				this.tempArray.clickIndex1 = index;
 				this.case2a = true;
 				this.case4a = true;
 				this.case5a = true;
 			}
-			
-		
+
+			// else if start time is selected and end time is not selected
 		} else if (this.st.sh != -1 && this.st.sm != -1 && this.et.eh == -1 && this.et.em == -1) {
+			this.clickedIndex2 = index;
+			// if date of start time selection and end time selection date are same
 			if (this.startDate == event.date) {
-				this.et.eh = event.hours;
-				this.et.em = event.minutes;
-				if (this.et.eh * 60 + this.et.em >= this.st.sh * 60 + this.st.sm) {
-					this.endDisabled = false;
-					event.isEndDate = true;
-					this.endSelect = this.clickedIndex;
-					if (this.et.em == 0) {
-						this.endTimeString = this.et.eh + ':' + '0' + this.et.em;
-					} else {
-						this.endTimeString = this.et.eh + ':' + this.et.em;
+				if (this.clickedIndex2 - this.clickedIndex1 <= 6) {
+					this.et.eh = event.hours;
+					this.et.em = event.minutes;
+					//if end time is greater than start time
+					if (this.et.eh * 60 + this.et.em > this.st.sh * 60 + this.st.sm) {
+						this.endDisabled = false;
+						event.isEndDate = true;
+						this.endSelect = this.clickedIndex;
+						if (this.et.em == 0) {
+							this.endTimeString = this.et.eh + ':' + '0' + this.et.em;
+						} else {
+							this.endTimeString = this.et.eh + ':' + this.et.em;
+						}
+						this.errorMessage = '';
+
+						//case 1 or case 4 or case 5
+						if (
+							this.tempArray.clickIndex1 != null &&
+							this.tempArray.clickIndex2 == null &&
+							this.ScheduleTime[this.clickedIndex + 1].date == event.date
+						) {
+							if (this.tempArray.clickIndex1 != null) {
+							}
+							this.tempArray.clickIndex2 = index;
+
+							this.case1b = true;
+							this.case4b = true;
+							this.case5b = true;
+
+							if (this.case1a && this.case1b) {
+								this.bookingDetails.bookingCase = 1;
+							}
+							var diff = index - this.tempArray.clickIndex1;
+
+							if (diff == 1 && this.case4a && this.case4b) {
+								this.bookingDetails.bookingCase = 4;
+							} else if (diff != 1 && this.case5a && this.case5b) {
+								this.bookingDetails.bookingCase = 5;
+							}
+						} else if (
+							this.tempArray.clickIndex1 != null &&
+							this.tempArray.clickIndex2 == null &&
+							this.ScheduleTime[this.clickedIndex + 1].date != event.date
+						) {
+							//case 2 or case 3
+							this.tempArray.clickIndex2 = index;
+							this.case2b = true;
+							this.case3b = true;
+
+							if (this.case2a && this.case2b) {
+								this.bookingDetails.bookingCase = 2;
+							} else if (this.case3a && this.case3b) {
+								this.bookingDetails.bookingCase = 3;
+							}
+						}
+					} else if (this.et.eh * 60 + this.et.em <= this.st.sh * 60 + this.st.sm) {
+						//if end time is less than start time
+						this.startDisabled = true;
+						this.endDisabled = true;
+						this.startSelect = -1;
+						this.endSelect = -1;
+
+						event.isEndDate = false;
+						event.isStartDate = false;
+						this.et.eh = -1;
+						this.et.em = -1;
+						this.st.sh = -1;
+						this.st.sm = -1;
+						this.startTimeString = 'Start Time ';
+						this.endTimeString = 'End Time';
+						this.errorMessage = 'End time should be after Start time, Reset !';
+
+						this.tempArray.clickIndex1 = null;
+						this.tempArray.clickIndex2 = null;
+						this.case1a = false;
+						this.case1b = false;
+						this.case2a = false;
+						this.case2b = false;
+						this.case3a = false;
+						this.case3b = false;
+						this.case4a = false;
+						this.case4b = false;
+						this.case5a = false;
+						this.case5b = false;
 					}
-					this.errorMessage = '';
-					
-
-					//case 1 or case 4 or case 5
-					if(this.tempArray.clickIndex1 != null && this.tempArray.clickIndex2 == null && this.ScheduleTime[this.clickedIndex+1].date == event.date){
-						if(this.tempArray.clickIndex1 !=null){
-							
-						}
-						this.tempArray.clickIndex2 = index;
-					
-						this.case1b = true;
-						this.case4b = true;
-						this.case5b = true;
-
-						if(this.case1a && this.case1b){
-							this.bookingDetails.bookingCase = 1;
-							
-							
-						}
-						var diff = index - this.tempArray.clickIndex1;
-						
-						if(diff==1 && this.case4a && this.case4b){
-							
-							this.bookingDetails.bookingCase = 4;
-						}else if(diff!=1 && this.case5a && this.case5b){
-						this.bookingDetails.bookingCase=5
-						}
-						
-					}
-					//case 2 or case 3
-					else if(this.tempArray.clickIndex1!=null && this.tempArray.clickIndex2 == null && this.ScheduleTime[this.clickedIndex+1].date != event.date){
-						this.tempArray.clickIndex2 = index;
-						this.case2b=true;
-						this.case3b = true;
-
-						if(this.case2a && this.case2b){
-							this.bookingDetails.bookingCase =2;
-						}
-						else if(this.case3a && this.case3b){
-							this.bookingDetails.bookingCase = 3;
-						}
-					}
-
 				} else {
+					this.errorMessage = "You can't book a tutor for more than 3 hours";
 					this.startDisabled = true;
 					this.endDisabled = true;
-					this.startSelect = -1;
-					this.endSelect = -1;
-					
-					event.isEndDate = false;
 					event.isStartDate = false;
-					this.et.eh = -1;
-					this.et.em = -1;
+					this.startSelect = -1;
 					this.st.sh = -1;
 					this.st.sm = -1;
 					this.startTimeString = 'Start Time ';
-					this.endTimeString = 'End Time';
-					this.errorMessage = 'End time should be after Start time, Reset !';
-
 					this.tempArray.clickIndex1 = null;
 					this.tempArray.clickIndex2 = null;
 					this.case1a = false;
-					this.case1b= false;
-					this.case2a= false;
-					this.case2b= false;
-					this.case3a= false;
-					this.case3b= false;
-					this.case4a= false;
-					this.case4b= false;
-					this.case5a= false;
-					this.case5b= false;
+					this.case1b = false;
+					this.case2a = false;
+					this.case2b = false;
+					this.case3a = false;
+					this.case3b = false;
+					this.case4a = false;
+					this.case4b = false;
+					this.case5a = false;
+					this.case5b = false;
 				}
 			} else {
-				
+				// if start time date and end time date are not equal
 				this.errorMessage = 'Start date and End date should be same';
 				this.startDisabled = true;
 				this.endDisabled = true;
@@ -240,18 +277,18 @@ export class TutorProfileComponent implements OnInit {
 				this.tempArray.clickIndex1 = null;
 				this.tempArray.clickIndex2 = null;
 				this.case1a = false;
-				this.case1b= false;
-				this.case2a= false;
-				this.case2b= false;
-				this.case3a= false;
-				this.case3b= false;
-				this.case4a= false;
-				this.case4b= false;
-				this.case5a= false;
-				this.case5b= false;
+				this.case1b = false;
+				this.case2a = false;
+				this.case2b = false;
+				this.case3a = false;
+				this.case3b = false;
+				this.case4a = false;
+				this.case4b = false;
+				this.case5a = false;
+				this.case5b = false;
 			}
 		} else if (this.st.sh != -1 && this.st.sm != -1 && this.et.eh != -1 && this.et.em != -1) {
-
+			// if both start time and end time are already selected
 			this.endDisabled = true;
 			this.startDisabled = false;
 			this.startSelect = this.clickedIndex;
@@ -268,31 +305,37 @@ export class TutorProfileComponent implements OnInit {
 				this.startTimeString = this.st.sh + ':' + this.st.sm;
 			}
 			this.endTimeString = 'End Time';
-		
+
 			this.errorMessage = '';
 
-			
 			this.tempArray.clickIndex1 = null;
 			this.tempArray.clickIndex2 = null;
 			this.case1a = false;
-			this.case1b= false;
-			this.case2a= false;
-			this.case2b= false;
-			this.case3a= false;
-			this.case3b= false;
-			this.case4a= false;
-			this.case4b= false;
-			this.case5a= false;
-			this.case5b= false;
+			this.case1b = false;
+			this.case2a = false;
+			this.case2b = false;
+			this.case3a = false;
+			this.case3b = false;
+			this.case4a = false;
+			this.case4b = false;
+			this.case5a = false;
+			this.case5b = false;
 
 			//case 1 or case 3
-			if(this.tempArray.clickIndex1 == null && this.tempArray.clickIndex2 == null && (this.clickedIndex-1 ==-1 || this.ScheduleTime[this.clickedIndex-1].date != event.date)){
+			if (
+				this.tempArray.clickIndex1 == null &&
+				this.tempArray.clickIndex2 == null &&
+				(this.clickedIndex - 1 == -1 || this.ScheduleTime[this.clickedIndex - 1].date != event.date)
+			) {
 				this.tempArray.clickIndex1 = index;
 				this.case1a = true;
 				this.case3a = true;
-			}
-			//case 2 or case 4 or case 5
-			else if(this.tempArray.clickIndex1 == null && this.tempArray.clickIndex2 == null && (this.ScheduleTime[this.clickedIndex-1].date == event.date)){
+			} else if (
+				this.tempArray.clickIndex1 == null &&
+				this.tempArray.clickIndex2 == null &&
+				this.ScheduleTime[this.clickedIndex - 1].date == event.date
+			) {
+				//case 2 or case 4 or case 5
 				this.tempArray.clickIndex1 = index;
 				this.case2a = true;
 				this.case4a = true;
@@ -322,7 +365,6 @@ export class TutorProfileComponent implements OnInit {
 			var flag = 0;
 			for (let slot of this.ScheduleTime) {
 				if (slot.date == date.date) {
-					
 					flag = 1;
 					break;
 				}
@@ -330,7 +372,6 @@ export class TutorProfileComponent implements OnInit {
 			if (flag == 1) {
 				date.hasElements = true;
 			} else {
-				
 			}
 		}
 	}
@@ -345,7 +386,6 @@ export class TutorProfileComponent implements OnInit {
 	}
 
 	onBooking() {
-		
 		this.bookingDetails.startTimeHour = this.st.sh;
 		this.bookingDetails.startTimeMinute = this.st.sm;
 		this.bookingDetails.dateOfMeeting = this.startDate;
@@ -358,22 +398,21 @@ export class TutorProfileComponent implements OnInit {
 		this.bookingDetails.tutorName = this.teacherProfile.fullName;
 		this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
 
-		this.httpService.isBookingValid(this.bookingDetails).subscribe((res)=>{
-			if(res){
-			this.isLoading = true;
+		this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
+			if (res) {
+				this.isLoading = true;
 				this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
 					if (res == true) {
-						this.isLoading =false;
-						
+						this.isLoading = false;
+
 						this.snackBar.open('Booking submitted successfully !', 'close', this.config);
 						this.dialogRef.closeAll();
 					}
 				});
+			} else if (!res) {
+				this.errorMessage = 'Tutor is busy in between your selected time slots !';
 			}
-			else if(!res){	
-				this.errorMessage = "Tutor is busy in between your selected time slots !";
-			}
-		 })
+		});
 	}
 
 	findDuration(startHour, startMinute, endHour, endMinute) {
@@ -392,7 +431,6 @@ export class TutorProfileComponent implements OnInit {
 
 	//for calculating the end time
 	calculateEndTime(startTime, duration) {
-		
 		var numberOfHours: number;
 		var numberOfMinutes: number;
 		numberOfHours = duration - duration % 1;

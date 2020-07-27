@@ -14,8 +14,10 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
 import { TutorVerification } from 'src/app/model/tutorVerification';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UpdateboxComponent } from '../profile/updatebox/updatebox.component';
+import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-profile',
@@ -24,20 +26,35 @@ import { UpdateboxComponent } from '../profile/updatebox/updatebox.component';
 })
 export class ProfileComponent implements OnInit {
 	profilePictureDisplay = '../../../assets/icons/user-square.svg';
-	ngOnInit(): void {
-		this.tutorProfile = this.tutorService.getTutorDetials();
-		this.userEmail = this.tutorProfile.email;
-		this.profilePictureDisplay = this.tutorProfile.profilePictureUrl;
-		this.tutorFormDetails = this.tutorService.getTutorProfileDetails();
-		
-		this.formProgress = this.tutorService.getTutorProfileDetails().profileCompleted;
-		if (this.formProgress >= 99) {
-			this.profileCompleted = true;
+	profilePicUploadStatus: boolean;
+	isLoading: boolean = false;
+	isLoading2: boolean = false;
+	isLoading3: boolean = false;
+	ngOnInit(): void {}
+	ngAfterViewInit() {
+		if (this.tutorService.getTutorProfileDetails().profileCompleted) {
+			this.profilePicUploadStatus = false;
+			this.disableContinue2 = false;
+			this.disableContinue1 = false;
+			this.tutorProfile = this.tutorService.getTutorDetials();
+			this.userEmail = this.tutorProfile.email;
+			this.profilePictureDisplay = this.tutorProfile.profilePictureUrl;
+			this.tutorFormDetails = this.tutorService.getTutorProfileDetails();
+
+			this.formProgress = this.tutorService.getTutorProfileDetails().profileCompleted;
+			if (this.formProgress >= 99) {
+				this.profileCompleted = true;
+			}
+		} else {
+			this.formProgress = null;
+			setTimeout(() => {
+				this.handleRefresh();
+			}, 1000);
 		}
 	}
 	subjectsValid: boolean = true;
-	disableContinue1: boolean = false;
-	disableContinue2: boolean = false;
+	disableContinue1: boolean;
+	disableContinue2: boolean;
 	basicTutorProfileDetails = new tutorProfileDetails();
 	gradeLevel;
 	//firebase connection
@@ -64,7 +81,7 @@ export class ProfileComponent implements OnInit {
 	formProgress = 12;
 	visible = true;
 	selectable = true;
-	maxGraduationYear = new Date().getFullYear()+5;
+	maxGraduationYear = new Date().getFullYear() + 5;
 	removable = true;
 	price1;
 	userEmail;
@@ -246,7 +263,8 @@ export class ProfileComponent implements OnInit {
 		private httpService: HttpService,
 		private firebaseStorage: AngularFireStorage,
 		private snackBar: MatSnackBar,
-		private matDialog: MatDialog
+		private matDialog: MatDialog,
+		private router: Router
 	) {
 		this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
 			startWith(null),
@@ -254,6 +272,20 @@ export class ProfileComponent implements OnInit {
 		);
 	}
 
+	handleRefresh() {
+		this.profilePicUploadStatus = false;
+		this.disableContinue2 = false;
+		this.disableContinue1 = false;
+		this.tutorProfile = this.tutorService.getTutorDetials();
+		this.userEmail = this.tutorProfile.email;
+		this.profilePictureDisplay = this.tutorProfile.profilePictureUrl;
+		this.tutorFormDetails = this.tutorService.getTutorProfileDetails();
+
+		this.formProgress = this.tutorService.getTutorProfileDetails().profileCompleted;
+		if (this.formProgress >= 99) {
+			this.profileCompleted = true;
+		}
+	}
 	updateBasicTutorProfile(profilePictureUrl) {
 		this.basicTutorProfileDetails.subject1 = this.fruits[0];
 		this.basicTutorProfileDetails.subject2 = this.fruits[1];
@@ -304,11 +336,11 @@ export class ProfileComponent implements OnInit {
 		var flags: number[] = [ 0, 0, 0 ];
 		var errorFlag: number = 0;
 		var i: number;
-		if(this.fruits.length!=3){
+		if (this.fruits.length != 3) {
 			// errorFlag = 1;
 			this.only3Subjects = true;
 			//show error. you are required to select 3 subjects only
-		}else{
+		} else {
 			this.only3Subjects = false;
 			for (i = 0; i < 3; i++) {
 				var subject: string = this.fruits[i];
@@ -324,8 +356,8 @@ export class ProfileComponent implements OnInit {
 				}
 			}
 		}
-		
-		if((this.fruits[0]==this.fruits[1]) || (this.fruits[1]==this.fruits[2]) || (this.fruits[2]==this.fruits[0])){
+
+		if (this.fruits[0] == this.fruits[1] || this.fruits[1] == this.fruits[2] || this.fruits[2] == this.fruits[0]) {
 			this.only3Subjects = true;
 		}
 
@@ -370,14 +402,62 @@ export class ProfileComponent implements OnInit {
 		} else {
 		}
 	}
-
+	saveForLater() {
+		this.tutorService.tutorProfileDetails.profileCompleted = this.formProgress;
+		this.router.navigate([ 'home/tutorDashboard' ]);
+	}
 	//-----------------------------------------firebase management-------------------------
 
 	//profile picture change function
 	profilePictureChange(event) {
 		// this.profilePictureDisabled = true;
 		this.uploadedProfilePicture = <File>event.target.files[0];
-		this.uploadProfilePicture();
+		this.isLoading3 = true;
+
+		// this.profilePictureDisabled = true;
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		const reader = new FileReader();
+		var imageSrc;
+		// var Image: File = evt.target.files[0];
+
+		if (event.target.files && event.target.files.length) {
+			this.uploadedProfilePicture = event.target.files[0];
+			reader.readAsDataURL(this.uploadedProfilePicture);
+			reader.onload = () => {
+				imageSrc = reader.result as string;
+				this.openDialog(imageSrc);
+			};
+		}
+		// this.uploadProfilePicture();
+	}
+	openDialog(imageSrc) {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.disableClose = true;
+		dialogConfig.data = {
+			image: this.uploadedProfilePicture,
+			imageSrc: imageSrc
+		};
+		// this.dialog.open(UploadProfilePictureComponent, dialogConfig);
+		const dialogRef = this.matDialog.open(UploadProfilePictureComponent, dialogConfig);
+		dialogRef.afterClosed().subscribe((data) => {
+			var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
+			var image: File = new File([ blob ], this.uploadedProfilePicture.name, {
+				type: this.uploadedProfilePicture.type,
+				lastModified: Date.now()
+			});
+			this.uploadedProfilePicture = image;
+			this.uploadProfilePicture();
+		});
+	}
+	b64toBlob(dataURI, fileType) {
+		var byteString = atob(dataURI.split(',')[1]);
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ ab ], { type: fileType });
 	}
 	profilePictureChangeCompleted(event) {
 		this.uploadedProfilePicture = <File>event.target.files[0];
@@ -405,6 +485,7 @@ export class ProfileComponent implements OnInit {
 			)
 			.subscribe();
 	}
+
 	//id document change function
 	idDocumentChange(event) {
 		this.uploadedIdDocument = <File>event.target.files[0];
@@ -425,7 +506,8 @@ export class ProfileComponent implements OnInit {
 			.pipe(
 				finalize(() => {
 					fileRef.getDownloadURL().subscribe((url) => {
-						this.disableContinue2 = true;
+						this.profilePicUploadStatus = true;
+						this.isLoading3 = false;
 						this.profilePictureUrl = url;
 						this.snackBar.open('Image Uploaded successfully', 'close', this.config);
 					});
@@ -437,12 +519,14 @@ export class ProfileComponent implements OnInit {
 	uploadIdDocument() {
 		var filePath = `tutor_id_document/${this.uploadedIdDocument}_${new Date().getTime()}`;
 		const fileRef = this.firebaseStorage.ref(filePath);
+		this.isLoading = true;
 		this.firebaseStorage
 			.upload(filePath, this.uploadedIdDocument)
 			.snapshotChanges()
 			.pipe(
 				finalize(() => {
 					fileRef.getDownloadURL().subscribe((url) => {
+						this.isLoading = false;
 						this.disableContinue1 = true;
 						this.idDocUrl = url;
 						this.snackBar.open('Id document Uploaded successfully', 'close', this.config);
@@ -455,12 +539,14 @@ export class ProfileComponent implements OnInit {
 	uplaodEducationDocument() {
 		var filePath = `tutor_education_document/${this.uploadedEducationDocument}_${new Date().getTime()}`;
 		const fileRef = this.firebaseStorage.ref(filePath);
+		this.isLoading2 = true;
 		this.firebaseStorage
 			.upload(filePath, this.uploadedEducationDocument)
 			.snapshotChanges()
 			.pipe(
 				finalize(() => {
 					fileRef.getDownloadURL().subscribe((url) => {
+						this.isLoading2 = false;
 						this.educationDocUrl = url;
 						this.disableContinue2 = true;
 						this.snackBar.open('education document Uploaded successfully', 'close', this.config);

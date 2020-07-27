@@ -204,9 +204,27 @@ h2 {
 p {
 	font-weight: 300 !important;
 }
+
 .errorMessage {
 	color: red;
 }
+
 .hideBlock {
 	display: none;
+}
+
+.tickMark {
+	margin-left: 97%;
+	height: 0px;
+	padding: 0;
+}
+
+.tickMarkImg {
+	width: 20px;
+	margin-top: -25px;
+}
+
+.loader {
+	margin-left: 79%;
+	height: 0;
 }

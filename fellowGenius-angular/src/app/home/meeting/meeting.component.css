@@ -292,9 +292,8 @@ img {
 .received_msg {
 	color: white;
 	display: inline-block;
-	padding: 0 0 0 10px;
 	vertical-align: top;
-	width: 92%;
+	width: 100%;
 }
 
 .received_withd_msg p {
@@ -399,4 +398,26 @@ img {
 	padding: 10px;
 	border: 1px solid white;
 	border-radius: 5px;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+	border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
 }

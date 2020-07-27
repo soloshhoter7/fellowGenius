@@ -17,8 +17,12 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import fG.DAO.MeetingDao;
@@ -33,18 +37,21 @@ import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
+import fG.Model.AuthenticationResponse;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorAvailabilityScheduleModel;
-import fG.Model.TutorLoginModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
+import fG.Repository.repositorySocialLogin;
+import fG.Repository.repositoryStudentLogin;
+import fG.Repository.repositoryTutorLogin;
 
 @Service
-public class UserService {
+public class UserService  implements UserDetailsService{
 
 	@Autowired
 	dao dao;
@@ -54,7 +61,68 @@ public class UserService {
 	
 	@Autowired
 	ScheduleService scheduleService;
+     
+	@Autowired 
+	repositoryStudentLogin repStudentLogin;
+	
+	@Autowired
+	repositoryTutorLogin repTutorLogin;
+	
+	@Autowired
+	repositorySocialLogin repSocialLogin;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
+	public String validateStudentUser(String email,String password) {
+		StudentLogin studentLogin = repStudentLogin.emailExist(email);
+		if(studentLogin!=null) {
+			if(encoder.matches(password, studentLogin.getPassword())) {
+			return String.valueOf(studentLogin.getStudentProfile().getSid());
+			}else {
+				return null;
+			}
+		}else {
+		 return null;	
+		} 
+	}
+	
+	public User loadStudentByUserId(String userId) {
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		if(dao.findStudentBySid(Integer.valueOf(userId))) {
+		    authorities.add(new SimpleGrantedAuthority("STUDENT"));
+			return new User(userId,"",authorities);
+		}else {
+			return null;
+		}
+	}
+	
+	public String validateTutorUser(String email,String password) {
+		
+		SocialLogin socialLogin =	repSocialLogin.checkSocialLogin(email);
+		TutorLogin tutLogin = repTutorLogin.validation(email);
+		
+		if(socialLogin!=null && socialLogin.getId().equals(password)) {
+			return String.valueOf(socialLogin.getTid());
+		}else if(tutLogin!=null && encoder.matches(password, tutLogin.getPassword())) {
+			return String.valueOf(tutLogin.getTutorProfile().getTid());
+		}else {
+			return null;
+		}
+		
+	}
+	
+	public User loadTutorByUserId(String userId) {
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		if(dao.getTutorProfile(Integer.valueOf(userId))!=null) {
+		    authorities.add(new SimpleGrantedAuthority("TUTOR"));
+			return new User(userId,"",authorities);
+		}else {
+			return null;
+		}
+	}
+	
+	
 	// saving student registration details
 	public boolean saveStudentProfile(StudentProfileModel studentModel) {
 		StudentProfile studentProfile = new StudentProfile();
@@ -66,7 +134,7 @@ public class UserService {
 		studentProfile.setGradeLevel(studentModel.getGradeLevel());
 		if (dao.saveStudentProfile(studentProfile)) {
 			StudentLogin studentLogin = new StudentLogin();
-			studentLogin.setPassword(studentModel.getPassword());
+			studentLogin.setPassword(encoder.encode(studentModel.getPassword()));
 			studentLogin.setEmail(studentModel.getEmail());
 			studentLogin.setStudentProfile(studentProfile);
 			dao.saveStudentLogin(studentLogin);
@@ -86,10 +154,10 @@ public class UserService {
 	}
 
 	// for getting student details after login
-	public StudentProfileModel getStudentDetails(String email) {
+	public StudentProfileModel getStudentDetails(String userId) {
 		StudentProfileModel stuProfileModel = new StudentProfileModel();
 		StudentProfile stuProfile = new StudentProfile();
-		stuProfile = dao.getStudentDetails(email);
+		stuProfile = dao.getStudentDetails(userId);
 		stuProfileModel.setContact(stuProfile.getContact());
 		stuProfileModel.setDateOfBirth(stuProfile.getDateOfBirth());
 		stuProfileModel.setEmail(stuProfile.getEmail());
@@ -172,13 +240,16 @@ public class UserService {
 
 			if (dao.saveTutorProfile(tutorProfile)) {
 				TutorLogin tutorLogin = new TutorLogin();
-				tutorLogin.setPassword(tutorModel.getPassword());
+				tutorLogin.setPassword(encoder.encode(tutorModel.getPassword()));
 				tutorLogin.setEmail(tutorModel.getEmail());
 				tutorLogin.setTutorProfile(tutorProfile);
 				dao.saveTutorLogin(tutorLogin);
 				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 				tutProfileDetails.setTid(tutorProfile.getTid());
 				tutProfileDetails.setProfileCompleted(12);
+				tutProfileDetails.setLessonCompleted(0);
+				tutProfileDetails.setRating(100);
+				tutProfileDetails.setReviewCount(0);
 				dao.saveTutorID(tutProfileDetails);
 				TutorVerification tutVerify = new TutorVerification();
 				tutVerify.setTid(tutorProfile.getTid());
@@ -233,19 +304,19 @@ public class UserService {
 		dao.updateTutorBasicInfo(tutorProfile);
 	}
 
-	// validation of tutor login
-	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
-		if (dao.onTutorLogin(tutorLoginModel)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	// validation of tutor login
+//	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
+//		if (dao.onTutorLogin(tutorLoginModel)) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	// getting tutor details after login
-	public TutorProfileModel getTutorDetails(String email) {
+	public TutorProfileModel getTutorDetails(String userId) {
 		TutorProfileModel tutorProfileModel = new TutorProfileModel();
-		TutorProfile tutorProfile = dao.getTutorDetails(email);
+		TutorProfile tutorProfile = dao.getTutorDetails(userId);
 		tutorProfileModel.setContact(tutorProfile.getContact());
 		tutorProfileModel.setDateOfBirth(tutorProfile.getDateOfBirth());
 		tutorProfileModel.setEmail(tutorProfile.getEmail());
@@ -294,14 +365,14 @@ public class UserService {
 		}
 	}
 
-	// for checking social login
-	public boolean checkSocialLogin(String email) {
-		if (dao.checkSocialLogin(email)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	// for checking social login
+//	public boolean checkSocialLogin(String email) {
+//		if (dao.checkSocialLogin(email)) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	// for saving tutor Availability Schedule
 		public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
@@ -406,7 +477,7 @@ public class UserService {
 	}
 
 	// for sending verification email
-	public String verifyEmail(String email) {
+	public AuthenticationResponse verifyEmail(String email) {
 			String to = email;
 			String from = "fellowGenius.tech@gmail.com";
 	      
@@ -460,7 +531,9 @@ public class UserService {
 		   e.printStackTrace();
 		   throw new RuntimeException(e);
 	      }
-		return otp;
+	      String otpFinal = encoder.encode(otp);
+	      System.out.println(otpFinal);
+		return new AuthenticationResponse(otpFinal);
 		
 	}
 	
@@ -473,4 +546,11 @@ public class UserService {
 		}
 	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

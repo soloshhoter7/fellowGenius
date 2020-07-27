@@ -89,7 +89,7 @@ input {
 	background-color: rgb(255, 255, 255);
 	color: #241084;
 	border: 1px solid #241084;
-	border-radius: 0;
+	border-radius: 5px;
 	margin-bottom: 10px;
 }
 
@@ -165,8 +165,8 @@ input.ng-valid {
 }
 
 .social-buttons {
-	margin-bottom: 20px;
-	padding: 15px;
+	margin-top: 5px;
+	padding: 7px;
 	border-radius: 5px;
 	margin-right: 13px;
 	width: auto;
@@ -184,4 +184,13 @@ input.ng-valid {
 
 .hideBlock {
 	display: none;
+}
+.signUpLink {
+	color: #241084;
+	cursor: pointer;
+	font-weight: 400;
+}
+.signUpLink:hover {
+	text-decoration: underline;
+	color: #241084;
 }

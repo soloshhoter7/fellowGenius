@@ -249,13 +249,14 @@ public class MeetingService {
 //		System.out.println("current date ->"+formatter.format(currentDate));
 //		Date currentDateWithTime = new Date(sdf.format(new Date()));
 //		System.out.println("current date with time ->"+sdf.format(currentDateWithTime));
-		 Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("IST"));
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		 Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("Asia/Kolkata"));
 		    currentDate.set(Calendar.HOUR_OF_DAY, 0);
 		    currentDate.set(Calendar.MINUTE, 0);
 		    currentDate.set(Calendar.SECOND, 0);
 		    currentDate.set(Calendar.MILLISECOND, 0);
 		System.out.println("currentDate_>"+currentDate.getTime());
-		 Calendar currentDateWithTime = Calendar.getInstance(TimeZone.getTimeZone("IST"));
+		 Calendar currentDateWithTime = Calendar.getInstance(TimeZone.getTimeZone("Asia/Kolkata"));
 		 System.out.println("currentDateWithTime_>"+currentDateWithTime.getTime());
 		for(BookingDetails meeting:bookings) {
 //			Date bookingDate = new Date(meeting.getDateOfMeeting());

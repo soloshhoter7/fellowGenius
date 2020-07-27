@@ -3,15 +3,21 @@ package fG.Entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class StudentProfile {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "id_seq")
+	@GenericGenerator(
+			name = "id_seq", 
+			strategy = "fG.Service.IdGenerator")
 	Integer sid;
+	Integer userBookingId;
 	@Column(name = "fullname")
 	String fullName;
 	String email;

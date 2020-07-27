@@ -13,6 +13,9 @@ import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 import { socialLogin } from 'src/app/model/socialModel';
 import { SocialService } from 'src/app/service/social.service';
 import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedule';
+import { CookieService } from 'ngx-cookie-service';
+// import * as jwt_decode from 'jwt-decode';
+import * as JwtDecode from 'jwt-decode';
 declare const FB: any;
 @Component({
 	selector: 'app-login',
@@ -27,7 +30,8 @@ export class LoginComponent implements OnInit {
 		private studentService: StudentService,
 		private tutorService: TutorService,
 		private socialService: SocialService,
-		private zone: NgZone
+		private zone: NgZone,
+		private cookieService: CookieService
 	) {}
 
 	@ViewChild('googleSignUp', { static: true })
@@ -48,7 +52,7 @@ export class LoginComponent implements OnInit {
 	tutorAvailabilitySchedule = new tutorAvailabilitySchedule();
 	incorrectLoginDetails: boolean = false;
 	errorText: string;
-
+	userId;
 	ngOnInit(): void {
 		if (this.loginDetailsService.getLoginType() == null) {
 			this.router.navigate([ '' ]);
@@ -68,15 +72,22 @@ export class LoginComponent implements OnInit {
 				this.studentLoginDetails.email = form.value.email;
 				this.studentLoginDetails.password = form.value.password;
 				this.httpService.checkLogin(this.studentLoginDetails).subscribe((res) => {
-					if (res == true) {
-						this.httpService.getStudentDetails(this.studentLoginDetails).subscribe((res) => {
+					if (res['response'] != 'false') {
+						this.cookieService.set('token', res['response']);
+						this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
+						// this.cookieService.set('userId', jwt_decode(res['response']).sub);
+						this.userId = this.cookieService.get('userId');
+						this.httpService.getStudentDetails(this.userId).subscribe((res) => {
 							this.studentProfile = res;
 							this.studentService.setStudentProfileDetails(this.studentProfile);
 							this.loginDetailsService.setTrType('login');
-							this.isLoading = false;
-							this.router.navigate([ 'home' ]);
+							this.httpService.getStudentSchedule(this.studentProfile.sid).subscribe((res) => {
+								this.studentService.setStudentBookings(res);
+								this.isLoading = false;
+								this.router.navigate([ 'home' ]);
+							});
 						});
-					} else if (res == false) {
+					} else {
 						this.errorText = 'Incorrect email or password';
 						this.isLoading = false;
 						this.hideContainer = '';
@@ -88,8 +99,12 @@ export class LoginComponent implements OnInit {
 				this.tutorLoginDetails.password = form.value.password;
 
 				this.httpService.checkTutorLogin(this.tutorLoginDetails).subscribe((res) => {
-					if (res == true) {
-						this.httpService.getTutorDetails(this.tutorLoginDetails).subscribe((res) => {
+					if (res['response'] != 'false') {
+						this.cookieService.set('token', res['response']);
+
+						this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
+						this.userId = this.cookieService.get('userId');
+						this.httpService.getTutorDetails(this.userId).subscribe((res) => {
 							this.tutorProfile = res;
 							this.tutorService.setTutorDetails(this.tutorProfile);
 							this.httpService.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
@@ -104,7 +119,7 @@ export class LoginComponent implements OnInit {
 								});
 							});
 						});
-					} else if (res == false) {
+					} else {
 						this.incorrectLoginDetails = true;
 						this.isLoading = false;
 						this.hideContainer = '';
@@ -132,32 +147,34 @@ export class LoginComponent implements OnInit {
 				this.socialLogin.fullName = profile.getName();
 				this.socialLogin.email = profile.getEmail();
 				this.socialService.setSocialDetails(this.socialLogin);
-				this.httpService.checkSocialLogin(this.socialLogin.email).subscribe((res) => {
+				this.tutorLoginDetails.email = this.socialLogin.email;
+				this.tutorLoginDetails.password = this.socialLogin.id;
+				this.httpService.checkTutorLogin(this.tutorLoginDetails).subscribe((res) => {
 					this.isLoading = true;
 					this.hideContainer = 'hideBlock';
-					if (res == true) {
-						var tutLoginModel = new tutorLoginModel();
-						this.socialService.setSocialDetails(this.socialLogin);
-						tutLoginModel.email = this.socialLogin.email;
-						this.httpService.getTutorDetails(tutLoginModel).subscribe((res) => {
-							this.tutorService.setTutorDetails(res);
-							this.httpService.getTutorProfileDetails(res.tid).subscribe((res) => {
-								this.tutorService.setTutorProfileDetails(res);
-								this.httpService
-									.getScheduleData(this.tutorService.getTutorDetials().tid)
-									.subscribe((res) => {
-										this.tutorAvailabilitySchedule = res;
-										this.tutorService.setPersonalAvailabilitySchedule(
-											this.tutorAvailabilitySchedule
-										);
-										this.zone.run(() => {
-											this.loginDetailsService.setTrType('login');
-											this.router.navigate([ 'home' ]);
-										});
+					if (res['response'] != 'false') {
+						this.cookieService.set('token', res['response']);
+
+						this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
+						this.userId = this.cookieService.get('userId');
+						this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+							this.tutorProfile = res;
+							this.tutorService.setTutorDetails(this.tutorProfile);
+							this.httpService.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
+								this.tutorProfileDetails = res;
+								this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+								this.httpService.getScheduleData(this.tutorProfile.tid).subscribe((res) => {
+									this.tutorAvailabilitySchedule = res;
+									this.tutorService.setPersonalAvailabilitySchedule(this.tutorAvailabilitySchedule);
+									this.isLoading = false;
+									this.zone.run(() => {
+										this.loginDetailsService.setTrType('login');
+										this.router.navigate([ 'home' ]);
 									});
+								});
 							});
 						});
-					} else if (res == false) {
+					} else {
 						this.zone.run(() => {
 							this.incorrectLoginDetails = true;
 							this.isLoading = false;
@@ -166,9 +183,44 @@ export class LoginComponent implements OnInit {
 						});
 					}
 				});
+
+				// this.httpService.checkSocialLogin(this.socialLogin.email).subscribe((res) => {
+				// 	this.isLoading = true;
+				// 	this.hideContainer = 'hideBlock';
+				// 	if (res == true) {
+				// 		var tutLoginModel = new tutorLoginModel();
+				// 		this.socialService.setSocialDetails(this.socialLogin);
+				// 		tutLoginModel.email = this.socialLogin.email;
+				// 		this.httpService.getTutorDetails(tutLoginModel).subscribe((res) => {
+				// 			this.tutorService.setTutorDetails(res);
+				// 			this.httpService.getTutorProfileDetails(res.tid).subscribe((res) => {
+				// 				this.tutorService.setTutorProfileDetails(res);
+				// 				this.httpService
+				// 					.getScheduleData(this.tutorService.getTutorDetials().tid)
+				// 					.subscribe((res) => {
+				// 						this.tutorAvailabilitySchedule = res;
+				// 						this.tutorService.setPersonalAvailabilitySchedule(
+				// 							this.tutorAvailabilitySchedule
+				// 						);
+				// 						this.zone.run(() => {
+				// 							this.loginDetailsService.setTrType('login');
+				// 							this.router.navigate([ 'home' ]);
+				// 						});
+				// 					});
+				// 			});
+				// 		});
+				// 	} else if (res == false) {
+				// 		this.zone.run(() => {
+				// 			this.incorrectLoginDetails = true;
+				// 			this.isLoading = false;
+				// 			this.hideContainer = '';
+				// 			this.errorText = 'Not a registered user. Sign Up first';
+				// 		});
+				// 	}
+				// });
 			},
 			(error) => {
-				alert(JSON.stringify(error, undefined, 2));
+				// alert(JSON.stringify(error, undefined, 2));
 			}
 		);
 	}

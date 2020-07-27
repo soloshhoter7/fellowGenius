@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,25 +13,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fG.Entity.ScheduleData;
+import fG.Model.AuthenticationResponse;
 import fG.Model.BookingDetailsModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Service.MeetingService;
 import fG.Service.UserService;
 
-import java.util.Properties;
-import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 @RestController
-//@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "https://fellowgenius.com")
 //@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/fellowGenius/meeting")
 public class meetingController {
@@ -42,12 +33,14 @@ public class meetingController {
 	UserService userService;
 
 	// for saving booking
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value = "/saveMeeting")
 	public boolean saveBooking(@RequestBody BookingDetailsModel booking) {
 		return meetingService.saveBooking(booking);
 	}
 
 	// delete my booking
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value= "/deleteMyBooking")
 	@ResponseBody
 	public boolean deleteMyBooking(String bid){
@@ -55,6 +48,7 @@ public class meetingController {
 		return meetingService.deleteMyBooking(bookingId);
 	}
 	// for finding tutor pending Bookings
+	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/findTutorBookings", produces = { "application/json" })
 	@ResponseBody
 	public List<?> findTutorBookings(String tid) throws ParseException {
@@ -62,6 +56,7 @@ public class meetingController {
 	}
 
 	// for updating booking status of booking
+	
 	@RequestMapping(value = "/updateBookingStatus", produces = { "application/json" })
 	@ResponseBody
 	public boolean updateBookingStatus(String bid, String approvalStatus) {
@@ -69,6 +64,7 @@ public class meetingController {
 	}
 
 	// find student pending bookings
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value = "/findStudentBookings")
 	@ResponseBody
 	public List<?> findStudentBookings(String studentid) throws ParseException {
@@ -78,6 +74,7 @@ public class meetingController {
 	}
 
 	// for fetching approved bookings list
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value = "/fetchApprovedList")
 	@ResponseBody
 	public List<?> fetchApprovedList(String studentid) throws ParseException {
@@ -87,6 +84,7 @@ public class meetingController {
 	}
 
 	// for fetching approved bookings list
+	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/fetchApprovedListTutor")
 	@ResponseBody
 	public List<?> fetchApprovedStudentList(String tutorId) throws ParseException {
@@ -96,6 +94,7 @@ public class meetingController {
 	}
 
 	// for fetching live meetings for tutors
+	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/fetchLiveMeetingListTutor")
 	@ResponseBody
 	public List<?> fetchLiveMeetingListTutor(String tutorId) throws ParseException {
@@ -105,6 +104,7 @@ public class meetingController {
 	}
 
 	// for fetching live meetings for student
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value = "/fetchLiveMeetingListStudent")
 	@ResponseBody
 	public List<?> fetchLiveMeetingListStudent(String sid) throws ParseException {
@@ -114,6 +114,7 @@ public class meetingController {
 	}
 
 	// for saving Schedule
+	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping("/saveSchedule")
 	public void saveSchedule(@RequestBody TutorAvailabilityScheduleModel tutorAvailabilitySchedule) {
 		if (tutorAvailabilitySchedule.getTid() != null) {
@@ -124,6 +125,7 @@ public class meetingController {
 	}
 
 	// for getting tutor availability schedule
+	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/getSchedule", produces = { "application/json" })
 	@ResponseBody
 	public TutorAvailabilityScheduleModel getAvailabilitySchedule(String tid)
@@ -132,6 +134,7 @@ public class meetingController {
 	}
 
 	// for getting tutor availability tutor array
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value = "/getTutorTimeArray", produces = { "application/json" })
 	@ResponseBody
 	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) {
@@ -139,6 +142,7 @@ public class meetingController {
 	}
 
 	// for getting student meeting schedule
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value = "/getStudentSchedule", produces = { "application/json" })
 	@ResponseBody
 	public ArrayList<ScheduleData> getStudentSchedule(String sid) throws ParseException {
@@ -146,14 +150,16 @@ public class meetingController {
 	}
 	
 	// for sending verification email
-	@RequestMapping(value="/sendEmail")
+//	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
+	@RequestMapping(value="/sendEmail",produces = {"application/json"})
 	@ResponseBody
-	public String sendEmail(String email) {
+	public AuthenticationResponse sendEmail(String email) {
 		return userService.verifyEmail(email);
 	      
 	}
 	
 	// for checking if tutor is available
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value="/getTutorIsAvailable")
 	@ResponseBody
 	public boolean getIsAvailable(String tid) {
@@ -162,6 +168,7 @@ public class meetingController {
 	
 	
 	// for checking if booking is valid
+	@PreAuthorize("hasAuthority('STUDENT')")
 	@RequestMapping(value="/isBookingValid")
 	@ResponseBody
 	public boolean isBookingValid(String sh, String sm, String eh, String em, String tid, String date) {

@@ -21,12 +21,12 @@ export class HttpService {
 	constructor(private http: HttpClient) {}
 	// for saving student profile details
 	saveStudentProfile(studentModel: StudentProfileModel): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/registerStudent', studentModel);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/registerStudent', studentModel);
 	}
 
 	//verifyEmail
 	verifyEmail(email: string): Observable<Object> {
-		return this.http.get('http://localhost:5000/fellowGenius/meeting/sendEmail', {
+		return this.http.get('https://backend.fellowgenius.com/fellowGenius/meeting/sendEmail', {
 			params: {
 				email: email
 			}
@@ -34,64 +34,73 @@ export class HttpService {
 	}
 	//for updating student profile
 	updateStudentProfile(studentModel: StudentProfileModel): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/updateStudentProfile', studentModel);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/updateStudentProfile', studentModel);
 	}
 
 	// for checking student login
 	checkLogin(studentLoginModel: StudentLoginModel): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/loginStudent', studentLoginModel);
+		return this.http.post('https://backend.fellowgenius.com/authenticateStudent', {
+			email: studentLoginModel.email,
+			password: studentLoginModel.password
+		});
 	}
 
 	// for	getting	student	details	after login
-	getStudentDetails(studentLoginModel: StudentLoginModel): Observable<StudentProfileModel> {
-		return this.http.get<StudentProfileModel>('http://localhost:5000/fellowGenius/getStudentDetails', {
+	getStudentDetails(userId): Observable<StudentProfileModel> {
+		return this.http.get<StudentProfileModel>('https://backend.fellowgenius.com/fellowGenius/getStudentDetails', {
 			params: {
-				email: studentLoginModel.email
+				userId: userId.toString()
 			}
 		});
 	}
 
 	// for saving tutor profile
 	saveTutorProfile(tutorModel: tutorProfile): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/registerTutor', tutorModel);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/registerTutor', tutorModel);
 	}
 
 	//for updating tutor profile after completing basic info form
 	updateTutorProfile(basicInfo: tutorProfile) {
-		return this.http.post('http://localhost:5000/fellowGenius/updateTutorBasicInfo', basicInfo);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/updateTutorBasicInfo', basicInfo);
 	}
 
 	//for updating tutor profile details after completing tutor profile details form
 	updateTutorProfileDetails(tutorProfileDetails: tutorProfileDetails) {
-		return this.http.post('http://localhost:5000/fellowGenius/updateTutor', tutorProfileDetails);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/updateTutor', tutorProfileDetails);
 	}
 
 	updateTutorVerification(tutorVerification: TutorVerification) {
-		return this.http.post('http://localhost:5000/fellowGenius/updateTutorVerification', tutorVerification);
+		return this.http.post(
+			'https://backend.fellowgenius.com/fellowGenius/updateTutorVerification',
+			tutorVerification
+		);
 	}
 
 	// for checking tutor login
 	checkTutorLogin(tutorLoginModel: tutorLoginModel): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/loginTutor', tutorLoginModel);
+		return this.http.post('https://backend.fellowgenius.com/authenticateTutor', {
+			email: tutorLoginModel.email,
+			password: tutorLoginModel.password
+		});
 	}
 
 	// for getting tutor details after login
-	getTutorDetails(tutorLoginModel: tutorLoginModel): Observable<tutorProfile> {
-		return this.http.get<tutorProfile>('http://localhost:5000/fellowGenius/getTutorDetails', {
+	getTutorDetails(userId): Observable<tutorProfile> {
+		return this.http.get<tutorProfile>('https://backend.fellowgenius.com/fellowGenius/getTutorDetails', {
 			params: {
-				email: tutorLoginModel.email
+				userId: userId.toString()
 			}
 		});
 	}
 
 	//fetch all the tutors for find tutor page
 	getTutorList() {
-		return this.http.get<tutorProfileDetails[]>('http://localhost:5000/fellowGenius/fetchTutorList');
+		return this.http.get<tutorProfileDetails[]>('https://backend.fellowgenius.com/fellowGenius/fetchTutorList');
 	}
 
 	//fetch Top Tutors List
 	fetchTopTutors(subject: string) {
-		return this.http.get<tutorProfileDetails[]>('http://localhost:5000/fellowGenius/fetchTopTutorList', {
+		return this.http.get<tutorProfileDetails[]>('https://backend.fellowgenius.com/fellowGenius/fetchTopTutorList', {
 			params: {
 				subject: subject
 			}
@@ -100,7 +109,7 @@ export class HttpService {
 
 	//for updating booking status
 	updateBookingStatus(bid: number, approvalStatus: string): Observable<Object> {
-		return this.http.get('http://localhost:5000/fellowGenius/meeting/updateBookingStatus', {
+		return this.http.get('https://backend.fellowgenius.com/fellowGenius/meeting/updateBookingStatus', {
 			params: {
 				bid: bid.toString(),
 				approvalStatus: approvalStatus
@@ -109,7 +118,9 @@ export class HttpService {
 	}
 
 	getTutorProfileDetails(tid: number): Observable<tutorProfileDetails> {
-		return this.http.get<tutorProfileDetails>('http://localhost:5000/fellowGenius/getTutorProfileDetails', {
+		return this.http.get<
+			tutorProfileDetails
+		>('https://backend.fellowgenius.com/fellowGenius/getTutorProfileDetails', {
 			params: {
 				tid: tid.toString()
 			}
@@ -118,12 +129,14 @@ export class HttpService {
 
 	//for saving  booking Details
 	saveBooking(bookingModel: bookingDetails): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/meeting/saveMeeting', bookingModel);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/meeting/saveMeeting', bookingModel);
 	}
 
 	//get Tutor Meetings
 	getTutorBookings(tid: number): Observable<bookingDetails[]> {
-		return this.http.get<bookingDetails[]>('http://localhost:5000/fellowGenius/meeting/findTutorBookings', {
+		return this.http.get<
+			bookingDetails[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/findTutorBookings', {
 			params: {
 				tid: tid.toString()
 			}
@@ -132,7 +145,9 @@ export class HttpService {
 
 	// for fetching student booking list student
 	findStudentBookings(sid: number) {
-		return this.http.get<bookingDetails[]>('http://localhost:5000/fellowGenius/meeting/findStudentBookings', {
+		return this.http.get<
+			bookingDetails[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/findStudentBookings', {
 			params: {
 				studentid: sid.toString()
 			}
@@ -141,7 +156,7 @@ export class HttpService {
 
 	//delete My Booking
 	deleteMyBooking(bid: number) {
-		return this.http.get<bookingDetails>('http://localhost:5000/fellowGenius/meeting/deleteMyBooking', {
+		return this.http.get<bookingDetails>('https://backend.fellowgenius.com/fellowGenius/meeting/deleteMyBooking', {
 			params: {
 				bid: bid.toString()
 			}
@@ -150,7 +165,9 @@ export class HttpService {
 
 	//for fetching  approved meetings student
 	fetchApprovedMeetings(sid: number) {
-		return this.http.get<bookingDetails[]>('http://localhost:5000/fellowGenius/meeting/fetchApprovedList', {
+		return this.http.get<
+			bookingDetails[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/fetchApprovedList', {
 			params: {
 				studentid: sid.toString()
 			}
@@ -159,7 +176,9 @@ export class HttpService {
 
 	//for fetching approved meetings tutor
 	fetchApprovedMeetingsTutor(tid: number) {
-		return this.http.get<bookingDetails[]>('http://localhost:5000/fellowGenius/meeting/fetchApprovedListTutor', {
+		return this.http.get<
+			bookingDetails[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/fetchApprovedListTutor', {
 			params: {
 				tutorId: tid.toString()
 			}
@@ -168,7 +187,9 @@ export class HttpService {
 
 	//for fetching live meetings tutor
 	fetchLiveMeetingsTutor(tid: number) {
-		return this.http.get<bookingDetails[]>('http://localhost:5000/fellowGenius/meeting/fetchLiveMeetingListTutor', {
+		return this.http.get<
+			bookingDetails[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/fetchLiveMeetingListTutor', {
 			params: {
 				tutorId: tid.toString()
 			}
@@ -179,7 +200,7 @@ export class HttpService {
 	fetchLiveMeetingsStudent(sid: number) {
 		return this.http.get<
 			bookingDetails[]
-		>('http://localhost:5000/fellowGenius/meeting/fetchLiveMeetingListStudent', {
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/fetchLiveMeetingListStudent', {
 			params: {
 				sid: sid.toString()
 			}
@@ -188,12 +209,12 @@ export class HttpService {
 
 	//for saving using social login details
 	saveSocialLogin(socialLogin: socialLogin): Observable<object> {
-		return this.http.post('http://localhost:5000/fellowGenius/registerSocialLogin', socialLogin);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/registerSocialLogin', socialLogin);
 	}
 
 	//for login using social login details
 	checkSocialLogin(email: string): Observable<Object> {
-		return this.http.get('http://localhost:5000/fellowGenius/ckeckSocialLogin', {
+		return this.http.get('https://backend.fellowgenius.com/fellowGenius/ckeckSocialLogin', {
 			params: {
 				email: email
 			}
@@ -202,27 +223,35 @@ export class HttpService {
 
 	//for editing tutorProfile details
 	editTutorProfileDetails(updateTutorProfileDetails: tutorProfileDetails) {
-		return this.http.post('http://localhost:5000/fellowGenius/editTutorProfileDetails', updateTutorProfileDetails);
+		return this.http.post(
+			'https://backend.fellowgenius.com/fellowGenius/editTutorProfileDetails',
+			updateTutorProfileDetails
+		);
 	}
 
 	//for editing name, email, contact, dob, addressline1, addressline2
 	editBasicInfo(updatedBasicInfo: tutorProfile): Observable<Object> {
-		return this.http.post('http://localhost:5000/fellowGenius/editTutorBasicInfo', updatedBasicInfo);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/editTutorBasicInfo', updatedBasicInfo);
 	}
 
 	//for editing city, state, country
 	editBasicProfile(updateBasicProfile: tutorProfile) {
-		return this.http.post('http://localhost:5000/fellowGenius/editTutorBasicInfo', updateBasicProfile);
+		return this.http.post('https://backend.fellowgenius.com/fellowGenius/editTutorBasicInfo', updateBasicProfile);
 	}
 
 	//save ScheduleData
 	saveScheduleData(tutorAvailableSchedule: tutorAvailabilitySchedule) {
-		return this.http.post('http://localhost:5000/fellowGenius/meeting/saveSchedule', tutorAvailableSchedule);
+		return this.http.post(
+			'https://backend.fellowgenius.com/fellowGenius/meeting/saveSchedule',
+			tutorAvailableSchedule
+		);
 	}
 
 	//getting tutor availabilitySchedule after login
 	getScheduleData(tid: number): Observable<tutorAvailabilitySchedule> {
-		return this.http.get<tutorAvailabilitySchedule>('http://localhost:5000/fellowGenius/meeting/getSchedule', {
+		return this.http.get<
+			tutorAvailabilitySchedule
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/getSchedule', {
 			params: {
 				tid: tid.toString()
 			}
@@ -231,7 +260,9 @@ export class HttpService {
 
 	// getting tutor avqailable time slots
 	getTutorTimeAvailabilityTimeArray(tid: number) {
-		return this.http.get<ScheduleTime[]>('http://localhost:5000/fellowGenius/meeting/getTutorTimeArray', {
+		return this.http.get<
+			ScheduleTime[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/getTutorTimeArray', {
 			params: {
 				tid: tid.toString()
 			}
@@ -240,7 +271,9 @@ export class HttpService {
 
 	//for updating availability status
 	changeAvailabilityStatus(tid: number, isAvailable: string) {
-		return this.http.get<tutorAvailabilitySchedule>('http://localhost:5000/fellowGenius/changeAvailabilityStatus', {
+		return this.http.get<
+			tutorAvailabilitySchedule
+		>('https://backend.fellowgenius.com/fellowGenius/changeAvailabilityStatus', {
 			params: {
 				tid: tid.toString(),
 				isAavailable: isAvailable
@@ -250,7 +283,9 @@ export class HttpService {
 
 	// getting student meetings
 	getStudentSchedule(sid: number): Observable<scheduleData[]> {
-		return this.http.get<scheduleData[]>('http://localhost:5000/fellowGenius/meeting/getStudentSchedule', {
+		return this.http.get<
+			scheduleData[]
+		>('https://backend.fellowgenius.com/fellowGenius/meeting/getStudentSchedule', {
 			params: {
 				sid: sid.toString()
 			}
@@ -258,7 +293,7 @@ export class HttpService {
 	}
 
 	getTutorIsAvailable(tid: number): Observable<Object> {
-		return this.http.get('http://localhost:5000/fellowGenius/meeting/getTutorIsAvailable', {
+		return this.http.get('https://backend.fellowgenius.com/fellowGenius/meeting/getTutorIsAvailable', {
 			params: {
 				tid: tid.toString()
 			}
@@ -266,7 +301,7 @@ export class HttpService {
 	}
 
 	isBookingValid(booking: bookingDetails): Observable<Object> {
-		return this.http.get('http://localhost:5000/fellowGenius/meeting/isBookingValid', {
+		return this.http.get('https://backend.fellowgenius.com/fellowGenius/meeting/isBookingValid', {
 			params: {
 				sh: booking.startTimeHour.toString(),
 				sm: booking.startTimeMinute.toString(),

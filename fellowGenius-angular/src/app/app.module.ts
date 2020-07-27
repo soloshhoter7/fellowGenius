@@ -27,7 +27,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FacadeComponent } from './facade/facade.component';
 import { LoginComponent } from './facade/login/login.component';
 import { SignUpComponent } from './facade/sign-up/sign-up.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -58,7 +58,13 @@ import { zeroDigit } from '../app/pipes/zeroDigit.pipe';
 import { UpdateboxstudentComponent } from './home/student-profile/updateboxstudent/updateboxstudent.component';
 import { LoadingComponent } from './facade/sign-up/LoadingSpinner/loading/loading.component';
 import { DeletePopupComponent } from './home/student-dashboard/delete-popup/delete-popup.component';
-
+import { TermsAndConditionsComponent } from './facade/sign-up/terms-and-conditions/terms-and-conditions.component';
+import { UploadProfilePictureComponent } from './facade/sign-up/upload-profile-picture/upload-profile-picture.component';
+import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
+import { GoogleLoginProvider, FacebookLoginProvider, AmazonLoginProvider } from 'angularx-social-login';
+import { LoaderComponent } from './home/loader/loader.component';
+import { BasicAuthHttpInterceptorService } from './service/basic-auth-http-interceptor.service';
+import { CookieService } from 'ngx-cookie-service';
 export const appRoutes: Routes = [
 	{
 		path: 'home',
@@ -112,7 +118,10 @@ export const appRoutes: Routes = [
 		zeroDigit,
 		UpdateboxstudentComponent,
 		LoadingComponent,
-		DeletePopupComponent
+		DeletePopupComponent,
+		TermsAndConditionsComponent,
+		UploadProfilePictureComponent,
+		LoaderComponent
 	],
 	imports: [
 		NgxMaterialTimepickerModule,
@@ -121,7 +130,7 @@ export const appRoutes: Routes = [
 		BrowserModule,
 		AppRoutingModule,
 		NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
-		RouterModule.forRoot(appRoutes),
+		RouterModule.forRoot(appRoutes, { useHash: true }),
 		FormsModule,
 		MatDialogModule,
 		HttpClientModule,
@@ -141,9 +150,41 @@ export const appRoutes: Routes = [
 		ScheduleModule,
 		RecurrenceEditorModule,
 		MatSlideToggleModule,
-		LayoutModule
+		LayoutModule,
+		SocialLoginModule
 	],
-	providers: [ DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService ],
+	providers: [
+		CookieService,
+		BasicAuthHttpInterceptorService,
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: BasicAuthHttpInterceptorService,
+			multi: true
+		},
+		DayService,
+		WeekService,
+		WorkWeekService,
+		MonthService,
+		MonthAgendaService,
+		{
+			provide: 'SocialAuthServiceConfig',
+			useValue: {
+				autoLogin: false,
+				providers: [
+					{
+						id: GoogleLoginProvider.PROVIDER_ID,
+						provider: new GoogleLoginProvider(
+							'254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com'
+						)
+					},
+					{
+						id: FacebookLoginProvider.PROVIDER_ID,
+						provider: new FacebookLoginProvider('561602290896109')
+					}
+				]
+			} as SocialAuthServiceConfig
+		}
+	],
 	bootstrap: [ AppComponent ]
 })
 export class AppModule {}

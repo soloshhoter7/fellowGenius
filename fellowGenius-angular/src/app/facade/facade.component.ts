@@ -27,7 +27,6 @@ export class FacadeComponent implements OnInit {
 				this.switchView = true;
 			}
 		});
-		this.preventRefreshButton();
 	}
 
 	onSignUp() {
@@ -42,13 +41,5 @@ export class FacadeComponent implements OnInit {
 	onLoginTutor() {
 		this.loginDetailsService.setLoginType('tutor');
 		this.router.navigate([ 'login' ]);
-	}
-
-	preventRefreshButton() {
-		window.addEventListener('beforeunload', function(e) {
-			var confirmationMessage = 'o/';
-			e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-			return confirmationMessage; // Gecko, WebKit, Chrome <34
-		});
 	}
 }
