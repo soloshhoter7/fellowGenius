@@ -1,0 +1,134 @@
+<body>
+    <div *ngIf="isLoading" style="text-align: center; margin-top:27%; z-index: 5">
+        <app-loading></app-loading>
+    </div>
+    <div class="container-fluid" style="margin-left: 2vw;" *ngIf="!isLoading">
+        <div class="view" style="position: relative;height: 80vh;">
+            <div id="mySidenav" class="sidenav boxShadow" style="position: absolute;height: 80vh;">
+                <button class="closeIconButton" (click)="closeSideNav()" title="close">
+            <img
+                           src="../../../../assets/icons/close.svg"
+                           alt=""
+                           style="height: 15px;"
+                         />
+
+          </button>
+                <div style="padding: 20px;height: 100%;">
+                    <div class="sideNavHeader">
+                        <h1 style="margin: 0;">Book Meeting</h1>
+
+                        <p style="font-weight: 500;margin-top: 5px;color:#210184">
+                            Timing : {{startTimeString}} &nbsp; - &nbsp; {{endTimeString}}</p>
+                        <div class="errorMessage">{{errorMessage}}</div>
+                    </div>
+                    <div class="sideNavBody">
+                        <div style="height:70%; overflow-y: scroll;margin-bottom: 15px;">
+                            <div *ngFor="let todayDate of scheduleDates; let z = index" class="dateBox">
+                                <div style="margin-bottom: 10px;">{{fullDate[z] | date: 'fullDate'}}</div>
+                                <div *ngIf="todayDate.hasElements">
+                                    <div *ngFor="let time of ScheduleTime; let i = index">
+                                        <div *ngIf="todayDate.date == time.date">
+                                            <div class="timeSlots" [style.background-color]="startSelect>=0 && endSelect>0 && i>startSelect && i<endSelect?'rgb(207, 200, 238)':null" [ngClass]="{'startClass': time.hours == st.sh && time.minutes == st.sm && startDate == time.date, 'endClass': time.hours == et.eh && time.minutes == et.em && startDate == time.date}"
+                                                (click)='timeSelector(time,i,todayDate)'>
+                                                {{time.hours}}:{{time.minutes | zero}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="!todayDate.hasElements">
+                                    No Available Schedules
+                                </div>
+                                <br>
+                                <hr class="timeBoxHr">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea style="padding-top: 5px;" class="form-control" id="description" rows="3" name="description" [(ngModel)]="bookingDetails.description" maxlength="100" #desc ngModel required></textarea>
+                            <label for="description" class="form-control-placeholder">Description<sup>*</sup></label
+                        >
+                        <span style="float: right;" class="setLength">{{desc.value.length}}/100</span>
+                      </div>
+                    <button class="btn btn-outline-success" style="
+                    width: 40%;
+                    margin-left: 30%;"
+                    (click)="onBooking()"
+                    [disabled]="startDisabled || endDisabled">
+                    Submit</button></div>
+                 </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 boxShadow" style="margin-right: 15px; padding: 15px; height: 80vh;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img class="profilePicture boxShadow" [src]="teacherProfile.profilePictureUrl" alt="tutorImager̥" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div style="font-size: 25px;">{{ teacherProfile.fullName }}</div>
+                                    <div class="marginZero" style="
+                      font-size: medium;
+                      color: rgb(109, 116, 116);
+                      padding-top: 1px;
+                    ">
+                                        {{ teacherProfile.studyInstitution }}
+                                    </div>
+                                    <div class="stars-outer" style="margin-top: 1px;">
+                                        <div class="stars-inner" [style.width.%]="teacherProfile.rating"></div>
+                                    </div>
+                                    <a href="#"> {{ teacherProfile.reviewCount }} Reviews</a>
+                                    <div style="font-size: smaller; margin-top: 1px;">
+                                        <span class="lessonCompleted">{{
+                      teacherProfile.lessonCompleted
+                    }}</span> lessons completed
+                                    </div>
+                                </div>
+                                <div class="col-md-3 font19">₹ {{ teacherProfile.price1}}/hr</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 40px;">
+                        <div class="col">
+                            <p class="font19" style="font-weight: 500;">Description</p>
+                            <p>{{ teacherProfile.description }}</p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 30px;">
+                        <div class="col">
+                            <p class="font19" style="font-weight: 500;">Speciality</p>
+                            <p>
+                               {{teacherProfile.speciality}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 boxShadow" style="height: fit-content;padding: 20px;" *ngIf="!isTutorAvailable">
+                    <div style="text-align: center;">
+                        <h2>Currently Unavailable</h2>
+                        <p>Please check back soon</p>
+                        <p>Happy Learning</p>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 boxShadow" style="height: fit-content;"  *ngIf="isTutorAvailable">
+                    <div style="
+              text-align: center;
+              margin-bottom: 20px;
+              margin-top: 10px;
+              color: rgb(109, 116, 116);
+            " class="font19">
+                        Contact {{ teacherProfile.fullName }}
+                    </div>
+                    <!-- <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">
+            Send Message
+          </button> -->
+                    <hr />
+                    <button type="button" class="btn btn-outline-primary" style="width: 100%; margin-bottom: 10px;" (click)="openSideNav()">
+            Book Meeting
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

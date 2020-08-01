@@ -1,0 +1,41 @@
+body {
+	/* background-color: rgb(143, 142, 138); */
+	background-color: #f9fafc;
+	height: 100%;
+}
+
+.card {
+	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+	width: 70%;
+	margin-bottom: 50px;
+}
+.progress-Bar {
+	width: 70%;
+	height: 8px;
+	margin-bottom: 16px;
+}
+.outer-progressBar {
+	background-color: #ccc;
+	height: inherit;
+	border-radius: 8px;
+}
+.inner-progressBar {
+	background-color: #241084;
+	height: inherit;
+	width: 0;
+	border-radius: 8px;
+}
+.completeProfileLink {
+	color: #241084;
+	cursor: pointer;
+	display: inline-block;
+}
+.completeProfileLink:hover {
+	text-decoration: underline;
+	color: #241084;
+}
+.dashboardIcons {
+	width: 18px;
+	height: 18px;
+	margin-right: 5px;
+}

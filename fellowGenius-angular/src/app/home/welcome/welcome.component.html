@@ -1,0 +1,13 @@
+<body>
+    <div class="row">
+        <img src="../../../assets/images/welcomeIcon.svg" alt="Image">
+    </div>
+    <div class="width100" style="padding: 6vh;text-align: center;">
+        <h1 *ngIf="loginType == 'student'" style="font-size: 2rem;line-height: 3rem;font-weight: 500;">Hey , {{ studentProfile.fullName }}</h1>
+        <h1 *ngIf="loginType == 'tutor'" style="font-size: 2rem;line-height: 3rem;font-weight: 500;">Hey , {{ tutorProfile.fullName }}</h1>
+        <h2 style="font-weight: 400;font-size: 1.7rem;line-height: 2rem;">You have successfully signed up to <span style="color: #241084;font-family: custom;font-size: larger;">fellowGenius</span></h2>
+        <h2 style="font-weight: 400;font-size: 1.375rem;line-height: 2rem;" *ngIf="loginType == 'tutor'">Complete your profile to get verified and rank among the other registered tutors</h2>
+        <h2 style="font-weight: 400;font-size: 1.375rem;line-height: 2rem;" *ngIf="loginType == 'student'">To find the best tutors suited for you , go to find tutors page and filter your subjects</h2>
+        <button class="btn btn-outline-success" (click)="continue()" style="padding: 10px;">Continue</button>
+    </div>
+</body>

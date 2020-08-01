@@ -1,0 +1,16 @@
+export const environment = {
+	production: true,
+	agora: {
+		appId: '45f3ee50e0fd491aa46bd17c05fc7073'
+	},
+	firebaseConfig: {
+		apiKey: 'AIzaSyCltKxu01z70siY0DplpPBcaTXXL2VCHSQ',
+		authDomain: 'fellowgenius-8606c.firebaseapp.com',
+		databaseURL: 'https://fellowgenius-8606c.firebaseio.com',
+		projectId: 'fellowgenius-8606c',
+		storageBucket: 'fellowgenius-8606c.appspot.com',
+		messagingSenderId: '284007218397',
+		appId: '1:284007218397:web:246d802f5758e9ffcbef34',
+		measurementId: 'G-ZDRYSC5RL4'
+	}
+};

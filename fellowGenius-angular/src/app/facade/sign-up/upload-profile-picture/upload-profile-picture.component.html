@@ -1,0 +1,19 @@
+<div style="padding: 20px; width: 500px; height: 500px;">
+  <div style="text-align: Center;">
+    <h2 style="font-weight: 400;">Upload Profile Picture</h2>
+  </div>
+  <hr />
+  <div class="img-container">
+    <img #image [src]="imageSource" crossorigin />
+  </div>
+  <hr />
+  <div style="width: max-content; float: right;">
+    <button
+      class="btn btn-primary"
+      style="margin-right: 10px;"
+      (click)="onUpload()"
+    >
+      Save
+    </button>
+  </div>
+</div>

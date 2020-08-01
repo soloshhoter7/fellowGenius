@@ -1,0 +1,314 @@
+import { Component, OnInit } from '@angular/core';
+import { extend, Internationalization, L10n } from '@syncfusion/ej2-base';
+import { tutorProfileDetails } from '../../model/tutorProfileDetails';
+import { bookingDetails } from 'src/app/model/bookingDetails';
+import { HttpService } from 'src/app/service/http.service';
+import { TutorService } from 'src/app/service/tutor.service';
+import { meetingDetails } from '../../model/meetingDetails';
+import { MeetingService } from 'src/app/service/meeting.service';
+import { Router } from '@angular/router';
+import { stringify } from 'querystring';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+L10n.load({
+	'en-US': {
+		schedule: {
+			addTitle: 'My Availability'
+		}
+	}
+});
+@Component({
+	selector: 'app-tutor-dashboard',
+	templateUrl: './tutor-dashboard.component.html',
+	styleUrls: [ './tutor-dashboard.component.css' ]
+})
+export class TutorDashboardComponent implements OnInit {
+	public now: Date = new Date();
+	constructor(
+		private httpService: HttpService,
+		private tutorService: TutorService,
+		private meetingService: MeetingService,
+		private router: Router,
+		private loginService: LoginDetailsService
+	) {
+		setInterval(() => {
+			this.now = new Date();
+		}, 1000);
+	}
+	showCard: boolean = true;
+	bookingRequestMessage = '';
+	approvedMeetingsMessage = '';
+	liveMeetingsMessage = '';
+	isLoading: boolean = false;
+	bookingList: bookingDetails[];
+	meetingList: bookingDetails[];
+	liveMeetingList: bookingDetails[];
+	hostMeeting = new meetingDetails();
+	tutorProfileDetails: tutorProfileDetails;
+	completeProfile = true;
+	condition;
+	ngOnInit(): void {
+		this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+		if (this.loginService.getLoginType() == 'tutor' && this.tutorProfileDetails.tid) {
+			this.fetchTutorPendingBookings();
+			this.fetchTutorApprovedMeetings();
+			this.fetchTutorLiveMeetings();
+		} else {
+			this.handleRefresh();
+		}
+	}
+	closeCompleteProfile() {
+		this.completeProfile = false;
+		this.showCard = false;
+	}
+	handleRefresh() {
+		setTimeout(() => {
+			this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+			this.loginService.setLoginType('tutor');
+			this.fetchTutorPendingBookings();
+			this.fetchTutorApprovedMeetings();
+			this.fetchTutorLiveMeetings();
+		}, 1000);
+	}
+	// -------------------------------------------------------------------------- tutor functions--------------------------------------------
+	// for accepting bookings
+	acceptBooking(booking: bookingDetails) {
+		this.isLoading = true;
+		booking.approvalStatus = 'Accepted';
+
+		this.httpService.updateBookingStatus(booking.bid, booking.approvalStatus).subscribe((res) => {
+			if (res == true) {
+				this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
+				if (this.bookingList.length == 0) {
+					this.bookingRequestMessage = 'No booking requests pending.';
+				}
+				this.before10MinutesTime(booking);
+				this.enableJoinNow(booking);
+				this.timeLeft(booking);
+				this.meetingList.push(booking);
+				this.approvedMeetingsMessage = '';
+				this.isLoading = false;
+			}
+		});
+	}
+
+	//for denying bookings
+	denyBooking(booking: bookingDetails) {
+		booking.approvalStatus = 'Rejected';
+
+		this.httpService.updateBookingStatus(booking.bid, booking.approvalStatus).subscribe((res) => {
+			if (res == true) {
+				this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
+				if (this.bookingList.length == 0) {
+					this.bookingRequestMessage = 'No booking requests pending.';
+				}
+			}
+		});
+	}
+
+	//for fetching pending tutor booking requests
+	fetchTutorPendingBookings() {
+		if (this.loginService.getLoginType() == 'tutor') {
+			this.httpService.getTutorBookings(this.tutorService.getTutorDetials().tid).subscribe((res) => {
+				this.bookingList = res;
+				if (this.bookingList.length == 0) {
+					this.bookingRequestMessage = 'No booking requests pending.';
+				}
+			});
+		}
+	}
+
+	//for fetching accepted booking requests
+	fetchTutorApprovedMeetings() {
+		this.httpService.fetchApprovedMeetingsTutor(this.tutorService.getTutorDetials().tid).subscribe((res) => {
+			this.meetingList = res;
+			if (this.meetingList.length == 0) {
+				this.approvedMeetingsMessage = 'No upcoming meetings pending.';
+			}
+			for (let booking of this.meetingList) {
+				this.before10MinutesTime(booking);
+				this.enableJoinNow(booking);
+				this.timeLeft(booking);
+
+				if (this.meetingList.length == 0) {
+					this.approvedMeetingsMessage = 'No upcoming meetings pending.';
+				}
+			}
+		});
+	}
+
+	//for fetching live meetings
+	fetchTutorLiveMeetings() {
+		this.httpService.fetchLiveMeetingsTutor(this.tutorService.getTutorDetials().tid).subscribe((res) => {
+			this.liveMeetingList = res;
+			if (this.liveMeetingList.length == 0) {
+				this.liveMeetingsMessage = 'No live meetings.';
+			}
+			// //for removing before date meetings
+			// for (let meeting of this.liveMeetingList) {
+			// 	if (this.isBeforeDate(meeting)) {
+			// 		this.liveMeetingList.splice(this.liveMeetingList.indexOf(meeting), 1);
+			// 		if (this.liveMeetingList.length == 0) {
+			// 			this.liveMeetingsMessage = 'No live meetings.';
+			// 		}
+			// 	}
+			// }
+			// //for removing before current time meetings
+			// for (let booking of this.liveMeetingList) {
+			// 	this.isTimeCompleted(booking, this.liveMeetingList);
+			// 	if (this.liveMeetingList.length == 0) {
+			// 		this.liveMeetingsMessage = 'No live meetings.';
+			// 	}
+			// }
+		});
+	}
+
+	// // to check if the meeting is before the current date
+	// isBeforeDate(booking: bookingDetails) {
+	// 	var dateParts: any = booking.dateOfMeeting.split('/');
+	// 	var bookingDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+	// 	var currentDate: string = new Date().toUTCString();
+	// 	var currDate: Date = new Date(currentDate);
+	// 	currDate.setTime(0);
+	// 	if (bookingDate.getTime() < currDate.getTime()) {
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
+
+	//for checking time
+	enableJoinNow(booking: bookingDetails) {
+		var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
+		var bookingMinutes = booking.startTimeHour * 60 + booking.startTimeMinute;
+		if (currentDate == booking.dateOfMeeting) {
+			setInterval(() => {
+				var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+				if (currentMinutes >= bookingMinutes) {
+					booking.isLive = true;
+				}
+			}, 5000);
+		}
+	}
+
+	//to calculate the time left
+	timeLeft(booking: bookingDetails) {
+		var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
+		if (currentDate == booking.dateOfMeeting) {
+			var startMinutes: number = booking.startTimeHour * 60 + booking.startTimeMinute;
+			var bookingDuration: number = booking.duration + 10;
+			var timeLeftString: string;
+			var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+			var differenceMinutes: number = startMinutes - currentMinutes;
+			var timeLeftHours: number = Math.trunc(differenceMinutes / 60);
+			var timeLeftMinutes: number = differenceMinutes % 60;
+			if (differenceMinutes > 0) {
+				if (timeLeftHours == 0) {
+					timeLeftString = timeLeftMinutes + ' minutes left ';
+				} else {
+					if (timeLeftMinutes != 0) {
+						timeLeftString = timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes left';
+					} else if (timeLeftMinutes == 0) {
+						timeLeftString = timeLeftHours + ' hours left';
+					}
+				}
+				booking.timeLeft = timeLeftString;
+			}
+			setInterval(() => {
+				currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+				differenceMinutes = startMinutes - currentMinutes;
+				timeLeftHours = Math.trunc(differenceMinutes / 60);
+				timeLeftMinutes = differenceMinutes % 60;
+				if (differenceMinutes > 0) {
+					if (timeLeftHours == 0) {
+						timeLeftString = timeLeftMinutes + ' minutes left ';
+					} else {
+						if (timeLeftMinutes != 0) {
+							timeLeftString = timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes left';
+						} else if (timeLeftMinutes == 0) {
+							timeLeftString = timeLeftHours + ' hours left';
+						}
+					}
+					booking.timeLeft = timeLeftString;
+				} else if (differenceMinutes <= 0) {
+					if (Math.abs(differenceMinutes) > bookingDuration) {
+						this.meetingList.splice(this.meetingList.indexOf(booking), 1);
+						if (this.meetingList.length == 0) {
+							this.approvedMeetingsMessage = 'No upcoming meetings.';
+						}
+						this.httpService
+							.updateBookingStatus(booking.bid, 'completed unattended')
+							.subscribe((res) => {});
+					}
+				}
+			}, 5000);
+		}
+	}
+
+	//to check if the meeting is before current time
+	isTimeCompleted(booking, list: bookingDetails[]) {
+		var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
+		if (currentDate == booking.dateOfMeeting) {
+			var startMinutes: number = booking.startTimeHour * 60 + booking.startTimeMinute;
+			var bookingDuration: number = booking.duration + 10;
+			var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+			var differenceMinutes: number = startMinutes - currentMinutes;
+			if (differenceMinutes <= 0) {
+				if (Math.abs(differenceMinutes) > bookingDuration) {
+					list.splice(list.indexOf(booking), 1);
+				}
+			}
+			setInterval(() => {
+				currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+				differenceMinutes = startMinutes - currentMinutes;
+				if (differenceMinutes <= 0) {
+					if (Math.abs(differenceMinutes) > bookingDuration) {
+						if (list.indexOf(booking) != -1) {
+							list.splice(list.indexOf(booking), 1);
+						}
+					}
+				}
+			}, 5000);
+		}
+	}
+
+	//minus 10 minutes from time
+	before10MinutesTime(meeting: bookingDetails) {
+		if (meeting.startTimeMinute == 0) {
+			meeting.startTimeMinute = 50;
+			meeting.startTimeHour -= 1;
+		} else {
+			meeting.startTimeMinute -= 10;
+		}
+	}
+
+	// when tutor initiates the meeting from upcoming meetings
+	onHost(booking: bookingDetails) {
+		booking.approvalStatus = 'live';
+		this.httpService.updateBookingStatus(booking.bid, booking.approvalStatus).subscribe((res) => {
+			if (res == true) {
+				this.meetingList.splice(this.meetingList.indexOf(booking, 0), 1);
+				this.liveMeetingList.push(booking);
+			}
+		});
+		this.hostMeeting.roomId = 123;
+		this.hostMeeting.role = 'host';
+		this.hostMeeting.roomName = booking.meetingId;
+		this.hostMeeting.userName = booking.tutorName;
+		this.hostMeeting.userId = booking.tutorId;
+		this.meetingService.setMeeting(this.hostMeeting);
+		this.meetingService.setBooking(booking);
+		this.router.navigate([ 'meeting' ]);
+	}
+
+	//on join function for live meetings
+	onJoin(booking: bookingDetails) {
+		this.hostMeeting.roomId = 123;
+		this.hostMeeting.role = 'host';
+		this.hostMeeting.roomName = booking.meetingId;
+		this.hostMeeting.userName = booking.tutorName;
+		this.hostMeeting.userId = booking.tutorId;
+		this.meetingService.setMeeting(this.hostMeeting);
+		this.meetingService.setBooking(booking);
+		this.router.navigate([ 'meeting' ]);
+	}
+}

@@ -1,0 +1,86 @@
+<body style="padding-top: 20px;height: 100%; background-color: #f9fafc;">
+    <!-- after profile Completed  -->
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-8">
+                <!-- for profile picture -->
+
+                <div class="row Box">
+                    <button class="editIconButton" (click)="tutProfileDetailsEdit()" title="Edit"><i class="far fa-edit editIcon"></i></button>
+                    <div class="col-md-2" style="margin-right: 30px;">
+                        <img src="../../../assets/icons/user-square.svg" alt="profilePicture" style="width:100px;height:100px;border-radius: 5px;">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <p style="font-size: 2.4rem;line-height: 1.333;font-weight: 300;margin:0;width: 100%;">{{ studentProfile.fullName }}</p>
+                            <p style="font-size: 1.2rem;line-height: 1.5;font-weight:300;margin:0;width: 100%;">{{ studentProfile.email}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row Box">
+                    <button class="editIconButton" (click)="basicInfoEdit()" title="Edit"><i class="far fa-edit editIcon"></i></button>
+                    <div class="row marginZero" style="width: 100%;">
+                        <h1>Basic Info</h1>
+                    </div>
+                    <div class="row" style="width: 100%;">
+                        <div class="col-md-6">
+                            <div style="width: 100%;">
+                                <div>
+                                    <h3 style="font-weight: 500;">Name</h3>
+                                </div>
+                                <div>
+                                    <p>{{studentProfile.fullName}}</p>
+                                </div>
+                            </div>
+                            <div style="width: 100%;">
+                                <div>
+                                    <h3 style="font-weight: 500;">Contact</h3>
+                                </div>
+                                <div>
+                                    <p>{{ studentProfile.contact }}</p>
+                                </div>
+                            </div>
+                            <div style="width: 100%;">
+                                <div>
+                                    <h3 style="font-weight: 500;">Date Of Birth</h3>
+                                </div>
+                                <div>
+                                    <p>{{ studentProfile.dateOfBirth }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div style="width: 100%;">
+                                <div>
+                                    <h3 style="font-weight: 500;">Subject</h3>
+                                </div>
+                                <div>
+                                    <p>{{ studentProfile.subject }}</p>
+                                </div>
+                            </div>
+                            <div style="width: 100%;">
+                                <div>
+                                    <h3 style="font-weight: 500;">Email</h3>
+                                </div>
+                                <div>
+                                    <p>{{ studentProfile.email }}</p>
+                                </div>
+                            </div>
+                            <div style="width: 100%;">
+                                <div>
+                                    <h3 style="font-weight: 500;">Grade Level</h3>
+                                </div>
+                                <div>
+                                    <p>{{ studentProfile.gradeLevel }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-3" style="height: fit-content;padding: 20px; text-align: center;"></div>
+        </div>
+    </div>
+</body>

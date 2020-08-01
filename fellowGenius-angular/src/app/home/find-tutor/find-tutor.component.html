@@ -1,0 +1,299 @@
+<body style="height: auto; background-color: #f9fafc;">
+    <!-- CREATING A NAVBAR -->
+    <br />
+    <h4 style="text-align: center;" class="font19">
+        Find a trusted, one-to-one tutor
+    </h4>
+    <hr style="width: 30%;" />
+    <!-- CREATE A SEARCH FILTER -->
+
+    <div class="searchField">
+        <table class="centerTable">
+            <tr>
+                <td>Name</td>
+                <td>Subject</td>
+                <td>Price</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" placeholder="name" [(ngModel)]="name" (input)="searchName()" />
+                </td>
+                <td>
+                    <!-- <input type="text" placeholder="subject" ngModel (input)="searchSubject()> -->
+                    <select class="form-control" name="subject" (change)="searchSubject($event)">
+
+                          <option value="none" selected disabled hidden> 
+                            Choose Subject 
+                          </option>
+                          <option>English</option>
+                          <option>Hindi</option>
+                          <option>Mathematics</option>
+                          <option>Science</option>
+                          <option>Social Science</option>
+                          
+                          <option>English</option>
+                          <option>Physics</option>
+                          <option>Chemistry</option>
+                          <option>Biology</option>
+                          <option>Physical Education</option>
+                          <option>Psychology</option>
+                          <option>Biotechnology</option>
+                          <option>Home Science</option>
+                          <option>Computer Science</option>
+                          <option>Engineering Drawing</option>
+                                                
+                          <option>Accountancy</option>
+                          <option>Business Studies</option>
+                          <option>Economics</option>
+                          <option>Multimedia & Web Technology</option>
+                          <option>Entrepreneurship</option>
+                          <option>Legal Studies</option>
+                          <option>Fine Arts</option>
+                        
+                          <option>History</option>
+                          <option>Political Science</option>
+                          <option>Economics</option>
+                          <option>Geography</option>
+                          <option>Sociology</option>
+                          <option>Media Studies</option>   
+                    
+                          <option>B.Com(Hons)-Year 1</option>
+                          <option>B.Com(Hons)-Year 2</option>
+                          <option>B.Com(Hons) Year 3</option>
+                          <option>Bachelor of Management Studies- Year 1</option>
+                          <option>Bachelor of Management Studies- year 2</option>
+                          <option>Bachelor of Management Studies- Year 3</option>
+                          
+                          
+                          <option>B.Com(Corporate Laws)-year 1</option>
+                          <option>B.Com(Corporate Laws)-year 1</option>
+                          <option>B.Com(Corporate Laws)-year 1</option>
+                          
+                          
+                          <option>BBA- Year 1</option>
+                          <option>BBA-Year 2</option>
+                          <option>BBA- year 3</option>
+                          
+                          
+                          <option>Bachelor of Business Studies- Year 1</option>
+                          <option>Bachelor of Business Studies- Year 2</option>
+                          <option>Bachelor of Business Studies- Year 3</option>
+                        
+                        
+                          <option>B.Sc(Gen-Maths)- Year 1</option> 
+                          <option>B.Sc(Gen-Maths)- Year 2</option>
+                          <option>B.Sc(Gen-Maths)- Year 3</option>
+                          
+                          
+                          <option>B.Sc(Hons-Maths)- Year 1</option>
+                          <option>B.Sc(Hons-Maths)- Year 1</option>
+                          <option>B.Sc(Hons-Maths)- Year 1</option>
+                          
+                          
+                          <option>B.Sc(Hons-Chemistry)- Year 1</option>
+                          <option>B.Sc(Hons-Chemistry)- year 2</option>
+                          <option>B.Sc(Hons-Chemistry) - Year 3</option>
+                          
+                          
+                          <option>B.Sc(Hons-Physics)- Year 1</option>
+                          <option>B.Sc(Hons-Physics)- Year 2</option>
+                          <option>B.Sc(Hons-Physics)- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Applied Physical Science- Year 1</option>
+                          <option>B.Sc (Hons) Applied Physical Science- Year 2</option>
+                          <option>B.Sc (Hons) Applied Physical Science- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Statistics- Year 1</option>
+                          <option>B.Sc (Hons) Statistics- Year 2</option>
+                          <option>B.Sc (Hons) Statistics- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Botany - Year 1</option>
+                          <option>B.Sc (Hons) Botany - Year 2</option>
+                          <option>B.Sc (Hons) Botany - Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Zoology - Year 1</option>
+                          <option>B.Sc (Hons) Zoology - Year 2</option>
+                          <option>B.Sc (Hons) Zoology - Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Industrial Chemistry - Year 1</option>
+                          <option>B.Sc (Hons) Industrial Chemistry - Year 2</option>
+                          <option>B.Sc (Hons) Industrial Chemistry - Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Biological Science- Year 1</option>
+                          <option>B.Sc (Hons) Biological Science- Year 2</option>
+                          <option>B.Sc (Hons) Biological Science- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Computer Science- Year 1</option>
+                          <option>B.Sc (Hons) Computer Science- Year 2</option>
+                          <option>B.Sc (Hons) Computer Science- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Electronics- Year 1</option>
+                          <option>B.Sc (Hons) Electronics- Year 2</option>
+                          <option>B.Sc (Hons) Electronics- Year 3</option>
+                          
+                          
+                          <option>B.Sc. (MT) Radiography - Year 1</option>
+                          <option>B.Sc. (MT) Radiography - Year 2</option>
+                          <option>B.Sc. (MT) Radiography - Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Geology- Year 1</option>
+                          <option>B.Sc (Hons) Geology- Year 2</option>
+                          <option>B.Sc (Hons) Geology- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Anthropology- Year 1</option>
+                          <option>B.Sc (Hons) Anthropology- Year 2</option>
+                          <option>B.Sc (Hons) Anthropology- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Microbiology- Year 1</option>
+                          <option>B.Sc (Hons) Microbiology- Year 2</option>
+                          <option>B.Sc (Hons) Microbiology- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Bio-Chemistry - Year 1</option>
+                          <option>B.Sc (Hons) Bio-Chemistry - Year 2</option>
+                          <option>B.Sc (Hons) Bio-Chemistry - Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Biomedical Science- Year 1</option>
+                          <option>B.Sc (Hons) Biomedical Science- Year 2</option>
+                          <option>B.Sc (Hons) Biomedical Science- Year 3</option>
+                          
+                          
+                          <option>B.Sc (Hons) Polymer Science - Year 1</option>
+                          <option>B.Sc (Hons) Polymer Science - Year 2</option>
+                          <option>B.Sc (Hons) Polymer Science - Year 3</option>
+                        
+                          <option>B.A (Hons) English- Year 1</option>
+                          <option>B.A (Hons) English- Year 2</option>
+                          <option>B.A (Hons) English- Year 3</option>
+                          
+                          <option>B.A. (Hons) Economics- Year 1</option>
+                          <option>B.A. (Hons) Economics- Year 2</option>
+                          <option>B.A. (Hons) Economics- Year 3</option>
+                          
+                          <option>B.A. (Hons.) Business Economics- Year 1</option>
+                          <option>B.A. (Hons.) Business Economics- Year 2</option>
+                          <option>B.A. (Hons.) Business Economics- Year 3</option>
+                          
+                          <option>B.A. (Hons.) Multimedia and Mass Communication- Year 1</option>
+                          <option>B.A. (Hons.) Multimedia and Mass Communication- Year 3</option>
+                          
+                          <option>B.A (Hons) Political Science- Year 1</option>
+                          <option>B.A (Hons) Political Science- Year 2</option>
+                          <option>B.A (Hons) Political Science- Year 3</option>
+                          
+                          <option>B.A (Hons) Psychology- Year 1</option>
+                          <option>B.A (Hons) Psychology- Year 2</option>
+                          <option>B.A (Hons) Psychology- Year 3</option>
+                          
+                          <option>B.A. (Hons) Business Economics (BBE)- Year 1</option>
+                          <option>B.A. (Hons) Business Economics (BBE)- Year 2</option>
+                          <option>B.A. (Hons) Business Economics (BBE)- Year 3</option>
+                          
+                          <option>B.A (Hons) Spanish- Year 1</option>
+                          <option>B.A (Hons) Spanish- Year 2</option>
+                          <option>B.A (Hons) Spanish- Year 3</option>
+                          
+                          <option>B.A (Hons) Sanskrit- Year 1</option>
+                          <option>B.A (Hons) Sanskrit- Year 2</option>
+                          <option>B.A (Hons) Sanskrit- Year 3</option>
+                    
+                  </select>
+
+                </td>
+                <td>
+                    <!-- <input type="text" placeholder="price" [(ngModel)]="price" (input)="searchPrice()" /> -->
+                    <select class="form-control" name="price" (change)="searchPrice($event)">
+                    <option value="none" selected disabled hidden>Price</option>
+                    <option>100-199</option>
+                    <option>200-399</option>
+                    <option>400-699</option>
+                    <option>700-999</option>
+                    <option>1000-1499</option>
+                    <option>1500-1999</option>
+                    <option>2000-2999</option>
+                    <option>3000-5000</option>
+                    </select>
+
+                </td>
+                <td>
+                    <button class="btn btn-danger" (click)="resetFilter()">Reset</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="row" *ngIf="tempFilterSearch.length == 0" style="box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+    padding: 20px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;">
+        <p style="margin: auto;
+        font-size: larger;">No results matched for your requirements</p>
+    </div>
+
+    <div class="tutorWrapper" *ngFor="let element of tempFilterSearch">
+        <div class="row marginZero" *ngIf="element.length != 0">
+            <div class="col-md-2 image">
+                <img [src]="element.profilePictureUrl" class="tutorImage" alt="tutorImage" />
+            </div>
+            <div class="col-md-7 marginZero" style="border-right: 1px solid rgb(203, 211, 205);">
+                <div class="marginZero">
+                    <h3 style="
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            text-decoration: solid;
+            padding:0;
+            margin:0;
+          " class="font19">
+                        {{ element.fullName }}
+                    </h3>
+                    <p class="marginZero" style="font-size: medium; color: rgb(109, 116, 116);
+          padding-top:1px;">
+                        {{ element.studyInstitution }}
+                    </p>
+                    <p class="marginZero" style="font-size: small; color: rgb(182, 192, 192);">
+                        {{ element.description }}
+                    </p>
+                    <p class="tutorSkillTags" style="font-size: smaller; color: rgb(109, 110, 110);">
+                        {{ element.subject1 }}
+                    </p>
+                    <p class="tutorSkillTags" style="font-size: smaller; color: rgb(109, 110, 110);">
+                        {{ element.subject2 }}
+                    </p>
+                    <p class="tutorSkillTags" style="font-size: smaller; color: rgb(109, 110, 110);">
+                        {{ element.subject3 }}
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <p style="font-size: x-large; text-decoration: solid;">
+                    ₹{{ element.price1 }}/hr
+                </p>
+                <div class="stars-outer">
+                    <div class="stars-inner" [style.width.%]="element.rating"></div>
+                </div>
+                <a href="#"> {{element.reviewCount}} Reviews</a>
+                <div style="font-size: smaller;">
+                    <span class="lessonCompleted">{{element.lessonCompleted}}</span> lessons completed
+                </div>
+                <button class="btn btn-success" style="margin-top: 4vh;" (click)="viewProfile(element)">
+        View Profile
+      </button>
+
+            </div>
+        </div>
+    </div>
+</body>
