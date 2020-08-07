@@ -18,8 +18,8 @@ import fG.Service.UserService;
 
 
 @RestController
-@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
 	
 		@Autowired

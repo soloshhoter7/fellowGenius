@@ -3,7 +3,7 @@
     <app-loading></app-loading>
   </div>
 
-  <div class="login-container">
+  <div class="login-container" [class]="hideContainer">
  
     <div class="login-header">
   
@@ -11,7 +11,7 @@
      <span class="info-class">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</span>
     </div> 
     <div class="logo"></div>
-    <span class="material-icons close">
+    <span class="material-icons close" (click)="toFacade()" style="cursor: pointer;">
       close
       </span>
     </div>
@@ -21,8 +21,9 @@
           <label class="form-control-placeholder" for="email">Email Address</label>
           <input type="email" id="email" class="form-control" ngModel name="email" required email #email="ngModel"
             maxlength="64" />
-         
         </div>
+        <p style="color: red;">incorrect email or password !</p>
+        <!-- <p style="color: red;" *ngIf="incorrectLoginDetails">{{errorText}}</p> -->
         <!-- <div class="form-group">
                       <input type="password" id="password" class="form-control" required>
                       <label class="form-control-placeholder" for="password">Password</label>
@@ -59,76 +60,11 @@
             Login Using Google
           </p>
         </button>
-
-     
           <span>
             New to FellowGenius? </span>
             <a href="" class="forgot-password" (click)="toSignUp()">Sign up</a>
-         
-          
         </div>
       </form>
-    </div>
-
-  
-  </div>
-
-  <div class="container" [class]="hideContainer" style="display: none;">
-    <div class="row marginZero">
-      <div class="navbar-brand" style="margin-bottom: 15px;">
-        fellowGenius
-      </div>
-    </div>
-    <div class="alert alert-danger" role="alert" *ngIf="incorrectLoginDetails">
-      <p style="text-align: center;">{{ errorText }}</p>
-    </div>
-    <div class="row">
-
-
-      <div class="col-sm-5 offset-sm-1 paddingZero">
-        <form (ngSubmit)="onLogin(l)" #l="ngForm">
-          <div class="form-group">
-            <input type="email" id="email" class="form-control" ngModel name="email" required email #email="ngModel"
-              maxlength="64" />
-            <label class="form-control-placeholder" for="email">Email Address</label>
-          </div>
-          <!-- <div class="form-group">
-                        <input type="password" id="password" class="form-control" required>
-                        <label class="form-control-placeholder" for="password">Password</label>
-                    </div> -->
-          <div class="form-group">
-            <input type="password" id="password" class="form-control" name="password" ngModel
-              [type]="hide ? 'password' : 'text'" required #password="ngModel" maxlength="40" />
-            <label class="form-control-placeholder" for="password">Password</label>
-            <div class="showPassword">
-              <i class="material-icons cursor" (click)="hide = !hide" style="color: #ccc;">
-                {{ hide ? "visibility_off" : "visibility" }}
-              </i>
-            </div>
-          </div>
-          <div class="form-group">
-            <button class="btn btn-primary" type="submit" [disabled]="!l.valid">
-              Login
-            </button>
-            <!-- <button class="btn btn-primary" style="margin-left: auto; margin-right: auto;" type="submit" [disabled]="!l.valid ">Sign in</button> -->
-          </div>
-        </form>
-        <div class="inner-box" [class]="hideSocialLogin">
-         
-          <!-- <button class="btn btn-primary social-buttons" style="background-color: #385998; border-color: #385998;" (click)="signIn()"><i class="fa fa-facebook social-icons"></i></button> -->
-          <!-- <button class="btn btn-primary social-buttons" style="background-color: #4875b4; border-color: #4875b4;"><i class="fa fa-linkedin social-icons"></i></button> -->
-        </div>
-        <hr />
-        <div>
-          <p style="text-align: center; font-weight: 200;">
-            New to FellowGenius?
-            <a class="signUpLink" (click)="toSignUp()">Sign up</a>
-          </p>
-        </div>
-        <!-- <div class="row">
-                    <button class="btn btn-outline-secondary" style="margin-left: auto; margin-right: auto;width: 80%;" (click)="toSignUp()">Sign Up</button>
-                </div> -->
-      </div>
     </div>
   </div>
 </body>

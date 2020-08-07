@@ -54,17 +54,21 @@ export class LoginComponent implements OnInit {
 	errorText: string;
 	userId;
 	ngOnInit(): void {
-		if (this.loginDetailsService.getLoginType() == null) {
-			this.router.navigate([ '' ]);
-		}
-		if (this.loginDetailsService.getLoginType() == 'tutor') {
-			this.hideSocialLogin = '';
-		}
+		// if (this.loginDetailsService.getLoginType() == null) {
+		// 	this.router.navigate([ '' ]);
+		// }
+		// if (this.loginDetailsService.getLoginType() == 'tutor') {
+		// 	this.hideSocialLogin = '';
+		// }
 		this.googleSDK();
 	}
-
+	toFacade() {
+		this.router.navigate([ 'facade' ]);
+	}
 	onLogin(form: NgForm) {
+		console.log('called!');
 		var loginType = this.loginDetailsService.getLoginType();
+		loginType = 'student';
 		if (loginType != null) {
 			this.isLoading = true;
 			this.hideContainer = 'hideBlock';

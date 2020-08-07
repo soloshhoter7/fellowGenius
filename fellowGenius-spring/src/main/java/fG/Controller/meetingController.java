@@ -21,8 +21,8 @@ import fG.Service.MeetingService;
 import fG.Service.UserService;
 
 @RestController
-@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/fellowGenius/meeting")
 public class meetingController {
 

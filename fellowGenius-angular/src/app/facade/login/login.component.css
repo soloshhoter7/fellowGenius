@@ -1,117 +1,92 @@
-.login-container
-{
-
-	width:480px;
+.login-container {
+	width: 480px;
 	margin: 0 auto;
-	display: block;	
+	display: block;
 
-	padding:10px;
-	margin-top:150px;
+	padding: 10px;
+	margin-top: 150px;
 }
 
-.login-container .close
-{
-	font-size:24px;
+.login-container .close {
+	font-size: 24px;
 
-    position: relative;
-    top: -100px;
-    right: -150px;
+	position: relative;
+	top: -100px;
+	right: -150px;
 }
 
-.login-container .logo
-{
-width:120px;
-height:90px;	
-display: inline-block;
-float:right;
+.login-container .logo {
+	width: 120px;
+	height: 90px;
+	display: inline-block;
+	float: right;
 }
 
-
-
-.login-container .login-header
-{
-	color:#E30084;
+.login-container .login-header {
+	color: #e30084;
 	font-weight: 700;
 	text-transform: uppercase;
-	font-size:22px;
-display: block;
-float:left;
-margin-bottom:10px;
-
-
+	font-size: 22px;
+	display: block;
+	float: left;
+	margin-bottom: 10px;
 }
 
-.login-container .login-header .header-container
-{
+.login-container .login-header .header-container {
 	display: inline-block;
-	float:left;
-	width:325px;
+	float: left;
+	width: 325px;
 	position: relative;
 }
 
-.login-container .login-header .info-class
-{
-
-	color:#5E6A6E;
+.login-container .login-header .info-class {
+	color: #5e6a6e;
 	text-transform: none;
 	font-weight: normal;
-	display:block;
-	font-size:12px;
+	display: block;
+	font-size: 12px;
 }
 
-
-
-.login-container .login-parameter-container
-{
-	border: 1px solid #7D0F7D;
-	border-radius:8px;
+.login-container .login-parameter-container {
+	border: 1px solid #7d0f7d;
+	border-radius: 8px;
 	display: block;
-	float:left;
-	width:100%;
-	padding:20px;
-	box-shadow: 0  8px 16px 0 #90A4AE;
+	float: left;
+	width: 100%;
+	padding: 20px;
+	box-shadow: 0 8px 16px 0 #90a4ae;
 	/*box-shadow: 0 0 2px 0 #90A4AE;*/
 	/*box-shadow: 0 8px 16px 0 rgba(24,19,87,0.07);*/
 }
 
-.login-container .login-parameter-container .button-container .btn-primary
-{
-
-
-		float:right;
-
-
+.login-container .login-parameter-container .button-container .btn-primary {
+	float: right;
 }
 
-
-
-.login-container .login-parameter-container .button-container .forgot-password
-{
-	color:#000000;
-	float:left;
+.login-container .login-parameter-container .button-container .forgot-password {
+	color: #000000;
+	float: left;
 }
 
-.login-instead
-{
+.login-instead {
 	width: 100%;
 	display: block;
-	float:left;
-	margin-top:20px;
+	float: left;
+	margin-top: 20px;
 	text-align: center;
-
 }
 
-.login-instead span
-{
-	width:100%;
+.login-instead span {
+	width: 100%;
 	display: block;
-	text-align:center;
-	margin-bottom:10px;
+	text-align: center;
+	margin-bottom: 10px;
 }
-.login-instead .btn
-{
-	text-align:center;
-	margin-bottom:10px;
-
+.login-instead .btn {
+	text-align: center;
+	margin-bottom: 10px;
 }
 
+.hideBlock {
+	display: none;
+}

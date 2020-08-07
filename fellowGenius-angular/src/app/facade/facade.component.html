@@ -1,89 +1,109 @@
 <div class="header">
-    <div class="logo"></div>
-    <div class="header-buttons-container">
+  <div class="logo"></div>
+  <div class="header-buttons-container">
+    <button type="button" class="btn btn-secondary showin" (click)="onSignUp()">
+      Sign Up
+    </button>
+    <button type="button" class="btn btn-primary" (click)="toLoginPage()">
+      Login
+    </button>
+  </div>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <button type="button" class="btn btn-secondary showin">Sign Up</button>
-        <button type="button" class="btn btn-primary">Login</button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="#">Home</a>
+        <a class="nav-item nav-link" href="#">Resources</a>
+        <a class="nav-item nav-link" href="#">Pricing</a>
+        <a class="nav-item nav-link" href="#">How it works</a>
+        <a class="nav-item nav-link hide" routerLink="/signUp">Sign Up</a>
+      </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-light">
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="#">Home</a>
-                <a class="nav-item nav-link" href="#">Resources</a>
-                <a class="nav-item nav-link" href="#">Pricing</a>
-                <a class="nav-item nav-link" href="#">How it works</a>
-                <a class="nav-item nav-link hide" href="#">Sign Up</a>
-            </div>
-        </div>
-    </nav>     
-</div>
-
-<div *ngIf="showContainer">
-  <nav class="navbar navbar-light bg-light justify-content-between">
-    <div class="logo"></div>
-      <div class="buttonGroup" style="margin:10px;">
-          <div class="dropdown" style="display: inline;">
-              <button class="btn  homeButtons dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign In</button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-top: 20px;">
-                  <a class="dropdown-item" (click)="onLoginStudent()" style="cursor: pointer;"><img src="../../assets/icons/studentIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Student</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" (click)="onLoginTutor()" style="cursor: pointer;"><img src="../../assets/icons/teacherIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Tutor</a>
-              </div>
-          </div>
-
-          <div class="dropdown" style="display: inline;">
-            <button class="btn  homeButtons dropdown-toggle" type="button" id="SignUpDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign Up</button>
-            <div class="dropdown-menu" aria-labelledby="SignUpDropdownMenuButton" style="margin-top: 20px;">
-                <a class="dropdown-item" routerLink="/signUpStudent" style="cursor: pointer;"><img src="../../assets/icons/studentIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Student</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" routerLink="/signUpTutor" style="cursor: pointer;"><img src="../../assets/icons/teacherIcon.svg" alt="" style="width: 25px;height:25px;margin-right: 10px;"> as Tutor</a>
-            </div>
-        </div>
-          <!-- <button type="button" class="btn  homeButtons" (click)="onSignUp()">Sign Up</button> -->
-      </div>
-
   </nav>
-  <div>
-      <div class="row marginZero">
-          <div class="col-sm-6">
-              <div class="row" style="
-            margin-top: 15vh;
-            margin-left: 5vw;">
-                  <h1 style="font-size: 3.125rem;
-                color: #241084;
-                line-height: 3.75rem;
-                font-weight: 900;">
-                      Peer to Peer<br>online classes from home</h1>
-                  <p style="font-size: 1.5rem;
-                line-height: 1.875rem;
-                font-weight: 700;
-                color:rgba(37,38,94,0.7);">Keep your studies on track with interactive and immersive online classes from any corner of the world.</p>
-                  <!-- <div style="margin-top: 2vh;">
-                      <form class="form-inline">
-                          <input class="form-control" type="search" placeholder="Search Subject" aria-label="Search" style="
-                  padding: 12px;
-                  margin-right: 10px;
-                  height: auto;
-                  ">
-                          <button class="btn btn-outline-success homeButtons my-2 my-sm-0" type="submit" style="padding: 12px;">Find Tutor</button>
-                      </form>
-                  </div> -->
-              </div>
-
-          </div>
-          <div class="col-sm-6">
-              <img src="../../assets/images/edu_illustration.png" alt="" style="margin: 30px;margin-left:80px ;">
-          </div>
+</div>
+<div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="row" style="margin-top: 15vh; margin-left: 5vw;">
+        <h1
+          style="
+            font-size: 3.125rem;
+            color: #241084;
+            line-height: 3.75rem;
+            font-weight: 900;
+          "
+        >
+          Peer to Peer<br />online classes from home
+        </h1>
+        <p
+          style="
+            font-size: 1.5rem;
+            line-height: 1.875rem;
+            font-weight: 700;
+            color: rgba(37, 38, 94, 0.7);
+          "
+        >
+          Keep your studies on track with interactive and immersive online
+          classes from any corner of the world.
+        </p>
+        <div style="margin-top: 2vh;">
+          <form class="form-inline">
+            <input
+              class="form-control"
+              type="search"
+              placeholder="Search Subject"
+              aria-label="Search"
+              style="padding: 12px; margin-right: 10px; height: auto;"
+            />
+            <button
+              class="btn btn-outline-success homeButtons my-2 my-sm-0"
+              type="submit"
+              style="padding: 12px;"
+            >
+              Find Tutor
+            </button>
+          </form>
+        </div>
       </div>
-
+    </div>
+    <div class="col-sm-6">
+      <img
+        src="../../assets/images/edu_illustration.png"
+        alt=""
+        style="margin: 30px; margin-left: 80px;"
+      />
+    </div>
   </div>
 </div>
+
+<div style="width: 80%; margin: auto;">
+  <owl-carousel-o [options]="customOptions">
+    <ng-template
+      carouselSlide
+      *ngFor="let slide of slidesStore"
+      [id]="slide.id"
+    >
+      <img
+        src="../../assets/images/bulb.jpeg"
+        [alt]="slide.alt"
+        [title]="slide.title"
+        style="padding: 10px;"
+      />
+    </ng-template>
+  </owl-carousel-o>
+</div>
+
 <!--
 <div *ngIf="switchView">
   <div class="container">
