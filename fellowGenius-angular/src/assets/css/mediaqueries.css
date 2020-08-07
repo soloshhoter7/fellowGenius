@@ -1,0 +1,28 @@
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+    .header .navbar {
+      left: -8px;
+      top: 2px;
+      position: absolute;
+    }
+    .header .navbar .navbar-collapse {
+      height: calc(100vh - 4.5em);
+      width: calc(100vh);
+      padding: 0 15px;
+      background-color: #FFFFFF;
+      position: fixed;
+      left: 0px;
+      top: 60px;
+      z-index: 9994;
+    }
+    .header .navbar .hide {
+      display: inline-block;
+    }
+    .header .logo {
+      left: 40%;
+      position: absolute;
+    }
+    .header .showin {
+      display: none;
+    }
+
+  }
