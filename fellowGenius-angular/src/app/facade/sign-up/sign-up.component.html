@@ -1,152 +1,93 @@
 <body>
-  <div class="signup-container">
 
-    <div  style="padding-top: 5vh;">
-      <div
-        class="row marginZero"
-        style="text-align: center; width: max-content; margin: auto;"
-      >
+  <div class="signup-container">
+    <div class="logo"></div>
+    <span class="material-icons close" (click)="toFacade()" style="cursor: pointer;">
+      close
+    </span>
+
+
+    <div class="signup-header">
+      <div class="header-container">      
+        <span class="header-primary">Create</span><br>
+
+      <span class="header-container-secondary">Your Account</span>
+    </div>
+
+      <div class="info-class">
+        <span >Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</span>
+       </div>
+
+      </div>
+
+
+    <div style="padding-top: 5vh;">
+      <div class="row marginZero" style="text-align: center; width: max-content; margin: auto;">
         <div class="navbar-brand" style="margin-bottom: 15px; width: 100%;">
           fellowGenius Sundaresh
         </div>
-        <div
-          *ngIf="isLoading"
-          style="
+        <div *ngIf="isLoading" style="
             text-align: center;
             margin-top: 50%;
             margin-left: auto;
             margin-right: auto;
-          "
-        >
+          ">
           <app-loading></app-loading>
         </div>
       </div>
 
-      <div
-        class="alert alert-danger"
-        role="alert"
-        *ngIf="incorrectLoginDetails"
-      >
+      <div class="alert alert-danger" role="alert" *ngIf="incorrectLoginDetails">
         <p style="text-align: center;">User Already registered ! go to Login</p>
       </div>
 
       <div class="row" *ngIf="!isLoading">
         <div class="signupBox" style="margin: auto;">
           <div class="row marginZero" style="font-size: 25px;">
-            <a (click)="toHomePage()" style="cursor: pointer;"
-              ><i
-                class="fas fa-arrow-left"
-                style="color: #8f98a4; font-size: large; margin-right: 20px;"
-              ></i
-            ></a>
-            <span
-              style="
+            <a (click)="toHomePage()" style="cursor: pointer;"><i class="fas fa-arrow-left"
+                style="color: #8f98a4; font-size: large; margin-right: 20px;"></i></a>
+            <span style="
                 color: #545174;
                 width: max-content;
                 margin: auto;
                 font-weight: 400;
-              "
-              >Sign Up</span
-            >
-            <button
-              type="button"
-              class="btn btn-outline-success"
-              style="font-size: small;"
-              (click)="toHomePage()"
-            >
+              ">Sign Up</span>
+            <button type="button" class="btn btn-outline-success" style="font-size: small;" (click)="toHomePage()">
               Home
             </button>
           </div>
           <div class="row" style="padding: 20px; margin-top: 5px;">
-            <form
-              style="width: 100%;"
-              (ngSubmit)="onSignUpStudent(s)"
-              #s="ngForm"
-            >
+            <form style="width: 100%;" (ngSubmit)="onSignUpStudent(s)" #s="ngForm">
               <div class="form-group" *ngIf="showInput">
-                <label class="form-control-placeholder" for="fullName"
-                  >Full Name</label
-                >
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  ngModel
-                  class="form-control"
-                  required
-                  #fullName="ngModel"
-                  maxlength="50"
-                />
+                <label class="form-control-placeholder" for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" ngModel class="form-control" required
+                  #fullName="ngModel" maxlength="50" />
 
-                <span
-                  class="help-block"
-                  *ngIf="!fullName.valid && fullName.touched"
-                  >Invalid Name</span
-                >
+                <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
               </div>
               <div class="form-group" *ngIf="showInput">
-                <label class="form-control-placeholder" for="email"
-                  >Email Address</label
-                >
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  ngModel
-                  class="form-control"
-                  required
-                  email
-                  #email="ngModel"
+                <label class="form-control-placeholder" for="email">Email Address</label>
+                <input type="email" id="email" name="email" ngModel class="form-control" required email #email="ngModel"
                   maxlength="64"
-                  pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
-                />
+                  pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$" />
 
-                <span
-                  *ngIf="(!email.valid && email.touched) || emailValid"
-                  class="help-block"
-                  >Invalid email</span
-                >
+                <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
               </div>
               <div class="row" *ngIf="showInput">
                 <div class="col-sm-6" style="padding-right: 10px;">
-                  <label class="form-control-placeholder" for="contact"
-                    >Mobile Number</label
-                  >
+                  <label class="form-control-placeholder" for="contact">Mobile Number</label>
 
                   <div class="form-group">
-                    <input
-                      type="text"
-                      id="contact"
-                      class="form-control"
-                      ngModel
-                      name="contact"
-                      required
-                      [pattern]="mobNumberPattern"
-                      #contact="ngModel"
-                    />
+                    <input type="text" id="contact" class="form-control" ngModel name="contact" required
+                      [pattern]="mobNumberPattern" #contact="ngModel" />
 
-                    <span
-                      *ngIf="!contact.valid && contact.touched"
-                      class="help-block"
-                      >Invalid contact</span
-                    >
+                    <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
                   </div>
                 </div>
                 <div class="col-sm-6" style="padding-left: 0;">
                   <div class="form-group">
-                    <label class="form-control-placeholder" for="date"
-                      >Date of Birth</label
-                    >
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="dateOfBirth"
-                      ngModel
-                      onfocus="(this.type='date')"
-                      onblur="(this.type='text')"
-                      id="date"
-                      required
-                    />
+                    <label class="form-control-placeholder" for="date">Date of Birth</label>
+                    <input class="form-control" type="text" name="dateOfBirth" ngModel onfocus="(this.type='date')"
+                      onblur="(this.type='text')" id="date" required />
 
                     <span class="help-block" *ngIf="showDateError">
                       Please enter valid DOB
@@ -155,70 +96,33 @@
                 </div>
               </div>
               <div class="form-group" *ngIf="showInput">
-                <label class="form-control-placeholder" for="password"
-                  >Password</label
-                >
-                <input
-                  type="password"
-                  id="password"
-                  class="form-control"
-                  name="password"
-                  ngModel
-                  [type]="hide ? 'password' : 'text'"
-                  required
-                  [pattern]="passwordPattern"
-                  minlength="8"
-                  maxlength="20"
-                  #password="ngModel"
-                />
+                <label class="form-control-placeholder" for="password">Password</label>
+                <input type="password" id="password" class="form-control" name="password" ngModel
+                  [type]="hide ? 'password' : 'text'" required [pattern]="passwordPattern" minlength="8" maxlength="20"
+                  #password="ngModel" />
 
                 <div class="showPassword">
-                  <i
-                    class="material-icons cursor"
-                    style="color: #ccc;"
-                    (click)="hide = !hide"
-                  >
+                  <i class="material-icons cursor" style="color: #ccc;" (click)="hide = !hide">
                     {{ hide ? "visibility_off" : "visibility" }}
                   </i>
                 </div>
-                <span
-                  *ngIf="!password.valid && password.touched"
-                  class="help-block"
-                  >password field must be minimum of 8 characters with atleast
-                  one lowercase, uppercase, number and a special character</span
-                >
+                <span *ngIf="!password.valid && password.touched" class="help-block">password field must be minimum of 8
+                  characters with atleast
+                  one lowercase, uppercase, number and a special character</span>
               </div>
-              <div
-                class="form-group"
-                *ngIf="showInput"
-                style="margin-bottom: 5px;"
-              >
-                <input
-                  type="checkbox"
-                  name="termsAndConditions"
-                  [value]="termsAndConditionsChecked"
-                  id="agree"
-                  ngModel
-                  required
-                />
+              <div class="form-group" *ngIf="showInput" style="margin-bottom: 5px;">
+                <input type="checkbox" name="termsAndConditions" [value]="termsAndConditionsChecked" id="agree" ngModel
+                  required />
                 I have read and agree to
-                <a
-                  role="button"
-                  class="termsLink"
-                  (click)="openTermsAndConditions()"
-                  >Terms and Conditions, Privacy Policy</a
-                >
+                <a role="button" class="termsLink" (click)="openTermsAndConditions()">Terms and Conditions, Privacy
+                  Policy</a>
               </div>
 
               <div class="form-group" *ngIf="showInput" style="margin: 0;">
                 <p style="float: right;">* all fields are mandatory</p>
               </div>
-              <button
-                class="btn btn-primary social-buttons"
-                style="background-color: #c63d2d; border-color: #c63d2d;"
-                (click)="prepareLoginButton()"
-                #googleSignUp
-              >
+              <button class="btn btn-primary social-buttons" style="background-color: #c63d2d; border-color: #c63d2d;"
+                (click)="prepareLoginButton()" #googleSignUp>
                 <i class="fa fa-google social-icons"></i>Sign Up using Google
               </button>
               <!-- --------------------- conditional OTP SCREEN now onwards--------------------------------------------- -->
@@ -228,27 +132,13 @@
                 verify your account by signing in to your email.
               </p>
               <div class="form-group" *ngIf="verifyEmail">
-                <input
-                  type="text"
-                  id="otp"
-                  name="otp"
-                  ngModel
-                  class="form-control"
-                  required
-                  #otp="ngModel"
-                />
+                <input type="text" id="otp" name="otp" ngModel class="form-control" required #otp="ngModel" />
 
-                <label class="form-control-placeholder" for="otp"
-                  >One Time Password</label
-                >
+                <label class="form-control-placeholder" for="otp">One Time Password</label>
                 <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
               </div>
               <!-- ----------------- OTP screen till here -------------------------------------------------------------- -->
-              <button
-                type="submit"
-                class="btn btn-outline-primary continueButton"
-                [disabled]="!s.valid"
-              >
+              <button type="submit" class="btn btn-outline-primary continueButton" [disabled]="!s.valid">
                 Continue
               </button>
             </form>

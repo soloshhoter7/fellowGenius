@@ -7,6 +7,59 @@
 	border:1px solid red;
 }
 
+.signup-container .close {
+	font-size: 24px;
+
+	position: relative;
+	top: -100px;
+	right: -150px;
+}
+
+.signup-container .logo {
+	width: 120px;
+	height: 90px;
+	display: inline-block;
+	float: right;
+}
+
+
+
+.signup-container .signup-header
+{
+	width:100%;
+
+	display: flex;
+	align-items: center;
+
+}
+
+.signup-container .signup-header .header-container
+{
+	color: #e30084;
+	font-weight: 700;
+	text-transform: uppercase;
+	width: 325px;
+	font-size:22px;
+}
+
+
+.signup-container .signup-header .header-container-secondary
+{
+	color: #000000;
+	font-weight: normal;
+	text-transform: uppercase;
+	font-size:22px;
+}
+
+.signup-container .signup-header .info-class {
+	color: #5e6a6e;
+	text-transform: none;
+	font-weight: normal;
+	font-size: 12px;
+}
+
+
+
 
 /*.navbar-brand {
 	color: #241084;
