@@ -1,3 +1,13 @@
+.signup-container {
+	width: 480px;
+	margin: 0 auto;
+	display: block;
+	padding: 10px;
+	margin-top: 150px;
+	border:1px solid red;
+}
+
+
 /*.navbar-brand {
 	color: #241084;
 	font-size: 38px;
