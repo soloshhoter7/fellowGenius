@@ -101,12 +101,14 @@ textarea:focus {
 .btn-secondary:hover {
   background-color: #e30084 !important;
   border-color: #e30084 !important;
+  color:#FFFFFF!important;
 }
 
 .btn-secondary:focus {
   background-color: #e30084 !important;
   border-color: #e30084 !important;
   box-shadow: 0 0 0 0.2rem #f7e4f9 !important;
+  color:#FFFFFF!important;
 }
 
 /* Google */
@@ -122,4 +124,14 @@ textarea:focus {
 .loginBtn--google:hover,
 .loginBtn--google:focus {
   background: #e74b37;
+}
+
+
+.error-information
+{
+  color:#D0021B;
+}
+.error-textbox
+{
+  border:1px solid #D0021B;
 }

@@ -22,7 +22,35 @@
       position: absolute;
     }
     .header .showin {
-      display: none;
+      display: none; 
+    }
+
+    .login-container
+    {
+      width:100%!important;
+      margin-top:0px!important;
+    }
+
+
+    .login-container .close 
+    {
+      top: -70px!important;
+     right: -110px!important;
+    }
+    .login-container .login-parameter-container
+    {
+      height: calc(100vh - 200px);
+    }
+
+    .login-container .login-instead
+    { 
+      margin-top:60px!important;
+    }
+
+    .login-container .button-container .btn-primary
+    {
+      width:100%!important;
+      margin-top:10px;
     }
 
   }
