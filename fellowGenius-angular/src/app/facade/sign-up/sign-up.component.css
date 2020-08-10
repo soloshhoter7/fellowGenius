@@ -1,18 +1,21 @@
 .signup-container {
-	width: 480px;
+	width: 680px;
 	margin: 0 auto;
 	display: block;
 	padding: 10px;
-	margin-top: 150px;
-	border:1px solid red;
+	margin-top: 50px;
+	height:700px;
+
+
+	
 }
 
 .signup-container .close {
 	font-size: 24px;
 
 	position: relative;
-	top: -100px;
-	right: -150px;
+	top: -10px;
+	right: -10px;
 }
 
 .signup-container .logo {
@@ -27,7 +30,6 @@
 .signup-container .signup-header
 {
 	width:100%;
-
 	display: flex;
 	align-items: center;
 
@@ -51,165 +53,44 @@
 	font-size:22px;
 }
 
-.signup-container .signup-header .info-class {
-	color: #5e6a6e;
-	text-transform: none;
-	font-weight: normal;
-	font-size: 12px;
+
+
+.signup-container .signup-parameter-container
+{
+	border: 1px solid #7d0f7d;
+	border-radius: 8px;
+	display: block;
+	float: left;
+	width: 100%;
+	padding: 20px;
+	box-shadow: 0 8px 16px 0 #90a4ae;
 }
 
-
-
-
-/*.navbar-brand {
-	color: #241084;
-	font-size: 38px;
-	font-weight: 500;
-	margin-left: 10px;
-	border-radius: 5px;
-	font-family: custom;
+.signup-container .signup-parameter-container .form-group
+{
+	width:60%;
+}
+.signup-container .signup-parameter-container .button-container
+{
+line-height: 30px;
+}
+.signup-container .signup-parameter-container .button-container .btn-primary {
+	float: right;
 }
 
-body {
-	width: 100vw;
-	height: 100vh;
-	background-color: #f9fafc;
+.signup-container .signup-parameter-container .button-container .forgot-password {
+	color: #000000;
+	float: left;
 }
 
-.box {
-	width: 400px;
-	height: max-content;
-	background-color: white;
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	padding: 2vw;
-}
-
-.signupBox {
-	width: 500px;
-	height: max-content;
-	background-color: white;
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	padding: 3vw;
-}
-
-.outerBox {
-	width: max-content;
-	margin: auto;
+.agree-disagree
+{
+	margin-bottom:15px;
 	text-align: center;
 }
 
-.marginZero {
-	margin: 0;
+.social-button-container
+{
+	margin-top:60px;
+	text-align:center;
 }
-
-.registrationButtons {
-	padding: 20px;
-	margin-bottom: 10px;
-	width: 100%;
-	background-color: white;
-	border-radius: 4px;
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	border: none;
-}
-
-.registrationButtons:hover {
-	box-shadow: 0px 0px 4px rgb(36, 16, 132, 0.7);
-}
-
-.form-group {
-	position: relative;
-}
-
-label {
-	color: #545174;
-	font-weight: 400;
-	text-align: left;
-	font-size: 1rem;
-	line-height: 1.25rem;
-	margin-bottom: 4px;
-}
-
-.full-width {
-	width: 100%;
-}
-
-.form-group {
-	margin-bottom: 10px;
-}
-
-.continueButton {
-	width: 100%;
-	padding: 12px;
-	margin-top: 5px;
-}
-
-.paddingZero {
-	padding: 0;
-}
-
-.form-group {
-	position: relative;
-	margin-bottom: 1.4rem;
-	/* width: 25vw; */
-/*}
-
-.form-control-placeholder {
-	position: absolute;
-	top: 5px;
-	left: 11px;
-	padding-left: 5px;
-	padding-right: 5px;
-	transition: all 500ms;
-	opacity: 1;
-}
-
-.form-control:focus + .form-control-placeholder,
-.form-control:valid + .form-control-placeholder {
-	font-size: 90%;
-	transform: translate3d(0, -75%, 0);
-}
-
-label {
-	background-color: white;
-	margin: 0;
-}
-
-.form-control {
-	padding-left: 15px;
-}
-
-.showPassword {
-	position: absolute;
-	right: 10px;
-	cursor: pointer;
-	top: 7px;
-}
-
-input.ng-invalid.ng-touched {
-	border-left-color: red;
-	border-left-width: 3px;
-}
-
-input.ng-valid {
-	border-left-color: green;
-	border-left-width: 3px;
-}
-
-label {
-	color: rgb(129, 124, 124);
-}
-
-.input-append .btn.dropdown-toggle {
-	float: none;
-}
-
-.help-block {
-	color: red;
-	font-size: 12px;
-}
-
-.form-control:focus {
-	border-color: #8093eb;
-	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 5px rgba(131, 137, 221, 0.5);
-}
-*/

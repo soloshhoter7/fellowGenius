@@ -2,7 +2,6 @@
 	width: 480px;
 	margin: 0 auto;
 	display: block;
-
 	padding: 10px;
 	margin-top: 150px;
 }
@@ -27,25 +26,20 @@
 	font-weight: 700;
 	text-transform: uppercase;
 	font-size: 22px;
-	display: block;
-	float: left;
+	width:100%;
+	display: flex;
+	align-items: center;
 	margin-bottom: 10px;
+
 }
 
 .login-container .login-header .header-container {
-	display: inline-block;
-	float: left;
+
 	width: 325px;
 	position: relative;
 }
 
-.login-container .login-header .info-class {
-	color: #5e6a6e;
-	text-transform: none;
-	font-weight: normal;
-	display: block;
-	font-size: 12px;
-}
+
 
 .login-container .login-parameter-container {
 	border: 1px solid #7d0f7d;

@@ -31,11 +31,16 @@
       margin-top:0px!important;
     }
 
+.login-container .login-header
+{
+  flex-direction: column;
+}
+
 
     .login-container .close 
     {
-      top: -70px!important;
-     right: -110px!important;
+      top: -150px!important;
+      right: -150px!important;
     }
     .login-container .login-parameter-container
     {
@@ -52,5 +57,47 @@
       width:100%!important;
       margin-top:10px;
     }
+
+
+    .signup-container
+    {
+      width:100%!important;
+      margin-top:0px!important;
+      background:transparent!important;
+    }
+
+
+
+.signup-container .signup-header
+{
+  flex-direction: column;
+
+}
+.signup-container .close 
+{
+  top: 10px!important;
+  right: 10px!important;
+}
+
+.signup-container .signup-header 
+
+    .signup-container  .signup-header .hide
+    {
+      display:inline-block;
+    }
+    .signup-parameter-container
+    {
+      width:98%!important;
+    }
+    .signup-parameter-container .logo
+    {
+      display: none!important;
+    }
+
+    .signup-container .signup-parameter-container .form-group
+    {
+      width:100%!important;
+    }
+
 
   }
