@@ -37,36 +37,48 @@ public class AuthenticationController {
 			System.out.println("hello student");
 			return "Hello student";
 		}
-
-		@RequestMapping(value = "/authenticateStudent", method = RequestMethod.POST)
-		public ResponseEntity<?> studentAuthentication(@RequestBody AuthenticationRequest authenticationRequest)
-				throws Exception {
-            System.out.println("hello ->"+ authenticationRequest);
-            System.out.println(authenticationRequest.getPassword());
-            String password =  encoder.encode(authenticationRequest.getPassword());
+//
+//		@RequestMapping(value = "/authenticateStudent", method = RequestMethod.POST)
+//		public ResponseEntity<?> studentAuthentication(@RequestBody AuthenticationRequest authenticationRequest)
+//				throws Exception {
+//        
+//            String password =  encoder.encode(authenticationRequest.getPassword());
+//            System.out.println(password);
+//	        final String userId = userDetailsService.validateStudentUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+//	        System.out.println("userId ->"+userId);
+//	        if(userId!=null) {
+//	    		final String jwt = jwtTokenUtil.generateToken(userId,"STUDENT");
+//	    		System.out.println(new AuthenticationResponse(jwt));
+//	    		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+//	        }else {
+//	        	 return ResponseEntity.ok(new AuthenticationResponse("false"));
+//	        }
+//		}
+//		
+//		@RequestMapping(value = "/authenticateTutor", method = RequestMethod.POST)
+//		public ResponseEntity<?> tutorAuthentication(@RequestBody AuthenticationRequest authenticationRequest) {
+//
+//	        final String userId = userDetailsService.validateTutorUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+//	        if(userId!=null) {
+//	    		final String jwt = jwtTokenUtil.generateToken(userId,"TUTOR");
+//	    		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+//	        }else {
+//	        	return ResponseEntity.ok(new AuthenticationResponse("false"));
+//	        }
+//		}
+		
+		@RequestMapping(value ="/authenticate",method = RequestMethod.POST)
+		public ResponseEntity<?> authentication(@RequestBody AuthenticationRequest authenticationRequest){
+			String password =  encoder.encode(authenticationRequest.getPassword());
             System.out.println(password);
-	        final String userId = userDetailsService.validateStudentUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-	        System.out.println("userId ->"+userId);
+	        final String userId = userDetailsService.validateUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+	        final String role = userDetailsService.fetchUserRole(userId);
 	        if(userId!=null) {
-	    		final String jwt = jwtTokenUtil.generateToken(userId,"STUDENT");
+	    		final String jwt = jwtTokenUtil.generateToken(userId,role);
 	    		System.out.println(new AuthenticationResponse(jwt));
 	    		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	        }else {
 	        	 return ResponseEntity.ok(new AuthenticationResponse("false"));
 	        }
 		}
-		
-		@RequestMapping(value = "/authenticateTutor", method = RequestMethod.POST)
-		public ResponseEntity<?> tutorAuthentication(@RequestBody AuthenticationRequest authenticationRequest) {
-            System.out.println("---------------------------------------------------------------------------------");
-			System.out.println("username -> "+authenticationRequest.getEmail()+" password -> "+authenticationRequest.getPassword());
-	        final String userId = userDetailsService.validateTutorUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-	        if(userId!=null) {
-	    		final String jwt = jwtTokenUtil.generateToken(userId,"TUTOR");
-	    		return ResponseEntity.ok(new AuthenticationResponse(jwt));
-	        }else {
-	        	return ResponseEntity.ok(new AuthenticationResponse("false"));
-	        }
-		}
-		
 }

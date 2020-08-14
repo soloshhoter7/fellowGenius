@@ -32,21 +32,21 @@
     </div>
   </nav>
 </div>
-<div>
-  <div class="row">
-   
+
+<div class="container">
+  <div class="row" >
     Search Banner appears here 
   </div>
 </div>
 
-<div class="why_fg_container">
+<div class="why_fg_container" style="width:75vw;margin:auto">
   <owl-carousel-o [options]="customOptions">
     <ng-template
       carouselSlide
       *ngFor="let slide of slidesStore"
       [id]="slide.id"
     >
-    <div class="why_fg_container">
+    <div class="why_fg_container" style="margin:10px;">
 
       <div class="search-result-card">
           <div class="result-profile-pic"
@@ -60,7 +60,10 @@
               <span class="result-card-specalizaiton">
                   Exterior University - politics [bachelors]
               </span>
-
+              <div class="stars-outer">
+                <!-- <div class="stars-inner" [style.width.%]="element.rating"></div> -->
+                <div class="stars-inner" style="width: 90%;"></div>
+            </div>
           </div>
 
           <div class="result-card-content">
@@ -97,10 +100,3 @@
     </ng-template>
   </owl-carousel-o>
 </div>
-
-<!--
-<div *ngIf="switchView">
-  <div class="container">
-      <img  class="switchView" src="../../assets/images/switchView.png">
-  </div>
-</div>-->

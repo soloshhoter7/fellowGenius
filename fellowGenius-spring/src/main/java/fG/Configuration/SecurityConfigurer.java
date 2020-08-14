@@ -47,10 +47,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
-		.authorizeRequests().antMatchers("/authenticateStudent").permitAll()
-		.antMatchers("/authenticateTutor").permitAll()
-		.antMatchers("/fellowGenius/registerStudent").permitAll()
-		.antMatchers("/fellowGenius/registerTutor").permitAll()
+		.authorizeRequests()
+//		.antMatchers("/authenticateStudent").permitAll()
+//		.antMatchers("/authenticateTutor").permitAll()
+		.antMatchers("/authenticate").permitAll()
+//		.antMatchers("/fellowGenius/registerStudent").permitAll()
+//		.antMatchers("/fellowGenius/registerTutor").permitAll()
+		.antMatchers("/fellowGenius/registerUser").permitAll()
 		.antMatchers("/fellowGenius/registerSocialLogin").permitAll()
 		.antMatchers("/fellowGenius/meeting/sendEmail").permitAll()
 		.antMatchers("/fellowGenius/**").permitAll()

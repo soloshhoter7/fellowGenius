@@ -33,14 +33,14 @@ public class meetingController {
 	UserService userService;
 
 	// for saving booking
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/saveMeeting")
 	public boolean saveBooking(@RequestBody BookingDetailsModel booking) {
 		return meetingService.saveBooking(booking);
 	}
 
 	// delete my booking
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value= "/deleteMyBooking")
 	@ResponseBody
 	public boolean deleteMyBooking(String bid){
@@ -48,7 +48,7 @@ public class meetingController {
 		return meetingService.deleteMyBooking(bookingId);
 	}
 	// for finding tutor pending Bookings
-	@PreAuthorize("hasAuthority('TUTOR')")
+	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/findTutorBookings", produces = { "application/json" })
 	@ResponseBody
 	public List<?> findTutorBookings(String tid) throws ParseException {
@@ -64,7 +64,7 @@ public class meetingController {
 	}
 
 	// find student pending bookings
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/findStudentBookings")
 	@ResponseBody
 	public List<?> findStudentBookings(String studentid) throws ParseException {
@@ -74,7 +74,7 @@ public class meetingController {
 	}
 
 	// for fetching approved bookings list
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/fetchApprovedList")
 	@ResponseBody
 	public List<?> fetchApprovedList(String studentid) throws ParseException {
@@ -84,7 +84,7 @@ public class meetingController {
 	}
 
 	// for fetching approved bookings list
-	@PreAuthorize("hasAuthority('TUTOR')")
+	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/fetchApprovedListTutor")
 	@ResponseBody
 	public List<?> fetchApprovedStudentList(String tutorId) throws ParseException {
@@ -94,7 +94,7 @@ public class meetingController {
 	}
 
 	// for fetching live meetings for tutors
-	@PreAuthorize("hasAuthority('TUTOR')")
+	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/fetchLiveMeetingListTutor")
 	@ResponseBody
 	public List<?> fetchLiveMeetingListTutor(String tutorId) throws ParseException {
@@ -104,7 +104,7 @@ public class meetingController {
 	}
 
 	// for fetching live meetings for student
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/fetchLiveMeetingListStudent")
 	@ResponseBody
 	public List<?> fetchLiveMeetingListStudent(String sid) throws ParseException {
@@ -114,7 +114,7 @@ public class meetingController {
 	}
 
 	// for saving Schedule
-	@PreAuthorize("hasAuthority('TUTOR')")
+	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping("/saveSchedule")
 	public void saveSchedule(@RequestBody TutorAvailabilityScheduleModel tutorAvailabilitySchedule) {
 		if (tutorAvailabilitySchedule.getTid() != null) {
@@ -125,7 +125,7 @@ public class meetingController {
 	}
 
 	// for getting tutor availability schedule
-	@PreAuthorize("hasAuthority('TUTOR')")
+	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/getSchedule", produces = { "application/json" })
 	@ResponseBody
 	public TutorAvailabilityScheduleModel getAvailabilitySchedule(String tid)
@@ -134,7 +134,7 @@ public class meetingController {
 	}
 
 	// for getting tutor availability tutor array
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/getTutorTimeArray", produces = { "application/json" })
 	@ResponseBody
 	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) {
@@ -142,7 +142,7 @@ public class meetingController {
 	}
 
 	// for getting student meeting schedule
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/getStudentSchedule", produces = { "application/json" })
 	@ResponseBody
 	public ArrayList<ScheduleData> getStudentSchedule(String sid) throws ParseException {
@@ -159,7 +159,7 @@ public class meetingController {
 	}
 	
 	// for checking if tutor is available
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value="/getTutorIsAvailable")
 	@ResponseBody
 	public boolean getIsAvailable(String tid) {
@@ -168,7 +168,7 @@ public class meetingController {
 	
 	
 	// for checking if booking is valid
-	@PreAuthorize("hasAuthority('STUDENT')")
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value="/isBookingValid")
 	@ResponseBody
 	public boolean isBookingValid(String sh, String sm, String eh, String em, String tid, String date) {

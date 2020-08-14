@@ -17,10 +17,9 @@ import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
+import fG.Entity.Users;
 import fG.Model.StudentLoginModel;
-import fG.Model.StudentProfileModel;
 import fG.Model.TutorAvailabilityScheduleModel;
-import fG.Model.TutorLoginModel;
 import fG.Model.TutorVerificationModel;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
@@ -30,10 +29,14 @@ import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryTutorVerification;
+import fG.Repository.repositoryUsers;
 
 @Component
 public class dao {
-
+ 
+	@Autowired
+	repositoryUsers repUsers;
+	
 	@Autowired
 	repositoryStudentProfile repStudentProfile;
 
@@ -58,6 +61,15 @@ public class dao {
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorSchedule;
 
+	// for saving user profile
+		public boolean saveUserLogin(Users user) {
+			if (repUsers.save(user) != null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 	// for saving student profile details
 	public boolean saveStudentProfile(StudentProfile studentProfile) {
 		if (repStudentProfile.emailExist(studentProfile.getEmail()) == null) {
@@ -290,5 +302,6 @@ public class dao {
 	public StudentProfile getStudentProfile(Integer sid) {
 		return repStudentProfile.idExist(sid);
 	}
+    
 
 }

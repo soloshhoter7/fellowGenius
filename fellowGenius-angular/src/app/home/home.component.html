@@ -12,7 +12,7 @@
 
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
       <ul class="navbar-nav" style="font-size: large;">
-        <li class="nav-item" *ngIf="loginType == 'student'">
+        <li class="nav-item" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
             routerLink="/home/studentDashboard"
@@ -22,7 +22,7 @@
           >
         </li>
 
-        <li class="nav-item" *ngIf="loginType == 'tutor'">
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
             class="nav-link"
             routerLink="/home/tutorDashboard"
@@ -32,7 +32,7 @@
           >
         </li>
 
-        <li class="nav-item" *ngIf="loginType == 'student'">
+        <li class="nav-item" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
             routerLink="/home/findTutor"
@@ -42,7 +42,7 @@
           >
         </li>
 
-        <li class="nav-item" *ngIf="loginType == 'student'">
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
             class="nav-link"
             routerLink="studentBookings"
@@ -52,7 +52,7 @@
           >
         </li>
 
-        <li class="nav-item" *ngIf="loginType == 'tutor'">
+        <li class="nav-item" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
             routerLink="bookings"
@@ -61,7 +61,7 @@
             >Bookings</a
           >
         </li>
-        <li class="nav-item" *ngIf="loginType == 'tutor'">
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
             class="nav-link"
             routerLink="tutorSchedule"
@@ -72,7 +72,7 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto" style="height: 40px; width: 340px;">
-        <li class="nav-item" *ngIf="loginType == 'tutor'">
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
           <label class="switch" style="margin-top: 13px; margin-right: 7px;">
             <input
               type="checkbox"
@@ -106,12 +106,12 @@
             >
               <span
                 style="font-size: larger; font-weight: 300;"
-                *ngIf="loginType == 'student'"
+                *ngIf="loginType == 'Learner'"
                 >{{ studentProfile.fullName }}</span
               >
               <span
                 style="font-size: larger; font-weight: 300;"
-                *ngIf="loginType == 'tutor'"
+                *ngIf="loginType == 'Expert'"
                 >{{ tutorProfile.fullName }}</span
               >
               <i
@@ -127,7 +127,7 @@
               <a
                 class="dropdown-item"
                 routerLink="/home/profile"
-                *ngIf="loginType == 'tutor'"
+                *ngIf="loginType == 'Expert'"
                 ><i
                   class="fas fa-user"
                   style="margin: 5px; color: #8d89aa;"
@@ -137,7 +137,7 @@
               <a
                 class="dropdown-item"
                 routerLink="/home/studentProfile"
-                *ngIf="loginType == 'student'"
+                *ngIf="loginType == 'Learner'"
                 ><i
                   class="fas fa-user"
                   style="margin: 5px; color: #8d89aa;"

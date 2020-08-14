@@ -62,83 +62,83 @@ export class SignUpStudentComponent implements OnInit {
 		verticalPosition: 'top'
 	};
 	timeOut: boolean = true;
-	onSignUpStudent(form: NgForm) {
-		if (this.verifyEmail == false) {
-			this.studentProfile.dateOfBirth = form.value.dateOfBirth;
-			var studentDOB = this.studentProfile.dateOfBirth.split('-');
+	// onSignUpStudent(form: NgForm) {
+	// 	if (this.verifyEmail == false) {
+	// 		this.studentProfile.dateOfBirth = form.value.dateOfBirth;
+	// 		var studentDOB = this.studentProfile.dateOfBirth.split('-');
 
-			var dobYear = parseInt(studentDOB[0]);
-			var maxYear = new Date().getFullYear() - 6;
-			var minYear = new Date().getFullYear() - 70;
+	// 		var dobYear = parseInt(studentDOB[0]);
+	// 		var maxYear = new Date().getFullYear() - 6;
+	// 		var minYear = new Date().getFullYear() - 70;
 
-			if (dobYear < maxYear && dobYear > minYear) {
-				this.isLoading = true;
-				this.studentProfile.fullName = form.value.fullName;
-				this.studentProfile.email = form.value.email;
-				this.studentProfile.password = form.value.password;
-				this.studentProfile.dateOfBirth = form.value.dateOfBirth;
-				this.studentProfile.contact = form.value.contact;
-				this.studentProfile.subject = form.value.subject;
-				this.studentProfile.gradeLevel = form.value.gradeLevel;
-				setTimeout(() => {
-					if (this.timeOut == true) {
-						this.emailValid = true;
-						this.isLoading = false;
-						this.showInput = true;
-					}
-				}, 25000);
-				this.httpClient.verifyEmail(this.studentProfile.email).subscribe((res) => {
-					console.log(res);
-					this.verificationOtp = res['response'];
-					console.log(this.verificationOtp);
-					this.timeOut = false;
-					this.verifyEmail = true;
-					this.isLoading = false;
-					this.showInput = false;
-				});
-			} else {
-				this.showDateError = true;
-			}
-		} else {
-			//   var bcrypt = require("bcryptjs");
-			if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-				console.log('otp matched !');
-				//   console.log(this.verificationOtp);
-				//   if (this.verificationOtp == form.value.otp) {
-				this.httpClient.saveStudentProfile(this.studentProfile).subscribe((res) => {
-					if (res == true) {
-						var studentLogin: StudentLoginModel = new StudentLoginModel();
-						studentLogin.email = this.studentProfile.email;
-						studentLogin.password = this.studentProfile.password;
-						this.httpClient.checkLogin(studentLogin).subscribe((res) => {
-							this.cookieService.set('token', res['response']);
-							this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
-							this.userId = this.cookieService.get('userId');
-							this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
-								this.studentProfile = res;
-								this.studentService.setStudentProfileDetails(this.studentProfile);
-								this.loginService.setLoginType('student');
-								this.loginService.setTrType('signUp');
-								this.router.navigate([ 'home' ]);
-							});
-						});
-					} else if (res == false) {
-						// this.router.navigate(['signUp'])
-						this.snackBar.open(
-							'registration not successful ! email already exists !',
-							'close',
-							this.config
-						);
-						this.incorrectLoginDetails = true;
-						this.dialogRef.closeAll();
-						// window.location.reload();
-					}
-				});
-			} else {
-				this.wrongOtp = true;
-			}
-		}
-	}
+	// 		if (dobYear < maxYear && dobYear > minYear) {
+	// 			this.isLoading = true;
+	// 			this.studentProfile.fullName = form.value.fullName;
+	// 			this.studentProfile.email = form.value.email;
+	// 			this.studentProfile.password = form.value.password;
+	// 			this.studentProfile.dateOfBirth = form.value.dateOfBirth;
+	// 			this.studentProfile.contact = form.value.contact;
+	// 			this.studentProfile.subject = form.value.subject;
+	// 			this.studentProfile.gradeLevel = form.value.gradeLevel;
+	// 			setTimeout(() => {
+	// 				if (this.timeOut == true) {
+	// 					this.emailValid = true;
+	// 					this.isLoading = false;
+	// 					this.showInput = true;
+	// 				}
+	// 			}, 25000);
+	// 			this.httpClient.verifyEmail(this.studentProfile.email).subscribe((res) => {
+	// 				console.log(res);
+	// 				this.verificationOtp = res['response'];
+	// 				console.log(this.verificationOtp);
+	// 				this.timeOut = false;
+	// 				this.verifyEmail = true;
+	// 				this.isLoading = false;
+	// 				this.showInput = false;
+	// 			});
+	// 		} else {
+	// 			this.showDateError = true;
+	// 		}
+	// 	} else {
+	// 		//   var bcrypt = require("bcryptjs");
+	// 		if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
+	// 			console.log('otp matched !');
+	// 			//   console.log(this.verificationOtp);
+	// 			//   if (this.verificationOtp == form.value.otp) {
+	// 			this.httpClient.saveStudentProfile(this.studentProfile).subscribe((res) => {
+	// 				if (res == true) {
+	// 					var studentLogin: StudentLoginModel = new StudentLoginModel();
+	// 					studentLogin.email = this.studentProfile.email;
+	// 					studentLogin.password = this.studentProfile.password;
+	// 					this.httpClient.checkLogin(studentLogin).subscribe((res) => {
+	// 						this.cookieService.set('token', res['response']);
+	// 						this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
+	// 						this.userId = this.cookieService.get('userId');
+	// 						this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
+	// 							this.studentProfile = res;
+	// 							this.studentService.setStudentProfileDetails(this.studentProfile);
+	// 							this.loginService.setLoginType('student');
+	// 							this.loginService.setTrType('signUp');
+	// 							this.router.navigate([ 'home' ]);
+	// 						});
+	// 					});
+	// 				} else if (res == false) {
+	// 					// this.router.navigate(['signUp'])
+	// 					this.snackBar.open(
+	// 						'registration not successful ! email already exists !',
+	// 						'close',
+	// 						this.config
+	// 					);
+	// 					this.incorrectLoginDetails = true;
+	// 					this.dialogRef.closeAll();
+	// 					// window.location.reload();
+	// 				}
+	// 			});
+	// 		} else {
+	// 			this.wrongOtp = true;
+	// 		}
+	// 	}
+	// }
 
 	toHomePage() {
 		this.router.navigate([ 'facade' ]);

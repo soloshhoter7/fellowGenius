@@ -51,12 +51,15 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.isTokenValid()) {
+			console.log('entered!');
 			this.loginType = this.loginService.getLoginType();
 			if (this.loginType) {
-				if (this.loginType == 'student') {
+				if (this.loginType == 'Learner') {
+					console.log('entered in learner !');
 					this.studentProfile = this.studentServce.getStudentProfileDetails();
+					console.log(this.studentProfile);
 					this.router.navigate([ 'home/studentDashboard' ]);
-				} else if (this.loginType == 'tutor') {
+				} else if (this.loginType == 'Expert') {
 					this.tutorProfile = this.tutorService.getTutorDetials();
 					if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
 						this.checked = true;
@@ -66,12 +69,18 @@ export class HomeComponent implements OnInit {
 					// this.dashboardUrl = '/home/tutorDashboard';
 					this.router.navigate([ 'home/tutorDashboard' ]);
 				}
-				if (this.loginService.getTrType() == 'signUp') {
-					this.dialog.open(WelcomeComponent, {
-						width: '70vw',
-						height: '90vh'
-					});
-				}
+				// if (this.loginService.getTrType() == 'signUp') {
+				// 	this.dialog.open(WelcomeComponent, {
+				// 		width: '70vw',
+				// 		height: '90vh'
+				// 	});
+				// }
+				// if (this.loginService.getTrType() == 'signUp') {
+				this.dialog.open(WelcomeComponent, {
+					width: '70vw',
+					height: '90vh'
+				});
+				// }
 			} else {
 				this.handleRefresh();
 				// setTimeout(() => {
@@ -160,20 +169,19 @@ export class HomeComponent implements OnInit {
 	// }
 	handleRefresh() {
 		this.userId = this.cookieService.get('userId');
-		if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'STUDENT') {
-			this.loginType = 'student';
+		if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
+			this.loginType = 'Learner';
 			this.loginService.setTrType('login');
 			this.httpService.getStudentDetails(this.userId).subscribe((res) => {
 				this.studentProfile = res;
-
 				this.studentService.setStudentProfileDetails(this.studentProfile);
 				this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
 					this.studentService.setStudentBookings(res);
 					// this.router.navigate([ 'home/studentDashboard' ]);
 				});
 			});
-		} else if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'TUTOR') {
-			this.loginType = 'tutor';
+		} else if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Expert') {
+			this.loginType = 'Expert';
 			this.loginService.setTrType('login');
 			this.httpService.getTutorDetails(this.userId).subscribe((res) => {
 				this.tutorProfile = res;

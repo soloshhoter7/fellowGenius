@@ -37,6 +37,7 @@ import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
+import fG.Entity.Users;
 import fG.Model.AuthenticationResponse;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
@@ -46,9 +47,11 @@ import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
+import fG.Model.registrationModel;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryTutorLogin;
+import fG.Repository.repositoryUsers;
 
 @Service
 public class UserService  implements UserDetailsService{
@@ -72,56 +75,145 @@ public class UserService  implements UserDetailsService{
 	repositorySocialLogin repSocialLogin;
 	
 	@Autowired
+	repositoryUsers repUsers;
+	@Autowired
 	private BCryptPasswordEncoder encoder;
-
-	public String validateStudentUser(String email,String password) {
-		StudentLogin studentLogin = repStudentLogin.emailExist(email);
-		if(studentLogin!=null) {
-			if(encoder.matches(password, studentLogin.getPassword())) {
-			return String.valueOf(studentLogin.getStudentProfile().getSid());
+ 
+	public String validateUser(String email, String password) {
+		Users userLogin = repUsers.emailExist(email);
+		if(userLogin!=null) {
+			if(encoder.matches(password, userLogin.getPassword())) {
+				return String.valueOf(userLogin.getUserId());
 			}else {
 				return null;
 			}
 		}else {
-		 return null;	
-		} 
+			return null;
+		}
 	}
 	
-	public User loadStudentByUserId(String userId) {
+//	public String validateStudentUser(String email,String password) {
+//		StudentLogin studentLogin = repStudentLogin.emailExist(email);
+//		if(studentLogin!=null) {
+//			if(encoder.matches(password, studentLogin.getPassword())) {
+//			return String.valueOf(studentLogin.getStudentProfile().getSid());
+//			}else {
+//				return null;
+//			}
+//		}else {
+//		 return null;	
+//		} 
+//	}
+	
+//	public User loadStudentByUserId(String userId) {
+//		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//		if(dao.findStudentBySid(Integer.valueOf(userId))) {
+//		    authorities.add(new SimpleGrantedAuthority("STUDENT"));
+//			return new User(userId,"",authorities);
+//		}else {
+//			return null;
+//		}
+//	}
+	
+	public User loadUserByUserId(String userId) {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		if(dao.findStudentBySid(Integer.valueOf(userId))) {
-		    authorities.add(new SimpleGrantedAuthority("STUDENT"));
+		Users user = repUsers.idExists(Integer.valueOf(userId));
+		if(user!=null) {
+		    authorities.add(new SimpleGrantedAuthority(user.getRole()));
 			return new User(userId,"",authorities);
 		}else {
 			return null;
 		}
 	}
 	
-	public String validateTutorUser(String email,String password) {
-		
-		SocialLogin socialLogin =	repSocialLogin.checkSocialLogin(email);
-		TutorLogin tutLogin = repTutorLogin.validation(email);
-		
-		if(socialLogin!=null && socialLogin.getId().equals(password)) {
-			return String.valueOf(socialLogin.getTid());
-		}else if(tutLogin!=null && encoder.matches(password, tutLogin.getPassword())) {
-			return String.valueOf(tutLogin.getTutorProfile().getTid());
+//	public String validateTutorUser(String email,String password) {
+//		
+//		SocialLogin socialLogin =	repSocialLogin.checkSocialLogin(email);
+//		TutorLogin tutLogin = repTutorLogin.validation(email);
+//		
+//		if(socialLogin!=null && socialLogin.getId().equals(password)) {
+//			return String.valueOf(socialLogin.getTid());
+//		}else if(tutLogin!=null && encoder.matches(password, tutLogin.getPassword())) {
+//			return String.valueOf(tutLogin.getTutorProfile().getTid());
+//		}else {
+//			return null;
+//		}
+//		
+//	}
+//	
+//	public User loadTutorByUserId(String userId) {
+//		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//		if(dao.getTutorProfile(Integer.valueOf(userId))!=null) {
+//		    authorities.add(new SimpleGrantedAuthority("TUTOR"));
+//			return new User(userId,"",authorities);
+//		}else {
+//			return null;
+//		}
+//	}
+	//for registering a user
+	public boolean saveUserProfile(registrationModel registrationModel) {
+		if(registrationModel.getRole().equals("Learner")) {
+			StudentProfile studentProfile = new StudentProfile();
+			studentProfile.setContact(registrationModel.getContact());
+			studentProfile.setEmail(registrationModel.getEmail());
+			studentProfile.setFullName(registrationModel.getFullName());
+			if (dao.saveStudentProfile(studentProfile)) {
+//				StudentLogin studentLogin = new StudentLogin();
+//				studentLogin.setPassword(encoder.encode(registrationModel.getPassword()));
+//				studentLogin.setEmail(registrationModel.getEmail());
+//				studentLogin.setStudentProfile(studentProfile);
+				
+				Users user = new Users();
+				user.setEmail(registrationModel.getEmail());
+				user.setPassword(encoder.encode(registrationModel.getPassword()));
+				user.setUserId(studentProfile.getSid());
+				user.setRole("Learner");
+				dao.saveUserLogin(user);
+//				dao.saveStudentLogin(studentLogin);
+				return true;
+			} else {
+				return false;
+			}
+		}else if(registrationModel.getRole().equals("Expert")) {
+			TutorProfile tutorProfile = new TutorProfile();
+			tutorProfile.setContact(registrationModel.getContact());
+			tutorProfile.setEmail(registrationModel.getEmail());
+			tutorProfile.setFullName(registrationModel.getFullName());
+
+			if (dao.saveTutorProfile(tutorProfile)) {
+//				TutorLogin tutorLogin = new TutorLogin();
+//				tutorLogin.setPassword(encoder.encode(registrationModel.getPassword()));
+//				tutorLogin.setEmail(registrationModel.getEmail());
+//				tutorLogin.setTutorProfile(tutorProfile);
+//				dao.saveTutorLogin(tutorLogin);
+				Users user = new Users();
+				user.setEmail(registrationModel.getEmail());
+				user.setPassword(encoder.encode(registrationModel.getPassword()));
+				user.setUserId(tutorProfile.getTid());
+				user.setRole("Expert");
+				dao.saveUserLogin(user);
+				//creating tutor profile details tuple
+				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+				tutProfileDetails.setTid(tutorProfile.getTid());
+				tutProfileDetails.setProfileCompleted(12);
+				tutProfileDetails.setLessonCompleted(0);
+				tutProfileDetails.setRating(100);
+				tutProfileDetails.setReviewCount(0);
+				dao.saveTutorID(tutProfileDetails);
+				//creating tutor schedule tuple
+				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+				tutSchedule.setTid(tutorProfile.getTid());
+				tutSchedule.setFullName(tutorProfile.getFullName());
+				tutSchedule.setIsAvailable("yes");
+				dao.saveTutorAvailbilitySchedule(tutSchedule);
+				return true;
+			} else {
+				return false;
+			}
 		}else {
-			return null;
-		}
-		
-	}
-	
-	public User loadTutorByUserId(String userId) {
-		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		if(dao.getTutorProfile(Integer.valueOf(userId))!=null) {
-		    authorities.add(new SimpleGrantedAuthority("TUTOR"));
-			return new User(userId,"",authorities);
-		}else {
-			return null;
+			return false;
 		}
 	}
-	
 	
 	// saving student registration details
 	public boolean saveStudentProfile(StudentProfileModel studentModel) {
@@ -551,6 +643,14 @@ public class UserService  implements UserDetailsService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String fetchUserRole(String userId) {
+		return repUsers.idExists(Integer.valueOf(userId)).getRole();
+	}
+
+	
+
+	
 
 	
 }

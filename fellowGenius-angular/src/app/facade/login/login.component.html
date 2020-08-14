@@ -1,5 +1,8 @@
 <body>
-  <div *ngIf="isLoading">
+  <div *ngIf="isLoading" style=
+  "width: max-content;
+  margin: auto;
+  padding-top: 35vh;">
     <app-loading></app-loading>
   </div>
 
@@ -22,8 +25,8 @@
           <input type="email" id="email" class="form-control" ngModel name="email" required email #email="ngModel"
             maxlength="64" />
         </div>
-        <span class="error-information">incorrect email or password !</span>
-        <!-- <p style="color: red;" *ngIf="incorrectLoginDetails">{{errorText}}</p> -->
+        <!-- <span class="error-information">incorrect email or password !</span> -->
+        <p style="color: red;" *ngIf="incorrectLoginDetails">{{errorText}}</p>
         <!-- <div class="form-group">
                       <input type="password" id="password" class="form-control" required>
                       <label class="form-control-placeholder" for="password">Password</label>
