@@ -231,3 +231,61 @@ textarea:focus {
 	background-position: bottom right;
 	padding-right: 0px !important;
 }
+
+
+.bg-thankyou-container
+{
+	width:500px;
+	height:350px;
+	background: url(assets/images/thankyou_bg.svg) no-repeat;
+	background-position: bottom left;
+	padding-right: 0px !important;
+	position: relative;
+	border:1px solid red;
+}
+
+.bg-thankyou-container .user-name-container
+{
+	left:250px;
+	top:90px;
+	position: absolute;
+
+}
+
+.bg-thankyou-container .thankyou-container
+{
+
+	left:250px;
+	top:120px;
+	position: absolute;
+	display: block;
+	float:left;
+}
+
+.bg-thankyou-container .thankyou-container .greet
+{
+	font-size:20px;
+	text-transform: uppercase;
+	color:#e30084;
+	font-weight: 700;
+	width:100%;
+	display: block;
+	float: left;
+}
+
+
+
+.bg-thankyou-container .btn-group
+{
+	left:250px;
+	top:240px;
+	position: absolute;
+
+}
+.bg-thankyou-container .button-container
+{
+	left:250px;
+	top:280px;
+	position: absolute;
+
+}
