@@ -41,6 +41,7 @@
 		"jwt-decode": "^2.2.0",
 		"net": "^1.0.2",
 		"ng2-ckeditor": "^1.2.7",
+		"ng2-owl-carousel2": "^2.0.3",
 		"ng4-social-login": "^1.4.2",
 		"ngx-agora": "^1.5.13",
 		"ngx-cookie-service": "^3.0.4",

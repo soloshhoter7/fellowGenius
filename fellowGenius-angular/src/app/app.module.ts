@@ -75,6 +75,7 @@ import { BasicAuthHttpInterceptorService } from "./service/basic-auth-http-inter
 import { CookieService } from "ngx-cookie-service";
 import { CarouselModule } from "ngx-owl-carousel-o";
 import { TestComponent } from "./test/test.component";
+import { Ng2OwlCarouselComponent } from "ng2-owl-carousel2";
 export const appRoutes: Routes = [
   {
     path: "home",
@@ -134,6 +135,7 @@ export const appRoutes: Routes = [
     UploadProfilePictureComponent,
     LoaderComponent,
     TestComponent,
+    Ng2OwlCarouselComponent,
   ],
   imports: [
     NgxMaterialTimepickerModule,
