@@ -66,8 +66,7 @@ textarea:focus {
 	margin-left: 10px;
 }
 
-.why_fg_container {
-}
+
 
 .why_fg_container .search-result-card {
 	width: 300px;
@@ -104,12 +103,72 @@ textarea:focus {
 	left: 20px;
 	position: absolute;
 	text-overflow: ellipsis;
+
+}
+
+.why_fg_container .search-result-card .result-card-header .stars-outer {
+	top: 55px;
+	right: 10px;
+	position: absolute;
+	font-size:20px;
+
+}
+/*
+.stars-outer {
 	position: relative;
+	display: inline-block;
+	top: 60px;
+	color: transparent;
+}
+*/
+.stars-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 0;
+}
+
+.stars-outer::before {
+	content: "\f005 \f005 \f005 \f005 \f005";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	color: #FFFFFF;
+
+}
+
+.stars-inner::before {
+	content: "\f005 \f005 \f005 \f005 \f005";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	color: #FC91FC;
+
 }
 
 .why_fg_container .search-result-card .numbers-container {
 	display: flex;
+	position: absolute;
+	top: 10px;
+	left: 90px;
+	text-align:center;
 }
+
+.why_fg_container .search-result-card .numbers-container .number {
+width:100%;
+display:block;
+float:left;
+font-weight: 700;
+color:#000000;
+}
+.why_fg_container .search-result-card .numbers-container .info {
+	width:100%;
+	display:block;
+	float:left;
+	text-transform: uppercase;
+
+	}
+
 
 .why_fg_container .search-result-card .result-profile-pic {
 	width: 70px;
@@ -137,7 +196,7 @@ textarea:focus {
 	height: 25px;
 	position: absolute;
 	top: 70px;
-	left: 0px;
+	left: 15px;
 	color: #5e6a6e;
 	font-size: 15px;
 }
@@ -288,4 +347,11 @@ textarea:focus {
 	top:280px;
 	position: absolute;
 
+}
+
+.separtor
+{
+	width:1px;
+	height:30px;
+	background-color:#979797;
 }
