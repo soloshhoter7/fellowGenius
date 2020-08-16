@@ -166,7 +166,10 @@
           >
         </div>
 
-        <div class="form-group button-container" style="margin-bottom: 35vh;">
+        <div
+          class="form-group button-container"
+          [ngStyle]="{ 'margin-bottom': verifyEmail ? '35vh' : '' }"
+        >
           <a routerLink="/login" class="forgot-password">
             Login Instead
           </a>
