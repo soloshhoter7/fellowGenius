@@ -376,3 +376,16 @@ background: url(assets/images/search_right_bg.svg) no-repeat;
 {
 	background: url(assets/images/searchbg.svg) no-repeat;
 }
+
+.how-it-works-container
+{
+	display: block;
+	float:left;
+	width:100%;
+	min-height: 250px;
+	background-color:#F7E4F9;
+	text-align: center;
+    padding-top: 100px;
+
+
+}
