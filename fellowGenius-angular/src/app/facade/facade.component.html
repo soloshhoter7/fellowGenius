@@ -33,20 +33,29 @@
   </nav>
 </div>
 
-<div class="container">
-  <div class="row" >
-    Search Banner appears here 
+<div class="search-container">
+  <div class="search-bg-left"></div>
+  <div class="search-box-container">
+
+      <div class="input-group">
+          <span class="input-group-header">Find Your Personal Tutor</span>
+          <input type="search" name="search" placeholder="Search by Subjects">
+          <span class="input-group-btn">
+              <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"
+                      aria-hidden="true"></span></button>
+          </span>
+      </div><!-- /input-group -->
   </div>
 </div>
 
-<div class="why_fg_container" style="width:75vw;margin:auto">
+<div class="why_fg_container">
   <owl-carousel-o [options]="customOptions">
     <ng-template
       carouselSlide
       *ngFor="let slide of slidesStore"
       [id]="slide.id"
     >
-    <div class="why_fg_container" style="margin:10px;">
+    <div class="why_fg_container">
 
       <div class="search-result-card">
           <div class="result-profile-pic"

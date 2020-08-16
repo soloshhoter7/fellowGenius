@@ -146,6 +146,15 @@ textarea:focus {
 
 }
 
+.why_fg_container
+{
+	width:80%;
+	margin: 0 auto;
+	display:block;
+	float:left;
+}
+
+
 .why_fg_container .search-result-card .numbers-container {
 	display: flex;
 	position: absolute;
@@ -354,4 +363,16 @@ color:#000000;
 	width:1px;
 	height:30px;
 	background-color:#979797;
+}
+
+.search-container
+{
+background: url(assets/images/search_right_bg.svg) no-repeat;
+	
+
+}
+
+.search-container .search-bg-left 
+{
+	background: url(assets/images/searchbg.svg) no-repeat;
 }
