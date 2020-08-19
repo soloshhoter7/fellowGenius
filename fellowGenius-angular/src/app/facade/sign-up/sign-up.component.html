@@ -37,8 +37,8 @@
       <p style="text-align: center;">User Already registered ! go to Login</p>
     </div>
     <div class="signup-parameter-container bg-signup">
-      <div class="logo"></div>
-      <form (ngSubmit)="onSignUp(t)" #t="ngForm">
+      <div class="logo logo-mobile"></div>
+      <form (ngSubmit)="onSignUp(t)" #t="ngForm" class="form-group-container">
         <div class="form-group" *ngIf="showInput">
           <label class="form-control-placeholder" for="fullName"
             >Full Name</label
