@@ -52,7 +52,10 @@
   How it works appears here
 </div>
 <!-- don't remove this wrapper class otherwise carousel wont work -->
-<div class="wrapper" style="margin-top: 5vh; padding-left: 5vw;">
+<div
+  class="wrapper"
+  style="margin-top: 5vh; padding-left: 5vw; max-width: 1100px;"
+>
   <owl-carousel-o [options]="customOptions" style="width: 70%; margin: auto;">
     <ng-container *ngFor="let slide of slidesStore">
       <ng-template carouselSlide>

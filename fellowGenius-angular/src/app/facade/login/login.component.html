@@ -1,46 +1,74 @@
 <body>
-  <div *ngIf="isLoading" style=
-  "width: max-content;
-  margin: auto;
-  padding-top: 35vh;">
+  <div
+    *ngIf="isLoading"
+    style="width: max-content; margin: auto; padding-top: 35vh;"
+  >
     <app-loading></app-loading>
   </div>
 
   <div class="login-container" [class]="hideContainer">
- 
     <div class="login-header">
-  
-    <div class="header-container"><span>Login</span> 
-     <span class="info-class">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</span>
-    </div> 
-    <div class="logo"></div>
-    <span class="material-icons close" (click)="toFacade()" style="cursor: pointer;">
-      close
+      <div class="header-container">
+        <span>Login</span>
+        <span class="info-class"
+          >Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt.</span
+        >
+      </div>
+      <div class="logo"></div>
+      <span
+        class="material-icons close"
+        (click)="toFacade()"
+        style="cursor: pointer;"
+      >
+        close
       </span>
     </div>
     <div class="login-parameter-container">
       <form (ngSubmit)="onLogin(l)" #l="ngForm">
         <div class="form-group">
-          <label class="form-control-placeholder" for="email">Email Address</label>
-          <input type="email" id="email" class="form-control" ngModel name="email" required email #email="ngModel"
-            maxlength="64" />
+          <label class="form-control-placeholder" for="email"
+            >Email Address</label
+          >
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            ngModel
+            name="email"
+            required
+            email
+            #email="ngModel"
+            maxlength="64"
+          />
         </div>
         <!-- <span class="error-information">incorrect email or password !</span> -->
-        <p style="color: red;" *ngIf="incorrectLoginDetails">{{errorText}}</p>
+        <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
         <!-- <div class="form-group">
                       <input type="password" id="password" class="form-control" required>
                       <label class="form-control-placeholder" for="password">Password</label>
                   </div> -->
         <div class="form-group">
-          <label class="form-control-placeholder" for="password">Password</label>
-          <input type="password" id="password" class="form-control" name="password" ngModel
-            [type]="hide ? 'password' : 'text'" required #password="ngModel" maxlength="40" />
-         
-         <!--<div class="showPassword">
+          <label class="form-control-placeholder" for="password"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            name="password"
+            ngModel
+            [type]="hide ? 'password' : 'text'"
+            required
+            #password="ngModel"
+            maxlength="40"
+          />
+
+          <!--<div class="showPassword">
             <i class="material-icons cursor" (click)="hide = !hide" style="color: #ccc;">
               {{ hide ? "visibility_off" : "visibility" }}
             </i>
-          </div>--> 
+          </div>-->
         </div>
         <div class="form-group button-container">
           <a href="#" class="forgot-password">
@@ -55,17 +83,18 @@
         <div class="login-instead">
           <span>Login instead</span>
 
-
-          <button class="btn btn-secondary" 
-          (click)="prepareLoginButton()" #googleSignUp>
-          <i class="fa fa-google social-icons"></i>
-          <p style="display: inline; font-size: larger;">
-            Login Using Google
-          </p>
-        </button>
-          <span>
-            New to FellowGenius? </span>
-            <a href="" class="forgot-password" (click)="toSignUp()">Sign up</a>
+          <button
+            class="btn btn-secondary"
+            (click)="prepareLoginButton()"
+            #googleSignUp
+          >
+            <i class="fa fa-google social-icons"></i>
+            <p style="display: inline; font-size: larger;">
+              Login Using Google
+            </p>
+          </button>
+          <span> New to FellowGenius? </span>
+          <a routerLink="/signUp" class="forgot-password">Sign up</a>
         </div>
       </form>
     </div>
