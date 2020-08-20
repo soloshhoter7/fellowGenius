@@ -83,26 +83,42 @@
   top: 10px!important;
   right: 10px!important;
 }
+.signup-container .logo 
+{
+display: inline-block!important;
+}
 
 .signup-container .signup-header 
 
     .signup-container  .signup-header .hide
     {
-      display:inline-block;
+      display:inline-block!important;
     }
     .signup-parameter-container
     {
       width:98%!important;
     }
-    .signup-parameter-container .logo
+    .signup-parameter-container .logo-mobile
     {
       display: none!important;
     }
 
+    .signup-container .signup-parameter-container .form-group-container
+    {
+      margin-left:-10px;
+    }
+
     .signup-container .signup-parameter-container .form-group
     {
-      width:100%!important;
+      width:98%!important;
     }
+
+    .bg-signup
+    {
+      background:transparent!important;
+    }
+
+
 
 
   }

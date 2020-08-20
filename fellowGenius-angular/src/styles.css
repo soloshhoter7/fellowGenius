@@ -19,11 +19,11 @@ body {
 }
 
 .hide {
-  display: none;
+  display: none!important;
 }
 
 .showin {
-  display: inline-block;
+  display: inline-block!important;
 }
 
 input:focus,
