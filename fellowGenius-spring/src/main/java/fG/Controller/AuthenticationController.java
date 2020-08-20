@@ -72,8 +72,9 @@ public class AuthenticationController {
 			String password =  encoder.encode(authenticationRequest.getPassword());
             System.out.println(password);
 	        final String userId = userDetailsService.validateUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-	        final String role = userDetailsService.fetchUserRole(userId);
+	        
 	        if(userId!=null) {
+	        	final String role = userDetailsService.fetchUserRole(userId);
 	    		final String jwt = jwtTokenUtil.generateToken(userId,role);
 	    		System.out.println(new AuthenticationResponse(jwt));
 	    		return ResponseEntity.ok(new AuthenticationResponse(jwt));
