@@ -1,83 +1,50 @@
 <div class="header">
-  <div class="logo"></div>
-  <div class="header-buttons-container">
-    <button type="button" class="btn btn-secondary showin" (click)="onSignUp()">
-      Sign Up
-    </button>
-    <button type="button" class="btn btn-primary" (click)="toLoginPage()">
-      Login
-    </button>
-  </div>
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNavAltMarkup"
-      aria-controls="navbarNavAltMarkup"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Home</a>
-        <a class="nav-item nav-link" href="#">Resources</a>
-        <a class="nav-item nav-link" href="#">Pricing</a>
-        <a class="nav-item nav-link" href="#">How it works</a>
-        <a class="nav-item nav-link hide" routerLink="/signUp">Sign Up</a>
+    <div class="logo"></div>
+    <div class="header-buttons-container">
+      <button type="button" class="btn btn-secondary showin" (click)="onSignUp()">
+        Sign Up
+      </button>
+      <button type="button" class="btn btn-primary" (click)="toLoginPage()">
+        Login
+      </button>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="#">Home</a>
+          <a class="nav-item nav-link" href="#">Resources</a>
+          <a class="nav-item nav-link" href="#">Pricing</a>
+          <a class="nav-item nav-link" href="#">How it works</a>
+          <a class="nav-item nav-link hide" routerLink="/signUp">Sign Up</a>
+        </div>
       </div>
-    </div>
-  </nav>
-</div>
-
-<div class="search-container">
-  <div class="search-bg-left"></div>
-  <div class="search-box-container">
-    <div class="input-group">
-      <span class="input-group-header">Find Your Personal Tutor</span>
-      <form>
-        <button class="searchButton" (click)="displaySelectedSubjects()">
-          <i class="fa fa-search" aria-hidden="true"></i>
-        </button>
-        <input 
-         type="search"
-         name="search" 
-         placeholder="Search by Subjects" 
-         [formControl]="myControl"
-         [matAutocomplete]="auto"
-         [(ngModel)]="selectedSubject"/>
-        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-autocomplete>
-      </form>
-     
-      <!-- <span class="input-group-btn">
-        <button class="btn btn-default" type="button">
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        </button>
-      </span>
-       -->
-    </div>
-    <!-- /input-group -->
+    </nav>
   </div>
-</div>
-<div class="how-it-works-container">
-  How it works appears here
-</div>
-<!-- don't remove this wrapper class otherwise carousel wont work -->
-<div
-  class="wrapper"
-  style="margin-top: 5vh; padding-left: 5vw; max-width: 1100px;"
->
-  <owl-carousel-o [options]="customOptions" style="width: 70%; margin: auto;">
-    <ng-container *ngFor="let slide of slidesStore">
-      <ng-template carouselSlide>
-        <div class="why_fg_container">
+  <div style="padding: 20px;background-color: purple;color: white;">
+    <h1>get your first session free banner </h1>
+  </div>
+  <div>
+    <div class="row" style="margin: 0;background-color: cornflowerblue;padding: 20px;">
+      <h2>place mobile filters html here</h2>
+    </div>
+    <div class="row" style="margin: 0;padding: 0;">
+      <div class="col-md-3" style="background-color: rebeccapurple; color: white;padding: 20px;">
+        <h2>place web filters html here</h2>
+      </div>
+      <div class="col-md-9" style="background-color: black;">
+        <div class="why_fg_container" style="width: max-content;" *ngFor="let result of searchResults">
           <div class="search-result-card">
             <div
               class="result-profile-pic"
@@ -118,7 +85,6 @@
             </div>
           </div>
         </div>
-      </ng-template>
-    </ng-container>
-  </owl-carousel-o>
-</div>
+      </div>
+    </div>
+  </div>
