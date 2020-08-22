@@ -33,7 +33,8 @@ export class FacadeComponent implements OnInit {
 		'History',
 		'Political Science',
 		'Geography',
-		'Physics'
+		'Physics',
+		'Chemistry'
 	];
 	filteredOptions: Observable<string[]>;
 

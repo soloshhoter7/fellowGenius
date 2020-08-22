@@ -1,9 +1,9 @@
-<body style="padding-top: 20px;height: 100%; background-color: #f9fafc;">
-    <!-- after profile Completed  -->
+<!-- <body style="padding-top: 20px;height: 100%; background-color: #f9fafc;">
+    
     <div class="container ">
         <div class="row">
             <div class="col-md-8">
-                <!-- for profile picture -->
+    
 
                 <div class="row Box">
                     <button class="editIconButton" (click)="tutProfileDetailsEdit()" title="Edit"><i class="far fa-edit editIcon"></i></button>
@@ -82,5 +82,114 @@
             <div class="col-md-1"></div>
             <div class="col-md-3" style="height: fit-content;padding: 20px; text-align: center;"></div>
         </div>
+    </div>
+</body> -->
+
+<body>
+
+    <div id="sidenav" class="sidenav">
+
+        <a href="#">DashBoard</a>
+        <a href="#">Experts</a>
+        <a href="#">Schedule</a>
+        <a href="#">Resources</a>
+    </div>
+
+    <div class="signup-container" id="mainContent">
+        <div class="header" id="headerContent">
+            <div class="logo" (click)="navAction(index)"></div>
+        </div>
+        <!-- <span class="navbar-toggler-icon" style="background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e); font-size:25px;cursor:pointer" (click)="openNav()">&#9776;</span> -->
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="background-image: url(../../../assets/icons/ham.jpg); background-size: 40px 30px;">
+        <span class="navbar-toggler-icon" (click)="openNav()"></span>
+      </button> -->
+        <div class="row" style="margin-bottom: 2vh;"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <p style="color: #e3165b; font-size: x-large;"><b>PROFILE</b></p>
+                    <img style="width:8vw; height:8vw; border-radius: 100%; border: 1px solid black" src="../../../assets/images/ajayVerma.jpg">
+                    <p style="text-align: center;width: 8vw;
+                    text-decoration: underline;"><a href="#">Upload</a></p>
+                </div>
+                <div class="offset-md-6 col-md-3" style="text-align: end;">
+                    <button class="btn" style="margin-right: 2vw; text-decoration: underline;">Cancel</button>
+                    <button type=button class="btn" style=" 
+                    padding: 1vh 2vw;
+                    background-color: purple;
+                    color: white;
+                    font-size: small">Save</button>
+                    <!-- padding-top: 1vh;
+                    padding-bottom: 1vh;
+                    padding-right: 2vw;
+                    padding-left: 2vw; -->
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-7 leftBox">
+                    <!-- <div class="logo"></div> -->
+                    <!-- <form (ngSubmit)="onSignUp(t)" #t="ngForm"> -->
+                    <div class="form-group">
+                        <label class="form-control-placeholder" for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" autofocus />
+
+                        <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-placeholder " for="email">Email Address</label>
+                        <input type="email" id="email" name="email" ngModel class="form-control input-fields" required email #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
+                        />
+                        <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-placeholder" for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" required #dob="ngModel" />
+                        <span *ngIf="!dob.valid && dob.touched" class="help-block">Invalid dob</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-placeholder" for="contact">Mobile Number</label>
+                        <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" required [pattern]="mobNumberPattern" #contact="ngModel" />
+
+                        <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control-placeholder" for="role">Select</label>
+                        <select class="form-control input-fields" ngModel name="role" required>
+                            <option>A</option>
+                            <option>B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-placeholder" for="profile">Add your LinkedIn Profile</label>
+                        <input type="text" id="profile" class="form-control input-fields" ngModel name="profile" required [pattern]="mobNumberPattern" #profile="ngModel" />
+                    </div>
+
+
+
+                    <!-- </form> -->
+                </div>
+                <!-- Learning Areas -->
+                <div class="col-md-5">
+                    <label class="form-control-placeholder" for="learning">Learning Areas</label>
+                    <div class="learningArea-fields" *ngFor="let size of learningAreas">
+                        <input type="text" name="learning" class="form-control" ngModel #learning="ngModel" style="width: 30vw;">
+                    </div>
+                    <div style="text-align: center; width: 30vw;">
+
+                        <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;">+</button>
+                        <button [disabled]="disableSub" type="button" class="btn btn-danger btn-circle btn-sm" (click)="subtractLearningArea()" style="font-size: inherit;">-</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
     </div>
 </body>
