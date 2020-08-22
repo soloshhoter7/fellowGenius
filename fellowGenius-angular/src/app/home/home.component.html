@@ -1,4 +1,4 @@
-<body>
+<!-- <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand berlinText" routerLink="/home">fellowGenius</a>
     <button
@@ -160,4 +160,106 @@
     </div>
   </nav>
   <router-outlet></router-outlet>
+</body> -->
+<body>
+
+  <div id="sidenav" class="sidenav">
+    <span
+                style="font-size: larger; font-weight: 300;color: white;"
+                *ngIf="loginType == 'Learner'"
+                >{{ studentProfile.fullName }}</span
+              >
+              <span
+                style="font-size: larger; font-weight: 300;color:white"
+                *ngIf="loginType == 'Expert'"
+                >{{ tutorProfile.fullName }}</span
+              >
+      <ul class="navbar-nav" style="font-size: large;">
+        <li>
+          <a
+          routerLink="/home/profile"
+          *ngIf="loginType == 'Expert'"
+          >
+          Profile</a>
+        </li>
+        <li>
+          <a
+          routerLink="/home/studentProfile"
+          *ngIf="loginType == 'Learner'"
+          >
+          Profile</a>
+        </li>
+        <li class="nav-item" *ngIf="loginType == 'Learner'">
+          <a
+            class="nav-link"
+            routerLink="/home/studentDashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Dashboard</a
+          >
+        </li>
+
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
+          <a
+            class="nav-link"
+            routerLink="/home/tutorDashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Dashboard</a
+          >
+        </li>
+
+        <li class="nav-item" *ngIf="loginType == 'Learner'">
+          <a
+            class="nav-link"
+            routerLink="/home/findTutor"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Find a tutor</a
+          >
+        </li>
+
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
+          <a
+            class="nav-link"
+            routerLink="studentBookings"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Bookings</a
+          >
+        </li>
+
+        <li class="nav-item" *ngIf="loginType == 'Learner'">
+          <a
+            class="nav-link"
+            routerLink="bookings"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Bookings</a
+          >
+        </li>
+        <li class="nav-item" *ngIf="loginType == 'Expert'">
+          <a
+            class="nav-link"
+            routerLink="tutorSchedule"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Schedule</a
+          >
+        </li>
+        <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
+              
+      </ul>
+  </div>
+
+  <div class="signup-container" id="mainContent">
+      <div class="header" id="headerContent">
+          <div class="logo" (click)="navAction(index)"></div>
+      </div>
+      <router-outlet></router-outlet>
+      <!-- <span class="navbar-toggler-icon" style="background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e); font-size:25px;cursor:pointer" (click)="openNav()">&#9776;</span> -->
+      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="background-image: url(../../../assets/icons/ham.jpg); background-size: 40px 30px;">
+      <span class="navbar-toggler-icon" (click)="openNav()"></span>
+    </button> -->
+  </div>
 </body>

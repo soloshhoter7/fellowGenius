@@ -87,22 +87,6 @@
 
 <body>
 
-    <div id="sidenav" class="sidenav">
-
-        <a href="#">DashBoard</a>
-        <a href="#">Experts</a>
-        <a href="#">Schedule</a>
-        <a href="#">Resources</a>
-    </div>
-
-    <div class="signup-container" id="mainContent">
-        <div class="header" id="headerContent">
-            <div class="logo" (click)="navAction(index)"></div>
-        </div>
-        <!-- <span class="navbar-toggler-icon" style="background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e); font-size:25px;cursor:pointer" (click)="openNav()">&#9776;</span> -->
-        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="background-image: url(../../../assets/icons/ham.jpg); background-size: 40px 30px;">
-        <span class="navbar-toggler-icon" (click)="openNav()"></span>
-      </button> -->
         <div class="row" style="margin-bottom: 2vh;"></div>
         <div class="container">
             <div class="row">
@@ -184,12 +168,7 @@
                         <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;">+</button>
                         <button [disabled]="disableSub" type="button" class="btn btn-danger btn-circle btn-sm" (click)="subtractLearningArea()" style="font-size: inherit;">-</button>
                     </div>
-
                 </div>
-
-
             </div>
         </div>
-
-    </div>
 </body>
