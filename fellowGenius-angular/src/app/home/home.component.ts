@@ -177,11 +177,13 @@ export class HomeComponent implements OnInit {
 	openNav() {
 		document.getElementById('sidenav').style.width = '230px';
 		document.getElementById('mainContent').style.marginLeft = '230px';
+
 	}
 
 	closeNav() {
 		document.getElementById('sidenav').style.width = '0';
 		document.getElementById('mainContent').style.marginLeft = '0';
+
 	}
 
 	handleRefresh() {

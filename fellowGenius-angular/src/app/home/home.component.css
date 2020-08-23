@@ -176,6 +176,7 @@ label {
 	overflow-x: hidden;
 	transition: 0.5s;
 	padding-top: 60px;
+
 }
 
 .sidenav a {
@@ -197,6 +198,7 @@ label {
 	right: 25px;
 	font-size: 36px;
 	margin-left: 50px;
+
 }
 
 #mainContent {
@@ -214,7 +216,7 @@ label {
 	height: 60px;
 	background: #ffffff;
 	border-bottom: 1px solid #b1a5a57a;
-	width: 100vw;
+
 	margin-left: -2vw;
 	display: block;
 	float: left;
