@@ -121,4 +121,37 @@ display: inline-block!important;
 
 
 
+
+
+.search-result-container
+{
+  position: absolute;
+    top: 230px;
+    display: inline-block;
+    float: left;
+}
+  .search-result-container .filter-container
+  {
+    flex:1!important;
+    width:100%!important;
+
   }
+
+  .search-result-container .filter-container .filter-category .filter-category-list li
+  {
+    background-color:#E30084;
+    padding:5px;
+    margin:5px;
+    width:150px;
+    border-radius:4px;
+    border:1px solid #E30084;
+    color:#FFFFFF;
+
+  }
+
+  .search-result-container .filter-container .filter-category .filter-category-list li .filters-label
+  {
+    color:#FFFFFF;
+  }
+
+    }
