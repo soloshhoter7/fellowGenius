@@ -734,3 +734,70 @@ textarea:focus {
   float: left;
   text-transform: uppercase;
 }
+
+.dashboard-container
+{
+  padding:20px;
+  float:left;
+  display:block;
+  width:100%;
+
+}
+
+.dashboard-container .widget
+{
+  background: #FFFFFF;
+border: 1px solid #3F023F;
+box-shadow: 0 2px 34px 0 rgba(0,0,0,0.09);
+border-radius: 12px;
+width:400px;
+min-height:250px;
+padding:10px;
+position:relative;
+
+    display: inline-block;
+    float: left;
+    margin-left: 30px;
+}
+
+.dashboard-container .widget .widget-header
+{
+  color:#890081;
+  font-weight:700;
+  font-size:13px;
+  text-transform:uppercase;
+}
+
+.dashboard-container .widget .widget-timings
+{
+  font-size:11px;
+  color:#E7001A;
+  position:absolute;
+  top:12px;
+  right:10px;
+}
+
+.dashboard-container .widget .widget-infomration
+{
+
+}
+
+.dashboard-container .widget .widget-footer
+{
+  position:absolute;
+  bottom:10px;
+  right:10px;
+}
+
+.dashboard-container .widget .widget-footer a
+{
+  color:#460041;
+  font-size:11px;
+  text-decoration:underline;
+}
+
+.dashboard-container .widget .widget-footer a:hover
+{
+
+  text-decoration:none;
+}
