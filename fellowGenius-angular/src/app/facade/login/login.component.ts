@@ -191,6 +191,7 @@ export class LoginComponent implements OnInit {
 	// ------------------------------------------------------------------------------------------------------------------
 	//google login
 	prepareLoginButton() {
+		this.incorrectLoginDetails = false;
 		this.auth2.attachClickHandler(
 			this.googleSignUp.nativeElement,
 			{},
@@ -200,77 +201,62 @@ export class LoginComponent implements OnInit {
 				this.socialLogin.fullName = profile.getName();
 				this.socialLogin.email = profile.getEmail();
 				this.socialService.setSocialDetails(this.socialLogin);
-				this.tutorLoginDetails.email = this.socialLogin.email;
-				this.tutorLoginDetails.password = this.socialLogin.id;
-				this.httpService.checkTutorLogin(this.tutorLoginDetails).subscribe((res) => {
+				console.log(this.socialLogin);
+				this.zone.run(() => {
 					this.isLoading = true;
 					this.hideContainer = 'hideBlock';
-					if (res['response'] != 'false') {
-						this.cookieService.set('token', res['response']);
-
-						this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
-						this.userId = this.cookieService.get('userId');
-						this.httpService.getTutorDetails(this.userId).subscribe((res) => {
-							this.tutorProfile = res;
-							this.tutorService.setTutorDetails(this.tutorProfile);
-							this.httpService.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
-								this.tutorProfileDetails = res;
-								this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
-								this.httpService.getScheduleData(this.tutorProfile.tid).subscribe((res) => {
-									this.tutorAvailabilitySchedule = res;
-									this.tutorService.setPersonalAvailabilitySchedule(this.tutorAvailabilitySchedule);
-									this.isLoading = false;
-									this.zone.run(() => {
-										this.loginDetailsService.setTrType('login');
+					this.loginModel.email = this.socialLogin.email;
+					this.loginModel.password = this.socialLogin.id;
+					this.httpService.checkLogin(this.loginModel).subscribe((res) => {
+						console.log(res);
+						if (res['response'] != 'false') {
+							this.cookieService.set('token', res['response']);
+							this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
+							var role = JwtDecode(res['response'])['ROLE'];
+							this.userId = this.cookieService.get('userId');
+							if (role == 'Learner') {
+								this.httpService.getStudentDetails(this.userId).subscribe((res) => {
+									this.studentProfile = res;
+									this.studentService.setStudentProfileDetails(this.studentProfile);
+									this.loginDetailsService.setTrType('login');
+									this.loginDetailsService.setLoginType('Learner');
+									this.httpService.getStudentSchedule(this.studentProfile.sid).subscribe((res) => {
+										this.studentService.setStudentBookings(res);
+										this.isLoading = false;
 										this.router.navigate([ 'home' ]);
 									});
 								});
-							});
-						});
-					} else {
-						this.zone.run(() => {
-							this.incorrectLoginDetails = true;
+							} else if (role == 'Expert') {
+								this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+									console.log(res);
+									this.tutorProfile = res;
+									this.tutorService.setTutorDetails(this.tutorProfile);
+									this.httpService.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
+										console.log(res);
+										this.tutorProfileDetails = res;
+										this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+										this.httpService.getScheduleData(this.tutorProfile.tid).subscribe((res) => {
+											console.log(res);
+											this.tutorAvailabilitySchedule = res;
+											this.tutorService.setPersonalAvailabilitySchedule(
+												this.tutorAvailabilitySchedule
+											);
+											this.loginDetailsService.setTrType('login');
+											this.loginDetailsService.setLoginType('Expert');
+											this.isLoading = false;
+											this.router.navigate([ '/home' ]);
+										});
+									});
+								});
+							}
+						} else {
+							this.errorText = 'Incorrect email or password';
 							this.isLoading = false;
 							this.hideContainer = '';
-							this.errorText = 'Not a registered user. Sign Up first';
-						});
-					}
+							this.incorrectLoginDetails = true;
+						}
+					});
 				});
-
-				// this.httpService.checkSocialLogin(this.socialLogin.email).subscribe((res) => {
-				// 	this.isLoading = true;
-				// 	this.hideContainer = 'hideBlock';
-				// 	if (res == true) {
-				// 		var tutLoginModel = new tutorLoginModel();
-				// 		this.socialService.setSocialDetails(this.socialLogin);
-				// 		tutLoginModel.email = this.socialLogin.email;
-				// 		this.httpService.getTutorDetails(tutLoginModel).subscribe((res) => {
-				// 			this.tutorService.setTutorDetails(res);
-				// 			this.httpService.getTutorProfileDetails(res.tid).subscribe((res) => {
-				// 				this.tutorService.setTutorProfileDetails(res);
-				// 				this.httpService
-				// 					.getScheduleData(this.tutorService.getTutorDetials().tid)
-				// 					.subscribe((res) => {
-				// 						this.tutorAvailabilitySchedule = res;
-				// 						this.tutorService.setPersonalAvailabilitySchedule(
-				// 							this.tutorAvailabilitySchedule
-				// 						);
-				// 						this.zone.run(() => {
-				// 							this.loginDetailsService.setTrType('login');
-				// 							this.router.navigate([ 'home' ]);
-				// 						});
-				// 					});
-				// 			});
-				// 		});
-				// 	} else if (res == false) {
-				// 		this.zone.run(() => {
-				// 			this.incorrectLoginDetails = true;
-				// 			this.isLoading = false;
-				// 			this.hideContainer = '';
-				// 			this.errorText = 'Not a registered user. Sign Up first';
-				// 		});
-				// 	}
-				// });
 			},
 			(error) => {
 				// alert(JSON.stringify(error, undefined, 2));

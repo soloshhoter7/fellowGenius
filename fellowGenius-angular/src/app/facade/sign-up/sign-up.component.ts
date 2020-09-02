@@ -69,6 +69,7 @@ export class SignUpComponent implements OnInit {
 	minDate: string;
 	userId;
 	auth2: any;
+	role;
 	// --------------- models ---------------------------------
 	registrationModel = new registrationModel();
 	loginModel = new loginModel();
@@ -98,7 +99,11 @@ export class SignUpComponent implements OnInit {
 	openThankYouPage() {
 		const dialogConfig = new MatDialogConfig();
 		dialogConfig.disableClose = true;
-		this.dialogRef.open(WelcomeComponent, dialogConfig);
+		const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
+		dialogRef.afterClosed().subscribe((data) => {
+			this.role = data;
+			this.saveSocialLogin();
+		});
 	}
 	openTermsAndConditions() {
 		this.dialogRef.open(TermsAndConditionsComponent, {
@@ -201,6 +206,7 @@ export class SignUpComponent implements OnInit {
 				this.zone.run(() => {
 					this.openThankYouPage();
 				});
+
 				// this.httpClient.saveSocialLogin(this.socialLogin).subscribe((res) => {
 				// 	if (res) {
 				// 		var loginModel = new tutorLoginModel();
@@ -272,6 +278,55 @@ export class SignUpComponent implements OnInit {
 				console.log('google pop up closed by the user');
 			}
 		);
+	}
+
+	saveSocialLogin() {
+		this.registrationModel.fullName = this.socialLogin.fullName;
+		this.registrationModel.email = this.socialLogin.email;
+		this.registrationModel.password = this.socialLogin.id;
+		this.registrationModel.role = this.role;
+		this.httpClient.registerUser(this.registrationModel).subscribe((res) => {
+			if (res == true) {
+				this.loginModel.email = this.registrationModel.email;
+				this.loginModel.password = this.registrationModel.password;
+				// for logging in once registration is done
+				this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
+					this.cookieService.set('token', res['response']);
+					this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
+					this.userId = this.cookieService.get('userId');
+
+					if (this.registrationModel.role == 'Learner') {
+						this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
+							this.studentProfile = res;
+							this.studentService.setStudentProfileDetails(this.studentProfile);
+							this.loginService.setLoginType('Learner');
+							this.loginService.setTrType('signUp');
+							this.router.navigate([ 'home' ]);
+						});
+					} else if (this.registrationModel.role == 'Expert') {
+						this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
+							this.tutorProfile = res;
+							this.tutorService.setTutorDetails(this.tutorProfile);
+
+							this.httpClient.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
+								this.tutorService.setTutorProfileDetails(res);
+								this.httpClient.getScheduleData(this.tutorProfile.tid).subscribe((res) => {
+									this.tutorAvailabilitySchedule = res;
+									this.tutorService.setPersonalAvailabilitySchedule(this.tutorAvailabilitySchedule);
+									this.loginService.setLoginType('Expert');
+									this.loginService.setTrType('signUp');
+									this.router.navigate([ 'home' ]);
+								});
+							});
+						});
+					}
+				});
+			} else if (res == false) {
+				this.snackBar.open('registration not successful ! email already exists !', 'close', this.config);
+				this.incorrectLoginDetails = true;
+				this.dialogRef.closeAll();
+			}
+		});
 	}
 	googleSDK() {
 		window['googleSDKLoaded'] = () => {

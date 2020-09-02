@@ -16,6 +16,7 @@ import { ThemePalette } from '@angular/material/core';
 import { LocationStrategy } from '@angular/common';
 import { SocialAuthService } from 'angularx-social-login';
 import { CookieService } from 'ngx-cookie-service';
+import { HostListener } from '@angular/core';
 import * as jwt_decode from 'jwt-decode';
 @Component({
 	selector: 'app-home',
@@ -34,6 +35,9 @@ export class HomeComponent implements OnInit {
 	studentLoginDetails = new StudentLoginModel();
 	RegisterForm: NgForm;
 	userId;
+	overlay;
+	screenHeight: number;
+	screenWidth: number;
 	constructor(
 		public router: Router,
 		public meetingService: MeetingService,
@@ -47,11 +51,22 @@ export class HomeComponent implements OnInit {
 		private locationStrategy: LocationStrategy,
 		private authService: SocialAuthService,
 		private cookieService: CookieService
-	) {}
+	) {
+		this.getScreenSize();
+	}
 	index: Number;
+	@HostListener('window:resize', [ '$event' ])
+	getScreenSize(event?) {
+		this.screenHeight = window.innerHeight;
+		this.screenWidth = window.innerWidth;
+		// console.log(this.screenHeight, this.screenWidth);
+	}
 	ngOnInit() {
 		this.index = 1;
-		this.openNav();
+		if (this.screenWidth >= 450) {
+			console.log('executed');
+			this.openNav();
+		}
 		if (this.isTokenValid()) {
 			console.log('entered!');
 			this.loginType = this.loginService.getLoginType();
@@ -93,7 +108,31 @@ export class HomeComponent implements OnInit {
 			this.router.navigate([ 'facade' ]);
 		}
 	}
+	openNav() {
+		if (this.screenWidth >= 450) {
+			document.getElementById('sidenav').style.width = '230px';
+			document.getElementById('mainContent').style.marginLeft = '230px';
+			this.overlay = '';
+		} else {
+			document.getElementById('sidenav').style.width = '300px';
+			this.overlay = 'overlay';
+		}
+	}
 
+	closeNav() {
+		document.getElementById('sidenav').style.width = '0';
+		document.getElementById('mainContent').style.marginLeft = '0';
+		this.overlay = '';
+	}
+	navAction(index) {
+		if (index % 2 == 1) {
+			this.index = index + 1;
+			this.closeNav();
+		} else {
+			this.index = index + 1;
+			this.openNav();
+		}
+	}
 	isTokenValid() {
 		if (this.cookieService.get('token') && !this.isTokenExpired()) {
 			return true;
@@ -164,27 +203,6 @@ export class HomeComponent implements OnInit {
 	// 	this.authService.signOut();
 	// 	this.router.navigate([ '#' ]);
 	// }
-
-	navAction(index) {
-		if (index % 2 == 1) {
-			this.index = index + 1;
-			this.closeNav();
-		} else {
-			this.index = index + 1;
-			this.openNav();
-		}
-	}
-	openNav() {
-		document.getElementById('sidenav').style.width = '230px';
-		document.getElementById('mainContent').style.marginLeft = '230px';
-
-	}
-
-	closeNav() {
-		document.getElementById('sidenav').style.width = '0';
-		document.getElementById('mainContent').style.marginLeft = '0';
-
-	}
 
 	handleRefresh() {
 		this.userId = this.cookieService.get('userId');

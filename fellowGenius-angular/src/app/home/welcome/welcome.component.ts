@@ -33,33 +33,30 @@ export class WelcomeComponent implements OnInit {
 	login = false;
 	socialLogin = false;
 	socialLoginName;
-	role = 'chooseRole';
+	role = 'learner';
 	ngOnInit() {
 		if (this.loginService.getLoginType()) {
 			this.loginType = this.loginService.getLoginType();
 			this.login = true;
-			console.log('login');
 			if (this.loginType == 'Learner') {
 				this.studentProfile = this.studentService.getStudentProfileDetails();
 			} else if (this.loginType == 'Expert') {
 				this.tutorProfile = this.tutorService.getTutorDetials();
 			}
 		} else {
-			console.log('this is the case');
 			this.socialLogin = true;
 			this.socialLoginName = this.socialService.getSocialDetails().fullName;
 		}
 	}
 	chooseRole(role: any) {
-		console.log(this.role);
 		this.role = role;
 	}
 	continue() {
 		this.dialog.closeAll();
 	}
-	toDashboard() {
-		console.log(this.role);
-		if (this.role == 'learner' || this.role == 'expert') {
+	toDashboard(form: any) {
+		this.role = form.value.role;
+		if (this.role == 'Learner' || this.role == 'Expert') {
 			this.dialogRef.close(this.role);
 		}
 	}

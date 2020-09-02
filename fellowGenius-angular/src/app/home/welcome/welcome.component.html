@@ -13,19 +13,19 @@
       <span class="user-name">Hey, {{socialLoginName}}</span>
     </span>
     
-    <div class="btn-group" role="group" aria-label="Basic example" *ngIf="!loginType">
+    <!-- <div class="btn-group" role="group" aria-label="Basic example" *ngIf="!loginType">
       <select [(ngModel)]="role" >
         <option [value]="chooseRole">choose role</option>
         <option [value]="learner">Learner</option>
         <option [value]="expert">Expert</option>
       </select>
-      <!-- <form>
+      <form>
         <button type="button" class="btn btn-secondary" value="expert" (click)="chooseRole()">Expert</button>
         <button type="button" class="btn btn-secondary" value="learner" (click)="chooseRole('learner')">Learner</button>
       </form>
-    -->
-   
-    </div>
+    </div> -->
+
+    
     <div class="thankyou-container">
       <span class="greet">Thank you</span>
       <span *ngIf="loginType"
@@ -36,13 +36,27 @@
         >Your regisration is almost complete & Please get a head start by
         choosing your role</span
       >
+      <div style="margin-top:10px" *ngIf="!loginType">
+        <form (ngSubmit)="toDashboard(t)" #t="ngForm">
+          <div  class="form-group">
+            <label class="form-control-placeholder" for="role">Choose Role</label>
+            <select class="form-control"  name="role" ngModel required>
+              <option>Learner</option>
+              <option>Expert</option>
+            </select>
+          </div>
+          <!-- <button type="submit">Go to Dashboard</button> -->
+        <div  *ngIf="!loginType">
+          <button type="button" class="btn btn-primary" type="submit" >Continue</button>
+        </div>
+      </form>
+      </div>
     </div>
+  
     <div class="button-container" *ngIf="loginType">
-      <button type="button" class="btn btn-primary">Go to Dashboard</button>
+      <button type="button" class="btn btn-primary" (click)="continue()">Go to Dashboard</button>
     </div>
-    <div class="button-container" *ngIf="!loginType">
-      <button type="button" class="btn btn-primary" (click)="toDashboard()">Go to Dashboard</button>
-    </div>
+    
   </div>
 
   <!-- <div class="row">

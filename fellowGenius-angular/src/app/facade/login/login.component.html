@@ -24,7 +24,9 @@
         close
       </span>
     </div>
+    <!-- <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p> -->
     <div class="login-parameter-container">
+      <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
       <form (ngSubmit)="onLogin(l)" #l="ngForm">
         <div class="form-group">
           <label class="form-control-placeholder" for="email"
@@ -43,7 +45,7 @@
           />
         </div>
         <!-- <span class="error-information">incorrect email or password !</span> -->
-        <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
+ 
         <!-- <div class="form-group">
                       <input type="password" id="password" class="form-control" required>
                       <label class="form-control-placeholder" for="password">Password</label>
