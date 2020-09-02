@@ -769,7 +769,7 @@ textarea:focus {
     border: 1px solid #3F023F;
     box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.09);
     border-radius: 12px;
-    width: 600px;
+    width: 400px;
     min-height: 250px;
     padding: 10px;
     position: relative;
@@ -813,7 +813,7 @@ textarea:focus {
     height: 150px;
     display: inline-block;
     float: left;
-    width: 250px;
+    width: 180px;
 }
 
 .dashboard-container .widget .widget-information .subject-description span {
@@ -860,7 +860,7 @@ textarea:focus {
 }
 
 .dashboard-container .widget .widget-information .stars-inner {
-    left: 450px;
+    left: 250px;
     position: absolute;
     top: 10px;
     width: 150px;
