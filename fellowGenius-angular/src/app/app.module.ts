@@ -67,6 +67,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { TestComponent } from './test/test.component';
 import { Ng2OwlCarouselComponent } from 'ng2-owl-carousel2';
 import { SearchResultsComponent } from './search-results/search-results.component';
+import { ThankYouComponent } from './facade/thank-you/thank-you.component';
 export const appRoutes: Routes = [
 	{
 		path: 'home',
@@ -125,7 +126,8 @@ export const appRoutes: Routes = [
 		LoaderComponent,
 		TestComponent,
 		Ng2OwlCarouselComponent,
-		SearchResultsComponent
+		SearchResultsComponent,
+		ThankYouComponent
 	],
 	imports: [
 		NgxMaterialTimepickerModule,
@@ -155,8 +157,10 @@ export const appRoutes: Routes = [
 		MatSlideToggleModule,
 		LayoutModule,
 		SocialLoginModule,
-		CarouselModule
+		CarouselModule,
+		MatInputModule
 	],
+	entryComponents: [ WelcomeComponent ],
 	providers: [
 		CookieService,
 		BasicAuthHttpInterceptorService,

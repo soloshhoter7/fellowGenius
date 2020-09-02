@@ -20,7 +20,7 @@
 	height: 90px;
 	display: inline-block;
 	float: right;
-	margin-right:70px;
+	margin-right: 70px;
 }
 
 .signup-container .signup-header {
@@ -83,4 +83,8 @@
 }
 input.ng-invalid.ng-touched {
 	border: 1px solid red;
+}
+
+.hideBlock {
+	display: none;
 }

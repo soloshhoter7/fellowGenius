@@ -1,6 +1,6 @@
 <body>
   <div class="bg-thankyou-container">
-    <span class="user-name-container" style="font-size: larger;"
+    <span class="user-name-container" style="font-size: larger;" *ngIf="loginType"
       >Hey ,
       <span class="user-name" *ngIf="loginType == 'Learner'">{{
         studentProfile.fullName
@@ -9,20 +9,39 @@
         tutorProfile.fullName
       }}</span></span
     >
-
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-secondary">Expert</button>
-      <button type="button" class="btn btn-secondary">Learner</button>
+    <span *ngIf="!loginType" class="user-name-container">
+      <span class="user-name">Hey, {{socialLoginName}}</span>
+    </span>
+    
+    <div class="btn-group" role="group" aria-label="Basic example" *ngIf="!loginType">
+      <select [(ngModel)]="role" >
+        <option [value]="chooseRole">choose role</option>
+        <option [value]="learner">Learner</option>
+        <option [value]="expert">Expert</option>
+      </select>
+      <!-- <form>
+        <button type="button" class="btn btn-secondary" value="expert" (click)="chooseRole()">Expert</button>
+        <button type="button" class="btn btn-secondary" value="learner" (click)="chooseRole('learner')">Learner</button>
+      </form>
+    -->
+   
     </div>
     <div class="thankyou-container">
       <span class="greet">Thank you</span>
-      <span
+      <span *ngIf="loginType"
         >Your regisration is almost complete & Please get a head start by
         updating your profile & manage your dashboard.</span
       >
+      <span *ngIf="!loginType"
+        >Your regisration is almost complete & Please get a head start by
+        choosing your role</span
+      >
     </div>
-    <div class="button-container">
+    <div class="button-container" *ngIf="loginType">
       <button type="button" class="btn btn-primary">Go to Dashboard</button>
+    </div>
+    <div class="button-container" *ngIf="!loginType">
+      <button type="button" class="btn btn-primary" (click)="toDashboard()">Go to Dashboard</button>
     </div>
   </div>
 

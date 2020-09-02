@@ -10,7 +10,7 @@
   >
     <app-loading></app-loading>
   </div>
-  <div class="signup-container" *ngIf="!isLoading">
+  <div class="signup-container"  ng-class="!isLoading ? '' : 'hideBlock'">
     <span
       class="material-icons close"
       (click)="toFacadePage()"
@@ -184,22 +184,23 @@
             Cancel
           </a>
         </div>
-        <div
-          class="form-group button-container social-button-container"
-          *ngIf="showInput"
-        >
-          <button
-            class="btn btn-secondary"
-            (click)="prepareLoginButton()"
-            #googleSignUp
-          >
-            <i class="fa fa-google social-icons"></i>
-            <p style="display: inline; font-size: larger;">
-              Login Using Google
-            </p>
-          </button>
-        </div>
+        
       </form>
+      <div
+      class="form-group button-container social-button-container"
+    >
+      <button
+        class="btn btn-secondary"
+        (click)="prepareLoginButton()"
+        #googleSignUp
+      >
+        <i class="fa fa-google social-icons"></i>
+        <p style="display: inline; font-size: larger;">
+          Login Using Google
+        </p>
+      </button>
+    </div>
     </div>
   </div>
+
 </body>
