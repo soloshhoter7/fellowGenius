@@ -25,9 +25,70 @@ import { Router } from '@angular/router';
 	styleUrls: [ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit {
-	basic = false;
-	ngOnInit() {}
-	toggleProfile() {
-		this.basic = !this.basic;
+	basic = true;
+	options: string[] = [
+		'Mathematics',
+		'English',
+		'Science',
+		'Social Science',
+		'History',
+		'Political Science',
+		'Geography',
+		'Physics',
+		'Chemistry'
+	];
+	selectedExpertise;
+	expertises: string[] = [];
+	educationInstitutes: string[] = [];
+	previousOraganisations: string[] = [];
+	myControl = new FormControl();
+	filteredOptions: Observable<string[]>;
+
+	inputOrganisation;
+	inputEducation;
+
+	ngOnInit() {
+		this.filteredOptions = this.myControl.valueChanges.pipe(startWith(''), map((value) => this._filter(value)));
+	}
+
+	private _filter(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.options.filter((option) => option.toLowerCase().includes(filterValue));
+	}
+
+	basicProfile() {
+		this.basic = true;
+	}
+	advancedProfile() {
+		this.basic = false;
+	}
+
+	saveExpertise() {
+		this.expertises.push(this.selectedExpertise);
+		this.selectedExpertise = '';
+	}
+
+	deleteExpertise(index: any) {
+		this.expertises.splice(index, 1);
+	}
+
+	addOrganisation() {
+		console.log(this.inputOrganisation);
+		this.previousOraganisations.push(this.inputOrganisation);
+		this.inputOrganisation = '';
+	}
+
+	deleteOrganisation(index: any) {
+		this.previousOraganisations.splice(index, 1);
+	}
+
+	addEducation() {
+		console.log(this.inputEducation);
+		this.educationInstitutes.push(this.inputEducation);
+		this.inputEducation = '';
+	}
+	deleteEducation(index: any) {
+		this.educationInstitutes.splice(index, 1);
 	}
 }

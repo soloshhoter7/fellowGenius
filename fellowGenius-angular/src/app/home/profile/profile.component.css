@@ -80,7 +80,7 @@ button {
 	/* width: 25vw; */
 }
 
-.form-control-placeholder {
+/* .form-control-placeholder {
 	position: absolute;
 	top: 5px;
 	left: 11px;
@@ -94,12 +94,7 @@ button {
 .form-control:valid + .form-control-placeholder {
 	font-size: 90%;
 	transform: translate3d(0, -75%, 0);
-}
-
-label {
-	background-color: white;
-	margin: 0;
-}
+} */
 
 .form-control {
 	padding-left: 15px;
@@ -125,10 +120,6 @@ input.ng-invalid.ng-touched {
 input.ng-valid {
 	border-left-color: green;
 	border-left-width: 3px;
-}
-
-label {
-	color: rgb(129, 124, 124);
 }
 
 .help-block {
@@ -258,11 +249,6 @@ input.ng-invalid.ng-touched {
 	margin-right: 3vw;
 }
 
-label {
-	font-size: small;
-	color: black;
-}
-
 /* .input-fields {
     width: 45vw;
 } */
@@ -332,4 +318,23 @@ label {
 	.sidenav a {
 		font-size: 18px;
 	}
+}
+.active {
+	color: white !important;
+	background-color: #e30084 !important;
+}
+.width50 {
+	width: 50%;
+}
+.tags {
+	padding: .375rem .75rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	margin-right: 5px;
+	border-radius: .25rem;
 }
