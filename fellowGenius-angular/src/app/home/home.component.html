@@ -254,6 +254,33 @@
             >Schedule</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="sessionNotes"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Session Notes</a
+          >
+        </li>
+        <li class="nav-item" >
+          <a
+            class="nav-link"
+            routerLink="recordings"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Recordings</a
+          >
+        </li>
+        <li class="nav-item" >
+          <a
+            class="nav-link"
+            routerLink="knowledgeBase"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Knowledge Base</a
+          >
+        </li>
         <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
               
       </ul>

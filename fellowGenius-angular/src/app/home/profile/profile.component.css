@@ -228,3 +228,108 @@ p {
 	margin-left: 79%;
 	height: 0;
 }
+.leftBox {
+	border-right: 1px solid rgb(164, 162, 162);
+}
+
+.learningArea-fields {
+	margin-bottom: 2.5vh;
+}
+
+.help-block {
+	color: red;
+}
+
+input.ng-invalid.ng-touched {
+	border: 1px solid red;
+}
+
+.btn-circle.btn-sm {
+	width: 20px;
+	height: 20px;
+	padding: 6px 0px;
+	border-radius: 15px;
+	font-size: 8px;
+	padding-top: 0;
+	text-align: center;
+}
+
+.btn-success {
+	margin-right: 3vw;
+}
+
+label {
+	font-size: small;
+	color: black;
+}
+
+/* .input-fields {
+    width: 45vw;
+} */
+
+.sidenav {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgb(57, 9, 61);
+	overflow-x: hidden;
+	transition: 0.5s;
+	padding-top: 60px;
+}
+
+.sidenav a {
+	padding: 8px 8px 8px 32px;
+	text-decoration: none;
+	font-size: 25px;
+	color: #ffffff;
+	display: block;
+	transition: 0.3s;
+}
+
+.sidenav a:hover {
+	color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+	position: absolute;
+	top: 0;
+	right: 25px;
+	font-size: 36px;
+	margin-left: 50px;
+}
+
+#mainContent {
+	transition: margin-left .5s;
+	padding: 16px;
+}
+
+#headerContent {
+	transition: margin-left .5s;
+	/* padding: 16px; */
+}
+
+.header {
+	transition: margin-left .5s;
+	height: 60px;
+	background: #ffffff;
+	border-bottom: 1px solid #b1a5a57a;
+	width: 100vw;
+	margin-left: -2vw;
+	display: block;
+	float: left;
+	box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+	padding-left: 15px;
+	margin-top: -2vh;
+}
+
+@media screen and (max-height: 450px) {
+	.sidenav {
+		padding-top: 15px;
+	}
+	.sidenav a {
+		font-size: 18px;
+	}
+}

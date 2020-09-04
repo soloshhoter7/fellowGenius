@@ -68,6 +68,9 @@ import { TestComponent } from './test/test.component';
 import { Ng2OwlCarouselComponent } from 'ng2-owl-carousel2';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { ThankYouComponent } from './facade/thank-you/thank-you.component';
+import { KnowledgeBaseComponent } from './home/knowledge-base/knowledge-base.component';
+import { SessionNotesComponent } from './home/session-notes/session-notes.component';
+import { RecordingsComponent } from './home/recordings/recordings.component';
 export const appRoutes: Routes = [
 	{
 		path: 'home',
@@ -80,7 +83,10 @@ export const appRoutes: Routes = [
 			{ path: 'bookings', component: BookingsComponent },
 			{ path: 'studentBookings', component: StudentBookingComponent },
 			{ path: 'findTutor', component: FindTutorComponent },
-			{ path: 'tutorSchedule', component: tutorScheduleComponent }
+			{ path: 'tutorSchedule', component: tutorScheduleComponent },
+			{ path: 'sessionNotes', component: SessionNotesComponent },
+			{ path: 'recordings', component: RecordingsComponent },
+			{ path: 'knowledgeBase', component: KnowledgeBaseComponent }
 		]
 	},
 	{ path: 'facade', component: FacadeComponent },
@@ -127,7 +133,10 @@ export const appRoutes: Routes = [
 		TestComponent,
 		Ng2OwlCarouselComponent,
 		SearchResultsComponent,
-		ThankYouComponent
+		ThankYouComponent,
+		KnowledgeBaseComponent,
+		SessionNotesComponent,
+		RecordingsComponent
 	],
 	imports: [
 		NgxMaterialTimepickerModule,
