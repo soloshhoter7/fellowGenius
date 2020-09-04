@@ -190,7 +190,7 @@
           >
           Profile</a>
         </li>
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
+        <li class="nav-item nav-item-active" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
             routerLink="/home/studentDashboard"
@@ -275,7 +275,9 @@
             >Knowledge Base</a
           >
         </li>
+        <li class="nav-item" >
         <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
+       </li>
               
       </ul>
   </div>

@@ -179,6 +179,14 @@ label {
     padding-top: 60px;
 }
 
+.sidenav .navbar-nav .nav-item-active {
+    background-color: #F7E4F9;
+}
+
+.sidenav .navbar-nav .nav-item:hover {
+    background-color: #F7E4F9;
+}
+
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
@@ -223,6 +231,8 @@ label {
     display: none;
 }
 
+
+/*
 @media screen and (min-width: 500px) {
     /* .sidenav {
 		padding-top: 15px;
@@ -236,7 +246,7 @@ label {
 	.main-content {
 		color: red;
 		background-color: black;
-	} */
+	}
     .overlay {
         display: none;
     }
@@ -268,4 +278,4 @@ label {
     body {
         overflow: hidden;
     }
-}
+} */
