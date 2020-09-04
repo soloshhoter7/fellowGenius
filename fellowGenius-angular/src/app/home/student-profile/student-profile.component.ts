@@ -3,6 +3,7 @@ import { StudentProfileModel } from 'src/app/model/studentProfile';
 import { StudentService } from 'src/app/service/student.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateboxstudentComponent } from './updateboxstudent/updateboxstudent.component';
+import { NgForm } from '@angular/forms';
 
 @Component({
 	selector: 'app-student-profile',
@@ -13,42 +14,43 @@ export class StudentProfileComponent implements OnInit {
 	constructor(private studentService: StudentService, private matDialog: MatDialog) {}
 
 	studentProfile: StudentProfileModel;
-	learningAreas = new Array(3);
+	// learningAreas = new Array(3);
 	disableAdd: boolean;
 	disableSub: boolean;
 	index: Number;
+	learningArea;
+	learningAreas: string[] = [];
+	
 	ngOnInit(): void {
 		this.index = 1;
 		this.openNav();
 		this.disableAdd = false;
-		this.disableSub = true;
+		// this.disableSub = true;
 		this.studentProfile = this.studentService.getStudentProfileDetails();
 
 		this.handleRefresh();
 	}
 
 	addLearningArea(){
-		
-		if(this.learningAreas.length<5 && this.learningAreas.length>2){
-			this.disableAdd = false;
-			this.learningAreas.push(1);
-			this.disableSub =false;
-		}else{
+		console.log(this.learningAreas.length);
+		if(this.learningAreas.length==5){
 			this.disableAdd = true;
+			// this.disableSub = true;
+		}else{
+			this.disableAdd = false;
+			console.log(this.learningArea);
+			this.learningAreas.push(this.learningArea);
+			this.learningArea = '';
+			
 		}
 		
 	}
 
-	subtractLearningArea(){
-		
-		if(this.learningAreas.length<=3){
-			this.disableSub = true;
+	subtractLearningArea(index: any){
+		if(this.learningAreas.length<=5){
 			this.disableAdd = false;
-		}else{
-			this.disableSub=false;
-			this.learningAreas.pop();
 		}
-		
+		this.learningAreas.splice(index, 1);
 	}
 
 	navAction(index){
@@ -68,7 +70,30 @@ export class StudentProfileComponent implements OnInit {
 	closeNav() {
 		document.getElementById("sidenav").style.width = "0";
 		document.getElementById("mainContent").style.marginLeft= "0";
-	  }
+	}
+
+	saveStudentProfile(form: NgForm){
+		console.log(form);
+		this.studentProfile.contact = form.value.contact;
+		this.studentProfile.dateOfBirth = form.value.dob;
+		this.studentProfile.email = form.value.email;
+		this.studentProfile.fullName = form.value.fullName;
+		this.studentProfile.linkProfile = form.value.linkProfile;
+		this.studentProfile.learningAreas = this.learningAreas;
+		console.log(this.studentProfile);
+		
+	}
+
+	addEducation() {
+		console.log(this.learningArea);
+		this.learningAreas.push(this.learningArea);
+		this.learningArea = '';
+	}
+
+	deleteEducation(index: any) {
+		this.learningAreas.splice(index, 1);
+	}
+
 
 	basicInfoEdit() {
 		this.studentService.setEditFuntion('basicInfoEdit');

@@ -3,8 +3,11 @@ export class StudentProfileModel {
 	public fullName: string;
 	public email: string;
 	public contact: string;
+	public linkProfile: string;
 	public dateOfBirth: string;
-	public password: string;
+	public profilePictureUrl: string;
+	public learningAreas: string[];
 	public subject: string;
-	public gradeLevel: string;
+	// public password: string;
+	// public gradeLevel: string;
 }

@@ -87,7 +87,8 @@
 
 <body>
 
-        <div class="row" style="margin-bottom: 2vh;"></div>
+    <div class="row" style="margin-bottom: 2vh;"></div>
+    <form (ngSubmit)="saveStudentProfile(s)" style="width: 100%;" #s="ngForm">
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
@@ -102,7 +103,7 @@
                     padding: 1vh 2vw;
                     background-color: purple;
                     color: white;
-                    font-size: small">Save</button>
+                    font-size: small" type=" submit">Save</button>
                     <!-- padding-top: 1vh;
                     padding-bottom: 1vh;
                     padding-right: 2vw;
@@ -111,13 +112,12 @@
             </div>
             <br>
             <div class="row">
+
                 <div class="col-md-7 leftBox">
                     <!-- <div class="logo"></div> -->
-                    <!-- <form (ngSubmit)="onSignUp(t)" #t="ngForm"> -->
                     <div class="form-group">
                         <label class="form-control-placeholder" for="fullName">Full Name</label>
                         <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" autofocus />
-
                         <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
                     </div>
 
@@ -125,7 +125,7 @@
                         <label class="form-control-placeholder " for="email">Email Address</label>
                         <input type="email" id="email" name="email" ngModel class="form-control input-fields" required email #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
                         />
-                        <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
+                        <span *ngIf="!email.valid && email.touched" class="help-block">Invalid email</span>
                     </div>
 
                     <div class="form-group">
@@ -149,26 +149,50 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-control-placeholder" for="profile">Add your LinkedIn Profile</label>
-                        <input type="text" id="profile" class="form-control input-fields" ngModel name="profile" required [pattern]="mobNumberPattern" #profile="ngModel" />
+                        <label class="form-control-placeholder" for="linkProfile">Add your LinkedIn Profile</label>
+                        <input type="text" id="linkProfile" class="form-control input-fields" ngModel name="linkProfile" required #linkProfile="ngModel" />
                     </div>
 
-
-
-                    <!-- </form> -->
                 </div>
                 <!-- Learning Areas -->
-                <div class="col-md-5">
+                <!-- <div class="col-md-5">
                     <label class="form-control-placeholder" for="learning">Learning Areas</label>
                     <div class="learningArea-fields" *ngFor="let size of learningAreas">
                         <input type="text" name="learning" class="form-control" ngModel #learning="ngModel" style="width: 30vw;">
                     </div>
                     <div style="text-align: center; width: 30vw;">
 
-                        <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;">+</button>
-                        <button [disabled]="disableSub" type="button" class="btn btn-danger btn-circle btn-sm" (click)="subtractLearningArea()" style="font-size: inherit;">-</button>
+                        <button [disabled]="disableAdd" type="submit" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit; align-content: center;"><img class="plus_minus" src="../../../assets/icons/plus.png"></button>
+                        <button [disabled]="disableSub" type="submit" class="btn btn-danger btn-circle btn-sm" (click)="subtractLearningArea()" style="font-size: inherit; align-content: center;"><img class="plus_minus" src="../../../assets/icons/minus.png"></button>
                     </div>
+                </div> -->
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-control-placeholder" for="learning">Learning Areas</label>
+                        <!-- <label for="expertise">Learning Areas</label> -->
+                        <div class="learningArea-fields" *ngFor="let size of learningAreas;let i=index">
+                            <div class="tags" style="display: inline;">{{size}}</div>
+                            <button type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="subtractLearningArea(i)" style="font-size: inherit;">-</button>
+                        </div>
+                        <div>
+                            <input type="search" name="search" style="
+                            width: 70%;
+                            display: inline; 
+                            margin-right: 5px;" class="form-control" [(ngModel)]="learningArea" placeholder="Add learning area" required/>
+                            <span style="                          
+                            display: inline;">
+                                <button [disabled]="disableAdd || !learningArea" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;display: inline;">+</button>
+                        </span>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+
                 </div>
             </div>
         </div>
+    </form>
 </body>

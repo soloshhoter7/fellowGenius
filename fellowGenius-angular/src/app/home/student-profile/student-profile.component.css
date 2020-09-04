@@ -302,3 +302,10 @@ label {
         font-size: 18px;
     }
 }
+
+.plus_minus {
+    width: 10px;
+    height: 10px;
+    /* margin-top: -1px; */
+    /* padding-left: 1px; */
+}
