@@ -161,27 +161,21 @@
   </nav>
   <router-outlet></router-outlet>
 </body> -->
+
 <body>
-  <div id="sidenav" class="sidenav">
-    <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
-    <span
-    class="material-icons close closeButton"
-    (click)="navAction(index)"
-    style="cursor: pointer;"
-  >
+    <div id="sidenav" class="sidenav">
+        <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
+        <span class="material-icons close closeButton" (click)="navAction(index)" style="cursor: pointer;">
     close
   </span>
-    <span
-                style="font-size: larger; font-weight: 300;color: white;"
-                *ngIf="loginType == 'Learner'"
-                >{{ studentProfile.fullName }}</span
+        <span style="font-size: larger; font-weight: 300;color: white;" *ngIf="loginType == 'Learner'">{{ studentProfile.fullName }}</span
               >
               <span
                 style="font-size: larger; font-weight: 300;color:white"
                 *ngIf="loginType == 'Expert'"
                 >{{ tutorProfile.fullName }}</span
               >
-      <ul class="navbar-nav" style="font-size: large;">
+      <ul class="navbar-nav">
         <li>
           <a
           routerLink="/home/profile"
@@ -196,7 +190,7 @@
           >
           Profile</a>
         </li>
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
+        <li class="nav-item nav-item-active" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
             routerLink="/home/studentDashboard"
@@ -216,7 +210,7 @@
           >
         </li>
 
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
+      <!-- <li class="nav-item" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
             routerLink="/home/findTutor"
@@ -224,7 +218,7 @@
             [routerLinkActiveOptions]="{ exact: true }"
             >Find a tutor</a
           >
-        </li>
+        </li>--> 
 
         <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
@@ -281,7 +275,9 @@
             >Knowledge Base</a
           >
         </li>
+        <li class="nav-item" >
         <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
+       </li>
               
       </ul>
   </div>

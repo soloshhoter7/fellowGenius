@@ -80,7 +80,8 @@
         </div>
 
     </div>
-    <div class="col-md-8 align">
+    <!--
+    <div class="col-md-8 align" style="display:none;">
 
         <div class="card">
             <div class="card-header">
@@ -116,15 +117,15 @@
                 </div>
             </div>
         </div>
-
-        <!-- ---------------------------------------- Pending Requests-------------------------------------------- -->
+-->
+    <!-- ---------------------------------------- Pending Requests--------------------------------------------
         <div class="card">
             <div class="card-header">
                 Booking Requests
             </div>
             <div class="card-body">
-                <div *ngIf="emptyBookingList">No Booking Requests</div>
-                <!-- <div *ngIf="meetingService.deleteBooking == 'delete'">No Booking Requests</div> -->
+                <div *ngIf="emptyBookingList">No Booking Requests</div> -->
+    <!-- <div *ngIf="meetingService.deleteBooking == 'delete'">No Booking Requests</div> 
                 <div class="" *ngFor="let element of bookingList">
                     <div class="row">
                         <div class="col-sm-1">
@@ -168,8 +169,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- ---------------------------------------- approved Meetings-------------------------------------------- -->
+ ---------------------------------------- approved Meetings--------------------------------------------
         <div class="card">
             <div class="card-header">
                 Upcoming Meetings
@@ -255,6 +255,6 @@
         </div>
     </div>
 
-
+-->
 
 </body>

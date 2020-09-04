@@ -844,8 +844,8 @@ textarea:focus {
 
 .dashboard-container .widget .widget-information .list-panel .list-information {
     position: absolute;
-    top: 10px;
-    left: 80px;
+    top: 5px;
+    left: 60px;
 }
 
 .dashboard-container .widget .widget-information .list-panel .list-information span {
@@ -860,7 +860,8 @@ textarea:focus {
 }
 
 .dashboard-container .widget .widget-information .stars-inner {
-    left: 250px;
+    left: auto;
+    right: -30px;
     position: absolute;
     top: 10px;
     width: 150px;
