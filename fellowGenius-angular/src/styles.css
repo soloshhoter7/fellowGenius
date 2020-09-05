@@ -440,11 +440,14 @@ textarea:focus {
     background-color: transparent;
     line-height: 20px;
     height: 20px;
+    padding-left: 0px;
 }
 
 .breadcrumb .active {
     color: #7D0F7D;
-    font-size: 14px;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 700;
 }
 
 .breadcrumb>li+li:before {
@@ -742,7 +745,8 @@ textarea:focus {
     text-transform: uppercase;
 }
 
-.dashboard-container {
+.dashboard-container,
+.primary-container {
     padding: 20px;
     float: left;
     display: block;
@@ -916,4 +920,39 @@ textarea:focus {
 
 .dashboard-container .widget .widget-footer a:hover {
     text-decoration: none;
+}
+
+.primary-container .content-container {
+    width: 100%;
+    display: block;
+    float: left;
+}
+
+.primary-container .content-container table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.primary-container .content-container table thead tr th {
+    background-color: #F7E4F9;
+    line-height: 20px;
+    height: 30px;
+    text-transform: uppercase;
+    padding: 5px;
+}
+
+.primary-container .content-container table tbody tr:nth-child(even) {
+    background-color: #F3F2F2;
+}
+
+.primary-container .content-container table tbody tr:nth-child(odd) {
+    background-color: #FFFFFF;
+}
+
+.primary-container .content-container table tbody tr td {
+    padding: 10px;
 }
