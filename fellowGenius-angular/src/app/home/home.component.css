@@ -170,21 +170,21 @@ label {
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     top: 0;
     left: 0;
-    background-color: rgb(57, 9, 61);
+    background-color: #3F023F;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
 }
 
 .sidenav .navbar-nav .nav-item-active {
-    background-color: #F7E4F9;
+    background-color: #7D0F7D;
 }
 
 .sidenav .navbar-nav .nav-item:hover {
-    background-color: #F7E4F9;
+    background-color: #7D0F7D;
 }
 
 .sidenav a {
