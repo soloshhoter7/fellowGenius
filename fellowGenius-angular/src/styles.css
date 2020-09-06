@@ -928,6 +928,79 @@ textarea:focus {
     float: left;
 }
 
+.primary-container .sort-container {
+    float: right;
+    width: 300px;
+    display: block;
+    margin-top: -20px;
+}
+
+.primary-container .sort-container select {
+    float: right;
+}
+
+.primary-container .content-container .button-subject-container {
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 10px;
+    padding-left: 0px;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject {
+    border: 1px solid #3F023F;
+    background-color: #FFFFFF;
+    width: 180px;
+    height: 50px;
+    display: inline-block;
+    float: left;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject:hover {
+    background-color: #F7E4F9;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject .button-for-text {
+    float: left;
+    display: inline-block;
+    width: 148px;
+    height: 50px;
+    padding: 5px;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject .button-for-text span {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject .button-for-text .subject-name {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject .button-for-text .subject-information {
+    font-size: 11px;
+}
+
+.primary-container .content-container .button-subject-container .buttons-for-subject .button-for-icon {
+    float: left;
+    display: inline-block;
+    width: 30px;
+    line-height: 45px;
+    height: 48px;
+    font-size: 15px;
+    background-color: #F7E4F9;
+    padding-left: 10px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
 .primary-container .content-container table {
     border: 1px solid #ccc;
     border-collapse: collapse;
@@ -955,4 +1028,10 @@ textarea:focus {
 
 .primary-container .content-container table tbody tr td {
     padding: 10px;
+}
+
+.primary-container .content-container table tbody tr .name-information span {
+    display: block;
+    float: left;
+    width: 100%;
 }
