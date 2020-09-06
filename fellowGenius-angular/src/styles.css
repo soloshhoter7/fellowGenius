@@ -940,7 +940,7 @@ textarea:focus {
 .primary-container .content-container table thead tr th {
     background-color: #F7E4F9;
     line-height: 20px;
-    height: 30px;
+    height: 50px;
     text-transform: uppercase;
     padding: 5px;
 }
