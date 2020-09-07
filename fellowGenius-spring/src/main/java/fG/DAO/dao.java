@@ -21,6 +21,7 @@ import fG.Entity.Users;
 import fG.Model.StudentLoginModel;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorVerificationModel;
+import fG.Repository.repositoryLearningAreasCount;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
@@ -60,6 +61,9 @@ public class dao {
 
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorSchedule;
+	
+	@Autowired
+	repositoryLearningAreasCount repLearningAreasCount;
 
 	// for saving user profile
 		public boolean saveUserLogin(Users user) {
@@ -258,7 +262,7 @@ public class dao {
 
 	// for updating student profile
 	public boolean updateStudentProfile(StudentProfile studentProfile) {
-		repStudentProfile.save(studentProfile);
+		repStudentProfile.save(studentProfile);	
 		return true;
 
 	}
@@ -302,6 +306,17 @@ public class dao {
 	public StudentProfile getStudentProfile(Integer sid) {
 		return repStudentProfile.idExist(sid);
 	}
+
+	//
+	public boolean learningAreasCount(ArrayList<String> learningAreas) {
+		System.out.println(learningAreas);
+		for(String learnAreas: learningAreas) {
+			System.out.println(learnAreas);
+			repLearningAreasCount.learningAreasCount(learnAreas);
+		}
+		return true;
+	}
+
     
 
 }

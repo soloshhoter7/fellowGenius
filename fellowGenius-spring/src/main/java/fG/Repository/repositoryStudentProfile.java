@@ -1,5 +1,8 @@
 package fG.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,5 +17,8 @@ public interface repositoryStudentProfile extends JpaRepository<StudentProfile, 
 	
 	@Query(value = "SELECT * FROM student_profile WHERE sid=?1", nativeQuery = true)
 	StudentProfile idExist(Integer id);
+
+
+	
 	
 }

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import fG.DAO.MeetingDao;
 import fG.DAO.dao;
 import fG.Entity.BookingDetails;
+import fG.Entity.LearningAreasCount;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -222,8 +223,8 @@ public class UserService  implements UserDetailsService{
 		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
 		studentProfile.setEmail(studentModel.getEmail());
 		studentProfile.setFullName(studentModel.getFullName());
-		studentProfile.setSubject(studentModel.getSubject());
-		studentProfile.setGradeLevel(studentModel.getGradeLevel());
+//		studentProfile.setSubject(studentModel.getSubject());
+//		studentProfile.setGradeLevel(studentModel.getGradeLevel());
 		if (dao.saveStudentProfile(studentProfile)) {
 			StudentLogin studentLogin = new StudentLogin();
 			studentLogin.setPassword(encoder.encode(studentModel.getPassword()));
@@ -256,8 +257,8 @@ public class UserService  implements UserDetailsService{
 		stuProfileModel.setFullName(stuProfile.getFullName());
 		stuProfileModel.setPassword("");
 		stuProfileModel.setSid(stuProfile.getSid());
-		stuProfileModel.setGradeLevel(stuProfile.getGradeLevel());
-		stuProfileModel.setSubject(stuProfile.getSubject());
+//		stuProfileModel.setGradeLevel(stuProfile.getGradeLevel());
+//		stuProfileModel.setSubject(stuProfile.getSubject());
 		return stuProfileModel;
 	}
 
@@ -522,11 +523,14 @@ public class UserService  implements UserDetailsService{
 		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
 		studentProfile.setEmail(studentModel.getEmail());
 		studentProfile.setFullName(studentModel.getFullName());
-		studentProfile.setSubject(studentModel.getSubject());
-		studentProfile.setGradeLevel(studentModel.getGradeLevel());
+		studentProfile.setUserBookingId(null);
 		studentProfile.setSid(studentModel.getSid());
 		studentProfile.setProfilePictureUrl(studentModel.getProfilePictureUrl());
+		studentProfile.setLinkProfile(studentModel.getLinkProfile());
+		studentProfile.setLearningAreas(studentModel.getLearningAreas());
 		dao.updateStudentProfile(studentProfile);
+		
+		dao.learningAreasCount(studentModel.getLearningAreas());
 		return true;
 
 	}
@@ -647,10 +651,6 @@ public class UserService  implements UserDetailsService{
 	public String fetchUserRole(String userId) {
 		return repUsers.idExists(Integer.valueOf(userId)).getRole();
 	}
-
-	
-
-	
 
 	
 }

@@ -1,5 +1,7 @@
 package fG.Model;
 
+import java.util.ArrayList;
+
 public class StudentProfileModel {
 	Integer sid;
 	String fullName;
@@ -7,22 +9,29 @@ public class StudentProfileModel {
 	String dateOfBirth;
 	String contact;
 	String password;
-	String subject;
 	String profilePictureUrl;
 	String gradeLevel;
+	String linkProfile;
+	ArrayList<String> learningAreas;
+
 	
+	public String getLinkProfile() {
+		return linkProfile;
+	}
+	public void setLinkProfile(String linkProfile) {
+		this.linkProfile = linkProfile;
+	}
+	public ArrayList<String> getLearningAreas() {
+		return learningAreas;
+	}
+	public void setLearningAreas(ArrayList<String> learningAreas) {
+		this.learningAreas = learningAreas;
+	}
 	public String getGradeLevel() {
 		return gradeLevel;
 	}
 	public void setGradeLevel(String gradeLevel) {
 		this.gradeLevel = gradeLevel;
-	}
-	
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
 	}
 	public Integer getSid() {
 		return sid;
@@ -70,7 +79,9 @@ public class StudentProfileModel {
 	@Override
 	public String toString() {
 		return "StudentProfileModel [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", subject=" + subject
-				+ ", profilePictureUrl=" + profilePictureUrl + ", gradeLevel=" + gradeLevel + "]";
+				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", profilePictureUrl="
+				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + ", linkProfile=" + linkProfile + ", learningAreas="
+				+ learningAreas + "]";
 	}
+
 }

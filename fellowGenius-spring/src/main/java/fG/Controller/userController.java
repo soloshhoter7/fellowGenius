@@ -52,9 +52,10 @@ public class userController {
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value= "/updateStudentProfile")
 	public boolean updateStudentProfile(@RequestBody StudentProfileModel stuModel) throws IOException {
-		service.updateStudentProfile(stuModel);
-		return true;
+		return service.updateStudentProfile(stuModel);		
+		
 	}
+	
 	// for checking student login
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/loginStudent")
