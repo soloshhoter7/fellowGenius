@@ -81,61 +81,61 @@ export class FindTutorComponent implements OnInit {
 		// }
 	}
 
-	searchSubject($event) {
-		this.subject = $event.target.value;
-		if (this.price == null) {
-			this.tempFilterSearch = this.filterSearch.filter((res) => {
-				return (
-					res.subject1.toLocaleLowerCase().startsWith(this.subject.toLocaleLowerCase()) ||
-					res.subject2.toLocaleLowerCase().startsWith(this.subject.toLocaleLowerCase()) ||
-					res.subject3.toLocaleLowerCase().startsWith(this.subject.toLocaleLowerCase())
-				);
-			});
-		} else if (this.price != null) {
-			this.tempFilterSearch = this.filterSearch.filter((res) => {
-				if (
-					(Number(res.price1) >= Number(this.lowerValue) &&
-						Number(res.price1) <= Number(this.higherValue) &&
-						res.subject1.match(this.subject)) ||
-					res.subject2.match(this.subject) ||
-					res.subject3.match(this.subject)
-				) {
-					return res.subject1 || res.subject2 || res.subject3;
-				}
-			});
-		}
+	// searchSubject($event) {
+	// 	this.subject = $event.target.value;
+	// 	if (this.price == null) {
+	// 		this.tempFilterSearch = this.filterSearch.filter((res) => {
+	// 			return (
+	// 				res.subject1.toLocaleLowerCase().startsWith(this.subject.toLocaleLowerCase()) ||
+	// 				res.subject2.toLocaleLowerCase().startsWith(this.subject.toLocaleLowerCase()) ||
+	// 				res.subject3.toLocaleLowerCase().startsWith(this.subject.toLocaleLowerCase())
+	// 			);
+	// 		});
+	// 	} else if (this.price != null) {
+	// 		this.tempFilterSearch = this.filterSearch.filter((res) => {
+	// 			if (
+	// 				(Number(res.price1) >= Number(this.lowerValue) &&
+	// 					Number(res.price1) <= Number(this.higherValue) &&
+	// 					res.subject1.match(this.subject)) ||
+	// 				res.subject2.match(this.subject) ||
+	// 				res.subject3.match(this.subject)
+	// 			) {
+	// 				return res.subject1 || res.subject2 || res.subject3;
+	// 			}
+	// 		});
+	// 	}
 
-		// }else{
-		// 	this.tempFilterSearch = this.tempFilterSearch.filter((res) => {
-		// 		return (
-		// 			res.subject1.toLocaleLowerCase().match(this.subject.toLocaleLowerCase()) ||
-		// 			res.subject2.toLocaleLowerCase().match(this.subject.toLocaleLowerCase()) ||
-		// 			res.subject3.toLocaleLowerCase().match(this.subject.toLocaleLowerCase())
-		// 			);
-		// 		});
-		// }
-	}
-
-	searchPrice($event) {
-		this.price = $event.target.value.split('-');
-		this.lowerValue = this.price[0];
-		this.higherValue = this.price[1];
-
-		if (this.subject == null) {
-			this.tempFilterSearch = this.filterSearch.filter((res) => {
-				if (Number(res.price1) >= Number(this.lowerValue) && Number(res.price1) <= Number(this.higherValue))
-					return res.price1.toLocaleLowerCase;
-			});
-		} else if (this.subject != null) {
-			this.tempFilterSearch = this.filterSearch.filter((res) => {
-				if (Number(res.price1) >= Number(this.lowerValue) && Number(res.price1) <= Number(this.higherValue)) {
-					return res.price1.toLocaleLowerCase;
-				}
-			});
-		}
-	}
-
-	resetFilter() {
-		this.setToInitialList();
-	}
+	// }else{
+	// 	this.tempFilterSearch = this.tempFilterSearch.filter((res) => {
+	// 		return (
+	// 			res.subject1.toLocaleLowerCase().match(this.subject.toLocaleLowerCase()) ||
+	// 			res.subject2.toLocaleLowerCase().match(this.subject.toLocaleLowerCase()) ||
+	// 			res.subject3.toLocaleLowerCase().match(this.subject.toLocaleLowerCase())
+	// 			);
+	// 		});
+	// }
 }
+
+// searchPrice($event) {
+// 	this.price = $event.target.value.split('-');
+// 	this.lowerValue = this.price[0];
+// 	this.higherValue = this.price[1];
+
+// 	if (this.subject == null) {
+// 		this.tempFilterSearch = this.filterSearch.filter((res) => {
+// 			if (Number(res.price1) >= Number(this.lowerValue) && Number(res.price1) <= Number(this.higherValue))
+// 				return res.price1.toLocaleLowerCase;
+// 		});
+// 	} else if (this.subject != null) {
+// 		this.tempFilterSearch = this.filterSearch.filter((res) => {
+// 			if (Number(res.price1) >= Number(this.lowerValue) && Number(res.price1) <= Number(this.higherValue)) {
+// 				return res.price1.toLocaleLowerCase;
+// 			}
+// 		});
+// 	}
+// }
+
+// 	resetFilter() {
+// 		this.setToInitialList();
+// 	}
+// }

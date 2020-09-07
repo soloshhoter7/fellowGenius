@@ -198,6 +198,7 @@ p {
 
 .errorMessage {
 	color: red;
+	margin: 5px;
 }
 
 .hideBlock {
