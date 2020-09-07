@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ElementRef, ViewChild } from '@angular/core';
-import { FormControl, NgForm } from '@angular/forms';
+import { FormControl, NgForm, FormGroup, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
@@ -26,6 +26,10 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
 	basic = true;
+	myControl = new FormControl();
+
+	@ViewChild('basicProfile') basicProfile: FormGroupDirective;
+
 	options: string[] = [
 		'Mathematics',
 		'English',
@@ -37,16 +41,17 @@ export class ProfileComponent implements OnInit {
 		'Physics',
 		'Chemistry'
 	];
+	//data fields
 	selectedExpertise;
 	expertises: string[] = [];
 	educationInstitutes: string[] = [];
 	previousOraganisations: string[] = [];
-	myControl = new FormControl();
 	filteredOptions: Observable<string[]>;
-
 	inputOrganisation;
 	inputEducation;
-
+	tutorProfile = new tutorProfile();
+	profilePictureUrl;
+	constructor(private fb: FormBuilder) {}
 	ngOnInit() {
 		this.filteredOptions = this.myControl.valueChanges.pipe(startWith(''), map((value) => this._filter(value)));
 	}
@@ -57,10 +62,19 @@ export class ProfileComponent implements OnInit {
 		return this.options.filter((option) => option.toLowerCase().includes(filterValue));
 	}
 
-	basicProfile() {
+	saveExpertBasicProfile(form: any) {
+		this.tutorProfile.fullName = form.value.fullName;
+		this.tutorProfile.contact = form.value.contact;
+		this.tutorProfile.dateOfBirth = form.value.dob;
+		this.tutorProfile.email = form.value.email;
+		this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+		console.log(this.tutorProfile);
+	}
+
+	basicProfileToggle() {
 		this.basic = true;
 	}
-	advancedProfile() {
+	advancedProfileToggle() {
 		this.basic = false;
 	}
 

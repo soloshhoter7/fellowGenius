@@ -1,5 +1,5 @@
 body {
-	height: auto;
+	height: 100vh;
 	background-color: #f9fafc;
 }
 
@@ -112,7 +112,7 @@ button {
 	text-decoration: underline;
 }
 
-input.ng-invalid.ng-touched {
+/* input.ng-invalid.ng-touched {
 	border-left-color: red;
 	border-left-width: 3px;
 }
@@ -120,7 +120,7 @@ input.ng-invalid.ng-touched {
 input.ng-valid {
 	border-left-color: green;
 	border-left-width: 3px;
-}
+} */
 
 .help-block {
 	color: red;
@@ -337,4 +337,6 @@ input.ng-invalid.ng-touched {
 	border: 1px solid #ced4da;
 	margin-right: 5px;
 	border-radius: .25rem;
+	width: 82%;
+	display: inline-block;
 }
