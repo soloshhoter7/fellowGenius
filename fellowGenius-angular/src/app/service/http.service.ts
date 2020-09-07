@@ -21,6 +21,7 @@ import { loginModel } from '../model/login';
 })
 export class HttpService {
 	constructor(private http: HttpClient) {}
+
 	// for saving student profile details
 	registerUser(registrationModel: registrationModel): Observable<Object> {
 		return this.http.post('http://localhost:8080/fellowGenius/registerUser', registrationModel);
@@ -35,7 +36,9 @@ export class HttpService {
 		});
 	}
 	//for updating student profile
+	//UPDATED
 	updateStudentProfile(studentModel: StudentProfileModel): Observable<Object> {
+		console.log(studentModel);
 		return this.http.post('http://localhost:8080/fellowGenius/updateStudentProfile', studentModel);
 	}
 

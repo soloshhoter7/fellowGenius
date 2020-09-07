@@ -93,9 +93,10 @@
             <div class="row">
                 <div class="col-md-3">
                     <p style="color: #e3165b; font-size: x-large;"><b>PROFILE</b></p>
-                    <img style="width:8vw; height:8vw; border-radius: 100%; border: 1px solid black" src="../../../assets/images/ajayVerma.jpg">
+                    <img style="width:8vw; height:8vw; border-radius: 100%; border: 1px solid black" [src]="studentProfile.profilePictureUrl">
                     <p style="text-align: center;width: 8vw;
-                    text-decoration: underline;"><a href="#">Upload</a></p>
+                    text-decoration: underline;">
+                        <input type="file" id="file" #userPhoto (change)="profilePictureChange($event)" name="image" />Upload</p>
                 </div>
                 <div class="offset-md-6 col-md-3" style="text-align: end;">
                     <button class="btn" style="margin-right: 2vw; text-decoration: underline;">Cancel</button>
@@ -171,18 +172,27 @@
                     <div class="form-group">
                         <label class="form-control-placeholder" for="learning">Learning Areas</label>
                         <!-- <label for="expertise">Learning Areas</label> -->
-                        <div class="learningArea-fields" *ngFor="let size of learningAreas;let i=index">
-                            <div class="tags" style="display: inline;">{{size}}</div>
+                        <div class="learningArea-fields" *ngFor="let fields of learningAreas;let i=index">
+                            <div class="tags" style="display: inline;" class="form-control">{{fields}}</div>&nbsp;&nbsp;&nbsp;
                             <button type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="subtractLearningArea(i)" style="font-size: inherit;">-</button>
                         </div>
                         <div>
-                            <input type="search" name="search" style="
+                            <!-- <input type="search" name="search" style="
                             width: 70%;
                             display: inline; 
-                            margin-right: 5px;" class="form-control" [(ngModel)]="learningArea" placeholder="Add learning area" required/>
+                            margin-right: 5px;" class="form-control" [(ngModel)]="learningArea" placeholder="Add learning area" required/> -->
+                            <input type="search" name="search" placeholder="Add learning area" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="learningArea" style="
+                            width: 70%;
+                            display: inline; 
+                            margin-right: 5px;" class="form-control" />
+                            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
                             <span style="                          
                             display: inline;">
-                                <button [disabled]="disableAdd || !learningArea" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;display: inline;">+</button>
+                                <button [disabled]="!learningArea" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;display: inline;">+</button>
                         </span>
 
                         </div>

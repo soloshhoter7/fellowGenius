@@ -1,9 +1,12 @@
 package fG.Entity;
 
+import java.util.ArrayList;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,22 +27,31 @@ public class StudentProfile {
 	@Column(name = "DOB")
 	String dateOfBirth;
 	String contact;
-	String subject;
 	String profilePictureUrl;
-	String gradeLevel;
+	String linkProfile;
+	@Lob
+	@Column(columnDefinition="BLOB")
+	ArrayList<String> learningAreas;
+
 	
-	public String getGradeLevel() {
-		return gradeLevel;
-	}
-	public void setGradeLevel(String gradeLevel) {
-		this.gradeLevel = gradeLevel;
-	}
 	
-	public String getSubject() {
-		return subject;
+	public Integer getUserBookingId() {
+		return userBookingId;
 	}
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setUserBookingId(Integer userBookingId) {
+		this.userBookingId = userBookingId;
+	}
+	public String getLinkProfile() {
+		return linkProfile;
+	}
+	public void setLinkProfile(String linkProfile) {
+		this.linkProfile = linkProfile;
+	}
+	public ArrayList<String> getLearningAreas() {
+		return learningAreas;
+	}
+	public void setLearningAreas(ArrayList<String> learningAreas) {
+		this.learningAreas = learningAreas;
 	}
 	public Integer getSid() {
 		return sid;
@@ -79,10 +91,12 @@ public class StudentProfile {
 	}
 	@Override
 	public String toString() {
-		return "StudentProfile [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", subject=" + subject + ", profilePictureUrl="
-				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + "]";
+		return "StudentProfile [sid=" + sid + ", userBookingId=" + userBookingId + ", fullName=" + fullName + ", email="
+				+ email + ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", profilePictureUrl="
+				+ profilePictureUrl + ", linkProfile=" + linkProfile + ", learningAreas=" + learningAreas + "]";
 	}
+
+
 	
 	
 }

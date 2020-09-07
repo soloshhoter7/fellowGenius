@@ -4,6 +4,13 @@ import { StudentService } from 'src/app/service/student.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateboxstudentComponent } from './updateboxstudent/updateboxstudent.component';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
+import { finalize } from "rxjs/operators";
+import { AngularFireStorage } from "@angular/fire/storage";
+import { HttpService } from "../../service/http.service";
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith} from 'rxjs/operators';
 
 @Component({
 	selector: 'app-student-profile',
@@ -11,45 +18,62 @@ import { NgForm } from '@angular/forms';
 	styleUrls: [ './student-profile.component.css' ]
 })
 export class StudentProfileComponent implements OnInit {
-	constructor(private studentService: StudentService, private matDialog: MatDialog) {}
+	constructor(private studentService: StudentService, 
+				private matDialog: MatDialog,
+    			private snackBar: MatSnackBar,
+				private firebaseStorage: AngularFireStorage,
+				private httpService: HttpService) {}
 
 	studentProfile: StudentProfileModel;
+	myControl = new FormControl();
+	options: string[] = [
+		'Mathematics',
+		'English',
+		'Science',
+		'Social Science',
+		'History',
+		'Political Science',
+		'Geography',
+		'Physics',
+		'Chemistry'
+	];
+	filteredOptions: Observable<string[]>;
 	// learningAreas = new Array(3);
-	disableAdd: boolean;
-	disableSub: boolean;
+	uploadedProfilePicture: File = null;
 	index: Number;
 	learningArea;
+	profilePictureUrl;
 	learningAreas: string[] = [];
-	
+	snackBarConfig: MatSnackBarConfig = {
+		duration: 2000,
+		horizontalPosition: "center",
+		verticalPosition: "top",
+	  };
+
 	ngOnInit(): void {
+		this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
 		this.index = 1;
 		this.openNav();
-		this.disableAdd = false;
 		// this.disableSub = true;
 		this.studentProfile = this.studentService.getStudentProfileDetails();
-
 		this.handleRefresh();
 	}
 
+	private _filter(value: string): string[] {
+		const filterValue = value.toLowerCase();
+		return this.options.filter(option => option.toLowerCase().includes(filterValue));
+	}
+
 	addLearningArea(){
-		console.log(this.learningAreas.length);
-		if(this.learningAreas.length==5){
-			this.disableAdd = true;
-			// this.disableSub = true;
-		}else{
-			this.disableAdd = false;
-			console.log(this.learningArea);
-			this.learningAreas.push(this.learningArea);
-			this.learningArea = '';
-			
-		}
-		
+		this.learningAreas.push(this.learningArea);
+		this.learningArea = '';
 	}
 
 	subtractLearningArea(index: any){
-		if(this.learningAreas.length<=5){
-			this.disableAdd = false;
-		}
 		this.learningAreas.splice(index, 1);
 	}
 
@@ -81,19 +105,56 @@ export class StudentProfileComponent implements OnInit {
 		this.studentProfile.linkProfile = form.value.linkProfile;
 		this.studentProfile.learningAreas = this.learningAreas;
 		console.log(this.studentProfile);
-		
+		if(this.learningAreasDuplicacyCheck(this.learningAreas)){
+			this.httpService.updateStudentProfile(this.studentProfile).subscribe(res=>{
+				console.log(res);
+			})
+		}else{
+			console.log("duplicate entries found");
+		}	
 	}
 
-	addEducation() {
-		console.log(this.learningArea);
-		this.learningAreas.push(this.learningArea);
-		this.learningArea = '';
+	learningAreasDuplicacyCheck(fields: string[]){
+		for(var i=0; i<fields.length-1; i++){
+			for(var j=i+1; j<fields.length; j++){
+				if(fields[i]==fields[j]){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
-	deleteEducation(index: any) {
-		this.learningAreas.splice(index, 1);
-	}
-
+	profilePictureChange(event) {
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		this.uploadProfilePicture();
+	  }
+	
+	  //for uploading profile picture
+	uploadProfilePicture() {
+		var filePath = `tutor_profile_picture/${
+		  this.uploadedProfilePicture
+		}_${new Date().getTime()}`;
+		const fileRef = this.firebaseStorage.ref(filePath);
+		this.firebaseStorage
+		  .upload(filePath, this.uploadedProfilePicture)
+		  .snapshotChanges()
+		  .pipe(
+			finalize(() => {
+			  fileRef.getDownloadURL().subscribe((url) => {
+				this.profilePictureUrl = url;
+				this.studentProfile.profilePictureUrl = this.profilePictureUrl;
+	
+				this.snackBar.open(
+				  "Image Uploaded successfully",
+				  "close",
+				  this.snackBarConfig
+				);
+			  });
+			})
+		  )
+		  .subscribe();
+	  }
 
 	basicInfoEdit() {
 		this.studentService.setEditFuntion('basicInfoEdit');

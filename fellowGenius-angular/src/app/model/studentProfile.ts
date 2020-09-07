@@ -8,6 +8,6 @@ export class StudentProfileModel {
 	public profilePictureUrl: string;
 	public learningAreas: string[];
 	public subject: string;
-	// public password: string;
+	public password: string;
 	// public gradeLevel: string;
 }
