@@ -71,6 +71,8 @@ import { ThankYouComponent } from './facade/thank-you/thank-you.component';
 import { KnowledgeBaseComponent } from './home/knowledge-base/knowledge-base.component';
 import { SessionNotesComponent } from './home/session-notes/session-notes.component';
 import { RecordingsComponent } from './home/recordings/recordings.component';
+import { dobValidator } from '../Validators/dobValidator.directive'
+
 export const appRoutes: Routes = [
 	{
 		path: 'home',
@@ -136,7 +138,8 @@ export const appRoutes: Routes = [
 		ThankYouComponent,
 		KnowledgeBaseComponent,
 		SessionNotesComponent,
-		RecordingsComponent
+		RecordingsComponent,
+		dobValidator
 	],
 	imports: [
 		NgxMaterialTimepickerModule,

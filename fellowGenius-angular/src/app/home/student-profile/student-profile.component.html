@@ -131,8 +131,8 @@
 
                     <div class="form-group">
                         <label class="form-control-placeholder" for="dob">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" required #dob="ngModel" />
-                        <span *ngIf="!dob.valid && dob.touched" class="help-block">Invalid dob</span>
+                        <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" dobValidator required #dob="ngModel" />
+                        <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid dob</span>
                     </div>
 
                     <div class="form-group">
