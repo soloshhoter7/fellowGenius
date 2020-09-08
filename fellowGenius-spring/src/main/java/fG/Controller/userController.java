@@ -37,16 +37,16 @@ public class userController {
 		return service.saveUserProfile(registrationModel);
 	}
 	
-	// for saving student registration details
-//	@PreAuthorize("hasAuthority('STUDENT')")
-	@RequestMapping(value = "/registerStudent")
-	public boolean saveStudentProfile(@RequestBody StudentProfileModel studentModel) throws IOException {
-		if (service.saveStudentProfile(studentModel)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	// for saving student registration details
+////	@PreAuthorize("hasAuthority('STUDENT')")
+//	@RequestMapping(value = "/registerStudent")
+//	public boolean saveStudentProfile(@RequestBody StudentProfileModel studentModel) throws IOException {
+//		if (service.saveStudentProfile(studentModel)) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	//for updating student profile
 	@PreAuthorize("hasAuthority('Learner')")
@@ -56,12 +56,12 @@ public class userController {
 		
 	}
 	
-	// for checking student login
-	@PreAuthorize("hasAuthority('Learner')")
-	@RequestMapping(value = "/loginStudent")
-	public boolean onLoginStudent(@RequestBody StudentLoginModel studentLoginModel) {
-		return service.onStudentLogin(studentLoginModel);
-	}
+//	// for checking student login
+//	@PreAuthorize("hasAuthority('Learner')")
+//	@RequestMapping(value = "/loginStudent")
+//	public boolean onLoginStudent(@RequestBody StudentLoginModel studentLoginModel) {
+//		return service.onStudentLogin(studentLoginModel);
+//	}
 
 	// for getting student details after login
 	@PreAuthorize("hasAuthority('Learner')")
@@ -80,7 +80,7 @@ public class userController {
 	// for getting tutor profile details after login
 	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/getTutorProfileDetails", produces = { "application/json" })
-	public TutorProfileDetails getTutorProfileDetails(String tid) {
+	public TutorProfileDetailsModel getTutorProfileDetails(String tid) {
 		return service.getTutorProfileDetails(Integer.valueOf(tid));
 	}
 
@@ -117,6 +117,7 @@ public class userController {
 	@RequestMapping(value = "/updateTutor", produces = "application/JSON")
 	public void updateTutorProfile(@RequestBody TutorProfileDetailsModel tutorDetailsModel)
 			throws IOException, IllegalArgumentException, IllegalAccessException {
+		System.out.println("tutor details model ->"+tutorDetailsModel);
 		service.updateTutorProfileDetails(tutorDetailsModel);
 
 	}

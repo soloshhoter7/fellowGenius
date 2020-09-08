@@ -175,14 +175,39 @@
           ">
             </div>
             <div class="profile-secondaryinformaiton">
-                <span *ngIf="loginType == 'Learner'" class="profile-varient">{{ studentProfile.fullName }}</span>
+                <span *ngIf="loginType=='Learner'" class="profile-varient">{{ studentProfile.fullName }}</span>
+                <span *ngIf="loginType=='Expert'" class="profile-varient">{{ tutorProfile.fullName }}</span>
                 <span class="profile-varient">Politics (Masters)</span>
-                <span>Add Progress bar</span>
-                <span>Add Swtich</span>
+                <span>
+                  <div class="progress-Bar">
+                    <div class="outer-progressBar">
+                      <div
+                        class="inner-progressBar"
+                        [style.width.%]="tutorProfileDetails.profileCompleted"
+                      ></div>
+                    </div>
+                  </div>
+                </span>
+                <span> <p style="  
+                  width: 80%;
+                  font-size: 10px;
+                  margin: auto;">You {{100-tutorProfileDetails.profileCompleted}}% left. Please get a head start by completing it now</p> </span>
+
+                <span>
+                  <label class="switch" style="margin-top: 13px; margin-right: 7px;">
+                  <input
+                    type="checkbox"
+                    [checked]="checked"
+                    (click)="toggleAvailability()"
+                  />
+                  <span class="slider round"></span>
+                </label>
+              </span>
+                
             </div>
         </div>
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" style="margin-top: 35px;">
             <li>
                 <a routerLink="/home/profile" *ngIf="loginType == 'Expert'">
           Profile</a>

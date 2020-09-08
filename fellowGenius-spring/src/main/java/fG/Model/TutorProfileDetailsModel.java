@@ -1,12 +1,13 @@
 package fG.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TutorProfileDetailsModel {
 	Integer tid;
 	String fullName;
 	String institute;
-	List<String> educationalQualifications;
+	ArrayList<String> educationalQualifications;
 	String price1;
 	String price2;
 	String price3;
@@ -18,8 +19,8 @@ public class TutorProfileDetailsModel {
 	String  profilePictureUrl;
 	String professionalSkills;
 	String currentOrganisation;
-	List<String> previousOrganisations;
-	List<String> areaOfExpertise;
+	ArrayList<String> previousOrganisations = new ArrayList<>();
+	ArrayList<String> areaOfExpertise = new ArrayList<>();;
 	Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
@@ -41,10 +42,10 @@ public class TutorProfileDetailsModel {
 	public void setInstitute(String institute) {
 		this.institute = institute;
 	}
-	public List<String> getEducationalQualifications() {
+	public ArrayList<String> getEducationalQualifications() {
 		return educationalQualifications;
 	}
-	public void setEducationalQualifications(List<String> educationalQualifications) {
+	public void setEducationalQualifications(ArrayList<String> educationalQualifications) {
 		this.educationalQualifications = educationalQualifications;
 	}
 	public String getPrice1() {
@@ -113,16 +114,16 @@ public class TutorProfileDetailsModel {
 	public void setCurrentOrganisation(String currentOrganisation) {
 		this.currentOrganisation = currentOrganisation;
 	}
-	public List<String> getPreviousOrganisations() {
+	public ArrayList<String> getPreviousOrganisations() {
 		return previousOrganisations;
 	}
-	public void setPreviousOrganisations(List<String> previousOrganisations) {
+	public void setPreviousOrganisations(ArrayList<String> previousOrganisations) {
 		this.previousOrganisations = previousOrganisations;
 	}
-	public List<String> getAreaOfExpertise() {
+	public ArrayList<String> getAreaOfExpertise() {
 		return areaOfExpertise;
 	}
-	public void setAreaOfExpertise(List<String> areaOfExpertise) {
+	public void setAreaOfExpertise(ArrayList<String> areaOfExpertise) {
 		this.areaOfExpertise = areaOfExpertise;
 	}
 	public Integer getProfileCompleted() {

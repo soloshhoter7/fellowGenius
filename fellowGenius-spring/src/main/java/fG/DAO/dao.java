@@ -185,6 +185,7 @@ public class dao {
 
 	// for getting tutor profile details
 	public TutorProfileDetails getTutorProfileDetails(Integer tid) {
+		System.out.println("oeee"+repTutorProfileDetails.idExist(tid));
 		return repTutorProfileDetails.idExist(tid);
 	}
 

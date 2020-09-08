@@ -1,44 +1,51 @@
 package fG.Entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 
 @Entity
 public class TutorProfileDetails {
 	@Id
-    Integer tid;
+	Integer tid;
 	String fullName;
-	public String subject1;
-	String subject2;
-	String subject3;
+	String institute;
+	
+	@Lob
+	@Column(columnDefinition="BLOB")
+	ArrayList<String> educationalQualifications;
+	
 	String price1;
 	String price2;
 	String price3;
-	String studyInstitution;
-	String majorSubject;
-	String graduationYear;
-	String  workTitle;
-	String  workInstitution;
 	String  description;
 	String  speciality;
 	Integer rating;
 	Integer reviewCount;
-    Integer lessonCompleted;
+	Integer lessonCompleted;
 	String  profilePictureUrl;
+	String professionalSkills;
+	String currentOrganisation;
+	@Column(columnDefinition="BLOB")
+	ArrayList<String> previousOrganisations;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY,
+			mappedBy ="userId")
+	Set<ExpertiseAreas> areaOfExpertise = new HashSet<>();
+	
 	Integer profileCompleted;
-	String gradeLevel;
-	
-	
-	public String getSpeciality() {
-		return speciality;
-	}
-	public void setSpeciality(String speciality) {
-		this.speciality = speciality;
-	}
+	Integer yearsOfExperience;
+	String linkedInProfile;
 	public Integer getTid() {
 		return tid;
 	}
@@ -51,23 +58,18 @@ public class TutorProfileDetails {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	public String getSubject1() {
-		return subject1;
+	public String getInstitute() {
+		return institute;
 	}
-	public void setSubject1(String subject1) {
-		this.subject1 = subject1;
+	public void setInstitute(String institute) {
+		this.institute = institute;
 	}
-	public String getSubject2() {
-		return subject2;
+	public ArrayList<String> getEducationalQualifications() {
+		return educationalQualifications;
 	}
-	public void setSubject2(String subject2) {
-		this.subject2 = subject2;
-	}
-	public String getSubject3() {
-		return subject3;
-	}
-	public void setSubject3(String subject3) {
-		this.subject3 = subject3;
+	
+	public void setEducationalQualifications(ArrayList<String> educationalQualifications) {
+		this.educationalQualifications = educationalQualifications;
 	}
 	public String getPrice1() {
 		return price1;
@@ -87,41 +89,17 @@ public class TutorProfileDetails {
 	public void setPrice3(String price3) {
 		this.price3 = price3;
 	}
-	public String getStudyInstitution() {
-		return studyInstitution;
-	}
-	public void setStudyInstitution(String studyInstitution) {
-		this.studyInstitution = studyInstitution;
-	}
-	public String getMajorSubject() {
-		return majorSubject;
-	}
-	public void setMajorSubject(String majorSubject) {
-		this.majorSubject = majorSubject;
-	}
-	public String getGraduationYear() {
-		return graduationYear;
-	}
-	public void setGraduationYear(String graduationYear) {
-		this.graduationYear = graduationYear;
-	}
-	public String getWorkTitle() {
-		return workTitle;
-	}
-	public void setWorkTitle(String workTitle) {
-		this.workTitle = workTitle;
-	}
-	public String getWorkInstitution() {
-		return workInstitution;
-	}
-	public void setWorkInstitution(String workInstitution) {
-		this.workInstitution = workInstitution;
-	}
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getSpeciality() {
+		return speciality;
+	}
+	public void setSpeciality(String speciality) {
+		this.speciality = speciality;
 	}
 	public Integer getRating() {
 		return rating;
@@ -147,28 +125,63 @@ public class TutorProfileDetails {
 	public void setProfilePictureUrl(String profilePictureUrl) {
 		this.profilePictureUrl = profilePictureUrl;
 	}
+	public String getProfessionalSkills() {
+		return professionalSkills;
+	}
+	public void setProfessionalSkills(String professionalSkills) {
+		this.professionalSkills = professionalSkills;
+	}
+	public String getCurrentOrganisation() {
+		return currentOrganisation;
+	}
+	public void setCurrentOrganisation(String currentOrganisation) {
+		this.currentOrganisation = currentOrganisation;
+	}
+
+	public ArrayList<String> getPreviousOrganisations() {
+		return previousOrganisations;
+	}
+	public void setPreviousOrganisations(ArrayList<String> previousOrganisations) {
+		this.previousOrganisations = previousOrganisations;
+	}
+	
+
+
+	public Set<ExpertiseAreas> getAreaOfExpertise() {
+		return areaOfExpertise;
+	}
+	public void setAreaOfExpertise(Set<ExpertiseAreas> areaOfExpertise) {
+		this.areaOfExpertise = areaOfExpertise;
+	}
 	public Integer getProfileCompleted() {
 		return profileCompleted;
 	}
 	public void setProfileCompleted(Integer profileCompleted) {
 		this.profileCompleted = profileCompleted;
 	}
-	
-	public String getGradeLevel() {
-		return gradeLevel;
+	public Integer getYearsOfExperience() {
+		return yearsOfExperience;
 	}
-	public void setGradeLevel(String gradeLevel) {
-		this.gradeLevel = gradeLevel;
+	public void setYearsOfExperience(Integer yearsOfExperience) {
+		this.yearsOfExperience = yearsOfExperience;
+	}
+	public String getLinkedInProfile() {
+		return linkedInProfile;
+	}
+	public void setLinkedInProfile(String linkedInProfile) {
+		this.linkedInProfile = linkedInProfile;
 	}
 	@Override
 	public String toString() {
-		return "TutorProfileDetails [tid=" + tid + ", fullName=" + fullName + ", subject1=" + subject1 + ", subject2="
-				+ subject2 + ", subject3=" + subject3 + ", price1=" + price1 + ", price2=" + price2 + ", price3="
-				+ price3 + ", studyInstitution=" + studyInstitution + ", majorSubject=" + majorSubject
-				+ ", graduationYear=" + graduationYear + ", workTitle=" + workTitle + ", workInstitution="
-				+ workInstitution + ", description=" + description + ", speciality=" + speciality + ", rating=" + rating
-				+ ", reviewCount=" + reviewCount + ", lessonCompleted=" + lessonCompleted + ", profilePictureUrl="
-				+ profilePictureUrl + ", profileCompleted=" + profileCompleted + ", gradeLevel=" + gradeLevel + "]";
+		return "TutorProfileDetails [tid=" + tid + ", fullName=" + fullName + ", institute=" + institute
+				+ ", educationalQualifications=" + educationalQualifications + ", price1=" + price1 + ", price2="
+				+ price2 + ", price3=" + price3 + ", description=" + description + ", speciality=" + speciality
+				+ ", rating=" + rating + ", reviewCount=" + reviewCount + ", lessonCompleted=" + lessonCompleted
+				+ ", profilePictureUrl=" + profilePictureUrl + ", professionalSkills=" + professionalSkills
+				+ ", currentOrganisation=" + currentOrganisation + ", previousOrganisations=" + previousOrganisations
+				+ ", profileCompleted=" + profileCompleted + ", yearsOfExperience=" + yearsOfExperience
+				+ ", linkedInProfile=" + linkedInProfile + "]";
 	}
+
 	
 }

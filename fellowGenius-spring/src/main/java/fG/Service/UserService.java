@@ -28,16 +28,14 @@ import org.springframework.stereotype.Service;
 import fG.DAO.MeetingDao;
 import fG.DAO.dao;
 import fG.Entity.BookingDetails;
-import fG.Entity.LearningAreasCount;
+import fG.Entity.ExpertiseAreas;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
 import fG.Entity.TutorAvailabilitySchedule;
-import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
-import fG.Entity.TutorVerification;
 import fG.Entity.Users;
 import fG.Model.AuthenticationResponse;
 import fG.Model.ScheduleTime;
@@ -159,18 +157,14 @@ public class UserService  implements UserDetailsService{
 			studentProfile.setEmail(registrationModel.getEmail());
 			studentProfile.setFullName(registrationModel.getFullName());
 			if (dao.saveStudentProfile(studentProfile)) {
-//				StudentLogin studentLogin = new StudentLogin();
-//				studentLogin.setPassword(encoder.encode(registrationModel.getPassword()));
-//				studentLogin.setEmail(registrationModel.getEmail());
-//				studentLogin.setStudentProfile(studentProfile);
-				
+
 				Users user = new Users();
 				user.setEmail(registrationModel.getEmail());
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
 				user.setUserId(studentProfile.getSid());
 				user.setRole("Learner");
 				dao.saveUserLogin(user);
-//				dao.saveStudentLogin(studentLogin);
+
 				return true;
 			} else {
 				return false;
@@ -182,11 +176,7 @@ public class UserService  implements UserDetailsService{
 			tutorProfile.setFullName(registrationModel.getFullName());
 
 			if (dao.saveTutorProfile(tutorProfile)) {
-//				TutorLogin tutorLogin = new TutorLogin();
-//				tutorLogin.setPassword(encoder.encode(registrationModel.getPassword()));
-//				tutorLogin.setEmail(registrationModel.getEmail());
-//				tutorLogin.setTutorProfile(tutorProfile);
-//				dao.saveTutorLogin(tutorLogin);
+
 				Users user = new Users();
 				user.setEmail(registrationModel.getEmail());
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
@@ -196,6 +186,7 @@ public class UserService  implements UserDetailsService{
 				//creating tutor profile details tuple
 				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 				tutProfileDetails.setTid(tutorProfile.getTid());
+				tutProfileDetails.setFullName(registrationModel.getFullName());
 				tutProfileDetails.setProfileCompleted(12);
 				tutProfileDetails.setLessonCompleted(0);
 				tutProfileDetails.setRating(100);
@@ -266,32 +257,46 @@ public class UserService  implements UserDetailsService{
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
-		tutProfileDetails.setDescription(tutorModel.getDescription());
+		TutorProfileDetails	tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
+		tutProfileDetails.setTid(tutorModel.getTid());
 		tutProfileDetails.setFullName(tutorModel.getFullName());
-		tutProfileDetails.setGradeLevel(tutorModel.getGradeLevel());
-		tutProfileDetails.setGraduationYear(tutorModel.getGraduationYear());
-		tutProfileDetails.setLessonCompleted(tutorModel.getLessonCompleted());
-		tutProfileDetails.setMajorSubject(tutorModel.getMajorSubject());
+		tutProfileDetails.setInstitute(tutorModel.getInstitute());
+		tutProfileDetails.setEducationalQualifications(tutorModel.getEducationalQualifications());
 		tutProfileDetails.setPrice1(tutorModel.getPrice1());
 		tutProfileDetails.setPrice2(tutorModel.getPrice2());
 		tutProfileDetails.setPrice3(tutorModel.getPrice3());
-		tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
-		tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+		tutProfileDetails.setDescription(tutorModel.getDescription());
+		tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
 		tutProfileDetails.setRating(tutorModel.getRating());
 		tutProfileDetails.setReviewCount(tutorModel.getReviewCount());
-		tutProfileDetails.setStudyInstitution(tutorModel.getStudyInstitution());
-		tutProfileDetails.setSubject1(tutorModel.getSubject1());
-		tutProfileDetails.setSubject2(tutorModel.getSubject2());
-		tutProfileDetails.setSubject3(tutorModel.getSubject3());
-		tutProfileDetails.setTid(tutorModel.getTid());
-		tutProfileDetails.setWorkInstitution(tutorModel.getWorkInstitution());
-		tutProfileDetails.setWorkTitle(tutorModel.getWorkTitle());
-		tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
+		tutProfileDetails.setLessonCompleted(tutorModel.getLessonCompleted());
+		tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+		tutProfileDetails.setProfessionalSkills(tutorModel.getProfessionalSkills());
+		tutProfileDetails.setCurrentOrganisation(tutorModel.getCurrentOrganisation());
+		tutProfileDetails.setPreviousOrganisations(tutorModel.getPreviousOrganisations());
+		tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
+		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
+		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
+		//for setting the expertise areas
+		for(String area:tutorModel.getAreaOfExpertise()) {
+			ExpertiseAreas subject = new ExpertiseAreas();
+			subject.setUserId(tutProfileDetails);
+			subject.setSubject(area);
+			if(!tutorProfileDetailsLoaded.getAreaOfExpertise().stream().filter(o -> o.getSubject().equals(area)).findFirst().isPresent()) {
+				tutProfileDetails.getAreaOfExpertise().add(subject);
+			}
+			
+		}
+//		tutProfileDetails.setAreaOfExpertise(areas);
 		dao.updateTutorProfile(tutProfileDetails);
-		if (tutorModel.getStudyInstitution() == null) {
-			dao.updateProfileCompleted(37, tutorModel.getTid());
-		} else {
-			dao.updateProfileCompleted(62, tutorModel.getTid());
+		Integer profileCompleted =dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
+		//updating profile completed percentage
+		if(profileCompleted<50) {
+			dao.updateProfileCompleted(50, tutorModel.getTid());	
+		}else if(profileCompleted.equals(50)&&tutProfileDetails.getInstitute()==null) {
+			dao.updateProfileCompleted(50, tutorModel.getTid());
+		}else if(profileCompleted.equals(50)&&tutProfileDetails.getInstitute()!=null) {
+			dao.updateProfileCompleted(100, tutorModel.getTid());
 		}
 	}
 
@@ -301,10 +306,10 @@ public class UserService  implements UserDetailsService{
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 		tutProfileDetails.setDescription(tutorModel.getDescription());
 		tutProfileDetails.setFullName(tutorModel.getFullName());
-		tutProfileDetails.setGradeLevel(tutorModel.getGradeLevel());
-		tutProfileDetails.setGraduationYear(tutorModel.getGraduationYear());
+//		tutProfileDetails.setGradeLevel(tutorModel.getGradeLevel());
+//		tutProfileDetails.setGraduationYear(tutorModel.getGraduationYear());
 		tutProfileDetails.setLessonCompleted(tutorModel.getLessonCompleted());
-		tutProfileDetails.setMajorSubject(tutorModel.getMajorSubject());
+//		tutProfileDetails.setMajorSubject(tutorModel.getMajorSubject());
 		tutProfileDetails.setPrice1(tutorModel.getPrice1());
 		tutProfileDetails.setPrice2(tutorModel.getPrice2());
 		tutProfileDetails.setPrice3(tutorModel.getPrice3());
@@ -312,13 +317,13 @@ public class UserService  implements UserDetailsService{
 		tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
 		tutProfileDetails.setRating(tutorModel.getRating());
 		tutProfileDetails.setReviewCount(tutorModel.getReviewCount());
-		tutProfileDetails.setStudyInstitution(tutorModel.getStudyInstitution());
-		tutProfileDetails.setSubject1(tutorModel.getSubject1());
-		tutProfileDetails.setSubject2(tutorModel.getSubject2());
-		tutProfileDetails.setSubject3(tutorModel.getSubject3());
+//		tutProfileDetails.setStudyInstitution(tutorModel.getStudyInstitution());
+//		tutProfileDetails.setSubject1(tutorModel.getSubject1());
+//		tutProfileDetails.setSubject2(tutorModel.getSubject2());
+//		tutProfileDetails.setSubject3(tutorModel.getSubject3());
 		tutProfileDetails.setTid(tutorModel.getTid());
-		tutProfileDetails.setWorkInstitution(tutorModel.getWorkInstitution());
-		tutProfileDetails.setWorkTitle(tutorModel.getWorkTitle());
+//		tutProfileDetails.setWorkInstitution(tutorModel.getWorkInstitution());
+//		tutProfileDetails.setWorkTitle(tutorModel.getWorkTitle());
 		tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
 		dao.updateTutorProfile(tutProfileDetails);
 	}
@@ -330,13 +335,11 @@ public class UserService  implements UserDetailsService{
 			tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
 			tutorProfile.setEmail(tutorModel.getEmail());
 			tutorProfile.setFullName(tutorModel.getFullName());
-
+			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			tutorProfile.setTid(tutorModel.getTid());
+			
 			if (dao.saveTutorProfile(tutorProfile)) {
-				TutorLogin tutorLogin = new TutorLogin();
-				tutorLogin.setPassword(encoder.encode(tutorModel.getPassword()));
-				tutorLogin.setEmail(tutorModel.getEmail());
-				tutorLogin.setTutorProfile(tutorProfile);
-				dao.saveTutorLogin(tutorLogin);
+				//saving tutor profile details
 				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 				tutProfileDetails.setTid(tutorProfile.getTid());
 				tutProfileDetails.setProfileCompleted(12);
@@ -344,9 +347,8 @@ public class UserService  implements UserDetailsService{
 				tutProfileDetails.setRating(100);
 				tutProfileDetails.setReviewCount(0);
 				dao.saveTutorID(tutProfileDetails);
-				TutorVerification tutVerify = new TutorVerification();
-				tutVerify.setTid(tutorProfile.getTid());
-				dao.saveTutorVerification(tutVerify);
+				
+				//saving tutor schedule details
 				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
 				tutSchedule.setTid(tutorProfile.getTid());
 				tutSchedule.setFullName(tutorProfile.getFullName());
@@ -367,16 +369,13 @@ public class UserService  implements UserDetailsService{
 		tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
 		tutorProfile.setEmail(tutorModel.getEmail());
 		tutorProfile.setFullName(tutorModel.getFullName());
-		tutorProfile.setAddressLine1(tutorModel.getAddressLine1());
-		tutorProfile.setAddressLine2(tutorModel.getAddressLine2());
-		tutorProfile.setCountry(tutorModel.getCountry());
-		tutorProfile.setState(tutorModel.getState());
 		tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-		tutorProfile.setCity(tutorModel.getCity());
 		dao.updateTutorBasicInfo(tutorProfile);
-		if (tutorProfile.getCity() != null && tutorProfile.getAddressLine1() != null) {
-			dao.updateProfileCompleted(37, tutorProfile.getTid());
+		
+		if(dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted()<=50) {
+			dao.updateProfileCompleted(40, tutorProfile.getTid());	
 		}
+		
 
 	}
 
@@ -388,12 +387,12 @@ public class UserService  implements UserDetailsService{
 		tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
 		tutorProfile.setEmail(tutorModel.getEmail());
 		tutorProfile.setFullName(tutorModel.getFullName());
-		tutorProfile.setAddressLine1(tutorModel.getAddressLine1());
-		tutorProfile.setAddressLine2(tutorModel.getAddressLine2());
-		tutorProfile.setCountry(tutorModel.getCountry());
-		tutorProfile.setState(tutorModel.getState());
+//		tutorProfile.setAddressLine1(tutorModel.getAddressLine1());
+//		tutorProfile.setAddressLine2(tutorModel.getAddressLine2());
+//		tutorProfile.setCountry(tutorModel.getCountry());
+//		tutorProfile.setState(tutorModel.getState());
 		tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-		tutorProfile.setCity(tutorModel.getCity());
+//		tutorProfile.setCity(tutorModel.getCity());
 		dao.updateTutorBasicInfo(tutorProfile);
 	}
 
@@ -414,14 +413,8 @@ public class UserService  implements UserDetailsService{
 		tutorProfileModel.setDateOfBirth(tutorProfile.getDateOfBirth());
 		tutorProfileModel.setEmail(tutorProfile.getEmail());
 		tutorProfileModel.setFullName(tutorProfile.getFullName());
-		tutorProfileModel.setPassword("");
 		tutorProfileModel.setTid(tutorProfile.getTid());
-		tutorProfileModel.setAddressLine1(tutorProfile.getAddressLine1());
-		tutorProfileModel.setAddressLine2(tutorProfile.getAddressLine2());
-		tutorProfileModel.setCountry(tutorProfile.getCountry());
-		tutorProfileModel.setState(tutorProfile.getState());
 		tutorProfileModel.setProfilePictureUrl(tutorProfile.getProfilePictureUrl());
-		tutorProfileModel.setCity(tutorProfile.getCity());
 		return tutorProfileModel;
 	}
 
@@ -441,8 +434,34 @@ public class UserService  implements UserDetailsService{
 	}
 
 	// getting tutor profile details with tid
-	public TutorProfileDetails getTutorProfileDetails(Integer tid) {
-		return dao.getTutorProfileDetails(tid);
+	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
+		System.out.println("get tutot profile details ->"+dao.getTutorProfileDetails(tid));
+		TutorProfileDetails tutProfileDetails = dao.getTutorProfileDetails(tid);
+		TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
+		tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
+		tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
+		tutorProfileDetailsModel.setInstitute(tutProfileDetails.getInstitute());
+		tutorProfileDetailsModel.setEducationalQualifications(tutProfileDetails.getEducationalQualifications());
+		tutorProfileDetailsModel.setPrice1(tutProfileDetails.getPrice1());
+		tutorProfileDetailsModel.setPrice2(tutProfileDetails.getPrice2());
+		tutorProfileDetailsModel.setPrice3(tutProfileDetails.getPrice3());
+		tutorProfileDetailsModel.setDescription(tutProfileDetails.getDescription());
+		tutorProfileDetailsModel.setSpeciality(tutProfileDetails.getSpeciality());
+		tutorProfileDetailsModel.setRating(tutProfileDetails.getRating());
+		tutorProfileDetailsModel.setReviewCount(tutProfileDetails.getReviewCount());
+		tutorProfileDetailsModel.setLessonCompleted(tutProfileDetails.getLessonCompleted());
+		tutorProfileDetailsModel.setProfilePictureUrl(tutProfileDetails.getProfilePictureUrl());
+		tutorProfileDetailsModel.setProfessionalSkills(tutProfileDetails.getProfessionalSkills());
+		tutorProfileDetailsModel.setCurrentOrganisation(tutProfileDetails.getCurrentOrganisation());
+		tutorProfileDetailsModel.setPreviousOrganisations(tutProfileDetails.getPreviousOrganisations());
+		tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
+		tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
+		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
+		for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
+			tutorProfileDetailsModel.getAreaOfExpertise().add(area.getSubject());
+		}
+		
+		return tutorProfileDetailsModel;
 	}
 
 	// for saving social login details

@@ -18,6 +18,7 @@ import { SocialAuthService } from 'angularx-social-login';
 import { CookieService } from 'ngx-cookie-service';
 import { HostListener } from '@angular/core';
 import * as jwt_decode from 'jwt-decode';
+import { tutorProfileDetails } from '../model/tutorProfileDetails';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
 	hostMeeting = new meetingDetails();
 	studentProfile = new StudentProfileModel();
 	tutorProfile = new tutorProfile();
+	tutorProfileDetails = new tutorProfileDetails();
 	dashboardUrl: string = '/home/studentDashboard';
 	loginType;
 	studentLoginDetails = new StudentLoginModel();
@@ -78,6 +80,7 @@ export class HomeComponent implements OnInit {
 					this.router.navigate([ 'home/studentDashboard' ]);
 				} else if (this.loginType == 'Expert') {
 					this.tutorProfile = this.tutorService.getTutorDetials();
+					this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
 					if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
 						this.checked = true;
 					} else {
@@ -223,8 +226,8 @@ export class HomeComponent implements OnInit {
 			this.httpService.getTutorDetails(this.userId).subscribe((res) => {
 				this.tutorProfile = res;
 				this.tutorService.setTutorDetails(this.tutorProfile);
-
 				this.httpService.getTutorProfileDetails(this.userId).subscribe((res) => {
+					this.tutorProfileDetails = res;
 					this.tutorService.setTutorProfileDetails(res);
 					this.httpService.getScheduleData(this.userId).subscribe((res) => {
 						this.tutorService.setPersonalAvailabilitySchedule(res);
