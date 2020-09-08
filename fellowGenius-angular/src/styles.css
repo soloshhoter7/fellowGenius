@@ -1070,6 +1070,7 @@ textarea:focus {
     border: 1px solid #DBDBDB;
     position: absolute;
     left: 20px;
+    top: 10px;
 }
 
 .expert-profile-container .expert-profile-header .contact-information {
@@ -1077,6 +1078,7 @@ textarea:focus {
     right: 20px;
     width: 300px;
     text-align: right;
+    top: 20px;
 }
 
 .expert-profile-container .expert-profile-header .contact-information span {
@@ -1110,10 +1112,69 @@ textarea:focus {
 .expert-profile-container .expert-profile-header .basic-information {
     position: absolute;
     left: 200px;
+    top: 20px;
+}
+
+.expert-profile-container .expert-profile-header .basic-information span {
+    display: block;
 }
 
 .expert-profile-container .expert-profile-header .basic-information .profile-name {
     color: #FFFFFF;
     font-size: 16px;
     font-weight: 700;
+}
+
+.expert-profile-container .expert-profile-header .basic-information .profile-skills {
+    color: #FFFFFF;
+}
+
+.expert-profile-container .expert-profile-header .numbers-container {
+    display: flex;
+    position: absolute;
+    top: 125px;
+    left: 180px;
+    text-align: center;
+}
+
+.expert-profile-container .expert-profile-header .numbers-container .number {
+    width: 100%;
+    display: block;
+    float: left;
+    font-weight: 700;
+    color: #000000;
+}
+
+.expert-profile-container .expert-profile-header .numbers-container .info {
+    width: 100%;
+    display: block;
+    float: left;
+    text-transform: uppercase;
+}
+
+.expert-profile-container .expert-profile-description {
+    margin-top: 60px;
+    margin-left: 180px;
+    padding: 10px;
+}
+
+.expert-profile-container .expert-profile-description .description-header {
+    color: #892687;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.expert-profile-container .expert-profile-description .description-label span {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+.expert-profile-container .expert-profile-description .row {
+    margin-top: 10px;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table {
+    border: 1px solid red;
+    width: 100%;
 }
