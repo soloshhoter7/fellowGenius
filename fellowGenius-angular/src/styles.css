@@ -1040,7 +1040,7 @@ textarea:focus {
     display: block;
     float: left;
     width: 80%;
-    border: 1px solid #460041;
+    border: 1px solid #892687;
     margin-top: 20px;
     border-radius: 8px;
     margin: 20px;
@@ -1052,10 +1052,11 @@ textarea:focus {
 }
 
 .expert-profile-container .expert-profile-header {
-    background-color: #460041;
+    background-color: #892687;
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
     height: 120px;
+    position: relative;
 }
 
 .expert-profile-container .expert-profile-header .list-thumbnail {
@@ -1067,4 +1068,52 @@ textarea:focus {
     background-position: center;
     box-shadow: 10px 10px 23px -16px rgba(0, 0, 0, 0.46);
     border: 1px solid #DBDBDB;
+    position: absolute;
+    left: 20px;
+}
+
+.expert-profile-container .expert-profile-header .contact-information {
+    position: absolute;
+    right: 20px;
+    width: 300px;
+    text-align: right;
+}
+
+.expert-profile-container .expert-profile-header .contact-information span {
+    display: block;
+    float: left;
+    width: 100%;
+    color: #FFFFFF;
+}
+
+.expert-profile-container .expert-profile-header .contact-information span .fa-linkedin {
+    display: inline-block;
+    position: relative;
+    top: -4px;
+}
+
+.expert-profile-container .expert-profile-header .contact-information span a {
+    color: #FFFFFF;
+    text-overflow: ellipsis;
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.expert-profile-container .expert-profile-header .contact-information span a:hover {
+    color: #e30084;
+    text-decoration: underline;
+}
+
+.expert-profile-container .expert-profile-header .basic-information {
+    position: absolute;
+    left: 200px;
+}
+
+.expert-profile-container .expert-profile-header .basic-information .profile-name {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
 }
