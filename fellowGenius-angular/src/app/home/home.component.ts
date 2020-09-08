@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
 	overlay;
 	screenHeight: number;
 	screenWidth: number;
+	profilePictureUrl = '../../../assets/images/default-user-image.png';
 	constructor(
 		public router: Router,
 		public meetingService: MeetingService,
@@ -81,6 +82,9 @@ export class HomeComponent implements OnInit {
 				} else if (this.loginType == 'Expert') {
 					this.tutorProfile = this.tutorService.getTutorDetials();
 					this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+					if (this.tutorProfileDetails.profilePictureUrl != null) {
+						this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
+					}
 					if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
 						this.checked = true;
 					} else {
@@ -228,6 +232,9 @@ export class HomeComponent implements OnInit {
 				this.tutorService.setTutorDetails(this.tutorProfile);
 				this.httpService.getTutorProfileDetails(this.userId).subscribe((res) => {
 					this.tutorProfileDetails = res;
+					if (this.tutorProfileDetails.profilePictureUrl != null) {
+						this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
+					}
 					this.tutorService.setTutorProfileDetails(res);
 					this.httpService.getScheduleData(this.userId).subscribe((res) => {
 						this.tutorService.setPersonalAvailabilitySchedule(res);
