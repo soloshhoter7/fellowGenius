@@ -306,9 +306,10 @@ export class SignUpComponent implements OnInit {
 					} else if (this.registrationModel.role == 'Expert') {
 						this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
 							this.tutorProfile = res;
+							console.log(this.tutorProfile);
 							this.tutorService.setTutorDetails(this.tutorProfile);
-
 							this.httpClient.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
+								console.log(res);
 								this.tutorService.setTutorProfileDetails(res);
 								this.httpClient.getScheduleData(this.tutorProfile.tid).subscribe((res) => {
 									this.tutorAvailabilitySchedule = res;

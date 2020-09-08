@@ -26,7 +26,11 @@ import { CookieService } from 'ngx-cookie-service';
 	styleUrls: [ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit {
-	constructor(private cookieService: CookieService, private tutorService: TutorService) {}
+	constructor(
+		private cookieService: CookieService,
+		private tutorService: TutorService,
+		private httpService: HttpService
+	) {}
 
 	basic = true;
 	myControl = new FormControl();
@@ -59,10 +63,40 @@ export class ProfileComponent implements OnInit {
 
 	ngOnInit() {
 		this.filteredOptions = this.myControl.valueChanges.pipe(startWith(''), map((value) => this._filter(value)));
-		this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-		this.tutorProfile = this.tutorService.getTutorDetials();
-		console.log(this.tutorProfile);
-		console.log(this.tutorProfileDetails);
+		if (this.tutorService.getTutorProfileDetails().profileCompleted) {
+			this.tutorProfile = this.tutorService.getTutorDetials();
+			this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+			console.log(this.tutorProfile);
+			console.log(this.tutorProfileDetails);
+			if (this.tutorProfileDetails.educationalQualifications != null) {
+				this.educationQualifications = this.tutorProfileDetails.educationalQualifications;
+			}
+			if (this.tutorProfileDetails.areaOfExpertise != null) {
+				this.expertises = this.tutorProfileDetails.areaOfExpertise;
+			}
+			if (this.tutorProfileDetails.previousOrganisations != null) {
+				this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
+				console.log(this.previousOraganisations);
+			}
+		} else {
+			console.log('else executed');
+			setTimeout(() => {
+				this.tutorProfile = this.tutorService.getTutorDetials();
+				this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+				console.log(this.tutorProfile);
+				console.log(this.tutorProfileDetails);
+				if (this.tutorProfileDetails.educationalQualifications != null) {
+					this.educationQualifications = this.tutorProfileDetails.educationalQualifications;
+				}
+				if (this.tutorProfileDetails.areaOfExpertise != null) {
+					this.expertises = this.tutorProfileDetails.areaOfExpertise;
+				}
+				if (this.tutorProfileDetails.previousOrganisations != null) {
+					this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
+					console.log(this.previousOraganisations);
+				}
+			}, 1000);
+		}
 	}
 
 	private _filter(value: string): string[] {
@@ -75,35 +109,54 @@ export class ProfileComponent implements OnInit {
 		this.userId = this.cookieService.get('userId');
 		if (this.userId) {
 			this.tutorProfile.tid = this.userId;
-			this.tutorProfile.fullName = form.value.fullName;
 			this.tutorProfile.contact = form.value.contact;
 			this.tutorProfile.dateOfBirth = form.value.dob;
-			this.tutorProfile.email = form.value.email;
 			this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
-			console.log(this.tutorProfile);
-
-			this.tutorProfileDetails.fullName = form.value.fullName;
 			this.tutorProfileDetails.tid = this.userId;
-			this.tutorProfileDetails.educationQualifications = this.educationQualifications;
+			this.tutorProfileDetails.educationalQualifications = this.educationQualifications;
 			this.tutorProfileDetails.professionalSkills = form.value.professionalSkills;
 			console.log(this.tutorProfileDetails);
+			console.log(this.tutorProfile);
+			this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res) => {
+				this.tutorService.setTutorDetails(this.tutorProfile);
+				this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe(() => {
+					if (this.tutorProfileDetails.profileCompleted < 50) {
+						this.tutorProfileDetails.profileCompleted = 50;
+					}
+					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+					console.log('all info saved successfully');
+				});
+			});
 		}
 	}
 
 	saveExpertAdvancedProfile(form: any) {
-		this.userId = this.cookieService.get('userId');
-		if (this.userId && this.expertises.length > 0) {
-			this.tutorProfileDetails.institute = form.value.Institute;
-			this.tutorProfileDetails.areaOfExpertise = this.expertises;
-			this.tutorProfileDetails.linkedInProfileUrl = form.value.linkedInProfile;
-			this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
-			this.tutorProfileDetails.currentOrganisation = form.value.currentOrganisation;
-			this.tutorProfileDetails.previousOrganisations = this.previousOraganisations;
-			this.tutorProfileDetails.description = form.value.description;
-			this.tutorProfileDetails.speciality = form.value.speciality;
+		if (this.tutorProfileDetails.profileCompleted >= 50) {
+			console.log('before ->');
 			console.log(this.tutorProfileDetails);
+			this.userId = this.cookieService.get('userId');
+			if (this.userId && this.expertises.length > 0) {
+				this.tutorProfileDetails.institute = form.value.Institute;
+				this.tutorProfileDetails.areaOfExpertise = this.expertises;
+				this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+				this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
+				this.tutorProfileDetails.currentOrganisation = form.value.currentOrganisation;
+				this.tutorProfileDetails.previousOrganisations = this.previousOraganisations;
+				this.tutorProfileDetails.description = form.value.description;
+				this.tutorProfileDetails.speciality = form.value.speciality;
+				if (this.tutorProfileDetails.profileCompleted == 50) {
+					this.tutorProfileDetails.profileCompleted = 100;
+				}
+				console.log(this.tutorProfileDetails);
+				this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
+					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+					console.log('information updated successfully');
+				});
+			} else {
+				this.errorText = 'Enter atleast one area of Expertise !';
+			}
 		} else {
-			this.errorText = 'Enter atleast one area of Expertise !';
+			console.log('complete basic profile first');
 		}
 	}
 

@@ -2,7 +2,7 @@ export class tutorProfileDetails {
 	public tid: number;
 	public fullName: string;
 	public institute: string;
-	public educationQualifications: string[] = [];
+	public educationalQualifications: string[] = [];
 	public price1: string;
 	public price2: string;
 	public price3: string;
@@ -18,5 +18,5 @@ export class tutorProfileDetails {
 	public areaOfExpertise: string[] = [];
 	public profileCompleted: number;
 	public yearsOfExperience: number;
-	public linkedInProfileUrl: string;
+	public linkedInProfile: string;
 }

@@ -48,34 +48,34 @@
               <form (ngSubmit)="saveExpertBasicProfile(basicProfile)" #basicProfile="ngForm">
               <div class="form-group">
                   <label  for="fullName">Full Name</label>
-                  <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" autofocus />
+                  <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" [ngModel]="tutorProfile.fullName" autofocus disabled />
 
                   <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
               </div>
 
               <div class="form-group">
                   <label  for="email">Email Address</label>
-                  <input type="email" id="email" name="email" ngModel class="form-control input-fields" required  #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
+                  <input type="email" id="email" name="email" ngModel [ngModel]="tutorProfile.email" class="form-control input-fields" required disabled #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
                   />
                   <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
               </div>
 
               <div class="form-group">
                   <label  for="dob">Date of Birth</label>
-                  <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" required #dob="ngModel" />
+                  <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" [ngModel]="tutorProfile.dateOfBirth" required #dob="ngModel" />
                   <span *ngIf="!dob.valid && dob.touched" class="help-block">Invalid dob</span>
               </div>
 
               <div class="form-group">
                   <label  for="contact">Mobile Number</label>
-                  <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" required [pattern]="mobNumberPattern" #contact="ngModel" />
+                  <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" [ngModel]="tutorProfile.contact" required [pattern]="mobNumberPattern" #contact="ngModel" />
 
                   <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
               </div>
 
               <div class="form-group">
                 <label  for="professionalSkills">Professional Skills</label>
-                <input type="text" id="professionalSkills" class="form-control input-fields" ngModel name="professionalSkills" required #professionalSkills="ngModel" />
+                <input type="text" id="professionalSkills" class="form-control input-fields" ngModel [ngModel]="tutorProfileDetails.professionalSkills" name="professionalSkills" required #professionalSkills="ngModel" />
                 <span *ngIf="!professionalSkills.valid && professionalSkills.touched" class="help-block">Invalid professional skills</span>
                </div>
               
@@ -120,7 +120,7 @@
             <div class="col-md-5 leftBox">
               <div class="form-group">
                 <label  for="Institute">Institute</label>
-                <input type="text" id="Institute" name="Institute" ngModel class="form-control input-fields" required #Institute="ngModel" maxlength="50" autofocus />
+                <input type="text" id="Institute" name="Institute" ngModel class="form-control input-fields" [ngModel]="tutorProfileDetails.institute" required #Institute="ngModel" maxlength="50" autofocus />
                 <span class="help-block" *ngIf="!Institute.valid && Institute.touched">Invalid Institute</span>
               </div>
     
@@ -190,12 +190,12 @@
             <div class="col-md-5">
               <div class="form-group">
                 <label  for="yearsOfExperience">Years of Experience</label>
-                <input type="number" id="yearsOfExperience" name="yearsOfExperience" ngModel class="form-control input-fields" required #yearsOfExperience="ngModel"  />
+                <input type="number" id="yearsOfExperience" name="yearsOfExperience" ngModel [ngModel]="tutorProfileDetails.yearsOfExperience" class="form-control input-fields" required #yearsOfExperience="ngModel"  />
                 <span class="help-block" *ngIf="!yearsOfExperience.valid && yearsOfExperience.touched">Invalid years of experience</span>
               </div>
               <div class="form-group">
                 <label  for="currentOrganisation">Current Organisation</label>
-                <input type="text" id="currentOrganisation" name="currentOrganisation" ngModel class="form-control input-fields" required #currentOrganisation="ngModel" maxlength="50"/>
+                <input type="text" id="currentOrganisation" name="currentOrganisation" ngModel [ngModel]="tutorProfileDetails.currentOrganisation" class="form-control input-fields" required #currentOrganisation="ngModel" maxlength="50"/>
                 <span class="help-block" *ngIf="!currentOrganisation.valid && currentOrganisation.touched">Invalid current organisation</span>
               </div>
     
@@ -224,7 +224,7 @@
 
               <div class="form-group">
                 <label  for="linkedInProfile">LinkedIn Profile link</label>
-                <input type="text" id="linkedInProfile" name="linkedInProfile" ngModel class="form-control input-fields" required #linkedInProfile="ngModel" />
+                <input type="text" id="linkedInProfile" name="linkedInProfile" ngModel [ngModel]="tutorProfileDetails.linkedInProfile" class="form-control input-fields" required #linkedInProfile="ngModel" />
                 <span class="help-block" *ngIf="!linkedInProfile.valid && linkedInProfile.touched">Invalid Link</span>
               </div>
             </div> 
