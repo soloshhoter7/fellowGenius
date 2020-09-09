@@ -57,7 +57,7 @@ export class SearchResultsComponent implements OnInit {
 			profileCompleted: 100,
 			profilePictureUrl: null,
 			rating: 100,
-			reviewCount: 0,
+			reviewCount: 10,
 			speciality: "Angular, JAVA",
 			yearsOfExperience: 10	
 		}];
@@ -82,25 +82,15 @@ export class SearchResultsComponent implements OnInit {
 	}
 
 	searchPrice($event) {
-
-		if($event.target.value==1500){
-			this.filteredArray = this.searchResults.filter((res) => {
-				if (Number(res.price1) >= Number(1500)) {
-					return res.price1.toLocaleLowerCase;
-				}
-			});
-		}else{
-			console.log($event.target.value);
-			var price = $event.target.value.split('-');
-			var lowerValue = price[0];
-			var higherValue = price[1];
-			this.filteredArray = this.searchResults.filter((res) => {
-				if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue))
-					return res.price1.toLocaleLowerCase;
-			});
-		}
-
-
-		
+		console.log($event.target.value);
+		var price = $event.target.value.split('-');
+		var lowerValue = price[0];
+		var higherValue = price[1];
+		this.filteredArray = this.searchResults.filter((res) => {
+			if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue)){
+				return res.price1.toLocaleLowerCase;
+			}
+				
+		});	
 	}
 }
