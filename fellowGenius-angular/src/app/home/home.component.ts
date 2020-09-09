@@ -77,7 +77,9 @@ export class HomeComponent implements OnInit {
 				if (this.loginType == 'Learner') {
 					console.log('entered in learner !');
 					this.studentProfile = this.studentServce.getStudentProfileDetails();
-					console.log(this.studentProfile);
+					if (this.studentProfile.profilePictureUrl != null) {
+						this.profilePictureUrl = this.studentProfile.profilePictureUrl;
+					}
 					this.router.navigate([ 'home/studentDashboard' ]);
 				} else if (this.loginType == 'Expert') {
 					this.tutorProfile = this.tutorService.getTutorDetials();
@@ -218,6 +220,9 @@ export class HomeComponent implements OnInit {
 			this.loginService.setTrType('login');
 			this.httpService.getStudentDetails(this.userId).subscribe((res) => {
 				this.studentProfile = res;
+				if (this.studentProfile.profilePictureUrl != null) {
+					this.profilePictureUrl = this.studentProfile.profilePictureUrl;
+				}
 				this.studentService.setStudentProfileDetails(this.studentProfile);
 				this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
 					this.studentService.setStudentBookings(res);

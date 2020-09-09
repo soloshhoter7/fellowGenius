@@ -241,15 +241,16 @@ public class UserService  implements UserDetailsService{
 	public StudentProfileModel getStudentDetails(String userId) {
 		StudentProfileModel stuProfileModel = new StudentProfileModel();
 		StudentProfile stuProfile = new StudentProfile();
+		
 		stuProfile = dao.getStudentDetails(userId);
+		stuProfileModel.setSid(stuProfile.getSid());
 		stuProfileModel.setContact(stuProfile.getContact());
 		stuProfileModel.setDateOfBirth(stuProfile.getDateOfBirth());
 		stuProfileModel.setEmail(stuProfile.getEmail());
 		stuProfileModel.setFullName(stuProfile.getFullName());
-		stuProfileModel.setPassword("");
-		stuProfileModel.setSid(stuProfile.getSid());
-//		stuProfileModel.setGradeLevel(stuProfile.getGradeLevel());
-//		stuProfileModel.setSubject(stuProfile.getSubject());
+		stuProfileModel.setProfilePictureUrl(stuProfile.getProfilePictureUrl());
+		stuProfileModel.setLinkProfile(stuProfile.getLinkProfile());
+		
 		return stuProfileModel;
 	}
 

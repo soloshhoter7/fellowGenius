@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentProfileModel } from 'src/app/model/studentProfile';
 import { StudentService } from 'src/app/service/student.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UpdateboxstudentComponent } from './updateboxstudent/updateboxstudent.component';
 import { NgForm } from '@angular/forms';
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { finalize } from "rxjs/operators";
-import { AngularFireStorage } from "@angular/fire/storage";
-import { HttpService } from "../../service/http.service";
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { HttpService } from '../../service/http.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map, startWith} from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
+import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component';
 
 @Component({
 	selector: 'app-student-profile',
@@ -18,12 +19,20 @@ import { map, startWith} from 'rxjs/operators';
 	styleUrls: [ './student-profile.component.css' ]
 })
 export class StudentProfileComponent implements OnInit {
-	constructor(private studentService: StudentService, 
-				private matDialog: MatDialog,
-    			private snackBar: MatSnackBar,
-				private firebaseStorage: AngularFireStorage,
-				private httpService: HttpService) {}
-
+	constructor(
+		private studentService: StudentService,
+		private matDialog: MatDialog,
+		private snackBar: MatSnackBar,
+		private firebaseStorage: AngularFireStorage,
+		private httpService: HttpService
+	) {}
+	isLoading3: boolean = false;
+	profilePicUploadStatus: boolean;
+	config: MatSnackBarConfig = {
+		duration: 2000,
+		horizontalPosition: 'center',
+		verticalPosition: 'top'
+	};
 	studentProfile: StudentProfileModel;
 	myControl = new FormControl();
 	options: string[] = [
@@ -39,85 +48,88 @@ export class StudentProfileComponent implements OnInit {
 	];
 	filteredOptions: Observable<string[]>;
 	// learningAreas = new Array(3);
-	uploadedProfilePicture: File = null;
+
 	index: Number;
 	learningArea;
-	profilePictureUrl;
 	learningAreas: string[] = [];
+	profilePictureUrl = '../../../assets/images/default-user-image.png';
+	uploadedProfilePicture: File = null;
+
 	snackBarConfig: MatSnackBarConfig = {
 		duration: 2000,
-		horizontalPosition: "center",
-		verticalPosition: "top",
-	  };
+		horizontalPosition: 'center',
+		verticalPosition: 'top'
+	};
 
 	ngOnInit(): void {
-		this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+		this.filteredOptions = this.myControl.valueChanges.pipe(startWith(''), map((value) => this._filter(value)));
 		this.index = 1;
 		this.openNav();
 		// this.disableSub = true;
+		console.log('student service profile');
+		console.log(this.studentService.getStudentProfileDetails());
 		this.studentProfile = this.studentService.getStudentProfileDetails();
+		if (this.studentProfile.profilePictureUrl != null) {
+			this.profilePictureUrl = this.studentProfile.profilePictureUrl;
+		}
 		this.handleRefresh();
 	}
 
 	private _filter(value: string): string[] {
 		const filterValue = value.toLowerCase();
-		return this.options.filter(option => option.toLowerCase().includes(filterValue));
+		return this.options.filter((option) => option.toLowerCase().includes(filterValue));
 	}
 
-	addLearningArea(){
+	addLearningArea() {
 		this.learningAreas.push(this.learningArea);
 		this.learningArea = '';
 	}
 
-	subtractLearningArea(index: any){
-		this.learningAreas.splice(index, 1);
+	subtractLearningArea(index: any) {
+		if (confirm('Are you sure you want to delete this learning area?')) {
+			this.learningAreas.splice(index, 1);
+		}
 	}
 
-	navAction(index){
-		if(index%2==1){
+	navAction(index) {
+		if (index % 2 == 1) {
 			this.index = index + 1;
 			this.closeNav();
-		}else{
+		} else {
 			this.index = index + 1;
 			this.openNav();
 		}
 	}
 	openNav() {
-		document.getElementById("sidenav").style.width = "230px";
-		document.getElementById("mainContent").style.marginLeft = "230px";
-	  }
-	  
-	closeNav() {
-		document.getElementById("sidenav").style.width = "0";
-		document.getElementById("mainContent").style.marginLeft= "0";
+		document.getElementById('sidenav').style.width = '230px';
+		document.getElementById('mainContent').style.marginLeft = '230px';
 	}
 
-	saveStudentProfile(form: NgForm){
+	closeNav() {
+		document.getElementById('sidenav').style.width = '0';
+		document.getElementById('mainContent').style.marginLeft = '0';
+	}
+
+	saveStudentProfile(form: NgForm) {
 		console.log(form);
 		this.studentProfile.contact = form.value.contact;
 		this.studentProfile.dateOfBirth = form.value.dob;
-		this.studentProfile.email = form.value.email;
-		this.studentProfile.fullName = form.value.fullName;
 		this.studentProfile.linkProfile = form.value.linkProfile;
 		this.studentProfile.learningAreas = this.learningAreas;
-		console.log(this.studentProfile);
-		if(this.learningAreasDuplicacyCheck(this.learningAreas)){
-			this.httpService.updateStudentProfile(this.studentProfile).subscribe(res=>{
+		this.studentProfile.profilePictureUrl = this.profilePictureUrl;
+		if (this.learningAreasDuplicacyCheck(this.learningAreas)) {
+			this.httpService.updateStudentProfile(this.studentProfile).subscribe((res) => {
 				console.log(res);
-			})
-		}else{
-			console.log("duplicate entries found");
-		}	
+			});
+		} else {
+			console.log('duplicate entries found');
+		}
 	}
 
-	learningAreasDuplicacyCheck(fields: string[]){
-		for(var i=0; i<fields.length-1; i++){
-			for(var j=i+1; j<fields.length; j++){
-				if(fields[i]==fields[j]){
+	learningAreasDuplicacyCheck(fields: string[]) {
+		for (var i = 0; i < fields.length - 1; i++) {
+			for (var j = i + 1; j < fields.length; j++) {
+				if (fields[i] == fields[j]) {
 					return false;
 				}
 			}
@@ -126,36 +138,91 @@ export class StudentProfileComponent implements OnInit {
 	}
 
 	profilePictureChange(event) {
+		// this.profilePictureDisabled = true;
 		this.uploadedProfilePicture = <File>event.target.files[0];
-		this.uploadProfilePicture();
-	  }
-	
-	  //for uploading profile picture
-	uploadProfilePicture() {
-		var filePath = `tutor_profile_picture/${
-		  this.uploadedProfilePicture
-		}_${new Date().getTime()}`;
+		this.isLoading3 = true;
+
+		// this.profilePictureDisabled = true;
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		const reader = new FileReader();
+		var imageSrc;
+		// var Image: File = evt.target.files[0];
+
+		if (event.target.files && event.target.files.length) {
+			this.uploadedProfilePicture = event.target.files[0];
+			reader.readAsDataURL(this.uploadedProfilePicture);
+			reader.onload = () => {
+				imageSrc = reader.result as string;
+				this.openDialog(imageSrc);
+			};
+		}
+		// this.uploadProfilePicture();
+	}
+	openDialog(imageSrc) {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.disableClose = true;
+		dialogConfig.data = {
+			image: this.uploadedProfilePicture,
+			imageSrc: imageSrc
+		};
+		// this.dialog.open(UploadProfilePictureComponent, dialogConfig);
+		const dialogRef = this.matDialog.open(UploadProfilePictureComponent, dialogConfig);
+		dialogRef.afterClosed().subscribe((data) => {
+			var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
+			var image: File = new File([ blob ], this.uploadedProfilePicture.name, {
+				type: this.uploadedProfilePicture.type,
+				lastModified: Date.now()
+			});
+			this.uploadedProfilePicture = image;
+			this.uploadProfilePicture();
+		});
+	}
+	b64toBlob(dataURI, fileType) {
+		var byteString = atob(dataURI.split(',')[1]);
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ ab ], { type: fileType });
+	}
+	profilePictureChangeCompleted(event) {
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		var filePath = `tutor_profile_picture/${this.uploadedProfilePicture}_${new Date().getTime()}`;
 		const fileRef = this.firebaseStorage.ref(filePath);
 		this.firebaseStorage
-		  .upload(filePath, this.uploadedProfilePicture)
-		  .snapshotChanges()
-		  .pipe(
-			finalize(() => {
-			  fileRef.getDownloadURL().subscribe((url) => {
-				this.profilePictureUrl = url;
-				this.studentProfile.profilePictureUrl = this.profilePictureUrl;
-	
-				this.snackBar.open(
-				  "Image Uploaded successfully",
-				  "close",
-				  this.snackBarConfig
-				);
-			  });
-			})
-		  )
-		  .subscribe();
-	  }
-
+			.upload(filePath, this.uploadedProfilePicture)
+			.snapshotChanges()
+			.pipe(
+				finalize(() => {
+					fileRef.getDownloadURL().subscribe((url) => {
+						this.profilePictureUrl = url;
+						this.snackBar.open('Image Uploaded successfully', 'close', this.config);
+					});
+				})
+			)
+			.subscribe();
+	}
+	//for uploading profile picture
+	uploadProfilePicture() {
+		var filePath = `tutor_profile_picture/${this.uploadedProfilePicture}_${new Date().getTime()}`;
+		const fileRef = this.firebaseStorage.ref(filePath);
+		this.firebaseStorage
+			.upload(filePath, this.uploadedProfilePicture)
+			.snapshotChanges()
+			.pipe(
+				finalize(() => {
+					fileRef.getDownloadURL().subscribe((url) => {
+						this.profilePicUploadStatus = true;
+						this.isLoading3 = false;
+						this.profilePictureUrl = url;
+						this.snackBar.open('Image Uploaded successfully', 'close', this.config);
+					});
+				})
+			)
+			.subscribe();
+	}
 	basicInfoEdit() {
 		this.studentService.setEditFuntion('basicInfoEdit');
 		this.matDialog.open(UpdateboxstudentComponent, {
@@ -174,6 +241,9 @@ export class StudentProfileComponent implements OnInit {
 		if (!this.studentProfile.sid) {
 			setTimeout(() => {
 				this.studentProfile = this.studentService.getStudentProfileDetails();
+				if (this.studentProfile.profilePictureUrl != null) {
+					this.profilePictureUrl = this.studentProfile.profilePictureUrl;
+				}
 			}, 1000);
 		}
 	}

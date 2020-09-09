@@ -6,8 +6,5 @@ export class StudentProfileModel {
 	public linkProfile: string;
 	public dateOfBirth: string;
 	public profilePictureUrl: string;
-	public learningAreas: string[];
-	public subject: string;
-	public password: string;
-	// public gradeLevel: string;
+	public learningAreas: string[] = [];
 }
