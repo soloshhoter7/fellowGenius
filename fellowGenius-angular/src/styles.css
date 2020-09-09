@@ -275,14 +275,14 @@ textarea:focus {
 }
 
 .btn-secondary:hover {
-    background-color: #e30084 !important;
-    border-color: #e30084 !important;
+    background-color: #7D0F7D !important;
+    border-color: #7D0F7D !important;
     color: #ffffff !important;
 }
 
 .btn-secondary:focus {
-    background-color: #e30084 !important;
-    border-color: #e30084 !important;
+    background-color: #7D0F7D !important;
+    border-color: #7D0F7D !important;
     box-shadow: 0 0 0 0.2rem #f7e4f9 !important;
     color: #ffffff !important;
 }
