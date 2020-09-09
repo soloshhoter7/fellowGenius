@@ -1175,6 +1175,52 @@ textarea:focus {
 }
 
 .expert-profile-container .expert-profile-description .schedular-table {
-    border: 1px solid red;
     width: 100%;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table .morning-row {
+    background-color: #FEEBCA;
+    height: 40px;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table .afternoon-row {
+    background-color: #F9C1DE;
+    height: 40px;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table .evening-row {
+    background-color: #D9F1F1;
+    height: 40px;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table .late-evening-row {
+    background-color: #FBD7DC;
+    height: 40px;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table .row-header {
+    text-transform: uppercase;
+    padding: 5px;
+    font-weight: 700;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table table {
+    border: 1px solid #000000;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table table thead tr th {
+    background-color: #F7E4F9;
+    line-height: 20px;
+    height: 50px;
+    text-transform: uppercase;
+    padding: 5px;
+}
+
+.expert-profile-container .expert-profile-description .schedular-table table tbody tr td {
+    padding: 10px;
 }

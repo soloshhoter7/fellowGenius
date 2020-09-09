@@ -175,4 +175,24 @@
         font-size: 30px!important;
         color: #FFFFFF!important;
     }
+    .expert-profile-container {
+        width: 90%!important;
+    }
+    .expert-profile-container .expert-profile-header .list-thumbnail {
+        width: 50px!important;
+        height: 50px!important;
+        top: 2px!important;
+    }
+    .expert-profile-container .expert-profile-header .basic-information {
+        top: 60px!important;
+        left: 5px!important;
+        width: 100%!important;
+    }
+    .expert-profile-container .expert-profile-header .contact-information {
+        top: 2px!important;
+    }
+    .expert-profile-container .expert-profile-description {
+        margin-left: 0px!important;
+        margin-top: 30px!important;
+    }
 }
