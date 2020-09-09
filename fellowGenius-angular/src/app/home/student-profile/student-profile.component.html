@@ -1,208 +1,117 @@
-<!-- <body style="padding-top: 20px;height: 100%; background-color: #f9fafc;">
-    
-    <div class="container ">
-        <div class="row">
-            <div class="col-md-8">
-    
-
-                <div class="row Box">
-                    <button class="editIconButton" (click)="tutProfileDetailsEdit()" title="Edit"><i class="far fa-edit editIcon"></i></button>
-                    <div class="col-md-2" style="margin-right: 30px;">
-                        <img src="../../../assets/icons/user-square.svg" alt="profilePicture" style="width:100px;height:100px;border-radius: 5px;">
-                    </div>
-                    <div class="col-md-9">
-                        <div class="row">
-                            <p style="font-size: 2.4rem;line-height: 1.333;font-weight: 300;margin:0;width: 100%;">{{ studentProfile.fullName }}</p>
-                            <p style="font-size: 1.2rem;line-height: 1.5;font-weight:300;margin:0;width: 100%;">{{ studentProfile.email}}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row Box">
-                    <button class="editIconButton" (click)="basicInfoEdit()" title="Edit"><i class="far fa-edit editIcon"></i></button>
-                    <div class="row marginZero" style="width: 100%;">
-                        <h1>Basic Info</h1>
-                    </div>
-                    <div class="row" style="width: 100%;">
-                        <div class="col-md-6">
-                            <div style="width: 100%;">
-                                <div>
-                                    <h3 style="font-weight: 500;">Name</h3>
-                                </div>
-                                <div>
-                                    <p>{{studentProfile.fullName}}</p>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div>
-                                    <h3 style="font-weight: 500;">Contact</h3>
-                                </div>
-                                <div>
-                                    <p>{{ studentProfile.contact }}</p>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div>
-                                    <h3 style="font-weight: 500;">Date Of Birth</h3>
-                                </div>
-                                <div>
-                                    <p>{{ studentProfile.dateOfBirth }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div style="width: 100%;">
-                                <div>
-                                    <h3 style="font-weight: 500;">Subject</h3>
-                                </div>
-                                <div>
-                                    <p>{{ studentProfile.subject }}</p>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div>
-                                    <h3 style="font-weight: 500;">Email</h3>
-                                </div>
-                                <div>
-                                    <p>{{ studentProfile.email }}</p>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div>
-                                    <h3 style="font-weight: 500;">Grade Level</h3>
-                                </div>
-                                <div>
-                                    <p>{{ studentProfile.gradeLevel }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-3" style="height: fit-content;padding: 20px; text-align: center;"></div>
-        </div>
-    </div>
-</body> -->
-
 <body>
-
-    <div class="row" style="margin-bottom: 2vh;"></div>
-    <form (ngSubmit)="saveStudentProfile(s)" style="width: 100%;" #s="ngForm">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <p style="color: #e3165b; font-size: x-large;"><b>PROFILE</b></p>
-                    <img style="width:8vw; height:8vw; border-radius: 100%; border: 1px solid black" [src]="studentProfile.profilePictureUrl">
-                    <p style="text-align: center;width: 8vw;
-                    text-decoration: underline;">
-                        <input type="file" id="file" #userPhoto (change)="profilePictureChange($event)" name="image" />Upload</p>
+    <div>
+        <form (ngSubmit)="saveStudentProfile(s)" style="width: 100%;" #s="ngForm">
+            <div class="container">
+                <div class="row" style="padding-top: 2vh;">
+                    <div class="col-md-3">
+                        <p style="color: #e3165b; font-size: x-large;"><b>PROFILE</b></p>
+                        <!-- <img style="width:8vw; height:8vw; border-radius: 100%; border: 1px solid black" [src]="studentProfile.profilePictureUrl">
+                        <p style="text-align: center;width: 8vw;
+                        text-decoration: underline;">
+                            <input type="file" id="file" #userPhoto (change)="profilePictureChange($event)" name="image" />Upload</p> -->
+                            <img style="width:130px; height:130px; border-radius: 100%; border: 1px solid black" [src]="profilePictureUrl">
+                            <div class="form-group">
+                                <input
+                                  #profilePicture
+                                  hidden="true"
+                                  type="file"
+                                  onclick="this.value=null"
+                                  (change)="profilePictureChange($event)"
+                                  required
+                                />
+                                
+                                <button
+                                  class="btn btn-outline-primary"
+                                  (click)="profilePicture.click()"
+                                  style="margin-top: 5px;width: 140px;position: relative;height: 30px;"
+                                >
+                                  <span *ngIf="!isLoading3">Upload</span>
+                                  <div class="tickMark" *ngIf="profilePicUploadStatus">
+                                    <img class="tickMarkImg" src="../../../assets/icons/tick.png">
+                                  </div>
+                                  <span *ngIf="isLoading3" class="loader"style="text-align: center; z-index: 10">
+                                    <app-loader></app-loader>
+                                  </span>
+                                </button>
+                              </div>
+                    </div>
+                    <div class="offset-md-6 col-md-3" style="text-align: end;">
+                        <button class="btn" style="margin-right: 2vw; text-decoration: underline;">Cancel</button>
+                        <button type=button class="btn" style=" 
+                        padding: 1vh 2vw;
+                        background-color: purple;
+                        color: white;
+                        font-size: small" type=" submit">Save</button>
+                    </div>
                 </div>
-                <div class="offset-md-6 col-md-3" style="text-align: end;">
-                    <button class="btn" style="margin-right: 2vw; text-decoration: underline;">Cancel</button>
-                    <button type=button class="btn" style=" 
-                    padding: 1vh 2vw;
-                    background-color: purple;
-                    color: white;
-                    font-size: small" type=" submit">Save</button>
-                    <!-- padding-top: 1vh;
-                    padding-bottom: 1vh;
-                    padding-right: 2vw;
-                    padding-left: 2vw; -->
-                </div>
-            </div>
-            <br>
-            <div class="row">
-
-                <div class="col-md-7 leftBox">
-                    <!-- <div class="logo"></div> -->
-                    <div class="form-group">
-                        <label class="form-control-placeholder" for="fullName">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" autofocus />
-                        <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-control-placeholder " for="email">Email Address</label>
-                        <input type="email" id="email" name="email" ngModel class="form-control input-fields" required email #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
-                        />
-                        <span *ngIf="!email.valid && email.touched" class="help-block">Invalid email</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-control-placeholder" for="dob">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" dobValidator required #dob="ngModel" />
-                        <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid dob</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-control-placeholder" for="contact">Mobile Number</label>
-                        <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" required [pattern]="mobNumberPattern" #contact="ngModel" />
-
-                        <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-control-placeholder" for="role">Select</label>
-                        <select class="form-control input-fields" ngModel name="role" required>
-                            <option>A</option>
-                            <option>B</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-control-placeholder" for="linkProfile">Add your LinkedIn Profile</label>
-                        <input type="text" id="linkProfile" class="form-control input-fields" ngModel name="linkProfile" required #linkProfile="ngModel" />
-                    </div>
-
-                </div>
-                <!-- Learning Areas -->
-                <!-- <div class="col-md-5">
-                    <label class="form-control-placeholder" for="learning">Learning Areas</label>
-                    <div class="learningArea-fields" *ngFor="let size of learningAreas">
-                        <input type="text" name="learning" class="form-control" ngModel #learning="ngModel" style="width: 30vw;">
-                    </div>
-                    <div style="text-align: center; width: 30vw;">
-
-                        <button [disabled]="disableAdd" type="submit" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit; align-content: center;"><img class="plus_minus" src="../../../assets/icons/plus.png"></button>
-                        <button [disabled]="disableSub" type="submit" class="btn btn-danger btn-circle btn-sm" (click)="subtractLearningArea()" style="font-size: inherit; align-content: center;"><img class="plus_minus" src="../../../assets/icons/minus.png"></button>
-                    </div>
-                </div> -->
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-control-placeholder" for="learning">Learning Areas</label>
-                        <!-- <label for="expertise">Learning Areas</label> -->
-                        <div class="learningArea-fields" *ngFor="let fields of learningAreas;let i=index">
-                            <div class="tags" style="display: inline;" class="form-control">{{fields}}</div>&nbsp;&nbsp;&nbsp;
-                            <button type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="subtractLearningArea(i)" style="font-size: inherit;">-</button>
+                <br>
+                <div class="row">
+    
+                    <div class="col-md-7 leftBox">
+                        <div class="form-group">
+                            <label class="form-control-placeholder" for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" [ngModel]="studentProfile.fullName" autofocus disabled />
+                            <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
                         </div>
-                        <div>
-                            <!-- <input type="search" name="search" style="
-                            width: 70%;
-                            display: inline; 
-                            margin-right: 5px;" class="form-control" [(ngModel)]="learningArea" placeholder="Add learning area" required/> -->
-                            <input type="search" name="search" placeholder="Add learning area" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="learningArea" style="
-                            width: 70%;
-                            display: inline; 
-                            margin-right: 5px;" class="form-control" />
-                            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                                    {{option}}
-                                </mat-option>
-                            </mat-autocomplete>
-                            <span style="                          
-                            display: inline;">
-                                <button [disabled]="!learningArea" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;display: inline;">+</button>
-                        </span>
-
+    
+                        <div class="form-group">
+                            <label class="form-control-placeholder " for="email">Email Address</label>
+                            <input type="email" id="email" name="email" ngModel [ngModel]="studentProfile.email" class="form-control input-fields" required email #email="ngModel" maxlength="64" disabled pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
+                            />
+                            <span *ngIf="!email.valid && email.touched" class="help-block">Invalid email</span>
+                        </div>
+    
+                        <div class="form-group">
+                            <label class="form-control-placeholder" for="dob">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" ngModel [ngModel]="studentProfile.dateOfBirth" class="form-control input-fields" dobValidator required #dob="ngModel" />
+                            <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid dob</span>
+                        </div>
+    
+                        <div class="form-group">
+                            <label class="form-control-placeholder" for="contact">Mobile Number</label>
+                            <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" required [ngModel]="studentProfile.contact"[pattern]="mobNumberPattern" #contact="ngModel" />
+    
+                            <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
                         </div>
 
+                        <div class="form-group">
+                            <label class="form-control-placeholder" for="linkProfile">Add your LinkedIn Profile</label>
+                            <input type="text" id="linkProfile" class="form-control input-fields" ngModel name="linkProfile" [ngModel]="studentProfile.linkProfile" required #linkProfile="ngModel" />
+                        </div>
+    
+                    </div>
+    
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="learning">Learning Areas</label>
+                            <div class="learningArea-fields" *ngFor="let fields of learningAreas;let i=index">
+                                <div class="tags" >{{fields}}</div>
+                                <button type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="subtractLearningArea(i)" style="font-size: inherit;">-</button>
+                            </div>
+                            <div>
+                                <input type="search" name="search" placeholder="Add learning area" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="learningArea" style="
+                                width: 70%;
+                                display: inline; 
+                                margin-right: 5px;" class="form-control" />
+                                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+                                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <span style="                          
+                                display: inline;">
+                                    <button [disabled]="!learningArea" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;display: inline;">+</button>
+                            </span>
+    
+                            </div>
+    
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+    
                     </div>
                 </div>
-                <div class="col-md-1">
-
-                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div> 
 </body>

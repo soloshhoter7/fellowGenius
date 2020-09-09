@@ -51,7 +51,7 @@ export class StudentDashboardComponent implements OnInit {
 			this.findStudentPendingBookings();
 			this.fetchApprovedMeetings();
 			this.fetchLiveMeetings();
-			this.fetchTopTutors();
+			// this.fetchTopTutors();
 			this.handleRefresh();
 		} else {
 			this.handleRefresh();
@@ -146,14 +146,14 @@ export class StudentDashboardComponent implements OnInit {
 		}
 	}
 	// -------------------------------------------------------------------------------------------------------------------------------------------------
-	fetchTopTutors() {
-		this.httpService.fetchTopTutors(this.studentService.getStudentProfileDetails().subject).subscribe((res) => {
-			this.topTutors = res;
-			if (this.topTutors.length == 0) {
-				this.noTutorMessage = 'No recommended tutors right now';
-			}
-		});
-	}
+	// fetchTopTutors() {
+	// 	this.httpService.fetchTopTutors(this.studentService.getStudentProfileDetails().subject).subscribe((res) => {
+	// 		this.topTutors = res;
+	// 		if (this.topTutors.length == 0) {
+	// 			this.noTutorMessage = 'No recommended tutors right now';
+	// 		}
+	// 	});
+	// }
 	fetchTutorList() {
 		this.httpService.getTutorList().subscribe((req) => {
 			this.filterSearch = req;
@@ -200,7 +200,7 @@ export class StudentDashboardComponent implements OnInit {
 			this.findStudentPendingBookings();
 			this.fetchApprovedMeetings();
 			this.fetchLiveMeetings();
-			this.fetchTopTutors();
+			// this.fetchTopTutors();
 		}, 1000);
 	}
 }
