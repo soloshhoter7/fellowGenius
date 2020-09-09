@@ -10,9 +10,41 @@
               </div>
             </div>
             <div  [class.hideBlock]="!basic">
-              <img style="width:130px; height:130px; border-radius: 100%; border: 1px solid black" src="../../../assets/images/ajayVerma.jpg">
+              <img style="width:130px; height:130px; border-radius: 100%; border: 1px solid black" [src]="profilePictureUrl">
+              <!-- <input
+                #profilePicture
+                hidden="true"
+                type="file"
+                onclick="this.value=null"
+                (change)="profilePictureChange($event)"
+                required
+              />
               <p style="text-align: center;
-              text-decoration: underline;margin-top: 5px;width: 140px;"><a href="#">Upload</a></p>
+              text-decoration: underline;margin-top: 5px;width: 140px;"><a href="#">Upload</a></p> -->
+              <div class="form-group">
+                <input
+                  #profilePicture
+                  hidden="true"
+                  type="file"
+                  onclick="this.value=null"
+                  (change)="profilePictureChange($event)"
+                  required
+                />
+                
+                <button
+                  class="btn btn-outline-primary"
+                  (click)="profilePicture.click()"
+                  style="margin-top: 5px;width: 140px;position: relative;height: 30px;"
+                >
+                  <span *ngIf="!isLoading3">Upload</span>
+                  <div class="tickMark" *ngIf="profilePicUploadStatus">
+                    <img class="tickMarkImg" src="../../../assets/icons/tick.png">
+                  </div>
+                  <span *ngIf="isLoading3" class="loader"style="text-align: center; z-index: 10">
+                    <app-loader></app-loader>
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="col-md-3" style="text-align: end;margin: 20px;" [class.hideBlock]="!basic">

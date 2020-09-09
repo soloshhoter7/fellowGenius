@@ -29,14 +29,23 @@ export class ProfileComponent implements OnInit {
 	constructor(
 		private cookieService: CookieService,
 		private tutorService: TutorService,
-		private httpService: HttpService
+		private httpService: HttpService,
+		private firebaseStorage: AngularFireStorage,
+		private snackBar: MatSnackBar,
+		private matDialog: MatDialog
 	) {}
 
 	basic = true;
 	myControl = new FormControl();
 	errorText: string;
+	isLoading3: boolean = false;
+	profilePicUploadStatus: boolean;
 	@ViewChild('basicProfile') basicProfile: FormGroupDirective;
-
+	config: MatSnackBarConfig = {
+		duration: 2000,
+		horizontalPosition: 'center',
+		verticalPosition: 'top'
+	};
 	options: string[] = [
 		'Mathematics',
 		'English',
@@ -59,7 +68,8 @@ export class ProfileComponent implements OnInit {
 	tutorProfile = new tutorProfile();
 	tutorProfileDetails = new tutorProfileDetails();
 	userId;
-	profilePictureUrl;
+	profilePictureUrl = '../../../assets/images/default-user-image.png';
+	uploadedProfilePicture: File = null;
 
 	ngOnInit() {
 		this.filteredOptions = this.myControl.valueChanges.pipe(startWith(''), map((value) => this._filter(value)));
@@ -78,6 +88,9 @@ export class ProfileComponent implements OnInit {
 				this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
 				console.log(this.previousOraganisations);
 			}
+			if (this.tutorProfileDetails.profilePictureUrl != null) {
+				this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
+			}
 		} else {
 			console.log('else executed');
 			setTimeout(() => {
@@ -94,6 +107,9 @@ export class ProfileComponent implements OnInit {
 				if (this.tutorProfileDetails.previousOrganisations != null) {
 					this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
 					console.log(this.previousOraganisations);
+				}
+				if (this.tutorProfileDetails.profilePictureUrl != null) {
+					this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
 				}
 			}, 1000);
 		}
@@ -115,6 +131,7 @@ export class ProfileComponent implements OnInit {
 			this.tutorProfileDetails.tid = this.userId;
 			this.tutorProfileDetails.educationalQualifications = this.educationQualifications;
 			this.tutorProfileDetails.professionalSkills = form.value.professionalSkills;
+			this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
 			console.log(this.tutorProfileDetails);
 			console.log(this.tutorProfile);
 			this.httpService.updateTutorProfile(this.tutorProfile).subscribe((res) => {
@@ -159,6 +176,102 @@ export class ProfileComponent implements OnInit {
 		} else {
 			console.log('complete basic profile first');
 		}
+	}
+
+	profilePictureChange(event) {
+		// this.profilePictureDisabled = true;
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		this.isLoading3 = true;
+
+		// this.profilePictureDisabled = true;
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		const reader = new FileReader();
+		var imageSrc;
+		// var Image: File = evt.target.files[0];
+
+		if (event.target.files && event.target.files.length) {
+			this.uploadedProfilePicture = event.target.files[0];
+			reader.readAsDataURL(this.uploadedProfilePicture);
+			reader.onload = () => {
+				imageSrc = reader.result as string;
+				this.openDialog(imageSrc);
+			};
+		}
+		// this.uploadProfilePicture();
+	}
+	openDialog(imageSrc) {
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.disableClose = true;
+		dialogConfig.data = {
+			image: this.uploadedProfilePicture,
+			imageSrc: imageSrc
+		};
+		// this.dialog.open(UploadProfilePictureComponent, dialogConfig);
+		const dialogRef = this.matDialog.open(UploadProfilePictureComponent, dialogConfig);
+		dialogRef.afterClosed().subscribe((data) => {
+			var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
+			var image: File = new File([ blob ], this.uploadedProfilePicture.name, {
+				type: this.uploadedProfilePicture.type,
+				lastModified: Date.now()
+			});
+			this.uploadedProfilePicture = image;
+			this.uploadProfilePicture();
+		});
+	}
+	b64toBlob(dataURI, fileType) {
+		var byteString = atob(dataURI.split(',')[1]);
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ ab ], { type: fileType });
+	}
+	profilePictureChangeCompleted(event) {
+		this.uploadedProfilePicture = <File>event.target.files[0];
+		var filePath = `tutor_profile_picture/${this.uploadedProfilePicture}_${new Date().getTime()}`;
+		const fileRef = this.firebaseStorage.ref(filePath);
+		this.firebaseStorage
+			.upload(filePath, this.uploadedProfilePicture)
+			.snapshotChanges()
+			.pipe(
+				finalize(() => {
+					fileRef.getDownloadURL().subscribe((url) => {
+						var tutorProfileDetails: tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+						this.profilePictureUrl = url;
+						tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+						this.httpService.editTutorProfileDetails(tutorProfileDetails).subscribe((res) => {
+							var tutProfile: tutorProfile = this.tutorService.getTutorDetials();
+							tutProfile.profilePictureUrl = this.profilePictureUrl;
+							this.httpService.editBasicProfile(tutProfile).subscribe((res) => {
+								this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+								this.snackBar.open('Image Uploaded successfully', 'close', this.config);
+							});
+						});
+					});
+				})
+			)
+			.subscribe();
+	}
+	//for uploading profile picture
+	uploadProfilePicture() {
+		var filePath = `tutor_profile_picture/${this.uploadedProfilePicture}_${new Date().getTime()}`;
+		const fileRef = this.firebaseStorage.ref(filePath);
+		this.firebaseStorage
+			.upload(filePath, this.uploadedProfilePicture)
+			.snapshotChanges()
+			.pipe(
+				finalize(() => {
+					fileRef.getDownloadURL().subscribe((url) => {
+						this.profilePicUploadStatus = true;
+						this.isLoading3 = false;
+						this.profilePictureUrl = url;
+						this.snackBar.open('Image Uploaded successfully', 'close', this.config);
+					});
+				})
+			)
+			.subscribe();
 	}
 
 	basicProfileToggle() {
