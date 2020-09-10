@@ -29,6 +29,7 @@ import fG.DAO.MeetingDao;
 import fG.DAO.dao;
 import fG.Entity.BookingDetails;
 import fG.Entity.ExpertiseAreas;
+import fG.Entity.LearningAreas;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -241,7 +242,6 @@ public class UserService  implements UserDetailsService{
 	public StudentProfileModel getStudentDetails(String userId) {
 		StudentProfileModel stuProfileModel = new StudentProfileModel();
 		StudentProfile stuProfile = new StudentProfile();
-		
 		stuProfile = dao.getStudentDetails(userId);
 		stuProfileModel.setSid(stuProfile.getSid());
 		stuProfileModel.setContact(stuProfile.getContact());
@@ -249,11 +249,41 @@ public class UserService  implements UserDetailsService{
 		stuProfileModel.setEmail(stuProfile.getEmail());
 		stuProfileModel.setFullName(stuProfile.getFullName());
 		stuProfileModel.setProfilePictureUrl(stuProfile.getProfilePictureUrl());
-		stuProfileModel.setLinkProfile(stuProfile.getLinkProfile());
-		
+		stuProfileModel.setLinkedInProfile(stuProfile.getLinkedInProfile());
+		for(LearningAreas area:stuProfile.getLearningAreas()) {
+			stuProfileModel.getLearningAreas().add(area.getSubject());
+		}
 		return stuProfileModel;
 	}
+	
+	// for updating student profile
+		public boolean updateStudentProfile(StudentProfileModel studentModel) {
+			StudentProfile studentProfileLoaded = dao.getStudentDetails(studentModel.getSid().toString());
+			StudentProfile studentProfile = new StudentProfile();
+			studentProfile.setContact(studentModel.getContact());
+			studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
+			studentProfile.setEmail(studentModel.getEmail());
+			studentProfile.setFullName(studentModel.getFullName());
+			studentProfile.setUserBookingId(null);
+			studentProfile.setSid(studentModel.getSid());
+			studentProfile.setProfilePictureUrl(studentModel.getProfilePictureUrl());
+			studentProfile.setLinkedInProfile(studentModel.getLinkedInProfile());
+			
+			
+			for(String area:studentModel.getLearningAreas()) {
+				LearningAreas subject = new LearningAreas();
+				subject.setUserId(studentProfile);
+				subject.setSubject(area);
+				if(!studentProfileLoaded.getLearningAreas().stream().filter(o -> o.getSubject().equals(area)).findFirst().isPresent()) {
+					studentProfile.getLearningAreas().add(subject);
+				}	
+			}
+			
+			dao.updateStudentProfile(studentProfile);
+			return true;
 
+		}
+		
 	// saving updating details of tutor
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
@@ -536,24 +566,7 @@ public class UserService  implements UserDetailsService{
 		return scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
 	}
 
-	// for updating student profile
-	public boolean updateStudentProfile(StudentProfileModel studentModel) {
-		StudentProfile studentProfile = new StudentProfile();
-		studentProfile.setContact(studentModel.getContact());
-		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
-		studentProfile.setEmail(studentModel.getEmail());
-		studentProfile.setFullName(studentModel.getFullName());
-		studentProfile.setUserBookingId(null);
-		studentProfile.setSid(studentModel.getSid());
-		studentProfile.setProfilePictureUrl(studentModel.getProfilePictureUrl());
-		studentProfile.setLinkProfile(studentModel.getLinkProfile());
-		studentProfile.setLearningAreas(studentModel.getLearningAreas());
-		dao.updateStudentProfile(studentProfile);
-		
-		dao.learningAreasCount(studentModel.getLearningAreas());
-		return true;
-
-	}
+	
 
 	// for fetching top tutor list
 	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject) {
@@ -670,6 +683,10 @@ public class UserService  implements UserDetailsService{
 
 	public String fetchUserRole(String userId) {
 		return repUsers.idExists(Integer.valueOf(userId)).getRole();
+	}
+
+	public void subtractArea(int id, String subject, String role) {
+		dao.subtractArea(id,subject,role);
 	}
 
 	

@@ -72,6 +72,9 @@ export class StudentProfileComponent implements OnInit {
 		if (this.studentProfile.profilePictureUrl != null) {
 			this.profilePictureUrl = this.studentProfile.profilePictureUrl;
 		}
+		if (this.studentProfile.learningAreas != null) {
+			this.learningAreas = this.studentProfile.learningAreas;
+		}
 		this.handleRefresh();
 	}
 
@@ -81,12 +84,16 @@ export class StudentProfileComponent implements OnInit {
 	}
 
 	addLearningArea() {
-		this.learningAreas.push(this.learningArea);
-		this.learningArea = '';
+		if (!this.duplicacyCheck(this.learningAreas, this.learningArea)) {
+			this.learningAreas.push(this.learningArea);
+			this.learningArea = '';
+		}
 	}
 
 	subtractLearningArea(index: any) {
+		var subject = this.learningAreas[index];
 		if (confirm('Are you sure you want to delete this learning area?')) {
+			this.httpService.subtractArea(this.studentProfile.sid, 'Learner', subject).subscribe();
 			this.learningAreas.splice(index, 1);
 		}
 	}
@@ -114,12 +121,13 @@ export class StudentProfileComponent implements OnInit {
 		console.log(form);
 		this.studentProfile.contact = form.value.contact;
 		this.studentProfile.dateOfBirth = form.value.dob;
-		this.studentProfile.linkProfile = form.value.linkProfile;
+		this.studentProfile.linkedInProfile = form.value.linkedInProfile;
 		this.studentProfile.learningAreas = this.learningAreas;
 		this.studentProfile.profilePictureUrl = this.profilePictureUrl;
 		if (this.learningAreasDuplicacyCheck(this.learningAreas)) {
 			this.httpService.updateStudentProfile(this.studentProfile).subscribe((res) => {
-				console.log(res);
+				this.studentService.setStudentProfileDetails(this.studentProfile);
+				this.snackBar.open('information saved successfully !', 'close', this.config);
 			});
 		} else {
 			console.log('duplicate entries found');
@@ -137,6 +145,9 @@ export class StudentProfileComponent implements OnInit {
 		return true;
 	}
 
+	duplicacyCheck(fields: string[], item: string) {
+		return fields.includes(item);
+	}
 	profilePictureChange(event) {
 		// this.profilePictureDisabled = true;
 		this.uploadedProfilePicture = <File>event.target.files[0];
@@ -243,6 +254,9 @@ export class StudentProfileComponent implements OnInit {
 				this.studentProfile = this.studentService.getStudentProfileDetails();
 				if (this.studentProfile.profilePictureUrl != null) {
 					this.profilePictureUrl = this.studentProfile.profilePictureUrl;
+				}
+				if (this.studentProfile.learningAreas != null) {
+					this.learningAreas = this.studentProfile.learningAreas;
 				}
 			}, 1000);
 		}

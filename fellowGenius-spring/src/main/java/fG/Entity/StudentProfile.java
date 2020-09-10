@@ -1,12 +1,17 @@
 package fG.Entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,12 +33,13 @@ public class StudentProfile {
 	String dateOfBirth;
 	String contact;
 	String profilePictureUrl;
-	String linkProfile;
-	@Lob
-	@Column(columnDefinition="BLOB")
-	ArrayList<String> learningAreas;
+	String linkedInProfile;
 
-	
+
+	@OneToMany(cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY,
+			mappedBy ="userId")
+	Set<LearningAreas> learningAreas = new HashSet<>();
 	
 	public Integer getUserBookingId() {
 		return userBookingId;
@@ -41,16 +47,19 @@ public class StudentProfile {
 	public void setUserBookingId(Integer userBookingId) {
 		this.userBookingId = userBookingId;
 	}
-	public String getLinkProfile() {
-		return linkProfile;
+	
+	
+	public String getLinkedInProfile() {
+		return linkedInProfile;
 	}
-	public void setLinkProfile(String linkProfile) {
-		this.linkProfile = linkProfile;
+	public void setLinkedInProfile(String linkedInProfile) {
+		this.linkedInProfile = linkedInProfile;
 	}
-	public ArrayList<String> getLearningAreas() {
+	
+	public Set<LearningAreas> getLearningAreas() {
 		return learningAreas;
 	}
-	public void setLearningAreas(ArrayList<String> learningAreas) {
+	public void setLearningAreas(Set<LearningAreas> learningAreas) {
 		this.learningAreas = learningAreas;
 	}
 	public Integer getSid() {
@@ -93,10 +102,7 @@ public class StudentProfile {
 	public String toString() {
 		return "StudentProfile [sid=" + sid + ", userBookingId=" + userBookingId + ", fullName=" + fullName + ", email="
 				+ email + ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", profilePictureUrl="
-				+ profilePictureUrl + ", linkProfile=" + linkProfile + ", learningAreas=" + learningAreas + "]";
+				+ profilePictureUrl + ", linkedInProfile=" + linkedInProfile + "]";
 	}
-
-
-	
 	
 }

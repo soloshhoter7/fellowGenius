@@ -288,4 +288,14 @@ export class HttpService {
 			}
 		});
 	}
+
+	subtractArea(userId, role, subject): Observable<Object> {
+		return this.http.get('http://localhost:8080/fellowGenius/subtractArea', {
+			params: {
+				userId: userId.toString(),
+				role: role,
+				subject: subject
+			}
+		});
+	}
 }

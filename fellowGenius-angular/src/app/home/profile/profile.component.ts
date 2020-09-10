@@ -141,7 +141,7 @@ export class ProfileComponent implements OnInit {
 						this.tutorProfileDetails.profileCompleted = 50;
 					}
 					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
-					console.log('all info saved successfully');
+					this.snackBar.open('Information saved Successfully !', 'close', this.config);
 				});
 			});
 		}
@@ -167,7 +167,7 @@ export class ProfileComponent implements OnInit {
 				console.log(this.tutorProfileDetails);
 				this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
 					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
-					console.log('information updated successfully');
+					this.snackBar.open('Information saved Successfully !', 'close', this.config);
 				});
 			} else {
 				this.errorText = 'Enter atleast one area of Expertise !';
@@ -177,6 +177,9 @@ export class ProfileComponent implements OnInit {
 		}
 	}
 
+	duplicacyCheck(fields: string[], item: string) {
+		return fields.includes(item);
+	}
 	profilePictureChange(event) {
 		// this.profilePictureDisabled = true;
 		this.uploadedProfilePicture = <File>event.target.files[0];
@@ -281,18 +284,29 @@ export class ProfileComponent implements OnInit {
 	}
 
 	saveExpertise() {
-		this.expertises.push(this.selectedExpertise);
-		this.selectedExpertise = '';
+		if (!this.duplicacyCheck(this.expertises, this.selectedExpertise)) {
+			this.expertises.push(this.selectedExpertise);
+			this.selectedExpertise = '';
+		} else {
+			this.selectedExpertise = '';
+		}
 	}
 
 	deleteExpertise(index: any) {
-		this.expertises.splice(index, 1);
+		var area = this.expertises[index];
+		if (confirm('Are you sure you want to delete ?')) {
+			this.httpService.subtractArea(this.tutorProfile.tid, 'Expert', area).subscribe();
+			this.expertises.splice(index, 1);
+		}
 	}
 
 	addOrganisation() {
-		console.log(this.inputOrganisation);
-		this.previousOraganisations.push(this.inputOrganisation);
-		this.inputOrganisation = '';
+		if (!this.duplicacyCheck(this.previousOraganisations, this.inputOrganisation)) {
+			this.previousOraganisations.push(this.inputOrganisation);
+			this.inputOrganisation = '';
+		} else {
+			this.inputOrganisation = '';
+		}
 	}
 
 	deleteOrganisation(index: any) {
@@ -300,9 +314,12 @@ export class ProfileComponent implements OnInit {
 	}
 
 	addEducation() {
-		console.log(this.inputEducation);
-		this.educationQualifications.push(this.inputEducation);
-		this.inputEducation = '';
+		if (!this.duplicacyCheck(this.educationQualifications, this.inputEducation)) {
+			this.educationQualifications.push(this.inputEducation);
+			this.inputEducation = '';
+		} else {
+			this.inputEducation = '';
+		}
 	}
 	deleteEducation(index: any) {
 		this.educationQualifications.splice(index, 1);

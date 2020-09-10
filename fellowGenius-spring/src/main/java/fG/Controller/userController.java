@@ -187,7 +187,13 @@ public class userController {
 		int tutorId = Integer.parseInt(tid);
 		service.changeAvailabilityStatus(tutorId, isAavailable);
 	}
-	
+	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+	@RequestMapping(value="/subtractArea")
+	@ResponseBody
+	public void subtractAres(String userId,String subject,String role) {
+		int id = Integer.parseInt(userId);
+		service.subtractArea(id,subject,role);
+	}
 	@RequestMapping(value="/helloKarma")
 	@ResponseBody
 	public String helloKarma() {

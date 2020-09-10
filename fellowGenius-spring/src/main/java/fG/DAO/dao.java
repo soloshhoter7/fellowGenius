@@ -21,7 +21,8 @@ import fG.Entity.Users;
 import fG.Model.StudentLoginModel;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorVerificationModel;
-import fG.Repository.repositoryLearningAreasCount;
+import fG.Repository.repositoryExpertiseAreas;
+import fG.Repository.repositoryLearningAreas;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
@@ -63,8 +64,10 @@ public class dao {
 	repositoryTutorAvailabilitySchedule repTutorSchedule;
 	
 	@Autowired
-	repositoryLearningAreasCount repLearningAreasCount;
-
+	repositoryLearningAreas	repLearningAreas;
+	
+	@Autowired
+	repositoryExpertiseAreas	repExpertiseAreas;
 	// for saving user profile
 		public boolean saveUserLogin(Users user) {
 			if (repUsers.save(user) != null) {
@@ -309,13 +312,21 @@ public class dao {
 	}
 
 	//
-	public boolean learningAreasCount(ArrayList<String> learningAreas) {
-		System.out.println(learningAreas);
-		for(String learnAreas: learningAreas) {
-			System.out.println(learnAreas);
-			repLearningAreasCount.learningAreasCount(learnAreas);
+//	public boolean learningAreasCount(ArrayList<String> learningAreas) {
+//		System.out.println(learningAreas);
+//		for(String learnAreas: learningAreas) {
+//			System.out.println(learnAreas);
+//			repLearningAreasCount.learningAreasCount(learnAreas);
+//		}
+//		return true;
+//	}
+
+	public void subtractArea(int id, String subject, String role) {
+		if(role.equals("Learner")) {
+			repLearningAreas.deleteSubject(id, subject);
+		}else if(role.equals("Expert")) {
+			repExpertiseAreas.deleteSubject(id, subject);
 		}
-		return true;
 	}
 
     

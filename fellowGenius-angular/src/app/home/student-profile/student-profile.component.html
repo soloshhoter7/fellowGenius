@@ -1,6 +1,6 @@
 <body>
     <div>
-        <form (ngSubmit)="saveStudentProfile(s)" style="width: 100%;" #s="ngForm">
+        <form (ngSubmit)="saveStudentProfile(learnerProfile)" style="width: 100%;" #learnerProfile="ngForm">
             <div class="container">
                 <div class="row" style="padding-top: 2vh;">
                     <div class="col-md-3">
@@ -41,7 +41,7 @@
                         padding: 1vh 2vw;
                         background-color: purple;
                         color: white;
-                        font-size: small" type=" submit">Save</button>
+                        font-size: small" type=" submit" [disabled]="!learnerProfile.valid">Save</button>
                     </div>
                 </div>
                 <br>
@@ -76,7 +76,7 @@
 
                         <div class="form-group">
                             <label class="form-control-placeholder" for="linkProfile">Add your LinkedIn Profile</label>
-                            <input type="text" id="linkProfile" class="form-control input-fields" ngModel name="linkProfile" [ngModel]="studentProfile.linkProfile" required #linkProfile="ngModel" />
+                            <input type="text" id="linkedInProfile" class="form-control input-fields" ngModel name="linkedInProfile" [ngModel]="studentProfile.linkProfile" #linkedInProfile="ngModel" />
                         </div>
     
                     </div>

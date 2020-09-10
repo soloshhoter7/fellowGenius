@@ -3,7 +3,7 @@ export class StudentProfileModel {
 	public fullName: string;
 	public email: string;
 	public contact: string;
-	public linkProfile: string;
+	public linkedInProfile: string;
 	public dateOfBirth: string;
 	public profilePictureUrl: string;
 	public learningAreas: string[] = [];

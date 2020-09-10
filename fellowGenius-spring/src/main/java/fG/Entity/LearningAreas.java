@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "LearningAreas")
@@ -23,7 +23,7 @@ public class LearningAreas {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    StudentProfile post;
+    StudentProfile userId;
 
 	public Long getId() {
 		return id;
@@ -41,17 +41,17 @@ public class LearningAreas {
 		Subject = subject;
 	}
 
-	public StudentProfile getPost() {
-		return post;
+	public StudentProfile getUserId() {
+		return userId;
 	}
 
-	public void setPost(StudentProfile post) {
-		this.post = post;
+	public void setUserId(StudentProfile userId) {
+		this.userId = userId;
 	}
 
 	@Override
 	public String toString() {
-		return "LearningAreas [id=" + id + ", Subject=" + Subject + ", post=" + post + "]";
+		return "LearningAreas [id=" + id + ", Subject=" + Subject + ", userId=" + userId + "]";
 	}
 
 }

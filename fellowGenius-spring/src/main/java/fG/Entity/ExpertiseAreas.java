@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="ExpertiseAreas")
@@ -17,6 +18,7 @@ public class ExpertiseAreas {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
+	@NotNull
 	String subject;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

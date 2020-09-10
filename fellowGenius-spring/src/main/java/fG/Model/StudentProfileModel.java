@@ -11,15 +11,16 @@ public class StudentProfileModel {
 	String password;
 	String profilePictureUrl;
 	String gradeLevel;
-	String linkProfile;
-	ArrayList<String> learningAreas;
+	String linkedInProfile;
+	ArrayList<String> learningAreas = new ArrayList<String>();
 
 	
-	public String getLinkProfile() {
-		return linkProfile;
+
+	public String getLinkedInProfile() {
+		return linkedInProfile;
 	}
-	public void setLinkProfile(String linkProfile) {
-		this.linkProfile = linkProfile;
+	public void setLinkedInProfile(String linkedInProfile) {
+		this.linkedInProfile = linkedInProfile;
 	}
 	public ArrayList<String> getLearningAreas() {
 		return learningAreas;
@@ -80,8 +81,8 @@ public class StudentProfileModel {
 	public String toString() {
 		return "StudentProfileModel [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
 				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", profilePictureUrl="
-				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + ", linkProfile=" + linkProfile + ", learningAreas="
-				+ learningAreas + "]";
+				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + ", linkedInProfile=" + linkedInProfile
+				+ ", learningAreas=" + learningAreas + "]";
 	}
 
 }
