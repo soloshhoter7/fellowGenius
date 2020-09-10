@@ -165,7 +165,7 @@
 <body>
     <div id="sidenav" class="sidenav">
         <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
-        <span class="material-icons close closeButton" (click)="navAction(index)" style="cursor: pointer;">
+        <span class="material-icons close closeButton" (click)="closeNav()" style="cursor: pointer;">
     close
   </span>
         <div class="profile-section-sidenav">
@@ -190,7 +190,7 @@
                 <span  *ngIf="tutorProfileDetails.profileCompleted!=100"> <p style="  
                   width: 80%;
                   font-size: 10px;
-                  margin: auto;">You {{100-tutorProfileDetails.profileCompleted}}% left. Please get a head start by completing it now</p> </span>
+                  margin: auto;">You have {{100-tutorProfileDetails.profileCompleted}}% left. Please get a head start by completing it now</p> </span>
 
                 <!-- <span>
                   <label class="switch">
@@ -201,54 +201,56 @@
                   />
                   <span class="slider round"></span>
                 </label>
-<<<<<<< HEAD
-                </span>
-
-=======
               </span> -->
                 
->>>>>>> b5b81998e1850d0f0a41651f38f8d536392a1ab7
             </div>
         </div>
 
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a routerLink="/home/profile" *ngIf="loginType == 'Expert'">
-          Profile</a>
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
+                <a routerLink="/home/profile">Profile</a>
             </li>
-            <li class="nav-item">
-                <a routerLink="/home/studentProfile" *ngIf="loginType == 'Learner'">
-          Profile</a>
-            </li>
-            <li class="nav-item nav-item-active" *ngIf="loginType == 'Learner'">
-                <a class="nav-link" routerLink="/home/studentDashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a
-          >
-        </li>
 
+            <li class="nav-item"  routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
+                <a routerLink="/home/studentProfile" >Profile</a>
+            </li>
+
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
+                <a class="nav-link" routerLink="/home/studentDashboard">Dashboard</a>
+            </li>
+
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
+                <a class="nav-link" routerLink="/home/tutorDashboard">Dashboard</a>
+            </li>
+
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
+                <a class="nav-link" routerLink="/home/findTutor">Experts</a>
+            </li> 
+
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
+                <a class="nav-link" routerLink="tutorSchedule">Schedule</a>
+            </li>
+
+            <li class="nav-item"  routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
+                <a class="nav-link" routerLink="sessionNotes">Session Notes</a>
+            </li>
+
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
+                <a class="nav-link" routerLink="recordings">Recordings</a>
+            </li>
+
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
+                <a class="nav-link" routerLink="knowledgeBase">Knowledge Base</a>
+            </li>
+            
+            <li class="nav-item" >
+                <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
+            </li>
+<!-- 
         <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
             class="nav-link"
-            routerLink="/home/tutorDashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Dashboard</a
-          >
-        </li>
-
-      <!-- <li class="nav-item" *ngIf="loginType == 'Learner'">
-          <a
-            class="nav-link"
-            routerLink="/home/findTutor"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Find a tutor</a
-          >
-        </li>--> 
-
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <a
-            class="nav-link"
-            routerLink="studentBookings"
+            routerLink="bookings"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
             >Bookings</a
@@ -258,51 +260,13 @@
         <li class="nav-item" *ngIf="loginType == 'Learner'">
           <a
             class="nav-link"
-            routerLink="bookings"
+            routerLink="studentBookings"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
             >Bookings</a
           >
-        </li>
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <a
-            class="nav-link"
-            routerLink="tutorSchedule"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Schedule</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="sessionNotes"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Session Notes</a
-          >
-        </li>
-        <li class="nav-item" >
-          <a
-            class="nav-link"
-            routerLink="recordings"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Recordings</a
-          >
-        </li>
-        <li class="nav-item" >
-          <a
-            class="nav-link"
-            routerLink="knowledgeBase"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Knowledge Base</a
-          >
-        </li>
-        <li class="nav-item" >
-        <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
-            </li>
+        </li> -->
+       
 
         </ul>
     </div>

@@ -34,6 +34,7 @@ export class TutorDashboardComponent implements OnInit {
 			this.now = new Date();
 		}, 1000);
 	}
+	takeAction;
 	showCard: boolean = true;
 	bookingRequestMessage = '';
 	approvedMeetingsMessage = '';
@@ -55,6 +56,9 @@ export class TutorDashboardComponent implements OnInit {
 		} else {
 			this.handleRefresh();
 		}
+	}
+	viewPendingRequests() {
+		this.takeAction = !this.takeAction;
 	}
 	closeCompleteProfile() {
 		this.completeProfile = false;

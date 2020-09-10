@@ -1,14 +1,3 @@
-body {
-	height: 100vh;
-	width: 100vw;
-	padding-top: 30px;
-	margin: 0;
-	background-color: #f9fafc;
-	/* padding-top: 10vh; */
-	/* background-color: red; */
-	font-family: Helvetica, Arial, Sans-Serif;
-}
-
 .box {
 	width: 80vw;
 	height: 85vh;

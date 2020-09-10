@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
 					this.tutorProfile = this.tutorService.getTutorDetials();
 					this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
 					if (this.tutorProfileDetails.profilePictureUrl != null) {
-						this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
+						this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
 					}
 					if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
 						this.checked = true;
@@ -95,18 +95,13 @@ export class HomeComponent implements OnInit {
 					// this.dashboardUrl = '/home/tutorDashboard';
 					this.router.navigate([ 'home/tutorDashboard' ]);
 				}
-				// if (this.loginService.getTrType() == 'signUp') {
-				// 	this.dialog.open(WelcomeComponent, {
-				// 		width: '70vw',
-				// 		height: '90vh'
-				// 	});
-				// }
-				// if (this.loginService.getTrType() == 'signUp') {
-				this.dialog.open(WelcomeComponent, {
-					width: 'auto',
-					height: 'auto'
-				});
-				// }
+
+				if (this.loginService.getTrType() == 'signUp') {
+					this.dialog.open(WelcomeComponent, {
+						width: 'auto',
+						height: 'auto'
+					});
+				}
 			} else {
 				this.handleRefresh();
 				// setTimeout(() => {
