@@ -164,6 +164,7 @@ export class ProfileComponent implements OnInit {
 				if (this.tutorProfileDetails.profileCompleted == 50) {
 					this.tutorProfileDetails.profileCompleted = 100;
 				}
+				console.log("After->");
 				console.log(this.tutorProfileDetails);
 				this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
 					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
