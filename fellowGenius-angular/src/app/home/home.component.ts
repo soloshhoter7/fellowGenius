@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit {
 		// console.log(this.screenHeight, this.screenWidth);
 	}
 	ngOnInit() {
+		console.log('started home !');
 		this.index = 1;
 		if (this.screenWidth >= 450) {
 			console.log('executed');
@@ -118,7 +119,7 @@ export class HomeComponent implements OnInit {
 			document.getElementById('mainContent').style.marginLeft = '230px';
 			this.overlay = '';
 		} else {
-			document.getElementById('sidenav').style.width = '300px';
+			document.getElementById('sidenav').style.width = '100%';
 			this.overlay = 'overlay';
 		}
 	}
