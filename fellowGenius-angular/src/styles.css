@@ -127,7 +127,7 @@ textarea:focus {
     top: 55px;
     right: 10px;
     position: absolute;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 
@@ -712,10 +712,10 @@ textarea:focus {
 }
 
 .search-result-container .search-cards-container .search-result-card .result-card-header .stars-outer {
-    top: 40px;
+    top: 45px;
     right: 10px;
     position: absolute;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .search-result-container .search-cards-container .search-result-card .numbers-container {
