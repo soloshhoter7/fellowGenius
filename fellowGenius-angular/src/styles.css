@@ -821,6 +821,11 @@ textarea:focus {
     border: 1px solid #DBDBDB;
     display: inline-block;
     float: left;
+    border-radius: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(assets/images/Upcoming_Placeholder.svg);
 }
 
 .dashboard-container .widget .widget-information .subject-description {
