@@ -1224,3 +1224,11 @@ textarea:focus {
 .expert-profile-container .expert-profile-description .schedular-table table tbody tr td {
     padding: 10px;
 }
+
+.sidenav .navbar-nav {
+    margin-top: 50px;
+}
+
+.lds-ellipsis div {
+    background-color: #FFFFFF!important;
+}

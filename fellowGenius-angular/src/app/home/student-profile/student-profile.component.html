@@ -9,23 +9,11 @@
                         <p style="text-align: center;width: 8vw;
                         text-decoration: underline;">
                             <input type="file" id="file" #userPhoto (change)="profilePictureChange($event)" name="image" />Upload</p> -->
-                            <img style="width:130px; height:130px; border-radius: 100%; border: 1px solid black" [src]="profilePictureUrl">
-                            <div class="form-group">
-                                <input
-                                  #profilePicture
-                                  hidden="true"
-                                  type="file"
-                                  onclick="this.value=null"
-                                  (change)="profilePictureChange($event)"
-                                  required
-                                />
-                                
-                                <button
-                                  class="btn btn-outline-primary"
-                                  type="button"
-                                  (click)="profilePicture.click()"
-                                  style="margin-top: 5px;width: 140px;position: relative;height: 30px;"
-                                >
+                        <img style="width:130px; height:130px; border-radius: 100%; border: 1px solid black" [src]="profilePictureUrl">
+                        <div class="form-group">
+                            <input #profilePicture hidden="true" type="file" onclick="this.value=null" (change)="profilePictureChange($event)" required />
+
+                            <button class="btn btn-primary" type="button" (click)="profilePicture.click()" style="margin-top: 5px;width: 140px;position: relative;height: 30px;">
                                   <span *ngIf="!isLoading3">Upload</span>
                                   <div class="tickMark" *ngIf="profilePicUploadStatus">
                                     <img class="tickMarkImg" src="../../../assets/icons/tick.png">
@@ -34,7 +22,7 @@
                                     <app-loader></app-loader>
                                   </span>
                                 </button>
-                              </div>
+                        </div>
                     </div>
                     <div class="offset-md-6 col-md-3" style="text-align: end;">
                         <button class="btn" style="margin-right: 2vw; text-decoration: underline;">Cancel</button>
@@ -47,31 +35,31 @@
                 </div>
                 <br>
                 <div class="row">
-    
+
                     <div class="col-md-7 leftBox">
                         <div class="form-group">
                             <label class="form-control-placeholder" for="fullName">Full Name</label>
                             <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" [ngModel]="studentProfile.fullName" autofocus disabled />
                             <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
                         </div>
-    
+
                         <div class="form-group">
                             <label class="form-control-placeholder " for="email">Email Address</label>
                             <input type="email" id="email" name="email" ngModel [ngModel]="studentProfile.email" class="form-control input-fields" required email #email="ngModel" maxlength="64" disabled pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
                             />
                             <span *ngIf="!email.valid && email.touched" class="help-block">Invalid email</span>
                         </div>
-    
+
                         <div class="form-group">
                             <label class="form-control-placeholder" for="dob">Date of Birth</label>
                             <input type="date" id="dob" name="dob" ngModel [ngModel]="studentProfile.dateOfBirth" class="form-control input-fields" dobValidator required #dob="ngModel" />
                             <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid dob</span>
                         </div>
-    
+
                         <div class="form-group">
                             <label class="form-control-placeholder" for="contact">Mobile Number</label>
-                            <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" required [ngModel]="studentProfile.contact"[pattern]="mobNumberPattern" #contact="ngModel" />
-    
+                            <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" required [ngModel]="studentProfile.contact" [pattern]="mobNumberPattern" #contact="ngModel" />
+
                             <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
                         </div>
 
@@ -79,14 +67,14 @@
                             <label class="form-control-placeholder" for="linkProfile">Add your LinkedIn Profile</label>
                             <input type="text" id="linkedInProfile" class="form-control input-fields" ngModel name="linkedInProfile" [ngModel]="studentProfile.linkedInProfile" #linkedInProfile="ngModel" />
                         </div>
-    
+
                     </div>
-    
+
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="learning">Learning Areas</label>
                             <div class="learningArea-fields" *ngFor="let fields of learningAreas;let i=index">
-                                <div class="tags" >{{fields}}</div>
+                                <div class="tags">{{fields}}</div>
                                 <button type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="subtractLearningArea(i)" style="font-size: inherit;">-</button>
                             </div>
                             <div>
@@ -103,16 +91,16 @@
                                 display: inline;">
                                     <button [disabled]="!learningArea" type="button" class="btn btn-success btn-circle btn-sm" (click)="addLearningArea()" style="font-size: inherit;display: inline;">+</button>
                             </span>
-                            <div *ngIf="duplicateArea" style="color:red;margin-top: 10px;">Duplicate learning area !</div>
+                                <div *ngIf="duplicateArea" style="color:red;margin-top: 10px;">Duplicate learning area !</div>
                             </div>
-    
+
                         </div>
                     </div>
                     <div class="col-md-1">
-    
+
                     </div>
                 </div>
             </div>
         </form>
-    </div> 
+    </div>
 </body>
