@@ -1,0 +1,9 @@
+.starButton {
+    background: white;
+    border: 0.2px solid gray;
+    height: 13px;
+}
+
+.starButton:focus {
+    background-color: gray;
+}

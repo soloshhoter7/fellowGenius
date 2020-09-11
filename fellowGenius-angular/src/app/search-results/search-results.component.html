@@ -76,7 +76,12 @@
     <div class="fliter-tag-container">
         <div class="filters-content">
             <ul class="nav nav-pills">
-                <li class="nav-item">
+                <li class="nav-item" *ngFor="let filters of allFiltersApplied">
+                    <a class="nav-link">
+                        <span *ngIf="filters <= 4">{{filters}}&nbsp; & up</span>
+                        <span *ngIf="filters!=1 && filters!=2 && filters!=3 && filters!=4" [innerHTML]="filters"></span></a>
+                </li>
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#"><span>Active</span> <span class="material-icons">
                                     close
                                 </span></a>
@@ -93,7 +98,7 @@
                                     close
                                 </span></a>
 
-                </li>
+                </li> -->
 
             </ul>
         </div>
@@ -116,35 +121,35 @@
                 <ul class="filter-category-list">
                     <li>
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="English">English
+                                    <input type="checkbox" class="filter-input" value="English" (change)="searchBySubject($event)">English
                                     <span class="filter-num">(123)</span>
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
                     <li>
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="Physics">Physics
+                                    <input type="checkbox" class="filter-input" value="Physics" (change)="searchBySubject($event)">Physics
                                     <span class="filter-num">(123)</span>
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
                     <li>
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="Chemistry">Chemistry
+                                    <input type="checkbox" class="filter-input" value="Chemistry" (change)="searchBySubject($event)">Chemistry
                                     <span class="filter-num">(123)</span>
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
                     <li>
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="Mathematics">Mathematics
+                                    <input type="checkbox" class="filter-input" value="Mathematics" (change)="searchBySubject($event)">Mathematics
                                     <span class="filter-num">(123)</span>
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
                     <li>
                         <label class="filters-label">
-                            <input type="checkbox" class="filter-input" value="Science">Science
+                            <input type="checkbox" class="filter-input" value="Science" (change)="searchBySubject($event)">Science
                             <span class="filter-num">(123)</span>
                             <!--  <div class="checkbox-indicator"></div>-->
                         </label>
@@ -154,61 +159,84 @@
             </div>
             <div class="filter-category">
                 <span class="filter-category-header">Price</span>
-
-                <!-- <select class="form-control" name="price" (change)="searchPrice($event)">
-                    <option value="none" selected disabled hidden>Price</option>
-                    <option>100-199</option>
-                    <option>200-399</option>
-                    <option>400-699</option>
-                    <option>700-999</option>
-                    <option>1000-1499</option>
-                    <option>1500-1999</option>
-                    <option>2000-2999</option>
-                    <option>3000-5000</option>
-                    </select> -->
                 <ul class="filter-category-list">
 
-                    <li>
+                    <li style="width: 50%;">
                         <label class="filters-label">
-                                <input type="checkbox" class="filter-input" value="100-199" (change)="searchPrice($event)">100-199
+                                <input type="checkbox" class="filter-input" value="100-199" (change)="searchByPrice($event)">100-199
                                 <!-- <span class="filter-num">(123)</span> -->
                                 <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
-                    <li>
+                    <li style="width: 50%;">
                         <label class="filters-label">
-                                <input type="checkbox" class="filter-input" value="200-399" (change)="searchPrice($event)">200-399
+                                <input type="checkbox" class="filter-input" value="200-399" (change)="searchByPrice($event)">200-399
                                 <!-- <span class="filter-num">(123)</span> -->
                                 <!-- <div class="checkbox-indicator"></div> -->
                             </label>
                     </li>
-                    <li>
+                    <li style="width: 50%;">
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="400-699" (change)="searchPrice($event)">400-699
+                                    <input type="checkbox" class="filter-input" value="400-699" (change)="searchByPrice($event)">400-699
                                     <!-- <span class="filter-num">(123)</span> -->
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
-                    <li>
+                    <li style="width: 50%;">
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="700-999" (change)="searchPrice($event)">700-999
+                                    <input type="checkbox" class="filter-input" value="700-999" (change)="searchByPrice($event)">700-999
                                     <!-- <span class="filter-num">(123)</span> -->
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
-                    <li>
+                    <li style="width: 50%;">
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="1000-1499" (change)="searchPrice($event)">1000-1499
+                                    <input type="checkbox" class="filter-input" value="1000-1499" (change)="searchByPrice($event)">1000-1499
                                     <!-- <span class="filter-num">(123)</span> -->
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
-                    <li>
+                    <li style="width: 50%;">
                         <label class="filters-label">
-                                    <input type="checkbox" class="filter-input" value="1500-10000" (change)="searchPrice($event)">1500+                                    <!-- <span class="filter-num">(123)</span> -->
+                                    <input type="checkbox" class="filter-input" value="1500-10000" (change)="searchByPrice($event)">1500+                                    <!-- <span class="filter-num">(123)</span> -->
                                     <!--  <div class="checkbox-indicator"></div>-->
                                 </label>
                     </li>
+                </ul>
+            </div>
+            <div class="filter-category">
+                <span class="filter-category-header">Avg. Reviews</span>
+                <ul class="filter-category-list">
+                    <li>
+
+                        <label class="filters-label">
+                                <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(80)">4 & up -->
+                                <input type="checkbox" class="filter-input" value=4 (change)="searchByRatings($event)">4 & up
+                                
+                                </label>
+                    </li>
+                    <li>
+                        <label class="filters-label">
+                            <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(60)">3 & up -->
+                            <input type="checkbox" class="filter-input" value=3 (change)="searchByRatings($event)">3 & up
+                                
+                            </label>
+                    </li>
+                    <li>
+                        <label class="filters-label">
+                            <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(40)">2 & up -->
+                            <input type="checkbox" class="filter-input" value=2 (change)="searchByRatings($event)">2 & up
+                                   
+                                </label>
+                    </li>
+                    <li>
+                        <label class="filters-label">
+                            <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(20)">1 & up -->
+                            <input type="checkbox" class="filter-input" value=1 (change)="searchByRatings($event)">1 & up
+                                   
+                                </label>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -261,7 +289,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-primary" (click)="toLoginPage()">
+                        <button type="button" class="btn btn-primary" (click)="toViewProfile()">
      View Profile
     </button>
                     </div>
