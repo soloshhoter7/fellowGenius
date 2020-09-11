@@ -450,8 +450,36 @@ public class UserService  implements UserDetailsService{
 	}
 
 	// for getting the list of teachers with 100% profile completion
-	public List<TutorProfileDetails> getTutorList() {
-		return dao.getTutorList();
+	public List<TutorProfileDetailsModel> getTutorList() {
+		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
+		List<TutorProfileDetails> tutList = dao.getTutorList();
+		for(TutorProfileDetails tutProfileDetails:tutList) {
+			TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
+			tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
+			tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
+			tutorProfileDetailsModel.setInstitute(tutProfileDetails.getInstitute());
+			tutorProfileDetailsModel.setEducationalQualifications(tutProfileDetails.getEducationalQualifications());
+			tutorProfileDetailsModel.setPrice1(tutProfileDetails.getPrice1());
+			tutorProfileDetailsModel.setPrice2(tutProfileDetails.getPrice2());
+			tutorProfileDetailsModel.setPrice3(tutProfileDetails.getPrice3());
+			tutorProfileDetailsModel.setDescription(tutProfileDetails.getDescription());
+			tutorProfileDetailsModel.setSpeciality(tutProfileDetails.getSpeciality());
+			tutorProfileDetailsModel.setRating(tutProfileDetails.getRating());
+			tutorProfileDetailsModel.setReviewCount(tutProfileDetails.getReviewCount());
+			tutorProfileDetailsModel.setLessonCompleted(tutProfileDetails.getLessonCompleted());
+			tutorProfileDetailsModel.setProfilePictureUrl(tutProfileDetails.getProfilePictureUrl());
+			tutorProfileDetailsModel.setProfessionalSkills(tutProfileDetails.getProfessionalSkills());
+			tutorProfileDetailsModel.setCurrentOrganisation(tutProfileDetails.getCurrentOrganisation());
+			tutorProfileDetailsModel.setPreviousOrganisations(tutProfileDetails.getPreviousOrganisations());
+			tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
+			tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
+			tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
+			for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
+				tutorProfileDetailsModel.getAreaOfExpertise().add(area.getSubject());
+			}
+			tutListModel.add(tutorProfileDetailsModel);
+		}
+		return tutListModel;
 	}
 
 	// for updating tutor verification

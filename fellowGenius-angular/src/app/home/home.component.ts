@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit {
 		// console.log(this.screenHeight, this.screenWidth);
 	}
 	ngOnInit() {
+		console.log('started home !');
 		this.index = 1;
 		if (this.screenWidth >= 450) {
 			console.log('executed');
@@ -85,7 +86,7 @@ export class HomeComponent implements OnInit {
 					this.tutorProfile = this.tutorService.getTutorDetials();
 					this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
 					if (this.tutorProfileDetails.profilePictureUrl != null) {
-						this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
+						this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
 					}
 					if (this.tutorService.getPersonalAvailabilitySchedule().isAvailable == 'yes') {
 						this.checked = true;
@@ -95,18 +96,13 @@ export class HomeComponent implements OnInit {
 					// this.dashboardUrl = '/home/tutorDashboard';
 					this.router.navigate([ 'home/tutorDashboard' ]);
 				}
-				// if (this.loginService.getTrType() == 'signUp') {
-				// 	this.dialog.open(WelcomeComponent, {
-				// 		width: '70vw',
-				// 		height: '90vh'
-				// 	});
-				// }
-				// if (this.loginService.getTrType() == 'signUp') {
-				this.dialog.open(WelcomeComponent, {
-					width: 'auto',
-					height: 'auto'
-				});
-				// }
+
+				if (this.loginService.getTrType() == 'signUp') {
+					this.dialog.open(WelcomeComponent, {
+						width: 'auto',
+						height: 'auto'
+					});
+				}
 			} else {
 				this.handleRefresh();
 				// setTimeout(() => {
@@ -123,7 +119,7 @@ export class HomeComponent implements OnInit {
 			document.getElementById('mainContent').style.marginLeft = '230px';
 			this.overlay = '';
 		} else {
-			document.getElementById('sidenav').style.width = '300px';
+			document.getElementById('sidenav').style.width = '100%';
 			this.overlay = 'overlay';
 		}
 	}

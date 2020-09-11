@@ -39,3 +39,9 @@ body {
 	height: 18px;
 	margin-right: 5px;
 }
+.takeActionLink {
+	cursor: pointer;
+}
+.takeActionLink:hover {
+	text-decoration: underline;
+}

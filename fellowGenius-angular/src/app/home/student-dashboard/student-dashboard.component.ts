@@ -18,6 +18,8 @@ import { DeletePopupComponent } from './delete-popup/delete-popup.component';
 	styleUrls: [ './student-dashboard.component.css' ]
 })
 export class StudentDashboardComponent implements OnInit {
+	viewPending;
+	pendingRequestsCount = 0;
 	joinMeeting = new meetingDetails();
 	sid: number;
 	bookingList: bookingDetails[];
@@ -57,6 +59,9 @@ export class StudentDashboardComponent implements OnInit {
 			this.handleRefresh();
 		}
 	}
+	viewPendingRequests() {
+		this.viewPending = !this.viewPending;
+	}
 	// -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
 	// for fetching student pending bookings
 	findStudentPendingBookings() {
@@ -65,6 +70,9 @@ export class StudentDashboardComponent implements OnInit {
 			this.meetingService.studentPendingRequests(this.bookingList);
 			if (this.bookingList.length == 0) {
 				this.emptyBookingList = true;
+				this.pendingRequestsCount = 0;
+			} else {
+				this.pendingRequestsCount = this.bookingList.length;
 			}
 		});
 	}
@@ -92,10 +100,37 @@ export class StudentDashboardComponent implements OnInit {
 			if (this.liveMeetingList.length == 0) {
 				this.emptyLiveList = true;
 			}
+			for (let booking of this.liveMeetingList) {
+				this.eliminateLiveMeetings(booking, this.liveMeetingList);
+			}
 		});
 	}
 
 	// --------------------------------------------------meeting operations-----------------------------------------------------------------------------
+
+	eliminateLiveMeetings(booking: bookingDetails, list: bookingDetails[]) {
+		var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
+		if (currentDate == booking.dateOfMeeting) {
+			var endMinutes: number = booking.endTimeHour * 60 + booking.endTimeMinute;
+			var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+			var differenceMinutes: number = endMinutes - currentMinutes;
+			if (differenceMinutes <= 0) {
+				if (list.indexOf(booking) != -1) {
+					list.splice(list.indexOf(booking), 1);
+				}
+			}
+			setInterval(() => {
+				currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+				differenceMinutes = endMinutes - currentMinutes;
+				if (differenceMinutes <= 0) {
+					if (list.indexOf(booking) != -1) {
+						list.splice(list.indexOf(booking), 1);
+						this.httpService.updateBookingStatus(booking.bid, 'completed').subscribe((res) => {});
+					}
+				}
+			}, 5000);
+		}
+	}
 
 	//to calculate the time left
 	timeLeft(booking: bookingDetails) {

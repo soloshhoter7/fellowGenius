@@ -40,6 +40,9 @@ export class ProfileComponent implements OnInit {
 	errorText: string;
 	isLoading3: boolean = false;
 	profilePicUploadStatus: boolean;
+	duplicateExpertiseArea;
+	duplicatePreviousOrganisation;
+	duplicateEducationArea;
 	@ViewChild('basicProfile') basicProfile: FormGroupDirective;
 	config: MatSnackBarConfig = {
 		duration: 2000,
@@ -142,6 +145,7 @@ export class ProfileComponent implements OnInit {
 					}
 					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
 					this.snackBar.open('Information saved Successfully !', 'close', this.config);
+					location.reload();
 				});
 			});
 		}
@@ -164,11 +168,12 @@ export class ProfileComponent implements OnInit {
 				if (this.tutorProfileDetails.profileCompleted == 50) {
 					this.tutorProfileDetails.profileCompleted = 100;
 				}
-				console.log("After->");
+				console.log('After->');
 				console.log(this.tutorProfileDetails);
 				this.httpService.updateTutorProfileDetails(this.tutorProfileDetails).subscribe((res) => {
 					this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
 					this.snackBar.open('Information saved Successfully !', 'close', this.config);
+					location.reload();
 				});
 			} else {
 				this.errorText = 'Enter atleast one area of Expertise !';
@@ -288,7 +293,11 @@ export class ProfileComponent implements OnInit {
 		if (!this.duplicacyCheck(this.expertises, this.selectedExpertise)) {
 			this.expertises.push(this.selectedExpertise);
 			this.selectedExpertise = '';
+			if (this.duplicateExpertiseArea == true) {
+				this.duplicateExpertiseArea = false;
+			}
 		} else {
+			this.duplicateExpertiseArea = true;
 			this.selectedExpertise = '';
 		}
 	}
@@ -305,8 +314,12 @@ export class ProfileComponent implements OnInit {
 		if (!this.duplicacyCheck(this.previousOraganisations, this.inputOrganisation)) {
 			this.previousOraganisations.push(this.inputOrganisation);
 			this.inputOrganisation = '';
+			if (this.duplicatePreviousOrganisation == true) {
+				this.duplicatePreviousOrganisation = false;
+			}
 		} else {
 			this.inputOrganisation = '';
+			this.duplicatePreviousOrganisation = true;
 		}
 	}
 
@@ -318,8 +331,12 @@ export class ProfileComponent implements OnInit {
 		if (!this.duplicacyCheck(this.educationQualifications, this.inputEducation)) {
 			this.educationQualifications.push(this.inputEducation);
 			this.inputEducation = '';
+			if (this.duplicateEducationArea == true) {
+				this.duplicateEducationArea = false;
+			}
 		} else {
 			this.inputEducation = '';
+			this.duplicateEducationArea = true;
 		}
 	}
 	deleteEducation(index: any) {

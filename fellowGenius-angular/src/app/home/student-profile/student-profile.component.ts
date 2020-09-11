@@ -28,6 +28,7 @@ export class StudentProfileComponent implements OnInit {
 	) {}
 	isLoading3: boolean = false;
 	profilePicUploadStatus: boolean;
+	duplicateArea;
 	config: MatSnackBarConfig = {
 		duration: 2000,
 		horizontalPosition: 'center',
@@ -87,6 +88,12 @@ export class StudentProfileComponent implements OnInit {
 		if (!this.duplicacyCheck(this.learningAreas, this.learningArea)) {
 			this.learningAreas.push(this.learningArea);
 			this.learningArea = '';
+			if (this.duplicateArea == true) {
+				this.duplicateArea = false;
+			}
+		} else {
+			this.duplicateArea = true;
+			this.learningArea = '';
 		}
 	}
 
@@ -128,6 +135,7 @@ export class StudentProfileComponent implements OnInit {
 			this.httpService.updateStudentProfile(this.studentProfile).subscribe((res) => {
 				this.studentService.setStudentProfileDetails(this.studentProfile);
 				this.snackBar.open('information saved successfully !', 'close', this.config);
+				location.reload();
 			});
 		} else {
 			console.log('duplicate entries found');
@@ -258,6 +266,7 @@ export class StudentProfileComponent implements OnInit {
 				if (this.studentProfile.learningAreas != null) {
 					this.learningAreas = this.studentProfile.learningAreas;
 				}
+				console.log(this.studentProfile);
 			}, 1000);
 		}
 	}

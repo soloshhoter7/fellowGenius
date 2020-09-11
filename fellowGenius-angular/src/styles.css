@@ -127,7 +127,7 @@ textarea:focus {
     top: 55px;
     right: 10px;
     position: absolute;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 
@@ -712,10 +712,10 @@ textarea:focus {
 }
 
 .search-result-container .search-cards-container .search-result-card .result-card-header .stars-outer {
-    top: 40px;
+    top: 45px;
     right: 10px;
     position: absolute;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .search-result-container .search-cards-container .search-result-card .numbers-container {
@@ -821,6 +821,11 @@ textarea:focus {
     border: 1px solid #DBDBDB;
     display: inline-block;
     float: left;
+    border-radius: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(assets/images/Upcoming_Placeholder.svg);
 }
 
 .dashboard-container .widget .widget-information .subject-description {
@@ -1223,4 +1228,12 @@ textarea:focus {
 
 .expert-profile-container .expert-profile-description .schedular-table table tbody tr td {
     padding: 10px;
+}
+
+.sidenav .navbar-nav {
+    margin-top: 50px;
+}
+
+.lds-ellipsis div {
+    background-color: #FFFFFF!important;
 }

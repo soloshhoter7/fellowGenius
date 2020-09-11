@@ -34,6 +34,8 @@ export class TutorDashboardComponent implements OnInit {
 			this.now = new Date();
 		}, 1000);
 	}
+	takeAction;
+	pendingRequestsCount = 0;
 	showCard: boolean = true;
 	bookingRequestMessage = '';
 	approvedMeetingsMessage = '';
@@ -55,6 +57,9 @@ export class TutorDashboardComponent implements OnInit {
 		} else {
 			this.handleRefresh();
 		}
+	}
+	viewPendingRequests() {
+		this.takeAction = !this.takeAction;
 	}
 	closeCompleteProfile() {
 		this.completeProfile = false;
@@ -80,6 +85,8 @@ export class TutorDashboardComponent implements OnInit {
 				this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
 				if (this.bookingList.length == 0) {
 					this.bookingRequestMessage = 'No booking requests pending.';
+					this.pendingRequestsCount = 0;
+					this.takeAction = false;
 				}
 				this.before10MinutesTime(booking);
 				this.enableJoinNow(booking);
@@ -100,6 +107,8 @@ export class TutorDashboardComponent implements OnInit {
 				this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
 				if (this.bookingList.length == 0) {
 					this.bookingRequestMessage = 'No booking requests pending.';
+					this.pendingRequestsCount = 0;
+					this.takeAction = false;
 				}
 			}
 		});
@@ -112,6 +121,9 @@ export class TutorDashboardComponent implements OnInit {
 				this.bookingList = res;
 				if (this.bookingList.length == 0) {
 					this.bookingRequestMessage = 'No booking requests pending.';
+					this.pendingRequestsCount = 0;
+				} else {
+					this.pendingRequestsCount = this.bookingList.length;
 				}
 			});
 		}
@@ -142,6 +154,12 @@ export class TutorDashboardComponent implements OnInit {
 			this.liveMeetingList = res;
 			if (this.liveMeetingList.length == 0) {
 				this.liveMeetingsMessage = 'No live meetings.';
+			}
+			for (let booking of this.liveMeetingList) {
+				this.eliminateLiveMeetings(booking, this.liveMeetingList);
+				if (this.meetingList.length == 0) {
+					this.approvedMeetingsMessage = 'No upcoming meetings pending.';
+				}
 			}
 			// //for removing before date meetings
 			// for (let meeting of this.liveMeetingList) {
@@ -203,12 +221,12 @@ export class TutorDashboardComponent implements OnInit {
 			var timeLeftMinutes: number = differenceMinutes % 60;
 			if (differenceMinutes > 0) {
 				if (timeLeftHours == 0) {
-					timeLeftString = timeLeftMinutes + ' minutes left ';
+					timeLeftString = timeLeftMinutes + ' minutes';
 				} else {
 					if (timeLeftMinutes != 0) {
-						timeLeftString = timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes left';
+						timeLeftString = timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes ';
 					} else if (timeLeftMinutes == 0) {
-						timeLeftString = timeLeftHours + ' hours left';
+						timeLeftString = timeLeftHours + ' hours ';
 					}
 				}
 				booking.timeLeft = timeLeftString;
@@ -220,12 +238,12 @@ export class TutorDashboardComponent implements OnInit {
 				timeLeftMinutes = differenceMinutes % 60;
 				if (differenceMinutes > 0) {
 					if (timeLeftHours == 0) {
-						timeLeftString = timeLeftMinutes + ' minutes left ';
+						timeLeftString = timeLeftMinutes + ' minutes ';
 					} else {
 						if (timeLeftMinutes != 0) {
-							timeLeftString = timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes left';
+							timeLeftString = timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes';
 						} else if (timeLeftMinutes == 0) {
-							timeLeftString = timeLeftHours + ' hours left';
+							timeLeftString = timeLeftHours + ' hours';
 						}
 					}
 					booking.timeLeft = timeLeftString;
@@ -271,6 +289,29 @@ export class TutorDashboardComponent implements OnInit {
 		}
 	}
 
+	eliminateLiveMeetings(booking: bookingDetails, list: bookingDetails[]) {
+		var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
+		if (currentDate == booking.dateOfMeeting) {
+			var endMinutes: number = booking.endTimeHour * 60 + booking.endTimeMinute;
+			var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+			var differenceMinutes: number = endMinutes - currentMinutes;
+			if (differenceMinutes <= 0) {
+				if (list.indexOf(booking) != -1) {
+					list.splice(list.indexOf(booking), 1);
+				}
+			}
+			setInterval(() => {
+				currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
+				differenceMinutes = endMinutes - currentMinutes;
+				if (differenceMinutes <= 0) {
+					if (list.indexOf(booking) != -1) {
+						list.splice(list.indexOf(booking), 1);
+						this.httpService.updateBookingStatus(booking.bid, 'completed').subscribe((res) => {});
+					}
+				}
+			}, 5000);
+		}
+	}
 	//minus 10 minutes from time
 	before10MinutesTime(meeting: bookingDetails) {
 		if (meeting.startTimeMinute == 0) {

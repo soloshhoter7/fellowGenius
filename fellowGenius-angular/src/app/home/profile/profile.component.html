@@ -140,6 +140,7 @@
                >
                  <button [disabled]="disableAdd" type="submit" class="btn btn-success btn-circle btn-sm" (click)="addEducation()" style="font-size: inherit;display: inline;">+</button>
                </div>
+               <div *ngIf="duplicateEducationArea" style="color:red;margin-top: 10px;">Educational Qualification already exists !</div>
                 </form>
               </div>
            </div>
@@ -181,6 +182,7 @@
                  <div style="width: max-content;display: inline;">
                  <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="saveExpertise()" style="font-size: inherit;display: inline;">+</button>
                  </div>
+                 <div *ngIf="duplicateExpertiseArea" style="color:red;margin-top: 10px;">Expertise already exists !</div>
                 </div>
                 <p class="errorMessage">{{errorText}}</p>
               </div>
@@ -227,7 +229,7 @@
               </div>
               <div class="form-group">
                 <label  for="currentOrganisation">Current Organisation</label>
-                <input type="text" id="currentOrganisation" name="currentOrganisation" ngModel [ngModel]="tutorProfileDetails.currentOrganisation" class="form-control input-fields" required #currentOrganisation="ngModel" maxlength="50"/>
+                <input type="text" id="currentOrganisation" name="currentOrganisation" ngModel [ngModel]="tutorProfileDetails.currentOrganisation" class="form-control input-fields"  #currentOrganisation="ngModel" maxlength="50"/>
                 <span class="help-block" *ngIf="!currentOrganisation.valid && currentOrganisation.touched">Invalid current organisation</span>
               </div>
     
@@ -252,6 +254,7 @@
                     <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="addOrganisation()" style="font-size: inherit;display: inline;">+</button>
                   </div>
                 </div>  
+                <div *ngIf="duplicatePreviousOrganisation" style="color:red;margin-top: 10px;">Organisation already exists !</div>
               </div>
 
               <div class="form-group">

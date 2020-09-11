@@ -43,6 +43,7 @@ export class tutorScheduleComponent implements OnInit {
 			this.tutorAvailabilitySchedule.fullName = this.tutorService.getTutorDetials().fullName;
 			this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().tid;
 			this.tutorAvailabilitySchedule.isAvailable = this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
+			this.copySchedule();
 		} else {
 			this.handleRefresh();
 		}
@@ -77,12 +78,12 @@ export class tutorScheduleComponent implements OnInit {
 				this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().tid;
 				this.tutorAvailabilitySchedule.isAvailable = this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
 				this.availabiltiySchedules = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+				this.copySchedule();
 				// setTimeout(() => {
 				// 	let scheduleObj = (document.querySelector('.e-schedule') as any).ej2_instances[0];
 				// 	scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
 				// }, 3000);
 				this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
-				this.copySchedule();
 			});
 		}
 	}
@@ -158,7 +159,9 @@ export class tutorScheduleComponent implements OnInit {
 		this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
 		setTimeout(() => {
 			//<<<---    using ()=> syntax
-			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {});
+			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {
+				this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+			});
 		}, 3000);
 	}
 	// for updating events into calendar schedules
@@ -171,7 +174,9 @@ export class tutorScheduleComponent implements OnInit {
 		}
 		this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
 		setTimeout(() => {
-			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {});
+			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {
+				this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+			});
 		}, 3000);
 	}
 	//for deleting events into calendar schedules
@@ -180,7 +185,9 @@ export class tutorScheduleComponent implements OnInit {
 		this.availableSchedules.splice(deleteIndex, 1);
 		this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
 		setTimeout(() => {
-			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {});
+			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {
+				this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+			});
 		}, 3000);
 	}
 	//for updating special case
@@ -188,7 +195,9 @@ export class tutorScheduleComponent implements OnInit {
 		this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
 		setTimeout(() => {
 			//<<<---    using ()=> syntax
-			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {});
+			this.httpService.saveScheduleData(this.tutorAvailabilitySchedule).subscribe((res) => {
+				this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+			});
 		}, 3000);
 	}
 	// on event rendered

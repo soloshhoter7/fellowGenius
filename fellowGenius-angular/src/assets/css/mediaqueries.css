@@ -167,6 +167,9 @@
     body .sidenav {
         max-height: 100vh;
     }
+    .sidenav .profile-thumbnail {
+        left: 120px!important;
+    }
     .closeButton {
         display: block!important;
         position: absolute;
