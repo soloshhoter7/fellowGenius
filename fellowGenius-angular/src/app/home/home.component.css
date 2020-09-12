@@ -1,289 +1,322 @@
 body {
-	height: 100%;
+    height: 100%;
+}
+
+.progressbar-container {
+    display: block;
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.progressbar-information {
+    text-transform: none;
+    font-size: 12px;
+}
+
+.progressbar-information label {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.progressbar-information .hyperlink-cont {
+    line-height: 12px;
+}
+
+.progressbar-information .hyperlink-cont a {
+    font-size: 12px;
+    text-decoration: underline;
 }
 
 .navbar-brand {
-	margin-left: 3vw;
-	margin-right: 22vw;
-	color: white;
+    margin-left: 3vw;
+    margin-right: 22vw;
+    color: white;
 }
 
 .marginZero {
-	margin: 0;
+    margin: 0;
 }
 
 .paddingZero {
-	padding: 0;
+    padding: 0;
 }
 
 .image {
-	width: 50vw;
-	height: 17vh;
+    width: 50vw;
+    height: 17vh;
 }
 
 img {
-	border-radius: 0;
-	width: 100%;
-	height: 100%;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
 }
 
 input[type="text"] {
-	resize: vertical;
+    resize: vertical;
 }
 
 p {
-	margin: 0;
+    margin: 0;
 }
 
 a {
-	margin-right: 1vw;
-	padding: 7px;
+    margin-right: 1vw;
+    padding: 7px;
 }
 
 .userButton {
-	padding: 5px;
-	background: none;
-	outline: none;
-	border: none;
-	color: #ccc;
+    padding: 5px;
+    background: none;
+    outline: none;
+    border: none;
+    color: #ccc;
 }
 
 .userButton:hover {
-	border: 1px solid #ccc;
-	border-radius: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .navbar-brand {
-	color: white;
-	font-size: 30px;
-	font-weight: 500;
-	margin-left: 10px;
-	border-radius: 5px;
-	cursor: pointer;
+    color: white;
+    font-size: 30px;
+    font-weight: 500;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .berlinText {
-	font-family: custom;
+    font-family: custom;
 }
 
 .switch {
-	margin-top: 13px;
-	position: relative;
-	display: inline-block;
-	width: 35px;
-	height: 15px;
+    margin-top: 13px;
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 15px;
 }
 
 .switch input {
-	opacity: 0;
-	width: 0;
-	height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #ccc;
-	-webkit-transition: .4s;
-	transition: .4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 
 .slider:before {
-	position: absolute;
-	content: "";
-	height: 22px;
-	width: 22px;
-	left: 0px;
-	bottom: -3px;
-	background-color: white;
-	transition: .4s;
-	-webkit-transition: .4s;
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 0px;
+    bottom: -3px;
+    background-color: white;
+    transition: .4s;
+    -webkit-transition: .4s;
 }
 
-input:checked + .slider {
-	background-color: #5cb85c;
+input:checked+.slider {
+    background-color: #5cb85c;
 }
 
-input:focus + .slider {
-	box-shadow: 0 0 1px #5cb85c;
+input:focus+.slider {
+    box-shadow: 0 0 1px #5cb85c;
 }
 
-input:checked + .slider:before {
-	-webkit-transform: translateX(17px);
-	-ms-transform: translateX(17px);
-	transform: translateX(17px);
+input:checked+.slider:before {
+    -webkit-transform: translateX(17px);
+    -ms-transform: translateX(17px);
+    transform: translateX(17px);
 }
 
 .slider.round {
-	border-radius: 34px;
+    border-radius: 34px;
 }
 
 .slider.round:before {
-	border-radius: 50%;
+    border-radius: 50%;
 }
 
 .leftBox {
-	border-right: 1px solid rgb(164, 162, 162);
+    border-right: 1px solid rgb(164, 162, 162);
 }
 
 .learningArea-fields {
-	margin-bottom: 2.5vh;
+    margin-bottom: 2.5vh;
 }
 
 .help-block {
-	color: red;
+    color: red;
 }
 
 input.ng-invalid.ng-touched {
-	border: 1px solid red;
+    border: 1px solid red;
 }
 
 .btn-circle.btn-sm {
-	width: 20px;
-	height: 20px;
-	padding: 6px 0px;
-	border-radius: 15px;
-	font-size: 8px;
-	padding-top: 0;
-	text-align: center;
+    width: 20px;
+    height: 20px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    font-size: 8px;
+    padding-top: 0;
+    text-align: center;
 }
 
 .btn-success {
-	margin-right: 3vw;
+    margin-right: 3vw;
 }
 
 label {
-	font-size: small;
-	color: black;
+    font-size: small;
+    color: black;
 }
+
 
 /* .input-fields {
     width: 45vw;
 } */
 
 .sidenav {
-	height: 100%;
-	width: 0;
-	position: fixed;
-	z-index: 5;
-	top: 0;
-	left: 0;
-	background-color: #3f023f;
-	overflow-x: hidden;
-	transition: 0.5s;
-	padding-top: 60px;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    background-color: #3f023f;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
 }
 
 .sidenav .navbar-nav .nav-item-active {
-	background-color: #7d0f7d;
+    background-color: #7d0f7d;
 }
 
 .sidenav .navbar-nav .nav-item:hover {
-	background-color: #7d0f7d;
+    background-color: #7d0f7d;
 }
 
 .sidenav a {
-	padding: 8px 8px 8px 32px;
-	text-decoration: none;
-	font-size: 15px;
-	color: #ffffff;
-	display: block;
-	transition: 0.3s;
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #ffffff;
+    display: block;
+    transition: 0.3s;
 }
 
 .sidenav a:hover {
-	color: #f1f1f1;
+    color: #f1f1f1;
 }
 
 .sidenav .closebtn {
-	position: absolute;
-	top: 0;
-	right: 25px;
-	font-size: 36px;
-	margin-left: 50px;
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
 }
 
 #mainContent {
-	transition: margin-left .5s;
+    transition: margin-left .5s;
 }
 
 #headerContent {
-	transition: margin-left .5s;
-	/* padding: 16px; */
+    transition: margin-left .5s;
+    /* padding: 16px; */
 }
 
 .header {
-	height: 60px;
-	background: #ffffff;
-	border-bottom: 1px solid #b1a5a57a;
-	width: 100%;
-	display: block;
-	float: left;
-	box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+    height: 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #b1a5a57a;
+    width: 100%;
+    display: block;
+    float: left;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 }
 
 .closeButton {
-	display: none;
+    display: none;
 }
 
 .profile-section-sidenav {
-	width: 100%;
-	display: flex;
-	height: 250px;
-	position: relative;
-	margin-top: -45px;
+    width: 100%;
+    display: flex;
+    height: 250px;
+    position: relative;
+    margin-top: -45px;
 }
 
 .profile-section-sidenav .profile-thumbnail {
-	width: 150px;
-	height: 150px;
-	border-radius: 100px;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center;
-	box-shadow: 10px 10px 23px -16px rgba(0, 0, 0, 0.46);
-	border: 1px solid #dbdbdb;
-	position: absolute;
-	left: 40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 10px 10px 23px -16px rgba(0, 0, 0, 0.46);
+    border: 1px solid #dbdbdb;
+    position: absolute;
+    left: 40px;
 }
 
 .profile-section-sidenav .profile-secondaryinformaiton {
-	color: #ffffff;
-	width: 100%;
-	text-align: center;
-	text-transform: uppercase;
-	margin-top: 160px;
+    color: #ffffff;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 160px;
 }
 
 .profile-section-sidenav .profile-secondaryinformaiton span {
-	display: block;
-	float: left;
-	width: 100%;
+    display: block;
+    float: left;
+    width: 100%;
 }
 
 .profile-section-sidenav .profile-secondaryinformaiton .profile-varient {
-	font-size: 16px;
-	color: #ffffff;
+    font-size: 16px;
+    color: #ffffff;
 }
+
 .progress-Bar {
-	height: 8px;
-	margin-bottom: 16px;
-	width: 40%;
-	margin: auto;
+    height: 8px;
+    margin-bottom: 16px;
+    width: 40%;
+    margin: auto;
 }
+
 .outer-progressBar {
-	background-color: white;
-	height: inherit;
+    background-color: white;
+    height: inherit;
 }
+
 .inner-progressBar {
-	background-color: #e30084;
-	height: inherit;
-	width: 0;
+    background-color: #e30084;
+    height: inherit;
+    width: 0;
 }
+
+
 /*
 @media screen and (min-width: 500px) {
     /* .sidenav {

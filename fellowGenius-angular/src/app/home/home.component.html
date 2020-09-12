@@ -171,13 +171,13 @@
         <div class="profile-section-sidenav">
 
             <div class="profile-thumbnail" [ngStyle]="{'background-image': 'url(' + profilePictureUrl + ')'}">
-              <!-- <img src="../../assets/images/default-user-image.png" alt=""> -->
+                <!-- <img src="../../assets/images/default-user-image.png" alt=""> -->
             </div>
             <div class="profile-secondaryinformaiton">
                 <span *ngIf="loginType=='Learner'" class="profile-varient">{{ studentProfile.fullName }}</span>
                 <span *ngIf="loginType=='Expert'" class="profile-varient">{{ tutorProfile.fullName }}</span>
                 <span class="profile-varient">Politics (Masters)</span>
-                <span *ngIf="tutorProfileDetails.profileCompleted!=100">
+                <span *ngIf="tutorProfileDetails.profileCompleted!=100" clas="progressbar-container">
                   <div class="progress-Bar">
                     <div class="outer-progressBar">
                       <div
@@ -187,10 +187,11 @@
                     </div>
                   </div>
                 </span>
-                <span  *ngIf="tutorProfileDetails.profileCompleted!=100"> <p style="  
-                  width: 80%;
-                  font-size: 10px;
-                  margin: auto;">You have {{100-tutorProfileDetails.profileCompleted}}% left. Please get a head start by completing it now</p> </span>
+                <div *ngIf="tutorProfileDetails.profileCompleted!=100" class="progressbar-information">
+                    <span>You have <label>{{100-tutorProfileDetails.profileCompleted}}% </label> left.</span>
+                    <span class="hyperlink-cont">Please get a head start by <a href="javascript:;">completing it now</a></span>
+
+                </div>
 
                 <span>
                   <label class="switch">
@@ -201,8 +202,8 @@
                   />
                   <span class="slider round"></span>
                 </label>
-              </span>
-                
+                </span>
+
             </div>
         </div>
 
@@ -211,8 +212,8 @@
                 <a routerLink="/home/profile">Profile</a>
             </li>
 
-            <li class="nav-item"  routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
-                <a routerLink="/home/studentProfile" >Profile</a>
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
+                <a routerLink="/home/studentProfile">Profile</a>
             </li>
 
             <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
@@ -225,13 +226,13 @@
 
             <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
                 <a class="nav-link" routerLink="/home/findTutor">Experts</a>
-            </li> 
+            </li>
 
             <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
                 <a class="nav-link" routerLink="tutorSchedule">Schedule</a>
             </li>
 
-            <li class="nav-item"  routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
+            <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Learner'">
                 <a class="nav-link" routerLink="sessionNotes">Session Notes</a>
             </li>
 
@@ -242,11 +243,11 @@
             <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{exact: true}" *ngIf="loginType == 'Expert'">
                 <a class="nav-link" routerLink="knowledgeBase">Knowledge Base</a>
             </li>
-            
-            <li class="nav-item" >
+
+            <li class="nav-item">
                 <a style="cursor: pointer;" (click)="onSignOut()">Sign Out</a>
             </li>
-<!-- 
+            <!-- 
         <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
             class="nav-link"
@@ -266,7 +267,7 @@
             >Bookings</a
           >
         </li> -->
-       
+
 
         </ul>
     </div>
