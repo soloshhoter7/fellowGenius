@@ -14,15 +14,15 @@
         top: 60px;
         z-index: 9994;
     }
-    .header .navbar .hide {
-        display: inline-block;
+    .hide {
+        display: inline-block!important;
+    }
+    .showin {
+        display: none!important;
     }
     .header .logo {
         left: 40%;
         position: absolute;
-    }
-    .header .showin {
-        display: none;
     }
     .search-bg-left {
         display: none;

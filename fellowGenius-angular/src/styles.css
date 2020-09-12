@@ -22,11 +22,11 @@ body {
 }
 
 .hide {
-    display: none!important;
+    display: none;
 }
 
 .showin {
-    display: inline-block!important;
+    display: inline-block;
 }
 
 .rowto {
