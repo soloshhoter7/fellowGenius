@@ -361,6 +361,42 @@
     <div [class]="overlay"></div>
     <div class="header" id="headerContent">
       <div class="logo" (click)="navAction(index)"></div>
+      <div class="search-box-container">
+        <div class="input-group">
+          <form>
+            <button class="searchButton" (click)="displaySelectedSubjects()">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+            <input
+              type="search"
+              name="search"
+              placeholder="Find Tutor by Subjects"
+              [formControl]="myControl"
+              [matAutocomplete]="auto"
+              [(ngModel)]="selectedSubject"
+            />
+            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+              <mat-option
+                *ngFor="let option of filteredOptions | async"
+                [value]="option"
+              >
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </form>
+
+          <!-- <span class="input-group-btn">
+        <button class="btn btn-default" type="button">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        </button>
+      </span>
+       -->
+        </div>
+        <!-- /input-group -->
+      </div>
+      <div class="dropdown-icon-container">
+        <span class="fa fa-sign-out-alt"></span>
+      </div>
     </div>
     <router-outlet></router-outlet>
   </div>
