@@ -30,6 +30,7 @@
 		"agora-rtc-sdk": "2.6.1",
 		"angular-6-social-login-fixed": "^1.0.2",
 		"angular-calendar": "^0.28.9",
+		"angular-google-charts": "^1.1.6",
 		"angular-sockjs": "^0.1.0",
 		"angularx-social-login": "^3.0.1",
 		"bcryptjs": "^2.4.3",

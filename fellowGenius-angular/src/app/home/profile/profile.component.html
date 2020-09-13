@@ -63,7 +63,7 @@
             />
 
             <button
-              class="btn btn-outline-primary"
+              class="btn btn-primary"
               (click)="profilePicture.click()"
               style="
                 margin-top: 5px;
@@ -152,7 +152,7 @@
           #basicProfile="ngForm"
         >
           <div class="form-group">
-            <label for="fullName">Full Name</label>
+            <label for="fullName">Full Name<sup>*</sup></label>
             <input
               type="text"
               id="fullName"
@@ -179,7 +179,7 @@
               </div> -->
 
           <div class="form-group">
-            <label for="dob">Date of Birth</label>
+            <label for="dob">Date of Birth<sup>*</sup></label>
             <input
               type="date"
               id="dob"
@@ -199,7 +199,7 @@
           </div>
 
           <div class="form-group">
-            <label for="contact">Mobile Number</label>
+            <label for="contact">Mobile Number<sup>*</sup></label>
             <input
               type="text"
               id="contact"
@@ -226,7 +226,6 @@
               ngModel
               [ngModel]="tutorProfileDetails.professionalSkills"
               name="professionalSkills"
-              required
               #professionalSkills="ngModel"
             />
             <span
@@ -240,9 +239,7 @@
       <!-- Educational Qualifications -->
       <div class="col-md-5">
         <div class="form-group">
-          <label for="expertise"
-            >Educational Qualifications & Certifications</label
-          >
+          <label>Educational Qualifications & Certifications</label>
           <div
             style="margin: 10px; margin-left: 0"
             *ngFor="let education of educationQualifications; let i = index"
@@ -256,7 +253,7 @@
               (click)="deleteEducation(i)"
               style="font-size: inherit"
             >
-              -
+              <i class="fas fa-minus"></i>
             </button>
           </div>
           <div>
@@ -271,13 +268,13 @@
               />
               <div style="width: max-content; display: inline">
                 <button
-                  [disabled]="disableAdd"
+                  [disabled]="!inputEducation"
                   type="submit"
                   class="btn btn-success btn-circle btn-sm"
                   (click)="addEducation()"
                   style="font-size: inherit; display: inline"
                 >
-                  +
+                  <i class="fas fa-plus"></i>
                 </button>
               </div>
               <div
@@ -299,7 +296,7 @@
         <div class="row" [class.hideBlock]="basic">
           <div class="col-md-5 leftBox">
             <div class="form-group">
-              <label for="Institute">Institute</label>
+              <label for="Institute">Institute<sup>*</sup></label>
               <input
                 type="text"
                 id="Institute"
@@ -321,7 +318,7 @@
 
             <div class="form-group">
               <label for="expertise" style="width: 100%"
-                >Area of Expertise</label
+                >Area of Expertise<sup>*</sup></label
               >
               <div
                 style="margin: 10px; margin-left: 0"
@@ -336,7 +333,7 @@
                   (click)="deleteExpertise(i)"
                   style="font-size: inherit"
                 >
-                  -
+                  <i class="fas fa-minus"></i>
                 </button>
               </div>
 
@@ -361,13 +358,13 @@
                 </mat-autocomplete>
                 <div style="width: max-content; display: inline">
                   <button
-                    [disabled]="disableAdd"
+                    [disabled]="!selectedExpertise"
                     type="button"
                     class="btn btn-success btn-circle btn-sm"
                     (click)="saveExpertise()"
                     style="font-size: inherit; display: inline"
                   >
-                    +
+                    <i class="fas fa-plus"></i>
                   </button>
                 </div>
                 <div
@@ -381,7 +378,7 @@
             </div>
 
             <div class="form-group">
-              <label for="description">Description</label>
+              <label for="description">Description<sup>*</sup></label>
               <textarea
                 style="padding-top: 10px"
                 class="form-control"
@@ -400,7 +397,7 @@
             </div>
             <!-- ............................ -->
             <div class="form-group">
-              <label for="speciality">Speciality</label>
+              <label for="speciality">Speciality<sup>*</sup></label>
               <textarea
                 class="form-control"
                 id="speciality"
@@ -428,7 +425,6 @@
                 ngModel
                 [ngModel]="tutorProfileDetails.yearsOfExperience"
                 class="form-control input-fields"
-                required
                 #yearsOfExperience="ngModel"
               />
               <span
@@ -476,7 +472,7 @@
                   (click)="deleteOrganisation(i)"
                   style="font-size: inherit"
                 >
-                  -
+                  <i class="fas fa-minus"></i>
                 </button>
               </div>
               <div>
@@ -490,13 +486,13 @@
                 />
                 <div style="width: max-content; display: inline">
                   <button
-                    [disabled]="disableAdd"
+                    [disabled]="!inputOrganisation"
                     type="button"
                     class="btn btn-success btn-circle btn-sm"
                     (click)="addOrganisation()"
                     style="font-size: inherit; display: inline"
                   >
-                    +
+                    <i class="fas fa-plus"></i>
                   </button>
                 </div>
               </div>
@@ -517,7 +513,6 @@
                 ngModel
                 [ngModel]="tutorProfileDetails.linkedInProfile"
                 class="form-control input-fields"
-                required
                 #linkedInProfile="ngModel"
               />
               <span

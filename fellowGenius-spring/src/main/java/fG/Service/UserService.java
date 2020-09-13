@@ -152,6 +152,9 @@ public class UserService  implements UserDetailsService{
 //	}
 	//for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
+		if(repUsers.emailExist(registrationModel.getEmail())!=null) {
+			return false;
+		}
 		if(registrationModel.getRole().equals("Learner")) {
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());

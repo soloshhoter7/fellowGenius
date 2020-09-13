@@ -25,6 +25,7 @@ import { tutorProfileDetails } from "../model/tutorProfileDetails";
   styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
+  studentProfileCompleted;
   color: ThemePalette;
   checked = false;
   joinMeeting = new meetingDetails();
@@ -81,6 +82,7 @@ export class HomeComponent implements OnInit {
           if (this.studentProfile.profilePictureUrl != null) {
             this.profilePictureUrl = this.studentProfile.profilePictureUrl;
           }
+          this.calculateStudentProfilePercentage();
           this.router.navigate(["home/studentDashboard"]);
         } else if (this.loginType == "Expert") {
           this.tutorProfile = this.tutorService.getTutorDetials();
@@ -120,17 +122,15 @@ export class HomeComponent implements OnInit {
     if (this.screenWidth >= 450) {
       document.getElementById("sidenav").style.width = "230px";
       document.getElementById("mainContent").style.marginLeft = "230px";
-      this.overlay = "";
     } else {
       document.getElementById("sidenav").style.width = "100%";
-      this.overlay = "overlay";
     }
   }
 
   closeNav() {
+    console.log("closes");
     document.getElementById("sidenav").style.width = "0";
     document.getElementById("mainContent").style.marginLeft = "0";
-    this.overlay = "";
   }
   navAction(index) {
     if (index % 2 == 1) {
@@ -151,8 +151,23 @@ export class HomeComponent implements OnInit {
     }
   }
   calculateStudentProfilePercentage() {
-    var totalFields = 7;
+    var filled = 2;
+    var totalFields = 6;
     if (this.studentProfile.dateOfBirth != null) {
+      filled += 1;
+    }
+    if (this.studentProfile.contact != null) {
+      filled += 1;
+    }
+    if (this.studentProfile.learningAreas != null) {
+      filled += 1;
+    }
+    if (this.studentProfile.profilePictureUrl != null) {
+      filled += 1;
+    }
+    console.log(filled);
+    if (filled <= totalFields) {
+      this.studentProfileCompleted = (filled / totalFields) * 100;
     }
   }
   isTokenExpired(token?: string): boolean {
@@ -233,6 +248,7 @@ export class HomeComponent implements OnInit {
         if (this.studentProfile.profilePictureUrl != null) {
           this.profilePictureUrl = this.studentProfile.profilePictureUrl;
         }
+        this.calculateStudentProfilePercentage();
         this.studentService.setStudentProfileDetails(this.studentProfile);
         this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
           this.studentService.setStudentBookings(res);

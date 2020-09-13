@@ -202,9 +202,18 @@
           clas="progressbar-container"
         >
         </span>
-        <div *ngIf="loginType == 'Learner'" class="progressbar-information">
-          <span class="hyperlink-cont"
-            >Please get a head start by
+        <div
+          *ngIf="
+            loginType == 'Learner' &&
+            studentProfileCompleted &&
+            studentProfileCompleted != 100
+          "
+          class="progressbar-information"
+        >
+          <span class="hyperlink-cont">
+            You have
+            <label>{{ 100 - studentProfileCompleted }}% </label>
+            left. Please get a head start by
             <a href="javascript:;" (click)="openProfile()"
               >completing your profile</a
             ></span
@@ -228,6 +237,7 @@
         </div>
 
         <span *ngIf="loginType == 'Expert'">
+          <p style="display: inline; margin: 5px">Available?</p>
           <label class="switch">
             <input
               type="checkbox"
