@@ -213,4 +213,16 @@
         top: 350px!important;
         position: absolute;
     }
+    .main-content .header {
+        height: 150px!important;
+        margin-bottom: 10px;
+    }
+    .main-content .header .search-box-container {
+        width: 100%;
+        left: 15px;
+        top: 65px;
+    }
+    .main-content .header .search-box-container .input-group .searchButton {
+        right: 30px!important;
+    }
 }
