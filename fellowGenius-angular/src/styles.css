@@ -22,11 +22,11 @@ body {
 }
 
 .hide {
-    display: none!important;
+    display: none;
 }
 
 .showin {
-    display: inline-block!important;
+    display: inline-block;
 }
 
 .rowto {
@@ -339,8 +339,8 @@ textarea:focus {
 }
 
 .bg-thankyou-container .user-name-container {
-    left: 250px;
-    top: 90px;
+    left: 0px;
+    top: -20px;
     position: absolute;
 }
 

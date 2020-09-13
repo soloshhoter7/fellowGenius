@@ -14,15 +14,15 @@
         top: 60px;
         z-index: 9994;
     }
-    .header .navbar .hide {
-        display: inline-block;
+    .hide {
+        display: inline-block!important;
+    }
+    .showin {
+        display: none!important;
     }
     .header .logo {
         left: 40%;
         position: absolute;
-    }
-    .header .showin {
-        display: none;
     }
     .search-bg-left {
         display: none;
@@ -197,5 +197,20 @@
     .expert-profile-container .expert-profile-description {
         margin-left: 0px!important;
         margin-top: 30px!important;
+    }
+    .mat-dialog-container {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+    }
+    .bg-thankyou-container {
+        background-position: top left!important;
+    }
+    .bg-thankyou-container .thankyou-container {
+        width: 300px!important;
+        left: 20px!important;
+        top: 350px!important;
+        position: absolute;
     }
 }
