@@ -1,17 +1,48 @@
 <body>
-  <div class="container" style="margin-bottom:50px ;">
-      <div class="row">
-          <div class="col-md-6">
-            <div style="margin:10px">
-              <p style="color: #e3165b; font-size:x-large;margin-right: 40px;display: inline;"><b>PROFILE</b></p>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary" [class.active]="basic" (click)="basicProfileToggle()">Basic</button>
-                <button type="button" class="btn btn-secondary" [class.active]="!basic" (click)="advancedProfileToggle()">Advanced</button>
-              </div>
-            </div>
-            <div  [class.hideBlock]="!basic">
-              <img style="width:130px; height:130px; border-radius: 100%; border: 1px solid black" [src]="profilePictureUrl">
-              <!-- <input
+  <div class="container" style="margin-bottom: 50px">
+    <div class="row">
+      <div class="col-md-6">
+        <div style="margin: 10px">
+          <p
+            style="
+              color: #e3165b;
+              font-size: x-large;
+              margin-right: 40px;
+              display: inline;
+            "
+          >
+            <b>PROFILE</b>
+          </p>
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              [class.active]="basic"
+              (click)="basicProfileToggle()"
+            >
+              Basic
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              [class.active]="!basic"
+              (click)="advancedProfileToggle()"
+            >
+              Advanced
+            </button>
+          </div>
+        </div>
+        <div [class.hideBlock]="!basic">
+          <img
+            style="
+              width: 130px;
+              height: 130px;
+              border-radius: 100%;
+              border: 1px solid black;
+            "
+            [src]="profilePictureUrl"
+          />
+          <!-- <input
                 #profilePicture
                 hidden="true"
                 type="file"
@@ -21,251 +52,483 @@
               />
               <p style="text-align: center;
               text-decoration: underline;margin-top: 5px;width: 140px;"><a href="#">Upload</a></p> -->
-              <div class="form-group">
-                <input
-                  #profilePicture
-                  hidden="true"
-                  type="file"
-                  onclick="this.value=null"
-                  (change)="profilePictureChange($event)"
-                  required
-                />
-                
-                <button
-                  class="btn btn-outline-primary"
-                  (click)="profilePicture.click()"
-                  style="margin-top: 5px;width: 140px;position: relative;height: 30px;"
-                >
-                  <span *ngIf="!isLoading3">Upload</span>
-                  <div class="tickMark" *ngIf="profilePicUploadStatus">
-                    <img class="tickMarkImg" src="../../../assets/icons/tick.png">
-                  </div>
-                  <span *ngIf="isLoading3" class="loader"style="text-align: center; z-index: 10">
-                    <app-loader></app-loader>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3" style="text-align: end;margin: 20px;" [class.hideBlock]="!basic">
-              <button class="btn" style="margin-right: 2vw; text-decoration: underline; width: auto;">Cancel</button>
-              <button type="submit" class="btn" style=" 
-              padding: 1vh 2vw;
-              background-color: purple;
-              color: white;
-              width: auto;
-              font-size: small"
-              (click)="basicProfile.ngSubmit.emit()"
-              [disabled]="!basicProfile.valid"
-              >Save</button>
-          </div>
+          <div class="form-group">
+            <input
+              #profilePicture
+              hidden="true"
+              type="file"
+              onclick="this.value=null"
+              (change)="profilePictureChange($event)"
+              required
+            />
 
-          <div class="col-md-3" style="text-align: end;margin: 20px;" [class.hideBlock]="basic">
-            <button class="btn" style="margin-right: 2vw; text-decoration: underline; width: auto;">Cancel</button>
-            <button type="submit" class="btn" style=" 
+            <button
+              class="btn btn-outline-primary"
+              (click)="profilePicture.click()"
+              style="
+                margin-top: 5px;
+                width: 140px;
+                position: relative;
+                height: 30px;
+              "
+            >
+              <span *ngIf="!isLoading3">Upload</span>
+              <div class="tickMark" *ngIf="profilePicUploadStatus">
+                <img class="tickMarkImg" src="../../../assets/icons/tick.png" />
+              </div>
+              <span
+                *ngIf="isLoading3"
+                class="loader"
+                style="text-align: center; z-index: 10"
+              >
+                <app-loader></app-loader>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-md-3"
+        style="text-align: end; margin: 20px"
+        [class.hideBlock]="!basic"
+      >
+        <button
+          class="btn"
+          style="margin-right: 2vw; text-decoration: underline; width: auto"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn"
+          style="
             padding: 1vh 2vw;
             background-color: purple;
             color: white;
             width: auto;
-            font-size: small"
-            (click)="advancedProfile.ngSubmit.emit()"
-            [disabled]="!advancedProfile.valid"
-            >Save</button>
-        </div>
+            font-size: small;
+          "
+          (click)="basicProfile.ngSubmit.emit()"
+          [disabled]="!basicProfile.valid"
+        >
+          Save
+        </button>
       </div>
 
-      <br>
-      <div class="row" [class.hideBlock]="!basic">
-          <div class="col-md-6 leftBox">
-              <form (ngSubmit)="saveExpertBasicProfile(basicProfile)" #basicProfile="ngForm">
-              <div class="form-group">
-                  <label  for="fullName">Full Name</label>
-                  <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" [ngModel]="tutorProfile.fullName" autofocus disabled />
+      <div
+        class="col-md-3"
+        style="text-align: end; margin: 20px"
+        [class.hideBlock]="basic"
+      >
+        <button
+          class="btn"
+          style="margin-right: 2vw; text-decoration: underline; width: auto"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn"
+          style="
+            padding: 1vh 2vw;
+            background-color: purple;
+            color: white;
+            width: auto;
+            font-size: small;
+          "
+          (click)="advancedProfile.ngSubmit.emit()"
+          [disabled]="!advancedProfile.valid"
+        >
+          Save
+        </button>
+      </div>
+    </div>
 
-                  <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
-              </div>
+    <br />
+    <div class="row" [class.hideBlock]="!basic">
+      <div class="col-md-6 leftBox">
+        <form
+          (ngSubmit)="saveExpertBasicProfile(basicProfile)"
+          #basicProfile="ngForm"
+        >
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              ngModel
+              class="form-control input-fields"
+              required
+              #fullName="ngModel"
+              maxlength="50"
+              [ngModel]="tutorProfile.fullName"
+              autofocus
+            />
 
-              <div class="form-group">
+            <span class="help-block" *ngIf="!fullName.valid && fullName.touched"
+              >Invalid Name</span
+            >
+          </div>
+
+          <!-- <div class="form-group">
                   <label  for="email">Email Address</label>
                   <input type="email" id="email" name="email" ngModel [ngModel]="tutorProfile.email" class="form-control input-fields" required disabled #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
                   />
                   <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
-              </div>
+              </div> -->
 
-              <div class="form-group">
-                  <label  for="dob">Date of Birth</label>
-                  <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" [ngModel]="tutorProfile.dateOfBirth" dobValidator required #dob="ngModel" />
-                  <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid dob</span>
-              </div>
-
-              <div class="form-group">
-                  <label  for="contact">Mobile Number</label>
-                  <input type="text" id="contact" class="form-control input-fields" ngModel name="contact" [ngModel]="tutorProfile.contact" required [pattern]="mobNumberPattern" #contact="ngModel" />
-
-                  <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid contact</span>
-              </div>
-
-              <div class="form-group">
-                <label  for="professionalSkills">Professional Skills</label>
-                <input type="text" id="professionalSkills" class="form-control input-fields" ngModel [ngModel]="tutorProfileDetails.professionalSkills" name="professionalSkills" required #professionalSkills="ngModel" />
-                <span *ngIf="!professionalSkills.valid && professionalSkills.touched" class="help-block">Invalid professional skills</span>
-               </div>
-              
-              </form>
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input
+              type="date"
+              id="dob"
+              name="dob"
+              ngModel
+              class="form-control input-fields"
+              [ngModel]="tutorProfile.dateOfBirth"
+              dobValidator
+              required
+              #dob="ngModel"
+            />
+            <span
+              *ngIf="dob.errors?.invalidDob && dob.touched"
+              class="help-block"
+              >Invalid dob</span
+            >
           </div>
-          <!-- Educational Qualifications -->
-          <div class="col-md-5">
-            <div class="form-group">
-              <label for="expertise">Educational Qualifications & Certifications</label>
-              <div style="margin: 10px; margin-left:0;"  *ngFor="let education of educationQualifications;let i=index">
-               <div class="tags">{{education}}</div>
-               <button [disabled]="disableSub" type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="deleteEducation(i)" style="font-size: inherit;">-</button>
-              </div>
-              <div>
-                <form>
-                  <input 
-                  type="search"
-                  name="search" 
-                  style="
-                      display: inline;
-                      width: 80%;
-                      margin-right: 5px;"
-                  class="form-control input-fields"
-                  [(ngModel)]="inputEducation"
-                  placeholder="Enter Qualification " 
-                  />
-                  <div style="    
-                      width: max-content;
-                      display: inline;"
-               >
-                 <button [disabled]="disableAdd" type="submit" class="btn btn-success btn-circle btn-sm" (click)="addEducation()" style="font-size: inherit;display: inline;">+</button>
-               </div>
-               <div *ngIf="duplicateEducationArea" style="color:red;margin-top: 10px;">Educational Qualification already exists !</div>
-                </form>
-              </div>
-           </div>
 
+          <div class="form-group">
+            <label for="contact">Mobile Number</label>
+            <input
+              type="text"
+              id="contact"
+              class="form-control input-fields"
+              ngModel
+              name="contact"
+              [ngModel]="tutorProfile.contact"
+              required
+              [pattern]="mobNumberPattern"
+              #contact="ngModel"
+            />
+
+            <span *ngIf="!contact.valid && contact.touched" class="help-block"
+              >Invalid contact</span
+            >
           </div>
-      </div>
-      <div>
-        <form (ngSubmit)="saveExpertAdvancedProfile(advancedProfile)" #advancedProfile="ngForm">
-          <div class="row" [class.hideBlock]="basic">
-            <div class="col-md-5 leftBox">
-              <div class="form-group">
-                <label  for="Institute">Institute</label>
-                <input type="text" id="Institute" name="Institute" ngModel class="form-control input-fields" [ngModel]="tutorProfileDetails.institute" required #Institute="ngModel" maxlength="50" autofocus />
-                <span class="help-block" *ngIf="!Institute.valid && Institute.touched">Invalid Institute</span>
-              </div>
-    
-              <div class="form-group">
-                <label for="expertise" style="width:100%">Area of Expertise</label>
-                <div style="margin: 10px; margin-left: 0;" *ngFor="let expertise of expertises;let i=index">
-                  <div class="tags">{{expertise}}</div>
-                  <button [disabled]="disableSub" type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="deleteExpertise(i)" style="font-size: inherit;">-</button>
-                </div>
-                
-                <div>
-                  <input 
-                  type="search"
-                  name="search" 
-                  class="form-control input-fields"
-                  placeholder="Search by Subjects" 
-                  [formControl]="myControl"
-                  [matAutocomplete]="auto"
-                  [(ngModel)]="selectedExpertise"
-                  style="display: inline;width: 80%;margin-right: 5px;"/>
-                  <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-                   <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                     {{option}}
-                   </mat-option>
-                  </mat-autocomplete>
-                 <div style="width: max-content;display: inline;">
-                 <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="saveExpertise()" style="font-size: inherit;display: inline;">+</button>
-                 </div>
-                 <div *ngIf="duplicateExpertiseArea" style="color:red;margin-top: 10px;">Expertise already exists !</div>
-                </div>
-                <p class="errorMessage">{{errorText}}</p>
-              </div>
-              
-              <div class="form-group">
-                <label for="description">Description</label>
-                <textarea
-                  style="padding-top: 10px;"
-                  class="form-control"
-                  id="description"
-                  rows="3"
-                  name="description"
-                  maxlength="250"
-                  [ngModel]="tutorProfileDetails.description"
-                  placeholder="Enter your Description text"
-                  #tutorProfileDescription
-                  required
-                ></textarea>
-                <span class="setLength">{{tutorProfileDescription.value.length}}/250</span>
-              </div>
-              <!-- ............................ -->
-              <div class="form-group">
-                <label for="speciality">Speciality</label>
-                <textarea
-                  class="form-control"
-                  id="speciality"
-                  rows="3"
-                  name="speciality"
-                  maxlength="250"
-                  [ngModel]="tutorProfileDetails.speciality"
-                  placeholder="Enter your Speciality text"
-                  #tutorProfileSpeciality
-                  required
-                ></textarea>
-                <span class="setLength">{{tutorProfileSpeciality.value.length}}/250</span>
-              </div>
-            </div>
-            <!-- Learning Areas -->
-            <div class="col-md-5">
-              <div class="form-group">
-                <label  for="yearsOfExperience">Years of Experience</label>
-                <input type="number" id="yearsOfExperience" name="yearsOfExperience" ngModel [ngModel]="tutorProfileDetails.yearsOfExperience" class="form-control input-fields" required #yearsOfExperience="ngModel"  />
-                <span class="help-block" *ngIf="!yearsOfExperience.valid && yearsOfExperience.touched">Invalid years of experience</span>
-              </div>
-              <div class="form-group">
-                <label  for="currentOrganisation">Current Organisation</label>
-                <input type="text" id="currentOrganisation" name="currentOrganisation" ngModel [ngModel]="tutorProfileDetails.currentOrganisation" class="form-control input-fields"  #currentOrganisation="ngModel" maxlength="50"/>
-                <span class="help-block" *ngIf="!currentOrganisation.valid && currentOrganisation.touched">Invalid current organisation</span>
-              </div>
-    
-              <div class="form-group">    
-                <label for="expertise">Previous Organisation</label>
-                <div style="margin: 10px; margin-left:0;"  *ngFor="let organisation of previousOraganisations;let i=index">
-                  <div class="tags">{{organisation}}</div>
-                  <button [disabled]="disableSub" type="button" class="btn btn-danger btn-circle btn-sm" style="display: inline;" (click)="deleteOrganisation(i)" style="font-size: inherit;">-</button>
-                </div>
-                <div>
-                  <input 
-                  type="search"
-                  name="search" 
-                  style="
-                  display: inline;
-                  width: 80%;
-                  margin-right: 5px;"
-                  class="form-control input-fields"
-                  [(ngModel)]="inputOrganisation"
-                  placeholder="Enter organisation name"/>
-                  <div style="width: max-content;display: inline;">
-                    <button [disabled]="disableAdd" type="button" class="btn btn-success btn-circle btn-sm" (click)="addOrganisation()" style="font-size: inherit;display: inline;">+</button>
-                  </div>
-                </div>  
-                <div *ngIf="duplicatePreviousOrganisation" style="color:red;margin-top: 10px;">Organisation already exists !</div>
-              </div>
 
-              <div class="form-group">
-                <label  for="linkedInProfile">LinkedIn Profile link</label>
-                <input type="text" id="linkedInProfile" name="linkedInProfile" ngModel [ngModel]="tutorProfileDetails.linkedInProfile" class="form-control input-fields" required #linkedInProfile="ngModel" />
-                <span class="help-block" *ngIf="!linkedInProfile.valid && linkedInProfile.touched">Invalid Link</span>
-              </div>
-            </div> 
+          <div class="form-group">
+            <label for="professionalSkills">Professional Skills</label>
+            <input
+              type="text"
+              id="professionalSkills"
+              class="form-control input-fields"
+              ngModel
+              [ngModel]="tutorProfileDetails.professionalSkills"
+              name="professionalSkills"
+              required
+              #professionalSkills="ngModel"
+            />
+            <span
+              *ngIf="!professionalSkills.valid && professionalSkills.touched"
+              class="help-block"
+              >Invalid professional skills</span
+            >
           </div>
         </form>
       </div>
+      <!-- Educational Qualifications -->
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="expertise"
+            >Educational Qualifications & Certifications</label
+          >
+          <div
+            style="margin: 10px; margin-left: 0"
+            *ngFor="let education of educationQualifications; let i = index"
+          >
+            <div class="tags">{{ education }}</div>
+            <button
+              [disabled]="disableSub"
+              type="button"
+              class="btn btn-danger btn-circle btn-sm"
+              style="display: inline"
+              (click)="deleteEducation(i)"
+              style="font-size: inherit"
+            >
+              -
+            </button>
+          </div>
+          <div>
+            <form>
+              <input
+                type="search"
+                name="search"
+                style="display: inline; width: 80%; margin-right: 5px"
+                class="form-control input-fields"
+                [(ngModel)]="inputEducation"
+                placeholder="Enter Qualification "
+              />
+              <div style="width: max-content; display: inline">
+                <button
+                  [disabled]="disableAdd"
+                  type="submit"
+                  class="btn btn-success btn-circle btn-sm"
+                  (click)="addEducation()"
+                  style="font-size: inherit; display: inline"
+                >
+                  +
+                </button>
+              </div>
+              <div
+                *ngIf="duplicateEducationArea"
+                style="color: red; margin-top: 10px"
+              >
+                Educational Qualification already exists !
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <form
+        (ngSubmit)="saveExpertAdvancedProfile(advancedProfile)"
+        #advancedProfile="ngForm"
+      >
+        <div class="row" [class.hideBlock]="basic">
+          <div class="col-md-5 leftBox">
+            <div class="form-group">
+              <label for="Institute">Institute</label>
+              <input
+                type="text"
+                id="Institute"
+                name="Institute"
+                ngModel
+                class="form-control input-fields"
+                [ngModel]="tutorProfileDetails.institute"
+                required
+                #Institute="ngModel"
+                maxlength="50"
+                autofocus
+              />
+              <span
+                class="help-block"
+                *ngIf="!Institute.valid && Institute.touched"
+                >Invalid Institute</span
+              >
+            </div>
 
+            <div class="form-group">
+              <label for="expertise" style="width: 100%"
+                >Area of Expertise</label
+              >
+              <div
+                style="margin: 10px; margin-left: 0"
+                *ngFor="let expertise of expertises; let i = index"
+              >
+                <div class="tags">{{ expertise }}</div>
+                <button
+                  [disabled]="disableSub"
+                  type="button"
+                  class="btn btn-danger btn-circle btn-sm"
+                  style="display: inline"
+                  (click)="deleteExpertise(i)"
+                  style="font-size: inherit"
+                >
+                  -
+                </button>
+              </div>
+
+              <div>
+                <input
+                  type="search"
+                  name="search"
+                  class="form-control input-fields"
+                  placeholder="Search by Subjects"
+                  [formControl]="myControl"
+                  [matAutocomplete]="auto"
+                  [(ngModel)]="selectedExpertise"
+                  style="display: inline; width: 80%; margin-right: 5px"
+                />
+                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+                  <mat-option
+                    *ngFor="let option of filteredOptions | async"
+                    [value]="option"
+                  >
+                    {{ option }}
+                  </mat-option>
+                </mat-autocomplete>
+                <div style="width: max-content; display: inline">
+                  <button
+                    [disabled]="disableAdd"
+                    type="button"
+                    class="btn btn-success btn-circle btn-sm"
+                    (click)="saveExpertise()"
+                    style="font-size: inherit; display: inline"
+                  >
+                    +
+                  </button>
+                </div>
+                <div
+                  *ngIf="duplicateExpertiseArea"
+                  style="color: red; margin-top: 10px"
+                >
+                  Expertise already exists !
+                </div>
+              </div>
+              <p class="errorMessage">{{ errorText }}</p>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                style="padding-top: 10px"
+                class="form-control"
+                id="description"
+                rows="3"
+                name="description"
+                maxlength="250"
+                [ngModel]="tutorProfileDetails.description"
+                placeholder="Enter your Description text"
+                #tutorProfileDescription
+                required
+              ></textarea>
+              <span class="setLength"
+                >{{ tutorProfileDescription.value.length }}/250</span
+              >
+            </div>
+            <!-- ............................ -->
+            <div class="form-group">
+              <label for="speciality">Speciality</label>
+              <textarea
+                class="form-control"
+                id="speciality"
+                rows="3"
+                name="speciality"
+                maxlength="250"
+                [ngModel]="tutorProfileDetails.speciality"
+                placeholder="Enter your Speciality text"
+                #tutorProfileSpeciality
+                required
+              ></textarea>
+              <span class="setLength"
+                >{{ tutorProfileSpeciality.value.length }}/250</span
+              >
+            </div>
+          </div>
+          <!-- Learning Areas -->
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="yearsOfExperience">Years of Experience</label>
+              <input
+                type="number"
+                id="yearsOfExperience"
+                name="yearsOfExperience"
+                ngModel
+                [ngModel]="tutorProfileDetails.yearsOfExperience"
+                class="form-control input-fields"
+                required
+                #yearsOfExperience="ngModel"
+              />
+              <span
+                class="help-block"
+                *ngIf="!yearsOfExperience.valid && yearsOfExperience.touched"
+                >Invalid years of experience</span
+              >
+            </div>
+            <div class="form-group">
+              <label for="currentOrganisation">Current Organisation</label>
+              <input
+                type="text"
+                id="currentOrganisation"
+                name="currentOrganisation"
+                ngModel
+                [ngModel]="tutorProfileDetails.currentOrganisation"
+                class="form-control input-fields"
+                #currentOrganisation="ngModel"
+                maxlength="50"
+              />
+              <span
+                class="help-block"
+                *ngIf="
+                  !currentOrganisation.valid && currentOrganisation.touched
+                "
+                >Invalid current organisation</span
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="expertise">Previous Organisation</label>
+              <div
+                style="margin: 10px; margin-left: 0"
+                *ngFor="
+                  let organisation of previousOraganisations;
+                  let i = index
+                "
+              >
+                <div class="tags">{{ organisation }}</div>
+                <button
+                  [disabled]="disableSub"
+                  type="button"
+                  class="btn btn-danger btn-circle btn-sm"
+                  style="display: inline"
+                  (click)="deleteOrganisation(i)"
+                  style="font-size: inherit"
+                >
+                  -
+                </button>
+              </div>
+              <div>
+                <input
+                  type="search"
+                  name="search"
+                  style="display: inline; width: 80%; margin-right: 5px"
+                  class="form-control input-fields"
+                  [(ngModel)]="inputOrganisation"
+                  placeholder="Enter organisation name"
+                />
+                <div style="width: max-content; display: inline">
+                  <button
+                    [disabled]="disableAdd"
+                    type="button"
+                    class="btn btn-success btn-circle btn-sm"
+                    (click)="addOrganisation()"
+                    style="font-size: inherit; display: inline"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div
+                *ngIf="duplicatePreviousOrganisation"
+                style="color: red; margin-top: 10px"
+              >
+                Organisation already exists !
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="linkedInProfile">LinkedIn Profile link</label>
+              <input
+                type="text"
+                id="linkedInProfile"
+                name="linkedInProfile"
+                ngModel
+                [ngModel]="tutorProfileDetails.linkedInProfile"
+                class="form-control input-fields"
+                required
+                #linkedInProfile="ngModel"
+              />
+              <span
+                class="help-block"
+                *ngIf="!linkedInProfile.valid && linkedInProfile.touched"
+                >Invalid Link</span
+              >
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </body>
