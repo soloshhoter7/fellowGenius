@@ -155,7 +155,7 @@ public class userController {
 //	}
 
 	// for getting the list of teachers with 100% profile completion
-	@PreAuthorize("hasAuthority('Learner')")
+//	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/fetchTutorList", produces = "application/JSON")
 	@ResponseBody
 	public List<TutorProfileDetailsModel> tutorList() {

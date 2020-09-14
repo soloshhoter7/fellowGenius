@@ -235,6 +235,8 @@ export class HomeComponent implements OnInit {
   onSignOut() {
     this.cookieService.delete("token");
     this.cookieService.delete("userId");
+    this.loginService.setLoginType(null);
+    this.loginService.setTrType(null);
     this.router.navigate([""]);
   }
   openProfile() {

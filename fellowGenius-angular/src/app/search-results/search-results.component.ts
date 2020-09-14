@@ -28,76 +28,77 @@ export class SearchResultsComponent implements OnInit {
   ngOnInit(): void {
     // this.fetchTutorList();
     console.log("login type ->" + this.loginService.getLoginType());
-    this.searchResults = [
-      {
-        tid: 1234,
-        areaOfExpertise: ["Mathematics", "English", "Physics"],
-        currentOrganisation: "Google",
-        description: "I have an experience of 10 years",
-        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-        fullName: "Ajay Verma",
-        institute: "Panipat Institute of Engineering and Technology",
-        lessonCompleted: 0,
-        linkedInProfile: "Ajay.linkedin",
-        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-        price1: "400",
-        price2: "400",
-        price3: "400",
-        professionalSkills: "Angular, JAVA",
-        profileCompleted: 100,
-        profilePictureUrl: null,
-        rating: 90,
-        reviewCount: 10,
-        speciality: "Angular, JAVA",
-        yearsOfExperience: 10,
-      },
-      {
-        tid: 3578,
-        areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
-        currentOrganisation: "Google",
-        description: "I have an experience of 10 years",
-        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-        fullName: "Shubham Verma",
-        institute: "Panipat Institute of Engineering and Technology",
-        lessonCompleted: 0,
-        linkedInProfile: "AJay.linkedin",
-        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-        price1: "800",
-        price2: "400",
-        price3: "400",
-        professionalSkills: "Angular, JAVA",
-        profileCompleted: 100,
-        profilePictureUrl: null,
-        rating: 70,
-        reviewCount: 10,
-        speciality: "Angular, JAVA",
-        yearsOfExperience: 10,
-      },
-      {
-        tid: 3572,
-        areaOfExpertise: ["Chemistry", "English", "Physics"],
-        currentOrganisation: "Google",
-        description: "I have an experience of 10 years",
-        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-        fullName: "Muskan Verma",
-        institute: "Panipat Institute of Engineering and Technology",
-        lessonCompleted: 0,
-        linkedInProfile: "Muskan.linkedin",
-        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-        price1: "500",
-        price2: "400",
-        price3: "400",
-        professionalSkills: "Angular, JAVA",
-        profileCompleted: 100,
-        profilePictureUrl: null,
-        rating: 50,
-        reviewCount: 10,
-        speciality: "Angular, JAVA",
-        yearsOfExperience: 10,
-      },
-    ];
-    // this.ratingFilterApplied = [];
-    this.filteredArray = this.searchResults;
+    // this.searchResults = [
+    //   {
+    //     tid: 1234,
+    //     areaOfExpertise: ["Mathematics", "English", "Physics"],
+    //     currentOrganisation: "Google",
+    //     description: "I have an experience of 10 years",
+    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    //     fullName: "Ajay Verma",
+    //     institute: "Panipat Institute of Engineering and Technology",
+    //     lessonCompleted: 0,
+    //     linkedInProfile: "Ajay.linkedin",
+    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    //     price1: "400",
+    //     price2: "400",
+    //     price3: "400",
+    //     professionalSkills: "Angular, JAVA",
+    //     profileCompleted: 100,
+    //     profilePictureUrl: null,
+    //     rating: 90,
+    //     reviewCount: 10,
+    //     speciality: "Angular, JAVA",
+    //     yearsOfExperience: 10,
+    //   },
+    //   {
+    //     tid: 3578,
+    //     areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
+    //     currentOrganisation: "Google",
+    //     description: "I have an experience of 10 years",
+    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    //     fullName: "Shubham Verma",
+    //     institute: "Panipat Institute of Engineering and Technology",
+    //     lessonCompleted: 0,
+    //     linkedInProfile: "AJay.linkedin",
+    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    //     price1: "800",
+    //     price2: "400",
+    //     price3: "400",
+    //     professionalSkills: "Angular, JAVA",
+    //     profileCompleted: 100,
+    //     profilePictureUrl: null,
+    //     rating: 70,
+    //     reviewCount: 10,
+    //     speciality: "Angular, JAVA",
+    //     yearsOfExperience: 10,
+    //   },
+    //   {
+    //     tid: 3572,
+    //     areaOfExpertise: ["Chemistry", "English", "Physics"],
+    //     currentOrganisation: "Google",
+    //     description: "I have an experience of 10 years",
+    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    //     fullName: "Muskan Verma",
+    //     institute: "Panipat Institute of Engineering and Technology",
+    //     lessonCompleted: 0,
+    //     linkedInProfile: "Muskan.linkedin",
+    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    //     price1: "500",
+    //     price2: "400",
+    //     price3: "400",
+    //     professionalSkills: "Angular, JAVA",
+    //     profileCompleted: 100,
+    //     profilePictureUrl: null,
+    //     rating: 50,
+    //     reviewCount: 10,
+    //     speciality: "Angular, JAVA",
+    //     yearsOfExperience: 10,
+    //   },
+    // ];
+    this.fetchTutorList();
+    this.ratingFilterApplied = [];
+    // this.filteredArray = this.searchResults;
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
@@ -116,7 +117,7 @@ export class SearchResultsComponent implements OnInit {
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
       console.log(req);
-      // this.searchResults = req;
+      this.searchResults = req;
     });
   }
 
