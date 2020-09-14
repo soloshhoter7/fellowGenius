@@ -316,6 +316,7 @@ export class TutorDashboardComponent implements OnInit {
     } else {
       var hoursLeft: number = 0;
       var minutesLeft: number = 0;
+      var daysLeft: number = 0;
       var timeLeftString: string;
       var dateParts: any = booking.dateOfMeeting.split("/");
       var bookingDate = new Date(
@@ -333,12 +334,20 @@ export class TutorDashboardComponent implements OnInit {
         if (daysLeft < 1) {
           hoursLeft = Math.trunc(differenceTimeMinutes / 60);
           minutesLeft = differenceTimeMinutes % 60;
+        } else {
+          var todayMinutesLeft = differenceTimeMinutes % (24 * 60);
+          hoursLeft = Math.trunc(todayMinutesLeft / 60);
+          minutesLeft = todayMinutesLeft % 60;
         }
         hoursLeft = hoursLeft + Math.trunc(startMinutes / 60);
         minutesLeft = minutesLeft + Math.trunc(startMinutes % 60);
         if (minutesLeft > 60) {
           hoursLeft += minutesLeft / 60;
           minutesLeft = minutesLeft % 60;
+        }
+        if (hoursLeft > 24) {
+          daysLeft += hoursLeft / 24;
+          hoursLeft = hoursLeft % 24;
         }
         if (daysLeft == 0) {
           timeLeftString =
@@ -358,7 +367,47 @@ export class TutorDashboardComponent implements OnInit {
         booking.timeLeft = timeLeftString;
       }
 
-      setInterval(() => {}, 5000);
+      setInterval(() => {
+        currDate = new Date();
+        var differenceTimeMinutes = Math.trunc(
+          (bookingDate.getTime() - currDate.getTime()) / (1000 * 60)
+        );
+        var daysLeft = Math.trunc(differenceTimeMinutes / (60 * 24));
+        if (daysLeft < 1) {
+          hoursLeft = Math.trunc(differenceTimeMinutes / 60);
+          minutesLeft = differenceTimeMinutes % 60;
+        } else {
+          var todayMinutesLeft = differenceTimeMinutes % (24 * 60);
+          hoursLeft = Math.trunc(todayMinutesLeft / 60);
+          minutesLeft = todayMinutesLeft % 60;
+        }
+        hoursLeft = hoursLeft + Math.trunc(startMinutes / 60);
+        minutesLeft = minutesLeft + Math.trunc(startMinutes % 60);
+        if (minutesLeft > 60) {
+          hoursLeft += minutesLeft / 60;
+          minutesLeft = minutesLeft % 60;
+        }
+        if (hoursLeft > 24) {
+          daysLeft += hoursLeft / 24;
+          hoursLeft = hoursLeft % 24;
+        }
+        if (daysLeft == 0) {
+          timeLeftString =
+            Math.trunc(hoursLeft) +
+            " hours " +
+            Math.trunc(minutesLeft) +
+            " minutes";
+        } else {
+          timeLeftString =
+            Math.trunc(daysLeft) +
+            " days " +
+            Math.trunc(hoursLeft) +
+            " hours " +
+            Math.trunc(minutesLeft) +
+            " minutes";
+        }
+        booking.timeLeft = timeLeftString;
+      }, 5000);
     }
   }
 

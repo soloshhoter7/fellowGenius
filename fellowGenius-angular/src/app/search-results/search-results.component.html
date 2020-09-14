@@ -1,6 +1,9 @@
-<div class="header">
+<!-- <div class="header">
   <div class="logo"></div>
-  <div class="header-buttons-container">
+  <div
+    class="header-buttons-container"
+    *ngIf="loginService.getLoginType() == null"
+  >
     <button type="button" class="btn btn-secondary showin" (click)="onSignUp()">
       Sign Up
     </button>
@@ -21,7 +24,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div
+      class="collapse navbar-collapse"
+      id="navbarNavAltMarkup"
+      *ngIf="loginService.getLoginType() == null"
+    >
       <div class="navbar-nav">
         <a class="nav-item nav-link active" href="#">Home</a>
         <a class="nav-item nav-link" href="#">Resources</a>
@@ -31,7 +38,7 @@
       </div>
     </div>
   </nav>
-</div>
+</div> -->
 
 <div class="advertise-container">
   <div class="advertisement">
@@ -53,7 +60,6 @@
     </span>
   </div>
 </div>
-
 <div class="content-container">
   <div class="breadcrumb-container">
     <ol class="breadcrumb">

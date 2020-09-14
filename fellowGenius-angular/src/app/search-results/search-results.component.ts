@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { HttpService } from "../service/http.service";
 import { tutorProfileDetails } from "../model/tutorProfileDetails";
 import { element } from "protractor";
+import { LoginDetailsService } from "../service/login-details.service";
 
 @Component({
   selector: "app-search-results",
@@ -10,6 +11,7 @@ import { element } from "protractor";
   styleUrls: ["./search-results.component.css"],
 })
 export class SearchResultsComponent implements OnInit {
+  showProfile;
   searchResults: tutorProfileDetails[];
   filteredArray: tutorProfileDetails[] = [];
   // arrayToShow: tutorProfileDetails[];
@@ -17,10 +19,15 @@ export class SearchResultsComponent implements OnInit {
   subjectFiltersApplied = [];
   priceFiltersApplied = [];
   ratingFilterApplied = [];
-  constructor(private router: Router, private httpService: HttpService) {}
+  constructor(
+    private router: Router,
+    private httpService: HttpService,
+    private loginService: LoginDetailsService
+  ) {}
 
   ngOnInit(): void {
     // this.fetchTutorList();
+    console.log("login type ->" + this.loginService.getLoginType());
     this.searchResults = [
       {
         tid: 1234,
@@ -89,8 +96,8 @@ export class SearchResultsComponent implements OnInit {
         yearsOfExperience: 10,
       },
     ];
-    this.ratingFilterApplied = [];
-    // this.filteredArray = this.searchResults;
+    // this.ratingFilterApplied = [];
+    this.filteredArray = this.searchResults;
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
@@ -103,7 +110,7 @@ export class SearchResultsComponent implements OnInit {
   }
 
   toViewProfile() {
-    this.router.navigate(["test"]);
+    this.router.navigate(["viewTutors"]);
   }
 
   fetchTutorList() {

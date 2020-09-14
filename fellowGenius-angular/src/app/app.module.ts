@@ -84,6 +84,8 @@ import { RecordingsComponent } from "./home/recordings/recordings.component";
 import { dobValidator } from "./Validators/dobValidator.directive";
 import { MatRadioModule } from "@angular/material/radio";
 import { GoogleChartsModule } from "angular-google-charts";
+import { ExpertProfileComponent } from "./expert-profile/expert-profile.component";
+import { NavBarComponent } from "./nav-bar/nav-bar.component";
 export const appRoutes: Routes = [
   {
     path: "home",
@@ -104,6 +106,7 @@ export const appRoutes: Routes = [
   },
   { path: "facade", component: FacadeComponent },
   { path: "searchResults", component: SearchResultsComponent },
+  { path: "viewTutors", component: ExpertProfileComponent },
   { path: "login", component: LoginComponent },
   { path: "signUp", component: SignUpComponent },
   { path: "signUpTutor", component: SignUpTutorComponent },
@@ -151,6 +154,8 @@ export const appRoutes: Routes = [
     SessionNotesComponent,
     RecordingsComponent,
     dobValidator,
+    ExpertProfileComponent,
+    NavBarComponent,
   ],
   imports: [
     NgxMaterialTimepickerModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { NgForm } from "@angular/forms";
+import { FormControl, NgForm } from "@angular/forms";
 import { meetingDetails } from "../model/meetingDetails";
 import { MeetingService } from "../service/meeting.service";
 import { StudentProfileModel } from "../model/studentProfile";
@@ -17,8 +17,10 @@ import { LocationStrategy } from "@angular/common";
 import { SocialAuthService } from "angularx-social-login";
 import { CookieService } from "ngx-cookie-service";
 import { HostListener } from "@angular/core";
+import { Observable } from "rxjs";
 import * as jwt_decode from "jwt-decode";
 import { tutorProfileDetails } from "../model/tutorProfileDetails";
+import { map, startWith } from "rxjs/operators";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -42,6 +44,20 @@ export class HomeComponent implements OnInit {
   screenHeight: number;
   screenWidth: number;
   profilePictureUrl = "../../../assets/images/default-user-image.png";
+  options: string[] = [
+    "Mathematics",
+    "English",
+    "Science",
+    "Social Science",
+    "History",
+    "Political Science",
+    "Geography",
+    "Physics",
+    "Chemistry",
+  ];
+  filteredOptions: Observable<string[]>;
+  myControl = new FormControl();
+  selectedSubject;
   constructor(
     public router: Router,
     public meetingService: MeetingService,
@@ -51,9 +67,6 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private httpService: HttpService,
     private studentService: StudentService,
-    private loginDetailsService: LoginDetailsService,
-    private locationStrategy: LocationStrategy,
-    private authService: SocialAuthService,
     private cookieService: CookieService
   ) {
     this.getScreenSize();
@@ -66,18 +79,14 @@ export class HomeComponent implements OnInit {
     // console.log(this.screenHeight, this.screenWidth);
   }
   ngOnInit() {
-    console.log("started home !");
     this.index = 1;
     if (this.screenWidth >= 450) {
-      console.log("executed");
       this.openNav();
     }
     if (this.isTokenValid()) {
-      console.log("entered!");
       this.loginType = this.loginService.getLoginType();
       if (this.loginType) {
         if (this.loginType == "Learner") {
-          console.log("entered in learner !");
           this.studentProfile = this.studentServce.getStudentProfileDetails();
           if (this.studentProfile.profilePictureUrl != null) {
             this.profilePictureUrl = this.studentProfile.profilePictureUrl;
@@ -117,6 +126,10 @@ export class HomeComponent implements OnInit {
     } else {
       this.router.navigate(["facade"]);
     }
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(""),
+      map((value) => this._filter(value))
+    );
   }
   openNav() {
     if (this.screenWidth >= 450) {
@@ -128,7 +141,6 @@ export class HomeComponent implements OnInit {
   }
 
   closeNav() {
-    console.log("closes");
     document.getElementById("sidenav").style.width = "0";
     document.getElementById("mainContent").style.marginLeft = "0";
   }
@@ -165,7 +177,7 @@ export class HomeComponent implements OnInit {
     if (this.studentProfile.profilePictureUrl != null) {
       filled += 1;
     }
-    console.log(filled);
+
     if (filled <= totalFields) {
       this.studentProfileCompleted = (filled / totalFields) * 100;
     }
@@ -233,6 +245,22 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
+  displaySelectedSubjects() {
+    if (this.selectedSubject) {
+      this.loginService.setLoginType(this.loginType);
+
+      this.router.navigate(["searchResults"]);
+    }
+  }
+
   // signOut() {
   // 	this.authService.signOut();
   // 	this.router.navigate([ '#' ]);
@@ -243,6 +271,8 @@ export class HomeComponent implements OnInit {
     if (jwt_decode(this.cookieService.get("token"))["ROLE"] == "Learner") {
       this.loginType = "Learner";
       this.loginService.setTrType("login");
+      this.loginService.setLoginType(this.loginType);
+
       this.httpService.getStudentDetails(this.userId).subscribe((res) => {
         this.studentProfile = res;
         if (this.studentProfile.profilePictureUrl != null) {
@@ -260,6 +290,8 @@ export class HomeComponent implements OnInit {
     ) {
       this.loginType = "Expert";
       this.loginService.setTrType("login");
+      this.loginService.setLoginType(this.loginType);
+
       this.httpService.getTutorDetails(this.userId).subscribe((res) => {
         this.tutorProfile = res;
         this.tutorService.setTutorDetails(this.tutorProfile);
