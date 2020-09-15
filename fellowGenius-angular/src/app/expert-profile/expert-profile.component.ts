@@ -15,6 +15,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { scheduleData } from "src/app/model/scheduleData";
 import { LoginDetailsService } from "../service/login-details.service";
+import { ConnectComponent } from "./connect/connect.component";
 @Component({
   selector: "app-expert-profile",
   templateUrl: "./expert-profile.component.html",
@@ -92,7 +93,8 @@ export class ExpertProfileComponent implements OnInit {
     private router: Router,
     private dialogRef: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private loginService: LoginDetailsService
+    private loginService: LoginDetailsService,
+    private dialog: MatDialog
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -109,27 +111,30 @@ export class ExpertProfileComponent implements OnInit {
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
-    if (this.loginService.getLoginType() != null) {
-      this.httpService
-        .getTutorIsAvailable(this.teacherProfile.tid)
-        .subscribe((res) => {
-          if (res == true) {
-            this.isTutorAvailable = true;
-            this.timeFrom(-7);
-            this.timeFrom2(-7);
-            this.httpService
-              .getTutorTimeAvailabilityTimeArray(this.teacherProfile.tid)
-              .subscribe((res) => {
-                this.ScheduleTime = res;
-                this.manipulateTimeSlots();
-              });
-          } else if (res == false) {
-            this.isTutorAvailable = false;
-          }
-        });
+    if (this.loginService.getLoginType() == "Learner") {
+      this.httpService.getTutorIsAvailable(this.userId).subscribe((res) => {
+        if (res == true) {
+          this.isTutorAvailable = true;
+          this.timeFrom(-7);
+          this.timeFrom2(-7);
+          this.httpService
+            .getTutorTimeAvailabilityTimeArray(this.userId)
+            .subscribe((res) => {
+              this.ScheduleTime = res;
+              this.manipulateTimeSlots();
+            });
+        } else if (res == false) {
+          this.isTutorAvailable = false;
+        }
+      });
     }
   }
-
+  openConnectPage() {
+    this.dialog.open(ConnectComponent, {
+      height: "80vh",
+      width: "90vw",
+    });
+  }
   timeSelector(event, index: number, todayDate: string) {
     this.clickedIndex = index;
 
