@@ -21,6 +21,7 @@ import { Observable } from "rxjs";
 import * as jwt_decode from "jwt-decode";
 import { tutorProfileDetails } from "../model/tutorProfileDetails";
 import { map, startWith } from "rxjs/operators";
+import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -67,7 +68,8 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private httpService: HttpService,
     private studentService: StudentService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private breakpointObserver: BreakpointObserver
   ) {
     this.getScreenSize();
   }
@@ -79,6 +81,15 @@ export class HomeComponent implements OnInit {
     // console.log(this.screenHeight, this.screenWidth);
   }
   ngOnInit() {
+    this.breakpointObserver
+      .observe(["(min-width: 800px)"])
+      .subscribe((state: BreakpointState) => {
+        if (state.matches) {
+          this.openNav();
+        } else {
+          this.closeNav();
+        }
+      });
     this.index = 1;
     if (this.screenWidth >= 450) {
       this.openNav();
