@@ -1,1 +1,192 @@
-<p>connect works!</p>
+<body>
+  <div
+    *ngIf="isLoading"
+    style="text-align: center; margin-top: 27%; z-index: 5"
+  >
+    <app-loading></app-loading>
+  </div>
+  <div class="connect-container" *ngIf="!isLoading">
+    <div class="connect-header">
+      <div style="float: right">
+        <button class="closeIconButton" title="close" (click)="closeNav()">
+          <img src="../../../../assets/icons/close.svg" style="height: 15px" />
+        </button>
+      </div>
+      <div>
+        <h1 style="margin: 0">Book Meeting</h1>
+        <p style="font-weight: 500; margin-top: 5px; color: #210184">
+          Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
+        </p>
+      </div>
+    </div>
+    <div
+      class="connect-body"
+      style="height: 40vh; max-height: 40vh; overflow-y: scroll"
+    >
+      <div>
+        <div
+          *ngFor="let todayDate of scheduleDates; let z = index"
+          class="dateBox"
+        >
+          <div style="margin-bottom: 10px">
+            {{ fullDate[z] | date: "fullDate" }}
+          </div>
+          <div *ngIf="todayDate.hasElements">
+            <div *ngFor="let time of ScheduleTime; let i = index">
+              <div *ngIf="todayDate.date == time.date">
+                <div
+                  class="timeSlots"
+                  [style.background-color]="
+                    startSelect >= 0 &&
+                    endSelect > 0 &&
+                    i > startSelect &&
+                    i < endSelect
+                      ? 'rgb(207, 200, 238)'
+                      : null
+                  "
+                  [ngClass]="{
+                    startClass:
+                      time.hours == st.sh &&
+                      time.minutes == st.sm &&
+                      startDate == time.date,
+                    endClass:
+                      time.hours == et.eh &&
+                      time.minutes == et.em &&
+                      startDate == time.date
+                  }"
+                  (click)="timeSelector(time, i, todayDate)"
+                >
+                  {{ time.hours }}:{{ time.minutes | zero }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!todayDate.hasElements">No Available Schedules</div>
+          <br />
+          <hr class="timeBoxHr" />
+        </div>
+      </div>
+    </div>
+    <div class="connect-footer">
+      <div class="form-group">
+        <textarea
+          style="padding-top: 5px"
+          class="form-control"
+          id="description"
+          rows="3"
+          name="description"
+          [(ngModel)]="bookingDetails.description"
+          maxlength="100"
+          #desc
+          ngModel
+          required
+        ></textarea>
+        <label for="description" class="form-control-placeholder"
+          >Description<sup>*</sup></label
+        >
+        <span style="float: right" class="setLength"
+          >{{ desc.value.length }}/100</span
+        >
+      </div>
+      <button
+        class="btn btn-outline-success"
+        style="width: 40%; margin-left: 30%"
+        (click)="onBooking()"
+        [disabled]="startDisabled || endDisabled"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+  <!-- <div style="max-width: inherit">
+    <button class="closeIconButton" (click)="closeSideNav()" title="close">
+      <img
+        src="../../../../assets/icons/close.svg"
+        alt=""
+        style="height: 15px"
+      />
+    </button>
+    <div>
+      <div>
+        <h1 style="margin: 0">Book Meeting</h1>
+        <p style="font-weight: 500; margin-top: 5px; color: #210184">
+          Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
+        </p>
+        <div class="errorMessage">{{ errorMessage }}</div>
+      </div>
+      <div>
+        <div>
+          <div
+            *ngFor="let todayDate of scheduleDates; let z = index"
+            class="dateBox"
+          >
+            <div style="margin-bottom: 10px">
+              {{ fullDate[z] | date: "fullDate" }}
+            </div>
+            <div *ngIf="todayDate.hasElements">
+              <div *ngFor="let time of ScheduleTime; let i = index">
+                <div *ngIf="todayDate.date == time.date">
+                  <div
+                    class="timeSlots"
+                    [style.background-color]="
+                      startSelect >= 0 &&
+                      endSelect > 0 &&
+                      i > startSelect &&
+                      i < endSelect
+                        ? 'rgb(207, 200, 238)'
+                        : null
+                    "
+                    [ngClass]="{
+                      startClass:
+                        time.hours == st.sh &&
+                        time.minutes == st.sm &&
+                        startDate == time.date,
+                      endClass:
+                        time.hours == et.eh &&
+                        time.minutes == et.em &&
+                        startDate == time.date
+                    }"
+                    (click)="timeSelector(time, i, todayDate)"
+                  >
+                    {{ time.hours }}:{{ time.minutes | zero }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!todayDate.hasElements">No Available Schedules</div>
+            <br />
+            <hr class="timeBoxHr" />
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea
+            style="padding-top: 5px"
+            class="form-control"
+            id="description"
+            rows="3"
+            name="description"
+            [(ngModel)]="bookingDetails.description"
+            maxlength="100"
+            #desc
+            ngModel
+            required
+          ></textarea>
+          <label for="description" class="form-control-placeholder"
+            >Description<sup>*</sup></label
+          >
+          <span style="float: right" class="setLength"
+            >{{ desc.value.length }}/100</span
+          >
+        </div>
+        <button
+          class="btn btn-outline-success"
+          style="width: 40%; margin-left: 30%"
+          (click)="onBooking()"
+          [disabled]="startDisabled || endDisabled"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div> -->
+</body>

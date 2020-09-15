@@ -335,7 +335,7 @@
       <li class="nav-item">
         <a style="cursor: pointer" (click)="onSignOut()">Sign Out</a>
       </li> -->
-      <!-- 
+      <!--       
         <li class="nav-item" *ngIf="loginType == 'Expert'">
           <a
             class="nav-link"
@@ -344,17 +344,17 @@
             [routerLinkActiveOptions]="{ exact: true }"
             >Bookings</a
           >
-        </li>
-
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
-          <a
-            class="nav-link"
-            routerLink="studentBookings"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Bookings</a
-          >
         </li> -->
+
+      <li class="nav-item" *ngIf="loginType == 'Learner'">
+        <a
+          class="nav-link"
+          routerLink="studentBookings"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Bookings</a
+        >
+      </li>
     </ul>
   </div>
   <div id="mainContent" class="main-content" style="position: relative">
@@ -419,10 +419,4 @@
     </div>
     <router-outlet></router-outlet>
   </div>
-  <!-- <div class="signup-container" id="mainContent">
-      <div class="header" id="headerContent">
-          <div class="logo" (click)="navAction(index)"></div>
-      </div>
-
-  </div> -->
 </body>

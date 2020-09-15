@@ -22,9 +22,9 @@ export class StudentDashboardComponent implements OnInit {
   pendingRequestsCount = 0;
   joinMeeting = new meetingDetails();
   sid: number;
-  bookingList: bookingDetails[];
-  approvedList: bookingDetails[];
-  liveMeetingList: bookingDetails[];
+  bookingList: bookingDetails[] = [];
+  approvedList: bookingDetails[] = [];
+  liveMeetingList: bookingDetails[] = [];
   filterSearch: tutorProfileDetails[];
   topTutors: tutorProfileDetails[];
   emptyBookingList: boolean = false;

@@ -22,6 +22,8 @@ import * as jwt_decode from "jwt-decode";
 import { tutorProfileDetails } from "../model/tutorProfileDetails";
 import { map, startWith } from "rxjs/operators";
 import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
+import { AppComponent } from "../app.component";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -69,7 +71,8 @@ export class HomeComponent implements OnInit {
     private httpService: HttpService,
     private studentService: StudentService,
     private cookieService: CookieService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private appComp: AppComponent
   ) {
     this.getScreenSize();
   }
@@ -96,32 +99,43 @@ export class HomeComponent implements OnInit {
     }
     if (this.isTokenValid()) {
       this.loginType = this.loginService.getLoginType();
-      if (this.loginType) {
-        if (this.loginType == "Learner") {
-          this.studentProfile = this.studentServce.getStudentProfileDetails();
-          if (this.studentProfile.profilePictureUrl != null) {
-            this.profilePictureUrl = this.studentProfile.profilePictureUrl;
-          }
-          this.calculateStudentProfilePercentage();
-          this.router.navigate(["home/studentDashboard"]);
-        } else if (this.loginType == "Expert") {
-          this.tutorProfile = this.tutorService.getTutorDetials();
-          this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-          if (this.tutorProfileDetails.profilePictureUrl != null) {
-            this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
-          }
-          if (
-            this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
-            "yes"
-          ) {
-            this.checked = true;
-          } else {
-            this.checked = false;
-          }
-          // this.dashboardUrl = '/home/tutorDashboard';
-          this.router.navigate(["home/tutorDashboard"]);
+      if (
+        this.loginType &&
+        this.loginType == "Learner" &&
+        this.studentService.getStudentProfileDetails().fullName != null
+      ) {
+        this.studentProfile = this.studentServce.getStudentProfileDetails();
+        if (this.studentProfile.profilePictureUrl != null) {
+          this.profilePictureUrl = this.studentProfile.profilePictureUrl;
         }
-
+        this.calculateStudentProfilePercentage();
+        this.router.navigate(["home/studentDashboard"]);
+        if (this.loginService.getTrType() == "signUp") {
+          this.dialog.open(WelcomeComponent, {
+            width: "auto",
+            height: "auto",
+          });
+        }
+      } else if (
+        this.loginType &&
+        this.loginType == "Expert" &&
+        this.tutorService.getTutorDetials().fullName != null
+      ) {
+        this.tutorProfile = this.tutorService.getTutorDetials();
+        this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+        if (this.tutorProfileDetails.profilePictureUrl != null) {
+          this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
+        }
+        if (
+          this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
+          "yes"
+        ) {
+          this.checked = true;
+        } else {
+          this.checked = false;
+        }
+        // this.dashboardUrl = '/home/tutorDashboard';
+        this.router.navigate(["home/tutorDashboard"]);
         if (this.loginService.getTrType() == "signUp") {
           this.dialog.open(WelcomeComponent, {
             width: "auto",
@@ -130,9 +144,6 @@ export class HomeComponent implements OnInit {
         }
       } else {
         this.handleRefresh();
-        // setTimeout(() => {
-        // 	console.log('hello');
-        // }, 1000);
       }
     } else {
       this.router.navigate(["facade"]);

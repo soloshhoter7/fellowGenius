@@ -1,0 +1,199 @@
+.image {
+  width: 50vw;
+  height: 17vh;
+}
+
+img {
+  border-radius: 0;
+  width: 100%;
+  height: 100%;
+}
+.boxShadow {
+  box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);
+}
+
+.font19 {
+  font-size: 19px;
+}
+
+.marginZero {
+  margin: 0;
+}
+
+.paddingZero {
+  padding: 0;
+}
+
+.stars-outer {
+  position: relative;
+  display: inline-block;
+}
+
+.stars-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
+
+.stars-outer::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #ccc;
+}
+
+.stars-inner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #f8ce0b;
+}
+
+.lessonCompleted {
+  margin-top: 1px;
+  background-color: teal;
+  width: fit-content;
+  padding-left: 4px;
+  padding-right: 4px;
+  color: white;
+  border-radius: 4px;
+}
+
+.messageBar {
+  z-index: 3;
+  width: 100%;
+  height: 10vh;
+  background-color: red;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.timeSlots {
+  float: left;
+  margin-right: 10px;
+  padding-left: 7px;
+  border: 0.8px solid #241084;
+  color: #241084;
+  padding-right: 7px;
+  border-radius: 9px;
+  margin-bottom: 3px;
+  cursor: pointer !important;
+}
+
+.selectedTimeSlots {
+  float: left;
+  border: 0.8px solid #241084;
+  margin-right: 10px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 9px;
+  color: white;
+  background-color: #241084;
+  z-index: 2;
+}
+
+.selectedTimeSlots:hover {
+  color: white;
+  background-color: #241084;
+}
+
+.timeSlots:hover {
+  background-color: #241084;
+  color: white;
+  cursor: default;
+}
+
+.timeBoxHr {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.startClass {
+  float: left;
+  border: 0.8px solid #241084;
+  margin-right: 10px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 9px;
+  color: white;
+  background-color: #241084;
+  z-index: 2;
+}
+
+.endClass {
+  float: left;
+  border: 0.8px solid #241084;
+  margin-right: 10px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 9px;
+  color: white;
+  background-color: #241084;
+  z-index: 2;
+}
+
+.closeIconButton {
+  background-color: white;
+  border: none;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 15px;
+  right: 20px;
+  font-size: larger;
+  cursor: pointer;
+  color: #8d89aa;
+  outline: none;
+}
+
+.closeIconButton:hover {
+  background-color: #ccc;
+  border-radius: 50%;
+  color: black;
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-control-placeholder {
+  position: absolute;
+  top: 5px;
+  left: 11px;
+  padding-left: 5px;
+  padding-right: 5px;
+  transition: all 500ms;
+  opacity: 1;
+}
+
+.form-control:focus + .form-control-placeholder,
+.form-control:valid + .form-control-placeholder {
+  font-size: 90%;
+  transform: translate3d(0, -75%, 0);
+}
+
+label {
+  background-color: white;
+  margin: 0;
+}
+
+.errorMessage {
+  color: red;
+}
+
+.mat-snack-bar-container {
+  background-color: white !important;
+  color: black !important;
+}
+.connect-footer {
+  margin-top: 20px;
+}
