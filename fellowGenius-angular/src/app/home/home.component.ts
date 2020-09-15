@@ -166,6 +166,10 @@ export class HomeComponent implements OnInit {
     document.getElementById("sidenav").style.width = "0";
     document.getElementById("mainContent").style.marginLeft = "0";
   }
+
+  heyNav() {
+    console.log("clse nav!");
+  }
   navAction(index) {
     if (index % 2 == 1) {
       this.index = index + 1;
