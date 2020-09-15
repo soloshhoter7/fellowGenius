@@ -51,6 +51,7 @@ import fG.Model.registrationModel;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryTutorLogin;
+import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryUsers;
 
 @Service
@@ -76,6 +77,10 @@ public class UserService  implements UserDetailsService{
 	
 	@Autowired
 	repositoryUsers repUsers;
+	
+	@Autowired
+	repositoryTutorProfileDetails repTutorProfileDetails;
+	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
  
@@ -719,6 +724,7 @@ public class UserService  implements UserDetailsService{
 	public void subtractArea(int id, String subject, String role) {
 		dao.subtractArea(id,subject,role);
 	}
+
 
 	
 }

@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { HttpService } from "../service/http.service";
 import { tutorProfileDetails } from "../model/tutorProfileDetails";
 import { element } from "protractor";
 import { LoginDetailsService } from "../service/login-details.service";
+import { ProfileService } from "../service/profile.service";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: "app-search-results",
@@ -22,7 +24,10 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private router: Router,
     private httpService: HttpService,
-    private loginService: LoginDetailsService
+    private loginService: LoginDetailsService,
+    private profileService: ProfileService,
+    private matDialog: MatDialog,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -110,9 +115,19 @@ export class SearchResultsComponent implements OnInit {
     this.router.navigate(["login"]);
   }
 
-  toViewProfile() {
-    this.router.navigate(["viewTutors"]);
+  viewProfile(profile: tutorProfileDetails) {
+    this.profileService.setProfile(profile);
+    this.router.navigate(["viewTutors"], {
+      queryParams: { page: profile.tid },
+    });
   }
+
+  // openDialogProfile() {
+  // 	this.matDialog.open(TutorProfileComponent, {
+  // 		height: '90vh',
+  // 		width: '70vw'
+  // 	});
+  // }
 
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {

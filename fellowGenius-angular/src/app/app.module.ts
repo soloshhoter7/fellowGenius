@@ -86,6 +86,7 @@ import { MatRadioModule } from "@angular/material/radio";
 import { GoogleChartsModule } from "angular-google-charts";
 import { ExpertProfileComponent } from "./expert-profile/expert-profile.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
+import { ConnectComponent } from './expert-profile/connect/connect.component';
 export const appRoutes: Routes = [
   {
     path: "home",
@@ -156,6 +157,7 @@ export const appRoutes: Routes = [
     dobValidator,
     ExpertProfileComponent,
     NavBarComponent,
+    ConnectComponent,
   ],
   imports: [
     NgxMaterialTimepickerModule,

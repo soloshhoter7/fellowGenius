@@ -162,7 +162,12 @@ public class userController {
 		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList();
 		return tutorProfileDetails;
 	}
-
+ 
+	@RequestMapping(value="/fetchTutorProfileDetails",produces = "application/JSON")
+	@ResponseBody
+	public TutorProfileDetailsModel fetchTutorProfileDetails(String tid) {
+		return service.getTutorProfileDetails(Integer.valueOf(tid));
+	}
 	// register social login
 //	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerSocialLogin")
