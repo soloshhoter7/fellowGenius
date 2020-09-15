@@ -220,9 +220,17 @@
     .main-content .header .search-box-container {
         width: 100%;
         left: 15px;
-        top: 65px;
+        top: 110px;
     }
     .main-content .header .search-box-container .input-group .searchButton {
         right: 30px!important;
+    }
+    .header .dropdown-icon-container {
+        width: auto!important;
+    }
+    .main-content .header .dropdown-icon-container .dropdown {
+        position: absolute;
+        left: -192px;
+        top: 55px;
     }
 }
