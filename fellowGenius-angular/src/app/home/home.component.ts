@@ -24,6 +24,7 @@ import { map, startWith } from "rxjs/operators";
 import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 import { AppComponent } from "../app.component";
+import { TutorDashboardComponent } from "../../app/home/dashboard/tutor-dashboard.component";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -81,7 +82,6 @@ export class HomeComponent implements OnInit {
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
-    // console.log(this.screenHeight, this.screenWidth);
   }
   ngOnInit() {
     this.breakpointObserver
@@ -167,9 +167,6 @@ export class HomeComponent implements OnInit {
     document.getElementById("mainContent").style.marginLeft = "0";
   }
 
-  heyNav() {
-    console.log("clse nav!");
-  }
   navAction(index) {
     if (index % 2 == 1) {
       this.index = index + 1;
