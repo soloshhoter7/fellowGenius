@@ -1,0 +1,12 @@
+.nav-link .fa {
+    font-size: 25px;
+    color: #201e20;
+}
+
+.dropdown-menu {
+    position: absolute;
+    will-change: transform;
+    top: -18px;
+    left: -65px;
+    transform: translate3d(-5px, 57px, 0px);
+}
