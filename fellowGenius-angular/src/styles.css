@@ -1324,3 +1324,11 @@ textarea:focus {
     background-color: #201e20;
     color: #ffffff;
 }
+
+.hum-burger {
+    font-size: 25px;
+    color: #201e20;
+    margin-right: 16px;
+    margin-top: 10px;
+    float: left;
+}
