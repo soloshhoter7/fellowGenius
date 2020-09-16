@@ -163,17 +163,35 @@
 </body> -->
 
 <body>
-    <div id="sidenav" class="sidenav">
-        <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
-        <span class="material-icons close closeButton" (click)="heyNav()" style="cursor: pointer">
+  <div id="sidenav" class="sidenav">
+    <!-- <div>
+      <button class="btn btn-primary" (click)="heyNav()">Close</button>
+    </div> -->
+    <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
+    <!-- <span
+      class="material-icons close closeButton"
+      (click)="heyNav()"
+      style="cursor: pointer"
+    >
       close
-    </span>
-        <div class="profile-section-sidenav">
-            <div (click)="openProfile()" class="profile-thumbnail" style="cursor: pointer" [ngStyle]="{ 'background-image': 'url(' + profilePictureUrl + ')' }">
-                <!-- <img src="../../assets/images/default-user-image.png" alt=""> -->
-            </div>
-            <div class="profile-secondaryinformaiton">
-                <span *ngIf="loginType == 'Learner'" (click)="openProfile()" class="profile-varient" style="cursor: pointer">{{ studentProfile.fullName }}</span
+    </span> -->
+
+    <div class="profile-section-sidenav">
+      <div
+        (click)="openProfile()"
+        class="profile-thumbnail"
+        style="cursor: pointer"
+        [ngStyle]="{ 'background-image': 'url(' + profilePictureUrl + ')' }"
+      >
+        <!-- <img src="../../assets/images/default-user-image.png" alt=""> -->
+      </div>
+      <div class="profile-secondaryinformaiton">
+        <span
+          *ngIf="loginType == 'Learner'"
+          (click)="openProfile()"
+          class="profile-varient"
+          style="cursor: pointer"
+          >{{ studentProfile.fullName }}</span
         >
         <span
           *ngIf="loginType == 'Expert'"
@@ -183,14 +201,20 @@
           >{{ tutorProfile.fullName }}</span
         >
         <span class="profile-varient">Politics (Masters)</span>
-                <span *ngIf="tutorProfileDetails.profileCompleted != 100" clas="progressbar-container">
+        <span
+          *ngIf="tutorProfileDetails.profileCompleted != 100"
+          clas="progressbar-container"
+        >
         </span>
-                <div *ngIf="
+        <div
+          *ngIf="
             loginType == 'Learner' &&
             studentProfileCompleted &&
             studentProfileCompleted != 100
-          " class="progressbar-information">
-                    <span class="hyperlink-cont">
+          "
+          class="progressbar-information"
+        >
+          <span class="hyperlink-cont">
             You have
             <label>{{ 100 - studentProfileCompleted }}% </label>
             left. Please get a head start by
@@ -212,7 +236,9 @@
           >
           <span class="hyperlink-cont"
             >Please get a head start by
-            <a href="javascript:;">completing it now</a></span
+            <a href="javascript:;" (click)="openProfile()"
+              >completing it now</a
+            ></span
           >
         </div>
 
@@ -225,13 +251,13 @@
               (click)="toggleAvailability()"
             />
             <span class="slider round"></span>
-                    </label>
-                    </span>
-                </div>
-            </div>
+          </label>
+        </span>
+      </div>
+    </div>
 
-            <ul class="navbar-nav">
-                <!-- <li
+    <ul class="navbar-nav">
+      <!-- <li
         class="nav-item"
         routerLinkActive="nav-item-active"
         [routerLinkActiveOptions]="{ exact: true }"
@@ -249,50 +275,90 @@
         <a routerLink="/home/studentProfile">Profile</a>
       </li> -->
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Learner'">
-                    <a class="nav-link" routerLink="/home/studentDashboard">Dashboard</a>
-                </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Learner'"
+      >
+        <a class="nav-link" routerLink="/home/studentDashboard">Dashboard</a>
+      </li>
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Expert'">
-                    <a class="nav-link" routerLink="/home/tutorDashboard">Dashboard</a>
-                </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Expert'"
+      >
+        <a class="nav-link" routerLink="/home/tutorDashboard">Dashboard</a>
+      </li>
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Learner'">
-                    <a class="nav-link" routerLink="/home/findTutor">Experts</a>
-                </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Learner'"
+      >
+        <a class="nav-link" routerLink="/home/findTutor">Experts</a>
+      </li>
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Expert'">
-                    <a class="nav-link" routerLink="tutorSchedule">Schedule</a>
-                </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Expert'"
+      >
+        <a class="nav-link" routerLink="tutorSchedule">Schedule</a>
+      </li>
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Learner'">
-                    <a class="nav-link" routerLink="sessionNotes">Session Notes</a>
-                </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Learner'"
+      >
+        <a class="nav-link" routerLink="sessionNotes">Session Notes</a>
+      </li>
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Expert'">
-                    <a class="nav-link" routerLink="recordings">Recordings</a>
-                </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Expert'"
+      >
+        <a class="nav-link" routerLink="recordings">Recordings</a>
+      </li>
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Expert'">
-                    <a class="nav-link" routerLink="knowledgeBase">Knowledge Base</a>
-                </li>
-                <!-- 
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Expert'"
+      >
+        <a class="nav-link" routerLink="knowledgeBase">Knowledge Base</a>
+      </li>
+      <!-- 
       <li class="nav-item">
         <a style="cursor: pointer" (click)="onSignOut()">Sign Out</a>
       </li> -->
-                <!--       
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <a
-            class="nav-link"
-            routerLink="bookings"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Bookings</a
-          >
-        </li> -->
 
-                <li class="nav-item" *ngIf="loginType == 'Learner'">
-                    <a class="nav-link" routerLink="studentBookings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Bookings</a
+      <li class="nav-item" *ngIf="loginType == 'Expert'">
+        <a
+          class="nav-link"
+          routerLink="bookings"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Bookings</a
+        >
+      </li>
+
+      <li class="nav-item" *ngIf="loginType == 'Learner'">
+        <a
+          class="nav-link"
+          routerLink="studentBookings"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Bookings</a
         >
       </li>
     </ul>
@@ -354,10 +420,10 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Expert</a>
+          </div>
         </div>
-    </div>
-    </div>
+      </div>
     </div>
     <router-outlet></router-outlet>
-    </div>
+  </div>
 </body>

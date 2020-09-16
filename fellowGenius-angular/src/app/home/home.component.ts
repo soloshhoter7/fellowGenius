@@ -285,7 +285,9 @@ export class HomeComponent implements OnInit {
       this.router.navigate(["searchResults"]);
     }
   }
-
+  heyNav() {
+    console.log("close it damn it");
+  }
   // signOut() {
   // 	this.authService.signOut();
   // 	this.router.navigate([ '#' ]);
