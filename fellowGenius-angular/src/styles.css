@@ -130,6 +130,47 @@ textarea:focus {
     font-size: 15px;
 }
 
+.footer-container {
+    display: block;
+    float: left;
+    width: 100%;
+    background-color: #f7e4f9;
+}
+
+.footer-container .footer-inner {
+    width: 80%;
+    margin: 0 auto;
+    display: block;
+    padding: 30px;
+}
+
+.footer-container .footer-inner .footer-item {
+    float: left;
+    margin: 0 7.2% 0 0;
+}
+
+.footer-container .footer-inner .footer-item ul {
+    list-style: none;
+}
+
+.footer-container .footer-inner .footer-item a {
+    color: #892687;
+    text-decoration: none;
+    line-height: 40px;
+}
+
+.footer-container .footer-inner .footer-item a:hover {
+    color: #e30084;
+    text-decoration: underline;
+}
+
+.footer-container .copyright-container {
+    display: block;
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
 
 /*
 .stars-outer {
