@@ -1,423 +1,477 @@
 .local {
-	position: fixed;
-	left: 1rem;
-	bottom: 1rem;
-	width: 20vw;
-	height: 20vh;
-	border-radius: 5px;
-	overflow: hidden;
-	z-index: 10;
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    width: 20vw;
+    height: 20vh;
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 10;
 }
 
 .remote {
-	position: fixed;
-	left: 1rem;
-	bottom: 11rem;
-	width: 20vw;
-	height: 20vh;
-	border-radius: 5px;
-	overflow: hidden;
-	z-index: 10;
+    position: fixed;
+    left: 1rem;
+    bottom: 11rem;
+    width: 20vw;
+    height: 20vh;
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 10;
 }
 
 .screen {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: 4;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 4;
 }
 
-button {
-	margin-left: 10px;
-	margin-top: 10px;
-	margin-bottom: 10px;
+
+/* button {
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .control-icons {
-	margin-top: 5px;
-	font-size: 20px;
-}
+    margin-top: 5px;
+    font-size: 20px;
+} */
 
 .control-nav {
-	background: rgb(57, 57, 57);
-	width: fit-content;
-	border-radius: 5px;
-	position: fixed;
-	bottom: 15vh;
-	left: 40vw;
-	z-index: 1000;
-	/* box-shadow: 0px 15px 8px rgb(199, 203, 217, 0.5); */
+    width: max-content;
+    border-radius: 5px;
+    position: relative;
+    margin-right: auto;
+    z-index: 10;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 60cvh;
+}
+
+button {
+    margin-left: 0.5vw;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    margin-right: 1vw;
+    border-radius: 50%;
+}
+
+.control-icons {
+    margin-top: 5px;
+    font-size: 20px;
+}
+
+.control-nav-div {
+    float: right;
+    margin-top: 0.6vh;
 }
 
 .timer {
-	color: #c0c0c0;
-	font-size: 25px;
-	margin-left: 10px;
-	border-right: 1px solid #c0c0c0;
-	padding-right: 10px;
+    color: #c0c0c0;
+    font-size: 25px;
+    margin-left: 10px;
+    border-right: 1px solid #c0c0c0;
+    padding-right: 10px;
 }
 
 .bg-image {
-	/* The image used */
-	background-color: #337ab8;
-	text-align: center;
-	z-index: 11;
+    /* The image used */
+    background-color: #337ab8;
+    text-align: center;
+    z-index: 11;
 }
 
 .blurred-icons {
-	/* color: #337ab8; */
-	color: white;
-	font-size: 50px;
-	margin-top: 50px;
+    /* color: #337ab8; */
+    color: white;
+    font-size: 50px;
+    margin-top: 50px;
 }
 
 .short-name {
-	position: relative;
-	z-index: 3;
-	border-radius: 100%;
-	background-color: rgb(199, 203, 217);
-	top: 20vh;
-	margin-left: 42vw;
-	box-shadow: 0px 0px 50px rgb(113, 113, 172);
-	width: 15vw;
-	height: 15vw;
-	text-align: center;
-	border-radius: 3px solid blue;
-	border-style: hidden;
+    position: relative;
+    display: table;
+    z-index: 3;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 100%;
+    background-color: rgb(199, 203, 217);
+    top: 20vh;
+    box-shadow: 0px 0px 50px rgb(29, 29, 0);
+    width: 180px;
+    height: 180px;
+    text-align: center;
+    border-radius: 3px solid blue;
+    border-style: hidden;
 }
 
 .container {
-	width: 100vw;
-	height: 100vh;
-	background-image: linear-gradient(to bottom, rgba(26, 34, 56, 0.9), rgba(26, 34, 56, 1));
-	position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(to bottom, rgba(244, 229, 248, 0.9), rgba(244, 229, 248, 1));
+    position: fixed;
 }
 
 .box {
-	width: 100vw;
-	height: 100vh;
-	background-image: linear-gradient(to bottom, rgba(26, 34, 56, 0.9), rgba(26, 34, 56, 1));
-	position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(to bottom, rgba(244, 229, 248, 0.9), rgba(244, 229, 248, 1));
+    position: fixed;
 }
 
 .shortNameText {
-	margin: 0;
-	font-size: 7vw;
-	position: absolute;
-	top: 6.5vw;
-	left: 3.5vw;
+    margin: 0;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+    font-size: 11vh;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .nameText {
-	color: white;
-	position: absolute;
-	bottom: 0;
-	z-index: 1;
-	font-size: larger;
-	right: 0px;
-	background-color: black;
-	margin: 0;
-	padding: 4px;
-	padding-left: 7px;
-	padding-right: 7px;
-	font-weight: 300;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    font-size: larger;
+    right: 0px;
+    background-color: black;
+    margin: 0;
+    padding: 4px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-weight: 300;
 }
 
 .expand-button {
-	background-color: rgba(0, 0, 0, 0.6);
-	font-size: 15px;
-	border-radius: 1px;
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 8px;
-	z-index: 1;
-	color: white;
-	cursor: pointer;
-	outline: none;
-	margin: 0;
-	border: none;
-	width: 40px;
-	height: 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-size: 15px;
+    border-radius: 1px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px;
+    z-index: 1;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    margin: 0;
+    border: none;
+    width: 40px;
+    height: 40px;
 }
+
 .tools {
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1;
-	margin-top: 5px;
-	margin-left: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    margin-top: 5px;
+    margin-left: 5px;
 }
+
 .canvas-body {
-	position: relative;
-	overflow: auto;
-	max-height: 100%;
+    position: relative;
+    overflow: auto;
+    max-height: 100%;
 }
+
 .toolButtons {
-	margin: 5px;
-	background: white;
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	border: none;
-	outline: none;
-	height: 50px;
-	width: 50px;
-	padding: 10px;
+    margin: 5px;
+    background: white;
+    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+    border: none;
+    outline: none;
+    height: 50px;
+    width: 50px;
+    padding: 10px;
 }
+
 .whiteBoard {
-	background-color: white;
+    background-color: white;
 }
+
 .canvasWrapper {
-	position: fixed;
-	top: 0;
-	background-color: white;
-	z-index: 10;
-	height: 100vh;
-	width: 100vw;
+    position: fixed;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    height: 100vh;
+    width: 100vw;
 }
+
 .canvasWrapperScreenShare {
-	position: fixed;
-	top: 0;
-	z-index: 10;
-	height: 100vh;
-	width: 100vw;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    height: 100vh;
+    width: 100vw;
 }
+
 canvas {
-	display: block;
+    display: block;
 }
+
 .hideBlock {
-	display: none;
+    display: none;
 }
+
 .redBackground {
-	background-color: red;
+    background-color: red;
 }
+
 .sidenav {
-	height: 100%;
-	width: 0;
-	z-index: 1001;
-	right: 0;
-	top: 0;
-	background-color: white;
-	overflow-x: hidden;
-	transition: 0.4s;
+    height: 100%;
+    width: 0;
+    z-index: 1001;
+    right: 0;
+    top: 0;
+    background-color: white;
+    overflow-x: hidden;
+    transition: 0.4s;
 }
 
 .boxShadow {
-	box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);
+    box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);
 }
 
 .sideNavBody {
-	height: 85%;
-	margin-bottom: 15px;
-	overflow-y: auto;
-	margin-top: 20px;
+    height: 85%;
+    margin-bottom: 15px;
+    overflow-y: auto;
+    margin-top: 20px;
 }
+
 .sideNavFooter {
-	position: absolute;
-	width: 85%;
-	bottom: 0;
+    position: absolute;
+    width: 85%;
+    bottom: 0;
 }
+
 .closeIconButton {
-	background-color: white;
-	border: none;
-	position: absolute;
-	width: 30px;
-	height: 30px;
-	top: 15px;
-	right: 20px;
-	font-size: larger;
-	cursor: pointer;
-	color: #8d89aa;
-	outline: none;
+    background-color: white;
+    border: none;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 15px;
+    right: 20px;
+    font-size: larger;
+    cursor: pointer;
+    color: #8d89aa;
+    outline: none;
 }
+
 .closeIconButton:hover {
-	background-color: #ccc;
-	border-radius: 50%;
-	color: black;
+    background-color: #ccc;
+    border-radius: 50%;
+    color: black;
 }
+
 .input_msg_write {
-	background-color: rgb(235, 235, 235);
-	float: left;
-	border: medium none;
-	color: black;
-	font-size: 15px;
-	min-height: 48px;
-	width: 86%;
-	border-radius: 26px;
-	padding-left: 15px;
-	outline: none;
-	padding-left: 25px;
-	margin-right: 7px;
+    background-color: rgb(235, 235, 235);
+    float: left;
+    border: medium none;
+    color: black;
+    font-size: 15px;
+    min-height: 48px;
+    width: 86%;
+    border-radius: 26px;
+    padding-left: 15px;
+    outline: none;
+    padding-left: 25px;
+    margin-right: 7px;
 }
 
 .write_msg {
-	background-color: rgb(235, 235, 235);
-	border: medium none;
-	color: black;
-	font-size: 15px;
-	min-height: 48px;
-	width: 84%;
-	border-radius: 26px;
-	outline: none;
+    background-color: rgb(235, 235, 235);
+    border: medium none;
+    color: black;
+    font-size: 15px;
+    min-height: 48px;
+    width: 84%;
+    border-radius: 26px;
+    outline: none;
 }
+
 .type_msg {
-	border-top: none;
-	position: relative;
-	margin-bottom: 20px;
+    border-top: none;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .msg_send_btn {
-	background: #36404a none repeat scroll 0 0;
-	border: medium none;
-	border-radius: 50%;
-	color: #fff;
-	cursor: pointer;
-	font-size: 17px;
-	height: 33px;
-	position: absolute;
-	right: 55px;
-	top: -2px;
-	width: 33px;
+    background: #36404a none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 17px;
+    height: 33px;
+    position: absolute;
+    right: 55px;
+    top: -2px;
+    width: 33px;
 }
+
 img {
-	max-width: 100%;
+    max-width: 100%;
 }
 
 .incoming_msg_img {
-	display: inline-block;
-	width: 6%;
+    display: inline-block;
+    width: 6%;
 }
 
 .received_msg {
-	color: white;
-	display: inline-block;
-	vertical-align: top;
-	width: 100%;
+    color: white;
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
 }
 
 .received_withd_msg p {
-	background: rgb(200, 200, 200) none repeat scroll 0 0;
-	border-radius: 3px;
-	color: black;
-	font-size: 14px;
-	padding: 5px 10px 5px 12px;
-	width: 100%;
+    background: rgb(200, 200, 200) none repeat scroll 0 0;
+    border-radius: 3px;
+    color: black;
+    font-size: 14px;
+    padding: 5px 10px 5px 12px;
+    width: 100%;
 }
 
 .time_date {
-	color: white;
-	display: block;
-	font-size: 12px;
-	margin: 8px 0 0;
+    color: white;
+    display: block;
+    font-size: 12px;
+    margin: 8px 0 0;
 }
 
 .received_withd_msg {
-	width: 57%;
+    width: 57%;
 }
 
 .mesgs {
-	float: left;
-	padding: 30px 15px 0 25px;
-	width: 60%;
+    float: left;
+    padding: 30px 15px 0 25px;
+    width: 60%;
 }
 
 .sent_msg p {
-	background: rgb(45, 107, 134) none repeat scroll 0 0;
-	border-radius: 3px;
-	font-size: 14px;
-	margin: 0;
-	color: #fff;
-	padding: 5px 10px 5px 12px;
-	width: 60%;
+    background: rgb(45, 107, 134) none repeat scroll 0 0;
+    border-radius: 3px;
+    font-size: 14px;
+    margin: 0;
+    color: #fff;
+    padding: 5px 10px 5px 12px;
+    width: 60%;
 }
 
 .outgoing_msg {
-	overflow: hidden;
-	margin: 26px 0 26px;
+    overflow: hidden;
+    margin: 26px 0 26px;
 }
+
 .uploadButton {
-	background: none;
-	border: 1px solid #210184;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	outline: none;
-	color: #210184;
-	border-radius: 5px;
-	height: 40px;
-	width: 40px;
-	font-size: large;
-	margin: 0;
-	margin-top: 4px;
-	border-radius: 50%;
+    background: none;
+    border: 1px solid #210184;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    outline: none;
+    color: #210184;
+    border-radius: 5px;
+    height: 40px;
+    width: 40px;
+    font-size: large;
+    margin: 0;
+    margin-top: 4px;
+    border-radius: 50%;
 }
+
 .uploadButton:hover {
-	background-color: #210184;
-	color: white;
+    background-color: #210184;
+    color: white;
 }
 
 .sent_msg .fileWrapper {
-	background: rgb(45, 107, 134) none repeat scroll 0 0;
-	border-radius: 3px;
-	font-size: 14px;
-	margin: 0;
-	color: #fff;
-	padding: 5px 10px 5px 12px;
-	width: max-content;
+    background: rgb(45, 107, 134) none repeat scroll 0 0;
+    border-radius: 3px;
+    font-size: 14px;
+    margin: 0;
+    color: #fff;
+    padding: 5px 10px 5px 12px;
+    width: max-content;
 }
+
 .received_withd_msg .fileWrapper {
-	background: rgb(200, 200, 200) none repeat scroll 0 0;
-	border-radius: 3px;
-	color: black;
-	font-size: 14px;
-	margin: 0;
-	padding: 5px 10px 5px 12px;
-	width: max-content;
+    background: rgb(200, 200, 200) none repeat scroll 0 0;
+    border-radius: 3px;
+    color: black;
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 10px 5px 12px;
+    width: max-content;
 }
+
 .imageTransfer {
-	height: 10vw;
-	width: 10vw;
-	margin: 5px;
-	border-radius: 5px;
+    height: 10vw;
+    width: 10vw;
+    margin: 5px;
+    border-radius: 5px;
 }
+
 .downloadButton {
-	background: none;
-	outline: none;
-	border: none;
+    background: none;
+    outline: none;
+    border: none;
 }
+
 .fileName {
-	display: inline-block;
-	width: max-content;
-	padding: 10px;
-	border: 1px solid black;
-	border-radius: 5px;
+    display: inline-block;
+    width: max-content;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
 }
+
 .fileNameOutgoing {
-	display: inline-block;
-	width: max-content;
-	padding: 10px;
-	border: 1px solid white;
-	border-radius: 5px;
+    display: inline-block;
+    width: max-content;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 5px;
 }
+
 
 /* width */
+
 ::-webkit-scrollbar {
-	width: 5px;
+    width: 5px;
 }
+
 
 /* Track */
+
 ::-webkit-scrollbar-track {
-	background: #f1f1f1;
-	border-radius: 5px;
+    background: #f1f1f1;
+    border-radius: 5px;
 }
+
 
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
-	background: #888;
-	border-radius: 5px;
+    background: #888;
+    border-radius: 5px;
 }
 
+
 /* Handle on hover */
+
 ::-webkit-scrollbar-thumb:hover {
-	background: #555;
+    background: #555;
 }
