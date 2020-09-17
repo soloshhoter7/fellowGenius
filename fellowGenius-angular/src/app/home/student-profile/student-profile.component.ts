@@ -57,9 +57,10 @@ export class StudentProfileComponent implements OnInit {
   uploadedProfilePicture: File = null;
 
   snackBarConfig: MatSnackBarConfig = {
-    duration: 2000,
+    duration: 15000,
     horizontalPosition: "center",
     verticalPosition: "top",
+    panelClass: ["snackbar"],
   };
 
   ngOnInit(): void {

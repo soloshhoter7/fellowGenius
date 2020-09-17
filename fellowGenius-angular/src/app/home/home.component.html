@@ -168,13 +168,13 @@
       <button class="btn btn-primary" (click)="heyNav()">Close</button>
     </div> -->
     <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
-    <!-- <span
+    <span
       class="material-icons close closeButton"
       (click)="heyNav()"
       style="cursor: pointer"
     >
       close
-    </span> -->
+    </span>
 
     <div class="profile-section-sidenav">
       <div
@@ -341,7 +341,7 @@
       <li class="nav-item">
         <a style="cursor: pointer" (click)="onSignOut()">Sign Out</a>
       </li> -->
-
+      <!-- 
       <li class="nav-item" *ngIf="loginType == 'Expert'">
         <a
           class="nav-link"
@@ -350,7 +350,7 @@
           [routerLinkActiveOptions]="{ exact: true }"
           >Bookings</a
         >
-      </li>
+      </li> -->
 
       <li class="nav-item" *ngIf="loginType == 'Learner'">
         <a
@@ -368,7 +368,7 @@
     <div class="header" id="headerContent">
       <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span>
       <div class="logo" (click)="navAction(index)"></div>
-      <div class="search-box-container">
+      <div class="search-box-container" *ngIf="loginType == 'Learner'">
         <div class="input-group">
           <form>
             <button class="searchButton" (click)="displaySelectedSubjects()">
@@ -416,10 +416,21 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            Learner
+            {{ loginType }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Expert</a>
+            <a
+              class="dropdown-item"
+              href="javascript:;"
+              *ngIf="loginType == 'Learner'"
+              >Expert</a
+            >
+            <a
+              class="dropdown-item"
+              href="javascript:;"
+              *ngIf="loginType == 'Expert'"
+              >Learner</a
+            >
           </div>
         </div>
       </div>
