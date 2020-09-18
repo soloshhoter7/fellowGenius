@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { HttpService } from "../../service/http.service";
 import { StudentService } from "../../service/student.service";
 import { bookingDetails } from "src/app/model/bookingDetails";
@@ -32,6 +32,7 @@ export class StudentDashboardComponent implements OnInit {
   emptyLiveList: boolean = false;
   public now: Date = new Date();
   noTutorMessage = "";
+
   constructor(
     private httpService: HttpService,
     private studentService: StudentService,
@@ -46,7 +47,21 @@ export class StudentDashboardComponent implements OnInit {
     }, 1000);
   }
 
+  @HostListener("window:resize", ["$event"])
+  getScreenSize(event?) {
+    var screenWidth = window.innerWidth;
+    if (screenWidth <= 800) {
+      // console.log("called");
+      this.studentChartWidth = "320";
+    } else {
+      this.studentChartWidth = "380";
+    }
+  }
+
   ngOnInit(): void {
+    if (window.innerWidth <= 800) {
+      this.studentChartWidth = "320";
+    }
     this.sid = this.studentService.getStudentProfileDetails().sid;
     if (this.sid) {
       this.fetchTutorList();
@@ -73,8 +88,8 @@ export class StudentDashboardComponent implements OnInit {
   ];
   columnNames = ["Subject", "Percentage"];
   options = { pieHole: 0.4 };
-  width = "380";
-  height = "180";
+  studentChartWidth = "380";
+  studentChartHeight = "180";
   openRecordingsPage() {
     this.router.navigate(["home/recordings"]);
   }

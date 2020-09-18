@@ -2,7 +2,6 @@
   width: 50vw;
   height: 17vh;
 }
-
 img {
   border-radius: 0;
   width: 100%;
@@ -78,34 +77,41 @@ img {
 .timeSlots {
   float: left;
   margin-right: 10px;
-  padding-left: 7px;
-  border: 0.8px solid #241084;
-  color: #241084;
-  padding-right: 7px;
-  border-radius: 9px;
+  /* padding-left: 7px; */
+  /* border: 0.8px solid #241084; */
+  /* color: #241084;
+  /* padding-right: 7px; */
+  height: 30px;
+  border: 1px solid #e30084;
+  border-radius: 25px;
   margin-bottom: 3px;
   cursor: pointer !important;
+
+  padding: 5px 16px;
+  line-height: 20px;
 }
 
 .selectedTimeSlots {
   float: left;
-  border: 0.8px solid #241084;
-  margin-right: 10px;
-  padding-left: 7px;
+  /* border: 0.8px solid #241084; */
+  /* margin-right: 10px; */
+  /* padding-left: 7px;
   padding-right: 7px;
-  border-radius: 9px;
+  border-radius: 9px; */
   color: white;
-  background-color: #241084;
+  /* background-color: #241084; */
+  background-color: #e30084;
   z-index: 2;
 }
 
 .selectedTimeSlots:hover {
   color: white;
-  background-color: #241084;
+  /* background-color: #241084; */
+  background-color: #e30084;
 }
 
 .timeSlots:hover {
-  background-color: #241084;
+  background-color: #e30084;
   color: white;
   cursor: default;
 }
@@ -118,26 +124,30 @@ img {
 }
 
 .startClass {
-  float: left;
-  border: 0.8px solid #241084;
-  margin-right: 10px;
+  /* float: left; */
+  /* border: 0.8px solid #241084; */
+  /* margin-right: 10px;
   padding-left: 7px;
   padding-right: 7px;
-  border-radius: 9px;
+  border-radius: 9px; */
+  /* color: white; */
+  /* background-color: #241084; */
+  background-color: #e30084;
   color: white;
-  background-color: #241084;
   z-index: 2;
 }
 
 .endClass {
-  float: left;
+  /* float: left;
   border: 0.8px solid #241084;
   margin-right: 10px;
   padding-left: 7px;
   padding-right: 7px;
   border-radius: 9px;
   color: white;
-  background-color: #241084;
+  background-color: #241084; */
+  background-color: #e30084;
+  color: white;
   z-index: 2;
 }
 
@@ -196,4 +206,16 @@ label {
 }
 .connect-footer {
   margin-top: 20px;
+}
+.dayColumn {
+  width: 110px;
+  position: inline;
+  padding: 10px;
+  margin-right: 20px;
+  font-size: 13px;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) {
+  .dayColumn {
+    width: 100%;
+  }
 }

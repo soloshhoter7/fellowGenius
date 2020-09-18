@@ -171,16 +171,6 @@ textarea:focus {
     text-align: center;
 }
 
-
-/*
-.stars-outer {
-	position: relative;
-	display: inline-block;
-	top: 60px;
-	color: transparent;
-}
-*/
-
 .stars-inner {
     position: absolute;
     top: 0;
@@ -545,6 +535,7 @@ textarea:focus {
     width: 100%;
     display: block;
     float: left;
+    padding: 10px;
 }
 
 .breadcrumb {
@@ -1152,19 +1143,26 @@ textarea:focus {
     width: 100%;
 }
 
-.expert-profile-container {
+.expert-profile-container-connect {
     display: block;
     float: left;
     width: 90%;
+    margin-top: 20px;
+    margin: 20px;
+}
+
+.expert-profile-container-connect .connect-button-container {
+    float: right;
+}
+
+.expert-profile-container {
+    display: block;
+    float: left;
+    width: 100%;
     border: 1px solid #892687;
     margin-top: 20px;
     border-radius: 8px;
     margin: 20px;
-}
-
-.connect-button-container {
-    float: right;
-    margin-top: -25px;
 }
 
 .expert-profile-container .expert-profile-header {
@@ -1173,6 +1171,13 @@ textarea:focus {
     border-top-left-radius: 8px;
     height: 120px;
     position: relative;
+}
+
+.expert-profile-header .stars-outer {
+    position: relative;
+    display: inline-block;
+    top: 10px;
+    color: transparent;
 }
 
 .expert-profile-container .expert-profile-header .list-thumbnail {

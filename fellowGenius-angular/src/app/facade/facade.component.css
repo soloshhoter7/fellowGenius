@@ -97,3 +97,10 @@
         padding-left: 5vw;
     }
 }
+
+.btnActive {
+    background-color: #7d0f7d !important;
+    border-color: #7d0f7d !important;
+    box-shadow: 0 0 0 0.2rem #f7e4f9 !important;
+    color: #ffffff !important;
+}
