@@ -332,12 +332,11 @@
     </span>
     </div>
 
-    <span class="timer control-nav" style="background-color: blueviolet;"><span>{{ timeLeft | formatTime }}</span></span>
     <div class="control-nav">
 
         <!-- session timer -->
         <div style="float: left">
-            <span class="timer" *ngIf="remoteJoined" style="background-color: blueviolet;"><span>{{ timeLeft | formatTime }}</span></span>
+            <span class="timer" *ngIf="remoteJoined"><span>{{ timeLeft | formatTime }}</span></span>
             <!-- mute-unmute video -->
             <button class="btn btn-primary" (click)="muteVideo()">
       <span
