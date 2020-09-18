@@ -99,7 +99,7 @@ export class TutorDashboardComponent implements OnInit {
     }
     this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
     if (
-      this.loginService.getLoginType() == "tutor" &&
+      this.loginService.getLoginType() == "Expert" &&
       this.tutorProfileDetails.tid
     ) {
       this.fetchTutorPendingBookings();
@@ -119,7 +119,7 @@ export class TutorDashboardComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-      this.loginService.setLoginType("tutor");
+      this.loginService.setLoginType("Expert");
       this.fetchTutorPendingBookings();
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
@@ -174,7 +174,7 @@ export class TutorDashboardComponent implements OnInit {
 
   //for fetching pending tutor booking requests
   fetchTutorPendingBookings() {
-    if (this.loginService.getLoginType() == "tutor") {
+    if (this.loginService.getLoginType() == "Expert") {
       this.httpService
         .getTutorBookings(this.tutorService.getTutorDetials().tid)
         .subscribe((res) => {
