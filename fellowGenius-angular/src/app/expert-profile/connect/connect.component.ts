@@ -27,6 +27,9 @@ export class ConnectComponent implements OnInit {
     verticalPosition: "top",
     panelClass: ["snackbar"],
   };
+  amountView;
+  selectedSubject;
+  areaOfExpertises = [];
   startDisabled: boolean;
   endDisabled: boolean;
   isTutorAvailable: boolean;
@@ -104,6 +107,7 @@ export class ConnectComponent implements OnInit {
         .subscribe((res) => {
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
+          this.areaOfExpertises = this.teacherProfile.areaOfExpertise;
         });
     });
 
@@ -127,6 +131,10 @@ export class ConnectComponent implements OnInit {
         }
       });
     }
+  }
+  toggleAmountView(event: any) {
+    console.log(this.selectedSubject);
+    this.amountView = !this.amountView;
   }
   closeNav() {
     this.dialogRef.closeAll();

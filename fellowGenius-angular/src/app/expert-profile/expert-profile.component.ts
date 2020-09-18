@@ -131,8 +131,8 @@ export class ExpertProfileComponent implements OnInit {
   }
   openConnectPage() {
     this.dialog.open(ConnectComponent, {
-      height: "80vh",
-      width: "90vw",
+      height: "auto",
+      width: "auto",
     });
   }
   timeSelector(event, index: number, todayDate: string) {

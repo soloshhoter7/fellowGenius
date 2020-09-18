@@ -166,19 +166,24 @@ export class tutorScheduleComponent implements OnInit {
   }
 
   copyBookings() {
-    for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
-      .allMeetingsSchedule) {
-      var appointment = new scheduleData();
-      appointment.Subject = schedule.Subject;
-      appointment.StartTime = schedule.StartTime;
-      appointment.EndTime = schedule.EndTime;
-      appointment.IsAllDay = schedule.IsAllDay;
-      appointment.RecurrenceRule = schedule.RecurrenceRule;
-      appointment.RecurrenceException = schedule.RecurrenceException;
-      appointment.Guid = schedule.Guid;
-      appointment.Type = "booking";
-      appointment.IsReadonly = true;
-      this.bookingSchedule.push(appointment);
+    if (
+      this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule
+        .length != 0
+    ) {
+      for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
+        .allMeetingsSchedule) {
+        var appointment = new scheduleData();
+        appointment.Subject = schedule.Subject;
+        appointment.StartTime = schedule.StartTime;
+        appointment.EndTime = schedule.EndTime;
+        appointment.IsAllDay = schedule.IsAllDay;
+        appointment.RecurrenceRule = schedule.RecurrenceRule;
+        appointment.RecurrenceException = schedule.RecurrenceException;
+        appointment.Guid = schedule.Guid;
+        appointment.Type = "booking";
+        appointment.IsReadonly = true;
+        this.bookingSchedule.push(appointment);
+      }
     }
   }
   copyAppointment(schedule) {

@@ -41,42 +41,45 @@
 </div> -->
 <app-nav-bar></app-nav-bar>
 <div class="advertise-container">
-    <div class="advertisement">
-        <span class="advertisement-header"> EXPLORE </span>
-        <span class="advertisement-content">
+  <div class="advertisement">
+    <span class="advertisement-header"> EXPLORE </span>
+    <span class="advertisement-content">
       Over 90,000 courses tought by experts
     </span>
-    </div>
-    <div class="advertisement secondary-advertisement">
-        <span class="advertisement-header"> Enroll </span>
-        <span class="advertisement-content">
+  </div>
+  <div class="advertisement secondary-advertisement">
+    <span class="advertisement-header"> Enroll </span>
+    <span class="advertisement-content">
       Enroll yourself in any courses in anytime
     </span>
-    </div>
-    <div class="advertisement">
-        <span class="advertisement-header"> Experience </span>
-        <span class="advertisement-content">
+  </div>
+  <div class="advertisement">
+    <span class="advertisement-header"> Experience </span>
+    <span class="advertisement-content">
       Over 90,000 courses tought by experts
     </span>
-    </div>
+  </div>
 </div>
 <div class="content-container">
-    <div class="breadcrumb-container">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
+  <div class="breadcrumb-container">
+    <ol class="breadcrumb">
+      <li><a href="#">Home</a></li>
 
-            <li class="active">Data</li>
-        </ol>
-    </div>
-    <div class="fliter-tag-container">
-        <div class="filters-content">
-            <ul class="nav nav-pills">
-                <li class="nav-item" *ngFor="let filters of allFiltersApplied">
-                    <a class="nav-link">
-                        <span *ngIf="filters <= 4">{{ filters }}&nbsp; & up</span>
-                        <span *ngIf="
+      <li class="active">Data</li>
+    </ol>
+  </div>
+  <div class="fliter-tag-container">
+    <div class="filters-content">
+      <ul class="nav nav-pills">
+        <li class="nav-item" *ngFor="let filters of allFiltersApplied">
+          <a class="nav-link">
+            <span *ngIf="filters <= 4">{{ filters }}&nbsp; & up</span>
+            <span
+              *ngIf="
                 filters != 1 && filters != 2 && filters != 3 && filters != 4
-              " [innerHTML]="filters"></span
+              "
+              [innerHTML]="filters"
+            ></span
           ></a>
         </li>
         <!-- <li class="nav-item">
@@ -97,10 +100,10 @@
                                 </span></a>
 
                 </li> -->
-            </ul>
-        </div>
-        <div class="sort-by-container">
-            <span>Sort By</span
+      </ul>
+    </div>
+    <div class="sort-by-container">
+      <span>Sort By</span
       ><select (change)="sort($event)">
         <option>Price</option>
         <option value="sortLowToHigh">Low to High</option>
@@ -112,9 +115,9 @@
     <div class="filter-container columnto">
       <div class="filter-category">
         <span class="filter-category-header">Subjects</span>
-            <ul class="filter-category-list">
-                <li>
-                    <label class="filters-label">
+        <ul class="filter-category-list">
+          <li>
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -124,9 +127,9 @@
               <span class="filter-num">(123)</span>
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -136,9 +139,9 @@
               <span class="filter-num">(123)</span>
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -148,9 +151,9 @@
               <span class="filter-num">(123)</span>
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -160,9 +163,9 @@
               <span class="filter-num">(123)</span>
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -172,14 +175,14 @@
               <span class="filter-num">(123)</span>
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-            </ul>
-        </div>
-        <div class="filter-category">
-            <span class="filter-category-header">Price</span>
-            <ul class="filter-category-list">
-                <li style="width: 50%">
-                    <label class="filters-label">
+          </li>
+        </ul>
+      </div>
+      <div class="filter-category">
+        <span class="filter-category-header">Price</span>
+        <ul class="filter-category-list">
+          <li style="width: 50%">
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -189,9 +192,9 @@
               <!-- <span class="filter-num">(123)</span> -->
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li style="width: 50%">
-                    <label class="filters-label">
+          </li>
+          <li style="width: 50%">
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -201,9 +204,9 @@
               <!-- <span class="filter-num">(123)</span> -->
               <!-- <div class="checkbox-indicator"></div> -->
             </label>
-                </li>
-                <li style="width: 50%">
-                    <label class="filters-label">
+          </li>
+          <li style="width: 50%">
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -213,9 +216,9 @@
               <!-- <span class="filter-num">(123)</span> -->
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li style="width: 50%">
-                    <label class="filters-label">
+          </li>
+          <li style="width: 50%">
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -225,9 +228,9 @@
               <!-- <span class="filter-num">(123)</span> -->
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li style="width: 50%">
-                    <label class="filters-label">
+          </li>
+          <li style="width: 50%">
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -237,9 +240,9 @@
               <!-- <span class="filter-num">(123)</span> -->
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-                <li style="width: 50%">
-                    <label class="filters-label">
+          </li>
+          <li style="width: 50%">
+            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -249,14 +252,14 @@
               <!-- <span class="filter-num">(123)</span> -->
               <!--  <div class="checkbox-indicator"></div>-->
             </label>
-                </li>
-            </ul>
-        </div>
-        <div class="filter-category">
-            <span class="filter-category-header">Avg. Reviews</span>
-            <ul class="filter-category-list">
-                <li>
-                    <label class="filters-label">
+          </li>
+        </ul>
+      </div>
+      <div class="filter-category">
+        <span class="filter-category-header">Avg. Reviews</span>
+        <ul class="filter-category-list">
+          <li>
+            <label class="filters-label">
               <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(80)">4 & up -->
               <input
                 type="checkbox"
@@ -265,9 +268,9 @@
                 (change)="searchByRatings($event)"
               />4 & up
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(60)">3 & up -->
               <input
                 type="checkbox"
@@ -276,9 +279,9 @@
                 (change)="searchByRatings($event)"
               />3 & up
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(40)">2 & up -->
               <input
                 type="checkbox"
@@ -287,9 +290,9 @@
                 (change)="searchByRatings($event)"
               />2 & up
             </label>
-                </li>
-                <li>
-                    <label class="filters-label">
+          </li>
+          <li>
+            <label class="filters-label">
               <!-- <input type="button" class="filter-input starButton" (click)="searchByRatings(20)">1 & up -->
               <input
                 type="checkbox"
@@ -298,56 +301,90 @@
                 (change)="searchByRatings($event)"
               />1 & up
             </label>
-                </li>
-            </ul>
-        </div>
+          </li>
+        </ul>
+      </div>
     </div>
+
     <div class="search-cards-container columnto">
-        <ul class="rowto">
-            <div *ngIf="allFiltersApplied.length == 0">
-                <li class="search-result-card" *ngFor="let result of searchResults">
-                    <div class="result-profile-pic" [ngStyle]="{
+      <div
+        *ngIf="searchResults.length == 0"
+        style="
+          width: max-content;
+          margin: auto;
+          padding: 10px;
+          padding-top: 20px;
+          max-width: 100vw;
+          text-align: center;
+        "
+      >
+        <h1 style="font-size: 5vh">We're Sorry !</h1>
+        <h2 style="font-size: 3vh">
+          We can't seem to find any experts that match your search
+        </h2>
+      </div>
+      <ul class="rowto">
+        <div *ngIf="allFiltersApplied.length == 0">
+          <li class="search-result-card" *ngFor="let result of searchResults">
+            <div
+              class="result-profile-pic"
+              [ngStyle]="{
                 'background-image': 'url(' + result.profilePictureUrl + ')'
-              }"></div>
-                    <div class="result-card-header">
-                        <span class="result-card-name" [innerHTML]="result.fullName">
+              }"
+            ></div>
+            <div class="result-card-header">
+              <span class="result-card-name" [innerHTML]="result.fullName">
                 <!-- Alex Chemoricle -->
               </span>
-                        <span class="result-card-specalizaiton" [innerHTML]="result.institute">
+              <span
+                class="result-card-specalizaiton"
+                [innerHTML]="result.institute"
+              >
                 <!-- Exterior University - politics [bachelors] -->
               </span>
-                        <div class="stars-outer">
-                            <div class="stars-inner" [style.width.%]="result.rating"></div>
-                            <!-- <div class="stars-inner" style="width: 90%;"></div> -->
-                        </div>
-                    </div>
+              <div class="stars-outer">
+                <div class="stars-inner" [style.width.%]="result.rating"></div>
+                <!-- <div class="stars-inner" style="width: 90%;"></div> -->
+              </div>
+            </div>
 
-                    <div class="result-card-content">
-                        <div class="numbers-container">
-                            <div class="fee_per_attribute">
-                                ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span>
-                                <span class="info">per hour</span>
-                            </div>
-                            <div class="separtor"></div>
-                            <div>
-                                <span class="number" [innerHTML]="result.reviewCount"></span>
-                                <span class="info">REVIEWS</span>
-                            </div>
-                            <div class="separtor"></div>
-                            <div>
-                                <span class="number" [innerHTML]="result.lessonCompleted"></span>
-                                <span class="info">Sessions</span>
-                            </div>
-                        </div>
+            <div class="result-card-content">
+              <div class="numbers-container">
+                <div class="fee_per_attribute">
+                  ₹<span
+                    class="number"
+                    style="display: contents; color: #7d0f7d"
+                    [innerHTML]="result.price1"
+                  ></span>
+                  <span class="info">per hour</span>
+                </div>
+                <div class="separtor"></div>
+                <div>
+                  <span class="number" [innerHTML]="result.reviewCount"></span>
+                  <span class="info">REVIEWS</span>
+                </div>
+                <div class="separtor"></div>
+                <div>
+                  <span
+                    class="number"
+                    [innerHTML]="result.lessonCompleted"
+                  ></span>
+                  <span class="info">Sessions</span>
+                </div>
+              </div>
 
-                        <div class="result-card-descirption" [innerHTML]="result.description">
-                            <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
-                        </div>
+              <div
+                class="result-card-descirption"
+                [innerHTML]="result.description"
+              >
+                <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
+              </div>
 
-                        <div class="result-card-tutorsfor">
-                            <b> Tutors For</b>
-                            <div class="tutor-sub">
-                                <span *ngFor="let skills of result.areaOfExpertise">{{ skills }}, &nbsp;</span
+              <div class="result-card-tutorsfor">
+                <b> Tutors For</b>
+                <div class="tutor-sub">
+                  <span *ngFor="let skills of result.areaOfExpertise"
+                    >{{ skills }}, &nbsp;</span
                   >
                 </div>
               </div>
@@ -364,65 +401,80 @@
         </div>
 
         <div *ngIf="allFiltersApplied.length != 0">
-
-        
-        <li class="search-result-card" *ngFor="let result of filteredArray">
-          <div class="result-profile-pic" [ngStyle]="{
-            'background-image': 'url(' + result.profilePictureUrl + ')'
-          }"></div>
-          <div class="result-card-header">
-            <span class="result-card-name" [innerHTML]="result.fullName">
-              <!-- Alex Chemoricle -->
-            </span>
-                                <span class="result-card-specalizaiton" [innerHTML]="result.institute">
-              <!-- Exterior University - politics [bachelors] -->
-            </span>
-                                <div class="stars-outer">
-                                    <div class="stars-inner" [style.width.%]="result.rating"></div>
-                                    <!-- <div class="stars-inner" style="width: 90%;"></div> -->
-                                </div>
-                            </div>
-
-                            <div class="result-card-content">
-                                <div class="numbers-container">
-                                    <div class="fee_per_attribute">
-                                        ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span>
-                                        <span class="info">per hour</span>
-                                    </div>
-                                    <div class="separtor"></div>
-                                    <div>
-                                        <span class="number" [innerHTML]="result.reviewCount"></span>
-                                        <span class="info">REVIEWS</span>
-                                    </div>
-                                    <div class="separtor"></div>
-                                    <div>
-                                        <span class="number" [innerHTML]="result.lessonCompleted"></span>
-                                        <span class="info">Sessions</span>
-                                    </div>
-                                </div>
-
-                                <div class="result-card-descirption" [innerHTML]="result.description">
-                                    <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
-                                </div>
-
-                                <div class="result-card-tutorsfor">
-                                    <b> Tutors For</b>
-                                    <div class="tutor-sub">
-                                        <span *ngFor="let skills of result.areaOfExpertise">{{ skills }}, &nbsp;</span
-                >
+          <li class="search-result-card" *ngFor="let result of filteredArray">
+            <div
+              class="result-profile-pic"
+              [ngStyle]="{
+                'background-image': 'url(' + result.profilePictureUrl + ')'
+              }"
+            ></div>
+            <div class="result-card-header">
+              <span class="result-card-name" [innerHTML]="result.fullName">
+                <!-- Alex Chemoricle -->
+              </span>
+              <span
+                class="result-card-specalizaiton"
+                [innerHTML]="result.institute"
+              >
+                <!-- Exterior University - politics [bachelors] -->
+              </span>
+              <div class="stars-outer">
+                <div class="stars-inner" [style.width.%]="result.rating"></div>
+                <!-- <div class="stars-inner" style="width: 90%;"></div> -->
               </div>
             </div>
 
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="toViewProfile()"
-            >
-              View Profile
-            </button>
-          </div>
-        </li>
-      </div>
+            <div class="result-card-content">
+              <div class="numbers-container">
+                <div class="fee_per_attribute">
+                  ₹<span
+                    class="number"
+                    style="display: contents; color: #7d0f7d"
+                    [innerHTML]="result.price1"
+                  ></span>
+                  <span class="info">per hour</span>
+                </div>
+                <div class="separtor"></div>
+                <div>
+                  <span class="number" [innerHTML]="result.reviewCount"></span>
+                  <span class="info">REVIEWS</span>
+                </div>
+                <div class="separtor"></div>
+                <div>
+                  <span
+                    class="number"
+                    [innerHTML]="result.lessonCompleted"
+                  ></span>
+                  <span class="info">Sessions</span>
+                </div>
+              </div>
+
+              <div
+                class="result-card-descirption"
+                [innerHTML]="result.description"
+              >
+                <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
+              </div>
+
+              <div class="result-card-tutorsfor">
+                <b> Tutors For</b>
+                <div class="tutor-sub">
+                  <span *ngFor="let skills of result.areaOfExpertise"
+                    >{{ skills }}, &nbsp;</span
+                  >
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="toViewProfile()"
+              >
+                View Profile
+              </button>
+            </div>
+          </li>
+        </div>
       </ul>
     </div>
   </div>
