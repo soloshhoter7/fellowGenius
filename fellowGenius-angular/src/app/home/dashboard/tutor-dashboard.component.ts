@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { extend, Internationalization, L10n } from "@syncfusion/ej2-base";
 import { tutorProfileDetails } from "../../model/tutorProfileDetails";
 import { bookingDetails } from "src/app/model/bookingDetails";
@@ -34,8 +34,19 @@ export class TutorDashboardComponent implements OnInit {
       this.now = new Date();
     }, 1000);
   }
-  width = "380";
-  height = "180";
+  @HostListener("window:resize", ["$event"])
+  getScreenSize(event?) {
+    var screenHeight = window.innerHeight;
+    var screenWidth = window.innerWidth;
+    if (screenWidth <= 800) {
+      this.tutorChartWidth = "320";
+    } else {
+      this.tutorChartWidth = "380";
+    }
+  }
+
+  tutorChartWidth = "380";
+  tutorChartHeight = "180";
   // ----------------------skills in demand ------------------------------
   skillsChartType = "PieChart";
   skillsData = [
@@ -75,14 +86,17 @@ export class TutorDashboardComponent implements OnInit {
   approvedMeetingsMessage = "";
   liveMeetingsMessage = "";
   isLoading: boolean = false;
-  bookingList: bookingDetails[];
-  meetingList: bookingDetails[];
-  liveMeetingList: bookingDetails[];
+  bookingList: bookingDetails[] = [];
+  meetingList: bookingDetails[] = [];
+  liveMeetingList: bookingDetails[] = [];
   hostMeeting = new meetingDetails();
   tutorProfileDetails: tutorProfileDetails;
   completeProfile = true;
   condition;
   ngOnInit(): void {
+    if (window.innerWidth <= 800) {
+      this.tutorChartWidth = "320";
+    }
     this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
     if (
       this.loginService.getLoginType() == "tutor" &&

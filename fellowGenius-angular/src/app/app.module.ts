@@ -6,6 +6,7 @@ import { AppComponent } from "./app.component";
 import { environment } from "src/environments/environment";
 import { NgxAgoraModule } from "ngx-agora";
 import { FormatTimePipe } from "src/app/pipes/formatTime";
+import { LengthBound } from "src/app/pipes/lengthBound";
 import { HomeComponent } from "./home/home.component";
 import { MeetingComponent } from "./home/meeting/meeting.component";
 import { MatInputModule } from "@angular/material/input";
@@ -119,6 +120,7 @@ export const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
+    LengthBound,
     FormatTimePipe,
     AppComponent,
     HomeComponent,

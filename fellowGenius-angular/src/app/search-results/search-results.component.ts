@@ -15,19 +15,19 @@ import { MatDialog } from "@angular/material/dialog";
 export class SearchResultsComponent implements OnInit {
   showProfile;
   searchResults: tutorProfileDetails[];
-	filteredArray: tutorProfileDetails[] = [];
-	// arrayToShow: tutorProfileDetails[];
-	allFiltersApplied = [];
-	subjectFiltersApplied = [];
-	priceFiltersApplied = [];
-	ratingFilterApplied = [];
-	deletionElementFinder = [];
-	elementsToBeDeleted = [];
+  filteredArray: tutorProfileDetails[] = [];
+  // arrayToShow: tutorProfileDetails[];
+  allFiltersApplied = [];
+  subjectFiltersApplied = [];
+  priceFiltersApplied = [];
+  ratingFilterApplied = [];
+  deletionElementFinder = [];
+  elementsToBeDeleted = [];
 
-	callSearchBySubject: boolean;
-	callSearchByPrice: boolean;
-	findFromSearchResult: boolean;
-	findFromFilterSearch: boolean;
+  callSearchBySubject: boolean;
+  callSearchByPrice: boolean;
+  findFromSearchResult: boolean;
+  findFromFilterSearch: boolean;
   constructor(
     private router: Router,
     private httpService: HttpService,
@@ -41,101 +41,101 @@ export class SearchResultsComponent implements OnInit {
     // this.fetchTutorList();
     // console.log("login type ->" + this.loginService.getLoginType());
     this.callSearchBySubject = false;
-		this.callSearchByPrice = false;
-		this.findFromSearchResult = false;
+    this.callSearchByPrice = false;
+    this.findFromSearchResult = false;
     this.findFromFilterSearch = false;
-    
-    this.searchResults = [
-			{
-				tid: 1234,
-				areaOfExpertise: ["Mathematics", "English", "Physics"],
-				currentOrganisation: "Google",
-				description: "I have an experience of 10 years",
-				educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-				fullName: "Ajay Verma",
-				institute: "Panipat Institute of Engineering and Technology",
-				lessonCompleted: 0,
-				linkedInProfile: "Ajay.linkedin",
-				previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-				price1: "400",
-				price2: "400",
-				price3: "400",
-				professionalSkills: "Angular, JAVA",
-				profileCompleted: 100,
-				profilePictureUrl: null,
-				rating: 90,
-				reviewCount: 10,
-				speciality: "Angular, JAVA",
-				yearsOfExperience: 10,
-			},
-			{
-				tid: 3578,
-				areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
-				currentOrganisation: "Google",
-				description: "I have an experience of 10 years",
-				educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-				fullName: "Shubham Verma",
-				institute: "Panipat Institute of Engineering and Technology",
-				lessonCompleted: 0,
-				linkedInProfile: "AJay.linkedin",
-				previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-				price1: "800",
-				price2: "400",
-				price3: "400",
-				professionalSkills: "Angular, JAVA",
-				profileCompleted: 100,
-				profilePictureUrl: null,
-				rating: 70,
-				reviewCount: 10,
-				speciality: "Angular, JAVA",
-				yearsOfExperience: 10,
-			},
-			{
-				tid: 3572,
-				areaOfExpertise: ["Chemistry", "English", "Physics"],
-				currentOrganisation: "Google",
-				description: "I have an experience of 10 years",
-				educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-				fullName: "Muskan Verma",
-				institute: "Panipat Institute of Engineering and Technology",
-				lessonCompleted: 0,
-				linkedInProfile: "Muskan.linkedin",
-				previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-				price1: "500",
-				price2: "400",
-				price3: "400",
-				professionalSkills: "Angular, JAVA",
-				profileCompleted: 100,
-				profilePictureUrl: null,
-				rating: 50,
-				reviewCount: 10,
-				speciality: "Angular, JAVA",
-				yearsOfExperience: 10,
-			}, {
-				tid: 8754,
-				areaOfExpertise: ["Science", "English"],
-				currentOrganisation: "Google",
-				description: "I have an experience of 10 years",
-				educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-				fullName: "Abhinav Tyagi",
-				institute: "Panipat Institute of Engineering and Technology",
-				lessonCompleted: 0,
-				linkedInProfile: "Abhinav.linkedin",
-				previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-				price1: "200",
-				price2: "400",
-				price3: "400",
-				professionalSkills: "Angular, JAVA",
-				profileCompleted: 100,
-				profilePictureUrl: null,
-				rating: 20,
-				reviewCount: 10,
-				speciality: "Angular, JAVA",
-				yearsOfExperience: 10,
-			},
-    ];
-    // this.fetchTutorList();
-    
+
+    // this.searchResults = [
+    // 		{
+    // 			tid: 1234,
+    // 			areaOfExpertise: ["Mathematics", "English", "Physics"],
+    // 			currentOrganisation: "Google",
+    // 			description: "I have an experience of 10 years",
+    // 			educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    // 			fullName: "Ajay Verma",
+    // 			institute: "Panipat Institute of Engineering and Technology",
+    // 			lessonCompleted: 0,
+    // 			linkedInProfile: "Ajay.linkedin",
+    // 			previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    // 			price1: "400",
+    // 			price2: "400",
+    // 			price3: "400",
+    // 			professionalSkills: "Angular, JAVA",
+    // 			profileCompleted: 100,
+    // 			profilePictureUrl: null,
+    // 			rating: 90,
+    // 			reviewCount: 10,
+    // 			speciality: "Angular, JAVA",
+    // 			yearsOfExperience: 10,
+    // 		},
+    // 		{
+    // 			tid: 3578,
+    // 			areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
+    // 			currentOrganisation: "Google",
+    // 			description: "I have an experience of 10 years",
+    // 			educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    // 			fullName: "Shubham Verma",
+    // 			institute: "Panipat Institute of Engineering and Technology",
+    // 			lessonCompleted: 0,
+    // 			linkedInProfile: "AJay.linkedin",
+    // 			previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    // 			price1: "800",
+    // 			price2: "400",
+    // 			price3: "400",
+    // 			professionalSkills: "Angular, JAVA",
+    // 			profileCompleted: 100,
+    // 			profilePictureUrl: null,
+    // 			rating: 70,
+    // 			reviewCount: 10,
+    // 			speciality: "Angular, JAVA",
+    // 			yearsOfExperience: 10,
+    // 		},
+    // 		{
+    // 			tid: 3572,
+    // 			areaOfExpertise: ["Chemistry", "English", "Physics"],
+    // 			currentOrganisation: "Google",
+    // 			description: "I have an experience of 10 years",
+    // 			educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    // 			fullName: "Muskan Verma",
+    // 			institute: "Panipat Institute of Engineering and Technology",
+    // 			lessonCompleted: 0,
+    // 			linkedInProfile: "Muskan.linkedin",
+    // 			previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    // 			price1: "500",
+    // 			price2: "400",
+    // 			price3: "400",
+    // 			professionalSkills: "Angular, JAVA",
+    // 			profileCompleted: 100,
+    // 			profilePictureUrl: null,
+    // 			rating: 50,
+    // 			reviewCount: 10,
+    // 			speciality: "Angular, JAVA",
+    // 			yearsOfExperience: 10,
+    // 		}, {
+    // 			tid: 8754,
+    // 			areaOfExpertise: ["Science", "English"],
+    // 			currentOrganisation: "Google",
+    // 			description: "I have an experience of 10 years",
+    // 			educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+    // 			fullName: "Abhinav Tyagi",
+    // 			institute: "Panipat Institute of Engineering and Technology",
+    // 			lessonCompleted: 0,
+    // 			linkedInProfile: "Abhinav.linkedin",
+    // 			previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+    // 			price1: "200",
+    // 			price2: "400",
+    // 			price3: "400",
+    // 			professionalSkills: "Angular, JAVA",
+    // 			profileCompleted: 100,
+    // 			profilePictureUrl: null,
+    // 			rating: 20,
+    // 			reviewCount: 10,
+    // 			speciality: "Angular, JAVA",
+    // 			yearsOfExperience: 10,
+    // 		},
+    // ];
+    this.fetchTutorList();
+
     // this.filteredArray = this.searchResults;
   }
 
@@ -170,217 +170,284 @@ export class SearchResultsComponent implements OnInit {
   }
 
   searchByPrice($event) {
-		this.callSearchBySubject = true;
+    this.callSearchBySubject = true;
 
-		if (this.searchBySubject($event) && !this.callSearchByPrice) {
-			//input is 400-599
-			console.log($event.target.value);
-			this.callSearchBySubject = false;
-			if (this.findFromSearchResult) {
-				console.log("NO SEARCH SUBJECT FILTER HAS BEEN APPLIED");
-				console.log($event.target.value);
+    if (this.searchBySubject($event) && !this.callSearchByPrice) {
+      //input is 400-599
+      console.log($event.target.value);
+      this.callSearchBySubject = false;
+      if (this.findFromSearchResult) {
+        console.log("NO SEARCH SUBJECT FILTER HAS BEEN APPLIED");
+        console.log($event.target.value);
         this.findFromSearchResult = false;
         this.filteredArray = [];
-        if(this.priceFiltersApplied.length==0){
-            console.log("length was 0 initially")
-						this.priceFiltersApplied.push($event.target.value);
-						this.allFiltersApplied.push($event.target.value);
-						var price = $event.target.value.split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.searchResults.filter((res) => {
-								if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue)) {
-                  // this.filteredArray.push(res);
-                  // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-                    // this.filteredArray.push(this.searchResults[this.searchResults.indexOf(res)]);
-                    this.filteredArray.push(res);
-									// }
-								}
-							})
-					
-        }else
-				if (this.priceFiltersApplied.length == 1) {
-					if (this.checkFiltersApplied(this.priceFiltersApplied, $event.target.value)) {
+        if (this.priceFiltersApplied.length == 0) {
+          console.log("length was 0 initially");
+          this.priceFiltersApplied.push($event.target.value);
+          this.allFiltersApplied.push($event.target.value);
+          var price = $event.target.value.split("-");
+          var lowerValue = price[0];
+          var higherValue = price[1];
+          this.searchResults.filter((res) => {
+            if (
+              Number(res.price1) >= Number(lowerValue) &&
+              Number(res.price1) <= Number(higherValue)
+            ) {
+              // this.filteredArray.push(res);
+              // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
+              // this.filteredArray.push(this.searchResults[this.searchResults.indexOf(res)]);
+              this.filteredArray.push(res);
+              // }
+            }
+          });
+        } else if (this.priceFiltersApplied.length == 1) {
+          if (
+            this.checkFiltersApplied(
+              this.priceFiltersApplied,
+              $event.target.value
+            )
+          ) {
             console.log("initially length was 1 but now 0");
-						this.priceFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-						this.allFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-						this.filteredArray = this.searchResults;
-					} else {
+            this.priceFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            this.allFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            this.filteredArray = this.searchResults;
+          } else {
             console.log("initially length was 1 and now 2");
-						this.priceFiltersApplied.push($event.target.value);
-						this.allFiltersApplied.push($event.target.value);
-						for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-							var price = this.priceFiltersApplied[i].split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.searchResults.filter((res) => {
-								if (
-									Number(res.price1) >= Number(lowerValue) &&
-									Number(res.price1) <= Number(higherValue)
-								) {
-									if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-										this.filteredArray.push(this.searchResults[this.searchResults.indexOf(res)]);
-									}
-								}
-							});
-						}
-					}
-				} else {
-					if (this.checkFiltersApplied(this.priceFiltersApplied, $event.target.value)) {
-            console.log("initially length was > 1 but now is reduced by 1");
-						this.priceFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-            this.allFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-            console.log("now splice the input: so the priceFiltersApplied array is: ");
-            console.log(this.priceFiltersApplied);
-            this.filteredArray=[];
+            this.priceFiltersApplied.push($event.target.value);
+            this.allFiltersApplied.push($event.target.value);
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              
-							var price = this.priceFiltersApplied[i].split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.searchResults.filter((res) => {
-								if (
-									Number(res.price1) >= Number(lowerValue) &&
-									Number(res.price1) <= Number(higherValue)
-								) {
-									// if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-										this.filteredArray.push(res);
-									// }
-								}
-							});
-						}
-					}else{
+              var price = this.priceFiltersApplied[i].split("-");
+              var lowerValue = price[0];
+              var higherValue = price[1];
+              this.searchResults.filter((res) => {
+                if (
+                  Number(res.price1) >= Number(lowerValue) &&
+                  Number(res.price1) <= Number(higherValue)
+                ) {
+                  if (
+                    !this.checkDuplicacyOfObjectInArray(
+                      this.filteredArray,
+                      this.searchResults[this.searchResults.indexOf(res)]
+                    )
+                  ) {
+                    this.filteredArray.push(
+                      this.searchResults[this.searchResults.indexOf(res)]
+                    );
+                  }
+                }
+              });
+            }
+          }
+        } else {
+          if (
+            this.checkFiltersApplied(
+              this.priceFiltersApplied,
+              $event.target.value
+            )
+          ) {
+            console.log("initially length was > 1 but now is reduced by 1");
+            this.priceFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            this.allFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            console.log(
+              "now splice the input: so the priceFiltersApplied array is: "
+            );
+            console.log(this.priceFiltersApplied);
+            this.filteredArray = [];
+            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
+              var price = this.priceFiltersApplied[i].split("-");
+              var lowerValue = price[0];
+              var higherValue = price[1];
+              this.searchResults.filter((res) => {
+                if (
+                  Number(res.price1) >= Number(lowerValue) &&
+                  Number(res.price1) <= Number(higherValue)
+                ) {
+                  // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
+                  this.filteredArray.push(res);
+                  // }
+                }
+              });
+            }
+          } else {
             console.log("initially length was > 1 but now is increased by 1");
             this.priceFiltersApplied.push($event.target.value);
             this.allFiltersApplied.push($event.target.value);
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-							var price = this.priceFiltersApplied[i].split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.searchResults.filter((res) => {
-								if (
-									Number(res.price1) >= Number(lowerValue) &&
-									Number(res.price1) <= Number(higherValue)
-								) {
-									if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-										this.filteredArray.push(this.searchResults[this.searchResults.indexOf(res)]);
-									}
-								}
-							});
-						}
-
+              var price = this.priceFiltersApplied[i].split("-");
+              var lowerValue = price[0];
+              var higherValue = price[1];
+              this.searchResults.filter((res) => {
+                if (
+                  Number(res.price1) >= Number(lowerValue) &&
+                  Number(res.price1) <= Number(higherValue)
+                ) {
+                  if (
+                    !this.checkDuplicacyOfObjectInArray(
+                      this.filteredArray,
+                      this.searchResults[this.searchResults.indexOf(res)]
+                    )
+                  ) {
+                    this.filteredArray.push(
+                      this.searchResults[this.searchResults.indexOf(res)]
+                    );
+                  }
+                }
+              });
+            }
           }
+        }
+      }
+      if (this.findFromFilterSearch) {
+        this.findFromFilterSearch = false;
+        console.log("SEARCH SUBJECT FILTER HAS ALREADY BEEN APPLIED");
+        console.log($event.target.value);
 
-				}
-			}
-			if (this.findFromFilterSearch) {
-				this.findFromFilterSearch = false;
-				console.log("SEARCH SUBJECT FILTER HAS ALREADY BEEN APPLIED");
-				console.log($event.target.value);
+        if (this.priceFiltersApplied.length == 1) {
+          if (
+            this.checkFiltersApplied(
+              this.priceFiltersApplied,
+              $event.target.value
+            )
+          ) {
+            this.priceFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            this.allFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+          } else {
+            this.priceFiltersApplied.push($event.target.value);
+            this.allFiltersApplied.push($event.target.value);
+            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
+              var price = this.priceFiltersApplied[i].split("-");
+              var lowerValue = price[0];
+              var higherValue = price[1];
+              this.filteredArray.filter((res) => {
+                if (
+                  Number(res.price1) >= Number(lowerValue) &&
+                  Number(res.price1) <= Number(higherValue)
+                ) {
+                  this.deletionElementFinder.push(res);
+                }
+              });
+            }
+            this.filteredArray = this.deletionElementFinder;
+            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
+            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
+            this.elementsToBeDeleted = [];
+            this.deletionElementFinder = [];
+          }
+        } else {
+          if (
+            this.checkFiltersApplied(
+              this.priceFiltersApplied,
+              $event.target.value
+            )
+          ) {
+            this.priceFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            this.allFiltersApplied.splice(
+              this.priceFiltersApplied.indexOf($event.target.value),
+              1
+            );
+            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
+              var price = this.priceFiltersApplied[i].split("-");
+              var lowerValue = price[0];
+              var higherValue = price[1];
+              this.filteredArray.filter((res) => {
+                if (
+                  Number(res.price1) >= Number(lowerValue) &&
+                  Number(res.price1) <= Number(higherValue)
+                ) {
+                  this.deletionElementFinder.push(res);
+                }
+              });
+            }
+            this.filteredArray = this.deletionElementFinder;
+            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
+            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
+            this.elementsToBeDeleted = [];
+            this.deletionElementFinder = [];
+          } else {
+            this.priceFiltersApplied.push($event.target.value);
+            this.allFiltersApplied.push($event.target.value);
+            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
+              var price = this.priceFiltersApplied[i].split("-");
+              var lowerValue = price[0];
+              var higherValue = price[1];
+              this.filteredArray.filter((res) => {
+                if (
+                  Number(res.price1) >= Number(lowerValue) &&
+                  Number(res.price1) <= Number(higherValue)
+                ) {
+                  this.deletionElementFinder.push(res);
+                }
+              });
+            }
+            this.filteredArray = this.deletionElementFinder;
+            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
+            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
+            this.elementsToBeDeleted = [];
+            this.deletionElementFinder = [];
+          }
+        }
+      }
+    }
 
-				if (this.priceFiltersApplied.length == 1) {
-					if (this.checkFiltersApplied(this.priceFiltersApplied, $event.target.value)) {
-						this.priceFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-						this.allFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-					} else {
-						this.priceFiltersApplied.push($event.target.value);
-						this.allFiltersApplied.push($event.target.value);
-						for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-							var price = this.priceFiltersApplied[i].split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.filteredArray.filter((res) => {
-								if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue)) {
-									this.deletionElementFinder.push(res);
-								}
-							})
-						}
-						this.filteredArray = this.deletionElementFinder;
-						// this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-						// this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-						this.elementsToBeDeleted = [];
-						this.deletionElementFinder = [];
-					}
-				} else {
-					if (this.checkFiltersApplied(this.priceFiltersApplied, $event.target.value)) {
-						this.priceFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-						this.allFiltersApplied.splice(this.priceFiltersApplied.indexOf($event.target.value), 1);
-						for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-							var price = this.priceFiltersApplied[i].split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.filteredArray.filter((res) => {
-								if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue)) {
-									this.deletionElementFinder.push(res);
-								}
-							})
-						}
-						this.filteredArray = this.deletionElementFinder;
-						// this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-						// this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-						this.elementsToBeDeleted = [];
-						this.deletionElementFinder = [];
-					} else {
-						this.priceFiltersApplied.push($event.target.value);
-						this.allFiltersApplied.push($event.target.value);
-						for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-							var price = this.priceFiltersApplied[i].split("-");
-							var lowerValue = price[0];
-							var higherValue = price[1];
-							this.filteredArray.filter((res) => {
-								if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue)) {
-									this.deletionElementFinder.push(res);
-								}
-							})
-						}
-						this.filteredArray = this.deletionElementFinder;
-						// this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-						// this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-						this.elementsToBeDeleted = [];
-						this.deletionElementFinder = [];
-					}
-				}
-			}
-		}
-
-		if (this.callSearchByPrice) {
-			console.log("CALL BY PRICE IS TRUE");
-			// input is subject not price
-			this.callSearchByPrice = false;
-			if (this.priceFiltersApplied.length == 1) {
-				var price = this.priceFiltersApplied[0].split("-");
-				var lowerValue = price[0];
-				var higherValue = price[1];
-				this.filteredArray.filter((res) => {
-					if (
-						Number(res.price1) < Number(lowerValue) ||
-						Number(res.price1) > Number(higherValue)
-					) {
-						this.filteredArray.splice(i, 1);
-					}
-
-				});
-			} else {
-				for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-					var price = this.priceFiltersApplied[i].split("-");
-					var lowerValue = price[0];
-					var higherValue = price[1];
-					this.filteredArray.filter((res) => {
-						if (Number(res.price1) >= Number(lowerValue) && Number(res.price1) <= Number(higherValue)) {
-							this.deletionElementFinder.push(res);
-						}
-					})
-				}
-				this.filteredArray = this.deletionElementFinder;
-				// this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-				// this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-				this.elementsToBeDeleted = [];
-				this.deletionElementFinder = [];
-
-			}
-		}
-
-	}
+    if (this.callSearchByPrice) {
+      console.log("CALL BY PRICE IS TRUE");
+      // input is subject not price
+      this.callSearchByPrice = false;
+      if (this.priceFiltersApplied.length == 1) {
+        var price = this.priceFiltersApplied[0].split("-");
+        var lowerValue = price[0];
+        var higherValue = price[1];
+        this.filteredArray.filter((res) => {
+          if (
+            Number(res.price1) < Number(lowerValue) ||
+            Number(res.price1) > Number(higherValue)
+          ) {
+            this.filteredArray.splice(i, 1);
+          }
+        });
+      } else {
+        for (var i = 0; i < this.priceFiltersApplied.length; i++) {
+          var price = this.priceFiltersApplied[i].split("-");
+          var lowerValue = price[0];
+          var higherValue = price[1];
+          this.filteredArray.filter((res) => {
+            if (
+              Number(res.price1) >= Number(lowerValue) &&
+              Number(res.price1) <= Number(higherValue)
+            ) {
+              this.deletionElementFinder.push(res);
+            }
+          });
+        }
+        this.filteredArray = this.deletionElementFinder;
+        // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
+        // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
+        this.elementsToBeDeleted = [];
+        this.deletionElementFinder = [];
+      }
+    }
+  }
 
   searchByRatings($event) {
     console.log($event.target.value);
@@ -459,108 +526,119 @@ export class SearchResultsComponent implements OnInit {
   }
 
   searchBySubject($event) {
-		console.log($event.target.value);
+    console.log($event.target.value);
 
-		if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
-			//input is price
-			this.callSearchBySubject = false;
-			this.callSearchByPrice = false;
-			console.log("CASE 1 CALLING " + this.subjectFiltersApplied.length);
-			this.findFromSearchResult = true;
-			return true;
-		}
-		if (this.subjectFiltersApplied.length != 0 && this.callSearchBySubject) {
-			this.callSearchBySubject = false;
-			this.callSearchByPrice = false;
-			console.log("CASE 2 CALLING " + this.subjectFiltersApplied.length);
-			// input is price
-			this.findFromFilterSearch = true;
-			for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-				this.searchResults.filter((res) => {
-					if (res.areaOfExpertise.includes(this.subjectFiltersApplied[i])) {
-						if (
-							!this.checkDuplicacyOfObjectInArray(
-								this.filteredArray,
-								this.searchResults[this.searchResults.indexOf(res)]
-							)
-						) {
-							this.filteredArray.push(
-								this.searchResults[this.searchResults.indexOf(res)]
-							);
-						}
-					}
-				});
-			}
-			return true;
-		}
+    if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
+      //input is price
+      this.callSearchBySubject = false;
+      this.callSearchByPrice = false;
+      console.log("CASE 1 CALLING " + this.subjectFiltersApplied.length);
+      this.findFromSearchResult = true;
+      return true;
+    }
+    if (this.subjectFiltersApplied.length != 0 && this.callSearchBySubject) {
+      this.callSearchBySubject = false;
+      this.callSearchByPrice = false;
+      console.log("CASE 2 CALLING " + this.subjectFiltersApplied.length);
+      // input is price
+      this.findFromFilterSearch = true;
+      for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
+        this.searchResults.filter((res) => {
+          if (res.areaOfExpertise.includes(this.subjectFiltersApplied[i])) {
+            if (
+              !this.checkDuplicacyOfObjectInArray(
+                this.filteredArray,
+                this.searchResults[this.searchResults.indexOf(res)]
+              )
+            ) {
+              this.filteredArray.push(
+                this.searchResults[this.searchResults.indexOf(res)]
+              );
+            }
+          }
+        });
+      }
+      return true;
+    }
 
-		if (!this.callSearchBySubject) {
-			// input is subject
-			console.log("CASE 3 CALLING");
-			console.log("INPUT IS SUBJECT");
-			if (this.checkFiltersApplied(this.subjectFiltersApplied, $event.target.value)) {
-				if (this.subjectFiltersApplied.length == 1) {
-					this.allFiltersApplied.splice(
-						this.allFiltersApplied.indexOf($event.target.value),
-						1
-					);
-					this.subjectFiltersApplied.pop();
-					for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-						if (
-							this.filteredArray[i].areaOfExpertise.includes($event.target.value)
-						) {
-							this.filteredArray.splice(i, 1);
-						}
-					}
-				} else {
-					for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-						if (this.filteredArray[i].areaOfExpertise.includes($event.target.value)) {
-							if (
-								this.removeOrNot(
-									this.filteredArray[i].areaOfExpertise,
-									this.subjectFiltersApplied,
-									$event.target.value
-								)
-							) {
-								this.filteredArray.splice(i, 1);
-							}
-						}
-					}
-					this.subjectFiltersApplied.splice(
-						this.subjectFiltersApplied.indexOf($event.target.value),
-						1
-					);
-					this.allFiltersApplied.splice(
-						this.allFiltersApplied.indexOf($event.target.value),
-						1
-					);
-				}
-			} else {
-				this.subjectFiltersApplied.push($event.target.value);
-				this.allFiltersApplied.push($event.target.value);
-				for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-					this.searchResults.filter((res) => {
-						if (res.areaOfExpertise.includes($event.target.value)) {
-							if (
-								!this.checkDuplicacyOfObjectInArray(
-									this.filteredArray,
-									this.searchResults[this.searchResults.indexOf(res)]
-								)
-							) {
-								this.filteredArray.push(
-									this.searchResults[this.searchResults.indexOf(res)]
-								);
-							}
-						}
-					});
-				}
-			}
-			if (this.priceFiltersApplied.length != 0) {
-				this.callSearchByPrice = true;
-				this.searchByPrice($event);
-			}
-		}
-	}
+    if (!this.callSearchBySubject) {
+      // input is subject
+      console.log("CASE 3 CALLING");
+      console.log("INPUT IS SUBJECT");
+      if (
+        this.checkFiltersApplied(
+          this.subjectFiltersApplied,
+          $event.target.value
+        )
+      ) {
+        if (this.subjectFiltersApplied.length == 1) {
+          this.allFiltersApplied.splice(
+            this.allFiltersApplied.indexOf($event.target.value),
+            1
+          );
+          this.subjectFiltersApplied.pop();
+          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
+            if (
+              this.filteredArray[i].areaOfExpertise.includes(
+                $event.target.value
+              )
+            ) {
+              this.filteredArray.splice(i, 1);
+            }
+          }
+        } else {
+          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
+            if (
+              this.filteredArray[i].areaOfExpertise.includes(
+                $event.target.value
+              )
+            ) {
+              if (
+                this.removeOrNot(
+                  this.filteredArray[i].areaOfExpertise,
+                  this.subjectFiltersApplied,
+                  $event.target.value
+                )
+              ) {
+                this.filteredArray.splice(i, 1);
+              }
+            }
+          }
+          this.subjectFiltersApplied.splice(
+            this.subjectFiltersApplied.indexOf($event.target.value),
+            1
+          );
+          this.allFiltersApplied.splice(
+            this.allFiltersApplied.indexOf($event.target.value),
+            1
+          );
+        }
+      } else {
+        this.subjectFiltersApplied.push($event.target.value);
+        this.allFiltersApplied.push($event.target.value);
+        for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
+          this.searchResults.filter((res) => {
+            if (res.areaOfExpertise.includes($event.target.value)) {
+              if (
+                !this.checkDuplicacyOfObjectInArray(
+                  this.filteredArray,
+                  this.searchResults[this.searchResults.indexOf(res)]
+                )
+              ) {
+                this.filteredArray.push(
+                  this.searchResults[this.searchResults.indexOf(res)]
+                );
+              }
+            }
+          });
+        }
+      }
+      if (this.priceFiltersApplied.length != 0) {
+        this.callSearchByPrice = true;
+        this.searchByPrice($event);
+      }
+    }
+  }
 
   removeOrNot(areaOfExpertise, subjectFiltersApplied, eventTarget) {
     var flag = 0;
@@ -598,18 +676,18 @@ export class SearchResultsComponent implements OnInit {
     }
   }
 
-  sort($event){
+  sort($event) {
     console.log($event.target.value);
-    if($event.target.value.localeCompare("sortLowToHigh")==0){
-      if(this.allFiltersApplied.length==0){
-        this.searchResults.sort((a,b)=>Number(a.price1) - Number(b.price1));
-      }else{
+    if ($event.target.value.localeCompare("sortLowToHigh") == 0) {
+      if (this.allFiltersApplied.length == 0) {
+        this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
+      } else {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
       }
-    }else if($event.target.value.localeCompare("sortHighToLow")==0){
-      if(this.allFiltersApplied.length==0){
-        this.searchResults.sort((a,b)=>Number(b.price1) - Number(a.price1));
-      }else{
+    } else if ($event.target.value.localeCompare("sortHighToLow") == 0) {
+      if (this.allFiltersApplied.length == 0) {
+        this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
+      } else {
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
       }
     }

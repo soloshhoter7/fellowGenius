@@ -97,38 +97,3 @@
         padding-left: 5vw;
     }
 }
-
-
-/* ................................................ */
-
-button {
-    margin-left: 0.5vw;
-    margin-top: 0.5vh;
-    margin-bottom: 0.5vh;
-    margin-right: 1vw;
-    border-radius: 50%;
-}
-
-.control-icons {
-    margin-top: 5px;
-    font-size: 20px;
-}
-
-.control-nav {
-    /* background: rgb(57, 57, 57); */
-    padding-bottom: 1vh;
-    /* width: fit-content; */
-    width: max-content;
-    /* border-radius: 5px; */
-    /* position: fixed; */
-    bottom: 15vh;
-    /* left: 40vw; */
-    margin: auto;
-    z-index: 1000;
-    /* box-shadow: 0px 15px 8px rgb(199, 203, 217, 0.5); */
-}
-
-.control-nav-div {
-    float: right;
-    margin-top: 0.6vh;
-}

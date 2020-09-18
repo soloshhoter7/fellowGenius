@@ -73,90 +73,35 @@
     </div>
 </div>
 <div class="how-it-works-container">
-    <!-- .............................................. -->
-    <div class="control-nav">
-        <!-- session timer -->
-        <!-- <span class="timer" *ngIf="remoteJoined"
-    ><span>{{ timeLeft | formatTime }}</span></span
-  > -->
-        <!-- mute-unmute video -->
-        <div style="float: left;">
-            <button class="btn btn-primary" (click)="muteVideo()">
-    <span
-      class="material-icons control-icons"
-    >
-      videocam_off
-    </span>
-    <!-- <span
-      class="material-icons control-icons"
-    >
-      videocam
-    </span> -->
-  </button>
-            <!-- mute-unmute mic -->
-            <button class="btn btn-primary" (click)="muteAudio()">
-    <span
-      class="material-icons control-icons"
-      >mic_off
-    </span>
-    <!-- <span
-      class="material-icons control-icons"
-      >mic
-    </span> -->
-  </button>
-            <!-- screen share -->
-            <button class="btn btn-primary" (click)="screenShare()">
-    <span
-      class="material-icons control-icons"
-      >stop_screen_share
-    </span>
-    <!-- <span
-      class="material-icons control-icons"
-      >screen_share
-    </span> -->
-  </button>
-            <button class="btn btn-primary" (click)="openWhiteBoard()">
-    <img
-      src="../../assets/icons/whiteboard.svg"
-      alt=""
-      style="width: 21px; height: 32px;"
-    />
-  </button>
-        </div>
+    <h1 class="header-panel">
+        How it works?
+    </h1>
+    <ul class="process">
+        <li class="process__item">
+            <span class="process__number">1</span>
+            <span class="process__title">Step One</span>
+            <span class="process__subtitle">Description goes here,Description goes hereDescription goes here,Description goes here</span>
+        </li>
+
+        <li class="process__item">
+            <span class="process__number">2</span>
+            <span class="process__title">Step Two</span>
+            <span class="process__subtitle">Description goes here,Description goes hereDescription goes here,Description goes here</span>
+        </li>
+
+        <li class="process__item">
+            <span class="process__number">3</span>
+            <span class="process__title">Step Three</span>
+            <span class="process__subtitle">Description goes here,Description goes hereDescription goes here,Description goes here</span>
+        </li>
 
 
-        <!-- chat -->
-        <div class="control-nav-div">
-            <button class="btn btn-success" (click)="openChatWindow()" style="position: relative;">
-    <span class="material-icons control-icons">chat </span>
-    <span style=
- " background-color: #32CD32;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  position: absolute;
-  top: -5px;
-  right: -5px;"
-  *ngIf="newMessageNotification"></span>
-  </button>
-            <!-- end call button  -->
-            <button class="btn btn-danger" (click)="stopStream()" style="margin-right: 10px;">
-    <span class="material-icons control-icons"> call_end </span>
-  </button>
-        </div>
-    </div>
-    <!-- ................................................. -->
-
-    How it works appears here</div>
+    </ul>
+</div>
 <!-- don't remove this wrapper class otherwise carousel wont work -->
 <div class="wrapper" style="padding-top: 20px">
     <div class="whyFGContainer">
-        <h1 style="
-        margin: auto;
-        width: max-content;
-        margin-bottom: 10px;
-        color: #7d0f7d;
-      ">
+        <h1 class="header-panel">
             WHY FELLOWGENIUS ?
         </h1>
         <div class="btn-group carousel-btn-group" role="group" aria-label="Basic example">
@@ -204,5 +149,33 @@
                 </ng-template>
             </ng-container>
         </owl-carousel-o>
+    </div>
+
+    <div class="footer-container">
+        <div class="footer-inner">
+
+            <section class="footer-item">
+
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">Prices</a></li>
+                    <li><a href="#">How it works</a></li>
+                </ul>
+            </section>
+
+            <section class="footer-item">
+
+                <ul>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Terms and Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </section>
+            <div class="copyright-container">
+                <span>&#169; copyright 2020</span>
+            </div>
+        </div>
     </div>
 </div>
