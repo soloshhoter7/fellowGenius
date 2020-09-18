@@ -171,16 +171,6 @@ textarea:focus {
     text-align: center;
 }
 
-
-/*
-.stars-outer {
-	position: relative;
-	display: inline-block;
-	top: 60px;
-	color: transparent;
-}
-*/
-
 .stars-inner {
     position: absolute;
     top: 0;
@@ -1181,6 +1171,13 @@ textarea:focus {
     border-top-left-radius: 8px;
     height: 120px;
     position: relative;
+}
+
+.expert-profile-header .stars-outer {
+    position: relative;
+    display: inline-block;
+    top: 10px;
+    color: transparent;
 }
 
 .expert-profile-container .expert-profile-header .list-thumbnail {
