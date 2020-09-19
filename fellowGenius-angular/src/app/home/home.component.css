@@ -227,13 +227,15 @@ label {
     color: #f1f1f1;
 }
 
+
+/*
 .sidenav .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
-}
+}*/
 
 #mainContent {
     transition: margin-left .5s;
@@ -263,7 +265,6 @@ label {
     display: flex;
     height: 250px;
     position: relative;
-    margin-top: -45px;
 }
 
 .profile-section-sidenav .profile-thumbnail {
