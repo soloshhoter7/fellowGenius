@@ -5,6 +5,17 @@
       {{ meeting.userName | uppercase }}
     </p>
   </div>
+
+  <span
+    class="durationContainer"
+    *ngIf="remoteJoined && this.meeting.role == 'host'"
+    ><span>{{ timeLeft | formatTime }}</span></span
+  >
+  <span
+    class="durationContainer"
+    *ngIf="remoteJoined && this.meeting.role == 'student'"
+    ><span>{{ timeLeft | formatTime }}</span></span
+  >
   <!-- --------------------------------------for host ------------------------------------------------ -->
   <div *ngIf="this.meeting.role == 'host'">
     <div id="mySidenav" class="sidenav boxShadow" style="position: absolute">
@@ -234,83 +245,89 @@
       ><span>{{ timeLeft | formatTime }}</span></span
     > -->
       <!-- mute-unmute video -->
-      <button class="btn btn-primary" (click)="muteVideo()">
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostVideoStatus == 'unmute host video'"
+      <div style="width: max-content; margin: auto">
+        <button class="btn btn-primary" (click)="muteVideo()">
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostVideoStatus == 'unmute host video'"
+          >
+            videocam_off
+          </span>
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostVideoStatus == 'mute host video'"
+          >
+            videocam
+          </span>
+        </button>
+        <!-- mute-unmute mic -->
+        <button class="btn btn-primary" (click)="muteAudio()">
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostAudioStatus == 'unmute host mic'"
+            >mic_off
+          </span>
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostAudioStatus == 'mute host mic'"
+            >mic
+          </span>
+        </button>
+        <!-- screen share -->
+        <button class="btn btn-primary" (click)="screenShare()">
+          <span
+            class="material-icons control-icons"
+            *ngIf="hostScreenShareStatus == false"
+            >stop_screen_share
+          </span>
+          <span
+            class="material-icons control-icons"
+            *ngIf="hostScreenShareStatus == true"
+            >screen_share
+          </span>
+        </button>
+        <button
+          class="btn btn-primary"
+          *ngIf="screenWidth >= 700"
+          (click)="openWhiteBoard()"
         >
-          videocam_off
-        </span>
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostVideoStatus == 'mute host video'"
+          <img
+            src="../../../assets/icons/whiteboard.svg"
+            alt=""
+            style="width: 21px; height: 32px"
+          />
+        </button>
+
+        <!-- chat -->
+        <button
+          class="btn btn-success"
+          (click)="openChatWindow()"
+          style="position: relative; padding: 8px 16px"
         >
-          videocam
-        </span>
-      </button>
-      <!-- mute-unmute mic -->
-      <button class="btn btn-primary" (click)="muteAudio()">
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostAudioStatus == 'unmute host mic'"
-          >mic_off
-        </span>
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostAudioStatus == 'mute host mic'"
-          >mic
-        </span>
-      </button>
-      <!-- screen share -->
-      <button class="btn btn-primary" (click)="screenShare()">
-        <span
-          class="material-icons control-icons"
-          *ngIf="hostScreenShareStatus == false"
-          >stop_screen_share
-        </span>
-        <span
-          class="material-icons control-icons"
-          *ngIf="hostScreenShareStatus == true"
-          >screen_share
-        </span>
-      </button>
-      <button class="btn btn-primary" (click)="openWhiteBoard()">
-        <img
-          src="../../../assets/icons/whiteboard.svg"
-          alt=""
-          style="width: 21px; height: 32px"
-        />
-      </button>
+          <span class="material-icons control-icons">chat </span>
+          <span
+            style="
+              background-color: #32cd32;
+              width: 10px;
+              height: 10px;
 
-      <!-- chat -->
-      <button
-        class="btn btn-success"
-        (click)="openChatWindow()"
-        style="position: relative; padding: 8px 16px"
-      >
-        <span class="material-icons control-icons">chat </span>
-        <span
-          style="
-            background-color: #32cd32;
-            width: 10px;
-            height: 10px;
-
-            border-radius: 50%;
-            position: absolute;
-            top: -5px;
-            right: -5px;
-          "
-          *ngIf="newMessageNotification"
-        ></span>
-      </button>
-      <!-- end call button  -->
-      <button
-        class="btn btn-danger"
-        (click)="stopStream()"
-        style="margin-right: 10px; padding: 8px 16px"
-      >
-        <span class="material-icons control-icons"> call_end </span>
-      </button>
+              border-radius: 50%;
+              position: absolute;
+              top: -5px;
+              right: -5px;
+            "
+            *ngIf="newMessageNotification"
+          ></span>
+        </button>
+        <!-- end call button  -->
+        <button
+          class="btn btn-danger"
+          (click)="stopStream()"
+          style="margin-right: 10px; padding: 8px 16px"
+        >
+          <span class="material-icons control-icons"> call_end </span>
+        </button>
+      </div>
     </div>
   </div>
   <!-- -------------------------------------------------------------------------------------- -->
@@ -471,7 +488,7 @@
       [id]="screenCallId"
       class="screen"
     >
-      <p class="nameText">{{ bookingDetails.tutorName }}</p>
+      <!-- <p class="nameText">{{ bookingDetails.tutorName }}</p> -->
     </div>
     <div [id]="localCallId" class="local">
       <p class="nameText">{{ bookingDetails.studentName }}</p>
@@ -488,66 +505,68 @@
     </div>
 
     <div class="control-nav">
+      <div style="width: max-content; margin: auto">
+        <!-- <span class="timer" *ngIf="remoteJoined"
+          ><span>{{ timeLeft | formatTime }}</span></span
+        > -->
+        <!-- mute-unmute video -->
+        <button class="btn btn-primary" (click)="muteVideo()">
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostVideoStatus == 'unmute host video'"
+          >
+            videocam_off
+          </span>
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostVideoStatus == 'mute host video'"
+          >
+            videocam
+          </span>
+        </button>
+        <!-- mute-unmute mic -->
+        <button class="btn btn-primary" (click)="muteAudio()">
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostAudioStatus == 'unmute host mic'"
+            >mic_off
+          </span>
+          <span
+            class="material-icons control-icons"
+            *ngIf="muteHostAudioStatus == 'mute host mic'"
+            >mic
+          </span>
+        </button>
+        <!-- chats -->
+        <button
+          class="btn btn-success"
+          (click)="openChatWindow()"
+          style="position: relative; padding: 8px 16px"
+        >
+          <span class="material-icons control-icons">chat </span>
+          <span
+            style="
+              background-color: #32cd32;
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              position: absolute;
+              top: -5px;
+              right: -5px;
+            "
+            *ngIf="newMessageNotification"
+          ></span>
+        </button>
+        <!-- end call button  -->
+        <button
+          class="btn btn-danger"
+          (click)="stopStream()"
+          style="padding: 8px 16px"
+        >
+          <span class="material-icons control-icons"> call_end </span>
+        </button>
+      </div>
       <!-- session timer -->
-      <span class="timer" *ngIf="remoteJoined"
-        ><span>{{ timeLeft | formatTime }}</span></span
-      >
-      <!-- mute-unmute video -->
-      <button class="btn btn-primary" (click)="muteVideo()">
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostVideoStatus == 'unmute host video'"
-        >
-          videocam_off
-        </span>
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostVideoStatus == 'mute host video'"
-        >
-          videocam
-        </span>
-      </button>
-      <!-- mute-unmute mic -->
-      <button class="btn btn-primary" (click)="muteAudio()">
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostAudioStatus == 'unmute host mic'"
-          >mic_off
-        </span>
-        <span
-          class="material-icons control-icons"
-          *ngIf="muteHostAudioStatus == 'mute host mic'"
-          >mic
-        </span>
-      </button>
-      <!-- chats -->
-      <button
-        class="btn btn-success"
-        (click)="openChatWindow()"
-        style="position: relative"
-      >
-        <span class="material-icons control-icons">chat </span>
-        <span
-          style="
-            background-color: #32cd32;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            position: absolute;
-            top: -5px;
-            right: -5px;
-          "
-          *ngIf="newMessageNotification"
-        ></span>
-      </button>
-      <!-- end call button  -->
-      <button
-        class="btn btn-danger"
-        (click)="stopStream()"
-        style="margin-right: 10px"
-      >
-        <span class="material-icons control-icons"> call_end </span>
-      </button>
     </div>
     <div
       *ngFor="let callId of remoteCalls"

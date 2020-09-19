@@ -41,15 +41,10 @@
 } */
 
 .control-nav {
-  margin-top: 65vh;
-  width: max-content;
-  border-radius: 5px;
-  position: relative;
-  margin-right: auto;
+  width: 100%;
+  position: absolute;
+  bottom: 0.5rem;
   z-index: 10;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 60cvh;
 }
 
 button {
@@ -486,7 +481,18 @@ img {
 [id^="video"] {
   object-fit: inherit !important;
 }
-@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+
+.durationContainer {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #892687;
+  padding: 6px 10px;
+  color: white;
+  border-radius: 5px;
+  font-size: 1.35rem;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (min-device-height: 501px) and (-webkit-min-device-pixel-ratio: 2) {
   .local {
     position: fixed;
     width: 20vw;
@@ -510,11 +516,14 @@ img {
     right: 8rem;
   }
   .control-nav {
-    margin-top: 61vh;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
   }
   .local .nameText {
     display: none;
   }
+
   .nameText {
     color: white;
     position: absolute;
