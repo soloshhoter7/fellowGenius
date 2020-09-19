@@ -45,97 +45,98 @@ export class SearchResultsComponent implements OnInit {
     this.findFromSearchResult = false;
     this.findFromFilterSearch = false;
 
-    // this.searchResults = [
-    //   {
-    //     tid: 1234,
-    //     areaOfExpertise: ["Mathematics", "English", "Physics"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Ajay Verma",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "Ajay.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "400",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 90,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 3578,
-    //     areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Shubham Verma",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "AJay.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "800",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 70,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 3572,
-    //     areaOfExpertise: ["Chemistry", "English", "Physics"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Muskan Verma",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "Muskan.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "500",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 50,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 8754,
-    //     areaOfExpertise: ["Science", "English"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Abhinav Tyagi",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "Abhinav.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "200",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 20,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    // ];
-    this.fetchTutorList();
+    this.searchResults = [
+      {
+        tid: 1234,
+        areaOfExpertise: ["Mathematics", "English", "Physics"],
+        currentOrganisation: "Google",
+        description: "I have an experience of 10 years",
+        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+        fullName: "Ajay Verma",
+        institute: "Panipat Institute of Engineering and Technology",
+        lessonCompleted: 0,
+        linkedInProfile: "Ajay.linkedin",
+        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+        price1: "400",
+        price2: "400",
+        price3: "400",
+        professionalSkills: "Angular, JAVA",
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 90,
+        reviewCount: 10,
+        speciality: "Angular, JAVA",
+        yearsOfExperience: 10,
+      },
+      {
+        tid: 3578,
+        areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
+        currentOrganisation: "Google",
+        description: "I have an experience of 10 years",
+        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+        fullName: "Shubham Verma",
+        institute: "Panipat Institute of Engineering and Technology",
+        lessonCompleted: 0,
+        linkedInProfile: "AJay.linkedin",
+        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+        price1: "800",
+        price2: "400",
+        price3: "400",
+        professionalSkills: "Angular, JAVA",
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 70,
+        reviewCount: 10,
+        speciality: "Angular, JAVA",
+        yearsOfExperience: 10,
+      },
+      {
+        tid: 3572,
+        areaOfExpertise: ["Chemistry", "English", "Physics"],
+        currentOrganisation: "Google",
+        description: "I have an experience of 10 years",
+        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+        fullName: "Muskan Verma",
+        institute: "Panipat Institute of Engineering and Technology",
+        lessonCompleted: 0,
+        linkedInProfile: "Muskan.linkedin",
+        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+        price1: "500",
+        price2: "400",
+        price3: "400",
+        professionalSkills: "Angular, JAVA",
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 50,
+        reviewCount: 10,
+        speciality: "Angular, JAVA",
+        yearsOfExperience: 10,
+      },
+      {
+        tid: 8754,
+        areaOfExpertise: ["Science", "English"],
+        currentOrganisation: "Google",
+        description: "I have an experience of 10 years",
+        educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
+        fullName: "Abhinav Tyagi",
+        institute: "Panipat Institute of Engineering and Technology",
+        lessonCompleted: 0,
+        linkedInProfile: "Abhinav.linkedin",
+        previousOrganisations: ["PeopleStrong Pvt. Ltd"],
+        price1: "200",
+        price2: "400",
+        price3: "400",
+        professionalSkills: "Angular, JAVA",
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 20,
+        reviewCount: 10,
+        speciality: "Angular, JAVA",
+        yearsOfExperience: 10,
+      },
+    ];
+
+    // this.fetchTutorList();
 
     // this.filteredArray = this.searchResults;
   }
@@ -528,19 +529,20 @@ export class SearchResultsComponent implements OnInit {
 
   searchBySubject($event) {
     console.log($event.target.value);
+    this.filteredArray = [];
 
     if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
       //input is price
       this.callSearchBySubject = false;
       this.callSearchByPrice = false;
-      console.log("CASE 1 CALLING " + this.subjectFiltersApplied.length);
+      console.log("Subject Filters are NOT applied and input is price " + this.subjectFiltersApplied.length);
       this.findFromSearchResult = true;
       return true;
     }
     if (this.subjectFiltersApplied.length != 0 && this.callSearchBySubject) {
       this.callSearchBySubject = false;
       this.callSearchByPrice = false;
-      console.log("CASE 2 CALLING " + this.subjectFiltersApplied.length);
+      console.log("Subject Filters are applied and input is price " + this.subjectFiltersApplied.length);
       // input is price
       this.findFromFilterSearch = true;
       for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
@@ -564,7 +566,6 @@ export class SearchResultsComponent implements OnInit {
 
     if (!this.callSearchBySubject) {
       // input is subject
-      console.log("CASE 3 CALLING");
       console.log("INPUT IS SUBJECT");
       if (
         this.checkFiltersApplied(
@@ -626,6 +627,7 @@ export class SearchResultsComponent implements OnInit {
                   this.searchResults[this.searchResults.indexOf(res)]
                 )
               ) {
+                console.log("subject is being pushed " + i + "times");
                 this.filteredArray.push(
                   this.searchResults[this.searchResults.indexOf(res)]
                 );

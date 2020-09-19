@@ -163,8 +163,8 @@ export class HomeComponent implements OnInit {
   }
 
   closeNav() {
-    document.getElementById("sidenav").style.width = "0";
-    document.getElementById("mainContent").style.marginLeft = "0";
+    document.getElementById("sidenav").style.width = "0px";
+    document.getElementById("mainContent").style.marginLeft = "0px";
   }
 
   navAction(index) {

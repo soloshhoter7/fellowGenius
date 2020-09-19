@@ -6,7 +6,6 @@ import { AppComponent } from "./app.component";
 import { environment } from "src/environments/environment";
 import { NgxAgoraModule } from "ngx-agora";
 import { FormatTimePipe } from "src/app/pipes/formatTime";
-import { LengthBound } from "src/app/pipes/lengthBound";
 import { HomeComponent } from "./home/home.component";
 import { MeetingComponent } from "./home/meeting/meeting.component";
 import { MatInputModule } from "@angular/material/input";
@@ -88,6 +87,7 @@ import { GoogleChartsModule } from "angular-google-charts";
 import { ExpertProfileComponent } from "./expert-profile/expert-profile.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { ConnectComponent } from './expert-profile/connect/connect.component';
+import { ShortenLength } from './pipes/shortenLength.pipe';
 export const appRoutes: Routes = [
   {
     path: "home",
@@ -120,7 +120,7 @@ export const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    LengthBound,
+    ShortenLength,
     FormatTimePipe,
     AppComponent,
     HomeComponent,
