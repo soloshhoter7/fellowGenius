@@ -42,15 +42,10 @@
 } */
 
 .control-nav {
-    margin-top: 65vh;
-    width: max-content;
-    border-radius: 5px;
-    position: relative;
-    margin-right: auto;
+    width: 100%;
+    position: absolute;
+    bottom: 0.5rem;
     z-index: 10;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 60cvh;
 }
 
 button {
@@ -484,7 +479,18 @@ img {
     object-fit: inherit !important;
 }
 
-@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+.durationContainer {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: #892687;
+    padding: 6px 10px;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.35rem;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (min-device-height: 501px) and (-webkit-min-device-pixel-ratio: 2) {
     .local {
         position: fixed;
         width: 20vw;
@@ -508,7 +514,9 @@ img {
         right: 8rem;
     }
     .control-nav {
-        margin-top: 61vh;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
     }
     .local .nameText {
         display: none;
@@ -517,7 +525,6 @@ img {
         color: white;
         position: absolute;
         bottom: 0;
-        width: 100%;
         z-index: 1;
         font-size: xx-small;
         right: 0px;
@@ -544,5 +551,67 @@ img {
     }
     [id^="video"] {
         object-fit: inherit !important;
+    }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+        .local {
+            position: fixed;
+            width: 20vw;
+            height: 17vh;
+            top: 1rem !important;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 10;
+            left: unset;
+            right: 1rem;
+        }
+        .remote {
+            position: fixed;
+            width: 20vw;
+            height: 17vh;
+            top: 1rem !important;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 10;
+            left: unset;
+            right: 8rem;
+        }
+        .control-nav {
+            margin-top: 61vh;
+        }
+        .local .nameText {
+            display: none;
+        }
+        .nameText {
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+            font-size: xx-small;
+            right: 0px;
+            background-color: rgb(0, 0, 0, 0.5);
+            margin: 0;
+            padding: 4px;
+            padding-left: 7px;
+            padding-right: 7px;
+            font-weight: 400;
+        }
+        .expand-button {
+            display: none;
+        }
+        .short-name {
+            top: 25vh;
+        }
+        .screen {
+            position: fixed;
+            top: 7rem;
+            left: 0;
+            width: 100vw;
+            height: 73vh;
+            z-index: 4;
+        }
+        [id^="video"] {
+            object-fit: inherit !important;
+        }
     }
 }

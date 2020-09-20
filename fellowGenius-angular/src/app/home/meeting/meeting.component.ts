@@ -163,7 +163,8 @@ export class MeetingComponent implements OnInit {
     this.preventBackButton();
     this.width = (window.screen.width / 100) * 97;
     this.height = (window.screen.height / 100) * 80;
-
+    this.screenWidth = window.screen.width;
+    this.screenHeight = window.screen.height;
     this.meeting = this.meetingService.getMeeting();
 
     this.senderName = this.meeting.userName;

@@ -35,7 +35,7 @@ export class SearchResultsComponent implements OnInit {
     private profileService: ProfileService,
     private matDialog: MatDialog,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // this.fetchTutorList();
@@ -50,7 +50,7 @@ export class SearchResultsComponent implements OnInit {
         tid: 1234,
         areaOfExpertise: ["Mathematics", "English", "Physics"],
         currentOrganisation: "Google",
-        description: "I have an experience of 10 years",
+        description: "I have an experience of 10 years aksjh a hj hdjkh jkj ahd ajkh adkah da djkajs d ak jk j sdlks k kl kls kk k",
         educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
         fullName: "Ajay Verma",
         institute: "Panipat Institute of Engineering and Technology",
@@ -529,10 +529,11 @@ export class SearchResultsComponent implements OnInit {
 
   searchBySubject($event) {
     console.log($event.target.value);
-    this.filteredArray = [];
+    
 
     if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
       //input is price
+      this.filteredArray = [];
       this.callSearchBySubject = false;
       this.callSearchByPrice = false;
       console.log("Subject Filters are NOT applied and input is price " + this.subjectFiltersApplied.length);
@@ -540,6 +541,7 @@ export class SearchResultsComponent implements OnInit {
       return true;
     }
     if (this.subjectFiltersApplied.length != 0 && this.callSearchBySubject) {
+      this.filteredArray = [];
       this.callSearchBySubject = false;
       this.callSearchByPrice = false;
       console.log("Subject Filters are applied and input is price " + this.subjectFiltersApplied.length);
@@ -566,6 +568,7 @@ export class SearchResultsComponent implements OnInit {
 
     if (!this.callSearchBySubject) {
       // input is subject
+      // this.allFiltersApplied = [];
       console.log("INPUT IS SUBJECT");
       if (
         this.checkFiltersApplied(
@@ -616,6 +619,7 @@ export class SearchResultsComponent implements OnInit {
           );
         }
       } else {
+        
         this.subjectFiltersApplied.push($event.target.value);
         this.allFiltersApplied.push($event.target.value);
         for (var i = 0; i < this.subjectFiltersApplied.length; i++) {

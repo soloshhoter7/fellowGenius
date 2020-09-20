@@ -202,7 +202,7 @@ export class HomeComponent implements OnInit {
     }
 
     if (filled <= totalFields) {
-      this.studentProfileCompleted = (filled / totalFields) * 100;
+      this.studentProfileCompleted = Math.trunc((filled / totalFields) * 100);
     }
   }
   isTokenExpired(token?: string): boolean {
