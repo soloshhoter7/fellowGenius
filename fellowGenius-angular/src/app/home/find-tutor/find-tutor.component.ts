@@ -7,6 +7,7 @@ import { ProfileService } from '../../service/profile.service';
 import { HttpService } from 'src/app/service/http.service';
 import { TutorService } from 'src/app/service/tutor.service';
 import { filter } from 'rxjs/operators';
+import { StudentService } from 'src/app/service/student.service';
 
 @Component({
 	selector: 'app-find-tutor',
@@ -31,14 +32,21 @@ export class FindTutorComponent implements OnInit {
 		private matDialog: MatDialog,
 		private profileService: ProfileService,
 		private httpService: HttpService,
-		private tutorService: TutorService
+		private tutorService: TutorService,
+		private studentService: StudentService,
 	) {}
 
 	ngOnInit() {
-		this.fetchTutorList();
+		this.fetchAllLinkedTutors();
+		// this.fetchTutorList();
 		this.filterSearch = this.tutorService.tutorList;
 	}
 
+	fetchAllLinkedTutors(){
+		this.httpService.fetchAllLinkedTutors(this.studentService.getStudentProfileDetails().sid).subscribe((res)=>{
+			console.log(res);
+		})
+	}
 	fetchTutorList() {
 		this.httpService.getTutorList().subscribe((req) => {
 			this.filterSearch = req;
@@ -80,6 +88,7 @@ export class FindTutorComponent implements OnInit {
 
 		// }
 	}
+}
 
 	// searchSubject($event) {
 	// 	this.subject = $event.target.value;
@@ -114,7 +123,7 @@ export class FindTutorComponent implements OnInit {
 	// 			);
 	// 		});
 	// }
-}
+
 
 // searchPrice($event) {
 // 	this.price = $event.target.value.split('-');

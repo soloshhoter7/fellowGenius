@@ -38,7 +38,7 @@ export class SearchResultsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.fetchTutorList();
+    this.fetchTutorList();
     // console.log("login type ->" + this.loginService.getLoginType());
     this.callSearchBySubject = false;
     this.callSearchByPrice = false;

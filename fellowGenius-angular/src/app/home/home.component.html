@@ -202,27 +202,38 @@
         >
         <span class="profile-varient">Politics (Masters)</span>
         <span
-          *ngIf="tutorProfileDetails.profileCompleted != 100"
+          *ngIf="
+            tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
+          "
           class="progressbar-container"
         >
+          <div class="progress-Bar">
+            <div class="outer-progressBar">
+              <div
+                class="inner-progressBar"
+                [style.width.%]="tutorProfileDetails.profileCompleted"
+              ></div>
+            </div>
+          </div>
         </span>
-        <div
+
+        <span
           *ngIf="
             loginType == 'Learner' &&
             studentProfileCompleted &&
             studentProfileCompleted != 100
           "
-          class="progressbar-information"
+          class="progressbar-container"
         >
-          <span class="hyperlink-cont">
-            You have
-            <label>{{ 100 - studentProfileCompleted }}% </label>
-            left. Please get a head start by
-            <a href="javascript:;" (click)="openProfile()"
-              >completing your profile</a
-            ></span
-          >
-        </div>
+          <div class="progress-Bar">
+            <div class="outer-progressBar">
+              <div
+                class="inner-progressBar"
+                [style.width.%]="studentProfileCompleted"
+              ></div>
+            </div>
+          </div>
+        </span>
         <div
           *ngIf="
             tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
@@ -238,6 +249,24 @@
             >Please get a head start by
             <a href="javascript:;" (click)="openProfile()"
               >completing it now</a
+            ></span
+          >
+        </div>
+
+        <div
+          *ngIf="
+            loginType == 'Learner' &&
+            studentProfileCompleted &&
+            studentProfileCompleted != 100
+          "
+          class="progressbar-information"
+        >
+          <span class="hyperlink-cont">
+            You have
+            <label>{{ 100 - studentProfileCompleted }}% </label>
+            left. Please get a head start by
+            <a href="javascript:;" (click)="openProfile()"
+              >completing your profile</a
             ></span
           >
         </div>
