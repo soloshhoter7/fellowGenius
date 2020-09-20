@@ -282,33 +282,35 @@ canvas {
 .input_msg_write {
   background-color: rgb(235, 235, 235);
   float: left;
-  border: medium none;
+  border: none !important;
   color: black;
   font-size: 15px;
   min-height: 48px;
   width: 86%;
   border-radius: 26px;
   padding-left: 15px;
-  outline: none;
+  outline: none !important;
   padding-left: 25px;
   margin-right: 7px;
 }
 
 .write_msg {
   background-color: rgb(235, 235, 235);
-  border: medium none;
+  border: none !important;
   color: black;
   font-size: 15px;
   min-height: 48px;
   width: 84%;
   border-radius: 26px;
-  outline: none;
+  outline: none !important;
 }
 
 .type_msg {
   border-top: none;
   position: relative;
   margin-bottom: 20px;
+  outline: none !important;
+  border: none !important;
 }
 
 .msg_send_btn {

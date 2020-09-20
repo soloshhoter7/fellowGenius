@@ -459,7 +459,7 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
     this.bookingDetails.tutorName = this.teacherProfile.fullName;
     this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
-
+    console.log(this.bookingDetails);
     this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
       if (res) {
         this.isLoading = true;

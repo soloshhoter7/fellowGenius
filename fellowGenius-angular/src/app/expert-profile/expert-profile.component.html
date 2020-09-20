@@ -1,253 +1,271 @@
 <app-nav-bar></app-nav-bar>
 <div class="content-container" style="background-color: black">
-    <div class="breadcrumb-container">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Search Results</a></li>
-            <li class="active">Profile</li>
-        </ol>
+  <div class="breadcrumb-container">
+    <ol class="breadcrumb">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Search Results</a></li>
+      <li class="active">Profile</li>
+    </ol>
+  </div>
+  <div class="expert-profile-container-connect">
+    <div
+      class="connect-button-container"
+      *ngIf="loginService.getLoginType() != 'Expert'"
+    >
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openConnectPage()"
+        [disabled]="loginService.getLoginType() == null"
+      >
+        Connect
+      </button>
     </div>
-    <div class="expert-profile-container-connect">
-        <div class="connect-button-container">
-            <button type="button" class="btn btn-primary" (click)="openConnectPage()" [disabled]="loginService.getLoginType() == null">
-Connect
-</button>
-        </div>
 
-        <div class="expert-profile-container">
+    <div class="expert-profile-container">
+      <div class="expert-profile-header">
+        <div
+          class="list-thumbnail"
+          [ngStyle]="{
+            'background-image': 'url(' + profilePictureUrl + ')'
+          }"
+        ></div>
 
-
-
-            <div class="expert-profile-header">
-                <div class="list-thumbnail" [ngStyle]="{
-          'background-image': 'url(' + profilePictureUrl + ')'
-        }"></div>
-
-                <div class="basic-information">
-                    <span class="profile-name">{{ teacherProfile.fullName }}</span>
-                    <span class="profile-skills">{{
-          teacherProfile.professionalSkills
-        }}</span>
-                    <div class="stars-outer">
-                        <div class="stars-inner" [style.width.%]="50"></div>
-                        <!-- <div class="stars-inner"></div> -->
-                    </div>
-                </div>
-
-                <div class="contact-information">
-                    <span>9885457865</span>
-                    <span>someone@somene.com</span>
-
-                    <span><i class="fa fa-linkedin" aria-hidden="true"></i
-          ><a href="http://linkein.com/asdf"
-            >http://linkedin.com/someonesomeone</a
-          ></span
-        >
-      </div>
-      <div class="numbers-container">
-        <div>
-          <span class="number">{{ teacherProfile.reviewCount }}</span>
-                    <span class="info">Reviews</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                    <span class="number">{{ teacherProfile.lessonCompleted }}</span>
-                    <span class="info">Sessions</span>
-                </div>
-            </div>
-        </div>
-        <div class="expert-profile-description">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="description-header">Description</div>
-                    <div class="description-label">
-                        {{ teacherProfile.description }}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="description-header">Speciality</div>
-                    <div class="description-label">
-                        {{ teacherProfile.speciality }}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="description-header">
-                        Education Qualification & Certificates
-                    </div>
-                    <div class="description-label">
-                        <span *ngFor="let education of teacherProfile.educationalQualifications">{{ education }}</span
-            >
+        <div class="basic-information">
+          <span class="profile-name">{{ teacherProfile.fullName }}</span>
+          <span class="profile-skills">{{
+            teacherProfile.professionalSkills
+          }}</span>
+          <div class="stars-outer">
+            <div class="stars-inner" [style.width.%]="50"></div>
+            <!-- <div class="stars-inner"></div> -->
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="description-header">Profession Skills</div>
-          <div class="description-label">
-            <span>{{ teacherProfile.professionalSkills }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="description-header">Area of Expertise</div>
-                    <div class="description-label">
-                        <span *ngFor="let area of teacherProfile.areaOfExpertise">{{
-              area
-            }}</span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="description-header">Professional Background</div>
-                    <div class="description-label">
-                        <span *ngIf="teacherProfile.yearsOfExperience">Years of Experience -
-              {{ teacherProfile.yearsOfExperience }}</span
-            >
-            <span *ngIf="teacherProfile.currentOrganisation"
-              >Current Organization -
-              {{ teacherProfile.currentOrganisation }}</span
-            >
-            <span *ngIf="teacherProfile.previousOrganisations"
-              >Previous Organization -
-              <p *ngFor="let org of teacherProfile.previousOrganisations">
-                {{ org }}
-              </p></span
-            >
+
+        <div class="contact-information">
+          <span>9885457865</span>
+          <span>someone@somene.com</span>
+
+          <span
+            ><i class="fa fa-linkedin" aria-hidden="true"></i
+            ><a href="http://linkein.com/asdf"
+              >http://linkedin.com/someonesomeone</a
+            ></span
+          >
+        </div>
+        <div class="numbers-container">
+          <div>
+            <span class="number">{{ teacherProfile.reviewCount }}</span>
+            <span class="info">Reviews</span>
+          </div>
+          <div class="separtor"></div>
+          <div>
+            <span class="number">{{ teacherProfile.lessonCompleted }}</span>
+            <span class="info">Sessions</span>
           </div>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="description-header">Schedule</div>
-          <div class="content-container">
-            <table class="schedular-table">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Mon</th>
-
-                  <th scope="col">Tue</th>
-                  <th scope="col">Wed</th>
-                  <th scope="col">Thu</th>
-                  <th scope="col">Fri</th>
-                  <th scope="col">Sat</th>
-                  <th scope="col">Sun</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr class="morning-row">
-                  <td scope="row" data-label="Morning" class="row-header">
-                    Morning
-                  </td>
-                  <td scope="row" data-label="Mon - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Tue - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Wed - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Thu - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Fri - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sat - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sun - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                </tr>
-                <tr class="afternoon-row">
-                  <td scope="row" data-label="Afternoon" class="row-header">
-                    Afternoon
-                  </td>
-                  <td scope="row" data-label="Mon - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Tue - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Wed - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Thu - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Fri - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sat - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sun - Morning">
-                    <img src="../assets/images/busy.svg" />
-                  </td>
-                </tr>
-                <tr class="evening-row">
-                  <td scope="row" data-label="Evening" class="row-header">
-                    Evening
-                  </td>
-                  <td scope="row" data-label="Mon - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Tue - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Wed - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Thu - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Fri - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sat - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sun - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                </tr>
-                <tr class="late-evening-row">
-                  <td scope="row" data-label="Late Evening" class="row-header">
-                    Late Evening
-                  </td>
-                  <td scope="row" data-label="Mon - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Tue - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Wed - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Thu - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Fri - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sat - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                  <td scope="row" data-label="Sun - Morning">
-                    <img src="../assets/images/available.svg" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="expert-profile-description">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="description-header">Description</div>
+            <div class="description-label">
+              {{ teacherProfile.description }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="description-header">Speciality</div>
+            <div class="description-label">
+              {{ teacherProfile.speciality }}
+            </div>
           </div>
         </div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div class="row">
+          <div class="col-md-6">
+            <div class="description-header">
+              Education Qualification & Certificates
+            </div>
+            <div class="description-label">
+              <span
+                *ngFor="
+                  let education of teacherProfile.educationalQualifications
+                "
+                >{{ education }}</span
+              >
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="description-header">Profession Skills</div>
+            <div class="description-label">
+              <span>{{ teacherProfile.professionalSkills }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="description-header">Area of Expertise</div>
+            <div class="description-label">
+              <span *ngFor="let area of teacherProfile.areaOfExpertise">{{
+                area
+              }}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="description-header">Professional Background</div>
+            <div class="description-label">
+              <span *ngIf="teacherProfile.yearsOfExperience"
+                >Years of Experience -
+                {{ teacherProfile.yearsOfExperience }}</span
+              >
+              <span *ngIf="teacherProfile.currentOrganisation"
+                >Current Organization -
+                {{ teacherProfile.currentOrganisation }}</span
+              >
+              <span *ngIf="teacherProfile.previousOrganisations"
+                >Previous Organization -
+                <p *ngFor="let org of teacherProfile.previousOrganisations">
+                  {{ org }}
+                </p></span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="description-header">Schedule</div>
+            <div class="content-container">
+              <table class="schedular-table">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Mon</th>
+
+                    <th scope="col">Tue</th>
+                    <th scope="col">Wed</th>
+                    <th scope="col">Thu</th>
+                    <th scope="col">Fri</th>
+                    <th scope="col">Sat</th>
+                    <th scope="col">Sun</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr class="morning-row">
+                    <td scope="row" data-label="Morning" class="row-header">
+                      Morning
+                    </td>
+                    <td scope="row" data-label="Mon - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Tue - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Wed - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Thu - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Fri - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sat - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sun - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                  </tr>
+                  <tr class="afternoon-row">
+                    <td scope="row" data-label="Afternoon" class="row-header">
+                      Afternoon
+                    </td>
+                    <td scope="row" data-label="Mon - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Tue - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Wed - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Thu - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Fri - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sat - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sun - Morning">
+                      <img src="../assets/images/busy.svg" />
+                    </td>
+                  </tr>
+                  <tr class="evening-row">
+                    <td scope="row" data-label="Evening" class="row-header">
+                      Evening
+                    </td>
+                    <td scope="row" data-label="Mon - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Tue - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Wed - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Thu - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Fri - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sat - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sun - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                  </tr>
+                  <tr class="late-evening-row">
+                    <td
+                      scope="row"
+                      data-label="Late Evening"
+                      class="row-header"
+                    >
+                      Late Evening
+                    </td>
+                    <td scope="row" data-label="Mon - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Tue - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Wed - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Thu - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Fri - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sat - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                    <td scope="row" data-label="Sun - Morning">
+                      <img src="../assets/images/available.svg" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <br /><br /><br /><br /><br /><br /><br /><br /><br />
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

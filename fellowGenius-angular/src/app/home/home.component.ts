@@ -332,6 +332,10 @@ export class HomeComponent implements OnInit {
             this.tutorService.setTutorProfileDetails(res);
             this.httpService.getScheduleData(this.userId).subscribe((res) => {
               this.tutorService.setPersonalAvailabilitySchedule(res);
+              console.log(
+                this.tutorService.getPersonalAvailabilitySchedule()
+                  .allMeetingsSchedule
+              );
               if (
                 this.tutorService.getPersonalAvailabilitySchedule()
                   .isAvailable == "yes"
