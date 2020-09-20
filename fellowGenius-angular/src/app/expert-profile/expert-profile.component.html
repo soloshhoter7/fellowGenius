@@ -12,12 +12,7 @@
       class="connect-button-container"
       *ngIf="loginService.getLoginType() != 'Expert'"
     >
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="openConnectPage()"
-        [disabled]="loginService.getLoginType() == null"
-      >
+      <button type="button" class="btn btn-primary" (click)="openConnectPage()">
         Connect
       </button>
     </div>
@@ -41,7 +36,9 @@
             <!-- <div class="stars-inner"></div> -->
           </div>
         </div>
-
+        <div class="price-stamp">
+          <span class="price">₹ {{ teacherProfile.price1 }}/hr</span>
+        </div>
         <div class="contact-information">
           <span>9885457865</span>
           <span>someone@somene.com</span>
