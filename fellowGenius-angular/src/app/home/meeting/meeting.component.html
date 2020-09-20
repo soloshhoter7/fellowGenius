@@ -1,43 +1,29 @@
 <body style="max-width: 100vw; max-height: 100vh">
-  <div class="box"></div>
-  <div class="short-name">
-    <p class="shortNameText">
-      {{ meeting.userName | uppercase }}
-    </p>
-  </div>
+    <div class="box"></div>
+    <div class="short-name">
+        <p class="shortNameText">
+            {{ meeting.userName | uppercase }}
+        </p>
+    </div>
 
-  <span
-    class="durationContainer"
-    *ngIf="remoteJoined && this.meeting.role == 'host'"
-    ><span>{{ timeLeft | formatTime }}</span></span
-  >
-  <span
-    class="durationContainer"
-    *ngIf="remoteJoined && this.meeting.role == 'student'"
-    ><span>{{ timeLeft | formatTime }}</span></span
-  >
-  <!-- --------------------------------------for host ------------------------------------------------ -->
-  <div *ngIf="this.meeting.role == 'host'">
-    <div id="mySidenav" class="sidenav boxShadow" style="position: absolute">
-      <button class="closeIconButton" (click)="closeSideNav()" title="close">
+    <span class="durationContainer" *ngIf="remoteJoined && this.meeting.role == 'host'"><span>{{ timeLeft | formatTime }}</span></span>
+    <span class="durationContainer" *ngIf="remoteJoined && this.meeting.role == 'student'"><span>{{ timeLeft | formatTime }}</span></span>
+    <!-- --------------------------------------for host ------------------------------------------------ -->
+    <div *ngIf="this.meeting.role == 'host'">
+        <div id="mySidenav" class="sidenav boxShadow" style="position: absolute">
+            <button class="closeIconButton" (click)="closeSideNav()" title="close">
         <img
           src="../../../assets/icons/close.svg"
           alt=""
           style="height: 15px"
         />
       </button>
-      <div style="padding: 30px; height: 100%">
-        <div class="sideNavHeader">
-          <h1 style="margin: 0">Meeting Chat</h1>
-        </div>
-        <div
-          #chatWindow
-          [scrollTop]="chatWindow.scrollHeight"
-          class="sideNavBody"
-          style="position: relative"
-        >
-          <div
-            style="
+            <div style="padding: 30px; height: 100%">
+                <div class="sideNavHeader">
+                    <h1 style="margin: 0">Meeting Chat</h1>
+                </div>
+                <div #chatWindow [scrollTop]="chatWindow.scrollHeight" class="sideNavBody" style="position: relative">
+                    <div style="
               position: absolute;
               bottom: 5px;
               width: 98%;
@@ -45,108 +31,65 @@
               padding: 20px;
               background-color: white;
               box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);
-            "
-            *ngIf="fileUploadedBox"
-          >
-            <div *ngIf="fileSizeExceeded" style="color: red">
-              File size exceeded..upload upto 100 MB
-            </div>
-            <div>{{ fileName }}</div>
-            <div>{{ fileSize }}</div>
-            <div style="float: right">
-              <button
-                class="btn btn-outline-secondary"
-                (click)="closeFileUploadedBox()"
-              >
+            " *ngIf="fileUploadedBox">
+                        <div *ngIf="fileSizeExceeded" style="color: red">
+                            File size exceeded..upload upto 100 MB
+                        </div>
+                        <div>{{ fileName }}</div>
+                        <div>{{ fileSize }}</div>
+                        <div style="float: right">
+                            <button class="btn btn-outline-secondary" (click)="closeFileUploadedBox()">
                 Close
               </button>
-              <button
-                class="btn btn-outline-primary"
-                (click)="getBase64()"
-                [disabled]="fileSizeExceeded"
-              >
+                            <button class="btn btn-outline-primary" (click)="getBase64()" [disabled]="fileSizeExceeded">
                 Send
               </button>
-            </div>
-          </div>
-
-          <div *ngFor="let message of meetingChat">
-            <div class="incoming_msg" *ngIf="message.senderId != senderId">
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <b style="color: black">{{ message.senderName }}</b> &emsp;
-                  <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
-                  <div class="fileWrapper" *ngIf="!message.messageText">
-                    <img
-                      [src]="message.dataSource"
-                      alt=""
-                      class="imageTransfer"
-                      *ngIf="message.fileType == 'image/jpeg'"
-                    />
-                    <div
-                      class="fileName"
-                      *ngIf="message.fileType != 'image/jpeg'"
-                    >
-                      {{ message.fileName }}
+                        </div>
                     </div>
-                    <a
-                      [href]="message.dataSource"
-                      [download]="message.fileName"
-                      class="downloadButton"
-                      ><img
-                        src="../../../assets/icons/download_black.svg"
-                        alt=""
-                        style="height: 30px; width: 30px; margin: 10px"
-                    /></a>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="outgoing_msg" *ngIf="message.senderId == senderId">
-              <div class="sent_msg">
-                <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
-                <div class="fileWrapper" *ngIf="!message.messageText">
-                  <img
-                    [src]="message.dataSource"
-                    alt=""
-                    class="imageTransfer"
-                    *ngIf="message.fileType == 'image/jpeg'"
-                  />
-                  <div
-                    class="fileName"
-                    *ngIf="message.fileType != 'image/jpeg'"
-                  >
-                    {{ message.fileName }}
-                  </div>
+                    <div *ngFor="let message of meetingChat">
+                        <div class="incoming_msg" *ngIf="message.senderId != senderId">
+                            <div class="received_msg">
+                                <div class="received_withd_msg">
+                                    <b style="color: black">{{ message.senderName }}</b> &emsp;
+                                    <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
+                                    <div class="fileWrapper" *ngIf="!message.messageText">
+                                        <img [src]="message.dataSource" alt="" class="imageTransfer" *ngIf="message.fileType == 'image/jpeg'" />
+                                        <div class="fileName" *ngIf="message.fileType != 'image/jpeg'">
+                                            {{ message.fileName }}
+                                        </div>
+                                        <a [href]="message.dataSource" [download]="message.fileName" class="downloadButton"><img src="../../../assets/icons/download_black.svg" alt="" style="height: 30px; width: 30px; margin: 10px" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="outgoing_msg" *ngIf="message.senderId == senderId">
+                            <div class="sent_msg">
+                                <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
+                                <div class="fileWrapper" *ngIf="!message.messageText">
+                                    <img [src]="message.dataSource" alt="" class="imageTransfer" *ngIf="message.fileType == 'image/jpeg'" />
+                                    <div class="fileName" *ngIf="message.fileType != 'image/jpeg'">
+                                        {{ message.fileName }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sideNavFooter">
-          <div class="type_msg">
-            <div class="input_msg_write">
-              <input
-                type="text"
-                class="write_msg"
-                [(ngModel)]="messageText"
-                placeholder="Type a message"
-                (keydown)="handleSubmit($event)"
-              />
-              <button
-                class="msg_send_btn"
-                type="button"
-                (click)="sendChatMessage()"
-              >
+                <div class="sideNavFooter">
+                    <div class="type_msg">
+                        <div class="input_msg_write">
+                            <input type="text" class="write_msg" [(ngModel)]="messageText" placeholder="Type a message" (keydown)="handleSubmit($event)" />
+                            <button class="msg_send_btn" type="button" (click)="sendChatMessage()">
                 <img
                   src="../../../../assets/icons/send.png"
                   height="15px"
                   width="15px"
                 />
               </button>
-            </div>
-            <!-- <div style="width: max-content; display: inline-block">
+                        </div>
+                        <!-- <div style="width: max-content; display: inline-block">
               <input
                 #fileUpload
                 hidden="true"
@@ -159,94 +102,83 @@
                 <i class="fas fa-file-upload"></i>
               </button>
             </div> -->
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div [class]="myClass" class="canvasWrapper">
-      <div class="canvas-body">
-        <div class="tools">
-          <button class="toolButtons" (click)="erase()">
+        <div [class]="myClass" class="canvasWrapper">
+            <div class="canvas-body">
+                <div class="tools">
+                    <button class="toolButtons" (click)="erase()">
             <img
               src="../../../assets/icons/rubber.svg"
               style="width: 30px; height: 30px"
             />
           </button>
-          <button class="toolButtons" (click)="pencil($event, 'red')">
+                    <button class="toolButtons" (click)="pencil($event, 'red')">
             <img
               src="../../../assets/icons/redPencil.svg"
               style="width: 30px; height: 30px"
             />
           </button>
-          <button class="toolButtons" (click)="pencil($event, 'blue')">
+                    <button class="toolButtons" (click)="pencil($event, 'blue')">
             <img
               src="../../../assets/icons/bluePencil.svg"
               style="width: 30px; height: 30px"
             />
           </button>
-          <button class="toolButtons" (click)="pencil($event, 'black')">
+                    <button class="toolButtons" (click)="pencil($event, 'black')">
             <img
               src="../../../assets/icons/blackPencil.svg"
               style="width: 30px; height: 30px"
             />
           </button>
-          <button class="toolButtons" (click)="undo()">
+                    <button class="toolButtons" (click)="undo()">
             <img
               src="../../../assets/icons/undo.svg"
               style="width: 30px; height: 30px"
             />
           </button>
-          <button class="toolButtons" (click)="redo()">
+                    <button class="toolButtons" (click)="redo()">
             <img
               src="../../../assets/icons/redo.svg"
               style="width: 30px; height: 30px"
             />
           </button>
-          <button class="toolButtons" (click)="reset()" style="width: 70px">
+                    <button class="toolButtons" (click)="reset()" style="width: 70px">
             Reset
           </button>
+                </div>
+                <canvas #canvas></canvas>
+            </div>
         </div>
-        <canvas #canvas></canvas>
-      </div>
-    </div>
 
-    <div [id]="screenCallId" class="screen"></div>
-    <div [id]="localCallId" class="local">
-      <p class="nameText">{{ bookingDetails.tutorName }}</p>
-    </div>
-    <div
-      class="bg-image local"
-      *ngIf="muteHostVideoStatus == 'unmute host video'"
-    >
-      <span class="material-icons blurred-icons"> videocam_off </span>
-    </div>
-    <div class="bg-image remote" *ngIf="remoteVideoMute">
-      <span class="material-icons blurred-icons"> videocam_off </span>
-    </div>
-    <div
-      *ngFor="let callId of remoteCalls"
-      [id]="callId"
-      [ngClass]="expandedScreen ? 'screen' : 'remote'"
-    >
-      <p class="nameText">{{ bookingDetails.studentName }}</p>
-      <button
-        class="expand-button"
-        (click)="expandScreen()"
-        *ngIf="expandEnabled"
-      >
+        <div [id]="screenCallId" class="screen"></div>
+        <div [id]="localCallId" class="local">
+            <p class="nameText">{{ bookingDetails.tutorName }}</p>
+        </div>
+        <div class="bg-image local" *ngIf="muteHostVideoStatus == 'unmute host video'">
+            <span class="material-icons blurred-icons"> videocam_off </span>
+        </div>
+        <div class="bg-image remote" *ngIf="remoteVideoMute">
+            <span class="material-icons blurred-icons"> videocam_off </span>
+        </div>
+        <div *ngFor="let callId of remoteCalls" [id]="callId" [ngClass]="expandedScreen ? 'screen' : 'remote'">
+            <p class="nameText">{{ bookingDetails.studentName }}</p>
+            <button class="expand-button" (click)="expandScreen()" *ngIf="expandEnabled">
         <i *ngIf="!expandedScreen" class="fa fa-expand" aria-hidden="true"></i>
         <i *ngIf="expandedScreen" class="fa fa-compress" aria-hidden="true"></i>
       </button>
-    </div>
-    <div class="control-nav">
-      <!-- session timer -->
-      <!-- <span class="timer" *ngIf="remoteJoined"
+        </div>
+        <div class="control-nav">
+            <!-- session timer -->
+            <!-- <span class="timer" *ngIf="remoteJoined"
       ><span>{{ timeLeft | formatTime }}</span></span
     > -->
-      <!-- mute-unmute video -->
-      <div style="width: max-content; margin: auto">
-        <button class="btn btn-primary" (click)="muteVideo()">
+            <!-- mute-unmute video -->
+            <div style="width: max-content; margin: auto">
+                <button class="btn btn-primary" (click)="muteVideo()">
           <span
             class="material-icons control-icons"
             *ngIf="muteHostVideoStatus == 'unmute host video'"
@@ -260,8 +192,8 @@
             videocam
           </span>
         </button>
-        <!-- mute-unmute mic -->
-        <button class="btn btn-primary" (click)="muteAudio()">
+                <!-- mute-unmute mic -->
+                <button class="btn btn-primary" (click)="muteAudio()">
           <span
             class="material-icons control-icons"
             *ngIf="muteHostAudioStatus == 'unmute host mic'"
@@ -273,8 +205,8 @@
             >mic
           </span>
         </button>
-        <!-- screen share -->
-        <button class="btn btn-primary" (click)="screenShare()">
+                <!-- screen share -->
+                <button class="btn btn-primary" (click)="screenShare()">
           <span
             class="material-icons control-icons"
             *ngIf="hostScreenShareStatus == false"
@@ -286,11 +218,7 @@
             >screen_share
           </span>
         </button>
-        <button
-          class="btn btn-primary"
-          *ngIf="screenWidth >= 700"
-          (click)="openWhiteBoard()"
-        >
+                <button class="btn btn-primary" *ngIf="screenWidth >= 700" (click)="openWhiteBoard()">
           <img
             src="../../../assets/icons/whiteboard.svg"
             alt=""
@@ -298,12 +226,8 @@
           />
         </button>
 
-        <!-- chat -->
-        <button
-          class="btn btn-success"
-          (click)="openChatWindow()"
-          style="position: relative; padding: 8px 16px"
-        >
+                <!-- chat -->
+                <button class="btn btn-success" (click)="openChatWindow()" style="position: relative; padding: 8px 16px">
           <span class="material-icons control-icons">chat </span>
           <span
             style="
@@ -319,147 +243,93 @@
             *ngIf="newMessageNotification"
           ></span>
         </button>
-        <!-- end call button  -->
-        <button
-          class="btn btn-danger"
-          (click)="stopStream()"
-          style="margin-right: 10px; padding: 8px 16px"
-        >
+                <!-- end call button  -->
+                <button class="btn btn-danger" (click)="stopStream()" style="margin-right: 10px; padding: 8px 16px">
           <span class="material-icons control-icons"> call_end </span>
         </button>
-      </div>
-    </div>
-  </div>
-  <!-- -------------------------------------------------------------------------------------- -->
-  <!-- -------------------------- for student---------------------------------------- -->
-  <div *ngIf="this.meeting.role == 'student'">
-    <div id="mySidenav" class="sidenav boxShadow" style="position: absolute">
-      <button class="closeIconButton" (click)="closeSideNav()" title="close">
+            </div>
+        </div>
+        <!-- -------------------------------------------------------------------------------------- -->
+        <!-- -------------------------- for student---------------------------------------- -->
+        <div *ngIf="this.meeting.role == 'student'">
+            <div id="mySidenav" class="sidenav boxShadow" style="position: absolute">
+                <button class="closeIconButton" (click)="closeSideNav()" title="close">
         <img
           src="../../../assets/icons/close.svg"
           alt=""
           style="height: 15px"
         />
       </button>
-      <div style="padding: 30px; height: 100%">
-        <div class="sideNavHeader">
-          <h1 style="margin: 0">Meeting Chat</h1>
-        </div>
-        <div
-          #chatWindow
-          [scrollTop]="chatWindow.scrollHeight"
-          class="sideNavBody"
-          style="position: relative"
-        >
-          <div
-            style="
+                <div style="padding: 30px; height: 100%">
+                    <div class="sideNavHeader">
+                        <h1 style="margin: 0">Meeting Chat</h1>
+                    </div>
+                    <div #chatWindow [scrollTop]="chatWindow.scrollHeight" class="sideNavBody" style="position: relative">
+                        <div style="
               position: absolute;
               bottom: 5px;
               width: 98%;
               left: 3px;
               padding: 20px;
               box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);
-            "
-            *ngIf="fileUploadedBox"
-          >
-            <div *ngIf="fileSizeExceeded" style="color: red">
-              File size exceeded..upload upto 100 MB
-            </div>
-            <div>{{ fileName }}</div>
-            <div>{{ fileSize }}</div>
-            <div style="float: right">
-              <button
-                class="btn btn-outline-secondary"
-                (click)="closeFileUploadedBox()"
-              >
+            " *ngIf="fileUploadedBox">
+                            <div *ngIf="fileSizeExceeded" style="color: red">
+                                File size exceeded..upload upto 100 MB
+                            </div>
+                            <div>{{ fileName }}</div>
+                            <div>{{ fileSize }}</div>
+                            <div style="float: right">
+                                <button class="btn btn-outline-secondary" (click)="closeFileUploadedBox()">
                 Close
               </button>
-              <button
-                class="btn btn-outline-primary"
-                (click)="getBase64()"
-                [disabled]="fileSizeExceeded"
-              >
+                                <button class="btn btn-outline-primary" (click)="getBase64()" [disabled]="fileSizeExceeded">
                 Send
               </button>
-            </div>
-          </div>
-          <div *ngFor="let message of meetingChat">
-            <div class="incoming_msg" *ngIf="message.senderId != senderId">
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <b style="color: black">{{ message.senderName }}</b> &emsp;
-                  <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
-                  <div class="fileWrapper" *ngIf="!message.messageText">
-                    <img
-                      [src]="message.dataSource"
-                      alt=""
-                      class="imageTransfer"
-                      *ngIf="message.fileType == 'image/jpeg'"
-                    />
-                    <div
-                      class="fileName"
-                      *ngIf="message.fileType != 'image/jpeg'"
-                    >
-                      {{ message.fileName }}
-                    </div>
-                    <a
-                      [href]="message.dataSource"
-                      [download]="message.fileName"
-                      class="downloadButton"
-                      ><img
-                        src="../../../assets/icons/download_black.svg"
-                        alt=""
-                        style="height: 30px; width: 30px; margin: 10px"
-                    /></a>
-                  </div>
-                </div>
-              </div>
-            </div>
+                            </div>
+                        </div>
+                        <div *ngFor="let message of meetingChat">
+                            <div class="incoming_msg" *ngIf="message.senderId != senderId">
+                                <div class="received_msg">
+                                    <div class="received_withd_msg">
+                                        <b style="color: black">{{ message.senderName }}</b> &emsp;
+                                        <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
+                                        <div class="fileWrapper" *ngIf="!message.messageText">
+                                            <img [src]="message.dataSource" alt="" class="imageTransfer" *ngIf="message.fileType == 'image/jpeg'" />
+                                            <div class="fileName" *ngIf="message.fileType != 'image/jpeg'">
+                                                {{ message.fileName }}
+                                            </div>
+                                            <a [href]="message.dataSource" [download]="message.fileName" class="downloadButton"><img src="../../../assets/icons/download_black.svg" alt="" style="height: 30px; width: 30px; margin: 10px" /></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="outgoing_msg" *ngIf="message.senderId == senderId">
-              <div class="sent_msg">
-                <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
-                <div class="fileWrapper" *ngIf="!message.messageText">
-                  <img
-                    [src]="message.dataSource"
-                    alt=""
-                    class="imageTransfer"
-                    *ngIf="message.fileType == 'image/jpeg'"
-                  />
-                  <div
-                    class="fileName"
-                    *ngIf="message.fileType != 'image/jpeg'"
-                  >
-                    {{ message.fileName }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sideNavFooter">
-          <div class="type_msg">
-            <div class="input_msg_write">
-              <input
-                type="text"
-                class="write_msg"
-                [(ngModel)]="messageText"
-                placeholder="Type a message"
-                (keydown)="handleSubmit($event)"
-              />
-              <button
-                class="msg_send_btn"
-                type="button"
-                (click)="sendChatMessage()"
-              >
+                            <div class="outgoing_msg" *ngIf="message.senderId == senderId">
+                                <div class="sent_msg">
+                                    <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
+                                    <div class="fileWrapper" *ngIf="!message.messageText">
+                                        <img [src]="message.dataSource" alt="" class="imageTransfer" *ngIf="message.fileType == 'image/jpeg'" />
+                                        <div class="fileName" *ngIf="message.fileType != 'image/jpeg'">
+                                            {{ message.fileName }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sideNavFooter">
+                        <div class="type_msg">
+                            <div class="input_msg_write">
+                                <input type="text" class="write_msg" [(ngModel)]="messageText" placeholder="Type a message" (keydown)="handleSubmit($event)" />
+                                <button class="msg_send_btn" type="button" (click)="sendChatMessage()">
                 <img
                   src="../../../../assets/icons/send.png"
                   height="15px"
                   width="15px"
                 />
               </button>
-            </div>
-            <!-- <div style="width: max-content; display: inline-block">
+                            </div>
+                            <!-- <div style="width: max-content; display: inline-block">
               <input
                 #fileUpload
                 hidden="true"
@@ -472,45 +342,38 @@
                 <i class="fas fa-file-upload"></i>
               </button>
             </div> -->
-          </div>
-        </div>
-      </div>
-    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div [class]="myClass" class="canvasWrapper">
-      <div class="canvas-body">
-        <canvas #canvas></canvas>
-      </div>
-    </div>
+            <div [class]="myClass" class="canvasWrapper">
+                <div class="canvas-body">
+                    <canvas #canvas></canvas>
+                </div>
+            </div>
 
-    <div
-      *ngFor="let screenCallId of screenRemoteCalls"
-      [id]="screenCallId"
-      class="screen"
-    >
-      <!-- <p class="nameText">{{ bookingDetails.tutorName }}</p> -->
-    </div>
-    <div [id]="localCallId" class="local">
-      <p class="nameText">{{ bookingDetails.studentName }}</p>
-    </div>
+            <div *ngFor="let screenCallId of screenRemoteCalls" [id]="screenCallId" class="screen">
+                <!-- <p class="nameText">{{ bookingDetails.tutorName }}</p> -->
+            </div>
+            <div [id]="localCallId" class="local">
+                <p class="nameText">{{ bookingDetails.studentName }}</p>
+            </div>
 
-    <div
-      class="bg-image local"
-      *ngIf="muteHostVideoStatus == 'unmute host video'"
-    >
-      <span class="material-icons blurred-icons"> videocam_off </span>
-    </div>
-    <div class="bg-image remote" *ngIf="remoteVideoMute">
-      <span class="material-icons blurred-icons"> videocam_off </span>
-    </div>
+            <div class="bg-image local" *ngIf="muteHostVideoStatus == 'unmute host video'">
+                <span class="material-icons blurred-icons"> videocam_off </span>
+            </div>
+            <div class="bg-image remote" *ngIf="remoteVideoMute">
+                <span class="material-icons blurred-icons"> videocam_off </span>
+            </div>
 
-    <div class="control-nav">
-      <div style="width: max-content; margin: auto">
-        <!-- <span class="timer" *ngIf="remoteJoined"
+            <div class="control-nav">
+                <div style="width: max-content; margin: auto">
+                    <!-- <span class="timer" *ngIf="remoteJoined"
           ><span>{{ timeLeft | formatTime }}</span></span
         > -->
-        <!-- mute-unmute video -->
-        <button class="btn btn-primary" (click)="muteVideo()">
+                    <!-- mute-unmute video -->
+                    <button class="btn btn-primary" (click)="muteVideo()">
           <span
             class="material-icons control-icons"
             *ngIf="muteHostVideoStatus == 'unmute host video'"
@@ -524,8 +387,8 @@
             videocam
           </span>
         </button>
-        <!-- mute-unmute mic -->
-        <button class="btn btn-primary" (click)="muteAudio()">
+                    <!-- mute-unmute mic -->
+                    <button class="btn btn-primary" (click)="muteAudio()">
           <span
             class="material-icons control-icons"
             *ngIf="muteHostAudioStatus == 'unmute host mic'"
@@ -537,12 +400,8 @@
             >mic
           </span>
         </button>
-        <!-- chats -->
-        <button
-          class="btn btn-success"
-          (click)="openChatWindow()"
-          style="position: relative; padding: 8px 16px"
-        >
+                    <!-- chats -->
+                    <button class="btn btn-success" (click)="openChatWindow()" style="position: relative; padding: 8px 16px">
           <span class="material-icons control-icons">chat </span>
           <span
             style="
@@ -557,31 +416,20 @@
             *ngIf="newMessageNotification"
           ></span>
         </button>
-        <!-- end call button  -->
-        <button
-          class="btn btn-danger"
-          (click)="stopStream()"
-          style="padding: 8px 16px"
-        >
+                    <!-- end call button  -->
+                    <button class="btn btn-danger" (click)="stopStream()" style="padding: 8px 16px">
           <span class="material-icons control-icons"> call_end </span>
         </button>
-      </div>
-      <!-- session timer -->
-    </div>
-    <div
-      *ngFor="let callId of remoteCalls"
-      [id]="callId"
-      [ngClass]="expandedScreen ? 'screen' : 'remote'"
-    >
-      <p class="nameText">{{ bookingDetails.tutorName }}</p>
-      <button
-        class="expand-button"
-        (click)="expandScreen()"
-        *ngIf="expandEnabled"
-      >
+                </div>
+                <!-- session timer -->
+            </div>
+            <div *ngFor="let callId of remoteCalls" [id]="callId" [ngClass]="expandedScreen ? 'screen' : 'remote'">
+                <p class="nameText">{{ bookingDetails.tutorName }}</p>
+                <button class="expand-button" (click)="expandScreen()" *ngIf="expandEnabled">
         <i *ngIf="!expandedScreen" class="fa fa-expand" aria-hidden="true"></i>
         <i *ngIf="expandedScreen" class="fa fa-compress" aria-hidden="true"></i>
       </button>
+            </div>
+        </div>
     </div>
-  </div>
 </body>

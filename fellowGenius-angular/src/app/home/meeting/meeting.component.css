@@ -282,35 +282,33 @@ canvas {
 .input_msg_write {
   background-color: rgb(235, 235, 235);
   float: left;
-  border: none !important;
+  border: medium none;
   color: black;
   font-size: 15px;
   min-height: 48px;
   width: 86%;
   border-radius: 26px;
   padding-left: 15px;
-  outline: none !important;
+  outline: none;
   padding-left: 25px;
   margin-right: 7px;
 }
 
 .write_msg {
   background-color: rgb(235, 235, 235);
-  border: none !important;
+  border: medium none;
   color: black;
   font-size: 15px;
   min-height: 48px;
   width: 84%;
   border-radius: 26px;
-  outline: none !important;
+  outline: none;
 }
 
 .type_msg {
   border-top: none;
   position: relative;
   margin-bottom: 20px;
-  outline: none !important;
-  border: none !important;
 }
 
 .msg_send_btn {
@@ -494,6 +492,7 @@ img {
   border-radius: 5px;
   font-size: 1.35rem;
 }
+
 @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (min-device-height: 501px) and (-webkit-min-device-pixel-ratio: 2) {
   .local {
     position: fixed;
@@ -525,7 +524,6 @@ img {
   .local .nameText {
     display: none;
   }
-
   .nameText {
     color: white;
     position: absolute;
@@ -556,5 +554,67 @@ img {
   }
   [id^="video"] {
     object-fit: inherit !important;
+  }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+    .local {
+      position: fixed;
+      width: 20vw;
+      height: 17vh;
+      top: 1rem !important;
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 10;
+      left: unset;
+      right: 1rem;
+    }
+    .remote {
+      position: fixed;
+      width: 20vw;
+      height: 17vh;
+      top: 1rem !important;
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 10;
+      left: unset;
+      right: 8rem;
+    }
+    .control-nav {
+      margin-top: 61vh;
+    }
+    .local .nameText {
+      display: none;
+    }
+    .nameText {
+      color: white;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      z-index: 1;
+      font-size: xx-small;
+      right: 0px;
+      background-color: rgb(0, 0, 0, 0.5);
+      margin: 0;
+      padding: 4px;
+      padding-left: 7px;
+      padding-right: 7px;
+      font-weight: 400;
+    }
+    .expand-button {
+      display: none;
+    }
+    .short-name {
+      top: 25vh;
+    }
+    .screen {
+      position: fixed;
+      top: 7rem;
+      left: 0;
+      width: 100vw;
+      height: 73vh;
+      z-index: 4;
+    }
+    [id^="video"] {
+      object-fit: inherit !important;
+    }
   }
 }

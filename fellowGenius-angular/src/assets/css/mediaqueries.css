@@ -203,6 +203,26 @@
     .expert-profile-container .expert-profile-header .contact-information {
         top: 2px !important;
     }
+    .expert-profile-header .price-stamp {
+        background: transparent!important;
+        overflow: hidden;
+        background-size: contain;
+        left: 50%;
+        width: 200px;
+        height: 120px;
+        position: absolute;
+    }
+    .expert-profile-header .price-stamp .price {
+        transform-origin: 0 0;
+        transform: rotate(0deg)!important;
+        display: inline-block;
+        top: 57px;
+        position: relative;
+        color: #FFFFFF;
+        left: 50px;
+        font-size: 16px;
+        font-weight: 700;
+    }
     .expert-profile-container .expert-profile-description {
         margin-left: 0px !important;
         margin-top: 30px !important;
