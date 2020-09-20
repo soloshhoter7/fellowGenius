@@ -162,7 +162,9 @@
             <button
               class="btn btn-primary"
               (click)="onBooking()"
-              [disabled]="startDisabled || endDisabled"
+              [disabled]="
+                startDisabled || endDisabled || !bookingDetails.subject
+              "
             >
               Submit
             </button>

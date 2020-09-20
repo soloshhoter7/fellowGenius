@@ -281,7 +281,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Learner'"
       >
-        <a class="nav-link" routerLink="/home/studentDashboard">Dashboard</a>
+        <a
+          class="nav-link"
+          routerLink="/home/studentDashboard"
+          (click)="onNavigationClick()"
+          >Dashboard</a
+        >
       </li>
 
       <li
@@ -290,7 +295,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Expert'"
       >
-        <a class="nav-link" routerLink="/home/tutorDashboard">Dashboard</a>
+        <a
+          class="nav-link"
+          routerLink="/home/tutorDashboard"
+          (click)="onNavigationClick()"
+          >Dashboard</a
+        >
       </li>
 
       <li
@@ -299,7 +309,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Learner'"
       >
-        <a class="nav-link" routerLink="/home/findTutor">Experts</a>
+        <a
+          class="nav-link"
+          routerLink="/home/findTutor"
+          (click)="onNavigationClick()"
+          >Experts</a
+        >
       </li>
 
       <li
@@ -308,7 +323,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Expert'"
       >
-        <a class="nav-link" routerLink="tutorSchedule">Schedule</a>
+        <a
+          class="nav-link"
+          routerLink="tutorSchedule"
+          (click)="onNavigationClick()"
+          >Schedule</a
+        >
       </li>
 
       <li
@@ -317,7 +337,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Learner'"
       >
-        <a class="nav-link" routerLink="sessionNotes">Session Notes</a>
+        <a
+          class="nav-link"
+          routerLink="sessionNotes"
+          (click)="onNavigationClick()"
+          >Session Notes</a
+        >
       </li>
 
       <li
@@ -326,7 +351,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Expert'"
       >
-        <a class="nav-link" routerLink="recordings">Recordings</a>
+        <a
+          class="nav-link"
+          routerLink="recordings"
+          (click)="onNavigationClick()"
+          >Recordings</a
+        >
       </li>
 
       <li
@@ -335,7 +365,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
         *ngIf="loginType == 'Expert'"
       >
-        <a class="nav-link" routerLink="knowledgeBase">Knowledge Base</a>
+        <a
+          class="nav-link"
+          routerLink="knowledgeBase"
+          (click)="onNavigationClick()"
+          >Knowledge Base</a
+        >
       </li>
       <!-- 
       <li class="nav-item">
@@ -352,12 +387,16 @@
         >
       </li> -->
 
-      <li class="nav-item" *ngIf="loginType == 'Learner'">
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Learner'"
+      >
         <a
           class="nav-link"
           routerLink="studentBookings"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="onNavigationClick()"
           >Bookings</a
         >
       </li>
@@ -367,7 +406,7 @@
     <div [class]="overlay"></div>
     <div class="header" id="headerContent">
       <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span>
-      <div class="logo" (click)="navAction(index)"></div>
+      <div class="logo" (click)="toFacade()"></div>
       <div class="search-box-container" *ngIf="loginType == 'Learner'">
         <div class="input-group">
           <form>

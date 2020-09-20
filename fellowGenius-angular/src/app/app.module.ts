@@ -88,6 +88,7 @@ import { ExpertProfileComponent } from "./expert-profile/expert-profile.componen
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { ConnectComponent } from './expert-profile/connect/connect.component';
 import { ShortenLength } from './pipes/shortenLength.pipe';
+import { LoginDialogComponent } from './expert-profile/login-dialog/login-dialog.component';
 export const appRoutes: Routes = [
   {
     path: "home",
@@ -160,6 +161,7 @@ export const appRoutes: Routes = [
     ExpertProfileComponent,
     NavBarComponent,
     ConnectComponent,
+    LoginDialogComponent,
   ],
   imports: [
     NgxMaterialTimepickerModule,

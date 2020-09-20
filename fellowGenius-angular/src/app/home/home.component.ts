@@ -153,6 +153,14 @@ export class HomeComponent implements OnInit {
       map((value) => this._filter(value))
     );
   }
+  onNavigationClick() {
+    if (this.screenWidth <= 500) {
+      this.closeNav();
+    }
+  }
+  toFacade() {
+    this.router.navigate([""]);
+  }
   openNav() {
     if (this.screenWidth >= 450) {
       document.getElementById("sidenav").style.width = "230px";
@@ -284,9 +292,6 @@ export class HomeComponent implements OnInit {
 
       this.router.navigate(["searchResults"]);
     }
-  }
-  heyNav() {
-    console.log("close it damn it");
   }
   // signOut() {
   // 	this.authService.signOut();

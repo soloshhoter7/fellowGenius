@@ -57,6 +57,7 @@ public class MeetingService {
 		booking.setTutorName(bookingModel.getTutorName());
 		booking.setApprovalStatus(bookingModel.getApprovalStatus());
 		booking.setBookingCase(bookingModel.getBookingCase());
+		booking.setSubject(bookingModel.getSubject());
 		sendNotificationTutor(bookingModel.getTutorId(), booking);
 		return meetingDao.saveBooking(booking);
 	}

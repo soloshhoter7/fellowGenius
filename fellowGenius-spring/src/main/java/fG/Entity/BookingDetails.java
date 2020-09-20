@@ -25,8 +25,15 @@ public class BookingDetails {
 	  String studentName;
 	  String tutorName;
 	  Integer bookingCase;
+	  String Subject;
 	  
 	  
+	public String getSubject() {
+		return Subject;
+	}
+	public void setSubject(String subject) {
+		Subject = subject;
+	}
 	public Integer getBookingCase() {
 		return bookingCase;
 	}
@@ -124,10 +131,9 @@ public class BookingDetails {
 				+ ", duration=" + duration + ", dateOfMeeting=" + dateOfMeeting + ", startTimeHour=" + startTimeHour
 				+ ", startTimeMinute=" + startTimeMinute + ", description=" + description + ", studentId=" + studentId
 				+ ", tutorId=" + tutorId + ", meetingId=" + meetingId + ", approvalStatus=" + approvalStatus
-				+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase + "]";
+				+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
+				+ ", Subject=" + Subject + "]";
 	}
 
-	
-	
 	  
 }

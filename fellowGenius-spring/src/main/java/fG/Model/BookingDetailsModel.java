@@ -16,8 +16,15 @@ public class BookingDetailsModel {
   String studentName;
   String tutorName;
   Integer bookingCase;
+  String subject;
   
   
+public String getSubject() {
+	return subject;
+}
+public void setSubject(String subject) {
+	this.subject = subject;
+}
 public Integer getBookingCase() {
 	return bookingCase;
 }
@@ -114,8 +121,10 @@ public String toString() {
 			+ ", duration=" + duration + ", dateOfMeeting=" + dateOfMeeting + ", startTimeHour=" + startTimeHour
 			+ ", startTimeMinute=" + startTimeMinute + ", description=" + description + ", studentId=" + studentId
 			+ ", tutorId=" + tutorId + ", meetingId=" + meetingId + ", approvalStatus=" + approvalStatus
-			+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase + "]";
+			+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
+			+ ", subject=" + subject + "]";
 }
+
 
   
   	

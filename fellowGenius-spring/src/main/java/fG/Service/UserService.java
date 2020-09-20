@@ -576,7 +576,7 @@ public class UserService  implements UserDetailsService{
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			for (int i = 0; i < bookings.size(); i++) {
 				BookingDetails booking = bookings.get(i);
-
+				String Description;
 				Date startDate = formatter.parse(booking.getDateOfMeeting());
 				startDate.setHours(booking.getStartTimeHour());
 				startDate.setMinutes(booking.getStartTimeMinute());
@@ -584,8 +584,9 @@ public class UserService  implements UserDetailsService{
 				Date endDate = formatter.parse(booking.getDateOfMeeting());
 				endDate.setHours(booking.getEndTimeHour());
 				endDate.setMinutes(booking.getEndTimeMinute());
-
+                Description = booking.getSubject() +"=>"+booking.getDescription();
 				ScheduleData schedule = new ScheduleData();
+				schedule.setDescription(Description);
 				schedule.setStartTime(startDate.toLocaleString());
 				schedule.setEndTime(endDate.toLocaleString());
 				schedule.setId(i + 1);

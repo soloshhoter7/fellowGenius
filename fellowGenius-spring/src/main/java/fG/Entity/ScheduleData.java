@@ -16,6 +16,16 @@ public class ScheduleData {
 	public String RecurrenceException;
 	public String Guid;
 	public Integer RecurrenceID;
+	public String Description;
+	
+	
+	public String getDescription() {
+		return Description;
+	}
+
+	public void setDescription(String description) {
+		Description = description;
+	}
 
 	public Integer getId() {
 		return Id;
@@ -105,8 +115,10 @@ public class ScheduleData {
 	public String toString() {
 		return "ScheduleData [Id=" + Id + ", Subject=" + Subject + ", comments=" + comments + ", StartTime=" + StartTime
 				+ ", EndTime=" + EndTime + ", IsAllDay=" + IsAllDay + ", RecurrenceRule=" + RecurrenceRule
-				+ ", RecurrenceException=" + RecurrenceException + ", Guid=" + Guid + ", RecurrenceId=" + RecurrenceID
-				+ "]";
+				+ ", RecurrenceException=" + RecurrenceException + ", Guid=" + Guid + ", RecurrenceID=" + RecurrenceID
+				+ ", Description=" + Description + "]";
 	}
+
+	
 
 }

@@ -41,9 +41,9 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(["login"]);
   }
   toDashboard() {
-    if (this.loginType == "Learner") {
+    if (this.loginService.getLoginType() == "Learner") {
       this.router.navigate(["home/studentDashboard"]);
-    } else if (this.loginType == "Expert") {
+    } else if (this.loginService.getLoginType() == "Expert") {
       this.router.navigate(["home/tutorDashboard"]);
     }
   }
