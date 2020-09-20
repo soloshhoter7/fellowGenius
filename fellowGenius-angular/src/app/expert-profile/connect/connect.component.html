@@ -6,187 +6,225 @@
     <app-loading></app-loading>
   </div>
   <div *ngIf="!isLoading">
-    <div class="connect-container" *ngIf="!amountView">
-      <div class="connect-header">
-        <div style="float: right">
-          <button class="closeIconButton" title="close" (click)="closeNav()">
-            <img
-              src="../../../../assets/icons/close.svg"
-              style="height: 15px"
-            />
-          </button>
+    <div style="padding: 40px" *ngIf="!isTutorAvailable">
+      <div style="text-align: center">
+        <h1>Expert is not available right now</h1>
+        <h2>Check Back Later</h2>
+      </div>
+    </div>
+    <div *ngIf="isTutorAvailable">
+      <div class="connect-container">
+        <div class="connect-header">
+          <div style="float: right">
+            <button class="closeIconButton" title="close" (click)="closeNav()">
+              <img
+                src="../../../../assets/icons/close.svg"
+                style="height: 15px"
+              />
+            </button>
+          </div>
+          <div style="margin-bottom: 15px">
+            <h1 style="margin: 0">Book Meeting</h1>
+            <!-- <p style="font-weight: 500; margin-top: 5px; color: #210184">
+              Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
+            </p> -->
+          </div>
         </div>
         <div>
-          <h1 style="margin: 0">Book Meeting</h1>
-          <p style="font-weight: 500; margin-top: 5px; color: #210184">
-            Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-          </p>
-        </div>
-      </div>
-      <div>
-        <div class="col-md-5">
-          <div class="form-group">
-            <label for="subject" style="margin-bottom: 10px"
-              >Choose Subject<sup>*</sup></label
-            >
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="subject" style="margin-bottom: 10px"
+                  >Choose Subject<sup>*</sup></label
+                >
 
-            <select class="form-control" [(ngModel)]="selectedSubject">
-              <option
-                *ngFor="let subject of areaOfExpertises"
-                [value]="subject.value"
-              >
-                {{ subject }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <!-- <div class="col-md-5">
-          <div class="form-group">
-            <label for="description" style="margin-bottom: 10px"
-              >Description<sup>*</sup></label
-            >
-            <textarea
-              style="padding-top: 5px"
-              class="form-control"
-              id="description"
-              rows="2"
-              name="description"
-              [(ngModel)]="bookingDetails.description"
-              maxlength="100"
-              #desc
-              ngModel
-              required
-            ></textarea>
-  
-            <span style="float: right" class="setLength"
-              >{{ desc.value.length }}/100</span
-            >
-          </div>
-        </div> -->
-      </div>
-      <div
-        class="connect-body"
-        style="height: 40vh; max-height: 40vh; overflow-y: scroll"
-      >
-        <div class="container">
-          <div class="row" style="max-width: 910px">
-            <div
-              *ngFor="let todayDate of scheduleDates; let z = index"
-              class="dayColumn"
-            >
-              <div style="margin-bottom: 20px; font-size: 15px">
-                {{ fullDate[z] | date: "fullDate" }}
+                <select
+                  class="form-control"
+                  [(ngModel)]="bookingDetails.subject"
+                >
+                  <option
+                    *ngFor="let subject of areaOfExpertises"
+                    [value]="subject"
+                  >
+                    {{ subject }}
+                  </option>
+                </select>
               </div>
-              <div *ngIf="todayDate.hasElements">
-                <div *ngFor="let time of ScheduleTime; let i = index">
-                  <div *ngIf="todayDate.date == time.date">
-                    <div
-                      class="timeSlots"
-                      [ngStyle]="
-                        startSelect >= 0 &&
-                        endSelect > 0 &&
-                        i > startSelect &&
-                        i < endSelect
-                          ? {
-                              'background-color': 'rgb(227, 0, 132)',
-                              color: 'white'
-                            }
-                          : {}
-                      "
-                      [ngClass]="{
-                        startClass:
-                          time.hours == st.sh &&
-                          time.minutes == st.sm &&
-                          startDate == time.date,
-                        endClass:
-                          time.hours == et.eh &&
-                          time.minutes == et.em &&
-                          startDate == time.date
-                      }"
-                      (click)="timeSelector(time, i, todayDate)"
-                    >
-                      {{ time.hours }}:{{ time.minutes | zero }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                *ngIf="!todayDate.hasElements"
-                style="margin-top: 10px; margin-bottom: 10px"
-              >
-                No Available Schedules
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="description" style="margin-bottom: 10px"
+                  >Description</label
+                >
+                <textarea
+                  style="padding-top: 5px"
+                  class="form-control"
+                  id="description"
+                  rows="2"
+                  name="description"
+                  [(ngModel)]="bookingDetails.description"
+                  maxlength="100"
+                  #desc
+                  ngModel
+                  placeholder="Enter description"
+                  required
+                ></textarea>
+
+                <span style="float: right" class="setLength"
+                  >{{ desc.value.length }}/100</span
+                >
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="connect-footer">
-        <div style="float: right">
-          <button
-            class="btn btn-primary"
-            (click)="toggleAmountView()"
-            [disabled]="startDisabled || endDisabled"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </div>
 
-    <div *ngIf="amountView">
-      <div class="connect-header">
-        <div class="row">
-          <div class="col-md-2">
-            <img
-              [src]="teacherProfile.profilePictureUrl"
-              style="width: 50px; height: 50px; border-radius: 50%"
-              alt=""
-            />
+        <div class="connect-body">
+          <div>
+            <label style="margin-bottom: 10px">Choose Time<sup>*</sup></label>
+            <p
+              style="
+                font-weight: 500;
+                margin-top: 5px;
+                color: #892687;
+                display: inline;
+                margin-left: 10px;
+              "
+            >
+              Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
+            </p>
+            <div class="errorMessage">{{ errorMessage }}</div>
           </div>
-          <div class="col-md-10">
-            <h1 style="font-size: 3vh">{{ teacherProfile.fullName }}</h1>
-            <h2 style="font-size: 2vh">{{ teacherProfile.institute }}</h2>
+          <div style="height: 40vh; max-height: 40vh; overflow-y: scroll">
+            <div class="container">
+              <div class="row" style="max-width: 910px">
+                <div
+                  *ngFor="let todayDate of scheduleDates; let z = index"
+                  class="dayColumn"
+                >
+                  <div style="margin-bottom: 20px; font-size: 15px">
+                    {{ fullDate[z] | date: "fullDate" }}
+                  </div>
+                  <div *ngIf="todayDate.hasElements">
+                    <div *ngFor="let time of ScheduleTime; let i = index">
+                      <div *ngIf="todayDate.date == time.date">
+                        <div
+                          class="timeSlots"
+                          [ngStyle]="
+                            startSelect >= 0 &&
+                            endSelect > 0 &&
+                            i > startSelect &&
+                            i < endSelect
+                              ? {
+                                  'background-color': 'rgb(227, 0, 132)',
+                                  color: 'white'
+                                }
+                              : {}
+                          "
+                          [ngClass]="{
+                            startClass:
+                              time.hours == st.sh &&
+                              time.minutes == st.sm &&
+                              startDate == time.date,
+                            endClass:
+                              time.hours == et.eh &&
+                              time.minutes == et.em &&
+                              startDate == time.date
+                          }"
+                          (click)="timeSelector(time, i, todayDate)"
+                        >
+                          {{ time.hours }}:{{ time.minutes | zero }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="!todayDate.hasElements"
+                    style="margin-top: 10px; margin-bottom: 10px"
+                  >
+                    No Available Schedules
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- <div class="row" style="margin-top: 50px">
-          <div>
-            <h3 style="font-size: 2vh">{{ selectedSubject }}</h3>
-          </div>
-          <div>
-            <h3 style="font-size: 2vh">
-              {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-            </h3>
-          </div>
-        </div> -->
-        <div class="row" style="margin-top: 20px">
-          <div style="width: 100%">
-            <h2 style="font-size: 2vh">{{ startDate }}</h2>
-          </div>
-          <div style="width: 100%">
-            <h2 style="font-size: 2vh">
-              {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-            </h2>
+        <div class="connect-footer">
+          <div style="float: right">
+            <!-- <button
+              class="btn btn-primary"
+              (click)="toggleAmountView()"
+              [disabled]="startDisabled || endDisabled"
+            >
+              Next
+            </button> -->
+            <button
+              class="btn btn-primary"
+              (click)="onBooking()"
+              [disabled]="startDisabled || endDisabled"
+            >
+              Submit
+            </button>
           </div>
         </div>
+      </div>
 
-        <div class="row" style="margin-top: 20px">
-          <h1>$400</h1>
+      <!-- <div *ngIf="amountView">
+        <div class="connect-header">
+          <div class="row">
+            <div class="col-md-2">
+              <img
+                [src]="teacherProfile.profilePictureUrl"
+                style="width: 50px; height: 50px; border-radius: 50%"
+                alt=""
+              />
+            </div>
+            <div class="col-md-10">
+              <h1 style="font-size: 3vh">{{ teacherProfile.fullName }}</h1>
+              <h2 style="font-size: 2vh">{{ teacherProfile.institute }}</h2>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 50px">
+            <div>
+              <h3 style="font-size: 2vh">{{ selectedSubject }}</h3>
+            </div>
+            <div>
+              <h3 style="font-size: 2vh">
+                {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
+              </h3>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 20px">
+            <div style="width: 100%">
+              <h2 style="font-size: 2vh">{{ startDate }}</h2>
+            </div>
+            <div style="width: 100%">
+              <h2 style="font-size: 2vh">
+                {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
+              </h2>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 20px">
+            <h1>$400</h1>
+          </div>
         </div>
-      </div>
-      <div class="connect-footer">
-        <div style="float: right">
-          <button
-            class="btn btn-secondary"
-            (click)="toggleAmountView()"
-            style="margin-right: 10px"
-          >
-            Back
-          </button>
-          <button class="btn btn-primary" (click)="onBooking()">
-            Check Out
-          </button>
+        <div class="connect-footer">
+          <div style="float: right">
+            <button
+              class="btn btn-secondary"
+              (click)="toggleAmountView()"
+              style="margin-right: 10px"
+            >
+              Back
+            </button>
+            <button class="btn btn-primary" (click)="onBooking()">
+              Check Out
+            </button>
+          </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 

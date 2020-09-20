@@ -1,0 +1,243 @@
+<div [class.hideBlock]="!login">
+  <div class="login-container">
+    <div class="login-parameter-container">
+      <p style="color: red" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
+      <form (ngSubmit)="onLogin(l)" #l="ngForm">
+        <div class="form-group">
+          <label class="form-control-placeholder" for="email"
+            >Email Address</label
+          >
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            ngModel
+            name="email"
+            required
+            #loginEmail="ngModel"
+            maxlength="64"
+          />
+        </div>
+        <!-- <span class="error-information">incorrect email or password !</span> -->
+
+        <!-- <div class="form-group">
+                                  <input type="password" id="password" class="form-control" required>
+                                  <label class="form-control-placeholder" for="password">Password</label>
+                              </div> -->
+        <div class="form-group">
+          <label class="form-control-placeholder" for="password"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            name="password"
+            ngModel
+            [type]="hide ? 'password' : 'text'"
+            required
+            #loginPassword="ngModel"
+            maxlength="40"
+          />
+
+          <!--<div class="showPassword">
+                        <i class="material-icons cursor" (click)="hide = !hide" style="color: #ccc;">
+                          {{ hide ? "visibility_off" : "visibility" }}
+                        </i>
+                      </div>-->
+        </div>
+        <div class="form-group button-container">
+          <a href="#" class="forgot-password"> Forgot-Password </a>
+          <button class="btn btn-primary" type="submit" [disabled]="!l.valid">
+            Sign in
+          </button>
+          <!-- <button class="btn btn-primary" style="margin-left: auto; margin-right: auto;" type="submit" [disabled]="!l.valid ">Sign in</button> -->
+        </div>
+
+        <div class="login-instead">
+          <span>Login instead</span>
+
+          <button
+            class="btn btn-secondary"
+            (click)="prepareLoginButton()"
+            #googleLogIn
+          >
+            <i class="fa fa-google social-icons"></i>
+            <p style="display: inline; font-size: larger">Login Using Google</p>
+          </button>
+          <span> New to FellowGenius? </span>
+          <a href="javascript:;" (click)="toSignUp()" class="forgot-password"
+            >Sign up</a
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div [class.hideBlock]="login">
+  <div
+    *ngIf="isLoading"
+    style="
+      text-align: center;
+      margin-top: 20%;
+      margin-left: auto;
+      margin-right: auto;
+    "
+  >
+    <app-loading></app-loading>
+  </div>
+  <div class="signup-container" *ngIf="!isLoading">
+    <div class="signup-header">
+      <div class="header-container">
+        <span class="header-primary">Create</span><br />
+
+        <span class="header-container-secondary">Your Account</span>
+      </div>
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="incorrectLoginDetails">
+      <p style="text-align: center">User Already registered ! go to Login</p>
+    </div>
+    <div class="signup-parameter-container">
+      <form (ngSubmit)="onSignUp(t)" #t="ngForm" class="form-group-container">
+        <div class="form-group" *ngIf="showInput">
+          <label class="form-control-placeholder" for="fullName"
+            >Full Name</label
+          >
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            ngModel
+            class="form-control"
+            required
+            #fullName="ngModel"
+            maxlength="50"
+            autofocus
+          />
+
+          <span class="help-block" *ngIf="!fullName.valid && fullName.touched"
+            >Invalid Name</span
+          >
+        </div>
+
+        <div class="form-group" *ngIf="showInput">
+          <label class="form-control-placeholder" for="email"
+            >Email Address</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            ngModel
+            class="form-control"
+            required
+            email
+            #email="ngModel"
+            maxlength="64"
+            pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
+          />
+          <span
+            *ngIf="(!email.valid && email.touched) || emailValid"
+            class="help-block"
+            >Invalid email</span
+          >
+        </div>
+
+        <div class="form-group" *ngIf="showInput">
+          <label class="form-control-placeholder" for="password"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            name="password"
+            ngModel
+            [type]="hide ? 'password' : 'text'"
+            required
+            [pattern]="passwordPattern"
+            minlength="8"
+            maxlength="20"
+            #password="ngModel"
+          />
+
+          <span class="help-block" *ngIf="!password.valid && password.touched"
+            >password field must be minimum of 8 characters with atleast one
+            lowercase, uppercase, number and a special character</span
+          >
+        </div>
+
+        <!-- <div class="form-group" *ngIf="showInput">
+                  <label class="form-control-placeholder" for="password"> Confirm Password</label>
+                  <input type="password" class="form-control" name="password" ngModel [type]="hide ? 'password' : 'text'" required [pattern]="passwordPattern" minlength="8" maxlength="20" />
+              </div> -->
+        <div class="form-group" *ngIf="showInput">
+          <label class="form-control-placeholder" for="contact"
+            >Mobile Number</label
+          >
+          <input
+            type="text"
+            id="contact"
+            class="form-control"
+            ngModel
+            name="contact"
+            required
+            [pattern]="mobNumberPattern"
+            #contact="ngModel"
+          />
+
+          <span *ngIf="!contact.valid && contact.touched" class="help-block"
+            >Invalid contact</span
+          >
+        </div>
+
+        <p *ngIf="verifyEmail" style="color: rgba(0, 0, 0, 0.8); width: 75%">
+          Your Verification Code has been sent to your Email, Please verify your
+          account by signing in to your email.
+        </p>
+        <div class="form-group" *ngIf="verifyEmail">
+          <label class="form-control-placeholder" for="otp"
+            >One Time Password</label
+          >
+          <input
+            type="text"
+            id="otp"
+            name="otp"
+            ngModel
+            class="form-control"
+            required
+            #otp="ngModel"
+          />
+          <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
+        </div>
+        <div class="form-group agree-disagree" *ngIf="showInput">
+          <!--   <input type="checkbox" name="termsAndConditions" [value]="termsAndConditionsChecked" id="agree" ngModel
+        required />-->
+          By clicking on Next, you agree to our
+          <a role="button" class="termsLink" (click)="openTermsAndConditions()"
+            >Terms and Conditions</a
+          >
+        </div>
+
+        <div
+          class="form-group button-container"
+          [ngStyle]="{ 'margin-bottom': verifyEmail ? '35vh' : '' }"
+        >
+          <a href="javascript:;" (click)="toSignUp()" class="forgot-password">
+            Login Instead
+          </a>
+          <button class="btn btn-primary" type="submit" [disabled]="!t.valid">
+            Next
+          </button>
+          <a
+            href="#"
+            class="forgot-password"
+            style="float: right; margin-right: 20px"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

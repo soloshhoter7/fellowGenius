@@ -197,11 +197,13 @@ export class tutorScheduleComponent implements OnInit {
     appointment.RecurrenceRule = schedule.RecurrenceRule;
     appointment.RecurrenceException = schedule.RecurrenceException;
     appointment.Guid = schedule.Guid;
+    appointment.Description = schedule.Description;
     return appointment;
   }
   // for adding events into calendar schedules
   addEvents(appointment: scheduleData) {
     this.availableSchedules.push(appointment);
+    console.log(this.availableSchedules);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
     setTimeout(() => {
       //<<<---    using ()=> syntax
@@ -215,7 +217,7 @@ export class tutorScheduleComponent implements OnInit {
   public onEventRendered(args: any): void {
     if (args.data.Type == "booking") {
       args.element.style.backgroundColor = "#4a4040";
-    }else if(args.data.Type == "availability"){
+    } else if (args.data.Type == "availability") {
       args.element.style.backgroundColor = "#e30084";
     }
   }

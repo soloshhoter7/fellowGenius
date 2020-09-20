@@ -16,6 +16,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { scheduleData } from "src/app/model/scheduleData";
 import { LoginDetailsService } from "../service/login-details.service";
 import { ConnectComponent } from "./connect/connect.component";
+import { LoginComponent } from "../facade/login/login.component";
+import { LoginDialogComponent } from "./login-dialog/login-dialog.component";
 @Component({
   selector: "app-expert-profile",
   templateUrl: "./expert-profile.component.html",
@@ -130,10 +132,17 @@ export class ExpertProfileComponent implements OnInit {
     }
   }
   openConnectPage() {
-    this.dialog.open(ConnectComponent, {
-      height: "auto",
-      width: "auto",
-    });
+    if (this.loginService.getLoginType() != null) {
+      this.dialog.open(ConnectComponent, {
+        height: "auto",
+        width: "auto",
+      });
+    } else {
+      this.dialog.open(LoginDialogComponent, {
+        width: "auto",
+        height: "auto",
+      });
+    }
   }
   timeSelector(event, index: number, todayDate: string) {
     this.clickedIndex = index;

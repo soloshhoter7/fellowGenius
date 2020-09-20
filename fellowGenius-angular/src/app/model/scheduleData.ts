@@ -11,4 +11,5 @@ export class scheduleData {
   public Guid: string;
   public Type: string;
   public IsReadonly: boolean;
+  public Description: string;
 }
