@@ -49,5 +49,8 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Modifying
 	@Query(value = "DELETE from booking_details WHERE bid=?1 AND approval_status='Pending'", nativeQuery = true)
 	Integer deleteMyBooking(Integer bookingId);
+	
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1", nativeQuery=true)
+	List<BookingDetails> fetchAllLinkedTutors(Integer userId);
 }
 

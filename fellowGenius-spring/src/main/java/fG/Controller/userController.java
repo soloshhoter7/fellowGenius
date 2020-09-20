@@ -205,4 +205,15 @@ public class userController {
 		return "Hello world ! the server is up and running";
 	}
 	
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value="/fetchAllLinkedTutors")
+	@ResponseBody
+	public List<TutorProfileDetails> fetchAllLinkedTutors(Integer userId) {
+		System.out.println("--------------------------------------------------------------------------------------------");
+		System.out.println(userId);
+		List<TutorProfileDetails> tutors = service.fetchAllLinkedTutors(userId);
+		System.out.println("--------------------------------------------------------------------------------------------");
+		return null;
+	}
+	
 }

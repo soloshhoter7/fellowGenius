@@ -725,6 +725,10 @@ public class UserService  implements UserDetailsService{
 		dao.subtractArea(id,subject,role);
 	}
 
+	public List<TutorProfileDetails> fetchAllLinkedTutors(Integer userId) {
+		return dao.fetchAllLinkedTutors(userId);
+	}
+
 
 	
 }

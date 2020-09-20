@@ -1,11 +1,17 @@
 img {
-  width: 40vw;
-  height: 40vh;
-  margin: auto;
+    width: 40vw;
+    height: 40vh;
+    margin: auto;
 }
+
 .width100 {
-  width: 100%;
+    width: 100%;
 }
+
 .example-margin {
-  margin: 0 10px;
+    margin: 0 10px;
+}
+
+.goToDashboard-margin {
+    margin-top: 2rem;
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
+import fG.Entity.BookingDetails;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -20,7 +21,9 @@ import fG.Entity.TutorVerification;
 import fG.Entity.Users;
 import fG.Model.StudentLoginModel;
 import fG.Model.TutorAvailabilityScheduleModel;
+import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorVerificationModel;
+import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryExpertiseAreas;
 import fG.Repository.repositoryLearningAreas;
 import fG.Repository.repositoryLearningAreasCount;
@@ -69,6 +72,9 @@ public class dao {
 	
 	@Autowired
 	repositoryExpertiseAreas repExpertiseAreas;
+	
+	@Autowired
+	repositoryBooking repBooking;
 	
 	// for saving user profile
 		public boolean saveUserLogin(Users user) {
@@ -329,6 +335,21 @@ public class dao {
 		}else if(role.equals("Expert")) {
 			repExpertiseAreas.deleteSubject(id, subject);
 		}
+	}
+
+	public List<TutorProfileDetails> fetchAllLinkedTutors(Integer userId) {
+//		System.out.println(repBooking.fetchAllLinkedTutors(userId));
+		List<BookingDetails> bookinglist = repBooking.fetchAllLinkedTutors(userId);
+//		System.out.println(bookinglist);
+		List<TutorProfileDetails> tutorsList = new ArrayList<TutorProfileDetails>();
+		for(BookingDetails id: bookinglist) {
+			tutorsList.add(repTutorProfileDetails.idExist(id.getTutorId()));
+			
+		}
+		System.out.println("----------------------------------------------------------------");
+		System.out.println(tutorsList);
+		System.out.println("----------------------------------------------------------------");
+		return tutorsList;
 	}
 
     

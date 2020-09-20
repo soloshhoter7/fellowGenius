@@ -87,6 +87,19 @@ export class HttpService {
     );
   }
 
+  //for experts page
+  //UPDATED
+  fetchAllLinkedTutors(sid: Number){
+    console.log(sid);
+    return this.http.get(
+      "http://localhost:8080/fellowGenius/fetchAllLinkedTutors",
+      {
+        params: {
+          userId: sid.toString(),
+        },
+      }
+    );
+  }
   //for updating tutor profile details after completing tutor profile details form
   updateTutorProfileDetails(tutorProfileDetails: tutorProfileDetails) {
     return this.http.post(

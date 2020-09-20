@@ -187,13 +187,48 @@
           >{{ tutorProfile.fullName }}</span
         >
         <span class="profile-varient">Politics (Masters)</span>
-                <span *ngIf="tutorProfileDetails.profileCompleted != 100" clas="progressbar-container">
+                <span *ngIf="tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'" class="progressbar-container">
+                  <div class="progress-Bar">
+                    <div class="outer-progressBar">
+                        <div class="inner-progressBar" [style.width.%]="tutorProfileDetails.profileCompleted">
+                          
+                        </div>
+                    </div>
+                </div>
         </span>
+
+                <span *ngIf="loginType == 'Learner' &&
+        studentProfileCompleted &&
+        studentProfileCompleted != 100
+      " class="progressbar-container">
+          <div class="progress-Bar">
+            <div class="outer-progressBar">
+                <div class="inner-progressBar" [style.width.%]="studentProfileCompleted">
+                </div>
+            </div>
+        </div>
+</span>
+                <div *ngIf="
+          tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
+        " class="progressbar-information">
+                    <span>You have
+          <label>{{ 100 - tutorProfileDetails.profileCompleted }}% </label>
+          left.</span
+        >
+        <span class="hyperlink-cont"
+          >Please get a head start by
+          <a href="javascript:;" (click)="openProfile()"
+            >completing it now</a
+          ></span
+        >
+      </div>
+
                 <div *ngIf="
             loginType == 'Learner' &&
             studentProfileCompleted &&
             studentProfileCompleted != 100
-          " class="progressbar-information">
+          " class="progressbar-information" >
+         
                     <span class="hyperlink-cont">
             You have
             <label>{{ 100 - studentProfileCompleted }}% </label>
@@ -203,24 +238,7 @@
             ></span
           >
         </div>
-        <div
-          *ngIf="
-            tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
-          "
-          class="progressbar-information"
-        >
-          <span
-            >You have
-            <label>{{ 100 - tutorProfileDetails.profileCompleted }}% </label>
-            left.</span
-          >
-          <span class="hyperlink-cont"
-            >Please get a head start by
-            <a href="javascript:;" (click)="openProfile()"
-              >completing it now</a
-            ></span
-          >
-        </div>
+      
 
         <span *ngIf="loginType == 'Expert'">
           <p style="display: inline; margin: 5px">Available?</p>
@@ -255,7 +273,7 @@
         <a routerLink="/home/studentProfile">Profile</a>
       </li> -->
 
-                <li class="nav-item" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Learner'">
+                <li class="nav-item item-one" routerLinkActive="nav-item-active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="loginType == 'Learner'">
                     <a class="nav-link" routerLink="/home/studentDashboard">Dashboard</a>
                 </li>
 
