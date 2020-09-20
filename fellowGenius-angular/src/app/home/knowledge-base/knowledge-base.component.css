@@ -5,6 +5,7 @@
     display: inline-flex;
     right: 1rem;
     text-align: right;
+    margin-top: 1 rem;
 }
 
 .form-control {

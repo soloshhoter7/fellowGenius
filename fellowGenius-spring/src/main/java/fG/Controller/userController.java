@@ -208,12 +208,11 @@ public class userController {
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value="/fetchAllLinkedTutors")
 	@ResponseBody
-	public List<TutorProfileDetails> fetchAllLinkedTutors(Integer userId) {
+	public List<TutorProfileDetailsModel> fetchAllLinkedTutors(Integer userId) {
 		System.out.println("--------------------------------------------------------------------------------------------");
 		System.out.println(userId);
-		List<TutorProfileDetails> tutors = service.fetchAllLinkedTutors(userId);
-		System.out.println("--------------------------------------------------------------------------------------------");
-		return null;
+		return service.fetchAllLinkedTutors(userId);
+	
 	}
 	
 }
