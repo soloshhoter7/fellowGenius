@@ -338,17 +338,13 @@ public class dao {
 	}
 
 	public List<TutorProfileDetails> fetchAllLinkedTutors(Integer userId) {
-//		System.out.println(repBooking.fetchAllLinkedTutors(userId));
 		List<BookingDetails> bookinglist = repBooking.fetchAllLinkedTutors(userId);
-//		System.out.println(bookinglist);
 		List<TutorProfileDetails> tutorsList = new ArrayList<TutorProfileDetails>();
 		for(BookingDetails id: bookinglist) {
-			tutorsList.add(repTutorProfileDetails.idExist(id.getTutorId()));
-			
+			if(!tutorsList.stream().filter(o->o.getTid().equals(id.getTutorId())).findFirst().isPresent()) {
+				tutorsList.add(repTutorProfileDetails.idExist(id.getTutorId()));		
+			}
 		}
-		System.out.println("----------------------------------------------------------------");
-		System.out.println(tutorsList);
-		System.out.println("----------------------------------------------------------------");
 		return tutorsList;
 	}
 

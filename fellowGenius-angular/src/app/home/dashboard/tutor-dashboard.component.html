@@ -189,11 +189,20 @@
         </div>
       </div>
       <div style="margin-top: 20px">
-        <google-chart
+        <!-- <google-chart
           #skillsChart
           [type]="skillsChartType"
           [data]="skillsData"
           [columnNames]="skillsColumnName"
+          [options]="skillsOptions"
+          [width]="tutorChartWidth"
+          [height]="tutorChartHeight"
+        >
+        </google-chart> -->
+        <google-chart
+          #skillsChart
+          [type]="skillsChartType"
+          [data]="skillsData"
           [options]="skillsOptions"
           [width]="tutorChartWidth"
           [height]="tutorChartHeight"
@@ -218,11 +227,20 @@
         </div>
       </div>
       <div style="margin-top: 20px">
-        <google-chart
+        <!-- <google-chart
           #skillsChart
           [type]="earningTrackerType"
           [data]="earningTrackerData"
           [columnNames]="earningTrackerType"
+          [options]="earningTrackerOptions"
+          [width]="tutorChartWidth"
+          [height]="tutorChartHeight"
+        >
+        </google-chart> -->
+        <google-chart
+          #skillsChart
+          [type]="earningTrackerType"
+          [data]="earningTrackerData"
           [options]="earningTrackerOptions"
           [width]="tutorChartWidth"
           [height]="tutorChartHeight"

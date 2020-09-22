@@ -14,7 +14,7 @@
             ngModel
             name="email"
             required
-            #loginEmail="ngModel"
+            #loginEmail
             maxlength="64"
           />
         </div>
@@ -39,38 +39,29 @@
             #loginPassword="ngModel"
             maxlength="40"
           />
-
-          <!--<div class="showPassword">
-                        <i class="material-icons cursor" (click)="hide = !hide" style="color: #ccc;">
-                          {{ hide ? "visibility_off" : "visibility" }}
-                        </i>
-                      </div>-->
         </div>
         <div class="form-group button-container">
           <a href="#" class="forgot-password"> Forgot-Password </a>
           <button class="btn btn-primary" type="submit" [disabled]="!l.valid">
             Sign in
           </button>
-          <!-- <button class="btn btn-primary" style="margin-left: auto; margin-right: auto;" type="submit" [disabled]="!l.valid ">Sign in</button> -->
-        </div>
-
-        <div class="login-instead">
-          <span>Login instead</span>
-
-          <button
-            class="btn btn-secondary"
-            (click)="prepareLoginButton()"
-            #googleLogIn
-          >
-            <i class="fa fa-google social-icons"></i>
-            <p style="display: inline; font-size: larger">Login Using Google</p>
-          </button>
-          <span> New to FellowGenius? </span>
-          <a href="javascript:;" (click)="toSignUp()" class="forgot-password"
-            >Sign up</a
-          >
         </div>
       </form>
+      <div class="login-instead">
+        <span>Login instead</span>
+        <button
+          class="btn btn-secondary"
+          (click)="prepareLoginButton()"
+          #googleLogIn
+        >
+          <i class="fa fa-google social-icons"></i>
+          <p style="display: inline; font-size: larger">Login Using Google</p>
+        </button>
+        <span> New to FellowGenius? </span>
+        <a href="javascript:;" (click)="toSignUp()" class="forgot-password"
+          >Sign up</a
+        >
+      </div>
     </div>
   </div>
 </div>
@@ -110,7 +101,7 @@
             ngModel
             class="form-control"
             required
-            #fullName="ngModel"
+            #fullName
             maxlength="50"
             autofocus
           />
@@ -132,7 +123,7 @@
             class="form-control"
             required
             email
-            #email="ngModel"
+            #email
             maxlength="64"
             pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
           />
@@ -158,7 +149,7 @@
             [pattern]="passwordPattern"
             minlength="8"
             maxlength="20"
-            #password="ngModel"
+            #password
           />
 
           <span class="help-block" *ngIf="!password.valid && password.touched"
@@ -167,10 +158,6 @@
           >
         </div>
 
-        <!-- <div class="form-group" *ngIf="showInput">
-                  <label class="form-control-placeholder" for="password"> Confirm Password</label>
-                  <input type="password" class="form-control" name="password" ngModel [type]="hide ? 'password' : 'text'" required [pattern]="passwordPattern" minlength="8" maxlength="20" />
-              </div> -->
         <div class="form-group" *ngIf="showInput">
           <label class="form-control-placeholder" for="contact"
             >Mobile Number</label
@@ -183,7 +170,7 @@
             name="contact"
             required
             [pattern]="mobNumberPattern"
-            #contact="ngModel"
+            #contact
           />
 
           <span *ngIf="!contact.valid && contact.touched" class="help-block"
@@ -206,13 +193,11 @@
             ngModel
             class="form-control"
             required
-            #otp="ngModel"
+            #otp
           />
           <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
         </div>
         <div class="form-group agree-disagree" *ngIf="showInput">
-          <!--   <input type="checkbox" name="termsAndConditions" [value]="termsAndConditionsChecked" id="agree" ngModel
-        required />-->
           By clicking on Next, you agree to our
           <a role="button" class="termsLink" (click)="openTermsAndConditions()"
             >Terms and Conditions</a

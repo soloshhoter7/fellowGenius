@@ -1,21 +1,20 @@
-import { Component, HostListener, OnInit } from "@angular/core";
-import { HttpService } from "../../service/http.service";
-import { StudentService } from "../../service/student.service";
-import { bookingDetails } from "src/app/model/bookingDetails";
-import { TutorService } from "src/app/service/tutor.service";
-import { tutorProfileDetails } from "src/app/model/tutorProfileDetails";
-import { meetingDetails } from "src/app/model/meetingDetails";
-import { MeetingService } from "src/app/service/meeting.service";
-import { Router } from "@angular/router";
-import { MatDialog } from "@angular/material/dialog";
-import { TutorProfileComponent } from "../find-tutor/tutor-profile/tutor-profile.component";
-import { ProfileService } from "src/app/service/profile.service";
-import { DeletePopupComponent } from "./delete-popup/delete-popup.component";
+import { Component, HostListener, OnInit } from '@angular/core';
+import { HttpService } from '../../service/http.service';
+import { StudentService } from '../../service/student.service';
+import { bookingDetails } from 'src/app/model/bookingDetails';
+import { TutorService } from 'src/app/service/tutor.service';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import { meetingDetails } from 'src/app/model/meetingDetails';
+import { MeetingService } from 'src/app/service/meeting.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileService } from 'src/app/service/profile.service';
+import { DeletePopupComponent } from './delete-popup/delete-popup.component';
 
 @Component({
-  selector: "app-student-dashboard",
-  templateUrl: "./student-dashboard.component.html",
-  styleUrls: ["./student-dashboard.component.css"],
+  selector: 'app-student-dashboard',
+  templateUrl: './student-dashboard.component.html',
+  styleUrls: ['./student-dashboard.component.css'],
 })
 export class StudentDashboardComponent implements OnInit {
   viewPending;
@@ -31,36 +30,36 @@ export class StudentDashboardComponent implements OnInit {
   emptyApprovedList: boolean = false;
   emptyLiveList: boolean = false;
   public now: Date = new Date();
-  noTutorMessage = "";
+  noTutorMessage = '';
 
   constructor(
-    private httpService: HttpService,
-    private studentService: StudentService,
-    private tutorService: TutorService,
+    public httpService: HttpService,
+    public studentService: StudentService,
+    public tutorService: TutorService,
     public meetingService: MeetingService,
-    private router: Router,
-    private dialog: MatDialog,
-    private profileService: ProfileService
+    public router: Router,
+    public dialog: MatDialog,
+    public profileService: ProfileService
   ) {
     setInterval(() => {
       this.now = new Date();
     }, 1000);
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     var screenWidth = window.innerWidth;
     if (screenWidth <= 800) {
       // console.log("called");
-      this.studentChartWidth = "320";
+      this.studentChartWidth = '320';
     } else {
-      this.studentChartWidth = "380";
+      this.studentChartWidth = '380';
     }
   }
 
   ngOnInit(): void {
     if (window.innerWidth <= 800) {
-      this.studentChartWidth = "320";
+      this.studentChartWidth = '320';
     }
     this.sid = this.studentService.getStudentProfileDetails().sid;
     if (this.sid) {
@@ -77,21 +76,21 @@ export class StudentDashboardComponent implements OnInit {
   viewPendingRequests() {
     this.viewPending = !this.viewPending;
   }
-  type = "PieChart";
+  type = 'PieChart';
   data = [
-    ["Mathematics", 45.0],
-    ["English", 26.8],
-    ["Science", 12.8],
-    ["C++", 8.5],
-    ["Machine Learning", 6.2],
-    ["Others", 0.7],
+    ['Mathematics', 45.0],
+    ['English', 26.8],
+    ['Science', 12.8],
+    ['C++', 8.5],
+    ['Machine Learning', 6.2],
+    ['Others', 0.7],
   ];
-  columnNames = ["Subject", "Percentage"];
+  // columnNames = ['Subject', 'Percentage'];
   options = { pieHole: 0.4 };
-  studentChartWidth = "380";
-  studentChartHeight = "180";
+  studentChartWidth = '380';
+  studentChartHeight = '180';
   openRecordingsPage() {
-    this.router.navigate(["home/recordings"]);
+    this.router.navigate(['home/recordings']);
   }
   // -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
   // for fetching student pending bookings
@@ -140,7 +139,7 @@ export class StudentDashboardComponent implements OnInit {
   // --------------------------------------------------meeting operations-----------------------------------------------------------------------------
 
   eliminateLiveMeetings(booking: bookingDetails, list: bookingDetails[]) {
-    var currentDate: string = new Date(Date.now()).toLocaleDateString("en-GB");
+    var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     if (currentDate == booking.dateOfMeeting) {
       var endMinutes: number = booking.endTimeHour * 60 + booking.endTimeMinute;
       var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
@@ -157,7 +156,7 @@ export class StudentDashboardComponent implements OnInit {
           if (list.indexOf(booking) != -1) {
             list.splice(list.indexOf(booking), 1);
             this.httpService
-              .updateBookingStatus(booking.bid, "completed")
+              .updateBookingStatus(booking.bid, 'completed')
               .subscribe((res) => {});
           }
         }
@@ -168,7 +167,7 @@ export class StudentDashboardComponent implements OnInit {
   //to calculate the time left
   timeLeft(booking: bookingDetails) {
     var currDate = new Date();
-    var currentDate: string = new Date(Date.now()).toLocaleDateString("en-GB");
+    var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     if (currentDate == booking.dateOfMeeting) {
       var startMinutes: number =
         booking.startTimeHour * 60 + booking.startTimeMinute;
@@ -180,13 +179,13 @@ export class StudentDashboardComponent implements OnInit {
       var timeLeftMinutes: number = differenceMinutes % 60;
       if (differenceMinutes > 0) {
         if (timeLeftHours == 0) {
-          timeLeftString = timeLeftMinutes + " minutes";
+          timeLeftString = timeLeftMinutes + ' minutes';
         } else {
           if (timeLeftMinutes != 0) {
             timeLeftString =
-              timeLeftHours + " hours " + timeLeftMinutes + " minutes ";
+              timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes ';
           } else if (timeLeftMinutes == 0) {
-            timeLeftString = timeLeftHours + " hours ";
+            timeLeftString = timeLeftHours + ' hours ';
           }
         }
         booking.timeLeft = timeLeftString;
@@ -198,13 +197,13 @@ export class StudentDashboardComponent implements OnInit {
         timeLeftMinutes = differenceMinutes % 60;
         if (differenceMinutes > 0) {
           if (timeLeftHours == 0) {
-            timeLeftString = timeLeftMinutes + " minutes ";
+            timeLeftString = timeLeftMinutes + ' minutes ';
           } else {
             if (timeLeftMinutes != 0) {
               timeLeftString =
-                timeLeftHours + " hours " + timeLeftMinutes + " minutes";
+                timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes';
             } else if (timeLeftMinutes == 0) {
-              timeLeftString = timeLeftHours + " hours";
+              timeLeftString = timeLeftHours + ' hours';
             }
           }
           booking.timeLeft = timeLeftString;
@@ -213,7 +212,7 @@ export class StudentDashboardComponent implements OnInit {
             this.approvedList.splice(this.approvedList.indexOf(booking), 1);
 
             this.httpService
-              .updateBookingStatus(booking.bid, "completed unattended")
+              .updateBookingStatus(booking.bid, 'completed unattended')
               .subscribe((res) => {});
           }
         }
@@ -223,7 +222,7 @@ export class StudentDashboardComponent implements OnInit {
       var minutesLeft: number = 0;
       var daysLeft: number = 0;
       var timeLeftString: string;
-      var dateParts: any = booking.dateOfMeeting.split("/");
+      var dateParts: any = booking.dateOfMeeting.split('/');
       var bookingDate = new Date(
         +dateParts[2],
         dateParts[1] - 1,
@@ -257,17 +256,17 @@ export class StudentDashboardComponent implements OnInit {
         if (daysLeft == 0) {
           timeLeftString =
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         } else {
           timeLeftString =
             Math.trunc(daysLeft) +
-            " days " +
+            ' days ' +
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         }
         booking.timeLeft = timeLeftString;
       }
@@ -299,31 +298,23 @@ export class StudentDashboardComponent implements OnInit {
         if (daysLeft == 0) {
           timeLeftString =
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         } else {
           timeLeftString =
             Math.trunc(daysLeft) +
-            " days " +
+            ' days ' +
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         }
         booking.timeLeft = timeLeftString;
       }, 5000);
     }
   }
   // -------------------------------------------------------------------------------------------------------------------------------------------------
-  // fetchTopTutors() {
-  // 	this.httpService.fetchTopTutors(this.studentService.getStudentProfileDetails().subject).subscribe((res) => {
-  // 		this.topTutors = res;
-  // 		if (this.topTutors.length == 0) {
-  // 			this.noTutorMessage = 'No recommended tutors right now';
-  // 		}
-  // 	});
-  // }
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
       this.filterSearch = req;
@@ -331,30 +322,22 @@ export class StudentDashboardComponent implements OnInit {
     });
   }
   onJoin(booking: bookingDetails) {
-    this.joinMeeting.role = "student";
+    this.joinMeeting.role = 'student';
     this.joinMeeting.roomId = 123;
     this.joinMeeting.roomName = booking.meetingId;
     this.joinMeeting.userName = booking.studentName;
     this.joinMeeting.userId = booking.studentId;
     this.meetingService.setMeeting(this.joinMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(["meeting"]);
-  }
-
-  openTutorProfile(tutorList: tutorProfileDetails) {
-    this.profileService.setProfile(tutorList);
-    this.dialog.open(TutorProfileComponent, {
-      width: "auto",
-      height: "auto",
-    });
+    this.router.navigate(['meeting']);
   }
 
   //delete pending request
   deleteBooking(myBooking: bookingDetails) {
     this.meetingService.setDeleteBooking(myBooking);
     this.dialog.open(DeletePopupComponent, {
-      width: "400px",
-      height: "150px",
+      width: '400px',
+      height: '150px',
     });
     this.dialog.afterAllClosed.subscribe(() => {
       if (this.bookingList.length == 0) {

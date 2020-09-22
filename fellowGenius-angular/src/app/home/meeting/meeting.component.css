@@ -76,7 +76,8 @@ button {
 
 .bg-image {
   /* The image used */
-  background-color: #337ab8;
+  /* background-color: #337ab8; */
+  background-color: rgb(125, 15, 125);
   text-align: center;
   z-index: 11;
 }
@@ -556,6 +557,12 @@ img {
     object-fit: inherit !important;
   }
   @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+    .blurred-icons {
+      /* color: #337ab8; */
+      color: white;
+      font-size: 30px;
+      margin-top: 40px;
+    }
     .local {
       position: fixed;
       width: 20vw;

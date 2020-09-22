@@ -1,31 +1,30 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
-import { FormControl, NgForm } from "@angular/forms";
-import { meetingDetails } from "../app/model/meetingDetails";
-import { MeetingService } from "../app/service/meeting.service";
-import { StudentProfileModel } from "../app/model/studentProfile";
-import { StudentService } from "../app/service/student.service";
-import { tutorProfile } from "../app/model/tutorProfile";
-import { LoginDetailsService } from "../app/service/login-details.service";
-import { TutorService } from "../app/service/tutor.service";
-import { WelcomeComponent } from "../app/home/welcome/welcome.component";
-import { MatDialog } from "@angular/material/dialog";
-import { HttpService } from "../app/service/http.service";
-import { StudentLoginModel } from "../app/model/studentLoginModel";
-import { ThemePalette } from "@angular/material/core";
-import { LocationStrategy } from "@angular/common";
-import { SocialAuthService } from "angularx-social-login";
-import { CookieService } from "ngx-cookie-service";
-import { HostListener } from "@angular/core";
-import { Observable } from "rxjs";
-import * as jwt_decode from "jwt-decode";
-import { tutorProfileDetails } from "../app/model/tutorProfileDetails";
-import { map, startWith } from "rxjs/operators";
-import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormControl, NgForm } from '@angular/forms';
+import { meetingDetails } from '../app/model/meetingDetails';
+import { MeetingService } from '../app/service/meeting.service';
+import { StudentProfileModel } from '../app/model/studentProfile';
+import { StudentService } from '../app/service/student.service';
+import { tutorProfile } from '../app/model/tutorProfile';
+import { LoginDetailsService } from '../app/service/login-details.service';
+import { TutorService } from '../app/service/tutor.service';
+import { WelcomeComponent } from '../app/home/welcome/welcome.component';
+import { MatDialog } from '@angular/material/dialog';
+import { HttpService } from '../app/service/http.service';
+import { StudentLoginModel } from '../app/model/studentLoginModel';
+import { ThemePalette } from '@angular/material/core';
+import { LocationStrategy } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
+import { HostListener } from '@angular/core';
+import { Observable } from 'rxjs';
+import * as jwt_decode from 'jwt-decode';
+import { tutorProfileDetails } from '../app/model/tutorProfileDetails';
+import { map, startWith } from 'rxjs/operators';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   constructor(
@@ -53,17 +52,17 @@ export class AppComponent implements OnInit {
   screenHeight: number;
   screenWidth: number;
   myControl = new FormControl();
-  profilePictureUrl = "../../../assets/images/default-user-image.png";
+  profilePictureUrl = '../../../assets/images/default-user-image.png';
   ngOnInit() {
     if (this.isTokenValid()) {
       this.loginType = this.loginService.getLoginType();
       if (this.loginType) {
-        if (this.loginType == "Learner") {
+        if (this.loginType == 'Learner') {
           this.studentProfile = this.studentService.getStudentProfileDetails();
           if (this.studentProfile.profilePictureUrl != null) {
             this.profilePictureUrl = this.studentProfile.profilePictureUrl;
           }
-        } else if (this.loginType == "Expert") {
+        } else if (this.loginType == 'Expert') {
           this.tutorProfile = this.tutorService.getTutorDetials();
           this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
           if (this.tutorProfileDetails.profilePictureUrl != null) {
@@ -71,7 +70,7 @@ export class AppComponent implements OnInit {
           }
           if (
             this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
-            "yes"
+            'yes'
           ) {
             this.checked = true;
           } else {
@@ -82,16 +81,16 @@ export class AppComponent implements OnInit {
         this.handleRefresh();
       }
     } else {
-      this.router.navigate(["facade"]);
+      this.router.navigate(['facade']);
     }
   }
 
   isTokenValid() {
-    if (this.cookieService.get("token") && !this.isTokenExpired()) {
+    if (this.cookieService.get('token') && !this.isTokenExpired()) {
       return true;
     } else {
-      this.cookieService.delete("token");
-      this.cookieService.delete("userId");
+      this.cookieService.delete('token');
+      this.cookieService.delete('userId');
       return false;
     }
   }
@@ -107,22 +106,22 @@ export class AppComponent implements OnInit {
   getTokenExpirationDate(token: string): Date {
     const decoded = jwt_decode(token);
 
-    if (decoded["exp"] === undefined) return null;
+    if (decoded['exp'] === undefined) return null;
 
     const date = new Date(0);
-    date.setUTCSeconds(decoded["exp"]);
+    date.setUTCSeconds(decoded['exp']);
     return date;
   }
 
   getToken(): string {
-    return this.cookieService.get("token");
+    return this.cookieService.get('token');
   }
 
   public handleRefresh() {
-    this.userId = this.cookieService.get("userId");
-    if (jwt_decode(this.cookieService.get("token"))["ROLE"] == "Learner") {
-      this.loginType = "Learner";
-      this.loginService.setTrType("login");
+    this.userId = this.cookieService.get('userId');
+    if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
+      this.loginType = 'Learner';
+      this.loginService.setTrType('login');
       this.loginService.setLoginType(this.loginType);
       this.httpService.getStudentDetails(this.userId).subscribe((res) => {
         this.studentProfile = res;
@@ -133,10 +132,10 @@ export class AppComponent implements OnInit {
         });
       });
     } else if (
-      jwt_decode(this.cookieService.get("token"))["ROLE"] == "Expert"
+      jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Expert'
     ) {
-      this.loginType = "Expert";
-      this.loginService.setTrType("login");
+      this.loginType = 'Expert';
+      this.loginService.setTrType('login');
       this.loginService.setLoginType(this.loginType);
 
       this.httpService.getTutorDetails(this.userId).subscribe((res) => {
@@ -152,7 +151,7 @@ export class AppComponent implements OnInit {
               this.tutorService.setPersonalAvailabilitySchedule(res);
               if (
                 this.tutorService.getPersonalAvailabilitySchedule()
-                  .isAvailable == "yes"
+                  .isAvailable == 'yes'
               ) {
                 this.checked = true;
               } else {

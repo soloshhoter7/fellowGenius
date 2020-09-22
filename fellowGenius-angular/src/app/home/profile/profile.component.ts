@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { ElementRef, ViewChild } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ElementRef, ViewChild } from '@angular/core';
 import {
   FormControl,
   NgForm,
@@ -8,32 +8,31 @@ import {
   FormBuilder,
   Validators,
   FormGroupDirective,
-} from "@angular/forms";
+} from '@angular/forms';
 import {
   MatAutocompleteSelectedEvent,
   MatAutocomplete,
-} from "@angular/material/autocomplete";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { TutorService } from "src/app/service/tutor.service";
-import { tutorProfile } from "src/app/model/tutorProfile";
-import { HttpService } from "src/app/service/http.service";
-import { tutorProfileDetails } from "src/app/model/tutorProfileDetails";
-import { AngularFireStorage } from "@angular/fire/storage";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { finalize } from "rxjs/operators";
-import { TutorVerification } from "src/app/model/tutorVerification";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { UpdateboxComponent } from "../profile/updatebox/updatebox.component";
-import { UploadProfilePictureComponent } from "src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component";
-import { Router } from "@angular/router";
-import { CookieService } from "ngx-cookie-service";
+} from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { TutorService } from 'src/app/service/tutor.service';
+import { tutorProfile } from 'src/app/model/tutorProfile';
+import { HttpService } from 'src/app/service/http.service';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
+import { TutorVerification } from 'src/app/model/tutorVerification';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
-  selector: "app-profile",
-  templateUrl: "./profile.component.html",
-  styleUrls: ["./profile.component.css"],
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   constructor(
@@ -53,22 +52,25 @@ export class ProfileComponent implements OnInit {
   duplicateExpertiseArea;
   duplicatePreviousOrganisation;
   duplicateEducationArea;
-  @ViewChild("basicProfile") basicProfile: FormGroupDirective;
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  @ViewChild('basicProfile') basicProfile: FormGroupDirective;
   config: MatSnackBarConfig = {
     duration: 2000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
   };
   options: string[] = [
-    "Mathematics",
-    "English",
-    "Science",
-    "Social Science",
-    "History",
-    "Political Science",
-    "Geography",
-    "Physics",
-    "Chemistry",
+    'Mathematics',
+    'English',
+    'Science',
+    'Social Science',
+    'History',
+    'Political Science',
+    'Geography',
+    'Physics',
+    'Chemistry',
   ];
   //data fields
   selectedExpertise;
@@ -81,19 +83,17 @@ export class ProfileComponent implements OnInit {
   tutorProfile = new tutorProfile();
   tutorProfileDetails = new tutorProfileDetails();
   userId;
-  profilePictureUrl = "../../../assets/images/default-user-image.png";
+  profilePictureUrl = '../../../assets/images/default-user-image.png';
   uploadedProfilePicture: File = null;
 
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map((value) => this._filter(value))
     );
     if (this.tutorService.getTutorProfileDetails().profileCompleted) {
       this.tutorProfile = this.tutorService.getTutorDetials();
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-      console.log(this.tutorProfile);
-      console.log(this.tutorProfileDetails);
       if (this.tutorProfileDetails.educationalQualifications != null) {
         this.educationQualifications = this.tutorProfileDetails.educationalQualifications;
       }
@@ -102,18 +102,14 @@ export class ProfileComponent implements OnInit {
       }
       if (this.tutorProfileDetails.previousOrganisations != null) {
         this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
-        console.log(this.previousOraganisations);
       }
       if (this.tutorProfileDetails.profilePictureUrl != null) {
         this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
       }
     } else {
-      console.log("else executed");
       setTimeout(() => {
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-        console.log(this.tutorProfile);
-        console.log(this.tutorProfileDetails);
         if (this.tutorProfileDetails.educationalQualifications != null) {
           this.educationQualifications = this.tutorProfileDetails.educationalQualifications;
         }
@@ -122,7 +118,6 @@ export class ProfileComponent implements OnInit {
         }
         if (this.tutorProfileDetails.previousOrganisations != null) {
           this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
-          console.log(this.previousOraganisations);
         }
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
@@ -140,7 +135,7 @@ export class ProfileComponent implements OnInit {
   }
 
   saveExpertBasicProfile(form: any) {
-    this.userId = this.cookieService.get("userId");
+    this.userId = this.cookieService.get('userId');
     if (this.userId) {
       this.tutorProfile.tid = this.userId;
       this.tutorProfile.contact = form.value.contact;
@@ -152,8 +147,6 @@ export class ProfileComponent implements OnInit {
       this.tutorProfileDetails.professionalSkills =
         form.value.professionalSkills;
       this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
-      console.log(this.tutorProfileDetails);
-      console.log(this.tutorProfile);
       this.httpService
         .updateTutorProfile(this.tutorProfile)
         .subscribe((res) => {
@@ -168,8 +161,8 @@ export class ProfileComponent implements OnInit {
                 this.tutorProfileDetails
               );
               this.snackBar.open(
-                "Information saved Successfully !",
-                "close",
+                'Information saved Successfully !',
+                'close',
                 this.config
               );
               location.reload();
@@ -180,9 +173,7 @@ export class ProfileComponent implements OnInit {
 
   saveExpertAdvancedProfile(form: any) {
     if (this.tutorProfileDetails.profileCompleted >= 50) {
-      console.log("before ->");
-      console.log(this.tutorProfileDetails);
-      this.userId = this.cookieService.get("userId");
+      this.userId = this.cookieService.get('userId');
       if (this.userId && this.expertises.length > 0) {
         this.tutorProfileDetails.institute = form.value.Institute;
         this.tutorProfileDetails.areaOfExpertise = this.expertises;
@@ -197,24 +188,21 @@ export class ProfileComponent implements OnInit {
         if (this.tutorProfileDetails.profileCompleted == 50) {
           this.tutorProfileDetails.profileCompleted = 100;
         }
-        console.log("After->");
-        console.log(this.tutorProfileDetails);
         this.httpService
           .updateTutorProfileDetails(this.tutorProfileDetails)
           .subscribe((res) => {
             this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
             this.snackBar.open(
-              "Information saved Successfully !",
-              "close",
+              'Information saved Successfully !',
+              'close',
               this.config
             );
             location.reload();
           });
       } else {
-        this.errorText = "Enter atleast one area of Expertise !";
+        this.errorText = 'Enter atleast one area of Expertise !';
       }
     } else {
-      console.log("complete basic profile first");
     }
   }
 
@@ -265,7 +253,7 @@ export class ProfileComponent implements OnInit {
     });
   }
   b64toBlob(dataURI, fileType) {
-    var byteString = atob(dataURI.split(",")[1]);
+    var byteString = atob(dataURI.split(',')[1]);
     var ab = new ArrayBuffer(byteString.length);
     var ia = new Uint8Array(ab);
 
@@ -299,8 +287,8 @@ export class ProfileComponent implements OnInit {
                   .subscribe((res) => {
                     this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
                     this.snackBar.open(
-                      "Image Uploaded successfully",
-                      "close",
+                      'Image Uploaded successfully',
+                      'close',
                       this.config
                     );
                   });
@@ -326,8 +314,8 @@ export class ProfileComponent implements OnInit {
             this.isLoading3 = false;
             this.profilePictureUrl = url;
             this.snackBar.open(
-              "Image Uploaded successfully",
-              "close",
+              'Image Uploaded successfully',
+              'close',
               this.config
             );
           });
@@ -346,21 +334,21 @@ export class ProfileComponent implements OnInit {
   saveExpertise() {
     if (!this.duplicacyCheck(this.expertises, this.selectedExpertise)) {
       this.expertises.push(this.selectedExpertise);
-      this.selectedExpertise = "";
+      this.selectedExpertise = '';
       if (this.duplicateExpertiseArea == true) {
         this.duplicateExpertiseArea = false;
       }
     } else {
       this.duplicateExpertiseArea = true;
-      this.selectedExpertise = "";
+      this.selectedExpertise = '';
     }
   }
 
   deleteExpertise(index: any) {
     var area = this.expertises[index];
-    if (confirm("Are you sure you want to delete ?")) {
+    if (confirm('Are you sure you want to delete ?')) {
       this.httpService
-        .subtractArea(this.tutorProfile.tid, "Expert", area)
+        .subtractArea(this.tutorProfile.tid, 'Expert', area)
         .subscribe();
       this.expertises.splice(index, 1);
     }
@@ -371,12 +359,12 @@ export class ProfileComponent implements OnInit {
       !this.duplicacyCheck(this.previousOraganisations, this.inputOrganisation)
     ) {
       this.previousOraganisations.push(this.inputOrganisation);
-      this.inputOrganisation = "";
+      this.inputOrganisation = '';
       if (this.duplicatePreviousOrganisation == true) {
         this.duplicatePreviousOrganisation = false;
       }
     } else {
-      this.inputOrganisation = "";
+      this.inputOrganisation = '';
       this.duplicatePreviousOrganisation = true;
     }
   }
@@ -390,12 +378,12 @@ export class ProfileComponent implements OnInit {
       !this.duplicacyCheck(this.educationQualifications, this.inputEducation)
     ) {
       this.educationQualifications.push(this.inputEducation);
-      this.inputEducation = "";
+      this.inputEducation = '';
       if (this.duplicateEducationArea == true) {
         this.duplicateEducationArea = false;
       }
     } else {
-      this.inputEducation = "";
+      this.inputEducation = '';
       this.duplicateEducationArea = true;
     }
   }

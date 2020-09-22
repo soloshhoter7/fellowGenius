@@ -200,6 +200,7 @@ public class UserService  implements UserDetailsService{
 				tutProfileDetails.setLessonCompleted(0);
 				tutProfileDetails.setRating(100);
 				tutProfileDetails.setReviewCount(0);
+				tutProfileDetails.setPrice1("400");
 				dao.saveTutorID(tutProfileDetails);
 				//creating tutor schedule tuple
 				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
@@ -727,35 +728,30 @@ public class UserService  implements UserDetailsService{
 	}
 
 	public List<TutorProfileDetailsModel> fetchAllLinkedTutors(Integer userId) {
-		dao.fetchAllLinkedTutors(userId);
-		
-		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();
+		List<TutorProfileDetails> tutors = dao.fetchAllLinkedTutors(userId);
 		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
-		
-		for(TutorProfileDetails tutor: tutors) {
-			TutorProfileDetails tutProfileDetails = new TutorProfileDetails(); 
+		for(TutorProfileDetails tutor: tutors) { 
 			TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
-			
-			tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
-			tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
-			tutorProfileDetailsModel.setInstitute(tutProfileDetails.getInstitute());
-			tutorProfileDetailsModel.setEducationalQualifications(tutProfileDetails.getEducationalQualifications());
-			tutorProfileDetailsModel.setPrice1(tutProfileDetails.getPrice1());
-			tutorProfileDetailsModel.setPrice2(tutProfileDetails.getPrice2());
-			tutorProfileDetailsModel.setPrice3(tutProfileDetails.getPrice3());
-			tutorProfileDetailsModel.setDescription(tutProfileDetails.getDescription());
-			tutorProfileDetailsModel.setSpeciality(tutProfileDetails.getSpeciality());
-			tutorProfileDetailsModel.setRating(tutProfileDetails.getRating());
-			tutorProfileDetailsModel.setReviewCount(tutProfileDetails.getReviewCount());
-			tutorProfileDetailsModel.setLessonCompleted(tutProfileDetails.getLessonCompleted());
-			tutorProfileDetailsModel.setProfilePictureUrl(tutProfileDetails.getProfilePictureUrl());
-			tutorProfileDetailsModel.setProfessionalSkills(tutProfileDetails.getProfessionalSkills());
-			tutorProfileDetailsModel.setCurrentOrganisation(tutProfileDetails.getCurrentOrganisation());
-			tutorProfileDetailsModel.setPreviousOrganisations(tutProfileDetails.getPreviousOrganisations());
-			tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
-			tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
-			tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
-			for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
+			tutorProfileDetailsModel.setTid(tutor.getTid());
+			tutorProfileDetailsModel.setFullName(tutor.getFullName());
+			tutorProfileDetailsModel.setInstitute(tutor.getInstitute());
+			tutorProfileDetailsModel.setEducationalQualifications(tutor.getEducationalQualifications());
+			tutorProfileDetailsModel.setPrice1(tutor.getPrice1());
+			tutorProfileDetailsModel.setPrice2(tutor.getPrice2());
+			tutorProfileDetailsModel.setPrice3(tutor.getPrice3());
+			tutorProfileDetailsModel.setDescription(tutor.getDescription());
+			tutorProfileDetailsModel.setSpeciality(tutor.getSpeciality());
+			tutorProfileDetailsModel.setRating(tutor.getRating());
+			tutorProfileDetailsModel.setReviewCount(tutor.getReviewCount());
+			tutorProfileDetailsModel.setLessonCompleted(tutor.getLessonCompleted());
+			tutorProfileDetailsModel.setProfilePictureUrl(tutor.getProfilePictureUrl());
+			tutorProfileDetailsModel.setProfessionalSkills(tutor.getProfessionalSkills());
+			tutorProfileDetailsModel.setCurrentOrganisation(tutor.getCurrentOrganisation());
+			tutorProfileDetailsModel.setPreviousOrganisations(tutor.getPreviousOrganisations());
+			tutorProfileDetailsModel.setProfileCompleted(tutor.getProfileCompleted());
+			tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
+			tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
+			for(ExpertiseAreas area:tutor.getAreaOfExpertise()) {
 				tutorProfileDetailsModel.getAreaOfExpertise().add(area.getSubject());
 			}
 			tutorsModel.add(tutorProfileDetailsModel);

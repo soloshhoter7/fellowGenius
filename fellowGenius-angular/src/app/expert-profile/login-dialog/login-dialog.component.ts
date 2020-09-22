@@ -4,36 +4,36 @@ import {
   ViewChild,
   ElementRef,
   NgZone,
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { NgForm } from "@angular/forms";
-import { StudentProfileModel } from "../../model/studentProfile";
-import { HttpService } from "src/app/service/http.service";
-import { StudentService } from "src/app/service/student.service";
-import { TutorService } from "src/app/service/tutor.service";
-import { LoginDetailsService } from "src/app/service/login-details.service";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { TermsAndConditionsComponent } from "../../facade/sign-up/terms-and-conditions/terms-and-conditions.component";
-import { StudentLoginModel } from "src/app/model/studentLoginModel";
-import { CookieService } from "ngx-cookie-service";
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { StudentProfileModel } from '../../model/studentProfile';
+import { HttpService } from 'src/app/service/http.service';
+import { StudentService } from 'src/app/service/student.service';
+import { TutorService } from 'src/app/service/tutor.service';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { TermsAndConditionsComponent } from '../../facade/sign-up/terms-and-conditions/terms-and-conditions.component';
+import { StudentLoginModel } from 'src/app/model/studentLoginModel';
+import { CookieService } from 'ngx-cookie-service';
 // import * as jwt_decode from "jwt-decode";
-import * as jwt_decode from "jwt-decode";
+import * as jwt_decode from 'jwt-decode';
 // import { bcrypt } from "node_modules/bcryptjs";
-import * as bcrypt from "bcryptjs";
-import { registrationModel } from "src/app/model/registration";
-import { loginModel } from "src/app/model/login";
-import { tutorProfile } from "src/app/model/tutorProfile";
-import { socialLogin } from "src/app/model/socialModel";
-import { tutorAvailabilitySchedule } from "src/app/model/tutorAvailabilitySchedule";
-import { SocialService } from "src/app/service/social.service";
-import { WelcomeComponent } from "src/app/home/welcome/welcome.component";
-import { tutorProfileDetails } from "src/app/model/tutorProfileDetails";
+import * as bcrypt from 'bcryptjs';
+import { registrationModel } from 'src/app/model/registration';
+import { loginModel } from 'src/app/model/login';
+import { tutorProfile } from 'src/app/model/tutorProfile';
+import { socialLogin } from 'src/app/model/socialModel';
+import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedule';
+import { SocialService } from 'src/app/service/social.service';
+import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 
 @Component({
-  selector: "app-login-dialog",
-  templateUrl: "./login-dialog.component.html",
-  styleUrls: ["./login-dialog.component.css"],
+  selector: 'app-login-dialog',
+  templateUrl: './login-dialog.component.html',
+  styleUrls: ['./login-dialog.component.css'],
 })
 export class LoginDialogComponent implements OnInit {
   login: boolean = true;
@@ -56,13 +56,13 @@ export class LoginDialogComponent implements OnInit {
     private zone: NgZone
   ) {}
   // --- parent child relationships ------------
-  @ViewChild("loginRef", { static: true })
+  @ViewChild('loginRef', { static: true })
   loginElement: ElementRef;
 
-  @ViewChild("googleSignUp", { static: true })
+  @ViewChild('googleSignUp', { static: true })
   googleSignUp: ElementRef;
 
-  @ViewChild("googleLogIn", { static: true })
+  @ViewChild('googleLogIn', { static: true })
   googleLogIn: ElementRef;
   // --- booleans ----------------------------
   isLoading: boolean;
@@ -77,9 +77,9 @@ export class LoginDialogComponent implements OnInit {
   hide: boolean = true;
   timeOut: boolean = true;
   // ---------- patterns --------------------------------
-  mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
-    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$";
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
 
   //  ----------- data fields ------------------------------
   verificationOtp;
@@ -98,43 +98,43 @@ export class LoginDialogComponent implements OnInit {
   //---------------- configurations ----------------------
   config: MatSnackBarConfig = {
     duration: 10000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
   };
   //--------------------------------------------------------
 
   FB: any;
   ngZone: NgZone;
-  hideSocialLogin = "hideBlock";
+  hideSocialLogin = 'hideBlock';
 
-  hideContainer = "";
+  hideContainer = '';
   studentLoginDetails = new StudentLoginModel();
 
   errorText: string;
   openTermsAndConditions() {
     this.dialogRef.open(TermsAndConditionsComponent, {
-      width: "auto",
-      height: "auto",
+      width: 'auto',
+      height: 'auto',
     });
   }
 
   onLogin(form: NgForm) {
     this.isLoading = true;
-    this.hideContainer = "hideBlock";
+    this.hideContainer = 'hideBlock';
     this.loginModel.email = form.value.email;
     this.loginModel.password = form.value.password;
     this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-      if (res["response"] != "false") {
-        var role = jwt_decode(res["response"])["ROLE"];
-        if (role == "Learner") {
-          this.cookieService.set("token", res["response"]);
-          this.cookieService.set("userId", jwt_decode(res["response"])["sub"]);
-          this.userId = this.cookieService.get("userId");
+      if (res['response'] != 'false') {
+        var role = jwt_decode(res['response'])['ROLE'];
+        if (role == 'Learner') {
+          this.cookieService.set('token', res['response']);
+          this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
+          this.userId = this.cookieService.get('userId');
           this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
             this.studentProfile = res;
             this.studentService.setStudentProfileDetails(this.studentProfile);
-            this.loginService.setTrType("login");
-            this.loginService.setLoginType("Learner");
+            this.loginService.setTrType('login');
+            this.loginService.setLoginType('Learner');
             this.httpClient
               .getStudentSchedule(this.studentProfile.sid)
               .subscribe((res) => {
@@ -144,15 +144,15 @@ export class LoginDialogComponent implements OnInit {
               });
           });
         } else {
-          this.errorText = "Incorrect email or password";
+          this.errorText = 'Incorrect email or password';
           this.isLoading = false;
-          this.hideContainer = "";
+          this.hideContainer = '';
           this.incorrectLoginDetails = true;
         }
       } else {
-        this.errorText = "Incorrect email or password";
+        this.errorText = 'Incorrect email or password';
         this.isLoading = false;
-        this.hideContainer = "";
+        this.hideContainer = '';
         this.incorrectLoginDetails = true;
       }
     });
@@ -169,24 +169,23 @@ export class LoginDialogComponent implements OnInit {
         this.socialLogin.fullName = profile.getName();
         this.socialLogin.email = profile.getEmail();
         this.socialService.setSocialDetails(this.socialLogin);
-        console.log(this.socialLogin);
+
         this.zone.run(() => {
           this.isLoading = true;
-          this.hideContainer = "hideBlock";
+          this.hideContainer = 'hideBlock';
           this.loginModel.email = this.socialLogin.email;
           this.loginModel.password = this.socialLogin.id;
           this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-            console.log(res);
-            if (res["response"] != "false") {
-              var role = jwt_decode(res["response"])["ROLE"];
+            if (res['response'] != 'false') {
+              var role = jwt_decode(res['response'])['ROLE'];
 
-              if (role == "Learner") {
-                this.cookieService.set("token", res["response"]);
+              if (role == 'Learner') {
+                this.cookieService.set('token', res['response']);
                 this.cookieService.set(
-                  "userId",
-                  jwt_decode(res["response"])["sub"]
+                  'userId',
+                  jwt_decode(res['response'])['sub']
                 );
-                this.userId = this.cookieService.get("userId");
+                this.userId = this.cookieService.get('userId');
                 this.httpClient
                   .getStudentDetails(this.userId)
                   .subscribe((res) => {
@@ -194,8 +193,8 @@ export class LoginDialogComponent implements OnInit {
                     this.studentService.setStudentProfileDetails(
                       this.studentProfile
                     );
-                    this.loginService.setTrType("login");
-                    this.loginService.setLoginType("Learner");
+                    this.loginService.setTrType('login');
+                    this.loginService.setLoginType('Learner');
                     this.httpClient
                       .getStudentSchedule(this.studentProfile.sid)
                       .subscribe((res) => {
@@ -206,9 +205,9 @@ export class LoginDialogComponent implements OnInit {
                   });
               }
             } else {
-              this.errorText = "Incorrect email or password";
+              this.errorText = 'Incorrect email or password';
               this.isLoading = false;
-              this.hideContainer = "";
+              this.hideContainer = '';
               this.incorrectLoginDetails = true;
             }
           });
@@ -227,7 +226,7 @@ export class LoginDialogComponent implements OnInit {
       this.registrationModel.email = form.value.email;
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
-      this.registrationModel.role = "Learner";
+      this.registrationModel.role = 'Learner';
       setTimeout(() => {
         if (this.timeOut == true) {
           this.emailValid = true;
@@ -238,7 +237,7 @@ export class LoginDialogComponent implements OnInit {
       this.httpClient
         .verifyEmail(this.registrationModel.email)
         .subscribe((res) => {
-          this.verificationOtp = res["response"];
+          this.verificationOtp = res['response'];
 
           this.timeOut = false;
           this.verifyEmail = true;
@@ -255,14 +254,14 @@ export class LoginDialogComponent implements OnInit {
               this.loginModel.password = this.registrationModel.password;
               // for logging in once registration is done
               this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-                this.cookieService.set("token", res["response"]);
+                this.cookieService.set('token', res['response']);
                 this.cookieService.set(
-                  "userId",
-                  jwt_decode(res["response"])["sub"]
+                  'userId',
+                  jwt_decode(res['response'])['sub']
                 );
-                this.userId = this.cookieService.get("userId");
+                this.userId = this.cookieService.get('userId');
 
-                if (this.registrationModel.role == "Learner") {
+                if (this.registrationModel.role == 'Learner') {
                   this.httpClient
                     .getStudentDetails(this.userId)
                     .subscribe((res) => {
@@ -270,16 +269,16 @@ export class LoginDialogComponent implements OnInit {
                       this.studentService.setStudentProfileDetails(
                         this.studentProfile
                       );
-                      this.loginService.setLoginType("Learner");
-                      this.loginService.setTrType("signUp");
+                      this.loginService.setLoginType('Learner');
+                      this.loginService.setTrType('signUp');
                       this.dialogRef.closeAll();
                     });
                 }
               });
             } else if (res == false) {
               this.snackBar.open(
-                "registration not successful ! email already exists !",
-                "close",
+                'registration not successful ! email already exists !',
+                'close',
                 this.config
               );
               this.incorrectLoginDetails = true;
@@ -293,14 +292,14 @@ export class LoginDialogComponent implements OnInit {
   }
 
   googleSDK() {
-    window["googleSDKLoaded"] = () => {
-      window["gapi"].load("auth2", () => {
-        this.auth2 = window["gapi"].auth2.init({
+    window['googleSDKLoaded'] = () => {
+      window['gapi'].load('auth2', () => {
+        this.auth2 = window['gapi'].auth2.init({
           client_id:
-            "254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com",
+            '254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com',
           // client_id: '15945118442-8olfveag5mpijqdsos8j7atn4u5hcmkk.apps.googleusercontent.com',
-          cookiepolicy: "single_host_origin",
-          scope: "profile email",
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile email',
         });
         this.prepareLoginButton();
       });
@@ -314,8 +313,8 @@ export class LoginDialogComponent implements OnInit {
       }
       js = d.createElement(s);
       js.id = id;
-      js.src = "https://apis.google.com/js/platform.js?onload=googleSDKLoaded";
+      js.src = 'https://apis.google.com/js/platform.js?onload=googleSDKLoaded';
       fjs.parentNode.insertBefore(js, fjs);
-    })(document, "script", "google-jssdk");
+    })(document, 'script', 'google-jssdk');
   }
 }

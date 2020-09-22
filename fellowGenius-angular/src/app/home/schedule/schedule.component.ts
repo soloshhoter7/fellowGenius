@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Inject } from "@angular/core";
+import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 import {
   ScheduleComponent,
   EventSettingsModel,
@@ -9,28 +9,28 @@ import {
   View,
   EventRenderedArgs,
   ActionEventArgs,
-} from "@syncfusion/ej2-angular-schedule";
-import * as jwt_decode from "jwt-decode";
+} from '@syncfusion/ej2-angular-schedule';
+import * as jwt_decode from 'jwt-decode';
 
-import { Button } from "../../../../node_modules/@syncfusion/ej2-buttons";
-import { timeInterval } from "rxjs/operators";
+import { Button } from '../../../../node_modules/@syncfusion/ej2-buttons';
+import { timeInterval } from 'rxjs/operators';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialog,
-} from "@angular/material/dialog";
-import { HttpService } from "src/app/service/http.service";
-import { scheduleData } from "src/app/model/scheduleData";
-import { ValueConverter } from "@angular/compiler/src/render3/view/template";
-import { tutorAvailabilitySchedule } from "src/app/model/tutorAvailabilitySchedule";
-import { TutorService } from "src/app/service/tutor.service";
-import { LoginDetailsService } from "src/app/service/login-details.service";
-import { CookieService } from "ngx-cookie-service";
+} from '@angular/material/dialog';
+import { HttpService } from 'src/app/service/http.service';
+import { scheduleData } from 'src/app/model/scheduleData';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedule';
+import { TutorService } from 'src/app/service/tutor.service';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
-  selector: "app-schedule",
-  templateUrl: "./schedule.component.html",
-  styleUrls: ["./schedule.component.css"],
+  selector: 'app-schedule',
+  templateUrl: './schedule.component.html',
+  styleUrls: ['./schedule.component.css'],
 })
 export class tutorScheduleComponent implements OnInit {
   ngOnInit(): void {
@@ -62,13 +62,12 @@ export class tutorScheduleComponent implements OnInit {
     private cookieService: CookieService
   ) {}
 
-  @ViewChild("scheduleObj") public scheduleObj: ScheduleComponent;
-  @ViewChild("meetingObj") public meetingObj: ScheduleComponent;
-  // @ViewChild('addButton') public addButton: Button;
-  public scheduleViews: View[] = ["Day", "Week", "WorkWeek", "Month"];
+  @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
+  @ViewChild('meetingObj') public meetingObj: ScheduleComponent;
+  public scheduleViews: View[] = ['Day', 'Week', 'WorkWeek', 'Month'];
   tutorAvailabilitySchedule = new tutorAvailabilitySchedule();
   calendarLoaded = false;
-  calendarView = "Availability";
+  calendarView = 'Availability';
   availabiltiySchedules: scheduleData[] = [];
   availableSchedules: scheduleData[] = [];
   bookingSchedule: scheduleData[] = [];
@@ -78,17 +77,17 @@ export class tutorScheduleComponent implements OnInit {
   // 	dataSource: this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule
   // };
   switchCalendarView() {
-    if (this.calendarView == "Availability") {
-      this.calendarView = "Meeting";
+    if (this.calendarView == 'Availability') {
+      this.calendarView = 'Meeting';
       this.scheduleObj.eventSettings.dataSource = this.bookingSchedule;
     } else {
-      this.calendarView = "Availability";
+      this.calendarView = 'Availability';
       this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
     }
   }
   handleRefresh() {
-    if (this.cookieService.get("userId")) {
-      let userId = this.cookieService.get("userId");
+    if (this.cookieService.get('userId')) {
+      let userId = this.cookieService.get('userId');
       this.httpService.getScheduleData(parseInt(userId)).subscribe((res) => {
         this.tutorService.setPersonalAvailabilitySchedule(res);
         this.tutorAvailabilitySchedule.fullName = this.tutorService.getTutorDetials().fullName;
@@ -108,46 +107,6 @@ export class tutorScheduleComponent implements OnInit {
     }
   }
 
-  // initiateCalendar() {
-  //   // console.log('initiate calendar called !');
-  //   // // let scheduleObj = (document.querySelector('scheduleObj') as any).ej2_instances[0];
-  //   // this.scheduleObj.eventSettings.dataSource = this.availabiltiySchedules;
-  //   setTimeout(function () {
-  //     let scheduleObj = (document.querySelector(".e-schedule") as any)
-  //       .ej2_instances[0];
-  //     let scheduleData: Object[] = [
-  //       {
-  //         Id: 1,
-  //         Subject: "Conference",
-  //         StartTime: new Date(2018, 1, 12, 9, 0),
-  //         EndTime: new Date(2018, 1, 12, 10, 0),
-  //         IsAllDay: false,
-  //       },
-  //       {
-  //         Id: 2,
-  //         Subject: "Meeting",
-  //         StartTime: new Date(2018, 1, 15, 10, 0),
-  //         EndTime: new Date(2018, 1, 15, 11, 30),
-  //         IsAllDay: false,
-  //       },
-  //       {
-  //         Id: 3,
-  //         Subject: "Testing",
-  //         StartTime: new Date(2018, 1, 11, 9, 0),
-  //         EndTime: new Date(2018, 1, 11, 10, 0),
-  //         IsAllDay: false,
-  //       },
-  //       {
-  //         Id: 4,
-  //         Subject: "Vacation",
-  //         StartTime: new Date(2018, 1, 13, 9, 0),
-  //         EndTime: new Date(2018, 1, 13, 10, 0),
-  //         IsAllDay: false,
-  //       },
-  //     ];
-  //     scheduleObj.eventSettings.dataSource = scheduleData;
-  //   }, 3000);
-  // }
   copySchedule() {
     for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
       .allAvailabilitySchedule) {
@@ -161,7 +120,7 @@ export class tutorScheduleComponent implements OnInit {
       appointment.RecurrenceException = schedule.RecurrenceException;
       appointment.Guid = schedule.Guid;
       appointment.IsReadonly = false;
-      appointment.Type = "availability";
+      appointment.Type = 'availability';
       this.availableSchedules.push(appointment);
     }
   }
@@ -181,7 +140,7 @@ export class tutorScheduleComponent implements OnInit {
         appointment.RecurrenceRule = schedule.RecurrenceRule;
         appointment.RecurrenceException = schedule.RecurrenceException;
         appointment.Guid = schedule.Guid;
-        appointment.Type = "booking";
+        appointment.Type = 'booking';
         appointment.IsReadonly = true;
         this.bookingSchedule.push(appointment);
       }
@@ -203,7 +162,6 @@ export class tutorScheduleComponent implements OnInit {
   // for adding events into calendar schedules
   addEvents(appointment: scheduleData) {
     this.availableSchedules.push(appointment);
-    console.log(this.availableSchedules);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
     setTimeout(() => {
       //<<<---    using ()=> syntax
@@ -215,10 +173,10 @@ export class tutorScheduleComponent implements OnInit {
     }, 3000);
   }
   public onEventRendered(args: any): void {
-    if (args.data.Type == "booking") {
-      args.element.style.backgroundColor = "#4a4040";
-    } else if (args.data.Type == "availability") {
-      args.element.style.backgroundColor = "#e30084";
+    if (args.data.Type == 'booking') {
+      args.element.style.backgroundColor = '#4a4040';
+    } else if (args.data.Type == 'availability') {
+      args.element.style.backgroundColor = '#e30084';
     }
   }
   // for updating events into calendar schedules
@@ -273,12 +231,12 @@ export class tutorScheduleComponent implements OnInit {
   onActionBegin(args: ActionEventArgs): void {
     var schedule;
     //when an event is created
-    if (args.requestType === "eventCreate") {
+    if (args.requestType === 'eventCreate') {
       schedule = args.addedRecords;
       setTimeout(() => {
         this.addEvents(this.copyAppointment(schedule[0]));
       }, 3000);
-    } else if (args.requestType === "eventChange") {
+    } else if (args.requestType === 'eventChange') {
       // when an event is changed
       schedule = args.changedRecords;
 
@@ -309,7 +267,7 @@ export class tutorScheduleComponent implements OnInit {
           this.updateEvents(this.copyAppointment(schedule[0]));
         }
       }, 3000);
-    } else if (args.requestType === "eventRemove") {
+    } else if (args.requestType === 'eventRemove') {
       // when an event is removed
       schedule = args.deletedRecords;
       if (schedule.length != 0) {
@@ -356,8 +314,8 @@ export class tutorScheduleComponent implements OnInit {
 }
 // -----------------------------------------------------------------------------------------------------------------------------
 @Component({
-  selector: "instruction-guide",
-  templateUrl: "instruction-guide.html",
+  selector: 'instruction-guide',
+  templateUrl: 'instruction-guide.html',
 })
 export class instructionGuide {
   constructor() {}

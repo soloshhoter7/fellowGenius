@@ -1,16 +1,16 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { HttpService } from "../service/http.service";
-import { tutorProfileDetails } from "../model/tutorProfileDetails";
-import { element } from "protractor";
-import { LoginDetailsService } from "../service/login-details.service";
-import { ProfileService } from "../service/profile.service";
-import { MatDialog } from "@angular/material/dialog";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpService } from '../service/http.service';
+import { tutorProfileDetails } from '../model/tutorProfileDetails';
+import { element } from 'protractor';
+import { LoginDetailsService } from '../service/login-details.service';
+import { ProfileService } from '../service/profile.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: "app-search-results",
-  templateUrl: "./search-results.component.html",
-  styleUrls: ["./search-results.component.css"],
+  selector: 'app-search-results',
+  templateUrl: './search-results.component.html',
+  styleUrls: ['./search-results.component.css'],
 })
 export class SearchResultsComponent implements OnInit {
   showProfile;
@@ -143,16 +143,16 @@ export class SearchResultsComponent implements OnInit {
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
   onSignUp() {
-    this.router.navigate(["signUp"]);
+    this.router.navigate(['signUp']);
   }
 
   toLoginPage() {
-    this.router.navigate(["login"]);
+    this.router.navigate(['login']);
   }
 
   viewProfile(profile: tutorProfileDetails) {
     this.profileService.setProfile(profile);
-    this.router.navigate(["viewTutors"], {
+    this.router.navigate(['viewTutors'], {
       queryParams: { page: profile.tid },
     });
   }
@@ -166,7 +166,6 @@ export class SearchResultsComponent implements OnInit {
 
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
-      console.log(req);
       this.searchResults = req;
     });
   }
@@ -176,18 +175,14 @@ export class SearchResultsComponent implements OnInit {
 
     if (this.searchBySubject($event) && !this.callSearchByPrice) {
       //input is 400-599
-      console.log($event.target.value);
       this.callSearchBySubject = false;
       if (this.findFromSearchResult) {
-        console.log("NO SEARCH SUBJECT FILTER HAS BEEN APPLIED");
-        console.log($event.target.value);
         this.findFromSearchResult = false;
         this.filteredArray = [];
         if (this.priceFiltersApplied.length == 0) {
-          console.log("length was 0 initially");
           this.priceFiltersApplied.push($event.target.value);
           this.allFiltersApplied.push($event.target.value);
-          var price = $event.target.value.split("-");
+          var price = $event.target.value.split('-');
           var lowerValue = price[0];
           var higherValue = price[1];
           this.searchResults.filter((res) => {
@@ -209,7 +204,6 @@ export class SearchResultsComponent implements OnInit {
               $event.target.value
             )
           ) {
-            console.log("initially length was 1 but now 0");
             this.priceFiltersApplied.splice(
               this.priceFiltersApplied.indexOf($event.target.value),
               1
@@ -220,11 +214,10 @@ export class SearchResultsComponent implements OnInit {
             );
             this.filteredArray = this.searchResults;
           } else {
-            console.log("initially length was 1 and now 2");
             this.priceFiltersApplied.push($event.target.value);
             this.allFiltersApplied.push($event.target.value);
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split("-");
+              var price = this.priceFiltersApplied[i].split('-');
               var lowerValue = price[0];
               var higherValue = price[1];
               this.searchResults.filter((res) => {
@@ -253,7 +246,6 @@ export class SearchResultsComponent implements OnInit {
               $event.target.value
             )
           ) {
-            console.log("initially length was > 1 but now is reduced by 1");
             this.priceFiltersApplied.splice(
               this.priceFiltersApplied.indexOf($event.target.value),
               1
@@ -262,13 +254,10 @@ export class SearchResultsComponent implements OnInit {
               this.priceFiltersApplied.indexOf($event.target.value),
               1
             );
-            console.log(
-              "now splice the input: so the priceFiltersApplied array is: "
-            );
-            console.log(this.priceFiltersApplied);
+
             this.filteredArray = [];
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split("-");
+              var price = this.priceFiltersApplied[i].split('-');
               var lowerValue = price[0];
               var higherValue = price[1];
               this.searchResults.filter((res) => {
@@ -283,11 +272,10 @@ export class SearchResultsComponent implements OnInit {
               });
             }
           } else {
-            console.log("initially length was > 1 but now is increased by 1");
             this.priceFiltersApplied.push($event.target.value);
             this.allFiltersApplied.push($event.target.value);
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split("-");
+              var price = this.priceFiltersApplied[i].split('-');
               var lowerValue = price[0];
               var higherValue = price[1];
               this.searchResults.filter((res) => {
@@ -313,8 +301,6 @@ export class SearchResultsComponent implements OnInit {
       }
       if (this.findFromFilterSearch) {
         this.findFromFilterSearch = false;
-        console.log("SEARCH SUBJECT FILTER HAS ALREADY BEEN APPLIED");
-        console.log($event.target.value);
 
         if (this.priceFiltersApplied.length == 1) {
           if (
@@ -335,7 +321,7 @@ export class SearchResultsComponent implements OnInit {
             this.priceFiltersApplied.push($event.target.value);
             this.allFiltersApplied.push($event.target.value);
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split("-");
+              var price = this.priceFiltersApplied[i].split('-');
               var lowerValue = price[0];
               var higherValue = price[1];
               this.filteredArray.filter((res) => {
@@ -369,7 +355,7 @@ export class SearchResultsComponent implements OnInit {
               1
             );
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split("-");
+              var price = this.priceFiltersApplied[i].split('-');
               var lowerValue = price[0];
               var higherValue = price[1];
               this.filteredArray.filter((res) => {
@@ -390,7 +376,7 @@ export class SearchResultsComponent implements OnInit {
             this.priceFiltersApplied.push($event.target.value);
             this.allFiltersApplied.push($event.target.value);
             for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split("-");
+              var price = this.priceFiltersApplied[i].split('-');
               var lowerValue = price[0];
               var higherValue = price[1];
               this.filteredArray.filter((res) => {
@@ -413,11 +399,10 @@ export class SearchResultsComponent implements OnInit {
     }
 
     if (this.callSearchByPrice) {
-      console.log("CALL BY PRICE IS TRUE");
       // input is subject not price
       this.callSearchByPrice = false;
       if (this.priceFiltersApplied.length == 1) {
-        var price = this.priceFiltersApplied[0].split("-");
+        var price = this.priceFiltersApplied[0].split('-');
         var lowerValue = price[0];
         var higherValue = price[1];
         this.filteredArray.filter((res) => {
@@ -430,7 +415,7 @@ export class SearchResultsComponent implements OnInit {
         });
       } else {
         for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-          var price = this.priceFiltersApplied[i].split("-");
+          var price = this.priceFiltersApplied[i].split('-');
           var lowerValue = price[0];
           var higherValue = price[1];
           this.filteredArray.filter((res) => {
@@ -452,8 +437,6 @@ export class SearchResultsComponent implements OnInit {
   }
 
   searchByRatings($event) {
-    console.log($event.target.value);
-
     if (
       this.checkFiltersApplied(this.ratingFilterApplied, $event.target.value)
     ) {
@@ -528,17 +511,11 @@ export class SearchResultsComponent implements OnInit {
   }
 
   searchBySubject($event) {
-    console.log($event.target.value);
-
     if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
       //input is price
       this.filteredArray = [];
       this.callSearchBySubject = false;
       this.callSearchByPrice = false;
-      console.log(
-        "Subject Filters are NOT applied and input is price " +
-          this.subjectFiltersApplied.length
-      );
       this.findFromSearchResult = true;
       return true;
     }
@@ -546,10 +523,6 @@ export class SearchResultsComponent implements OnInit {
       this.filteredArray = [];
       this.callSearchBySubject = false;
       this.callSearchByPrice = false;
-      console.log(
-        "Subject Filters are applied and input is price " +
-          this.subjectFiltersApplied.length
-      );
       // input is price
       this.findFromFilterSearch = true;
       for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
@@ -574,7 +547,6 @@ export class SearchResultsComponent implements OnInit {
     if (!this.callSearchBySubject) {
       // input is subject
       // this.allFiltersApplied = [];
-      console.log("INPUT IS SUBJECT");
       if (
         this.checkFiltersApplied(
           this.subjectFiltersApplied,
@@ -635,7 +607,6 @@ export class SearchResultsComponent implements OnInit {
                   this.searchResults[this.searchResults.indexOf(res)]
                 )
               ) {
-                console.log("subject is being pushed " + i + "times");
                 this.filteredArray.push(
                   this.searchResults[this.searchResults.indexOf(res)]
                 );
@@ -688,14 +659,13 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
-    console.log($event.target.value);
-    if ($event.target.value.localeCompare("sortLowToHigh") == 0) {
+    if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
       if (this.allFiltersApplied.length == 0) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
       } else {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
       }
-    } else if ($event.target.value.localeCompare("sortHighToLow") == 0) {
+    } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
       if (this.allFiltersApplied.length == 0) {
         this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
       } else {

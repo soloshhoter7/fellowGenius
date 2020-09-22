@@ -1,7 +1,7 @@
 <body>
   <div
     *ngIf="isLoading"
-    style="width: max-content; margin: auto; padding-top: 35vh;"
+    style="width: max-content; margin: auto; padding-top: 35vh"
   >
     <app-loading></app-loading>
   </div>
@@ -12,21 +12,21 @@
         <span>Login</span>
         <span class="info-class"
           >Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt.</span
+          eiusmod tempor incididun.</span
         >
       </div>
       <div class="logo"></div>
       <span
         class="material-icons close"
         (click)="toFacade()"
-        style="cursor: pointer;"
+        style="cursor: pointer"
       >
         close
       </span>
     </div>
     <!-- <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p> -->
     <div class="login-parameter-container">
-      <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
+      <p style="color: red" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
       <form (ngSubmit)="onLogin(l)" #l="ngForm">
         <div class="form-group">
           <label class="form-control-placeholder" for="email"
@@ -44,12 +44,6 @@
             maxlength="64"
           />
         </div>
-        <!-- <span class="error-information">incorrect email or password !</span> -->
- 
-        <!-- <div class="form-group">
-                      <input type="password" id="password" class="form-control" required>
-                      <label class="form-control-placeholder" for="password">Password</label>
-                  </div> -->
         <div class="form-group">
           <label class="form-control-placeholder" for="password"
             >Password</label
@@ -65,40 +59,28 @@
             #password="ngModel"
             maxlength="40"
           />
-
-          <!--<div class="showPassword">
-            <i class="material-icons cursor" (click)="hide = !hide" style="color: #ccc;">
-              {{ hide ? "visibility_off" : "visibility" }}
-            </i>
-          </div>-->
         </div>
         <div class="form-group button-container">
-          <a href="#" class="forgot-password">
-            Forgot-Password
-          </a>
+          <a href="#" class="forgot-password"> Forgot-Password </a>
           <button class="btn btn-primary" type="submit" [disabled]="!l.valid">
             Sign in
           </button>
-          <!-- <button class="btn btn-primary" style="margin-left: auto; margin-right: auto;" type="submit" [disabled]="!l.valid ">Sign in</button> -->
-        </div>
-
-        <div class="login-instead">
-          <span>Login instead</span>
-
-          <button
-            class="btn btn-secondary"
-            (click)="prepareLoginButton()"
-            #googleSignUp
-          >
-            <i class="fa fa-google social-icons"></i>
-            <p style="display: inline; font-size: larger;">
-              Login Using Google
-            </p>
-          </button>
-          <span> New to FellowGenius? </span>
-          <a routerLink="/signUp" class="forgot-password">Sign up</a>
         </div>
       </form>
+      <div class="login-instead">
+        <span>Login instead</span>
+
+        <button
+          class="btn btn-secondary"
+          (click)="prepareLoginButton()"
+          #googleSignUp
+        >
+          <i class="fa fa-google social-icons" style="margin-right: 5px"></i>
+          <p style="display: inline; font-size: larger">Login Using Google</p>
+        </button>
+        <span> New to FellowGenius? </span>
+        <a routerLink="/signUp" class="forgot-password">Sign up</a>
+      </div>
     </div>
   </div>
 </body>

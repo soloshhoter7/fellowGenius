@@ -1,34 +1,33 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
-import { FormControl, NgForm } from "@angular/forms";
-import { meetingDetails } from "../model/meetingDetails";
-import { MeetingService } from "../service/meeting.service";
-import { StudentProfileModel } from "../model/studentProfile";
-import { StudentService } from "../service/student.service";
-import { tutorProfile } from "../model/tutorProfile";
-import { LoginDetailsService } from "../service/login-details.service";
-import { TutorService } from "../service/tutor.service";
-import { WelcomeComponent } from "../home/welcome/welcome.component";
-import { MatDialog } from "@angular/material/dialog";
-import { HttpService } from "../service/http.service";
-import { StudentLoginModel } from "../model/studentLoginModel";
-import { ThemePalette } from "@angular/material/core";
-import { LocationStrategy } from "@angular/common";
-import { SocialAuthService } from "angularx-social-login";
-import { CookieService } from "ngx-cookie-service";
-import { HostListener } from "@angular/core";
-import { Observable } from "rxjs";
-import * as jwt_decode from "jwt-decode";
-import { tutorProfileDetails } from "../model/tutorProfileDetails";
-import { map, startWith } from "rxjs/operators";
-import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
-import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
-import { AppComponent } from "../app.component";
-import { TutorDashboardComponent } from "../../app/home/dashboard/tutor-dashboard.component";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormControl, NgForm } from '@angular/forms';
+import { meetingDetails } from '../model/meetingDetails';
+import { MeetingService } from '../service/meeting.service';
+import { StudentProfileModel } from '../model/studentProfile';
+import { StudentService } from '../service/student.service';
+import { tutorProfile } from '../model/tutorProfile';
+import { LoginDetailsService } from '../service/login-details.service';
+import { TutorService } from '../service/tutor.service';
+import { WelcomeComponent } from '../home/welcome/welcome.component';
+import { MatDialog } from '@angular/material/dialog';
+import { HttpService } from '../service/http.service';
+import { StudentLoginModel } from '../model/studentLoginModel';
+import { ThemePalette } from '@angular/material/core';
+
+import { CookieService } from 'ngx-cookie-service';
+import { HostListener } from '@angular/core';
+import { Observable } from 'rxjs';
+import * as jwt_decode from 'jwt-decode';
+import { tutorProfileDetails } from '../model/tutorProfileDetails';
+import { map, startWith } from 'rxjs/operators';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+
+import { AppComponent } from '../app.component';
+
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.css"],
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
   studentProfileCompleted;
@@ -39,7 +38,7 @@ export class HomeComponent implements OnInit {
   studentProfile = new StudentProfileModel();
   tutorProfile = new tutorProfile();
   tutorProfileDetails = new tutorProfileDetails();
-  dashboardUrl: string = "/home/studentDashboard";
+  dashboardUrl: string = '/home/studentDashboard';
   loginType;
   studentLoginDetails = new StudentLoginModel();
   RegisterForm: NgForm;
@@ -47,17 +46,17 @@ export class HomeComponent implements OnInit {
   overlay;
   screenHeight: number;
   screenWidth: number;
-  profilePictureUrl = "../../../assets/images/default-user-image.png";
+  profilePictureUrl = '../../../assets/images/default-user-image.png';
   options: string[] = [
-    "Mathematics",
-    "English",
-    "Science",
-    "Social Science",
-    "History",
-    "Political Science",
-    "Geography",
-    "Physics",
-    "Chemistry",
+    'Mathematics',
+    'English',
+    'Science',
+    'Social Science',
+    'History',
+    'Political Science',
+    'Geography',
+    'Physics',
+    'Chemistry',
   ];
   filteredOptions: Observable<string[]>;
   myControl = new FormControl();
@@ -78,14 +77,14 @@ export class HomeComponent implements OnInit {
     this.getScreenSize();
   }
   index: Number;
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
   }
   ngOnInit() {
     this.breakpointObserver
-      .observe(["(min-width: 800px)"])
+      .observe(['(min-width: 800px)'])
       .subscribe((state: BreakpointState) => {
         if (state.matches) {
           this.openNav();
@@ -101,7 +100,7 @@ export class HomeComponent implements OnInit {
       this.loginType = this.loginService.getLoginType();
       if (
         this.loginType &&
-        this.loginType == "Learner" &&
+        this.loginType == 'Learner' &&
         this.studentService.getStudentProfileDetails().fullName != null
       ) {
         this.studentProfile = this.studentServce.getStudentProfileDetails();
@@ -109,16 +108,16 @@ export class HomeComponent implements OnInit {
           this.profilePictureUrl = this.studentProfile.profilePictureUrl;
         }
         this.calculateStudentProfilePercentage();
-        this.router.navigate(["home/studentDashboard"]);
-        if (this.loginService.getTrType() == "signUp") {
+        this.router.navigate(['home/studentDashboard']);
+        if (this.loginService.getTrType() == 'signUp') {
           this.dialog.open(WelcomeComponent, {
-            width: "auto",
-            height: "auto",
+            width: 'auto',
+            height: 'auto',
           });
         }
       } else if (
         this.loginType &&
-        this.loginType == "Expert" &&
+        this.loginType == 'Expert' &&
         this.tutorService.getTutorDetials().fullName != null
       ) {
         this.tutorProfile = this.tutorService.getTutorDetials();
@@ -128,28 +127,28 @@ export class HomeComponent implements OnInit {
         }
         if (
           this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
-          "yes"
+          'yes'
         ) {
           this.checked = true;
         } else {
           this.checked = false;
         }
         // this.dashboardUrl = '/home/tutorDashboard';
-        this.router.navigate(["home/tutorDashboard"]);
-        if (this.loginService.getTrType() == "signUp") {
+        this.router.navigate(['home/tutorDashboard']);
+        if (this.loginService.getTrType() == 'signUp') {
           this.dialog.open(WelcomeComponent, {
-            width: "auto",
-            height: "auto",
+            width: 'auto',
+            height: 'auto',
           });
         }
       } else {
         this.handleRefresh();
       }
     } else {
-      this.router.navigate(["facade"]);
+      this.router.navigate(['facade']);
     }
     this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map((value) => this._filter(value))
     );
   }
@@ -159,20 +158,20 @@ export class HomeComponent implements OnInit {
     }
   }
   toFacade() {
-    this.router.navigate([""]);
+    this.router.navigate(['']);
   }
   openNav() {
     if (this.screenWidth >= 450) {
-      document.getElementById("sidenav").style.width = "230px";
-      document.getElementById("mainContent").style.marginLeft = "230px";
+      document.getElementById('sidenav').style.width = '230px';
+      document.getElementById('mainContent').style.marginLeft = '230px';
     } else {
-      document.getElementById("sidenav").style.width = "100%";
+      document.getElementById('sidenav').style.width = '100%';
     }
   }
 
   closeNav() {
-    document.getElementById("sidenav").style.width = "0px";
-    document.getElementById("mainContent").style.marginLeft = "0px";
+    document.getElementById('sidenav').style.width = '0px';
+    document.getElementById('mainContent').style.marginLeft = '0px';
   }
 
   navAction(index) {
@@ -185,11 +184,11 @@ export class HomeComponent implements OnInit {
     }
   }
   isTokenValid() {
-    if (this.cookieService.get("token") && !this.isTokenExpired()) {
+    if (this.cookieService.get('token') && !this.isTokenExpired()) {
       return true;
     } else {
-      this.cookieService.delete("token");
-      this.cookieService.delete("userId");
+      this.cookieService.delete('token');
+      this.cookieService.delete('userId');
       return false;
     }
   }
@@ -225,23 +224,23 @@ export class HomeComponent implements OnInit {
   getTokenExpirationDate(token: string): Date {
     const decoded = jwt_decode(token);
 
-    if (decoded["exp"] === undefined) return null;
+    if (decoded['exp'] === undefined) return null;
 
     const date = new Date(0);
-    date.setUTCSeconds(decoded["exp"]);
+    date.setUTCSeconds(decoded['exp']);
     return date;
   }
 
   getToken(): string {
-    return this.cookieService.get("token");
+    return this.cookieService.get('token');
   }
   toggleAvailability() {
     if (this.checked == true) {
       this.checked = false;
-      this.tutorService.personalAvailablitySchedule.isAvailable = "no";
+      this.tutorService.personalAvailablitySchedule.isAvailable = 'no';
     } else {
       this.checked = true;
-      this.tutorService.personalAvailablitySchedule.isAvailable = "yes";
+      this.tutorService.personalAvailablitySchedule.isAvailable = 'yes';
     }
     this.httpService
       .changeAvailabilityStatus(
@@ -250,31 +249,19 @@ export class HomeComponent implements OnInit {
       )
       .subscribe((res) => {});
   }
-  onJoin() {
-    this.joinMeeting.role = "student";
-    this.meetingService.setMeeting(this.joinMeeting);
-    this.router.navigate(["meeting"]);
-  }
-  onHost() {
-    this.hostMeeting.roomId = 123;
-    this.hostMeeting.role = "host";
-    this.hostMeeting.roomName = "abc";
-    this.meetingService.setMeeting(this.hostMeeting);
-    this.router.navigate(["meeting"]);
-  }
 
   onSignOut() {
-    this.cookieService.delete("token");
-    this.cookieService.delete("userId");
+    this.cookieService.delete('token');
+    this.cookieService.delete('userId');
     this.loginService.setLoginType(null);
     this.loginService.setTrType(null);
-    this.router.navigate([""]);
+    this.router.navigate(['']);
   }
   openProfile() {
-    if (this.loginType == "Learner") {
-      this.router.navigate(["home/studentProfile"]);
-    } else if (this.loginType == "Expert") {
-      this.router.navigate(["home/profile"]);
+    if (this.loginType == 'Learner') {
+      this.router.navigate(['home/studentProfile']);
+    } else if (this.loginType == 'Expert') {
+      this.router.navigate(['home/profile']);
     }
   }
 
@@ -290,19 +277,15 @@ export class HomeComponent implements OnInit {
     if (this.selectedSubject) {
       this.loginService.setLoginType(this.loginType);
 
-      this.router.navigate(["searchResults"]);
+      this.router.navigate(['searchResults']);
     }
   }
-  // signOut() {
-  // 	this.authService.signOut();
-  // 	this.router.navigate([ '#' ]);
-  // }
 
   handleRefresh() {
-    this.userId = this.cookieService.get("userId");
-    if (jwt_decode(this.cookieService.get("token"))["ROLE"] == "Learner") {
-      this.loginType = "Learner";
-      this.loginService.setTrType("login");
+    this.userId = this.cookieService.get('userId');
+    if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
+      this.loginType = 'Learner';
+      this.loginService.setTrType('login');
       this.loginService.setLoginType(this.loginType);
 
       this.httpService.getStudentDetails(this.userId).subscribe((res) => {
@@ -318,10 +301,10 @@ export class HomeComponent implements OnInit {
         });
       });
     } else if (
-      jwt_decode(this.cookieService.get("token"))["ROLE"] == "Expert"
+      jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Expert'
     ) {
-      this.loginType = "Expert";
-      this.loginService.setTrType("login");
+      this.loginType = 'Expert';
+      this.loginService.setTrType('login');
       this.loginService.setLoginType(this.loginType);
 
       this.httpService.getTutorDetails(this.userId).subscribe((res) => {
@@ -337,13 +320,9 @@ export class HomeComponent implements OnInit {
             this.tutorService.setTutorProfileDetails(res);
             this.httpService.getScheduleData(this.userId).subscribe((res) => {
               this.tutorService.setPersonalAvailabilitySchedule(res);
-              console.log(
-                this.tutorService.getPersonalAvailabilitySchedule()
-                  .allMeetingsSchedule
-              );
               if (
                 this.tutorService.getPersonalAvailabilitySchedule()
-                  .isAvailable == "yes"
+                  .isAvailable == 'yes'
               ) {
                 this.checked = true;
               } else {

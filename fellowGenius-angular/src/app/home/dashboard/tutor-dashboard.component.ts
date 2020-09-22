@@ -1,90 +1,90 @@
-import { Component, HostListener, OnInit } from "@angular/core";
-import { extend, Internationalization, L10n } from "@syncfusion/ej2-base";
-import { tutorProfileDetails } from "../../model/tutorProfileDetails";
-import { bookingDetails } from "src/app/model/bookingDetails";
-import { HttpService } from "src/app/service/http.service";
-import { TutorService } from "src/app/service/tutor.service";
-import { meetingDetails } from "../../model/meetingDetails";
-import { MeetingService } from "src/app/service/meeting.service";
-import { Router } from "@angular/router";
-import { stringify } from "querystring";
-import { LoginDetailsService } from "src/app/service/login-details.service";
+import { Component, HostListener, OnInit } from '@angular/core';
+import { extend, Internationalization, L10n } from '@syncfusion/ej2-base';
+import { tutorProfileDetails } from '../../model/tutorProfileDetails';
+import { bookingDetails } from 'src/app/model/bookingDetails';
+import { HttpService } from 'src/app/service/http.service';
+import { TutorService } from 'src/app/service/tutor.service';
+import { meetingDetails } from '../../model/meetingDetails';
+import { MeetingService } from 'src/app/service/meeting.service';
+import { Router } from '@angular/router';
+import { stringify } from 'querystring';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
 L10n.load({
-  "en-US": {
+  'en-US': {
     schedule: {
-      addTitle: "My Availability",
+      addTitle: 'My Availability',
     },
   },
 });
 @Component({
-  selector: "app-tutor-dashboard",
-  templateUrl: "./tutor-dashboard.component.html",
-  styleUrls: ["./tutor-dashboard.component.css"],
+  selector: 'app-tutor-dashboard',
+  templateUrl: './tutor-dashboard.component.html',
+  styleUrls: ['./tutor-dashboard.component.css'],
 })
 export class TutorDashboardComponent implements OnInit {
   public now: Date = new Date();
   constructor(
-    private httpService: HttpService,
-    private tutorService: TutorService,
-    private meetingService: MeetingService,
-    private router: Router,
-    private loginService: LoginDetailsService
+    public httpService: HttpService,
+    public tutorService: TutorService,
+    public meetingService: MeetingService,
+    public router: Router,
+    public loginService: LoginDetailsService
   ) {
     setInterval(() => {
       this.now = new Date();
     }, 1000);
   }
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     var screenHeight = window.innerHeight;
     var screenWidth = window.innerWidth;
     if (screenWidth <= 800) {
-      this.tutorChartWidth = "320";
+      this.tutorChartWidth = '320';
     } else {
-      this.tutorChartWidth = "380";
+      this.tutorChartWidth = '380';
     }
   }
 
-  tutorChartWidth = "380";
-  tutorChartHeight = "180";
+  tutorChartWidth = '380';
+  tutorChartHeight = '180';
   // ----------------------skills in demand ------------------------------
-  skillsChartType = "PieChart";
+  skillsChartType = 'PieChart';
   skillsData = [
-    ["Mathematics", 45.0],
-    ["English", 26.8],
-    ["Science", 12.8],
-    ["C++", 8.5],
-    ["Machine Learning", 6.2],
-    ["Others", 0.7],
+    ['Mathematics', 45.0],
+    ['English', 26.8],
+    ['Science', 12.8],
+    ['C++', 8.5],
+    ['Machine Learning', 6.2],
+    ['Others', 0.7],
   ];
-  skillsColumnName = ["Subject", "Percentage"];
+  // skillsColumnName = ["Subject", "Percentage"];
   skillsOptions = { pieHole: 0.4 };
   // --------------------------Earnings Tracker --------------------------
-  earningTrackerType = "ComboChart";
+  earningTrackerType = 'ComboChart';
   earningTrackerData = [
-    ["June", 150, 150],
-    ["July", 200, 200],
-    ["August", 300, 300],
-    ["September", 250, 250],
+    ['June', 150, 150],
+    ['July', 200, 200],
+    ['August', 300, 300],
+    ['September', 250, 250],
   ];
-  earningTrackerColumnNames = ["Earnings", "Average"];
+  // earningTrackerColumnNames = ["Earnings", "Average"];
   earningTrackerOptions = {
     hAxis: {
-      title: "Months",
+      title: 'Months',
     },
     vAxis: {
-      title: "Earning (USD $)",
+      title: 'Earning (USD $)',
     },
-    seriesType: "bars",
-    series: { 1: { type: "line" } },
+    seriesType: 'bars',
+    series: { 1: { type: 'line' } },
   };
   // ---------------------------------------------------------------------
   takeAction;
   pendingRequestsCount = 0;
   showCard: boolean = true;
-  bookingRequestMessage = "";
-  approvedMeetingsMessage = "";
-  liveMeetingsMessage = "";
+  bookingRequestMessage = '';
+  approvedMeetingsMessage = '';
+  liveMeetingsMessage = '';
   isLoading: boolean = false;
   bookingList: bookingDetails[] = [];
   meetingList: bookingDetails[] = [];
@@ -95,11 +95,11 @@ export class TutorDashboardComponent implements OnInit {
   condition;
   ngOnInit(): void {
     if (window.innerWidth <= 800) {
-      this.tutorChartWidth = "320";
+      this.tutorChartWidth = '320';
     }
     this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
     if (
-      this.loginService.getLoginType() == "Expert" &&
+      this.loginService.getLoginType() == 'Expert' &&
       this.tutorProfileDetails.tid
     ) {
       this.fetchTutorPendingBookings();
@@ -119,20 +119,20 @@ export class TutorDashboardComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-      this.loginService.setLoginType("Expert");
+      this.loginService.setLoginType('Expert');
       this.fetchTutorPendingBookings();
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
     }, 1000);
   }
   openRecordingsPage() {
-    this.router.navigate(["home/recordings"]);
+    this.router.navigate(['home/recordings']);
   }
   // -------------------------------------------------------------------------- tutor functions--------------------------------------------
   // for accepting bookings
   acceptBooking(booking: bookingDetails) {
     this.isLoading = true;
-    booking.approvalStatus = "Accepted";
+    booking.approvalStatus = 'Accepted';
 
     this.httpService
       .updateBookingStatus(booking.bid, booking.approvalStatus)
@@ -140,7 +140,7 @@ export class TutorDashboardComponent implements OnInit {
         if (res == true) {
           this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
           if (this.bookingList.length == 0) {
-            this.bookingRequestMessage = "No booking requests pending.";
+            this.bookingRequestMessage = 'No booking requests pending.';
             this.pendingRequestsCount = 0;
             this.takeAction = false;
           }
@@ -148,7 +148,7 @@ export class TutorDashboardComponent implements OnInit {
           this.enableJoinNow(booking);
           this.timeLeft(booking);
           this.meetingList.push(booking);
-          this.approvedMeetingsMessage = "";
+          this.approvedMeetingsMessage = '';
           this.isLoading = false;
         }
       });
@@ -156,7 +156,7 @@ export class TutorDashboardComponent implements OnInit {
 
   //for denying bookings
   denyBooking(booking: bookingDetails) {
-    booking.approvalStatus = "Rejected";
+    booking.approvalStatus = 'Rejected';
 
     this.httpService
       .updateBookingStatus(booking.bid, booking.approvalStatus)
@@ -164,7 +164,7 @@ export class TutorDashboardComponent implements OnInit {
         if (res == true) {
           this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
           if (this.bookingList.length == 0) {
-            this.bookingRequestMessage = "No booking requests pending.";
+            this.bookingRequestMessage = 'No booking requests pending.';
             this.pendingRequestsCount = 0;
             this.takeAction = false;
           }
@@ -174,13 +174,13 @@ export class TutorDashboardComponent implements OnInit {
 
   //for fetching pending tutor booking requests
   fetchTutorPendingBookings() {
-    if (this.loginService.getLoginType() == "Expert") {
+    if (this.loginService.getLoginType() == 'Expert') {
       this.httpService
         .getTutorBookings(this.tutorService.getTutorDetials().tid)
         .subscribe((res) => {
           this.bookingList = res;
           if (this.bookingList.length == 0) {
-            this.bookingRequestMessage = "No booking requests pending.";
+            this.bookingRequestMessage = 'No booking requests pending.';
             this.pendingRequestsCount = 0;
           } else {
             this.pendingRequestsCount = this.bookingList.length;
@@ -196,7 +196,7 @@ export class TutorDashboardComponent implements OnInit {
       .subscribe((res) => {
         this.meetingList = res;
         if (this.meetingList.length == 0) {
-          this.approvedMeetingsMessage = "No upcoming meetings pending.";
+          this.approvedMeetingsMessage = 'No upcoming meetings pending.';
         }
         for (let booking of this.meetingList) {
           this.before10MinutesTime(booking);
@@ -204,7 +204,7 @@ export class TutorDashboardComponent implements OnInit {
           this.timeLeft(booking);
 
           if (this.meetingList.length == 0) {
-            this.approvedMeetingsMessage = "No upcoming meetings pending.";
+            this.approvedMeetingsMessage = 'No upcoming meetings pending.';
           }
         }
       });
@@ -217,50 +217,20 @@ export class TutorDashboardComponent implements OnInit {
       .subscribe((res) => {
         this.liveMeetingList = res;
         if (this.liveMeetingList.length == 0) {
-          this.liveMeetingsMessage = "No live meetings.";
+          this.liveMeetingsMessage = 'No live meetings.';
         }
         for (let booking of this.liveMeetingList) {
           this.eliminateLiveMeetings(booking, this.liveMeetingList);
           if (this.meetingList.length == 0) {
-            this.approvedMeetingsMessage = "No upcoming meetings pending.";
+            this.approvedMeetingsMessage = 'No upcoming meetings pending.';
           }
         }
-        // //for removing before date meetings
-        // for (let meeting of this.liveMeetingList) {
-        // 	if (this.isBeforeDate(meeting)) {
-        // 		this.liveMeetingList.splice(this.liveMeetingList.indexOf(meeting), 1);
-        // 		if (this.liveMeetingList.length == 0) {
-        // 			this.liveMeetingsMessage = 'No live meetings.';
-        // 		}
-        // 	}
-        // }
-        // //for removing before current time meetings
-        // for (let booking of this.liveMeetingList) {
-        // 	this.isTimeCompleted(booking, this.liveMeetingList);
-        // 	if (this.liveMeetingList.length == 0) {
-        // 		this.liveMeetingsMessage = 'No live meetings.';
-        // 	}
-        // }
       });
   }
 
-  // // to check if the meeting is before the current date
-  // isBeforeDate(booking: bookingDetails) {
-  // 	var dateParts: any = booking.dateOfMeeting.split('/');
-  // 	var bookingDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-  // 	var currentDate: string = new Date().toUTCString();
-  // 	var currDate: Date = new Date(currentDate);
-  // 	currDate.setTime(0);
-  // 	if (bookingDate.getTime() < currDate.getTime()) {
-  // 		return true;
-  // 	} else {
-  // 		return false;
-  // 	}
-  // }
-
   //for checking time
   enableJoinNow(booking: bookingDetails) {
-    var currentDate: string = new Date(Date.now()).toLocaleDateString("en-GB");
+    var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     var bookingMinutes = booking.startTimeHour * 60 + booking.startTimeMinute;
     if (currentDate == booking.dateOfMeeting) {
       setInterval(() => {
@@ -275,7 +245,7 @@ export class TutorDashboardComponent implements OnInit {
   //to calculate the time left
   timeLeft(booking: bookingDetails) {
     var currDate = new Date();
-    var currentDate: string = new Date(Date.now()).toLocaleDateString("en-GB");
+    var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     if (currentDate == booking.dateOfMeeting) {
       var startMinutes: number =
         booking.startTimeHour * 60 + booking.startTimeMinute;
@@ -287,13 +257,13 @@ export class TutorDashboardComponent implements OnInit {
       var timeLeftMinutes: number = differenceMinutes % 60;
       if (differenceMinutes > 0) {
         if (timeLeftHours == 0) {
-          timeLeftString = timeLeftMinutes + " minutes";
+          timeLeftString = timeLeftMinutes + ' minutes';
         } else {
           if (timeLeftMinutes != 0) {
             timeLeftString =
-              timeLeftHours + " hours " + timeLeftMinutes + " minutes ";
+              timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes ';
           } else if (timeLeftMinutes == 0) {
-            timeLeftString = timeLeftHours + " hours ";
+            timeLeftString = timeLeftHours + ' hours ';
           }
         }
         booking.timeLeft = timeLeftString;
@@ -305,13 +275,13 @@ export class TutorDashboardComponent implements OnInit {
         timeLeftMinutes = differenceMinutes % 60;
         if (differenceMinutes > 0) {
           if (timeLeftHours == 0) {
-            timeLeftString = timeLeftMinutes + " minutes ";
+            timeLeftString = timeLeftMinutes + ' minutes ';
           } else {
             if (timeLeftMinutes != 0) {
               timeLeftString =
-                timeLeftHours + " hours " + timeLeftMinutes + " minutes";
+                timeLeftHours + ' hours ' + timeLeftMinutes + ' minutes';
             } else if (timeLeftMinutes == 0) {
-              timeLeftString = timeLeftHours + " hours";
+              timeLeftString = timeLeftHours + ' hours';
             }
           }
           booking.timeLeft = timeLeftString;
@@ -319,10 +289,10 @@ export class TutorDashboardComponent implements OnInit {
           if (Math.abs(differenceMinutes) > bookingDuration) {
             this.meetingList.splice(this.meetingList.indexOf(booking), 1);
             if (this.meetingList.length == 0) {
-              this.approvedMeetingsMessage = "No upcoming meetings.";
+              this.approvedMeetingsMessage = 'No upcoming meetings.';
             }
             this.httpService
-              .updateBookingStatus(booking.bid, "completed unattended")
+              .updateBookingStatus(booking.bid, 'completed unattended')
               .subscribe((res) => {});
           }
         }
@@ -332,7 +302,7 @@ export class TutorDashboardComponent implements OnInit {
       var minutesLeft: number = 0;
       var daysLeft: number = 0;
       var timeLeftString: string;
-      var dateParts: any = booking.dateOfMeeting.split("/");
+      var dateParts: any = booking.dateOfMeeting.split('/');
       var bookingDate = new Date(
         +dateParts[2],
         dateParts[1] - 1,
@@ -366,17 +336,17 @@ export class TutorDashboardComponent implements OnInit {
         if (daysLeft == 0) {
           timeLeftString =
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         } else {
           timeLeftString =
             Math.trunc(daysLeft) +
-            " days " +
+            ' days ' +
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         }
         booking.timeLeft = timeLeftString;
       }
@@ -408,17 +378,17 @@ export class TutorDashboardComponent implements OnInit {
         if (daysLeft == 0) {
           timeLeftString =
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         } else {
           timeLeftString =
             Math.trunc(daysLeft) +
-            " days " +
+            ' days ' +
             Math.trunc(hoursLeft) +
-            " hours " +
+            ' hours ' +
             Math.trunc(minutesLeft) +
-            " minutes";
+            ' minutes';
         }
         booking.timeLeft = timeLeftString;
       }, 5000);
@@ -427,7 +397,7 @@ export class TutorDashboardComponent implements OnInit {
 
   //to check if the meeting is before current time
   isTimeCompleted(booking, list: bookingDetails[]) {
-    var currentDate: string = new Date(Date.now()).toLocaleDateString("en-GB");
+    var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     if (currentDate == booking.dateOfMeeting) {
       var startMinutes: number =
         booking.startTimeHour * 60 + booking.startTimeMinute;
@@ -454,7 +424,7 @@ export class TutorDashboardComponent implements OnInit {
   }
 
   eliminateLiveMeetings(booking: bookingDetails, list: bookingDetails[]) {
-    var currentDate: string = new Date(Date.now()).toLocaleDateString("en-GB");
+    var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     if (currentDate == booking.dateOfMeeting) {
       var endMinutes: number = booking.endTimeHour * 60 + booking.endTimeMinute;
       var currentMinutes = this.now.getHours() * 60 + this.now.getMinutes();
@@ -471,7 +441,7 @@ export class TutorDashboardComponent implements OnInit {
           if (list.indexOf(booking) != -1) {
             list.splice(list.indexOf(booking), 1);
             this.httpService
-              .updateBookingStatus(booking.bid, "completed")
+              .updateBookingStatus(booking.bid, 'completed')
               .subscribe((res) => {});
           }
         }
@@ -490,7 +460,7 @@ export class TutorDashboardComponent implements OnInit {
 
   // when tutor initiates the meeting from upcoming meetings
   onHost(booking: bookingDetails) {
-    booking.approvalStatus = "live";
+    booking.approvalStatus = 'live';
     this.httpService
       .updateBookingStatus(booking.bid, booking.approvalStatus)
       .subscribe((res) => {
@@ -500,24 +470,24 @@ export class TutorDashboardComponent implements OnInit {
         }
       });
     this.hostMeeting.roomId = 123;
-    this.hostMeeting.role = "host";
+    this.hostMeeting.role = 'host';
     this.hostMeeting.roomName = booking.meetingId;
     this.hostMeeting.userName = booking.tutorName;
     this.hostMeeting.userId = booking.tutorId;
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(["meeting"]);
+    this.router.navigate(['meeting']);
   }
 
   //on join function for live meetings
   onJoin(booking: bookingDetails) {
     this.hostMeeting.roomId = 123;
-    this.hostMeeting.role = "host";
+    this.hostMeeting.role = 'host';
     this.hostMeeting.roomName = booking.meetingId;
     this.hostMeeting.userName = booking.tutorName;
     this.hostMeeting.userId = booking.tutorId;
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(["meeting"]);
+    this.router.navigate(['meeting']);
   }
 }

@@ -115,7 +115,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              (click)="onHost(element)"
+              (click)="onJoin(element)"
               [disabled]="!element.isLive"
             >
               Join
@@ -140,12 +140,20 @@
         </div>
       </div>
       <div style="margin-top: 20px">
-        <google-chart
+        <!-- <google-chart
           #chart
-          [title]="title"
           [type]="type"
           [data]="data"
           [columnNames]="columnNames"
+          [options]="options"
+          [width]="studentChartWidth"
+          [height]="studentChartHeight"
+        >
+        </google-chart> -->
+        <google-chart
+          #chart
+          [type]="type"
+          [data]="data"
           [options]="options"
           [width]="studentChartWidth"
           [height]="studentChartHeight"

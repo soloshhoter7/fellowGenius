@@ -1,13 +1,12 @@
-import { Injectable } from "@angular/core";
-import { tutorProfileDetails } from "../model/tutorProfileDetails";
-import { tutorLoginModel } from "../model/tutorLoginModel";
-import { TutorProfileComponent } from "../home/find-tutor/tutor-profile/tutor-profile.component";
-import { tutorProfile } from "../model/tutorProfile";
-import { tutorAvailabilitySchedule } from "../model/tutorAvailabilitySchedule";
-import { scheduleData } from "../model/scheduleData";
+import { Injectable } from '@angular/core';
+import { tutorProfileDetails } from '../model/tutorProfileDetails';
+import { tutorLoginModel } from '../model/tutorLoginModel';
+import { tutorProfile } from '../model/tutorProfile';
+import { tutorAvailabilitySchedule } from '../model/tutorAvailabilitySchedule';
+import { scheduleData } from '../model/scheduleData';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class TutorService {
   personalAvailablitySchedule: tutorAvailabilitySchedule;
@@ -62,8 +61,8 @@ export class TutorService {
       schedule.StartTime = startDate.toString();
       schedule.EndTime = endDate.toString();
       schedule.Subject = schedule.Subject.concat(
-        " : ",
-        schedule.Description.split("=")[0]
+        ' : ',
+        schedule.Description.split('=')[0]
       );
     }
   }

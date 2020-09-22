@@ -9,16 +9,16 @@ import {
   Sanitizer,
   ViewChildren,
   HostListener,
-} from "@angular/core";
+} from '@angular/core';
 import {
   DomSanitizer,
   SafeHtml,
   SafeUrl,
   SafeStyle,
-} from "@angular/platform-browser";
-import * as Stomp from "stompjs";
-import { fromEvent } from "rxjs";
-import { switchMap, takeUntil, pairwise } from "rxjs/operators";
+} from '@angular/platform-browser';
+import * as Stomp from 'stompjs';
+import { fromEvent } from 'rxjs';
+import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
 import {
   NgxAgoraService,
   Stream,
@@ -28,30 +28,29 @@ import {
   LocalStreamStats,
   RemoteStreamStats,
   StreamStats,
-} from "ngx-agora";
-import * as SockJS from "sockjs-client";
-import { timer, Subscription } from "rxjs";
-import { MeetingService } from "src/app/service/meeting.service";
-import { meetingDetails } from "src/app/model/meetingDetails";
-import { Router } from "@angular/router";
-import { bookingDetails } from "src/app/model/bookingDetails";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSnackBarConfig } from "@angular/material/snack-bar";
-import { colors } from "src/colors";
-import { MessageModel } from "src/app/model/message";
-import { WebSocketService } from "src/app/service/web-socket.service";
-import { DataSource } from "@angular/cdk/collections";
-import { LocationStrategy } from "@angular/common";
-import { LoginDetailsService } from "src/app/service/login-details.service";
-import { HttpService } from "src/app/service/http.service";
-import { CookieService } from "ngx-cookie-service";
-import * as jwt_decode from "jwt-decode";
+} from 'ngx-agora';
+import * as SockJS from 'sockjs-client';
+import { timer, Subscription } from 'rxjs';
+import { MeetingService } from 'src/app/service/meeting.service';
+import { meetingDetails } from 'src/app/model/meetingDetails';
+import { Router } from '@angular/router';
+import { bookingDetails } from 'src/app/model/bookingDetails';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MessageModel } from 'src/app/model/message';
+import { WebSocketService } from 'src/app/service/web-socket.service';
+import { DataSource } from '@angular/cdk/collections';
+import { LocationStrategy } from '@angular/common';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+import { HttpService } from 'src/app/service/http.service';
+import { CookieService } from 'ngx-cookie-service';
+import * as jwt_decode from 'jwt-decode';
 const numbers = timer(3000, 1000);
 
 @Component({
-  selector: "app-meeting",
-  templateUrl: "./meeting.component.html",
-  styleUrls: ["./meeting.component.css"],
+  selector: 'app-meeting',
+  templateUrl: './meeting.component.html',
+  styleUrls: ['./meeting.component.css'],
 })
 export class MeetingComponent implements OnInit {
   constructor(
@@ -69,9 +68,9 @@ export class MeetingComponent implements OnInit {
     this.sid = 76;
   }
   //   ---------------------
-  @ViewChild("canvas") public canvas: ElementRef;
-  @ViewChild("canvasScreenShare") public canvasScreenShare: ElementRef;
-  @ViewChild("chatWindow") private chatWindow: ElementRef;
+  @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasScreenShare') public canvasScreenShare: ElementRef;
+  @ViewChild('chatWindow') private chatWindow: ElementRef;
   @Input() public width = 1175;
   @Input() public height = 650;
 
@@ -81,8 +80,8 @@ export class MeetingComponent implements OnInit {
   greetings: string[] = [];
   showConversation: boolean = false;
   chatOpen: boolean = false;
-  myClass: string = "hideBlock";
-  myScreenShareClass: string = "hideBlock";
+  myClass: string = 'hideBlock';
+  myScreenShareClass: string = 'hideBlock';
   ws: any;
   name: string;
   disabled: boolean;
@@ -95,17 +94,17 @@ export class MeetingComponent implements OnInit {
   expandEnabled: boolean = true;
   remoteJoined: boolean = false;
   meeting = new meetingDetails();
-  localCallId = "agora_local";
-  screenCallId = "agora_screen";
+  localCallId = 'agora_local';
+  screenCallId = 'agora_screen';
   remoteCalls: string[] = [];
   screenRemoteCalls: string[] = [];
   localStreams: string[] = [];
   remoteVideoMute = false;
-  muteHostVideoStatus = "mute host video";
+  muteHostVideoStatus = 'mute host video';
   hostVideo = true;
-  muteHostAudioStatus = "mute host mic";
+  muteHostAudioStatus = 'mute host mic';
   hostScreenShareStatus = false;
-  timelimit;
+  timelimit = 0;
   timeLeft = this.timelimit;
   openWhiteBoardStatus: boolean = false;
   bookingDetails: bookingDetails;
@@ -117,8 +116,8 @@ export class MeetingComponent implements OnInit {
   senderName: string;
   fileUploadedBox = false;
   fileSizeExceeded = false;
-  fileName = "";
-  fileSize = "";
+  fileName = '';
+  fileSize = '';
   uploadedFile: File;
   private client: AgoraClient;
   private screenClient: AgoraClient;
@@ -133,12 +132,12 @@ export class MeetingComponent implements OnInit {
   canvasScreenShareEl: HTMLCanvasElement;
   config: MatSnackBarConfig = {
     duration: 7000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
   };
   fileType: string;
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
@@ -146,20 +145,23 @@ export class MeetingComponent implements OnInit {
 
   ngAfterViewInit() {
     this.canvasEl = this.canvas.nativeElement;
-    this.cx = this.canvasEl.getContext("2d");
+    this.cx = this.canvasEl.getContext('2d');
 
     this.canvasEl.width = this.width;
     this.canvasEl.height = this.height;
 
     this.cx.lineWidth = 5;
-    this.cx.lineCap = "round";
-    this.cx.strokeStyle = "#000";
+    this.cx.lineCap = 'round';
+    this.cx.strokeStyle = '#000';
     this.connectToMeetingWebSocket(this.meeting.roomName);
     this.captureEvents(this.canvasEl);
     this.getMousePosition(this.canvasEl);
   }
 
   ngOnInit() {
+    if (this.meetingService.getMeeting().roomId == null) {
+      this.handleRefresh();
+    }
     this.preventBackButton();
     this.width = (window.screen.width / 100) * 97;
     this.height = (window.screen.height / 100) * 80;
@@ -174,8 +176,8 @@ export class MeetingComponent implements OnInit {
     this.shortName();
     //---------------------------------------------- normal camera stream ----------------------------------
     this.client = this.ngxAgoraService.createClient({
-      mode: "rtc",
-      codec: "h264",
+      mode: 'rtc',
+      codec: 'h264',
     });
     this.assignClientHandlers();
     this.localStream = this.ngxAgoraService.createStream({
@@ -195,12 +197,12 @@ export class MeetingComponent implements OnInit {
   }
 
   handleRefresh() {
-    if (jwt_decode(this.cookieService.get("token"))["ROLE"] == "Learner") {
-      this.router.navigate(["home/studentDashboard"]);
+    if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
+      this.router.navigate(['home/studentDashboard']);
     } else if (
-      jwt_decode(this.cookieService.get("token"))["ROLE"] == "Expert"
+      jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Expert'
     ) {
-      this.router.navigate(["home/tutorDashboard"]);
+      this.router.navigate(['home/tutorDashboard']);
     }
   }
   calculateRemainingTime() {
@@ -222,10 +224,10 @@ export class MeetingComponent implements OnInit {
   }
 
   shareScreen() {
-    if (this.meetingService.getMeeting().role == "host") {
+    if (this.meetingService.getMeeting().role == 'host') {
       this.screenClient = this.ngxAgoraService.createClient({
-        mode: "rtc",
-        codec: "h264",
+        mode: 'rtc',
+        codec: 'h264',
       });
       this.assignScreenClientHandlers();
       this.screenStream = this.ngxAgoraService.createStream({
@@ -243,7 +245,7 @@ export class MeetingComponent implements OnInit {
     }
   }
   endCall() {
-    if (this.meeting.role == "host") {
+    if (this.meeting.role == 'host') {
       if (this.screenStream != null) {
         this.screenStream.stop();
         this.screenClient.leave();
@@ -255,10 +257,10 @@ export class MeetingComponent implements OnInit {
     this.localStream.stop();
     this.localStream.close();
 
-    if (this.meeting.role == "host") {
-      this.router.navigate(["home/tutorDashboard"]);
-    } else if (this.meeting.role == "student") {
-      this.router.navigate(["home/studentDashboard"]);
+    if (this.meeting.role == 'host') {
+      this.router.navigate(['home/tutorDashboard']);
+    } else if (this.meeting.role == 'student') {
+      this.router.navigate(['home/studentDashboard']);
     }
     // this.router.navigate([ 'home' ]);
   }
@@ -268,17 +270,17 @@ export class MeetingComponent implements OnInit {
     this.subscription = numbers.subscribe((x) => {
       this.timeLeft = this.timelimit - x;
       if (x == before10Minutes) {
-        if (this.router.url === "/meeting") {
+        if (this.router.url === '/meeting') {
           this.snackbar.open(
-            "10 Minutes Left ! Hurry up",
-            "close",
+            '10 Minutes Left ! Hurry up',
+            'close',
             this.config
           );
         }
       }
       if (x == this.timelimit) {
         this.httpService
-          .updateBookingStatus(this.bookingDetails.bid, "Successful")
+          .updateBookingStatus(this.bookingDetails.bid, 'Successful')
           .subscribe((res) => {
             this.localStream.stop();
             this.subscription.unsubscribe();
@@ -293,9 +295,9 @@ export class MeetingComponent implements OnInit {
     this.client.on(ClientEvent.LocalStreamPublished, (evt) => {});
 
     this.client.on(ClientEvent.Error, (error) => {
-      if (error.reason === "DYNAMIC_KEY_TIMEOUT") {
-        this.client.renewChannelKey("", () => (renewError) =>
-          console.error("Renew channel key failed: ", renewError)
+      if (error.reason === 'DYNAMIC_KEY_TIMEOUT') {
+        this.client.renewChannelKey('', () => (renewError) =>
+          console.error('Renew channel key failed: ', renewError)
         );
       }
     });
@@ -311,7 +313,7 @@ export class MeetingComponent implements OnInit {
           (err) => {}
         );
       } else if (
-        this.meetingService.getMeeting().role == "student" &&
+        this.meetingService.getMeeting().role == 'student' &&
         id == 76
       ) {
         this.client.subscribe(
@@ -396,7 +398,7 @@ export class MeetingComponent implements OnInit {
           onSuccess();
         }
       },
-      (err) => console.error("getUserMedia failed", err)
+      (err) => console.error('getUserMedia failed', err)
     );
   }
 
@@ -408,7 +410,7 @@ export class MeetingComponent implements OnInit {
           onSuccess();
         }
       },
-      (err) => console.error("getUserMedia failed", err)
+      (err) => console.error('getUserMedia failed', err)
     );
   }
   //-----------------------------------------------------------------------------------------------------------------
@@ -451,28 +453,28 @@ export class MeetingComponent implements OnInit {
   // ------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------- control button functions --------------------------------------------
   stopStream() {
-    if (confirm("Are you sure you want to cancel !")) {
+    if (confirm('Are you sure you want to cancel !')) {
       this.endCall();
     }
   }
 
   muteVideo() {
-    if (this.muteHostVideoStatus == "mute host video") {
+    if (this.muteHostVideoStatus == 'mute host video') {
       this.localStream.muteVideo();
-      this.muteHostVideoStatus = "unmute host video";
-    } else if (this.muteHostVideoStatus == "unmute host video") {
+      this.muteHostVideoStatus = 'unmute host video';
+    } else if (this.muteHostVideoStatus == 'unmute host video') {
       this.localStream.unmuteVideo();
-      this.muteHostVideoStatus = "mute host video";
+      this.muteHostVideoStatus = 'mute host video';
     }
   }
 
   muteAudio() {
-    if (this.muteHostAudioStatus == "mute host mic") {
+    if (this.muteHostAudioStatus == 'mute host mic') {
       this.localStream.muteAudio();
-      this.muteHostAudioStatus = "unmute host mic";
+      this.muteHostAudioStatus = 'unmute host mic';
     } else {
       this.localStream.unmuteAudio();
-      this.muteHostAudioStatus = "mute host mic";
+      this.muteHostAudioStatus = 'mute host mic';
     }
   }
 
@@ -496,14 +498,14 @@ export class MeetingComponent implements OnInit {
   openWhiteBoard() {
     if (this.openWhiteBoardStatus == false) {
       this.openWhiteBoardStatus = true;
-      this.myClass = "";
+      this.myClass = '';
       this.expandEnabled = false;
-      this.myScreenShareClass = "hideBlock";
+      this.myScreenShareClass = 'hideBlock';
       this.initiateWhiteBoardForStudent();
       // this.router.navigate([ '/meeting/whiteBoard' ]);
     } else {
       this.openWhiteBoardStatus = !this.openWhiteBoardStatus;
-      this.myClass = "hideBlock";
+      this.myClass = 'hideBlock';
       this.expandEnabled = true;
       this.closeWhiteBoardForStudent();
       // this.router.navigate([ 'meeting' ]);
@@ -527,30 +529,30 @@ export class MeetingComponent implements OnInit {
   }
   openSideNav() {
     if (this.screenWidth <= 500) {
-      document.getElementById("mySidenav").style.width = "100%";
+      document.getElementById('mySidenav').style.width = '100%';
     } else {
-      document.getElementById("mySidenav").style.width = "400px";
+      document.getElementById('mySidenav').style.width = '400px';
     }
   }
   closeSideNav() {
-    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById('mySidenav').style.width = '0';
     this.chatOpen = false;
     this.newMessageNotification = false;
   }
   //-------------------------------------------------------------------------------------------------------------------
   captureEvents(canvasEl: HTMLCanvasElement) {
     // this will capture all mousedown events from the canvas element
-    fromEvent(canvasEl, "mousedown")
+    fromEvent(canvasEl, 'mousedown')
       .pipe(
         switchMap((e) => {
           // this.getMousePosition(canvasEl);
           // after a mouse down, we'll record all mouse moves
-          return fromEvent(canvasEl, "mousemove").pipe(
+          return fromEvent(canvasEl, 'mousemove').pipe(
             // we'll stop (and unsubscribe) once the user releases the mouse
             // this will trigger a 'mouseup' event
-            takeUntil(fromEvent(canvasEl, "mouseup")),
+            takeUntil(fromEvent(canvasEl, 'mouseup')),
             // we'll also stop (and unsubscribe) once the mouse leaves the canvas (mouseleave event)
-            takeUntil(fromEvent(canvasEl, "mouseleave")),
+            takeUntil(fromEvent(canvasEl, 'mouseleave')),
             // pairwise lets us get the previous value to draw a line from
             // the previous point to the current point
             pairwise()
@@ -571,7 +573,7 @@ export class MeetingComponent implements OnInit {
           y: res[1].clientY - rect.top,
         };
         this.sendCoordinates(
-          "drawing",
+          'drawing',
           null,
           this.cx.strokeStyle,
           this.cx.lineWidth,
@@ -591,8 +593,8 @@ export class MeetingComponent implements OnInit {
   }
 
   getMousePosition(canvas) {
-    canvas.addEventListener("mouseup", () => {
-      var src = canvas.toDataURL("image/png");
+    canvas.addEventListener('mouseup', () => {
+      var src = canvas.toDataURL('image/png');
       this.list.push(src);
       this.undoStack.push(src);
     });
@@ -614,27 +616,27 @@ export class MeetingComponent implements OnInit {
 
   erase() {
     this.cx.lineWidth = 50;
-    this.cx.lineCap = "round";
-    this.cx.strokeStyle = "#fff";
+    this.cx.lineCap = 'round';
+    this.cx.strokeStyle = '#fff';
   }
   pencil(event, item) {
-    if (item == "black") {
+    if (item == 'black') {
       this.cx.lineWidth = 5;
-      this.cx.lineCap = "round";
-      this.cx.strokeStyle = "#000";
-    } else if (item == "red") {
+      this.cx.lineCap = 'round';
+      this.cx.strokeStyle = '#000';
+    } else if (item == 'red') {
       this.cx.lineWidth = 5;
-      this.cx.lineCap = "round";
-      this.cx.strokeStyle = "#FF0000";
-    } else if (item == "blue") {
+      this.cx.lineCap = 'round';
+      this.cx.strokeStyle = '#FF0000';
+    } else if (item == 'blue') {
       this.cx.lineWidth = 5;
-      this.cx.lineCap = "round";
-      this.cx.strokeStyle = "#0000FF";
+      this.cx.lineCap = 'round';
+      this.cx.strokeStyle = '#0000FF';
     }
   }
 
   reset() {
-    this.sendCoordinates("reset", null, null, null, null, null);
+    this.sendCoordinates('reset', null, null, null, null, null);
     this.cx.clearRect(0, 0, this.cx.canvas.width, this.cx.canvas.height);
   }
   undo() {
@@ -643,11 +645,11 @@ export class MeetingComponent implements OnInit {
     } else {
       var src = this.undoStack.pop();
       this.redoStack.push(this.list.pop());
-      var img: HTMLImageElement = document.createElement("img");
+      var img: HTMLImageElement = document.createElement('img');
       img.src = src.toString();
-      img.setAttribute("width", "1000");
-      img.setAttribute("height", "480");
-      this.sendCoordinates("undo", img.src, null, null, null, null);
+      img.setAttribute('width', '1000');
+      img.setAttribute('height', '480');
+      this.sendCoordinates('undo', img.src, null, null, null, null);
       img.onload = (event) => {
         this.cx.clearRect(0, 0, this.width, this.height);
         this.cx.drawImage(img, 0, 0);
@@ -659,11 +661,11 @@ export class MeetingComponent implements OnInit {
     var src = this.redoStack.pop();
     this.list.push(src);
     this.undoStack.push(src);
-    var img: HTMLImageElement = document.createElement("img");
+    var img: HTMLImageElement = document.createElement('img');
     img.src = src.toString();
-    img.setAttribute("width", "1000");
-    img.setAttribute("height", "480");
-    this.sendCoordinates("redo", img.src, null, null, null, null);
+    img.setAttribute('width', '1000');
+    img.setAttribute('height', '480');
+    this.sendCoordinates('redo', img.src, null, null, null, null);
     img.onload = (event) => {
       this.cx.clearRect(0, 0, this.width, this.height);
       this.cx.drawImage(img, 0, 0);
@@ -672,41 +674,41 @@ export class MeetingComponent implements OnInit {
 
   connectToMeetingWebSocket(bookingId) {
     // let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
-    // let socket = new SockJS("https://backend.fellowgenius.com/fellowGenius");
+    let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
     // let socket = new SockJS('http://localhost:5000/fellowGenius');
-    let socket = new SockJS("http://localhost:8080/fellowGenius");
+    // let socket = new SockJS('http://localhost:8080/fellowGenius');
     this.ws = Stomp.over(socket);
     let that = this;
     this.ws.connect(
       {},
       (frame) => {
-        that.ws.subscribe("/errors", (message) => {
-          alert("Error " + message.body);
+        that.ws.subscribe('/errors', (message) => {
+          alert('Error ' + message.body);
         });
-        that.ws.subscribe("/inbox/whiteBoard/" + bookingId, (message) => {
+        that.ws.subscribe('/inbox/whiteBoard/' + bookingId, (message) => {
           var res = JSON.parse(message.body);
 
-          if (res.action == "initiateWhiteBoard") {
-            if (this.meetingService.getMeeting().role == "student") {
+          if (res.action == 'initiateWhiteBoard') {
+            if (this.meetingService.getMeeting().role == 'student') {
               this.expandEnabled = false;
-              this.myClass = "";
+              this.myClass = '';
             }
-          } else if (res.action == "drawing") {
-            if (this.meetingService.getMeeting().role == "student") {
+          } else if (res.action == 'drawing') {
+            if (this.meetingService.getMeeting().role == 'student') {
               this.cx.strokeStyle = res.color;
               this.cx.lineWidth = res.lineWidth;
-              if (res.color == "#ffffff") {
-                this.cx.lineCap = "round";
+              if (res.color == '#ffffff') {
+                this.cx.lineCap = 'round';
               }
               this.drawOnCanvas(res.prevPos, res.currentPos);
             }
-          } else if (res.action == "closeWhiteBoard") {
-            if (this.meetingService.getMeeting().role == "student") {
+          } else if (res.action == 'closeWhiteBoard') {
+            if (this.meetingService.getMeeting().role == 'student') {
               this.expandEnabled = true;
-              this.myClass = "hideBlock";
+              this.myClass = 'hideBlock';
             }
-          } else if (res.action == "reset") {
-            if (this.meetingService.getMeeting().role == "student") {
+          } else if (res.action == 'reset') {
+            if (this.meetingService.getMeeting().role == 'student') {
               this.cx.clearRect(
                 0,
                 0,
@@ -714,12 +716,12 @@ export class MeetingComponent implements OnInit {
                 this.cx.canvas.height
               );
             }
-          } else if (res.action == "undo" || res.action == "redo") {
-            if (this.meetingService.getMeeting().role == "student") {
-              var img: HTMLImageElement = document.createElement("img");
+          } else if (res.action == 'undo' || res.action == 'redo') {
+            if (this.meetingService.getMeeting().role == 'student') {
+              var img: HTMLImageElement = document.createElement('img');
               img.src = res.dataSource.toString();
-              img.setAttribute("width", "1000");
-              img.setAttribute("height", "480");
+              img.setAttribute('width', '1000');
+              img.setAttribute('height', '480');
               img.onload = (event) => {
                 this.cx.clearRect(0, 0, this.width, this.height);
                 this.cx.drawImage(img, 0, 0);
@@ -728,7 +730,7 @@ export class MeetingComponent implements OnInit {
           }
         });
 
-        that.ws.subscribe("/inbox/MeetingChat/" + bookingId, function (
+        that.ws.subscribe('/inbox/MeetingChat/' + bookingId, function (
           message
         ) {
           var res: any = JSON.parse(message.body);
@@ -756,7 +758,7 @@ export class MeetingComponent implements OnInit {
       },
       (error) => {
         // alert('STOMP error ' + error);
-        console.log("re initiating the connection !");
+        console.log('re initiating the connection !');
         setTimeout(() => {
           this.connectToMeetingWebSocket(this.meeting.roomName);
         }, 5000);
@@ -773,18 +775,18 @@ export class MeetingComponent implements OnInit {
       prevPos: prevPos,
       currentPos: currentPos,
     });
-    this.ws.send("/sendData/" + this.meeting.roomName, {}, data);
+    this.ws.send('/sendData/' + this.meeting.roomName, {}, data);
   }
   initiateWhiteBoardForStudent() {
-    this.sendCoordinates("initiateWhiteBoard", null, null, null, null, null);
+    this.sendCoordinates('initiateWhiteBoard', null, null, null, null, null);
   }
   closeWhiteBoardForStudent() {
-    this.sendCoordinates("closeWhiteBoard", null, null, null, null, null);
+    this.sendCoordinates('closeWhiteBoard', null, null, null, null, null);
   }
   //--------------------------------------------- chat functions--------------------------------------------------
   sendChatMessage() {
     var senderId: number;
-    if (this.messageText != "") {
+    if (this.messageText != '') {
       this.message.messageText = this.messageText;
       this.message.senderId = this.senderId;
       this.message.senderName = this.senderName;
@@ -792,7 +794,7 @@ export class MeetingComponent implements OnInit {
       this.message.date = new Date().toLocaleString();
       // this.scrollToBottom();
       this.sendMessageToMeeting(this.message, this.meeting.roomName);
-      this.messageText = "";
+      this.messageText = '';
     }
 
     // this.scrollToBottom();
@@ -803,7 +805,7 @@ export class MeetingComponent implements OnInit {
     let data = JSON.stringify({
       message: message,
     });
-    this.ws.send("/sendChat/" + bookingId, {}, data);
+    this.ws.send('/sendChat/' + bookingId, {}, data);
   }
   // for handling the enter submit event
   handleSubmit(event) {
@@ -821,9 +823,9 @@ export class MeetingComponent implements OnInit {
     if (file.size <= 100 * 1024 * 1024) {
       if (file.size > 1024 * 1024) {
         this.fileSize =
-          (file.size / (1024 * 1024)).toFixed(2).toString() + " MB";
+          (file.size / (1024 * 1024)).toFixed(2).toString() + ' MB';
       } else {
-        this.fileSize = (file.size / 1024).toFixed(2).toString() + " KB";
+        this.fileSize = (file.size / 1024).toFixed(2).toString() + ' KB';
       }
       // this.getBase64(file);
     } else {
@@ -857,7 +859,7 @@ export class MeetingComponent implements OnInit {
   }
 
   b64toBlob(dataURI, fileType) {
-    var byteString = atob(dataURI.split(",")[1]);
+    var byteString = atob(dataURI.split(',')[1]);
     var ab = new ArrayBuffer(byteString.length);
     var ia = new Uint8Array(ab);
 
@@ -871,7 +873,7 @@ export class MeetingComponent implements OnInit {
     let data = JSON.stringify({
       message: message,
     });
-    this.ws.send("/sendChat/" + bookingId, {}, data);
+    this.ws.send('/sendChat/' + bookingId, {}, data);
     // this.ws.send()
     this.closeFileUploadedBox();
   }
@@ -883,7 +885,7 @@ export class MeetingComponent implements OnInit {
   //--------------------------------------------------------------------------------------------------------------
   //--------------------------------- for short Name ------------------------------------------------------------------
   shortName() {
-    var str = this.meeting.userName.split(" ");
+    var str = this.meeting.userName.split(' ');
     if (str[1] != undefined) {
       var fn = str[0];
       var ln = str[1];

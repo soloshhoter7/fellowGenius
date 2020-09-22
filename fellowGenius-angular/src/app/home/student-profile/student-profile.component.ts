@@ -1,22 +1,21 @@
-import { Component, OnInit } from "@angular/core";
-import { StudentProfileModel } from "src/app/model/studentProfile";
-import { StudentService } from "src/app/service/student.service";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { UpdateboxstudentComponent } from "./updateboxstudent/updateboxstudent.component";
-import { NgForm } from "@angular/forms";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { finalize } from "rxjs/operators";
-import { AngularFireStorage } from "@angular/fire/storage";
-import { HttpService } from "../../service/http.service";
-import { FormControl } from "@angular/forms";
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { UploadProfilePictureComponent } from "src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component";
+import { Component, OnInit } from '@angular/core';
+import { StudentProfileModel } from 'src/app/model/studentProfile';
+import { StudentService } from 'src/app/service/student.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { NgForm } from '@angular/forms';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { HttpService } from '../../service/http.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component';
 
 @Component({
-  selector: "app-student-profile",
-  templateUrl: "./student-profile.component.html",
-  styleUrls: ["./student-profile.component.css"],
+  selector: 'app-student-profile',
+  templateUrl: './student-profile.component.html',
+  styleUrls: ['./student-profile.component.css'],
 })
 export class StudentProfileComponent implements OnInit {
   constructor(
@@ -31,21 +30,21 @@ export class StudentProfileComponent implements OnInit {
   duplicateArea;
   config: MatSnackBarConfig = {
     duration: 2000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
   };
   studentProfile: StudentProfileModel;
   myControl = new FormControl();
   options: string[] = [
-    "Mathematics",
-    "English",
-    "Science",
-    "Social Science",
-    "History",
-    "Political Science",
-    "Geography",
-    "Physics",
-    "Chemistry",
+    'Mathematics',
+    'English',
+    'Science',
+    'Social Science',
+    'History',
+    'Political Science',
+    'Geography',
+    'Physics',
+    'Chemistry',
   ];
   filteredOptions: Observable<string[]>;
   // learningAreas = new Array(3);
@@ -53,26 +52,26 @@ export class StudentProfileComponent implements OnInit {
   index: Number;
   learningArea;
   learningAreas: string[] = [];
-  profilePictureUrl = "../../../assets/images/default-user-image.png";
+  profilePictureUrl = '../../../assets/images/default-user-image.png';
   uploadedProfilePicture: File = null;
-
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   snackBarConfig: MatSnackBarConfig = {
     duration: 15000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
-    panelClass: ["snackbar"],
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+    panelClass: ['snackbar'],
   };
 
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map((value) => this._filter(value))
     );
     this.index = 1;
     this.openNav();
     // this.disableSub = true;
-    console.log("student service profile");
-    console.log(this.studentService.getStudentProfileDetails());
     this.studentProfile = this.studentService.getStudentProfileDetails();
     if (this.studentProfile.profilePictureUrl != null) {
       this.profilePictureUrl = this.studentProfile.profilePictureUrl;
@@ -93,21 +92,21 @@ export class StudentProfileComponent implements OnInit {
   addLearningArea() {
     if (!this.duplicacyCheck(this.learningAreas, this.learningArea)) {
       this.learningAreas.push(this.learningArea);
-      this.learningArea = "";
+      this.learningArea = '';
       if (this.duplicateArea == true) {
         this.duplicateArea = false;
       }
     } else {
       this.duplicateArea = true;
-      this.learningArea = "";
+      this.learningArea = '';
     }
   }
 
   subtractLearningArea(index: any) {
     var subject = this.learningAreas[index];
-    if (confirm("Are you sure you want to delete this learning area?")) {
+    if (confirm('Are you sure you want to delete this learning area?')) {
       this.httpService
-        .subtractArea(this.studentProfile.sid, "Learner", subject)
+        .subtractArea(this.studentProfile.sid, 'Learner', subject)
         .subscribe();
       this.learningAreas.splice(index, 1);
     }
@@ -123,17 +122,16 @@ export class StudentProfileComponent implements OnInit {
     }
   }
   openNav() {
-    document.getElementById("sidenav").style.width = "230px";
-    document.getElementById("mainContent").style.marginLeft = "230px";
+    document.getElementById('sidenav').style.width = '230px';
+    document.getElementById('mainContent').style.marginLeft = '230px';
   }
 
   closeNav() {
-    document.getElementById("sidenav").style.width = "0";
-    document.getElementById("mainContent").style.marginLeft = "0";
+    document.getElementById('sidenav').style.width = '0';
+    document.getElementById('mainContent').style.marginLeft = '0';
   }
 
   saveStudentProfile(form: NgForm) {
-    console.log(form);
     this.studentProfile.contact = form.value.contact;
     this.studentProfile.dateOfBirth = form.value.dob;
     this.studentProfile.fullName = form.value.fullName;
@@ -146,14 +144,13 @@ export class StudentProfileComponent implements OnInit {
         .subscribe((res) => {
           this.studentService.setStudentProfileDetails(this.studentProfile);
           this.snackBar.open(
-            "information saved successfully !",
-            "close",
+            'information saved successfully !',
+            'close',
             this.config
           );
           location.reload();
         });
     } else {
-      console.log("duplicate entries found");
     }
   }
 
@@ -215,7 +212,7 @@ export class StudentProfileComponent implements OnInit {
     });
   }
   b64toBlob(dataURI, fileType) {
-    var byteString = atob(dataURI.split(",")[1]);
+    var byteString = atob(dataURI.split(',')[1]);
     var ab = new ArrayBuffer(byteString.length);
     var ia = new Uint8Array(ab);
 
@@ -238,8 +235,8 @@ export class StudentProfileComponent implements OnInit {
           fileRef.getDownloadURL().subscribe((url) => {
             this.profilePictureUrl = url;
             this.snackBar.open(
-              "Image Uploaded successfully",
-              "close",
+              'Image Uploaded successfully',
+              'close',
               this.config
             );
           });
@@ -263,28 +260,14 @@ export class StudentProfileComponent implements OnInit {
             this.isLoading3 = false;
             this.profilePictureUrl = url;
             this.snackBar.open(
-              "Image Uploaded successfully",
-              "close",
+              'Image Uploaded successfully',
+              'close',
               this.config
             );
           });
         })
       )
       .subscribe();
-  }
-  basicInfoEdit() {
-    this.studentService.setEditFuntion("basicInfoEdit");
-    this.matDialog.open(UpdateboxstudentComponent, {
-      width: "auto",
-      height: "auto",
-    });
-  }
-  tutProfileDetailsEdit() {
-    this.studentService.setEditFuntion("basicInfoEdit2");
-    this.matDialog.open(UpdateboxstudentComponent, {
-      width: "auto",
-      height: "auto",
-    });
   }
   handleRefresh() {
     if (!this.studentProfile.sid) {
@@ -296,7 +279,6 @@ export class StudentProfileComponent implements OnInit {
         if (this.studentProfile.learningAreas != null) {
           this.learningAreas = this.studentProfile.learningAreas;
         }
-        console.log(this.studentProfile);
       }, 1000);
     }
   }

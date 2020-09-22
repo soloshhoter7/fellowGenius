@@ -4,35 +4,34 @@ import {
   ViewChild,
   ElementRef,
   NgZone,
-} from "@angular/core";
-import { Router } from "@angular/router";
-import { NgForm } from "@angular/forms";
-import { StudentProfileModel } from "../../model/studentProfile";
-import { HttpService } from "src/app/service/http.service";
-import { StudentService } from "src/app/service/student.service";
-import { TutorService } from "src/app/service/tutor.service";
-import { LoginDetailsService } from "src/app/service/login-details.service";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { TermsAndConditionsComponent } from "../sign-up/terms-and-conditions/terms-and-conditions.component";
-import { StudentLoginModel } from "src/app/model/studentLoginModel";
-import { CookieService } from "ngx-cookie-service";
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { StudentProfileModel } from '../../model/studentProfile';
+import { HttpService } from 'src/app/service/http.service';
+import { StudentService } from 'src/app/service/student.service';
+import { TutorService } from 'src/app/service/tutor.service';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { TermsAndConditionsComponent } from '../sign-up/terms-and-conditions/terms-and-conditions.component';
+import { StudentLoginModel } from 'src/app/model/studentLoginModel';
+import { CookieService } from 'ngx-cookie-service';
 // import * as jwt_decode from "jwt-decode";
-import * as jwt_decode from "jwt-decode";
+import * as jwt_decode from 'jwt-decode';
 // import { bcrypt } from "node_modules/bcryptjs";
-import * as bcrypt from "bcryptjs";
-import { registrationModel } from "src/app/model/registration";
-import { loginModel } from "src/app/model/login";
-import { tutorProfile } from "src/app/model/tutorProfile";
-import { socialLogin } from "src/app/model/socialModel";
-import { tutorAvailabilitySchedule } from "src/app/model/tutorAvailabilitySchedule";
-import { SocialService } from "src/app/service/social.service";
-import { WelcomeComponent } from "src/app/home/welcome/welcome.component";
-import { ThankYouComponent } from "../thank-you/thank-you.component";
+import * as bcrypt from 'bcryptjs';
+import { registrationModel } from 'src/app/model/registration';
+import { loginModel } from 'src/app/model/login';
+import { tutorProfile } from 'src/app/model/tutorProfile';
+import { socialLogin } from 'src/app/model/socialModel';
+import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedule';
+import { SocialService } from 'src/app/service/social.service';
+import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 @Component({
-  selector: "app-sign-up",
-  templateUrl: "./sign-up.component.html",
-  styleUrls: ["./sign-up.component.css"],
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent implements OnInit {
   constructor(
@@ -48,10 +47,10 @@ export class SignUpComponent implements OnInit {
     private zone: NgZone
   ) {}
   // --- parent child relationships ------------
-  @ViewChild("loginRef", { static: true })
+  @ViewChild('loginRef', { static: true })
   loginElement: ElementRef;
 
-  @ViewChild("googleSignUp", { static: true })
+  @ViewChild('googleSignUp', { static: true })
   googleSignUp: ElementRef;
   // --- booleans ----------------------------
   isLoading: boolean;
@@ -66,9 +65,9 @@ export class SignUpComponent implements OnInit {
   hide: boolean = true;
   timeOut: boolean = true;
   // ---------- patterns --------------------------------
-  mobNumberPattern = "^((\\+91-?)|0)?[0-9]{10}$";
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
-    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$";
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
 
   //  ----------- data fields ------------------------------
   verificationOtp;
@@ -87,8 +86,8 @@ export class SignUpComponent implements OnInit {
   //---------------- configurations ----------------------
   config: MatSnackBarConfig = {
     duration: 5000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
   };
   //--------------------------------------------------------
   ngOnInit() {
@@ -96,11 +95,11 @@ export class SignUpComponent implements OnInit {
   }
 
   toSignUpPage() {
-    this.router.navigate(["signUp"]);
+    this.router.navigate(['signUp']);
   }
 
   toFacadePage() {
-    this.router.navigate(["facade"]);
+    this.router.navigate(['facade']);
   }
 
   openThankYouPage() {
@@ -114,8 +113,8 @@ export class SignUpComponent implements OnInit {
   }
   openTermsAndConditions() {
     this.dialogRef.open(TermsAndConditionsComponent, {
-      width: "auto",
-      height: "auto",
+      width: 'auto',
+      height: 'auto',
     });
   }
 
@@ -137,7 +136,7 @@ export class SignUpComponent implements OnInit {
       this.httpClient
         .verifyEmail(this.registrationModel.email)
         .subscribe((res) => {
-          this.verificationOtp = res["response"];
+          this.verificationOtp = res['response'];
 
           this.timeOut = false;
           this.verifyEmail = true;
@@ -154,14 +153,14 @@ export class SignUpComponent implements OnInit {
               this.loginModel.password = this.registrationModel.password;
               // for logging in once registration is done
               this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-                this.cookieService.set("token", res["response"]);
+                this.cookieService.set('token', res['response']);
                 this.cookieService.set(
-                  "userId",
-                  jwt_decode(res["response"])["sub"]
+                  'userId',
+                  jwt_decode(res['response'])['sub']
                 );
-                this.userId = this.cookieService.get("userId");
+                this.userId = this.cookieService.get('userId');
 
-                if (this.registrationModel.role == "Learner") {
+                if (this.registrationModel.role == 'Learner') {
                   this.httpClient
                     .getStudentDetails(this.userId)
                     .subscribe((res) => {
@@ -169,11 +168,11 @@ export class SignUpComponent implements OnInit {
                       this.studentService.setStudentProfileDetails(
                         this.studentProfile
                       );
-                      this.loginService.setLoginType("Learner");
-                      this.loginService.setTrType("signUp");
-                      this.router.navigate(["home"]);
+                      this.loginService.setLoginType('Learner');
+                      this.loginService.setTrType('signUp');
+                      this.router.navigate(['home']);
                     });
-                } else if (this.registrationModel.role == "Expert") {
+                } else if (this.registrationModel.role == 'Expert') {
                   this.httpClient
                     .getTutorDetails(this.userId)
                     .subscribe((res) => {
@@ -191,9 +190,9 @@ export class SignUpComponent implements OnInit {
                               this.tutorService.setPersonalAvailabilitySchedule(
                                 this.tutorAvailabilitySchedule
                               );
-                              this.loginService.setLoginType("Expert");
-                              this.loginService.setTrType("signUp");
-                              this.router.navigate(["home"]);
+                              this.loginService.setLoginType('Expert');
+                              this.loginService.setTrType('signUp');
+                              this.router.navigate(['home']);
                             });
                         });
                     });
@@ -201,8 +200,8 @@ export class SignUpComponent implements OnInit {
               });
             } else if (res == false) {
               this.snackBar.open(
-                "registration not successful ! email already exists !",
-                "close",
+                'registration not successful ! email already exists !',
+                'close',
                 this.config
               );
               this.incorrectLoginDetails = true;
@@ -226,13 +225,12 @@ export class SignUpComponent implements OnInit {
         this.socialLogin.fullName = profile.getName();
         this.socialLogin.email = profile.getEmail();
         this.socialService.setSocialDetails(this.socialLogin);
-        console.log(this.socialLogin);
         this.zone.run(() => {
           this.openThankYouPage();
         });
       },
       (error) => {
-        console.log("google pop up closed by the user");
+        console.log('google pop up closed by the user');
       }
     );
   }
@@ -248,27 +246,25 @@ export class SignUpComponent implements OnInit {
         this.loginModel.password = this.registrationModel.password;
         // for logging in once registration is done
         this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-          this.cookieService.set("token", res["response"]);
-          this.cookieService.set("userId", jwt_decode(res["response"])["sub"]);
-          this.userId = this.cookieService.get("userId");
+          this.cookieService.set('token', res['response']);
+          this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
+          this.userId = this.cookieService.get('userId');
 
-          if (this.registrationModel.role == "Learner") {
+          if (this.registrationModel.role == 'Learner') {
             this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
               this.studentProfile = res;
               this.studentService.setStudentProfileDetails(this.studentProfile);
-              this.loginService.setLoginType("Learner");
-              this.loginService.setTrType("signUp");
-              this.router.navigate(["home"]);
+              this.loginService.setLoginType('Learner');
+              this.loginService.setTrType('signUp');
+              this.router.navigate(['home']);
             });
-          } else if (this.registrationModel.role == "Expert") {
+          } else if (this.registrationModel.role == 'Expert') {
             this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
               this.tutorProfile = res;
-              console.log(this.tutorProfile);
               this.tutorService.setTutorDetails(this.tutorProfile);
               this.httpClient
                 .getTutorProfileDetails(this.tutorProfile.tid)
                 .subscribe((res) => {
-                  console.log(res);
                   this.tutorService.setTutorProfileDetails(res);
                   this.httpClient
                     .getScheduleData(this.tutorProfile.tid)
@@ -277,9 +273,9 @@ export class SignUpComponent implements OnInit {
                       this.tutorService.setPersonalAvailabilitySchedule(
                         this.tutorAvailabilitySchedule
                       );
-                      this.loginService.setLoginType("Expert");
-                      this.loginService.setTrType("signUp");
-                      this.router.navigate(["home"]);
+                      this.loginService.setLoginType('Expert');
+                      this.loginService.setTrType('signUp');
+                      this.router.navigate(['home']);
                     });
                 });
             });
@@ -287,8 +283,8 @@ export class SignUpComponent implements OnInit {
         });
       } else if (res == false) {
         this.snackBar.open(
-          "registration not successful ! email already exists !",
-          "close",
+          'registration not successful ! email already exists !',
+          'close',
           this.config
         );
         this.incorrectLoginDetails = true;
@@ -297,14 +293,14 @@ export class SignUpComponent implements OnInit {
     });
   }
   googleSDK() {
-    window["googleSDKLoaded"] = () => {
-      window["gapi"].load("auth2", () => {
-        this.auth2 = window["gapi"].auth2.init({
+    window['googleSDKLoaded'] = () => {
+      window['gapi'].load('auth2', () => {
+        this.auth2 = window['gapi'].auth2.init({
           client_id:
-            "254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com",
+            '254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com',
           // client_id: '15945118442-8olfveag5mpijqdsos8j7atn4u5hcmkk.apps.googleusercontent.com',
-          cookiepolicy: "single_host_origin",
-          scope: "profile email",
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile email',
         });
         this.prepareLoginButton();
       });
@@ -318,163 +314,8 @@ export class SignUpComponent implements OnInit {
       }
       js = d.createElement(s);
       js.id = id;
-      js.src = "https://apis.google.com/js/platform.js?onload=googleSDKLoaded";
+      js.src = 'https://apis.google.com/js/platform.js?onload=googleSDKLoaded';
       fjs.parentNode.insertBefore(js, fjs);
-    })(document, "script", "google-jssdk");
+    })(document, 'script', 'google-jssdk');
   }
-  // onSignUpTutor(form: NgForm) {
-  // 	if (this.verifyEmail == false) {
-  // 		this.isLoading = true;
-  // 		this.tutorProfile.fullName = form.value.fullName;
-  // 		this.tutorProfile.email = form.value.email;
-  // 		this.tutorProfile.password = form.value.password;
-  // 		this.tutorProfile.dateOfBirth = form.value.dateOfBirth;
-  // 		this.tutorProfile.contact = form.value.contact;
-  // 		setTimeout(() => {
-  // 			if (this.timeOut == true) {
-  // 				this.isLoading = false;
-  // 				this.showInput = true;
-  // 				this.emailValid = false;
-  // 			}
-  // 		}, 25000);
-
-  // 		this.httpClient.verifyEmail(this.tutorProfile.email).subscribe((res) => {
-  // 			this.timeOut = false;
-  // 			this.verificationOtp = res;
-  // 			this.verifyEmail = true;
-  // 			this.isLoading = false;
-  // 			this.showInput = false;
-  // 		});
-  // 	} else {
-  // 		var tutLoginModel = new tutorLoginModel();
-  // 		var tid;
-
-  // 		//   if (this.verificationOtp == form.value.otp) {
-  // 		if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-  // 			this.httpClient.saveTutorProfile(this.tutorProfile).subscribe((res) => {
-  // 				if (res == true) {
-  // 					tutLoginModel.email = this.tutorProfile.email;
-  // 					tutLoginModel.password = this.tutorProfile.password;
-  // 					// this.tutorService.setTutorDetails(this.tutorProfile);
-
-  // 					this.httpClient.checkTutorLogin(tutLoginModel).subscribe((res) => {
-  // 						if (res['response'] != 'false') {
-  // 							this.cookieService.set('token', res['response']);
-
-  // 							this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
-  // 							this.userId = this.cookieService.get('userId');
-  // 							this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
-  // 								this.tutorProfile = res;
-  // 								this.tutorService.setTutorDetails(this.tutorProfile);
-
-  // 								this.httpClient.getTutorProfileDetails(this.tutorProfile.tid).subscribe((res) => {
-  // 									this.tutorService.setTutorProfileDetails(res);
-  // 									this.httpClient.getScheduleData(this.tutorProfile.tid).subscribe((res) => {
-  // 										this.tutorAvailabilitySchedule = res;
-  // 										this.tutorService.setPersonalAvailabilitySchedule(
-  // 											this.tutorAvailabilitySchedule
-  // 										);
-  // 										this.loginService.setLoginType('tutor');
-  // 										this.loginService.setTrType('signUp');
-  // 										this.router.navigate([ 'home' ]);
-  // 									});
-  // 								});
-  // 							});
-  // 						}
-  // 					});
-  // 				} else if (res == false) {
-  // 					// this.router.navigate(['signUp'])
-  // 					this.snackBar.open(
-  // 						'registration not successful ! email already exists !',
-  // 						'close',
-  // 						this.config
-  // 					);
-  // 					this.dialogRef.closeAll();
-  // 					// setTimeout(() => {
-  // 					// 	window.location.reload();
-  // 					// }, 2000);
-  // 				}
-  // 			});
-  // 		} else {
-  // 			this.wrongOtp = true;
-  // 		}
-  // 	}
-  // }
-  // onSignUpStudent(form: NgForm) {
-  // 	if (this.verifyEmail == false) {
-  // 		this.studentProfile.dateOfBirth = form.value.dateOfBirth;
-  // 		var studentDOB = this.studentProfile.dateOfBirth.split('-');
-
-  // 		var dobYear = parseInt(studentDOB[0]);
-  // 		var maxYear = new Date().getFullYear() - 6;
-  // 		var minYear = new Date().getFullYear() - 70;
-
-  // 		if (dobYear < maxYear && dobYear > minYear) {
-  // 			this.isLoading = true;
-  // 			this.studentProfile.fullName = form.value.fullName;
-  // 			this.studentProfile.email = form.value.email;
-  // 			this.studentProfile.password = form.value.password;
-  // 			this.studentProfile.dateOfBirth = form.value.dateOfBirth;
-  // 			this.studentProfile.contact = form.value.contact;
-  // 			this.studentProfile.subject = form.value.subject;
-  // 			this.studentProfile.gradeLevel = form.value.gradeLevel;
-  // 			setTimeout(() => {
-  // 				if (this.timeOut == true) {
-  // 					this.emailValid = true;
-  // 					this.isLoading = false;
-  // 					this.showInput = true;
-  // 				}
-  // 			}, 25000);
-  // 			this.httpClient.verifyEmail(this.studentProfile.email).subscribe((res) => {
-  // 				console.log(res);
-  // 				this.verificationOtp = res['response'];
-  // 				console.log(this.verificationOtp);
-  // 				this.timeOut = false;
-  // 				this.verifyEmail = true;
-  // 				this.isLoading = false;
-  // 				this.showInput = false;
-  // 			});
-  // 		} else {
-  // 			this.showDateError = true;
-  // 		}
-  // 	} else {
-  // 		//   var bcrypt = require("bcryptjs");
-  // 		if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-  // 			console.log('otp matched !');
-  // 			//   console.log(this.verificationOtp);
-  // 			//   if (this.verificationOtp == form.value.otp) {
-  // 			this.httpClient.saveStudentProfile(this.studentProfile).subscribe((res) => {
-  // 				if (res == true) {
-  // 					var studentLogin: StudentLoginModel = new StudentLoginModel();
-  // 					studentLogin.email = this.studentProfile.email;
-  // 					studentLogin.password = this.studentProfile.password;
-  // 					this.httpClient.checkLogin(studentLogin).subscribe((res) => {
-  // 						this.cookieService.set('token', res['response']);
-  // 						this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
-  // 						this.userId = this.cookieService.get('userId');
-  // 						this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
-  // 							this.studentProfile = res;
-  // 							this.studentService.setStudentProfileDetails(this.studentProfile);
-  // 							this.loginService.setLoginType('student');
-  // 							this.loginService.setTrType('signUp');
-  // 							this.router.navigate([ 'home' ]);
-  // 						});
-  // 					});
-  // 				} else if (res == false) {
-  // 					// this.router.navigate(['signUp'])
-  // 					this.snackBar.open(
-  // 						'registration not successful ! email already exists !',
-  // 						'close',
-  // 						this.config
-  // 					);
-  // 					this.incorrectLoginDetails = true;
-  // 					this.dialogRef.closeAll();
-  // 					// window.location.reload();
-  // 				}
-  // 			});
-  // 		} else {
-  // 			this.wrongOtp = true;
-  // 		}
-  // 	}
-  // }
 }

@@ -1,33 +1,32 @@
-import { Component, OnInit } from "@angular/core";
-import { ProfileService } from "../../service/profile.service";
-import { tutorProfileDetails } from "../../model/tutorProfileDetails";
-import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
-import { meetingDetails } from "src/app/model/meetingDetails";
-import { MeetingService } from "src/app/service/meeting.service";
-import { NgForm } from "@angular/forms";
-import { bookingDetails } from "src/app/model/bookingDetails";
-import { Time } from "@angular/common";
-import { StudentService } from "src/app/service/student.service";
-import { HttpService } from "src/app/service/http.service";
-import { ScheduleTime } from "../../model/ScheduleTime";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
-import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute, Router } from "@angular/router";
-import { scheduleData } from "src/app/model/scheduleData";
-import { LoginDetailsService } from "../../service/login-details.service";
+import { Component, OnInit } from '@angular/core';
+import { ProfileService } from '../../service/profile.service';
+import { tutorProfileDetails } from '../../model/tutorProfileDetails';
+
+import { meetingDetails } from 'src/app/model/meetingDetails';
+import { MeetingService } from 'src/app/service/meeting.service';
+import { NgForm } from '@angular/forms';
+import { bookingDetails } from 'src/app/model/bookingDetails';
+import { Time } from '@angular/common';
+import { StudentService } from 'src/app/service/student.service';
+import { HttpService } from 'src/app/service/http.service';
+import { ScheduleTime } from '../../model/ScheduleTime';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { scheduleData } from 'src/app/model/scheduleData';
+import { LoginDetailsService } from '../../service/login-details.service';
 @Component({
-  selector: "app-connect",
-  templateUrl: "./connect.component.html",
-  styleUrls: ["./connect.component.css"],
+  selector: 'app-connect',
+  templateUrl: './connect.component.html',
+  styleUrls: ['./connect.component.css'],
 })
 export class ConnectComponent implements OnInit {
   config: MatSnackBarConfig = {
     duration: 5000,
-    horizontalPosition: "center",
-    verticalPosition: "top",
-    panelClass: ["snackbar"],
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+    panelClass: ['snackbar'],
   };
-  amountView;
   selectedSubject;
   areaOfExpertises = [];
   startDisabled: boolean;
@@ -39,9 +38,9 @@ export class ConnectComponent implements OnInit {
   bookingDetails = new bookingDetails();
   clickedIndex: number;
   startDate: string;
-  startTimeString = "Start Time";
-  endTimeString = "End Time";
-  errorMessage: string = "";
+  startTimeString = 'Start Time';
+  endTimeString = 'End Time';
+  errorMessage: string = '';
   endSelect = -1;
   startSelect = -1;
   tempArray = new ScheduleTime();
@@ -70,13 +69,12 @@ export class ConnectComponent implements OnInit {
   case5b: boolean = false;
   dates = [];
   scheduleDates: dateModel[] = [];
-  model: NgbDateStruct;
   meridian = true;
   date: Date = new Date();
   settings = {
     bigBanner: true,
     timePicker: true,
-    format: "dd-MM-yyyy hh:mm a",
+    format: 'dd-MM-yyyy hh:mm a',
     defaultOpen: false,
     closeOnSelect: false,
   };
@@ -85,7 +83,7 @@ export class ConnectComponent implements OnInit {
   clickedIndex1: number;
   clickedIndex2: number;
   userId;
-  profilePictureUrl = "../../assets/images/default-user-image.png";
+  profilePictureUrl = '../../assets/images/default-user-image.png';
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -100,8 +98,7 @@ export class ConnectComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      this.userId = params["page"];
-      console.log(this.userId);
+      this.userId = params['page'];
       this.httpService
         .fetchTutorProfileDetails(this.userId)
         .subscribe((res) => {
@@ -114,7 +111,7 @@ export class ConnectComponent implements OnInit {
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
-    if (this.loginService.getLoginType() == "Learner") {
+    if (this.loginService.getLoginType() == 'Learner') {
       this.httpService.getTutorIsAvailable(this.userId).subscribe((res) => {
         if (res == true) {
           this.isTutorAvailable = true;
@@ -131,10 +128,6 @@ export class ConnectComponent implements OnInit {
         }
       });
     }
-  }
-  toggleAmountView(event: any) {
-    console.log(this.selectedSubject);
-    this.amountView = !this.amountView;
   }
   closeNav() {
     this.dialogRef.closeAll();
@@ -160,11 +153,11 @@ export class ConnectComponent implements OnInit {
       event.isStartDate = true;
       this.startSelect = this.clickedIndex;
       if (this.st.sm == 0) {
-        this.startTimeString = this.st.sh + ":" + "0" + this.st.sm;
+        this.startTimeString = this.st.sh + ':' + '0' + this.st.sm;
       } else {
-        this.startTimeString = this.st.sh + ":" + this.st.sm;
+        this.startTimeString = this.st.sh + ':' + this.st.sm;
       }
-      this.errorMessage = "";
+      this.errorMessage = '';
 
       //case 1 or case 3
       if (
@@ -210,11 +203,11 @@ export class ConnectComponent implements OnInit {
             event.isEndDate = true;
             this.endSelect = this.clickedIndex;
             if (this.et.em == 0) {
-              this.endTimeString = this.et.eh + ":" + "0" + this.et.em;
+              this.endTimeString = this.et.eh + ':' + '0' + this.et.em;
             } else {
-              this.endTimeString = this.et.eh + ":" + this.et.em;
+              this.endTimeString = this.et.eh + ':' + this.et.em;
             }
-            this.errorMessage = "";
+            this.errorMessage = '';
 
             //case 1 or case 4 or case 5
             if (
@@ -272,9 +265,9 @@ export class ConnectComponent implements OnInit {
             this.et.em = -1;
             this.st.sh = -1;
             this.st.sm = -1;
-            this.startTimeString = "Start Time ";
-            this.endTimeString = "End Time";
-            this.errorMessage = "End time should be after Start time, Reset !";
+            this.startTimeString = 'Start Time ';
+            this.endTimeString = 'End Time';
+            this.errorMessage = 'End time should be after Start time, Reset !';
 
             this.tempArray.clickIndex1 = null;
             this.tempArray.clickIndex2 = null;
@@ -297,7 +290,7 @@ export class ConnectComponent implements OnInit {
           this.startSelect = -1;
           this.st.sh = -1;
           this.st.sm = -1;
-          this.startTimeString = "Start Time ";
+          this.startTimeString = 'Start Time ';
           this.tempArray.clickIndex1 = null;
           this.tempArray.clickIndex2 = null;
           this.case1a = false;
@@ -313,14 +306,14 @@ export class ConnectComponent implements OnInit {
         }
       } else {
         // if start time date and end time date are not equal
-        this.errorMessage = "Start date and End date should be same";
+        this.errorMessage = 'Start date and End date should be same';
         this.startDisabled = true;
         this.endDisabled = true;
         event.isStartDate = false;
         this.startSelect = -1;
         this.st.sh = -1;
         this.st.sm = -1;
-        this.startTimeString = "Start Time ";
+        this.startTimeString = 'Start Time ';
         this.tempArray.clickIndex1 = null;
         this.tempArray.clickIndex2 = null;
         this.case1a = false;
@@ -352,13 +345,13 @@ export class ConnectComponent implements OnInit {
       this.et.em = -1;
       event.isEndDate = false;
       if (this.st.sm == 0) {
-        this.startTimeString = this.st.sh + ":" + "0" + this.st.sm;
+        this.startTimeString = this.st.sh + ':' + '0' + this.st.sm;
       } else {
-        this.startTimeString = this.st.sh + ":" + this.st.sm;
+        this.startTimeString = this.st.sh + ':' + this.st.sm;
       }
-      this.endTimeString = "End Time";
+      this.endTimeString = 'End Time';
 
-      this.errorMessage = "";
+      this.errorMessage = '';
 
       this.tempArray.clickIndex1 = null;
       this.tempArray.clickIndex2 = null;
@@ -412,7 +405,7 @@ export class ConnectComponent implements OnInit {
       var date = new dateModel();
       date.date = new Date(
         new Date().getTime() - (X >= 0 ? I : I - I - I) * 24 * 60 * 60 * 1000
-      ).toLocaleDateString("en-GB");
+      ).toLocaleDateString('en-GB');
       this.scheduleDates.push(date);
     }
   };
@@ -431,12 +424,6 @@ export class ConnectComponent implements OnInit {
       } else {
       }
     }
-  }
-  openSideNav() {
-    document.getElementById("mySidenav").style.width = "550px";
-  }
-  closeSideNav() {
-    document.getElementById("mySidenav").style.width = "0";
   }
   toggleMeridian() {
     this.meridian = !this.meridian;
@@ -459,7 +446,6 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
     this.bookingDetails.tutorName = this.teacherProfile.fullName;
     this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
-    console.log(this.bookingDetails);
     this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
       if (res) {
         this.isLoading = true;
@@ -468,8 +454,8 @@ export class ConnectComponent implements OnInit {
             this.isLoading = false;
 
             this.snackBar.open(
-              "Booking submitted successfully !",
-              "close",
+              'Booking submitted successfully !',
+              'close',
               this.config
             );
             this.dialogRef.closeAll();
@@ -477,7 +463,7 @@ export class ConnectComponent implements OnInit {
         });
       } else if (!res) {
         this.errorMessage =
-          "Tutor is busy in between your selected time slots !";
+          'Tutor is busy in between your selected time slots !';
       }
     });
   }
@@ -488,9 +474,9 @@ export class ConnectComponent implements OnInit {
 
   //for generating the hash code
   onGenerateString(l) {
-    var text = "";
+    var text = '';
     var char_list =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (var i = 0; i < l; i++) {
       text += char_list.charAt(Math.floor(Math.random() * char_list.length));
     }

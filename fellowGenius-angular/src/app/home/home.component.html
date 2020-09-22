@@ -271,7 +271,11 @@
           >
         </div>
 
-        <span *ngIf="loginType == 'Expert'">
+        <span
+          *ngIf="
+            loginType == 'Expert' && tutorProfileDetails.profileCompleted == 100
+          "
+        >
           <p style="display: inline; margin: 5px">Available?</p>
           <label class="switch">
             <input
@@ -340,7 +344,7 @@
       >
         <a
           class="nav-link"
-          routerLink="/home/findTutor"
+          routerLink="/home/experts"
           (click)="onNavigationClick()"
           >Experts</a
         >
@@ -357,20 +361,6 @@
           routerLink="tutorSchedule"
           (click)="onNavigationClick()"
           >Schedule</a
-        >
-      </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Learner'"
-      >
-        <a
-          class="nav-link"
-          routerLink="sessionNotes"
-          (click)="onNavigationClick()"
-          >Session Notes</a
         >
       </li>
 
@@ -427,6 +417,19 @@
           routerLink="studentBookings"
           (click)="onNavigationClick()"
           >Bookings</a
+        >
+      </li>
+      <li
+        class="nav-item"
+        routerLinkActive="nav-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="loginType == 'Learner'"
+      >
+        <a
+          class="nav-link"
+          routerLink="sessionNotes"
+          (click)="onNavigationClick()"
+          >Session Notes</a
         >
       </li>
     </ul>

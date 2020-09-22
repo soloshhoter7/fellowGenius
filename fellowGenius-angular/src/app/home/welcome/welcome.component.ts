@@ -1,21 +1,21 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { TutorService } from "src/app/service/tutor.service";
-import { tutorProfile } from "src/app/model/tutorProfile";
-import { tutorProfileDetails } from "src/app/model/tutorProfileDetails";
-import { StudentProfileModel } from "src/app/model/studentProfile";
-import { StudentService } from "src/app/service/student.service";
-import { LoginDetailsService } from "src/app/service/login-details.service";
+import { Component, OnInit, Inject } from '@angular/core';
+import { TutorService } from 'src/app/service/tutor.service';
+import { tutorProfile } from 'src/app/model/tutorProfile';
+import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import { StudentProfileModel } from 'src/app/model/studentProfile';
+import { StudentService } from 'src/app/service/student.service';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
 import {
   MatDialog,
   MAT_DIALOG_DATA,
   MatDialogRef,
-} from "@angular/material/dialog";
-import { SocialService } from "src/app/service/social.service";
+} from '@angular/material/dialog';
+import { SocialService } from 'src/app/service/social.service';
 
 @Component({
-  selector: "app-welcome",
-  templateUrl: "./welcome.component.html",
-  styleUrls: ["./welcome.component.css"],
+  selector: 'app-welcome',
+  templateUrl: './welcome.component.html',
+  styleUrls: ['./welcome.component.css'],
 })
 export class WelcomeComponent implements OnInit {
   constructor(
@@ -37,14 +37,14 @@ export class WelcomeComponent implements OnInit {
   login = false;
   socialLogin = false;
   socialLoginName;
-  role = "Learner";
+  role = 'Learner';
   ngOnInit() {
     if (this.loginService.getLoginType()) {
       this.loginType = this.loginService.getLoginType();
       this.login = true;
-      if (this.loginType == "Learner") {
+      if (this.loginType == 'Learner') {
         this.studentProfile = this.studentService.getStudentProfileDetails();
-      } else if (this.loginType == "Expert") {
+      } else if (this.loginType == 'Expert') {
         this.tutorProfile = this.tutorService.getTutorDetials();
       }
     } else {
@@ -58,10 +58,9 @@ export class WelcomeComponent implements OnInit {
   continue() {
     this.dialog.closeAll();
   }
-  toDashboard(form: any) {
-    console.log(this.role);
+  toDashboard() {
     // this.role = form.value.role;
-    if (this.role == "Learner" || this.role == "Expert") {
+    if (this.role == 'Learner' || this.role == 'Expert') {
       this.dialogRef.close(this.role);
     }
   }

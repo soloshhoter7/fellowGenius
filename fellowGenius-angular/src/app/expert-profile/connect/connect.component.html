@@ -25,9 +25,6 @@
           </div>
           <div style="margin-bottom: 15px">
             <h1 style="margin: 0">Book Meeting</h1>
-            <!-- <p style="font-weight: 500; margin-top: 5px; color: #210184">
-              Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-            </p> -->
           </div>
         </div>
         <div>
@@ -152,13 +149,6 @@
         </div>
         <div class="connect-footer">
           <div style="float: right">
-            <!-- <button
-              class="btn btn-primary"
-              (click)="toggleAmountView()"
-              [disabled]="startDisabled || endDisabled"
-            >
-              Next
-            </button> -->
             <button
               class="btn btn-primary"
               (click)="onBooking()"
@@ -171,154 +161,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div *ngIf="amountView">
-        <div class="connect-header">
-          <div class="row">
-            <div class="col-md-2">
-              <img
-                [src]="teacherProfile.profilePictureUrl"
-                style="width: 50px; height: 50px; border-radius: 50%"
-                alt=""
-              />
-            </div>
-            <div class="col-md-10">
-              <h1 style="font-size: 3vh">{{ teacherProfile.fullName }}</h1>
-              <h2 style="font-size: 2vh">{{ teacherProfile.institute }}</h2>
-            </div>
-          </div>
-          <div class="row" style="margin-top: 50px">
-            <div>
-              <h3 style="font-size: 2vh">{{ selectedSubject }}</h3>
-            </div>
-            <div>
-              <h3 style="font-size: 2vh">
-                {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-              </h3>
-            </div>
-          </div>
-          <div class="row" style="margin-top: 20px">
-            <div style="width: 100%">
-              <h2 style="font-size: 2vh">{{ startDate }}</h2>
-            </div>
-            <div style="width: 100%">
-              <h2 style="font-size: 2vh">
-                {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-              </h2>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top: 20px">
-            <h1>$400</h1>
-          </div>
-        </div>
-        <div class="connect-footer">
-          <div style="float: right">
-            <button
-              class="btn btn-secondary"
-              (click)="toggleAmountView()"
-              style="margin-right: 10px"
-            >
-              Back
-            </button>
-            <button class="btn btn-primary" (click)="onBooking()">
-              Check Out
-            </button>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
-
-  <!-- <div style="max-width: inherit">
-    <button class="closeIconButton" (click)="closeSideNav()" title="close">
-      <img
-        src="../../../../assets/icons/close.svg"
-        alt=""
-        style="height: 15px"
-      />
-    </button>
-    <div>
-      <div>
-        <h1 style="margin: 0">Book Meeting</h1>
-        <p style="font-weight: 500; margin-top: 5px; color: #210184">
-          Timing : {{ startTimeString }} &nbsp; - &nbsp; {{ endTimeString }}
-        </p>
-        <div class="errorMessage">{{ errorMessage }}</div>
-      </div>
-      <div>
-        <div>
-          <div
-            *ngFor="let todayDate of scheduleDates; let z = index"
-            class="dateBox"
-          >
-            <div style="margin-bottom: 10px">
-              {{ fullDate[z] | date: "fullDate" }}
-            </div>
-            <div *ngIf="todayDate.hasElements">
-              <div *ngFor="let time of ScheduleTime; let i = index">
-                <div *ngIf="todayDate.date == time.date">
-                  <div
-                    class="timeSlots"
-                    [style.background-color]="
-                      startSelect >= 0 &&
-                      endSelect > 0 &&
-                      i > startSelect &&
-                      i < endSelect
-                        ? 'rgb(207, 200, 238)'
-                        : null
-                    "
-                    [ngClass]="{
-                      startClass:
-                        time.hours == st.sh &&
-                        time.minutes == st.sm &&
-                        startDate == time.date,
-                      endClass:
-                        time.hours == et.eh &&
-                        time.minutes == et.em &&
-                        startDate == time.date
-                    }"
-                    (click)="timeSelector(time, i, todayDate)"
-                  >
-                    {{ time.hours }}:{{ time.minutes | zero }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="!todayDate.hasElements">No Available Schedules</div>
-            <br />
-            <hr class="timeBoxHr" />
-          </div>
-        </div>
-        <div class="form-group">
-          <textarea
-            style="padding-top: 5px"
-            class="form-control"
-            id="description"
-            rows="3"
-            name="description"
-            [(ngModel)]="bookingDetails.description"
-            maxlength="100"
-            #desc
-            ngModel
-            required
-          ></textarea>
-          <label for="description" class="form-control-placeholder"
-            >Description<sup>*</sup></label
-          >
-          <span style="float: right" class="setLength"
-            >{{ desc.value.length }}/100</span
-          >
-        </div>
-        <button
-          class="btn btn-outline-success"
-          style="width: 40%; margin-left: 30%"
-          (click)="onBooking()"
-          [disabled]="startDisabled || endDisabled"
-        >
-          Submit
-        </button>
-      </div>
-    </div>
-  </div> -->
 </body>
