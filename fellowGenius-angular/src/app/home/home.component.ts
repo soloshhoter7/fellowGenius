@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   myControl = new FormControl();
   selectedSubject;
+  toggleNavigation: boolean = false;
   constructor(
     public router: Router,
     public meetingService: MeetingService,
@@ -83,19 +84,25 @@ export class HomeComponent implements OnInit {
     this.screenWidth = window.innerWidth;
   }
   ngOnInit() {
+    // this.toggleNavigation = true;
     this.breakpointObserver
       .observe(['(min-width: 800px)'])
       .subscribe((state: BreakpointState) => {
         if (state.matches) {
           this.openNav();
+          console.log('called open Nav');
         } else {
           this.closeNav();
+          console.log('called close Nav');
         }
       });
-    this.index = 1;
-    if (this.screenWidth >= 450) {
-      this.openNav();
-    }
+    this.toggleNavigation = true;
+    // if (this.screenWidth >= 450) {
+    //   this.openNav();
+    // } else {
+    //   this.toggleNavigation = false;
+    //   this.closeNav();
+    // }
     if (this.isTokenValid()) {
       this.loginType = this.loginService.getLoginType();
       if (
@@ -167,11 +174,14 @@ export class HomeComponent implements OnInit {
     } else {
       document.getElementById('sidenav').style.width = '100%';
     }
+    this.toggleNavigation = true;
   }
 
   closeNav() {
     document.getElementById('sidenav').style.width = '0px';
+    console.log(document.getElementById('sidenav').style.width);
     document.getElementById('mainContent').style.marginLeft = '0px';
+    this.toggleNavigation = false;
   }
 
   navAction(index) {
@@ -182,6 +192,14 @@ export class HomeComponent implements OnInit {
       this.index = index + 1;
       this.openNav();
     }
+  }
+  toggleNav() {
+    if (this.toggleNavigation) {
+      this.closeNav();
+    } else {
+      this.openNav();
+    }
+    // this.openNav();
   }
   isTokenValid() {
     if (this.cookieService.get('token') && !this.isTokenExpired()) {
@@ -259,6 +277,7 @@ export class HomeComponent implements OnInit {
   }
   openProfile() {
     if (this.loginType == 'Learner') {
+      this.onNavigationClick();
       this.router.navigate(['home/studentProfile']);
     } else if (this.loginType == 'Expert') {
       this.router.navigate(['home/profile']);

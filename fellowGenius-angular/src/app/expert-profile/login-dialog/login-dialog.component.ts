@@ -43,6 +43,9 @@ export class LoginDialogComponent implements OnInit {
   toSignUp() {
     this.login = !this.login;
   }
+  closeNav() {
+    this.dialogRef.closeAll();
+  }
   constructor(
     private router: Router,
     private httpClient: HttpService,

@@ -61,7 +61,8 @@ import { SearchResultsComponent } from './search-results/search-results.componen
 import { KnowledgeBaseComponent } from './home/knowledge-base/knowledge-base.component';
 import { SessionNotesComponent } from './home/session-notes/session-notes.component';
 import { RecordingsComponent } from './home/recordings/recordings.component';
-import { dobValidator } from './Validators/dobValidator.directive';
+import { dobValidator } from './custom-directives/dobValidator.directive';
+import { ImagePreloadDirective } from './custom-directives/ImagePreload.directive';
 import { MatRadioModule } from '@angular/material/radio';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { ExpertProfileComponent } from './expert-profile/expert-profile.component';
@@ -132,6 +133,7 @@ export const appRoutes: Routes = [
     SessionNotesComponent,
     RecordingsComponent,
     dobValidator,
+    ImagePreloadDirective,
     ExpertProfileComponent,
     NavBarComponent,
     ConnectComponent,

@@ -5,6 +5,14 @@
   >
     <app-loading></app-loading>
   </div>
+  <span
+    class="material-icons close closeButton"
+    (click)="closeNav()"
+    style="cursor: pointer"
+    *ngIf="!isLoading"
+  >
+    close
+  </span>
   <div *ngIf="!isLoading">
     <div style="padding: 40px" *ngIf="!isTutorAvailable">
       <div style="text-align: center">
@@ -15,14 +23,14 @@
     <div *ngIf="isTutorAvailable">
       <div class="connect-container">
         <div class="connect-header">
-          <div style="float: right">
+          <!-- <div style="float: right">
             <button class="closeIconButton" title="close" (click)="closeNav()">
               <img
                 src="../../../../assets/icons/close.svg"
                 style="height: 15px"
               />
             </button>
-          </div>
+          </div> -->
           <div style="margin-bottom: 15px">
             <h1 style="margin: 0">Book Meeting</h1>
           </div>

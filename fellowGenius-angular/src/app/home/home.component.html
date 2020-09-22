@@ -1,173 +1,5 @@
-<!-- <body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand berlinText" routerLink="/home">fellowGenius</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#collapsibleNavbar"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-      <ul class="navbar-nav" style="font-size: large;">
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
-          <a
-            class="nav-link"
-            routerLink="/home/studentDashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Dashboard</a
-          >
-        </li>
-
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <a
-            class="nav-link"
-            routerLink="/home/tutorDashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Dashboard</a
-          >
-        </li>
-
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
-          <a
-            class="nav-link"
-            routerLink="/home/findTutor"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Find a tutor</a
-          >
-        </li>
-
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <a
-            class="nav-link"
-            routerLink="studentBookings"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Bookings</a
-          >
-        </li>
-
-        <li class="nav-item" *ngIf="loginType == 'Learner'">
-          <a
-            class="nav-link"
-            routerLink="bookings"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Bookings</a
-          >
-        </li>
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <a
-            class="nav-link"
-            routerLink="tutorSchedule"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >Schedule</a
-          >
-        </li>
-      </ul>
-      <ul class="navbar-nav ml-auto" style="height: 40px; width: 340px;">
-        <li class="nav-item" *ngIf="loginType == 'Expert'">
-          <label class="switch" style="margin-top: 13px; margin-right: 7px;">
-            <input
-              type="checkbox"
-              [checked]="checked"
-              (click)="toggleAvailability()"
-            />
-            <span class="slider round"></span>
-          </label>
-        </li>
-        <span *ngIf="loginType == 'tutor'"
-          ><p
-            style="
-              color: white;
-              margin-left: 10px;
-              width: 76px;
-              margin-top: 8px;
-            "
-          >
-            Available ?
-          </p></span
-        >
-        <li class="nav-item" style="margin-right: 40px; margin-left: 10px;">
-          <div class="dropdown">
-            <button
-              class="userButton dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <span
-                style="font-size: larger; font-weight: 300;"
-                *ngIf="loginType == 'Learner'"
-                >{{ studentProfile.fullName }}</span
-              >
-              <span
-                style="font-size: larger; font-weight: 300;"
-                *ngIf="loginType == 'Expert'"
-                >{{ tutorProfile.fullName }}</span
-              >
-              <i
-                style="margin-left: 10px; font-size: larger;"
-                class="fas fa-user-circle"
-              ></i>
-            </button>
-            <div
-              class="dropdown-menu"
-              aria-labelledby="dropdownMenuButton"
-              style="width: 200px;"
-            >
-              <a
-                class="dropdown-item"
-                routerLink="/home/profile"
-                *ngIf="loginType == 'Expert'"
-                ><i
-                  class="fas fa-user"
-                  style="margin: 5px; color: #8d89aa;"
-                ></i>
-                Your Profile</a
-              >
-              <a
-                class="dropdown-item"
-                routerLink="/home/studentProfile"
-                *ngIf="loginType == 'Learner'"
-                ><i
-                  class="fas fa-user"
-                  style="margin: 5px; color: #8d89aa;"
-                ></i>
-                Your Profile</a
-              >
-
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" style="cursor: pointer;" (click)="onSignOut()"
-                ><i
-                  class="fas fa-sign-out-alt"
-                  style="margin: 5px; color: #8d89aa;"
-                ></i>
-                Sign Out</a
-              >
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <router-outlet></router-outlet>
-</body> -->
-
 <body>
   <div id="sidenav" class="sidenav">
-    <!-- <div>
-      <button class="btn btn-primary" (click)="heyNav()">Close</button>
-    </div> -->
-    <!-- <button (click)=""><i class="fas fa-times"></i></button> -->
     <span
       class="material-icons close closeButton"
       (click)="closeNav()"
@@ -176,7 +8,7 @@
       close
     </span>
 
-    <div class="profile-section-sidenav">
+    <div class="profile-section-sidenav" [class.hideBlock]="!toggleNavigation">
       <div
         (click)="openProfile()"
         class="profile-thumbnail"
@@ -289,7 +121,7 @@
       </div>
     </div>
 
-    <ul class="navbar-nav">
+    <ul class="navbar-nav" [class.hideBlock]="!toggleNavigation">
       <!-- <li
         class="nav-item"
         routerLinkActive="nav-item-active"
@@ -437,7 +269,8 @@
   <div id="mainContent" class="main-content" style="position: relative">
     <div [class]="overlay"></div>
     <div class="header" id="headerContent">
-      <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span>
+      <!-- <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span> -->
+      <span class="fa fa-bars hum-burger" (click)="toggleNav()"></span>
       <div class="logo" (click)="toFacade()"></div>
       <div class="search-box-container" *ngIf="loginType == 'Learner'">
         <div class="input-group">

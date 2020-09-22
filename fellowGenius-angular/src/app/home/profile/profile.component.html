@@ -27,6 +27,9 @@
               class="btn btn-secondary"
               [class.active]="!basic"
               (click)="advancedProfileToggle()"
+              [disabled]="
+                tutorService.getTutorProfileDetails().profileCompleted < 50
+              "
             >
               Advanced
             </button>

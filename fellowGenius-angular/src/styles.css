@@ -241,6 +241,7 @@ textarea:focus {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-image: url("../src/assets/images/default-user-image.png");
   box-shadow: 10px 10px 23px -16px rgba(0, 0, 0, 0.46);
   z-index: 1;
 }

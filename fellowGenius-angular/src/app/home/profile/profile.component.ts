@@ -36,12 +36,12 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class ProfileComponent implements OnInit {
   constructor(
-    private cookieService: CookieService,
-    private tutorService: TutorService,
-    private httpService: HttpService,
-    private firebaseStorage: AngularFireStorage,
-    private snackBar: MatSnackBar,
-    private matDialog: MatDialog
+    public cookieService: CookieService,
+    public tutorService: TutorService,
+    public httpService: HttpService,
+    public firebaseStorage: AngularFireStorage,
+    public snackBar: MatSnackBar,
+    public matDialog: MatDialog
   ) {}
 
   basic = true;
@@ -126,7 +126,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private _filter(value: string): string[] {
+  public _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.options.filter((option) =>

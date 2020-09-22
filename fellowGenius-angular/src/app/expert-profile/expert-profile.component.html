@@ -24,6 +24,7 @@
           [ngStyle]="{
             'background-image': 'url(' + profilePictureUrl + ')'
           }"
+          default="../../assets/images/default-user-image.png"
         ></div>
 
         <div class="basic-information">
@@ -32,14 +33,17 @@
             teacherProfile.professionalSkills
           }}</span>
           <div class="stars-outer">
-            <div class="stars-inner" [style.width.%]="50"></div>
+            <div
+              class="stars-inner"
+              [style.width.%]="teacherProfile.rating"
+            ></div>
             <!-- <div class="stars-inner"></div> -->
           </div>
         </div>
         <div class="price-stamp">
           <span class="price">₹ {{ teacherProfile.price1 }}/hr</span>
         </div>
-        <div class="contact-information">
+        <!-- <div class="contact-information">
           <span>9885457865</span>
           <span>someone@somene.com</span>
 
@@ -49,7 +53,7 @@
               >http://linkedin.com/someonesomeone</a
             ></span
           >
-        </div>
+        </div> -->
         <div class="numbers-container">
           <div>
             <span class="number">{{ teacherProfile.reviewCount }}</span>
