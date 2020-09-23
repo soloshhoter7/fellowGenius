@@ -106,6 +106,9 @@
     .how-it-works-container {
         height: auto !important;
     }
+    .how-it-works-container .separtor-how-it-works {
+        display: none;
+    }
     .how-it-works-container .process .process__item {
         width: 100% !important;
         display: block;

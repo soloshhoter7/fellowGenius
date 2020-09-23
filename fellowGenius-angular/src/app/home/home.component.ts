@@ -280,6 +280,7 @@ export class HomeComponent implements OnInit {
       this.onNavigationClick();
       this.router.navigate(['home/studentProfile']);
     } else if (this.loginType == 'Expert') {
+      this.onNavigationClick();
       this.router.navigate(['home/profile']);
     }
   }
