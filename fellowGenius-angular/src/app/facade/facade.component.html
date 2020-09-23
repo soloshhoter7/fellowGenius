@@ -38,88 +38,80 @@
 </div> -->
 <app-nav-bar></app-nav-bar>
 <div class="search-container">
-  <div class="search-bg-left"></div>
-  <div class="search-box-container">
-    <div class="input-group">
-      <span class="input-group-header">Find Your Personal Tutor</span>
-      <form>
-        <button class="searchButton" (click)="displaySelectedSubjects()">
+    <div class="search-bg-left"></div>
+    <div class="search-box-container">
+        <div class="input-group">
+            <span class="input-group-header">Find Your Personal Tutor</span>
+            <form>
+                <button class="searchButton" (click)="displaySelectedSubjects()">
           <i class="fa fa-search" aria-hidden="true"></i>
         </button>
-        <input
-          type="search"
-          name="search"
-          placeholder="Search by Subjects"
-          [formControl]="myControl"
-          [matAutocomplete]="auto"
-          [(ngModel)]="selectedSubject"
-        />
-        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-          >
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
-      </form>
+                <input type="search" name="search" placeholder="Search by Subjects" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selectedSubject" />
+                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-autocomplete>
+            </form>
 
-      <!-- <span class="input-group-btn">
+            <!-- <span class="input-group-btn">
         <button class="btn btn-default" type="button">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         </button>
       </span>
        -->
+        </div>
+        <!-- /input-group -->
     </div>
-    <!-- /input-group -->
-  </div>
 </div>
 <div class="advertise-container">
-  <div class="advertisement">
-    <span class="advertisement-header"> EXPLORE </span>
-    <span class="advertisement-content">
+    <div class="advertisement">
+        <span class="advertisement-header"> EXPLORE </span>
+        <span class="advertisement-content">
       Over 90,000 courses tought by experts
     </span>
-  </div>
-  <div class="advertisement secondary-advertisement">
-    <span class="advertisement-header"> Enroll </span>
-    <span class="advertisement-content">
+    </div>
+    <div class="advertisement secondary-advertisement">
+        <span class="advertisement-header"> Enroll </span>
+        <span class="advertisement-content">
       Enroll yourself in any courses in anytime
     </span>
-  </div>
-  <div class="advertisement">
-    <span class="advertisement-header"> Experience </span>
-    <span class="advertisement-content">
+    </div>
+    <div class="advertisement">
+        <span class="advertisement-header"> Experience </span>
+        <span class="advertisement-content">
       Over 90,000 courses tought by experts
     </span>
-  </div>
+    </div>
 </div>
 <div class="how-it-works-container">
-  <h1 class="header-panel">How it works?</h1>
-  <ul class="process">
-    <li class="process__item">
-      <span class="process__number">1</span>
-      <span class="process__title">Step One</span>
-      <span class="process__subtitle"
-        >Description goes here,Description goes hereDescription goes
+    <div class="separtor-how-it-works">
+        <div class="dot left-dot"></div>
+        <div class="dot center-dot"></div>
+        <div class="dot right-dot"></div>
+    </div>
+    <h1 class="header-panel">How it works?</h1>
+    <ul class="process">
+        <li class="process__item">
+            <span class="process__number">1</span>
+            <span class="process__title">Step One</span>
+            <span class="process__subtitle">Description goes here,Description goes hereDescription goes
         here,Description goes here</span
       >
     </li>
 
     <li class="process__item">
       <span class="process__number">2</span>
-      <span class="process__title">Step Two</span>
-      <span class="process__subtitle"
-        >Description goes here,Description goes hereDescription goes
+            <span class="process__title">Step Two</span>
+            <span class="process__subtitle">Description goes here,Description goes hereDescription goes
         here,Description goes here</span
       >
     </li>
 
     <li class="process__item">
       <span class="process__number">3</span>
-      <span class="process__title">Step Three</span>
-      <span class="process__subtitle"
-        >Description goes here,Description goes hereDescription goes
+            <span class="process__title">Step Three</span>
+            <span class="process__subtitle">Description goes here,Description goes hereDescription goes
         here,Description goes here</span
       >
     </li>
@@ -164,62 +156,61 @@
               ></div>
               <div class="result-card-header">
                 <span class="result-card-name"> Alex Chemoricle </span>
-                <span class="result-card-specalizaiton">
+            <span class="result-card-specalizaiton">
                   Exterior University - politics [bachelors]
                 </span>
-                <div class="stars-outer">
-                  <!-- <div class="stars-inner" [style.width.%]="element.rating"></div> -->
-                  <div class="stars-inner" style="width: 90%"></div>
-                </div>
-              </div>
-
-              <div class="result-card-content">
-                <div class="numbers-container">
-                  <div>
-                    <span class="number">1980</span>
-                    <span class="info">STUDENTS</span>
-                  </div>
-                  <div class="separtor"></div>
-                  <div>
-                    <span class="number">2007</span>
-                    <span class="info">Sessions</span>
-                  </div>
-                </div>
-
-                <div class="result-card-descirption">
-                  Exterior University - politics, Exterior University - politics
-                  [bachelors]
-                </div>
-              </div>
+            <div class="stars-outer">
+                <!-- <div class="stars-inner" [style.width.%]="element.rating"></div> -->
+                <div class="stars-inner" style="width: 90%"></div>
             </div>
-          </div>
-        </ng-template>
-      </ng-container>
-    </owl-carousel-o>
-  </div>
+</div>
 
-  <div class="footer-container">
-    <div class="footer-inner">
-      <section class="footer-item">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Resources</a></li>
-          <li><a href="#">Prices</a></li>
-          <li><a href="#">How it works</a></li>
-        </ul>
-      </section>
-
-      <section class="footer-item">
-        <ul>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Terms and Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Contact Us</a></li>
-        </ul>
-      </section>
-      <div class="copyright-container">
-        <span>&#169; copyright 2020</span>
-      </div>
+<div class="result-card-content">
+    <div class="numbers-container">
+        <div>
+            <span class="number">1980</span>
+            <span class="info">STUDENTS</span>
+        </div>
+        <div class="separtor"></div>
+        <div>
+            <span class="number">2007</span>
+            <span class="info">Sessions</span>
+        </div>
     </div>
-  </div>
+
+    <div class="result-card-descirption">
+        Exterior University - politics, Exterior University - politics [bachelors]
+    </div>
+</div>
+</div>
+</div>
+</ng-template>
+</ng-container>
+</owl-carousel-o>
+</div>
+
+<div class="footer-container">
+    <div class="footer-inner">
+        <section class="footer-item">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Prices</a></li>
+                <li><a href="#">How it works</a></li>
+            </ul>
+        </section>
+
+        <section class="footer-item">
+            <ul>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Terms and Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </section>
+        <div class="copyright-container">
+            <span>&#169; copyright 2020</span>
+        </div>
+    </div>
+</div>
 </div>
