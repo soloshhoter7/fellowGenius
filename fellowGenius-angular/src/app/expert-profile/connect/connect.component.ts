@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ProfileService } from '../../service/profile.service';
 import { tutorProfileDetails } from '../../model/tutorProfileDetails';
-
+import { environment } from './../../../environments/environment';
 import { meetingDetails } from 'src/app/model/meetingDetails';
 import { MeetingService } from 'src/app/service/meeting.service';
 import { NgForm } from '@angular/forms';
@@ -15,6 +15,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { scheduleData } from 'src/app/model/scheduleData';
 import { LoginDetailsService } from '../../service/login-details.service';
+import {
+  ICustomWindow,
+  WindowRefService,
+} from 'src/app/service/window-ref.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-connect',
   templateUrl: './connect.component.html',
@@ -43,6 +48,7 @@ export class ConnectComponent implements OnInit {
   errorMessage: string = '';
   endSelect = -1;
   startSelect = -1;
+  paymentSuccessful: boolean = false;
   tempArray = new ScheduleTime();
   time = { hour: 13, minute: 30 };
   endTime = {
@@ -71,6 +77,7 @@ export class ConnectComponent implements OnInit {
   scheduleDates: dateModel[] = [];
   meridian = true;
   date: Date = new Date();
+  amount: number;
   settings = {
     bigBanner: true,
     timePicker: true,
@@ -84,6 +91,14 @@ export class ConnectComponent implements OnInit {
   clickedIndex2: number;
   userId;
   profilePictureUrl = '../../assets/images/default-user-image.png';
+  private _window: ICustomWindow;
+  public rzp: any;
+  public options: any;
+  totalPrice = 0;
+  payableAmount = 0;
+  processingPayment: boolean;
+  paymentResponse: any = {};
+
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -94,7 +109,9 @@ export class ConnectComponent implements OnInit {
     private dialogRef: MatDialog,
     private activatedRoute: ActivatedRoute,
     private loginService: LoginDetailsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private zone: NgZone,
+    private winRef: WindowRefService
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -103,6 +120,7 @@ export class ConnectComponent implements OnInit {
         .fetchTutorProfileDetails(this.userId)
         .subscribe((res) => {
           this.teacherProfile = res;
+          this.amount = parseInt(this.teacherProfile.price1);
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           this.areaOfExpertises = this.teacherProfile.areaOfExpertise;
         });
@@ -129,12 +147,119 @@ export class ConnectComponent implements OnInit {
       });
     }
   }
+
+  initPay(): void {
+    console.log(this.preparePaymentDetails());
+    this.rzp = new this.winRef.nativeWindow['Razorpay'](
+      this.preparePaymentDetails()
+    );
+    this.rzp.open();
+  }
+
+  preparePaymentDetails() {
+    var ref = this;
+    return {
+      key: environment.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+      amount: (ref.payableAmount * 100).toString(), // Amount is in currency subunits. Default currency is INR. Hence, 29935 refers to 29935 paise or INR 299.35.
+      name: 'Pay' + ' ' + ref.teacherProfile.fullName,
+      image: this.teacherProfile.profilePictureUrl,
+      handler: function (response) {
+        ref.paymentHandler(response);
+      },
+      modal: {
+        ondismiss: () => {
+          this.zone.run(() => {
+            console.log('payment failed');
+            this.closeNav();
+          });
+        },
+      },
+      prefill: {
+        name: 'FellowGenius',
+        email: '',
+      },
+      theme: {
+        color: '#2874f0',
+      },
+    };
+  }
+  paymentHandler(res: any) {
+    this.zone.run(() => {
+      this.paymentSuccessful = true;
+      this.createBooking(res);
+    });
+  }
+
+  calculatePrice(subject: any) {
+    var subjectPrice;
+    for (let area of this.teacherProfile.areaOfExpertise) {
+      if (area.area == subject) {
+        subjectPrice = area.price;
+      }
+    }
+    this.payableAmount = (this.bookingDetails.duration / 60) * subjectPrice;
+  }
+
+  createBooking(res: any) {
+    if (this.paymentSuccessful) {
+      console.log(this.paymentSuccessful);
+      this.bookingDetails.razorpay_payment_id = res.razorpay_payment_id;
+      this.bookingDetails.razorpay_order_id = res.razorpay_order_id;
+      this.bookingDetails.razorpay_signature = res.razorpay_signature;
+      this.bookingDetails.amount = this.payableAmount;
+      console.log(this.bookingDetails);
+      this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
+        if (res == true) {
+          this.isLoading = false;
+
+          this.snackBar.open(
+            'Booking submitted successfully !',
+            'close',
+            this.config
+          );
+          this.dialogRef.closeAll();
+        }
+      });
+    }
+  }
+  onBooking() {
+    this.bookingDetails.startTimeHour = this.st.sh;
+    this.bookingDetails.startTimeMinute = this.st.sm;
+    this.bookingDetails.dateOfMeeting = this.startDate;
+    this.bookingDetails.duration = this.findDuration(
+      this.st.sh,
+      this.st.sm,
+      this.et.eh,
+      this.et.em
+    );
+    this.bookingDetails.endTimeHour = this.et.eh;
+    this.bookingDetails.endTimeMinute = this.et.em;
+    this.bookingDetails.meetingId = this.onGenerateString(10);
+    this.bookingDetails.tutorId = this.teacherProfile.tid;
+    this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
+    this.bookingDetails.tutorName = this.teacherProfile.fullName;
+    this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
+    this.calculatePrice(this.bookingDetails.subject);
+    this.processingPayment = false;
+    this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
+      if (res) {
+        this.isLoading = true;
+        this.initPay();
+      } else if (!res) {
+        this.errorMessage =
+          'Tutor is busy in between your selected time slots !';
+      }
+    });
+  }
+
   closeNav() {
     this.dialogRef.closeAll();
   }
+
   openConnectPage() {
     this.dialog.open(ConnectComponent);
   }
+
   timeSelector(event, index: number, todayDate: string) {
     this.clickedIndex = index;
 
@@ -427,45 +552,6 @@ export class ConnectComponent implements OnInit {
   }
   toggleMeridian() {
     this.meridian = !this.meridian;
-  }
-
-  onBooking() {
-    this.bookingDetails.startTimeHour = this.st.sh;
-    this.bookingDetails.startTimeMinute = this.st.sm;
-    this.bookingDetails.dateOfMeeting = this.startDate;
-    this.bookingDetails.duration = this.findDuration(
-      this.st.sh,
-      this.st.sm,
-      this.et.eh,
-      this.et.em
-    );
-    this.bookingDetails.endTimeHour = this.et.eh;
-    this.bookingDetails.endTimeMinute = this.et.em;
-    this.bookingDetails.meetingId = this.onGenerateString(10);
-    this.bookingDetails.tutorId = this.teacherProfile.tid;
-    this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
-    this.bookingDetails.tutorName = this.teacherProfile.fullName;
-    this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
-    this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
-      if (res) {
-        this.isLoading = true;
-        this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
-          if (res == true) {
-            this.isLoading = false;
-
-            this.snackBar.open(
-              'Booking submitted successfully !',
-              'close',
-              this.config
-            );
-            this.dialogRef.closeAll();
-          }
-        });
-      } else if (!res) {
-        this.errorMessage =
-          'Tutor is busy in between your selected time slots !';
-      }
-    });
   }
 
   findDuration(startHour, startMinute, endHour, endMinute) {

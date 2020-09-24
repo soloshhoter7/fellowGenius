@@ -163,7 +163,6 @@ export class SearchResultsComponent implements OnInit {
   // 		width: '70vw'
   // 	});
   // }
-
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
       this.searchResults = req;

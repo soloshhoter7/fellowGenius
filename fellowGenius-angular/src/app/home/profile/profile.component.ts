@@ -19,7 +19,10 @@ import { map, startWith } from 'rxjs/operators';
 import { TutorService } from 'src/app/service/tutor.service';
 import { tutorProfile } from 'src/app/model/tutorProfile';
 import { HttpService } from 'src/app/service/http.service';
-import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import {
+  expertise,
+  tutorProfileDetails,
+} from 'src/app/model/tutorProfileDetails';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
@@ -35,6 +38,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
+  addExpertise = new expertise();
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -74,7 +78,7 @@ export class ProfileComponent implements OnInit {
   ];
   //data fields
   selectedExpertise;
-  expertises: string[] = [];
+  expertises: expertise[] = [];
   educationQualifications: string[] = [];
   previousOraganisations: string[] = [];
   filteredOptions: Observable<string[]>;
@@ -85,7 +89,7 @@ export class ProfileComponent implements OnInit {
   userId;
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   uploadedProfilePicture: File = null;
-
+  priceForExpertise;
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -206,8 +210,19 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  duplicacyCheck(fields: string[], item: string) {
+  cancelForm() {
+    location.reload();
+  }
+  duplicacyCheck(fields: Object[], item: string) {
     return fields.includes(item);
+  }
+  expertiseDuplicacyCheck(subject) {
+    for (let area of this.expertises) {
+      if (area.area == subject) {
+        return true;
+      }
+    }
+    return false;
   }
   profilePictureChange(event) {
     // this.profilePictureDisabled = true;
@@ -332,9 +347,16 @@ export class ProfileComponent implements OnInit {
   }
 
   saveExpertise() {
-    if (!this.duplicacyCheck(this.expertises, this.selectedExpertise)) {
-      this.expertises.push(this.selectedExpertise);
+    this.addExpertise = new expertise();
+    console.log(this.selectedExpertise + ':' + this.priceForExpertise);
+    if (!this.expertiseDuplicacyCheck(this.selectedExpertise)) {
+      this.addExpertise.area = this.selectedExpertise;
+      this.addExpertise.price = this.priceForExpertise;
+      this.expertises.push(this.addExpertise);
+      console.log(this.expertises);
       this.selectedExpertise = '';
+      this.priceForExpertise = '';
+
       if (this.duplicateExpertiseArea == true) {
         this.duplicateExpertiseArea = false;
       }

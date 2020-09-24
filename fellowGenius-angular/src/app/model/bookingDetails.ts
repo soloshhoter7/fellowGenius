@@ -1,4 +1,4 @@
-import { Time } from "@angular/common";
+import { Time } from '@angular/common';
 
 export class bookingDetails {
   public bid: number;
@@ -14,9 +14,15 @@ export class bookingDetails {
   public meetingId: string;
   public studentName: string;
   public tutorName: string;
-  public approvalStatus: string = "Pending";
+  public approvalStatus: string = 'Pending';
   public isLive: boolean = false;
-  public timeLeft: String = "";
+  public timeLeft: String = '';
   public bookingCase: number;
   public subject: string;
+  public rating: number;
+  public reviewText: string;
+  public amount: number;
+  public razorpay_payment_id;
+  public razorpay_order_id;
+  public razorpay_signature;
 }

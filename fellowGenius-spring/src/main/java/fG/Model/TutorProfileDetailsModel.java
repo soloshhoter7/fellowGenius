@@ -20,7 +20,7 @@ public class TutorProfileDetailsModel {
 	String professionalSkills;
 	String currentOrganisation;
 	ArrayList<String> previousOrganisations = new ArrayList<>();
-	ArrayList<String> areaOfExpertise = new ArrayList<>();;
+	ArrayList<expertise> areaOfExpertise = new ArrayList<expertise>();;
 	Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
@@ -120,10 +120,11 @@ public class TutorProfileDetailsModel {
 	public void setPreviousOrganisations(ArrayList<String> previousOrganisations) {
 		this.previousOrganisations = previousOrganisations;
 	}
-	public ArrayList<String> getAreaOfExpertise() {
+
+	public ArrayList<expertise> getAreaOfExpertise() {
 		return areaOfExpertise;
 	}
-	public void setAreaOfExpertise(ArrayList<String> areaOfExpertise) {
+	public void setAreaOfExpertise(ArrayList<expertise> areaOfExpertise) {
 		this.areaOfExpertise = areaOfExpertise;
 	}
 	public Integer getProfileCompleted() {

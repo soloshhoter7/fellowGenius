@@ -17,7 +17,12 @@ public class BookingDetailsModel {
   String tutorName;
   Integer bookingCase;
   String subject;
-  
+  Integer amount;
+  Integer rating;
+  String reviewText;
+  String razorpay_payment_id;
+  String razorpay_order_id;
+  String razorpay_signature;
   
 public String getSubject() {
 	return subject;
@@ -115,6 +120,45 @@ public String getMeetingId() {
 public void setMeetingId(String meetingId) {
 	this.meetingId = meetingId;
 }
+
+public String getRazorpay_payment_id() {
+	return razorpay_payment_id;
+}
+public void setRazorpay_payment_id(String razorpay_payment_id) {
+	this.razorpay_payment_id = razorpay_payment_id;
+}
+public String getRazorpay_order_id() {
+	return razorpay_order_id;
+}
+public void setRazorpay_order_id(String razorpay_order_id) {
+	this.razorpay_order_id = razorpay_order_id;
+}
+public String getRazorpay_signature() {
+	return razorpay_signature;
+}
+public void setRazorpay_signature(String razorpay_signature) {
+	this.razorpay_signature = razorpay_signature;
+}
+
+public Integer getRating() {
+	return rating;
+}
+public void setRating(Integer rating) {
+	this.rating = rating;
+}
+public String getReviewText() {
+	return reviewText;
+}
+public void setReviewText(String reviewText) {
+	this.reviewText = reviewText;
+}
+
+public Integer getAmount() {
+	return amount;
+}
+public void setAmount(Integer amount) {
+	this.amount = amount;
+}
 @Override
 public String toString() {
 	return "BookingDetailsModel [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute
@@ -122,10 +166,9 @@ public String toString() {
 			+ ", startTimeMinute=" + startTimeMinute + ", description=" + description + ", studentId=" + studentId
 			+ ", tutorId=" + tutorId + ", meetingId=" + meetingId + ", approvalStatus=" + approvalStatus
 			+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
-			+ ", subject=" + subject + "]";
+			+ ", subject=" + subject + ", amount=" + amount + ", rating=" + rating + ", reviewText=" + reviewText
+			+ ", razorpay_payment_id=" + razorpay_payment_id + ", razorpay_order_id=" + razorpay_order_id
+			+ ", razorpay_signature=" + razorpay_signature + "]";
 }
-
-
-  
   	
 }

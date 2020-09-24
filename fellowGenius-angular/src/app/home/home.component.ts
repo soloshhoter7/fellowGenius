@@ -84,19 +84,17 @@ export class HomeComponent implements OnInit {
     this.screenWidth = window.innerWidth;
   }
   ngOnInit() {
-    // this.toggleNavigation = true;
+    this.toggleNavigation = true;
     this.breakpointObserver
       .observe(['(min-width: 800px)'])
       .subscribe((state: BreakpointState) => {
         if (state.matches) {
           this.openNav();
-          console.log('called open Nav');
         } else {
           this.closeNav();
-          console.log('called close Nav');
         }
       });
-    this.toggleNavigation = true;
+    // this.toggleNavigation = true;
     // if (this.screenWidth >= 450) {
     //   this.openNav();
     // } else {
@@ -179,7 +177,6 @@ export class HomeComponent implements OnInit {
 
   closeNav() {
     document.getElementById('sidenav').style.width = '0px';
-    console.log(document.getElementById('sidenav').style.width);
     document.getElementById('mainContent').style.marginLeft = '0px';
     this.toggleNavigation = false;
   }
@@ -277,10 +274,8 @@ export class HomeComponent implements OnInit {
   }
   openProfile() {
     if (this.loginType == 'Learner') {
-      this.onNavigationClick();
       this.router.navigate(['home/studentProfile']);
     } else if (this.loginType == 'Expert') {
-      this.onNavigationClick();
       this.router.navigate(['home/profile']);
     }
   }

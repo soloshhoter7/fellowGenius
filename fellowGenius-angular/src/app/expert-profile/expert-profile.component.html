@@ -41,7 +41,17 @@
           </div>
         </div>
         <div class="price-stamp">
-          <span class="price">₹ {{ teacherProfile.price1 }}/hr</span>
+          <span
+            class="price"
+            *ngIf="teacherProfile.price1 != teacherProfile.price2"
+            >₹ {{ teacherProfile.price1 }} -
+            {{ teacherProfile.price2 }}/hr</span
+          >
+          <span
+            class="price"
+            *ngIf="teacherProfile.price1 == teacherProfile.price2"
+            >₹ {{ teacherProfile.price1 }}/hr</span
+          >
         </div>
         <!-- <div class="contact-information">
           <span>9885457865</span>
@@ -106,9 +116,9 @@
           <div class="col-md-6">
             <div class="description-header">Area of Expertise</div>
             <div class="description-label">
-              <span *ngFor="let area of teacherProfile.areaOfExpertise">{{
-                area
-              }}</span>
+              <span *ngFor="let area of teacherProfile.areaOfExpertise"
+                >{{ area.area }} - ₹ {{ area.price }}/hour</span
+              >
             </div>
           </div>
           <div class="col-md-6">
