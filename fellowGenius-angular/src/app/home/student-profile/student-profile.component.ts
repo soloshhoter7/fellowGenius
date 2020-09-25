@@ -89,6 +89,9 @@ export class StudentProfileComponent implements OnInit {
     );
   }
 
+  cancelForm() {
+    location.reload();
+  }
   addLearningArea() {
     if (!this.duplicacyCheck(this.learningAreas, this.learningArea)) {
       this.learningAreas.push(this.learningArea);

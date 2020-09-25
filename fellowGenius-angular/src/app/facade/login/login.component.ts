@@ -136,6 +136,9 @@ export class LoginComponent implements OnInit {
   // ------------------------------------------------------------------------------------------------------------------
   //google login
   prepareLoginButton() {
+    if (this.auth2 == null) {
+      location.reload();
+    }
     this.incorrectLoginDetails = false;
     this.auth2.attachClickHandler(
       this.googleSignUp.nativeElement,

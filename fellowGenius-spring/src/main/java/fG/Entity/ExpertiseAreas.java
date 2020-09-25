@@ -21,6 +21,9 @@ public class ExpertiseAreas {
 	@NotNull
 	String subject;
 	
+	@NotNull
+	Integer price;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id",nullable=false)
 	TutorProfileDetails userId;
@@ -48,9 +51,19 @@ public class ExpertiseAreas {
 	public void setUserId(TutorProfileDetails userId) {
 		this.userId = userId;
 	}
+    
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
 
 	@Override
 	public String toString() {
-		return "ExpertiseAreas [id=" + id + ", subject=" + subject + ", userId=" + userId + "]";
+		return "ExpertiseAreas [id=" + id + ", subject=" + subject + ", price=" + price + ", userId=" + userId + "]";
 	}
+
+	
 }

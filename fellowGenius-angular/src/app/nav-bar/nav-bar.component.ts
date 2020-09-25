@@ -31,6 +31,9 @@ export class NavBarComponent implements OnInit {
     }
   }
 
+  toFacade() {
+    this.router.navigate(['']);
+  }
   onSignUp() {
     this.router.navigate(['signUp']);
   }

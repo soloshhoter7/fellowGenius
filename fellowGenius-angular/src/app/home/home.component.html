@@ -10,7 +10,7 @@
 
     <div class="profile-section-sidenav" [class.hideBlock]="!toggleNavigation">
       <div
-        (click)="openProfile()"
+        (click)="openProfile(); onNavigationClick()"
         class="profile-thumbnail"
         style="cursor: pointer"
         [ngStyle]="{ 'background-image': 'url(' + profilePictureUrl + ')' }"
@@ -20,14 +20,14 @@
       <div class="profile-secondaryinformaiton">
         <span
           *ngIf="loginType == 'Learner'"
-          (click)="openProfile()"
+          (click)="openProfile(); onNavigationClick()"
           class="profile-varient"
           style="cursor: pointer"
           >{{ studentProfile.fullName }}</span
         >
         <span
           *ngIf="loginType == 'Expert'"
-          (click)="openProfile()"
+          (click)="openProfile(); onNavigationClick()"
           class="profile-varient"
           style="cursor: pointer"
           >{{ tutorProfile.fullName }}</span
@@ -79,7 +79,7 @@
           >
           <span class="hyperlink-cont"
             >Please get a head start by
-            <a href="javascript:;" (click)="openProfile()"
+            <a href="javascript:;" (click)="openProfile(); onNavigationClick()"
               >completing it now</a
             ></span
           >
@@ -97,7 +97,7 @@
             You have
             <label>{{ 100 - studentProfileCompleted }}% </label>
             left. Please get a head start by
-            <a href="javascript:;" (click)="openProfile()"
+            <a href="javascript:;" (click)="openProfile(); onNavigationClick()"
               >completing your profile</a
             ></span
           >

@@ -173,7 +173,7 @@
           </li>
         </ul>
       </div>
-      <!-- <div class="filter-category">
+      <div class="filter-category">
         <span class="filter-category-header">Price</span>
         <ul class="filter-category-list">
           <li style="width: 50%">
@@ -184,7 +184,6 @@
                 value="100-199"
                 (change)="searchByPrice($event)"
               />100-199
-
             </label>
           </li>
           <li style="width: 50%">
@@ -195,7 +194,6 @@
                 value="200-399"
                 (change)="searchByPrice($event)"
               />200-399
-
             </label>
           </li>
           <li style="width: 50%">
@@ -206,7 +204,6 @@
                 value="400-699"
                 (change)="searchByPrice($event)"
               />400-699
-
             </label>
           </li>
           <li style="width: 50%">
@@ -217,7 +214,6 @@
                 value="700-999"
                 (change)="searchByPrice($event)"
               />700-999
-
             </label>
           </li>
           <li style="width: 50%">
@@ -228,7 +224,6 @@
                 value="1000-1499"
                 (change)="searchByPrice($event)"
               />1000-1499
-
             </label>
           </li>
           <li style="width: 50%">
@@ -243,7 +238,7 @@
           </li>
         </ul>
       </div>
-      <div class="filter-category">
+      <!-- <div class="filter-category">
         <span class="filter-category-header">Avg. Reviews</span>
         <ul class="filter-category-list">
           <li>
@@ -368,7 +363,7 @@
                 <b> Tutors For</b>
                 <div class="tutor-sub">
                   <span *ngFor="let skills of result.areaOfExpertise"
-                    >{{ skills }}, &nbsp;</span
+                    >{{ skills.area }}, &nbsp;</span
                   >
                 </div>
               </div>
@@ -444,7 +439,7 @@
                 <b> Tutors For</b>
                 <div class="tutor-sub">
                   <span *ngFor="let skills of result.areaOfExpertise"
-                    >{{ skills }}, &nbsp;</span
+                    >{{ skills.area }}, &nbsp;</span
                   >
                 </div>
               </div>

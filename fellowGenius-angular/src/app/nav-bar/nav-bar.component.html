@@ -1,5 +1,5 @@
 <div class="header">
-  <div class="logo"></div>
+  <div class="logo" (click)="toFacade()"></div>
   <div
     class="header-buttons-container"
     *ngIf="loginService.getLoginType() == null"

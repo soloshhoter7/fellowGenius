@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
         this.handleRefresh();
       }
     } else {
-      this.router.navigate(['facade']);
+      // this.router.navigate(['facade']);
     }
   }
 

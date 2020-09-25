@@ -47,6 +47,7 @@ import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
+import fG.Model.expertise;
 import fG.Model.registrationModel;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
@@ -318,15 +319,27 @@ public class UserService  implements UserDetailsService{
 		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
 		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
 		//for setting the expertise areas
-		for(String area:tutorModel.getAreaOfExpertise()) {
+		Integer minPrice =Integer.MAX_VALUE;
+		Integer maxPrice = 0;
+		for(expertise area:tutorModel.getAreaOfExpertise()) {
 			ExpertiseAreas subject = new ExpertiseAreas();
 			subject.setUserId(tutProfileDetails);
-			subject.setSubject(area);
-			if(!tutorProfileDetailsLoaded.getAreaOfExpertise().stream().filter(o -> o.getSubject().equals(area)).findFirst().isPresent()) {
+			subject.setSubject(area.getArea());
+			subject.setPrice(area.getPrice());
+			if(!tutorProfileDetailsLoaded.getAreaOfExpertise().stream().filter(o -> o.getSubject().equals(area.getArea())).findFirst().isPresent()) {
 				tutProfileDetails.getAreaOfExpertise().add(subject);
+				if(area.getPrice()>maxPrice) {
+					maxPrice=area.getPrice();
+				}
+				if(area.getPrice()<minPrice) {
+					minPrice = area.getPrice();
+				}
 			}
 			
 		}
+		tutProfileDetails.setPrice1(minPrice.toString());
+		tutProfileDetails.setPrice2(maxPrice.toString());
+		
 //		tutProfileDetails.setAreaOfExpertise(areas);
 		dao.updateTutorProfile(tutProfileDetails);
 		Integer profileCompleted =dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
@@ -484,7 +497,10 @@ public class UserService  implements UserDetailsService{
 			tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
 			tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
 			for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
-				tutorProfileDetailsModel.getAreaOfExpertise().add(area.getSubject());
+				expertise exp = new expertise();
+				exp.setArea(area.getSubject());
+				exp.setPrice(area.getPrice());
+				tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 			}
 			tutListModel.add(tutorProfileDetailsModel);
 		}
@@ -526,7 +542,10 @@ public class UserService  implements UserDetailsService{
 		tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
 		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
 		for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
-			tutorProfileDetailsModel.getAreaOfExpertise().add(area.getSubject());
+			expertise exp = new expertise();
+			exp.setArea(area.getSubject());
+			exp.setPrice(area.getPrice());
+			tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 		}
 		
 		return tutorProfileDetailsModel;
@@ -752,7 +771,10 @@ public class UserService  implements UserDetailsService{
 			tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
 			tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
 			for(ExpertiseAreas area:tutor.getAreaOfExpertise()) {
-				tutorProfileDetailsModel.getAreaOfExpertise().add(area.getSubject());
+				expertise exp = new expertise();
+				exp.setArea(area.getSubject());
+				exp.setPrice(area.getPrice());
+				tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 			}
 			tutorsModel.add(tutorProfileDetailsModel);
 		}

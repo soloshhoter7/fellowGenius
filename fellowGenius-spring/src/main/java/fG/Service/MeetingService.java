@@ -58,6 +58,10 @@ public class MeetingService {
 		booking.setApprovalStatus(bookingModel.getApprovalStatus());
 		booking.setBookingCase(bookingModel.getBookingCase());
 		booking.setSubject(bookingModel.getSubject());
+		booking.setAmount(bookingModel.getAmount());
+		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
+		booking.setRazorpay_payment_id(bookingModel.getRazorpay_payment_id());
+		booking.setRazorpay_signature(bookingModel.getRazorpay_signature());
 		sendNotificationTutor(bookingModel.getTutorId(), booking);
 		return meetingDao.saveBooking(booking);
 	}
