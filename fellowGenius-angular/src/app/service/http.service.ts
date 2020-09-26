@@ -20,7 +20,34 @@ import { loginModel } from '../model/login';
   providedIn: 'root',
 })
 export class HttpService {
+  
   constructor(private http: HttpClient) {}
+
+  // fetch pending reviewList at student dashboard
+  fetchPendingReviewsList(studentid:number): Observable<bookingDetails[]> {
+    return this.http.get<bookingDetails[]>(
+      'http://localhost:8080/fellowGenius/meeting/fetchPendingReviewsList',{
+        params: {
+          sid: studentid.toString()
+        }
+      }
+    );
+  }
+
+  // save ratings and review to backend
+  giveFeedback(meetingId: any, rating: number, review: string, tid: number): Observable<Object> {
+    
+    return this.http.get(
+      'http://localhost:8080/fellowGenius/meeting/saveTutorRatings',{
+        params: {
+          meetingId: meetingId,
+          rating: rating.toString(),
+          reviewText: review,
+          tid: tid.toString()
+        }
+      }
+    );
+  }
 
   // for saving student profile details
   registerUser(registrationModel: registrationModel): Observable<Object> {
@@ -178,6 +205,7 @@ export class HttpService {
 
   //for saving  booking Details
   saveBooking(bookingModel: bookingDetails): Observable<Object> {
+    
     return this.http.post(
       'http://localhost:8080/fellowGenius/meeting/saveMeeting',
       bookingModel

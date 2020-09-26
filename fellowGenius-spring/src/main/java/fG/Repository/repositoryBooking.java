@@ -52,5 +52,13 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1", nativeQuery=true)
 	List<BookingDetails> fetchAllLinkedTutors(Integer userId);
+
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT approval_status='Pending' && rating = 0", nativeQuery=true)
+	List<BookingDetails> fetchPendingReviewsList(Integer studentId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE booking_details SET rating=?2, review_text=?3 WHERE meeting_id=?1", nativeQuery = true)
+	void saveTutorRatings(String meetingId, Integer rating, String reviewText);
 }
 

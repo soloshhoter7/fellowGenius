@@ -167,6 +167,10 @@ p {
   margin-bottom: 30px;
 }
 
+.pending-requests {
+  height: max-content;
+}
+
 .widget-time {
   font-size: 11px;
   /* color: #e7001a; */
@@ -210,4 +214,7 @@ input:checked ~ label {
 }
 .review-icons {
   padding: 10px;
+}
+.pending-reviews {
+  overflow: scroll;
 }
