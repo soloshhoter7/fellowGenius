@@ -137,7 +137,6 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   // --------------------------------------------------meeting operations-----------------------------------------------------------------------------
-
   eliminateLiveMeetings(booking: bookingDetails, list: bookingDetails[]) {
     var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');
     if (currentDate == booking.dateOfMeeting) {
@@ -348,7 +347,6 @@ export class StudentDashboardComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.sid = this.studentService.getStudentProfileDetails().sid;
-
       this.fetchTutorList();
       this.findStudentPendingBookings();
       this.fetchApprovedMeetings();
