@@ -195,6 +195,8 @@ export class TutorDashboardComponent implements OnInit {
       .fetchApprovedMeetingsTutor(this.tutorService.getTutorDetials().tid)
       .subscribe((res) => {
         this.meetingList = res;
+        this.sortMeetings(this.meetingList);
+      
         if (this.meetingList.length == 0) {
           this.approvedMeetingsMessage = 'No upcoming meetings pending.';
         }
@@ -228,6 +230,13 @@ export class TutorDashboardComponent implements OnInit {
       });
   }
 
+  sortMeetings(meetingList){
+    meetingList.sort(function(a,b){
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return b.dateOfMeeting - a.dateOfMeeting;
+    });
+  }
   //for checking time
   enableJoinNow(booking: bookingDetails) {
     var currentDate: string = new Date(Date.now()).toLocaleDateString('en-GB');

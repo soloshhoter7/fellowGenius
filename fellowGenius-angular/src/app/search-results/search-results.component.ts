@@ -6,6 +6,7 @@ import { element } from 'protractor';
 import { LoginDetailsService } from '../service/login-details.service';
 import { ProfileService } from '../service/profile.service';
 import { MatDialog } from '@angular/material/dialog';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-search-results',
@@ -28,6 +29,12 @@ export class SearchResultsComponent implements OnInit {
   callSearchByPrice: boolean;
   findFromSearchResult: boolean;
   findFromFilterSearch: boolean;
+
+  screenHeight: number;
+  screenWidth: number;
+  showMobileFilterView: boolean;
+  showMobileFilterButton: boolean;
+
   constructor(
     private router: Router,
     private httpService: HttpService,
@@ -35,9 +42,36 @@ export class SearchResultsComponent implements OnInit {
     private profileService: ProfileService,
     private matDialog: MatDialog,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    this.getScreenSize();
+  }
 
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    console.log('in get screen size');
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    if(this.screenWidth<=500){
+      this.showMobileFilterButton = true;
+      this.showMobileFilterView = true;
+    }else{
+      this.showMobileFilterButton =false;
+      this.showMobileFilterView = false;
+    }
+  }
+  
   ngOnInit(): void {
+      
+    if(window.screen.width<=500){
+      console.log(this.screenWidth);
+      console.log("size<500");
+      this.showMobileFilterButton = true;
+      this.showMobileFilterView = true;
+    }else{
+      this.showMobileFilterButton =false;
+      this.showMobileFilterView = false;
+    }
+
     this.fetchTutorList();
     // console.log("login type ->" + this.loginService.getLoginType());
     this.callSearchBySubject = false;
@@ -45,6 +79,7 @@ export class SearchResultsComponent implements OnInit {
     this.findFromSearchResult = false;
     this.findFromFilterSearch = false;
 
+ 
     // this.searchResults = [
     //   {
     //     tid: 1234,
@@ -141,11 +176,15 @@ export class SearchResultsComponent implements OnInit {
     // this.filteredArray = this.searchResults;
   }
 
+  
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
   onSignUp() {
     this.router.navigate(['signUp']);
   }
 
+  showFilters(){
+    this.showMobileFilterView = !this.showMobileFilterView;
+  }
   toLoginPage() {
     this.router.navigate(['login']);
   }
@@ -166,6 +205,7 @@ export class SearchResultsComponent implements OnInit {
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
       this.searchResults = req;
+      console.log(this.searchResults[0].areaOfExpertise[0].area);
     });
   }
 
@@ -558,32 +598,40 @@ export class SearchResultsComponent implements OnInit {
             1
           );
           this.subjectFiltersApplied.pop();
+          console.log("filtered array length : " + (this.filteredArray.length-1));
           for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            if (
-              this.filteredArray[i].areaOfExpertise.includes(
-                $event.target.value
-              )
-            ) {
-              this.filteredArray.splice(i, 1);
-            }
-          }
-        } else {
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            if (
-              this.filteredArray[i].areaOfExpertise.includes(
-                $event.target.value
-              )
-            ) {
+            console.log(this.filteredArray[i].areaOfExpertise.length);
+            for(var j=this.filteredArray[i].areaOfExpertise.length-1; j>=0; j--){
               if (
-                this.removeOrNot(
-                  this.filteredArray[i].areaOfExpertise,
-                  this.subjectFiltersApplied,
+                this.filteredArray[i].areaOfExpertise[j].area.includes(
                   $event.target.value
                 )
               ) {
                 this.filteredArray.splice(i, 1);
               }
             }
+       
+          }
+        } else {
+          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
+            for(var j=0; j<this.filteredArray[i].areaOfExpertise.length; j++){
+              if (
+                this.filteredArray[i].areaOfExpertise[j].area.includes(
+                  $event.target.value
+                )
+              ) {
+                if (
+                  this.removeOrNot(
+                    this.filteredArray[i].areaOfExpertise[j],
+                    this.subjectFiltersApplied,
+                    $event.target.value
+                  )
+                ) {
+                  this.filteredArray.splice(i, 1);
+                }
+              }
+            }
+   
           }
           this.subjectFiltersApplied.splice(
             this.subjectFiltersApplied.indexOf($event.target.value),
@@ -595,22 +643,43 @@ export class SearchResultsComponent implements OnInit {
           );
         }
       } else {
+        // this.subjectFiltersApplied.push($event.target.value);
+        // this.allFiltersApplied.push($event.target.value);
+        // for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
+        //   this.searchResults.filter((res) => {
+        //     if (res.areaOfExpertise.includes($event.target.value)) {
+        //       if (
+        //         !this.checkDuplicacyOfObjectInArray(
+        //           this.filteredArray,
+        //           this.searchResults[this.searchResults.indexOf(res)]
+        //         )
+        //       ) {
+        //         this.filteredArray.push(
+        //           this.searchResults[this.searchResults.indexOf(res)]
+        //         );
+        //       }
+        //     }
+        //   });
+        // }
         this.subjectFiltersApplied.push($event.target.value);
         this.allFiltersApplied.push($event.target.value);
         for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
           this.searchResults.filter((res) => {
-            if (res.areaOfExpertise.includes($event.target.value)) {
-              if (
-                !this.checkDuplicacyOfObjectInArray(
-                  this.filteredArray,
-                  this.searchResults[this.searchResults.indexOf(res)]
-                )
-              ) {
-                this.filteredArray.push(
-                  this.searchResults[this.searchResults.indexOf(res)]
-                );
+            for(var j=0; j<res.areaOfExpertise.length; j++){
+              if (res.areaOfExpertise[j].area.includes($event.target.value)) {
+                if (
+                  !this.checkDuplicacyOfObjectInArray(
+                    this.filteredArray,
+                    this.searchResults[this.searchResults.indexOf(res)]
+                  )
+                ) {
+                  this.filteredArray.push(
+                    this.searchResults[this.searchResults.indexOf(res)]
+                  );
+                }
               }
             }
+        
           });
         }
       }
@@ -628,7 +697,7 @@ export class SearchResultsComponent implements OnInit {
         if (subjectFiltersApplied[j].localeCompare(eventTarget) == 0) {
           continue;
         } else {
-          if (areaOfExpertise[i].localeCompare(subjectFiltersApplied[j]) == 0) {
+          if (areaOfExpertise[i].area.localeCompare(subjectFiltersApplied[j]) == 0) {
             flag = 1;
             break;
           }

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileService } from 'src/app/service/profile.service';
 import { DeletePopupComponent } from './delete-popup/delete-popup.component';
+import { StarRatingComponent } from 'ng-starrating';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -17,6 +18,9 @@ import { DeletePopupComponent } from './delete-popup/delete-popup.component';
   styleUrls: ['./student-dashboard.component.css'],
 })
 export class StudentDashboardComponent implements OnInit {
+  selected = 0;
+  hovered = 0;
+  readonly = false;
   viewPending;
   pendingRequestsCount = 0;
   joinMeeting = new meetingDetails();
@@ -29,6 +33,7 @@ export class StudentDashboardComponent implements OnInit {
   emptyBookingList: boolean = false;
   emptyApprovedList: boolean = false;
   emptyLiveList: boolean = false;
+  pendingReviews: tutorProfileDetails[] = [];
   public now: Date = new Date();
   noTutorMessage = '';
 
@@ -72,6 +77,13 @@ export class StudentDashboardComponent implements OnInit {
     } else {
       this.handleRefresh();
     }
+  }
+  cancelReview() {
+    console.log('canceledReviews');
+  }
+
+  saveRating(rating: any) {
+    console.log(' rating ->' + rating);
   }
   viewPendingRequests() {
     this.viewPending = !this.viewPending;

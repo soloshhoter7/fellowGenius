@@ -51,7 +51,7 @@ import { LoadingComponent } from './facade/sign-up/LoadingSpinner/loading/loadin
 import { DeletePopupComponent } from './home/student-dashboard/delete-popup/delete-popup.component';
 import { TermsAndConditionsComponent } from './facade/sign-up/terms-and-conditions/terms-and-conditions.component';
 import { UploadProfilePictureComponent } from './facade/sign-up/upload-profile-picture/upload-profile-picture.component';
-
+import { NgbRating } from '@ng-bootstrap/ng-bootstrap';
 import { LoaderComponent } from './home/loader/loader.component';
 import { BasicAuthHttpInterceptorService } from './service/basic-auth-http-interceptor.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -71,6 +71,8 @@ import { ConnectComponent } from './expert-profile/connect/connect.component';
 import { ShortenLength } from './pipes/shortenLength.pipe';
 import { LoginDialogComponent } from './expert-profile/login-dialog/login-dialog.component';
 import { ExpertsComponent } from './home/experts/experts.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RatingModule } from 'ng-starrating';
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -166,6 +168,8 @@ export const appRoutes: Routes = [
     CarouselModule,
     MatInputModule,
     GoogleChartsModule,
+    NgbModule,
+    RatingModule,
   ],
   entryComponents: [WelcomeComponent],
   providers: [
