@@ -101,10 +101,13 @@
       </div>
       <div *ngIf="liveMeetingList != null">
         <div *ngFor="let element of liveMeetingList">
-          <div class="widget-timings">
+          <!-- <div class="widget-timings">
             <span style="color: red">● &nbsp;</span>Live Now
-          </div>
+          </div> -->
           <div class="widget-information">
+            <div class="widget-time">
+              <span style="color: red">● &nbsp;</span>Live Now
+            </div>
             <div class="subject-thumbnail"></div>
             <div class="subject-description">
               <span>{{ element.studentName }}</span>
@@ -135,13 +138,14 @@
     </div>
 
     <div *ngFor="let element of meetingList">
-        <div class="widget-timings" *ngIf="element.timeLeft == null">
-            <span style="color: red">● &nbsp;</span>Live Now
-        </div>
-        <div class="widget-timings" *ngIf="element.timeLeft != null">
-            Live in:{{ element.timeLeft }}
-        </div>
         <div class="widget-information">
+            <div class="widget-time" *ngIf="element.timeLeft == null">
+                <span style="color: red">● &nbsp;</span>Live Now
+            </div>
+            <div class="widget-time" *ngIf="element.timeLeft != null">
+                Live in:{{ element.timeLeft }}
+            </div>
+            <!-- <div class="widget-information"> -->
             <div class="subject-thumbnail"></div>
             <div class="subject-description">
                 <span>{{ element.studentName }}</span>

@@ -1,145 +1,167 @@
 .card {
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	width: 80%;
-	margin-bottom: 50px;
-	margin-left: 70px;
-	margin-top: 50px;
-	padding: 0px;
+    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+    width: 80%;
+    margin-bottom: 50px;
+    margin-left: 70px;
+    margin-top: 50px;
+    padding: 0px;
 }
 
 .card2 {
-	box-shadow: 0px 0px 4px rgba(132, 133, 136, 0.7);
-	width: 80%;
-	margin-bottom: 50px;
-	margin-left: 70px;
-	margin-top: 50px;
-	padding: 0px;
-	height: auto;
-	max-height: 600px;
+    box-shadow: 0px 0px 4px rgba(132, 133, 136, 0.7);
+    width: 80%;
+    margin-bottom: 50px;
+    margin-left: 70px;
+    margin-top: 50px;
+    padding: 0px;
+    height: auto;
+    max-height: 600px;
 }
 
 .card-body {
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	padding: 20px;
+    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+    padding: 20px;
 }
 
 .tutor-card-body {
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	padding: 10px;
-	height: auto;
-	max-height: 360px;
-	overflow-y: scroll;
+    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+    padding: 10px;
+    height: auto;
+    max-height: 360px;
+    overflow-y: scroll;
 }
 
 .tutorBox {
-	padding-top: 5px;
-	margin-top: 10px;
-	margin-left: 10px;
-	margin-right: 10px;
-	padding: 0px;
-	width: 100%;
-	margin-right: 50px;
-	margin: 0;
+    padding-top: 5px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0px;
+    width: 100%;
+    margin-right: 50px;
+    margin: 0;
 }
 
 .image-styling {
-	margin-top: 20px;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	height: 110px;
-	width: 110px;
-	border-radius: 50%;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 110px;
+    width: 110px;
+    border-radius: 50%;
 }
 
 .btn-join {
-	border: 1px solid #0073b1;
-	color: #0073b1;
-	background: none;
-	padding: 2px 15px;
+    border: 1px solid #0073b1;
+    color: #0073b1;
+    background: none;
+    padding: 2px 15px;
 }
 
 .btn-join:hover {
-	background-color: #57add3;
+    background-color: #57add3;
 }
 
 .btn-decline {
-	border: 1px solid #800d1a;
-	color: #800d1a;
-	background: none;
-	padding: 2px 15px;
+    border: 1px solid #800d1a;
+    color: #800d1a;
+    background: none;
+    padding: 2px 15px;
 }
 
 .btn-decline:hover {
-	background-color: #d50b31;
+    background-color: #d50b31;
 }
 
 .education-detail {
-	margin-left: 30px;
-	margin-right: 15px;
-	font-size: 10px;
-	margin-top: 10px;
+    margin-left: 30px;
+    margin-right: 15px;
+    font-size: 10px;
+    margin-top: 10px;
 }
 
 .request-buttons {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 10px;
-	margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .align {
-	float: left;
+    float: left;
 }
 
 img {
-	height: 80px;
-	width: 80px;
-	border-radius: 100%;
+    height: 80px;
+    width: 80px;
+    border-radius: 100%;
 }
 
 .leftMarginZero {
-	margin-left: 0;
+    margin-left: 0;
 }
 
 .rightPaddingZero {
-	padding-right: 0;
+    padding-right: 0;
 }
 
 .paddingZero {
-	padding: 0;
+    padding: 0;
 }
 
 .card-header {
-	width: 100%;
+    width: 100%;
 }
 
 p {
-	margin: 0;
+    margin: 0;
 }
 
 .divBox {
-	box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-	padding: 10px;
-	margin-bottom: 10px;
+    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 .tutorSkillTags {
-	display: inline;
-	font-size: smaller;
-	background-color: rgb(183, 208, 231);
-	padding: 2px;
-	color: white;
-	padding-left: 5px;
-	padding-right: 5px;
-	border-radius: 0%;
-	margin-right: 5px;
-	border-radius: 5px;
+    display: inline;
+    font-size: smaller;
+    background-color: rgb(183, 208, 231);
+    padding: 2px;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 0%;
+    margin-right: 5px;
+    border-radius: 5px;
 }
+
 .takeActionLink {
-	cursor: pointer;
+    cursor: pointer;
 }
+
 .takeActionLink:hover {
-	text-decoration: underline;
+    text-decoration: underline;
+}
+
+.widget-information {
+    /* border: 1px solid red; */
+    position: relative;
+    height: 250px;
+    margin-bottom: 30px;
+}
+
+.widget-time {
+    font-size: 11px;
+    /* color: #e7001a; */
+    position: absolute;
+    top: -35px;
+    right: 10px;
+}
+
+.widget {
+    max-height: 250px;
+    overflow: hidden;
 }

@@ -53,3 +53,23 @@ body {
 .takeActionLink:hover {
     text-decoration: underline;
 }
+
+.widget-information {
+    /* border: 1px solid red; */
+    position: relative;
+    height: 250px;
+    margin-bottom: 30px;
+}
+
+.widget-time {
+    font-size: 11px;
+    /* color: #e7001a; */
+    position: absolute;
+    top: -35px;
+    right: 10px;
+}
+
+.widget {
+    max-height: 250px;
+    overflow: hidden;
+}
