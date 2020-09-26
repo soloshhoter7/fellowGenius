@@ -238,6 +238,7 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.tutorId = this.teacherProfile.tid;
     this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
     this.bookingDetails.tutorName = this.teacherProfile.fullName;
+    this.bookingDetails.tutorProfilePictureUrl = this.teacherProfile.profilePictureUrl;
     this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
     this.calculatePrice(this.bookingDetails.subject);
     this.processingPayment = false;

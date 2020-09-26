@@ -153,6 +153,10 @@ p {
     margin-bottom: 30px;
 }
 
+.pending-requests {
+    height: max-content;
+}
+
 .widget-time {
     font-size: 11px;
     /* color: #e7001a; */
@@ -164,4 +168,8 @@ p {
 .widget {
     max-height: 250px;
     overflow: hidden;
+}
+
+.pending-reviews {
+    overflow: scroll;
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import fG.Entity.BookingDetails;
 import fG.Repository.repositoryBooking;
+import fG.Repository.repositoryTutorProfileDetails;
 
 @Component
 public class MeetingDao {
@@ -14,6 +15,9 @@ public class MeetingDao {
 	@Autowired
 	repositoryBooking repBooking;
 
+	@Autowired
+	repositoryTutorProfileDetails repTutorProfileDetails;
+	
 	// for saving booking in database
 	public boolean saveBooking(BookingDetails booking) {
 		repBooking.save(booking);
@@ -82,5 +86,18 @@ public class MeetingDao {
 			return false;
 		}
 		
+	}
+
+	public List<BookingDetails> fetchPendingReviewsList(Integer studentId) {
+		return repBooking.fetchPendingReviewsList(studentId);
+		
+	}
+
+	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, Integer tid) {
+		System.out.println("---------------------------------------------------------------------- In dao");
+		System.out.println(meetingId + ":" + rating + ":" + reviewText);
+		repBooking.saveTutorRatings(meetingId, rating, reviewText);
+		repTutorProfileDetails.updateReviewCount(tid);
+		return true;
 	}
 }

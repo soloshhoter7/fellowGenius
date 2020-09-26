@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fG.Entity.BookingDetails;
 import fG.Entity.ScheduleData;
 import fG.Model.AuthenticationResponse;
 import fG.Model.BookingDetailsModel;
@@ -56,7 +57,6 @@ public class meetingController {
 	}
 
 	// for updating booking status of booking
-	
 	@RequestMapping(value = "/updateBookingStatus", produces = { "application/json" })
 	@ResponseBody
 	public boolean updateBookingStatus(String bid, String approvalStatus) {
@@ -173,5 +173,26 @@ public class meetingController {
 	@ResponseBody
 	public boolean isBookingValid(String sh, String sm, String eh, String em, String tid, String date) {
 		return meetingService.isBookingValid(Integer.valueOf(sh),Integer.valueOf(sm),Integer.valueOf(eh),Integer.valueOf(em),Integer.valueOf(tid), date);
+	}
+	
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value="/fetchPendingReviewsList")
+	@ResponseBody
+	public List<BookingDetails> fetchPendingReviewsList(String sid){
+		
+//		System.out.println(sid);
+		Integer studentId = Integer.valueOf(sid);
+		return meetingService.fetchPendingReviewsList(studentId);
+		
+	}
+	
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value="/saveTutorRatings")
+	@ResponseBody
+	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, String tid) {
+		Integer tutid = Integer.valueOf(tid);
+		System.out.println("----------------------------------------------------------------------");
+		System.out.println(meetingId + ":" + rating + ":" + reviewText +":" + tid);
+		return meetingService.saveTutorRatings(meetingId, rating, reviewText, tutid);
 	}
 }

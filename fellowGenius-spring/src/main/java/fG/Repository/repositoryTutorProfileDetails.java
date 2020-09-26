@@ -43,4 +43,9 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 
 	@Query(value="SELECT * FROM tutor_profile_details WHERE profile_completed = 100", nativeQuery = true)
 	public List<TutorProfileDetails> findAllTutors();
+
+	@Modifying
+	@Transactional
+	@Query(value ="UPDATE tutor_profile_details SET review_count = review_count +1 WHERE tid =?1" ,nativeQuery =true)
+	void updateReviewCount(Integer tid);
 }

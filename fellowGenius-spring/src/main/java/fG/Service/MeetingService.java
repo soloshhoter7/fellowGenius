@@ -59,6 +59,8 @@ public class MeetingService {
 		booking.setBookingCase(bookingModel.getBookingCase());
 		booking.setSubject(bookingModel.getSubject());
 		booking.setAmount(bookingModel.getAmount());
+		booking.setRating(0);
+		booking.setTutorProfilePictureUrl(bookingModel.getTutorProfilePictureUrl());
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
 		booking.setRazorpay_payment_id(bookingModel.getRazorpay_payment_id());
 		booking.setRazorpay_signature(bookingModel.getRazorpay_signature());
@@ -288,5 +290,14 @@ public class MeetingService {
 		bookings.removeAll(eliminateList);
 	
 		return bookings;
+	}
+
+	public List<BookingDetails> fetchPendingReviewsList(Integer studentId) {
+		return meetingDao.fetchPendingReviewsList(studentId);
+		
+	}
+
+	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, Integer tid) {
+		return meetingDao.saveTutorRatings(meetingId, rating, reviewText, tid);
 	}
 }

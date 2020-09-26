@@ -32,7 +32,14 @@ public class BookingDetails {
 	  String razorpay_order_id;
 	  String razorpay_signature;
 	  Integer amount;
+	  String tutorProfilePictureUrl;
 	  
+	public String getTutorProfilePictureUrl() {
+		return tutorProfilePictureUrl;
+	}
+	public void setTutorProfilePictureUrl(String tutorProfilePictureUrl) {
+		this.tutorProfilePictureUrl = tutorProfilePictureUrl;
+	}
 	public String getSubject() {
 		return Subject;
 	}
@@ -176,7 +183,10 @@ public class BookingDetails {
 				+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
 				+ ", Subject=" + Subject + ", rating=" + rating + ", reviewText=" + reviewText
 				+ ", razorpay_payment_id=" + razorpay_payment_id + ", razorpay_order_id=" + razorpay_order_id
-				+ ", razorpay_signature=" + razorpay_signature + ", amount=" + amount + "]";
+				+ ", razorpay_signature=" + razorpay_signature + ", amount=" + amount + ", tutorProfilePictureUrl="
+				+ tutorProfilePictureUrl + "]";
 	}
+
+	
   
 }

@@ -25,6 +25,7 @@ export class StudentDashboardComponent implements OnInit {
   approvedList: bookingDetails[] = [];
   liveMeetingList: bookingDetails[] = [];
   filterSearch: tutorProfileDetails[];
+  pendingReviewList: bookingDetails[] = [];
   topTutors: tutorProfileDetails[];
   emptyBookingList: boolean = false;
   emptyApprovedList: boolean = false;
@@ -63,6 +64,7 @@ export class StudentDashboardComponent implements OnInit {
     }
     this.sid = this.studentService.getStudentProfileDetails().sid;
     if (this.sid) {
+      this.fetchPendingReviewsList();
       this.fetchTutorList();
       this.findStudentPendingBookings();
       this.fetchApprovedMeetings();
@@ -93,6 +95,27 @@ export class StudentDashboardComponent implements OnInit {
     this.router.navigate(['home/recordings']);
   }
   // -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
+
+  // for fetching pending review list
+  fetchPendingReviewsList(){
+    console.log("fetch pending review list");
+    this.httpService.fetchPendingReviewsList(this.sid).subscribe((res)=>{
+      this.pendingReviewList = res;
+      console.log(this.pendingReviewList);
+    })
+
+  }
+
+  giveFeedback(profile){
+    console.log(profile);
+    var meetingId = profile.meetingId;
+    var rating = 80;
+    var review = "You are a god teacher";
+    var tid = profile.tutorId;
+    this.httpService.giveFeedback(meetingId, rating, review, tid).subscribe((res)=>{
+      console.log(res);
+    })
+  }
   // for fetching student pending bookings
   findStudentPendingBookings() {
     this.httpService.findStudentBookings(this.sid).subscribe((res) => {
