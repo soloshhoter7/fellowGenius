@@ -173,7 +173,7 @@ p {
 
 .widget-time {
   font-size: 11px;
-  /* color: #e7001a; */
+  color: #e7001a;
   position: absolute;
   top: -35px;
   right: 10px;
@@ -215,6 +215,6 @@ input:checked ~ label {
 .review-icons {
   padding: 10px;
 }
-.pending-reviews {
+/* .pending-reviews {
   overflow: scroll;
-}
+} */

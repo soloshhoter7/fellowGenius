@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProfileService } from 'src/app/service/profile.service';
 import { DeletePopupComponent } from './delete-popup/delete-popup.component';
 import { StarRatingComponent } from 'ng-starrating';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -45,12 +46,19 @@ export class StudentDashboardComponent implements OnInit {
     public meetingService: MeetingService,
     public router: Router,
     public dialog: MatDialog,
-    public profileService: ProfileService
+    public profileService: ProfileService,
+    private snackBar: MatSnackBar
   ) {
     setInterval(() => {
       this.now = new Date();
     }, 1000);
   }
+
+  config: MatSnackBarConfig = {
+    duration: 2000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+  };
 
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -75,7 +83,7 @@ export class StudentDashboardComponent implements OnInit {
       this.fetchApprovedMeetings();
       this.fetchLiveMeetings();
       // this.fetchTopTutors();
-      this.handleRefresh();
+      // this.handleRefresh();
     } else {
       this.handleRefresh();
     }
@@ -84,8 +92,21 @@ export class StudentDashboardComponent implements OnInit {
     console.log('canceledReviews');
   }
 
-  saveRating(rating: any) {
-    console.log(' rating ->' + rating);
+  saveRating(profile: any, rating: any) {
+    console.log(profile);
+    var meetingId = profile.meetingId;
+    var review = ' ';
+    var tid = profile.tutorId;
+    this.httpService
+      .giveFeedback(meetingId, rating, review, tid)
+      .subscribe((res) => {
+        console.log(res);
+        this.pendingReviewList.splice(
+          this.pendingReviewList.indexOf(profile),
+          1
+        );
+        this.snackBar.open('Feedback submitted successfully', 'close');
+      });
   }
   viewPendingRequests() {
     this.viewPending = !this.viewPending;
@@ -109,24 +130,25 @@ export class StudentDashboardComponent implements OnInit {
   // -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
 
   // for fetching pending review list
-  fetchPendingReviewsList(){
-    console.log("fetch pending review list");
-    this.httpService.fetchPendingReviewsList(this.sid).subscribe((res)=>{
+  fetchPendingReviewsList() {
+    console.log('fetch pending review list');
+    this.httpService.fetchPendingReviewsList(this.sid).subscribe((res) => {
       this.pendingReviewList = res;
       console.log(this.pendingReviewList);
-    })
-
+    });
   }
 
-  giveFeedback(profile){
+  giveFeedback(profile) {
     console.log(profile);
     var meetingId = profile.meetingId;
     var rating = 80;
-    var review = "You are a god teacher";
+    var review = 'You are a god teacher';
     var tid = profile.tutorId;
-    this.httpService.giveFeedback(meetingId, rating, review, tid).subscribe((res)=>{
-      console.log(res);
-    })
+    this.httpService
+      .giveFeedback(meetingId, rating, review, tid)
+      .subscribe((res) => {
+        console.log(res);
+      });
   }
   // for fetching student pending bookings
   findStudentPendingBookings() {
@@ -382,6 +404,7 @@ export class StudentDashboardComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.sid = this.studentService.getStudentProfileDetails().sid;
+      this.fetchPendingReviewsList();
       this.fetchTutorList();
       this.findStudentPendingBookings();
       this.fetchApprovedMeetings();

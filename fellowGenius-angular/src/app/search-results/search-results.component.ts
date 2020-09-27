@@ -51,24 +51,23 @@ export class SearchResultsComponent implements OnInit {
     console.log('in get screen size');
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
-    if(this.screenWidth<=500){
+    if (this.screenWidth <= 500) {
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
-    }else{
-      this.showMobileFilterButton =false;
+    } else {
+      this.showMobileFilterButton = false;
       this.showMobileFilterView = false;
     }
   }
-  
+
   ngOnInit(): void {
-      
-    if(window.screen.width<=500){
+    if (window.screen.width <= 500) {
       console.log(this.screenWidth);
-      console.log("size<500");
+      console.log('size<500');
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
-    }else{
-      this.showMobileFilterButton =false;
+    } else {
+      this.showMobileFilterButton = false;
       this.showMobileFilterView = false;
     }
 
@@ -79,7 +78,6 @@ export class SearchResultsComponent implements OnInit {
     this.findFromSearchResult = false;
     this.findFromFilterSearch = false;
 
- 
     // this.searchResults = [
     //   {
     //     tid: 1234,
@@ -176,13 +174,12 @@ export class SearchResultsComponent implements OnInit {
     // this.filteredArray = this.searchResults;
   }
 
-  
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
   onSignUp() {
     this.router.navigate(['signUp']);
   }
 
-  showFilters(){
+  showFilters() {
     this.showMobileFilterView = !this.showMobileFilterView;
   }
   toLoginPage() {
@@ -598,10 +595,16 @@ export class SearchResultsComponent implements OnInit {
             1
           );
           this.subjectFiltersApplied.pop();
-          console.log("filtered array length : " + (this.filteredArray.length-1));
+          console.log(
+            'filtered array length : ' + (this.filteredArray.length - 1)
+          );
           for (var i = this.filteredArray.length - 1; i >= 0; i--) {
             console.log(this.filteredArray[i].areaOfExpertise.length);
-            for(var j=this.filteredArray[i].areaOfExpertise.length-1; j>=0; j--){
+            for (
+              var j = this.filteredArray[i].areaOfExpertise.length - 1;
+              j >= 0;
+              j--
+            ) {
               if (
                 this.filteredArray[i].areaOfExpertise[j].area.includes(
                   $event.target.value
@@ -610,11 +613,14 @@ export class SearchResultsComponent implements OnInit {
                 this.filteredArray.splice(i, 1);
               }
             }
-       
           }
         } else {
           for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            for(var j=0; j<this.filteredArray[i].areaOfExpertise.length; j++){
+            for (
+              var j = 0;
+              j < this.filteredArray[i].areaOfExpertise.length;
+              j++
+            ) {
               if (
                 this.filteredArray[i].areaOfExpertise[j].area.includes(
                   $event.target.value
@@ -631,7 +637,6 @@ export class SearchResultsComponent implements OnInit {
                 }
               }
             }
-   
           }
           this.subjectFiltersApplied.splice(
             this.subjectFiltersApplied.indexOf($event.target.value),
@@ -665,7 +670,7 @@ export class SearchResultsComponent implements OnInit {
         this.allFiltersApplied.push($event.target.value);
         for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
           this.searchResults.filter((res) => {
-            for(var j=0; j<res.areaOfExpertise.length; j++){
+            for (var j = 0; j < res.areaOfExpertise.length; j++) {
               if (res.areaOfExpertise[j].area.includes($event.target.value)) {
                 if (
                   !this.checkDuplicacyOfObjectInArray(
@@ -679,7 +684,6 @@ export class SearchResultsComponent implements OnInit {
                 }
               }
             }
-        
           });
         }
       }
@@ -697,7 +701,9 @@ export class SearchResultsComponent implements OnInit {
         if (subjectFiltersApplied[j].localeCompare(eventTarget) == 0) {
           continue;
         } else {
-          if (areaOfExpertise[i].area.localeCompare(subjectFiltersApplied[j]) == 0) {
+          if (
+            areaOfExpertise[i].area.localeCompare(subjectFiltersApplied[j]) == 0
+          ) {
             flag = 1;
             break;
           }

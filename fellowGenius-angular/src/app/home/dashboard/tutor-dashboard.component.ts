@@ -93,6 +93,8 @@ export class TutorDashboardComponent implements OnInit {
   tutorProfileDetails: tutorProfileDetails;
   completeProfile = true;
   condition;
+  profilePictureUrl = '../../../assets/images/default-user-image.png';
+  recentReviewsList: bookingDetails[] = [];
   ngOnInit(): void {
     if (window.innerWidth <= 800) {
       this.tutorChartWidth = '320';
@@ -105,6 +107,7 @@ export class TutorDashboardComponent implements OnInit {
       this.fetchTutorPendingBookings();
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
+      this.fetchExpertRecentReviews();
     } else {
       this.handleRefresh();
     }
@@ -123,10 +126,18 @@ export class TutorDashboardComponent implements OnInit {
       this.fetchTutorPendingBookings();
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
+      this.fetchExpertRecentReviews();
     }, 1000);
   }
   openRecordingsPage() {
     this.router.navigate(['home/recordings']);
+  }
+  fetchExpertRecentReviews() {
+    this.httpService
+      .fetchExpertRecentReviews(this.tutorProfileDetails.tid)
+      .subscribe((res) => {
+        this.recentReviewsList = res;
+      });
   }
   // -------------------------------------------------------------------------- tutor functions--------------------------------------------
   // for accepting bookings
@@ -196,7 +207,7 @@ export class TutorDashboardComponent implements OnInit {
       .subscribe((res) => {
         this.meetingList = res;
         this.sortMeetings(this.meetingList);
-      
+
         if (this.meetingList.length == 0) {
           this.approvedMeetingsMessage = 'No upcoming meetings pending.';
         }
@@ -230,8 +241,8 @@ export class TutorDashboardComponent implements OnInit {
       });
   }
 
-  sortMeetings(meetingList){
-    meetingList.sort(function(a,b){
+  sortMeetings(meetingList) {
+    meetingList.sort(function (a, b) {
       // Turn your strings into dates, and then subtract them
       // to get a value that is either negative, positive, or zero.
       return b.dateOfMeeting - a.dateOfMeeting;

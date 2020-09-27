@@ -171,8 +171,8 @@
     <div class="widget pending-reviews">
       <div class="widget-header">Pending Reviews</div>
       <div class="widget-information">
-        <div style="padding: 10px">
-          <span *ngIf="pendingReviews.length == 0">No Pending reviews</span>
+        <div style="padding: 10px" *ngIf="pendingReviewList.length == 0">
+          <span>No Pending reviews</span>
         </div>
         <div class="list-panel" *ngFor="let list of pendingReviewList">
           <div
@@ -192,51 +192,51 @@
                   type="radio"
                   name="rate"
                   id="rate-5"
-                  (click)="saveRating('100')"
+                  (click)="saveRating(list, '100')"
                 />
                 <label for="rate-5" class="fas fa-star"></label>
                 <input
                   type="radio"
                   name="rate"
                   id="rate-4"
-                  (click)="saveRating('80')"
+                  (click)="saveRating(list, '80')"
                 />
                 <label for="rate-4" class="fas fa-star"></label>
                 <input
                   type="radio"
                   name="rate"
                   id="rate-3"
-                  (click)="saveRating('60')"
+                  (click)="saveRating(list, '60')"
                 />
                 <label for="rate-3" class="fas fa-star"></label>
                 <input
                   type="radio"
                   name="rate"
                   id="rate-2"
-                  (click)="saveRating('40')"
+                  (click)="saveRating(list, '40')"
                 />
                 <label for="rate-2" class="fas fa-star"></label>
                 <input
                   type="radio"
                   name="rate"
                   id="rate-1"
-                  (click)="saveRating('20')"
+                  (click)="saveRating(list, '20')"
                 />
                 <label for="rate-1" class="fas fa-star"></label>
               </div>
-              <div style="font-size: larger">
+              <!-- <div style="font-size: larger">
                 <i
                   class="fas fa-times review-icons"
                   (click)="cancelReview()"
                 ></i>
                 <i class="fas fa-check review-icons" *ngIf="false"></i>
                 <i class="fas fa-edit review-icons" *ngIf="false"></i>
-              </div>
+              </div> -->
             </div>
           </div>
-          <button class="btn btn-warning" (click)="giveFeedback(list)">
+          <!-- <button class="btn btn-warning" (click)="giveFeedback(list)">
             Feedback
-          </button>
+          </button> -->
         </div>
       </div>
       <div class="widget-footer" *ngIf="pendingReviews.length != 0">

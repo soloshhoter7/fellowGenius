@@ -1,75 +1,75 @@
 body {
-    /* background-color: rgb(143, 142, 138); */
-    background-color: #f9fafc;
-    height: 100%;
+  /* background-color: rgb(143, 142, 138); */
+  background-color: #f9fafc;
+  height: 100%;
 }
 
 .card {
-    box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-    width: 70%;
-    margin-bottom: 50px;
+  box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+  width: 70%;
+  margin-bottom: 50px;
 }
 
 .progress-Bar {
-    width: 70%;
-    height: 8px;
-    margin-bottom: 16px;
+  width: 70%;
+  height: 8px;
+  margin-bottom: 16px;
 }
 
 .outer-progressBar {
-    background-color: #ccc;
-    height: inherit;
-    border-radius: 8px;
+  background-color: #ccc;
+  height: inherit;
+  border-radius: 8px;
 }
 
 .inner-progressBar {
-    background-color: #241084;
-    height: inherit;
-    width: 0;
-    border-radius: 8px;
+  background-color: #241084;
+  height: inherit;
+  width: 0;
+  border-radius: 8px;
 }
 
 .completeProfileLink {
-    color: #241084;
-    cursor: pointer;
-    display: inline-block;
+  color: #241084;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .completeProfileLink:hover {
-    text-decoration: underline;
-    color: #241084;
+  text-decoration: underline;
+  color: #241084;
 }
 
 .dashboardIcons {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
 }
 
 .takeActionLink {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .takeActionLink:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .widget-information {
-    /* border: 1px solid red; */
-    position: relative;
-    height: 250px;
-    margin-bottom: 30px;
+  /* border: 1px solid red; */
+  position: relative;
+  height: 250px;
+  margin-bottom: 30px;
 }
 
 .widget-time {
-    font-size: 11px;
-    /* color: #e7001a; */
-    position: absolute;
-    top: -35px;
-    right: 10px;
+  font-size: 11px;
+  color: #e7001a;
+  position: absolute;
+  top: -35px;
+  right: 10px;
 }
 
 .widget {
-    max-height: 250px;
-    overflow: hidden;
+  max-height: 250px;
+  overflow: hidden;
 }
