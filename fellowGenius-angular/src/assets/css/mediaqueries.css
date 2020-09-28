@@ -27,6 +27,10 @@
     .search-bg-left {
         display: none;
     }
+    .search-container {
+        background: transparent!important;
+        background-color: #f7e4f9!important;
+    }
     .login-container {
         width: 100% !important;
         margin-top: 0px !important;
@@ -90,6 +94,10 @@
     .search-result-container .filter-container {
         flex: 1 !important;
         width: 100% !important;
+    }
+    .search-result-container .filter-container .filter-category {
+        display: inline-block;
+        float: left;
     }
     .search-result-container .filter-container .filter-category .filter-category-list li {
         background-color: #e30084;
