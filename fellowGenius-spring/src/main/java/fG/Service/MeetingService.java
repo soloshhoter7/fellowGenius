@@ -27,6 +27,7 @@ import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfile;
 import fG.Model.BookingDetailsModel;
 import fG.Model.ScheduleTime;
+import fG.Repository.repositoryBooking;
 
 @Service
 public class MeetingService {
@@ -40,6 +41,8 @@ public class MeetingService {
 	@Autowired
 	ScheduleService scheduleService;
 
+	@Autowired
+	repositoryBooking repBooking;
 	// to save the bookings requested by student
 	public boolean saveBooking(BookingDetailsModel bookingModel) {
 		BookingDetails booking = new BookingDetails();
@@ -299,5 +302,9 @@ public class MeetingService {
 
 	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, Integer tid) {
 		return meetingDao.saveTutorRatings(meetingId, rating, reviewText, tid);
+	}
+
+	public List<BookingDetails> fetchExpertRecentReviews(Integer tid) {
+		return repBooking.fetchExpertRecentReviews(tid);
 	}
 }
