@@ -162,6 +162,7 @@ export class LoginComponent implements OnInit {
                 JwtDecode(res['response'])['sub']
               );
               var role = JwtDecode(res['response'])['ROLE'];
+              console.log('role' + role);
               this.userId = this.cookieService.get('userId');
               if (role == 'Learner') {
                 this.httpService

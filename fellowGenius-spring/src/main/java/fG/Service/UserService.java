@@ -781,4 +781,45 @@ public class UserService  implements UserDetailsService{
 		return tutorsModel;
 		
 	}
+
+	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings) {
+		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings);
+		if(tutors==null) {
+			return null;
+		}else {
+			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
+			for(TutorProfileDetails tutor: tutors) { 
+				TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
+				tutorProfileDetailsModel.setTid(tutor.getTid());
+				tutorProfileDetailsModel.setFullName(tutor.getFullName());
+				tutorProfileDetailsModel.setInstitute(tutor.getInstitute());
+				tutorProfileDetailsModel.setEducationalQualifications(tutor.getEducationalQualifications());
+				tutorProfileDetailsModel.setPrice1(tutor.getPrice1());
+				tutorProfileDetailsModel.setPrice2(tutor.getPrice2());
+				tutorProfileDetailsModel.setPrice3(tutor.getPrice3());
+				tutorProfileDetailsModel.setDescription(tutor.getDescription());
+				tutorProfileDetailsModel.setSpeciality(tutor.getSpeciality());
+				tutorProfileDetailsModel.setRating(tutor.getRating());
+				tutorProfileDetailsModel.setReviewCount(tutor.getReviewCount());
+				tutorProfileDetailsModel.setLessonCompleted(tutor.getLessonCompleted());
+				tutorProfileDetailsModel.setProfilePictureUrl(tutor.getProfilePictureUrl());
+				tutorProfileDetailsModel.setProfessionalSkills(tutor.getProfessionalSkills());
+				tutorProfileDetailsModel.setCurrentOrganisation(tutor.getCurrentOrganisation());
+				tutorProfileDetailsModel.setPreviousOrganisations(tutor.getPreviousOrganisations());
+				tutorProfileDetailsModel.setProfileCompleted(tutor.getProfileCompleted());
+				tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
+				tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
+				for(ExpertiseAreas area:tutor.getAreaOfExpertise()) {
+					expertise exp = new expertise();
+					exp.setArea(area.getSubject());
+					exp.setPrice(area.getPrice());
+					tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
+				}
+				tutorsModel.add(tutorProfileDetailsModel);
+			}
+			return tutorsModel;
+		}
+		
+	
+	}
 }

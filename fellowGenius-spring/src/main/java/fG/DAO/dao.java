@@ -1,7 +1,11 @@
 package fG.DAO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+
+import javax.security.auth.Subject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 
 import fG.Entity.BookingDetails;
+import fG.Entity.ExpertiseAreas;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -21,12 +26,10 @@ import fG.Entity.TutorVerification;
 import fG.Entity.Users;
 import fG.Model.StudentLoginModel;
 import fG.Model.TutorAvailabilityScheduleModel;
-import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorVerificationModel;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryExpertiseAreas;
 import fG.Repository.repositoryLearningAreas;
-import fG.Repository.repositoryLearningAreasCount;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
@@ -346,6 +349,121 @@ public class dao {
 			}
 		}
 		return tutorsList;
+	}
+
+	public List<TutorProfileDetails> filtersApplied(String[] subjects, String[] price, Integer[] ratings) {
+		
+		//CASE 1
+		if(subjects.length>0 && price.length>0) {
+			List<ExpertiseAreas> subjectWiseFilters  = new ArrayList<ExpertiseAreas>();
+			List<TutorProfileDetails> priceWiseTutors = new ArrayList<TutorProfileDetails>();
+			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
+			
+			// got all tutors for required subject
+			for(String subject: subjects) {
+				subjectWiseFilters.addAll(repExpertiseAreas.searchBySubject(subject));		
+			}
+			
+			for(String priceRange: price) {
+				Integer lowerValue = Integer.valueOf(priceRange.split("-")[0]);
+				Integer higherValue = Integer.valueOf(priceRange.split("-")[1]);
+				for(ExpertiseAreas subjectWiseFilt: subjectWiseFilters) {
+					Long id = subjectWiseFilt.getId();
+					if(!priceWiseTutors.contains(subjectWiseFilt.getUserId())) {
+						priceWiseTutors.add(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id).getUserId());
+					}
+				}
+			}
+			
+			
+		
+			if(ratings.length==0) {
+				return priceWiseTutors;
+			}else {
+				for(TutorProfileDetails ratingWise: priceWiseTutors) {
+					Integer rating = ratingWise.getRating();
+					if(rating>=ratings[0]) {
+						ratingWiseTutors.add(ratingWise);
+					}
+				}
+				return ratingWiseTutors;
+			}
+		}
+		
+		//CASE 2
+		else if(subjects.length>0 && price.length==0) {
+			List<ExpertiseAreas> subjectWiseFilters  = new ArrayList<ExpertiseAreas>(); 
+			List<TutorProfileDetails> subjectWiseTutors = new  ArrayList<TutorProfileDetails>();
+			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
+			
+			for(int i=0; i<subjects.length;i++) {
+				subjectWiseFilters.addAll(repExpertiseAreas.searchSubject(subjects[i]));	
+			}
+			System.out.println("LENGTH OF SUBJECT WISE FILTER " + subjectWiseFilters.size());
+			for(ExpertiseAreas subjectWiseFilt: subjectWiseFilters) {
+				if(!subjectWiseTutors.contains(subjectWiseFilt.getUserId())) {
+					subjectWiseTutors.add(subjectWiseFilt.getUserId());
+				}
+			}
+
+			
+			if(ratings.length==0) {
+				return subjectWiseTutors;
+			}else {
+				for(TutorProfileDetails ratingWise: subjectWiseTutors) {
+					Integer rating = ratingWise.getRating();
+					if(rating>=ratings[0]) {
+						ratingWiseTutors.add(ratingWise);
+					}
+				}
+				return ratingWiseTutors;
+			}
+			
+		}
+		//CASE 3
+		else if(subjects.length==0 && price.length>0) {
+			 
+			List<TutorProfileDetails> priceWiseTutors = new ArrayList<TutorProfileDetails>();
+			List<ExpertiseAreas> priceWiseFilters = new ArrayList<ExpertiseAreas>();
+			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
+			
+			for(String priceRange: price) {
+				Integer lowerValue = Integer.valueOf(priceRange.split("-")[0]);
+				Integer higherValue = Integer.valueOf(priceRange.split("-")[1]);
+				priceWiseFilters.addAll(repExpertiseAreas.searchPrice(lowerValue, higherValue));
+
+			}
+			
+			for(ExpertiseAreas priceWiseFilt : priceWiseFilters) {
+				if(!priceWiseTutors.contains(priceWiseFilt.getUserId())) {
+					priceWiseTutors.add(priceWiseFilt.getUserId());
+				}
+			}
+			
+			if(ratings.length==0) {
+				return priceWiseTutors;
+			}else {
+				for(TutorProfileDetails ratingWise: priceWiseTutors) {
+					Integer rating = ratingWise.getRating();
+					if(rating>=ratings[0]) {
+						ratingWiseTutors.add(ratingWise);
+					}
+				}
+				return ratingWiseTutors;
+			}
+		}
+		
+		//CASE 4
+		else if(subjects.length==0 && price.length==0) {
+			if(ratings.length>0) {
+				return repTutorProfileDetails.searchByRatings(ratings[0]);
+			}else {
+				return null;
+			}
+			
+		}
+		return null;	
+		
 	}
 
     
