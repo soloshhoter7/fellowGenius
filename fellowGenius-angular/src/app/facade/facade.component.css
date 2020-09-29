@@ -20,6 +20,16 @@
     display: inline-block;
     margin-bottom: 10px;
     font-weight: 600;
+    color: #761175;
+    text-transform: uppercase;
+}
+
+.search-container .search-box-container .input-group .input-group-footer {
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    margin-top: 10px;
 }
 
 .search-container .search-box-container .input-group input[type="search"] {
