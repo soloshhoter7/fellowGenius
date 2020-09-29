@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { StudentLoginModel } from "../model/studentLoginModel";
-import { StudentProfileModel } from "../model/studentProfile";
-import { scheduleData } from "../model/scheduleData";
+import { Injectable } from '@angular/core';
+import { StudentLoginModel } from '../model/studentLoginModel';
+import { StudentProfileModel } from '../model/studentProfile';
+import { scheduleData } from '../model/scheduleData';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class StudentService {
   studentProfile = new StudentProfileModel();
@@ -42,6 +42,7 @@ export class StudentService {
       var endDate: Date = new Date(schedule.EndTime.toString());
       schedule.StartTime = startDate.toString();
       schedule.EndTime = endDate.toString();
+      schedule.Type = 'booking';
     }
   }
 }

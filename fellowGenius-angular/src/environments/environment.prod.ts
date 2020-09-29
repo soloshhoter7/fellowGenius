@@ -13,4 +13,5 @@ export const environment = {
     appId: '1:284007218397:web:246d802f5758e9ffcbef34',
     measurementId: 'G-ZDRYSC5RL4',
   },
+  RAZORPAY_KEY_ID: 'rzp_test_B1W7ile7wVdDl1',
 };

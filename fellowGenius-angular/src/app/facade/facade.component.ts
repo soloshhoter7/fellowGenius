@@ -72,39 +72,36 @@ export class FacadeComponent implements OnInit {
   slidesStore = [
     {
       id: 1,
-      src: '../../assets/images/bulb.jpeg',
-      alt: 'Image_1',
-      title: 'Image_1',
+      imageUrl: '../../assets/images/suyashKejriwal.jpg',
+      name: 'Suyash Kejriwal',
+      specialisation: 'PIET - B.tech[CSE]',
+      studentsCount: 50,
+      sessionsCount: 98,
+      rating: 85,
+      review:
+        'Fellowgenius is a standalone peer to peer online classes platform. its beautiful user interface make Experts and learner feel at home. it is a great platform to promote online educators.',
     },
     {
       id: 2,
-      src: '../../assets/images/bulb.jpeg',
-      alt: 'Image_2',
-      title: 'Image_3',
+      imageUrl: '../../assets/images/vaibhav.jpeg',
+      name: 'Vaibhav Vishal Jha',
+      specialisation: 'PIET - B.tech[CSE]',
+      review:
+        'As a teaching expert, it was an awesome experience being a part of this wonderful platform. The layout is very clean anyone would appreciate its simplicity',
+      studentsCount: 30,
+      sessionsCount: 46,
+      rating: 90,
     },
     {
       id: 3,
-      src: '../../assets/images/bulb.jpeg',
-      alt: 'Image_3',
-      title: 'Image_3',
-    },
-    {
-      id: 4,
-      src: '../../assets/images/bulb.jpeg',
-      alt: 'Image_4',
-      title: 'Image_4',
-    },
-    {
-      id: 5,
-      src: '../../assets/images/bulb.jpeg',
-      alt: 'Image_5',
-      title: 'Image_5',
-    },
-    {
-      id: 6,
-      src: '../../assets/images/bulb.jpeg',
-      alt: 'Image_6',
-      title: 'Image_6',
+      imageUrl: '../../assets/images/ajayVerma.jpg',
+      name: 'Ajay Verma',
+      specialisation: 'PIET - B.tech[CSE]',
+      review:
+        'I really loved the experience of teaching here, not only the quality of the platform but also the ease to understand its functionality. Most of the features are self explanatory here, Good job guyz',
+      studentsCount: 21,
+      sessionsCount: 53,
+      rating: 100,
     },
   ];
 

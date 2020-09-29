@@ -218,3 +218,7 @@ input:checked ~ label {
 /* .pending-reviews {
   overflow: scroll;
 } */
+.active {
+  color: white !important;
+  background-color: #7d0f7d !important;
+}

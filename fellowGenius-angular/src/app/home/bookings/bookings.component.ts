@@ -53,7 +53,11 @@ export class BookingsComponent implements OnInit {
   tutorAvailabilitySchedule = new tutorAvailabilitySchedule();
   availabilitySchedule: Array<Object> = [];
   availableSchedules: scheduleData[] = [];
-
+  public onEventRendered(args: any): void {
+    if (args.data.Type == 'booking') {
+      args.element.style.backgroundColor = '#e30084';
+    }
+  }
   handleRefresh() {
     setTimeout(() => {
       this.httpService

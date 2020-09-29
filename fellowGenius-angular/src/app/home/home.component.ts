@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit {
     'Physics',
     'Chemistry',
   ];
+  subject;
   filteredOptions: Observable<string[]>;
   myControl = new FormControl();
   selectedSubject;
@@ -130,6 +131,7 @@ export class HomeComponent implements OnInit {
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
         }
+        this.subject = this.tutorProfileDetails.educationalQualifications[0];
         if (
           this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
           'yes'
@@ -333,6 +335,7 @@ export class HomeComponent implements OnInit {
               this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
             }
             this.tutorService.setTutorProfileDetails(res);
+            this.subject = this.tutorProfileDetails.educationalQualifications[0];
             this.httpService.getScheduleData(this.userId).subscribe((res) => {
               this.tutorService.setPersonalAvailabilitySchedule(res);
               if (

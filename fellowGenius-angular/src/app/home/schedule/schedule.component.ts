@@ -157,6 +157,7 @@ export class tutorScheduleComponent implements OnInit {
     appointment.RecurrenceException = schedule.RecurrenceException;
     appointment.Guid = schedule.Guid;
     appointment.Description = schedule.Description;
+    appointment.Type = 'availability';
     return appointment;
   }
   // for adding events into calendar schedules
@@ -174,9 +175,9 @@ export class tutorScheduleComponent implements OnInit {
   }
   public onEventRendered(args: any): void {
     if (args.data.Type == 'booking') {
-      args.element.style.backgroundColor = '#4a4040';
-    } else if (args.data.Type == 'availability') {
       args.element.style.backgroundColor = '#e30084';
+    } else if (args.data.Type == 'availability') {
+      args.element.style.backgroundColor = '#7d0f7d';
     }
   }
   // for updating events into calendar schedules

@@ -257,13 +257,13 @@ textarea:focus {
   .search-result-card
   .result-card-content
   .result-card-descirption {
-  width: 100%;
+  width: 85%;
   height: 25px;
   position: absolute;
   top: 70px;
   left: 15px;
   color: #5e6a6e;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .owl-carousel .owl-item {
@@ -1717,4 +1717,8 @@ textarea:focus {
   margin-right: 16px;
   margin-top: 10px;
   float: left;
+}
+.btn .active {
+  color: white !important;
+  background-color: #7d0f7d !important;
 }

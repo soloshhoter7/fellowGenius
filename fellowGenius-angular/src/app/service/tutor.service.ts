@@ -65,5 +65,9 @@ export class TutorService {
         schedule.Description.split('=')[0]
       );
     }
+    for (let schedule of this.getPersonalAvailabilitySchedule()
+      .allAvailabilitySchedule) {
+      schedule.Type = 'availability';
+    }
   }
 }

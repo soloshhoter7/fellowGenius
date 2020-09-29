@@ -147,6 +147,7 @@
     </div>
 
     <br />
+    <div style="color: red; padding: 10px">{{ profileError }}</div>
     <div class="row" [class.hideBlock]="!basic">
       <div class="col-md-6 leftBox">
         <form
@@ -290,14 +291,14 @@
       </div>
     </div>
     <div>
-      <div
+      <!-- <div
         *ngIf="
           tutorService.getTutorProfileDetails().profileCompleted < 50 && !basic
         "
         style="text-align: center"
       >
         <h3>Complete basic profile first !</h3>
-      </div>
+      </div> -->
       <div
         [class.hideBlock]="
           tutorService.getTutorProfileDetails().profileCompleted < 50 && !basic
@@ -406,7 +407,7 @@
                     "
                   >
                     <button
-                      [disabled]="!selectedExpertise"
+                      [disabled]="!selectedExpertise || !priceForExpertise"
                       type="button"
                       class="btn btn-success btn-circle btn-sm"
                       (click)="saveExpertise()"

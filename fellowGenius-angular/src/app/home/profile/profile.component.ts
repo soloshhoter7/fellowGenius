@@ -39,6 +39,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class ProfileComponent implements OnInit {
   addExpertise = new expertise();
+  profileError: string;
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -343,7 +344,12 @@ export class ProfileComponent implements OnInit {
     this.basic = true;
   }
   advancedProfileToggle() {
-    this.basic = false;
+    if (this.tutorService.tutorProfileDetails.profileCompleted < 50) {
+      console.log('cannot continue to advanced profile');
+      this.profileError = 'complete basic profile first';
+    } else {
+      this.basic = false;
+    }
   }
 
   saveExpertise() {

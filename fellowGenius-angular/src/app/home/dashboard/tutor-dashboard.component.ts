@@ -49,6 +49,7 @@ export class TutorDashboardComponent implements OnInit {
   tutorChartHeight = '180';
   // ----------------------skills in demand ------------------------------
   skillsChartType = 'PieChart';
+  // skillsChartType = 'Table';
   skillsData = [
     ['Mathematics', 45.0],
     ['English', 26.8],
@@ -59,8 +60,12 @@ export class TutorDashboardComponent implements OnInit {
   ];
   // skillsColumnName = ["Subject", "Percentage"];
   skillsOptions = { pieHole: 0.4 };
+  toggleSkillsInDemand(value) {
+    this.skillsChartType = value;
+  }
   // --------------------------Earnings Tracker --------------------------
   earningTrackerType = 'ComboChart';
+  earningPeriod = 'Week';
   earningTrackerData = [
     ['June', 150, 150],
     ['July', 200, 200],
@@ -78,6 +83,9 @@ export class TutorDashboardComponent implements OnInit {
     seriesType: 'bars',
     series: { 1: { type: 'line' } },
   };
+  toggleEarningPeriod(value) {
+    this.earningPeriod = value;
+  }
   // ---------------------------------------------------------------------
   takeAction;
   pendingRequestsCount = 0;
@@ -129,8 +137,8 @@ export class TutorDashboardComponent implements OnInit {
       this.fetchExpertRecentReviews();
     }, 1000);
   }
-  openRecordingsPage() {
-    this.router.navigate(['home/recordings']);
+  openSchedulePage() {
+    this.router.navigate(['home/tutorSchedule']);
   }
   fetchExpertRecentReviews() {
     this.httpService
@@ -306,6 +314,7 @@ export class TutorDashboardComponent implements OnInit {
           }
           booking.timeLeft = timeLeftString;
         } else if (differenceMinutes <= 0) {
+          booking.timeLeft = null;
           if (Math.abs(differenceMinutes) > bookingDuration) {
             this.meetingList.splice(this.meetingList.indexOf(booking), 1);
             if (this.meetingList.length == 0) {

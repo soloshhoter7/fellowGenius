@@ -82,8 +82,6 @@ export class StudentDashboardComponent implements OnInit {
       this.findStudentPendingBookings();
       this.fetchApprovedMeetings();
       this.fetchLiveMeetings();
-      // this.fetchTopTutors();
-      // this.handleRefresh();
     } else {
       this.handleRefresh();
     }
@@ -105,7 +103,11 @@ export class StudentDashboardComponent implements OnInit {
           this.pendingReviewList.indexOf(profile),
           1
         );
-        this.snackBar.open('Feedback submitted successfully', 'close');
+        this.snackBar.open(
+          'Feedback submitted successfully',
+          'close',
+          this.config
+        );
       });
   }
   viewPendingRequests() {
@@ -124,6 +126,10 @@ export class StudentDashboardComponent implements OnInit {
   options = { pieHole: 0.4 };
   studentChartWidth = '380';
   studentChartHeight = '180';
+  toggleSkillsInDemand(value) {
+    this.type = value;
+  }
+
   openRecordingsPage() {
     this.router.navigate(['home/recordings']);
   }
@@ -264,6 +270,7 @@ export class StudentDashboardComponent implements OnInit {
           }
           booking.timeLeft = timeLeftString;
         } else if (differenceMinutes <= 0) {
+          booking.timeLeft = null;
           if (Math.abs(differenceMinutes) > bookingDuration) {
             this.approvedList.splice(this.approvedList.indexOf(booking), 1);
 

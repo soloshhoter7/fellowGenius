@@ -73,3 +73,37 @@ body {
   max-height: 250px;
   overflow: hidden;
 }
+.active {
+  color: white !important;
+  background-color: #7d0f7d !important;
+}
+
+.outer-stars {
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  right: 5px;
+  font-size: 20px;
+  -webkit-text-stroke-color: #fc91fc;
+  -webkit-text-stroke-width: thin;
+}
+.inner-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
+.outer-stars::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: white;
+}
+.inner-stars::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #fc91fc;
+}

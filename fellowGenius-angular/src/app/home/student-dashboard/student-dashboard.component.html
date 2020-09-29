@@ -100,6 +100,11 @@
             Live in:{{ element.timeLeft }}
         </div> -->
         <div class="widget-information">
+          <div class="widget-time">
+            <span style="color: red" *ngIf="element.timeLeft == null"
+              >● &nbsp;About to start</span
+            >
+          </div>
           <div class="widget-time" *ngIf="element.timeLeft != null">
             Live in:{{ element.timeLeft }}
           </div>
@@ -137,10 +142,20 @@
       <div class="widget-header">Skills in Demand</div>
       <div class="widget-timings">
         <div class="btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            [class.active]="type == 'PieChart'"
+            (click)="toggleSkillsInDemand('PieChart')"
+          >
             <span class="fa fa-chart-pie"></span>
           </button>
-          <button type="button" class="btn btn-secondary">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            [class.active]="type == 'Table'"
+            (click)="toggleSkillsInDemand('Table')"
+          >
             <span class="fa fa-list"></span>
           </button>
         </div>
@@ -239,7 +254,7 @@
           </button> -->
         </div>
       </div>
-      <div class="widget-footer" *ngIf="pendingReviews.length != 0">
+      <div class="widget-footer" *ngIf="pendingReviews.length > 3">
         <a href="">view more</a>
       </div>
     </div>

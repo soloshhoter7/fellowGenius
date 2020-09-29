@@ -32,7 +32,7 @@
           style="cursor: pointer"
           >{{ tutorProfile.fullName }}</span
         >
-        <span class="profile-varient">Politics (Masters)</span>
+        <span class="profile-varient" *ngIf="subject != null"></span>
         <span
           *ngIf="
             tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
