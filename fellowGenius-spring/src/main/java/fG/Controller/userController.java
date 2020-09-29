@@ -2,6 +2,7 @@ package fG.Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fG.Entity.TutorProfileDetails;
+import fG.Model.FiltersApplied;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
@@ -214,5 +216,17 @@ public class userController {
 		return service.fetchAllLinkedTutors(userId);
 	
 	}
+	
+	
+	@RequestMapping(value="/filtersApplied")
+	public List<TutorProfileDetailsModel> filtersApplied(@RequestBody FiltersApplied filtersApplied) {
+		System.out.println("--------------------------------------------------------------------------------------------");
+		System.out.println(Arrays.toString(filtersApplied.subjects));
+		System.out.println(Arrays.toString(filtersApplied.ratings));
+		System.out.println(Arrays.toString(filtersApplied.price));
+		return  service.filtersApplied(filtersApplied.subjects,filtersApplied.price,filtersApplied.ratings);
+			
+	}
+	
 	
 }

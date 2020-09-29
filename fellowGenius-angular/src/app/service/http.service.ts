@@ -15,12 +15,21 @@ import { timezoneData } from '@syncfusion/ej2-angular-schedule';
 import { ScheduleTime } from '../model/ScheduleTime';
 import { registrationModel } from '../model/registration';
 import { loginModel } from '../model/login';
+import { filtersApplied } from '../model/filtersApplied'
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
   constructor(private http: HttpClient) {}
+
+  filters: filtersApplied;
+
+  applyFilters(filtersApplied: filtersApplied){
+    return this.http.post(
+      'http://localhost:8080/fellowGenius/filtersApplied', filtersApplied
+    );
+  }
 
   // fetch pending reviewList at student dashboard
   fetchPendingReviewsList(studentid: number): Observable<bookingDetails[]> {

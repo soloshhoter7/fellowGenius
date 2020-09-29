@@ -48,4 +48,8 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 	@Transactional
 	@Query(value ="UPDATE tutor_profile_details SET review_count = review_count +1 WHERE tid =?1" ,nativeQuery =true)
 	void updateReviewCount(Integer tid);
+
+	@Query(value="SELECT * FROM tutor_profile_details WHERE rating >= ?1", nativeQuery = true)
+	public List<TutorProfileDetails> searchByRatings(Integer ratings);
+
 }
