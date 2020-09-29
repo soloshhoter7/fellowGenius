@@ -71,15 +71,26 @@
     <div class="fliter-tag-container">
         <div class="filters-content" *ngIf="!showMobileFilterView">
             <ul class="nav nav-pills">
-                <li class="nav-item" *ngFor="let filters of allFiltersApplied">
+                <li class="nav-item" *ngFor="let filters of subjectFiltersApplied">
                     <a class="nav-link">
-                        <span *ngIf="filters <= 4">{{ filters }}&nbsp; & up</span>
-                        <span *ngIf="
-                filters != 1 && filters != 2 && filters != 3 && filters != 4
-              " [innerHTML]="filters"></span
+                        <span [innerHTML]="filters"></span
           ></a>
-        </li>
-        <!-- <li class="nav-item">
+          <!-- <span *ngIf="filters <= 4">{{ filters }}&nbsp; & up</span> -->
+                </li>
+                <li class="nav-item" *ngFor="let filters of priceFiltersApplied">
+                    <a class="nav-link">
+                        <span [innerHTML]="filters"></span
+        ></a>
+        <!-- <span *ngIf="filters <= 4">{{ filters }}&nbsp; & up</span> -->
+                </li>
+                <li class="nav-item" *ngFor="let filters of ratingFilterApplied">
+                    <a class="nav-link">
+                        <span>{{ filters }}&nbsp; & up</span
+        ></a>
+        <!-- <span *ngIf="filters <= 4">{{ filters }}&nbsp; & up</span> -->
+                </li>
+
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#"><span>Active</span> <span class="material-icons">
                                     close
                                 </span></a>
@@ -242,11 +253,11 @@
                 </li>
             </ul>
         </div>
-        <!-- <div class="filter-category">
-        <span class="filter-category-header">Avg. Reviews</span>
-        <ul class="filter-category-list">
-          <li>
-            <label class="filters-label">
+        <div class="filter-category">
+            <span class="filter-category-header">Avg. Reviews</span>
+            <ul class="filter-category-list">
+                <li>
+                    <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -254,9 +265,9 @@
                 (change)="searchByRatings($event)"
               />4 & up
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                </li>
+                <li>
+                    <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -264,9 +275,9 @@
                 (change)="searchByRatings($event)"
               />3 & up
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                </li>
+                <li>
+                    <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -274,9 +285,9 @@
                 (change)="searchByRatings($event)"
               />2 & up
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                </li>
+                <li>
+                    <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -284,9 +295,9 @@
                 (change)="searchByRatings($event)"
               />1 & up
             </label>
-          </li>
-        </ul>
-      </div> -->
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="search-cards-container columnto">
         <div *ngIf="searchResults.length == 0" style="
@@ -303,7 +314,8 @@
             </h2>
         </div>
         <ul class="rowto">
-            <div *ngIf="allFiltersApplied.length == 0">
+            <!-- <div *ngIf="allFiltersApplied.length == 0"> -->
+            <div *ngIf="!allFiltersApplied.show">
                 <li class="search-result-card" *ngFor="let result of searchResults">
                     <div class="result-profile-pic" [ngStyle]="{
                 'background-image': 'url(' + result.profilePictureUrl + ')'
@@ -362,7 +374,8 @@
           </li>
         </div>
 
-        <div *ngIf="allFiltersApplied.length != 0">
+        <!-- <div *ngIf="allFiltersApplied.length != 0"> -->
+          <div>
           <li class="search-result-card" *ngFor="let result of filteredArray">
             <div
               class="result-profile-pic"
@@ -423,7 +436,8 @@
             </div>
           </li>
         </div>
-        <div
+        
+        <!-- <div
           *ngIf="allFiltersApplied.length != 0 && filteredArray.length == 0"
           style="
             width: max-content;
@@ -438,7 +452,7 @@
           <h2 style="font-size: 3vh">
             We can't seem to find any experts that match your search
           </h2>
-        </div>
+        </div> -->
       </ul>
       <!-- <div *ngIf="filterSearch.length == 0 && allFiltersApplied.length!=0">
         NO TEACHERS FOUND

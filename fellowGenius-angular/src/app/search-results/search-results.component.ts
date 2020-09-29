@@ -7,18 +7,23 @@ import { LoginDetailsService } from '../service/login-details.service';
 import { ProfileService } from '../service/profile.service';
 import { MatDialog } from '@angular/material/dialog';
 import { HostListener } from '@angular/core';
+import { Subject } from 'rxjs';
+import { filtersApplied } from '../model/filtersApplied';
+import { subject } from '../model/subject';
 
 @Component({
   selector: 'app-search-results',
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.css'],
 })
+
 export class SearchResultsComponent implements OnInit {
-  showProfile;
   searchResults: tutorProfileDetails[] = [];
   filteredArray: tutorProfileDetails[] = [];
+  allFiltersApplied: filtersApplied = new filtersApplied();
+  subjects: string[];
   // arrayToShow: tutorProfileDetails[];
-  allFiltersApplied = [];
+
   subjectFiltersApplied = [];
   priceFiltersApplied = [];
   ratingFilterApplied = [];
@@ -61,6 +66,9 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
+    console.log(this.allFiltersApplied.show);
+
     if (window.screen.width <= 500) {
       console.log(this.screenWidth);
       console.log('size<500');
@@ -202,496 +210,80 @@ export class SearchResultsComponent implements OnInit {
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
       this.searchResults = req;
-      console.log(this.searchResults[0].areaOfExpertise[0].area);
     });
   }
 
+  searchBySubject($event) {
+    var subject = $event.target.value;
+    if(this.subjectFiltersApplied.length==0){
+      this.subjectFiltersApplied.push(subject);
+      this.allFiltersApplied.subjects.push(subject);
+      this.allFiltersApplied.show = true;
+    }else{
+      if(this.checkFiltersApplied(this.subjectFiltersApplied, subject)){
+        this.subjectFiltersApplied.splice(this.subjectFiltersApplied.indexOf(subject),1);
+        this.allFiltersApplied.subjects.splice(this.allFiltersApplied.subjects.indexOf(subject),1);
+        if(this.allFiltersApplied.subjects.length==0){
+          this.allFiltersApplied.show = false;
+        }
+      }else{
+        this.subjectFiltersApplied.push(subject);
+        this.allFiltersApplied.subjects.push(subject);
+        this.allFiltersApplied.show = true;
+      }
+    }
+    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res)=>{
+      console.log(res.valueOf());
+      // console.log(res.toString().length==undefined);
+    })
+  }
+
   searchByPrice($event) {
-    this.callSearchBySubject = true;
-
-    if (this.searchBySubject($event) && !this.callSearchByPrice) {
-      //input is 400-599
-      this.callSearchBySubject = false;
-      if (this.findFromSearchResult) {
-        this.findFromSearchResult = false;
-        this.filteredArray = [];
-        if (this.priceFiltersApplied.length == 0) {
-          this.priceFiltersApplied.push($event.target.value);
-          this.allFiltersApplied.push($event.target.value);
-          var price = $event.target.value.split('-');
-          var lowerValue = price[0];
-          var higherValue = price[1];
-          this.searchResults.filter((res) => {
-            if (
-              Number(res.price1) >= Number(lowerValue) &&
-              Number(res.price1) <= Number(higherValue)
-            ) {
-              // this.filteredArray.push(res);
-              // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-              // this.filteredArray.push(this.searchResults[this.searchResults.indexOf(res)]);
-              this.filteredArray.push(res);
-              // }
-            }
-          });
-        } else if (this.priceFiltersApplied.length == 1) {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.filteredArray = this.searchResults;
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.searchResults.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  if (
-                    !this.checkDuplicacyOfObjectInArray(
-                      this.filteredArray,
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    )
-                  ) {
-                    this.filteredArray.push(
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    );
-                  }
-                }
-              });
-            }
-          }
-        } else {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-
-            this.filteredArray = [];
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.searchResults.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-                  this.filteredArray.push(res);
-                  // }
-                }
-              });
-            }
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.searchResults.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  if (
-                    !this.checkDuplicacyOfObjectInArray(
-                      this.filteredArray,
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    )
-                  ) {
-                    this.filteredArray.push(
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    );
-                  }
-                }
-              });
-            }
-          }
+    var price = $event.target.value;
+    if(this.priceFiltersApplied.length==0){
+      this.priceFiltersApplied.push(price);
+      this.allFiltersApplied.price.push(price);
+      this.allFiltersApplied.show = true;
+    }else{
+      if(this.checkFiltersApplied(this.priceFiltersApplied, price)){
+        this.priceFiltersApplied.splice(this.priceFiltersApplied.indexOf(price),1);
+        this.allFiltersApplied.price.splice(this.allFiltersApplied.price.indexOf(price),1);
+        if(this.allFiltersApplied.price.length==0){
+          this.allFiltersApplied.show = false;
         }
-      }
-      if (this.findFromFilterSearch) {
-        this.findFromFilterSearch = false;
-
-        if (this.priceFiltersApplied.length == 1) {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.filteredArray.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  this.deletionElementFinder.push(res);
-                }
-              });
-            }
-            this.filteredArray = this.deletionElementFinder;
-            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-            this.elementsToBeDeleted = [];
-            this.deletionElementFinder = [];
-          }
-        } else {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.filteredArray.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  this.deletionElementFinder.push(res);
-                }
-              });
-            }
-            this.filteredArray = this.deletionElementFinder;
-            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-            this.elementsToBeDeleted = [];
-            this.deletionElementFinder = [];
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.filteredArray.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  this.deletionElementFinder.push(res);
-                }
-              });
-            }
-            this.filteredArray = this.deletionElementFinder;
-            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-            this.elementsToBeDeleted = [];
-            this.deletionElementFinder = [];
-          }
-        }
+      }else{
+        this.priceFiltersApplied.push(price);
+        this.allFiltersApplied.price.push(price);
+        this.allFiltersApplied.show = true;
       }
     }
-
-    if (this.callSearchByPrice) {
-      // input is subject not price
-      this.callSearchByPrice = false;
-      if (this.priceFiltersApplied.length == 1) {
-        var price = this.priceFiltersApplied[0].split('-');
-        var lowerValue = price[0];
-        var higherValue = price[1];
-        this.filteredArray.filter((res) => {
-          if (
-            Number(res.price1) < Number(lowerValue) ||
-            Number(res.price1) > Number(higherValue)
-          ) {
-            this.filteredArray.splice(i, 1);
-          }
-        });
-      } else {
-        for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-          var price = this.priceFiltersApplied[i].split('-');
-          var lowerValue = price[0];
-          var higherValue = price[1];
-          this.filteredArray.filter((res) => {
-            if (
-              Number(res.price1) >= Number(lowerValue) &&
-              Number(res.price1) <= Number(higherValue)
-            ) {
-              this.deletionElementFinder.push(res);
-            }
-          });
-        }
-        this.filteredArray = this.deletionElementFinder;
-        // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-        // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-        this.elementsToBeDeleted = [];
-        this.deletionElementFinder = [];
-      }
-    }
+    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res)=>{
+      console.log(res);
+    })
   }
 
   searchByRatings($event) {
-    if (
-      this.checkFiltersApplied(this.ratingFilterApplied, $event.target.value)
-    ) {
-      if (this.ratingFilterApplied.length == 1) {
-        this.filteredArray = [];
-        this.ratingFilterApplied.pop();
-        this.allFiltersApplied.splice(
-          this.allFiltersApplied.indexOf($event.target.value),
-          1
-        );
-      } else {
-        var status = false;
-        for (var i = 0; i < this.ratingFilterApplied.length; i++) {
-          if ($event.target.value > this.ratingFilterApplied[i]) {
-            status = true;
-          }
+    var ratings = $event.target.value;
+    if(this.ratingFilterApplied.length==0){
+      this.ratingFilterApplied.push(ratings);
+      this.allFiltersApplied.ratings.push(ratings * 20);
+      this.allFiltersApplied.show = true;
+    }else{
+      if(this.checkFiltersApplied(this.ratingFilterApplied, ratings)){
+        this.ratingFilterApplied.splice(this.ratingFilterApplied.indexOf(ratings),1);
+        this.allFiltersApplied.ratings.splice(this.allFiltersApplied.ratings.indexOf(ratings*20),1);
+        if(this.allFiltersApplied.ratings.length==0){
+          this.allFiltersApplied.show = false;
         }
-        if (status) {
-          this.ratingFilterApplied.splice(
-            this.ratingFilterApplied.indexOf($event.target.value),
-            1
-          );
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-        } else {
-          this.ratingFilterApplied.sort();
-          var smallest = Math.min.apply(Math, this.ratingFilterApplied);
-          var nextToSmallest = this.ratingFilterApplied[
-            this.ratingFilterApplied.indexOf(smallest) + 2
-          ];
-
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            if (
-              this.filteredArray[i].rating >= 20 * smallest &&
-              this.filteredArray[i].rating < 20 * nextToSmallest
-            ) {
-              this.filteredArray.splice(i, 1);
-            }
-          }
-          this.ratingFilterApplied.splice(
-            this.ratingFilterApplied.indexOf($event.target.value),
-            1
-          );
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-        }
-      }
-    } else {
-      this.ratingFilterApplied.push($event.target.value);
-      this.allFiltersApplied.push($event.target.value);
-      for (var i = 0; i < this.ratingFilterApplied.length; i++) {
-        this.searchResults.filter((res) => {
-          if (res.rating >= 20 * Number($event.target.value)) {
-            if (
-              !this.checkDuplicacyOfObjectInArray(
-                this.filteredArray,
-                this.searchResults[this.searchResults.indexOf(res)]
-              )
-            ) {
-              this.filteredArray.push(
-                this.searchResults[this.searchResults.indexOf(res)]
-              );
-            }
-          }
-        });
+      }else{
+        this.ratingFilterApplied.push(ratings);
+        this.allFiltersApplied.ratings.push(ratings*20);
+        this.allFiltersApplied.show = true;
       }
     }
-  }
-
-  searchBySubject($event) {
-    if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
-      //input is price
-      this.filteredArray = [];
-      this.callSearchBySubject = false;
-      this.callSearchByPrice = false;
-      this.findFromSearchResult = true;
-      return true;
-    }
-    if (this.subjectFiltersApplied.length != 0 && this.callSearchBySubject) {
-      this.filteredArray = [];
-      this.callSearchBySubject = false;
-      this.callSearchByPrice = false;
-      // input is price
-      this.findFromFilterSearch = true;
-      for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-        this.searchResults.filter((res) => {
-          if (res.areaOfExpertise.includes(this.subjectFiltersApplied[i])) {
-            if (
-              !this.checkDuplicacyOfObjectInArray(
-                this.filteredArray,
-                this.searchResults[this.searchResults.indexOf(res)]
-              )
-            ) {
-              this.filteredArray.push(
-                this.searchResults[this.searchResults.indexOf(res)]
-              );
-            }
-          }
-        });
-      }
-      return true;
-    }
-
-    if (!this.callSearchBySubject) {
-      // input is subject
-      // this.allFiltersApplied = [];
-      if (
-        this.checkFiltersApplied(
-          this.subjectFiltersApplied,
-          $event.target.value
-        )
-      ) {
-        if (this.subjectFiltersApplied.length == 1) {
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-          this.subjectFiltersApplied.pop();
-          console.log(
-            'filtered array length : ' + (this.filteredArray.length - 1)
-          );
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            console.log(this.filteredArray[i].areaOfExpertise.length);
-            for (
-              var j = this.filteredArray[i].areaOfExpertise.length - 1;
-              j >= 0;
-              j--
-            ) {
-              if (
-                this.filteredArray[i].areaOfExpertise[j].area.includes(
-                  $event.target.value
-                )
-              ) {
-                this.filteredArray.splice(i, 1);
-              }
-            }
-          }
-        } else {
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            for (
-              var j = 0;
-              j < this.filteredArray[i].areaOfExpertise.length;
-              j++
-            ) {
-              if (
-                this.filteredArray[i].areaOfExpertise[j].area.includes(
-                  $event.target.value
-                )
-              ) {
-                if (
-                  this.removeOrNot(
-                    this.filteredArray[i].areaOfExpertise[j],
-                    this.subjectFiltersApplied,
-                    $event.target.value
-                  )
-                ) {
-                  this.filteredArray.splice(i, 1);
-                }
-              }
-            }
-          }
-          this.subjectFiltersApplied.splice(
-            this.subjectFiltersApplied.indexOf($event.target.value),
-            1
-          );
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-        }
-      } else {
-        // this.subjectFiltersApplied.push($event.target.value);
-        // this.allFiltersApplied.push($event.target.value);
-        // for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-        //   this.searchResults.filter((res) => {
-        //     if (res.areaOfExpertise.includes($event.target.value)) {
-        //       if (
-        //         !this.checkDuplicacyOfObjectInArray(
-        //           this.filteredArray,
-        //           this.searchResults[this.searchResults.indexOf(res)]
-        //         )
-        //       ) {
-        //         this.filteredArray.push(
-        //           this.searchResults[this.searchResults.indexOf(res)]
-        //         );
-        //       }
-        //     }
-        //   });
-        // }
-        this.subjectFiltersApplied.push($event.target.value);
-        this.allFiltersApplied.push($event.target.value);
-        for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-          this.searchResults.filter((res) => {
-            for (var j = 0; j < res.areaOfExpertise.length; j++) {
-              if (res.areaOfExpertise[j].area.includes($event.target.value)) {
-                if (
-                  !this.checkDuplicacyOfObjectInArray(
-                    this.filteredArray,
-                    this.searchResults[this.searchResults.indexOf(res)]
-                  )
-                ) {
-                  this.filteredArray.push(
-                    this.searchResults[this.searchResults.indexOf(res)]
-                  );
-                }
-              }
-            }
-          });
-        }
-      }
-      if (this.priceFiltersApplied.length != 0) {
-        this.callSearchByPrice = true;
-        this.searchByPrice($event);
-      }
-    }
+    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res)=>{
+      console.log(res);
+    })
   }
 
   removeOrNot(areaOfExpertise, subjectFiltersApplied, eventTarget) {
@@ -733,14 +325,15 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
+    console.log("in sort");
     if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
-      if (this.allFiltersApplied.length == 0) {
+      if (!this.allFiltersApplied.show) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
       } else {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
       }
     } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
-      if (this.allFiltersApplied.length == 0) {
+      if (this.allFiltersApplied.show) {
         this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
       } else {
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
@@ -748,3 +341,4 @@ export class SearchResultsComponent implements OnInit {
     }
   }
 }
+
