@@ -116,6 +116,7 @@
         </button>
         </div>
         <div class="sort-by-container">
+            <a href="javascript:;" (click)="clearAllFilters()">clear All Filters</a>
             <span style="margin-left: 15px;">Sort By</span
       ><select (change)="sort($event)">
         <option>Price</option>
@@ -315,28 +316,30 @@
         </div>
         <ul class="rowto">
             <!-- <div *ngIf="allFiltersApplied.length == 0"> -->
-            <div *ngIf="!allFiltersApplied.show">
+            <!-- ....................................................... -->
+            <div *ngIf="(allFiltersApplied.price.length == 0 && allFiltersApplied.ratings.length == 0 && allFiltersApplied.subjects.length == 0)">
                 <li class="search-result-card" *ngFor="let result of searchResults">
                     <div class="result-profile-pic" [ngStyle]="{
                 'background-image': 'url(' + result.profilePictureUrl + ')'
               }" default="../../assets/images/default-user-image.png"></div>
                     <div class="result-card-header">
                         <span class="result-card-name" [innerHTML]="result.fullName">
-                <!-- Alex Chemoricle -->
+                
               </span>
                         <span class="result-card-specalizaiton" [innerHTML]="result.institute">
-                <!-- Exterior University - politics [bachelors] -->
+                
               </span>
                         <div class="stars-outer">
                             <div class="stars-inner" [style.width.%]="result.rating"></div>
-                            <!-- <div class="stars-inner" style="width: 90%;"></div> -->
+
                         </div>
                     </div>
 
                     <div class="result-card-content">
                         <div class="numbers-container">
                             <div class="fee_per_attribute">
-                                ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span>
+
+                                ₹<span class="number" style="display: contents; color: #7d0f7d">{{result.price1}}-{{result.price2}}</span>
                                 <span class="info">per hour</span>
                             </div>
                             <div class="separtor"></div>
@@ -352,7 +355,7 @@
                         </div>
 
                         <div class="result-card-descirption" [innerHTML]="result.description | shorten">
-                            <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
+
                         </div>
 
                         <div class="result-card-tutorsfor">
@@ -373,18 +376,16 @@
             </div>
           </li>
         </div>
+            <!-- ....................................................... -->
 
-        <!-- <div *ngIf="allFiltersApplied.length != 0"> -->
-          <div>
-          <li class="search-result-card" *ngFor="let result of filteredArray">
-            <div
-              class="result-profile-pic"
-              [ngStyle]="{
+            <!-- <div *ngIf="allFiltersApplied.length != 0"> -->
+            <div>
+                <li class="search-result-card" *ngFor="let result of filteredArray">
+                    <div class="result-profile-pic" [ngStyle]="{
                 'background-image': 'url(' + result.profilePictureUrl + ')'
-              }"
-            ></div>
-            <div class="result-card-header">
-              <span class="result-card-name" [innerHTML]="result.fullName">
+              }"></div>
+                    <div class="result-card-header">
+                        <span class="result-card-name" [innerHTML]="result.fullName">
                 <!-- Alex Chemoricle -->
               </span>
                                 <span class="result-card-specalizaiton" [innerHTML]="result.institute">
@@ -399,7 +400,8 @@
                             <div class="result-card-content">
                                 <div class="numbers-container">
                                     <div class="fee_per_attribute">
-                                        ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span>
+                                        <!-- ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span> -->
+                                        ₹<span class="number" style="display: contents; color: #7d0f7d">{{result.price1}}-{{result.price2}}</span>
                                         <span class="info">per hour</span>
                                     </div>
                                     <div class="separtor"></div>
@@ -437,8 +439,8 @@
           </li>
         </div>
         
-        <!-- <div
-          *ngIf="allFiltersApplied.length != 0 && filteredArray.length == 0"
+        <div
+          *ngIf="(allFiltersApplied.price.length != 0 || allFiltersApplied.ratings.length != 0 || allFiltersApplied.subjects.length != 0) && filteredArray.length == 0"
           style="
             width: max-content;
             margin: auto;
@@ -452,7 +454,7 @@
           <h2 style="font-size: 3vh">
             We can't seem to find any experts that match your search
           </h2>
-        </div> -->
+        </div>
       </ul>
       <!-- <div *ngIf="filterSearch.length == 0 && allFiltersApplied.length!=0">
         NO TEACHERS FOUND

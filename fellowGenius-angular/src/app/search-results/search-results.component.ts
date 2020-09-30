@@ -237,8 +237,9 @@ export class SearchResultsComponent implements OnInit {
       }
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-      // console.log(res.valueOf());
-      // this.filteredArray = res;
+      console.log(res);
+      this.filteredArray = [];
+      this.filteredArray = res;
       // console.log(res.toString().length == undefined);
     });
   }
@@ -270,6 +271,8 @@ export class SearchResultsComponent implements OnInit {
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
       console.log(res);
+      this.filteredArray = [];
+      this.filteredArray = res;
     });
   }
 
@@ -300,6 +303,8 @@ export class SearchResultsComponent implements OnInit {
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
       console.log(res);
+      this.filteredArray = [];
+      this.filteredArray = res;
     });
   }
 
@@ -339,6 +344,10 @@ export class SearchResultsComponent implements OnInit {
     ) {
       return true;
     }
+  }
+
+  clearAllFilters(){
+    window.location.reload();
   }
 
   sort($event) {

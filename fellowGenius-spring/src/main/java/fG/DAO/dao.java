@@ -370,12 +370,15 @@ public class dao {
 				for(ExpertiseAreas subjectWiseFilt: subjectWiseFilters) {
 					Long id = subjectWiseFilt.getId();
 					if(!priceWiseTutors.contains(subjectWiseFilt.getUserId())) {
-						priceWiseTutors.add(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id).getUserId());
+						System.out.println("NULL AE");
+//						System.out.println(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id));
+						if(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id)!=null) {
+							priceWiseTutors.add(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id).getUserId());
+						}
+						
 					}
 				}
 			}
-			
-			
 		
 			if(ratings.length==0) {
 				return priceWiseTutors;
@@ -399,7 +402,7 @@ public class dao {
 			for(int i=0; i<subjects.length;i++) {
 				subjectWiseFilters.addAll(repExpertiseAreas.searchSubject(subjects[i]));	
 			}
-			System.out.println("LENGTH OF SUBJECT WISE FILTER " + subjectWiseFilters.size());
+			
 			for(ExpertiseAreas subjectWiseFilt: subjectWiseFilters) {
 				if(!subjectWiseTutors.contains(subjectWiseFilt.getUserId())) {
 					subjectWiseTutors.add(subjectWiseFilt.getUserId());
@@ -412,6 +415,8 @@ public class dao {
 			}else {
 				for(TutorProfileDetails ratingWise: subjectWiseTutors) {
 					Integer rating = ratingWise.getRating();
+					System.out.println("................................................");
+					System.out.println(rating);
 					if(rating>=ratings[0]) {
 						ratingWiseTutors.add(ratingWise);
 					}

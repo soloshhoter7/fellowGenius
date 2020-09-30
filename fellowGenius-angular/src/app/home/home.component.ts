@@ -85,25 +85,25 @@ export class HomeComponent implements OnInit {
     this.screenWidth = window.innerWidth;
   }
   ngOnInit() {
-    // this.toggleNavigation = true;
-    // this.breakpointObserver
-    //   .observe(['(min-width: 800px)'])
-    //   .subscribe((state: BreakpointState) => {
-    //     if (state.matches) {
-    //       console.log('called open nav');
-    //       this.openNav();
-    //     } else {
-    //       console.log('called close nav');
-    //       this.closeNav();
-    //     }
-    //   });
-    // this.toggleNavigation = true;
-    // if (this.screenWidth >= 450) {
-    //   this.openNav();
-    // } else {
-    //   this.toggleNavigation = false;
-    //   this.closeNav();
-    // }
+    this.toggleNavigation = true;
+    this.breakpointObserver
+      .observe(['(min-width: 800px)'])
+      .subscribe((state: BreakpointState) => {
+        if (state.matches) {
+          console.log('called open nav');
+          this.openNav();
+        } else {
+          console.log('called close nav');
+          this.closeNav();
+        }
+      });
+    this.toggleNavigation = true;
+    if (this.screenWidth >= 450) {
+      this.openNav();
+    } else {
+      this.toggleNavigation = false;
+      this.closeNav();
+    }
     if (this.isTokenValid()) {
       this.loginType = this.loginService.getLoginType();
       if (
