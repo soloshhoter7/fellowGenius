@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
   HttpRequest,
   HttpHandler,
-} from "@angular/common/http";
-import { CookieService } from "ngx-cookie-service";
-import { stringify } from "querystring";
+} from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { stringify } from 'querystring';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class BasicAuthHttpInterceptorService implements HttpInterceptor {
   constructor(private cookieService: CookieService) {}
@@ -18,26 +18,26 @@ export class BasicAuthHttpInterceptorService implements HttpInterceptor {
     // "https://backend.fellowgenius.com/fellowGenius/registerSocialLogin",
     // "https://backend.fellowgenius.com/authenticate",
 
-    "http://localhost:8080/fellowGenius/meeting/sendEmail",
+    'http://localhost:8080/fellowGenius/meeting/sendEmail',
     // 'http://localhost:5000/fellowGenius/registerStudent',
     // 'http://localhost:5000/fellowGenius/registerTutor',
-    "http://localhost:8080/fellowGenius/registerUser",
-    "http://localhost:8080/fellowGenius/registerSocialLogin",
+    'http://localhost:8080/fellowGenius/registerUser',
+    'http://localhost:8080/fellowGenius/registerSocialLogin',
     // 'http://localhost:5000/authenticateStudent',
     // 'http://localhost:5000/authenticateTutor',
-    "http://localhost:8080/authenticate",
-    "http://localhost:8080/fellowgenius/fetchTutorList",
+    'http://localhost:8080/authenticate',
+    'http://localhost:8080/fellowgenius/fetchTutorList',
   ];
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    var token = this.cookieService.get("token");
+    var token = this.cookieService.get('token');
     // console.log('interceptor  called !');
     // console.log(req.url);
     // if (sessionStorage.getItem('username') && sessionStorage.getItem('token')) {
     if (this.isUrlValid(req.url)) {
-      if (token != "") {
+      if (token != '') {
         req = req.clone({
           setHeaders: {
-            Authorization: "Bearer " + token,
+            Authorization: 'Bearer ' + token,
           },
         });
       }

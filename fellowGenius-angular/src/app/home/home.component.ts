@@ -85,16 +85,18 @@ export class HomeComponent implements OnInit {
     this.screenWidth = window.innerWidth;
   }
   ngOnInit() {
-    this.toggleNavigation = true;
-    this.breakpointObserver
-      .observe(['(min-width: 800px)'])
-      .subscribe((state: BreakpointState) => {
-        if (state.matches) {
-          this.openNav();
-        } else {
-          this.closeNav();
-        }
-      });
+    // this.toggleNavigation = true;
+    // this.breakpointObserver
+    //   .observe(['(min-width: 800px)'])
+    //   .subscribe((state: BreakpointState) => {
+    //     if (state.matches) {
+    //       console.log('called open nav');
+    //       this.openNav();
+    //     } else {
+    //       console.log('called close nav');
+    //       this.closeNav();
+    //     }
+    //   });
     // this.toggleNavigation = true;
     // if (this.screenWidth >= 450) {
     //   this.openNav();
@@ -168,10 +170,12 @@ export class HomeComponent implements OnInit {
   }
   openNav() {
     if (this.screenWidth >= 450) {
+      console.log('device is bigger');
       document.getElementById('sidenav').style.width = '230px';
       document.getElementById('mainContent').style.marginLeft = '230px';
     } else {
       document.getElementById('sidenav').style.width = '100%';
+      console.log('device is small');
     }
     this.toggleNavigation = true;
   }

@@ -237,8 +237,9 @@ export class SearchResultsComponent implements OnInit {
       }
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-      console.log(res.valueOf());
-      // console.log(res.toString().length==undefined);
+      // console.log(res.valueOf());
+      // this.filteredArray = res;
+      // console.log(res.toString().length == undefined);
     });
   }
 

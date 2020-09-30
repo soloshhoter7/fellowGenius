@@ -15,7 +15,7 @@ import { timezoneData } from '@syncfusion/ej2-angular-schedule';
 import { ScheduleTime } from '../model/ScheduleTime';
 import { registrationModel } from '../model/registration';
 import { loginModel } from '../model/login';
-import { filtersApplied } from '../model/filtersApplied'
+import { filtersApplied } from '../model/filtersApplied';
 
 @Injectable({
   providedIn: 'root',
@@ -25,9 +25,12 @@ export class HttpService {
 
   filters: filtersApplied;
 
-  applyFilters(filtersApplied: filtersApplied){
-    return this.http.post(
-      'http://localhost:8080/fellowGenius/filtersApplied', filtersApplied
+  applyFilters(
+    filtersApplied: filtersApplied
+  ): Observable<tutorProfileDetails[]> {
+    return this.http.post<tutorProfileDetails[]>(
+      'http://localhost:8080/fellowGenius/filtersApplied',
+      filtersApplied
     );
   }
 

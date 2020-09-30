@@ -4,7 +4,6 @@ public class FiltersApplied{
 	public String[] subjects;
 	public String[] price;
 	public Integer[] ratings;
-	
 	public String[] getSubjects() {
 		return subjects;
 	}
