@@ -16,7 +16,6 @@ import { subject } from '../model/subject';
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.css'],
 })
-
 export class SearchResultsComponent implements OnInit {
   searchResults: tutorProfileDetails[] = [];
   filteredArray: tutorProfileDetails[] = [];
@@ -66,7 +65,6 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
     console.log(this.allFiltersApplied.show);
 
     if (window.screen.width <= 500) {
@@ -179,7 +177,7 @@ export class SearchResultsComponent implements OnInit {
 
     this.fetchTutorList();
 
-    // this.filteredArray = this.searchResults;
+    this.filteredArray = this.searchResults;
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
@@ -215,75 +213,93 @@ export class SearchResultsComponent implements OnInit {
 
   searchBySubject($event) {
     var subject = $event.target.value;
-    if(this.subjectFiltersApplied.length==0){
+    if (this.subjectFiltersApplied.length == 0) {
       this.subjectFiltersApplied.push(subject);
       this.allFiltersApplied.subjects.push(subject);
       this.allFiltersApplied.show = true;
-    }else{
-      if(this.checkFiltersApplied(this.subjectFiltersApplied, subject)){
-        this.subjectFiltersApplied.splice(this.subjectFiltersApplied.indexOf(subject),1);
-        this.allFiltersApplied.subjects.splice(this.allFiltersApplied.subjects.indexOf(subject),1);
-        if(this.allFiltersApplied.subjects.length==0){
+    } else {
+      if (this.checkFiltersApplied(this.subjectFiltersApplied, subject)) {
+        this.subjectFiltersApplied.splice(
+          this.subjectFiltersApplied.indexOf(subject),
+          1
+        );
+        this.allFiltersApplied.subjects.splice(
+          this.allFiltersApplied.subjects.indexOf(subject),
+          1
+        );
+        if (this.allFiltersApplied.subjects.length == 0) {
           this.allFiltersApplied.show = false;
         }
-      }else{
+      } else {
         this.subjectFiltersApplied.push(subject);
         this.allFiltersApplied.subjects.push(subject);
         this.allFiltersApplied.show = true;
       }
     }
-    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res)=>{
+    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
       console.log(res.valueOf());
       // console.log(res.toString().length==undefined);
-    })
+    });
   }
 
   searchByPrice($event) {
     var price = $event.target.value;
-    if(this.priceFiltersApplied.length==0){
+    if (this.priceFiltersApplied.length == 0) {
       this.priceFiltersApplied.push(price);
       this.allFiltersApplied.price.push(price);
       this.allFiltersApplied.show = true;
-    }else{
-      if(this.checkFiltersApplied(this.priceFiltersApplied, price)){
-        this.priceFiltersApplied.splice(this.priceFiltersApplied.indexOf(price),1);
-        this.allFiltersApplied.price.splice(this.allFiltersApplied.price.indexOf(price),1);
-        if(this.allFiltersApplied.price.length==0){
+    } else {
+      if (this.checkFiltersApplied(this.priceFiltersApplied, price)) {
+        this.priceFiltersApplied.splice(
+          this.priceFiltersApplied.indexOf(price),
+          1
+        );
+        this.allFiltersApplied.price.splice(
+          this.allFiltersApplied.price.indexOf(price),
+          1
+        );
+        if (this.allFiltersApplied.price.length == 0) {
           this.allFiltersApplied.show = false;
         }
-      }else{
+      } else {
         this.priceFiltersApplied.push(price);
         this.allFiltersApplied.price.push(price);
         this.allFiltersApplied.show = true;
       }
     }
-    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res)=>{
+    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
       console.log(res);
-    })
+    });
   }
 
   searchByRatings($event) {
     var ratings = $event.target.value;
-    if(this.ratingFilterApplied.length==0){
+    if (this.ratingFilterApplied.length == 0) {
       this.ratingFilterApplied.push(ratings);
       this.allFiltersApplied.ratings.push(ratings * 20);
       this.allFiltersApplied.show = true;
-    }else{
-      if(this.checkFiltersApplied(this.ratingFilterApplied, ratings)){
-        this.ratingFilterApplied.splice(this.ratingFilterApplied.indexOf(ratings),1);
-        this.allFiltersApplied.ratings.splice(this.allFiltersApplied.ratings.indexOf(ratings*20),1);
-        if(this.allFiltersApplied.ratings.length==0){
+    } else {
+      if (this.checkFiltersApplied(this.ratingFilterApplied, ratings)) {
+        this.ratingFilterApplied.splice(
+          this.ratingFilterApplied.indexOf(ratings),
+          1
+        );
+        this.allFiltersApplied.ratings.splice(
+          this.allFiltersApplied.ratings.indexOf(ratings * 20),
+          1
+        );
+        if (this.allFiltersApplied.ratings.length == 0) {
           this.allFiltersApplied.show = false;
         }
-      }else{
+      } else {
         this.ratingFilterApplied.push(ratings);
-        this.allFiltersApplied.ratings.push(ratings*20);
+        this.allFiltersApplied.ratings.push(ratings * 20);
         this.allFiltersApplied.show = true;
       }
     }
-    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res)=>{
+    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
       console.log(res);
-    })
+    });
   }
 
   removeOrNot(areaOfExpertise, subjectFiltersApplied, eventTarget) {
@@ -325,7 +341,7 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
-    console.log("in sort");
+    console.log('in sort');
     if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
       if (!this.allFiltersApplied.show) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
@@ -341,4 +357,3 @@ export class SearchResultsComponent implements OnInit {
     }
   }
 }
-

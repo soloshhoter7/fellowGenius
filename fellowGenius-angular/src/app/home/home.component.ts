@@ -131,7 +131,6 @@ export class HomeComponent implements OnInit {
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
         }
-        this.subject = this.tutorProfileDetails.educationalQualifications[0];
         if (
           this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
           'yes'
