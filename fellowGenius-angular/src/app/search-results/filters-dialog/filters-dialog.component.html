@@ -1,0 +1,190 @@
+<div class="container-fluid" style="position: relative; height: 100%">
+  <div class="content-header" style="margin-bottom: 15px">
+    <h1>Apply Filters</h1>
+  </div>
+  <div class="content-body" style="height: 80%; overflow: scroll">
+    <div>
+      <div class="filter-container">
+        <div class="filter-category">
+          <span class="filter-category-header">Subjects</span>
+          <ul class="filter-category-list">
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="English"
+                  (change)="searchBySubject($event)"
+                />English
+                <span class="filter-num">(123)</span>
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="Physics"
+                  (change)="searchBySubject($event)"
+                />Physics
+                <span class="filter-num">(123)</span>
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="Chemistry"
+                  (change)="searchBySubject($event)"
+                />Chemistry
+                <span class="filter-num">(123)</span>
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="Mathematics"
+                  (change)="searchBySubject($event)"
+                />Mathematics
+                <span class="filter-num">(123)</span>
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="Science"
+                  (change)="searchBySubject($event)"
+                />Science
+                <span class="filter-num">(123)</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="filter-category">
+          <span class="filter-category-header">Price</span>
+          <ul class="filter-category-list">
+            <li style="width: 50%">
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="100-199"
+                  (change)="searchByPrice($event)"
+                />100-199
+              </label>
+            </li>
+            <li style="width: 50%">
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="200-399"
+                  (change)="searchByPrice($event)"
+                />200-399
+              </label>
+            </li>
+            <li style="width: 50%">
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="400-699"
+                  (change)="searchByPrice($event)"
+                />400-699
+              </label>
+            </li>
+            <li style="width: 50%">
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="700-999"
+                  (change)="searchByPrice($event)"
+                />700-999
+              </label>
+            </li>
+            <li style="width: 50%">
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="1000-1499"
+                  (change)="searchByPrice($event)"
+                />1000-1499
+              </label>
+            </li>
+            <li style="width: 50%">
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="1500-10000"
+                  (change)="searchByPrice($event)"
+                />1500+
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="filter-category">
+          <span class="filter-category-header">Avg. Reviews</span>
+          <ul class="filter-category-list">
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="4"
+                  (change)="searchByRatings($event)"
+                />4 & up
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="3"
+                  (change)="searchByRatings($event)"
+                />3 & up
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="2"
+                  (change)="searchByRatings($event)"
+                />2 & up
+              </label>
+            </li>
+            <li>
+              <label class="filters-label">
+                <input
+                  type="checkbox"
+                  class="filter-input"
+                  value="1"
+                  (change)="searchByRatings($event)"
+                />1 & up
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="container-footer"
+    style="position: absolute; bottom: 0; width: 100%"
+  >
+    <div style="float: right">
+      <button class="btn btn-secondary" (click)="closeDialog()">Cancel</button>
+      <button class="btn btn-primary" (click)="applyFilters()">Apply</button>
+    </div>
+  </div>
+</div>

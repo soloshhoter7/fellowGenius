@@ -10,6 +10,7 @@ import { HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filtersApplied } from '../model/filtersApplied';
 import { subject } from '../model/subject';
+import { FiltersDialogComponent } from './filters-dialog/filters-dialog.component';
 
 @Component({
   selector: 'app-search-results',
@@ -37,7 +38,7 @@ export class SearchResultsComponent implements OnInit {
   screenHeight: number;
   screenWidth: number;
   showMobileFilterView: boolean;
-  showMobileFilterButton: boolean;
+  showMobileFilterButton: boolean = false;
 
   constructor(
     private router: Router,
@@ -52,7 +53,7 @@ export class SearchResultsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
-    console.log('in get screen size');
+    // console.log('in get screen size');
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     if (this.screenWidth <= 500) {
@@ -65,11 +66,7 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.allFiltersApplied.show);
-
     if (window.screen.width <= 500) {
-      console.log(this.screenWidth);
-      console.log('size<500');
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
     } else {
@@ -186,7 +183,13 @@ export class SearchResultsComponent implements OnInit {
   }
 
   showFilters() {
-    this.showMobileFilterView = !this.showMobileFilterView;
+    // this.showMobileFilterView = !this.showMobileFilterView;
+    // this.matDialog.open(FiltersDialogComponent);
+    const dialogRef = this.matDialog.open(FiltersDialogComponent);
+
+    dialogRef
+      .afterClosed()
+      .subscribe((data) => console.log('Dialog output:', data));
   }
   toLoginPage() {
     this.router.navigate(['login']);
@@ -346,7 +349,7 @@ export class SearchResultsComponent implements OnInit {
     }
   }
 
-  clearAllFilters(){
+  clearAllFilters() {
     window.location.reload();
   }
 
