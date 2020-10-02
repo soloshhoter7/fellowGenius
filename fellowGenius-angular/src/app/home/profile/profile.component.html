@@ -1,48 +1,33 @@
 <body>
-  <div class="container" style="margin-bottom: 50px">
-    <div class="row">
-      <div class="col-md-6">
-        <div style="margin: 10px">
-          <p
-            style="
+    <div class="container" style="margin-bottom: 50px">
+        <div class="row">
+            <div class="col-md-6">
+                <div style="margin: 10px">
+                    <p style="
               color: #e3165b;
               font-size: x-large;
               margin-right: 40px;
               display: inline;
-            "
-          >
-            <b>PROFILE</b>
-          </p>
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              [class.active]="basic"
-              (click)="basicProfileToggle()"
-            >
+            ">
+                        <b>PROFILE</b>
+                    </p>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-secondary" [class.active]="basic" (click)="basicProfileToggle()">
               Basic
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              [class.active]="!basic"
-              (click)="advancedProfileToggle()"
-            >
+                        <button type="button" class="btn btn-secondary" [class.active]="!basic" (click)="advancedProfileToggle()">
               Advanced
             </button>
-          </div>
-        </div>
-        <div [class.hideBlock]="!basic">
-          <img
-            style="
+                    </div>
+                </div>
+                <div [class.hideBlock]="!basic">
+                    <img style="
               width: 130px;
               height: 130px;
               border-radius: 100%;
               border: 1px solid black;
-            "
-            [src]="profilePictureUrl"
-          />
-          <!-- <input
+            " [src]="profilePictureUrl" />
+                    <!-- <input
                 #profilePicture
                 hidden="true"
                 type="file"
@@ -52,26 +37,15 @@
               />
               <p style="text-align: center;
               text-decoration: underline;margin-top: 5px;width: 140px;"><a href="#">Upload</a></p> -->
-          <div class="form-group">
-            <input
-              #profilePicture
-              hidden="true"
-              type="file"
-              onclick="this.value=null"
-              (change)="profilePictureChange($event)"
-              required
-            />
+                    <div class="form-group">
+                        <input #profilePicture hidden="true" type="file" onclick="this.value=null" (change)="profilePictureChange($event)" required />
 
-            <button
-              class="btn btn-primary"
-              (click)="profilePicture.click()"
-              style="
+                        <button class="btn btn-primary" (click)="profilePicture.click()" style="
                 margin-top: 5px;
                 width: 140px;
                 position: relative;
                 height: 30px;
-              "
-            >
+              ">
               <span *ngIf="!isLoading3">Upload</span>
               <div class="tickMark" *ngIf="profilePicUploadStatus">
                 <img class="tickMarkImg" src="../../../assets/icons/tick.png" />
@@ -84,93 +58,50 @@
                 <app-loader></app-loader>
               </span>
             </button>
-          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="text-align: end; margin: 20px" [class.hideBlock]="!basic">
+                <button class="btn" style="margin-right: 2vw; text-decoration: underline; width: auto" (click)="cancelForm()">
+          Cancel
+        </button>
+                <button type="submit" class="btn" style="
+            padding: 1vh 2vw;
+            background-color: purple;
+            color: white;
+            width: auto;
+            font-size: small;
+          " (click)="basicProfile.ngSubmit.emit()" [disabled]="!basicProfile.valid">
+          Save
+        </button>
+            </div>
+
+            <div class="col-md-3" style="text-align: end; margin: 20px" [class.hideBlock]="basic">
+                <button class="btn" style="margin-right: 2vw; text-decoration: underline; width: auto" (click)="cancelForm()">
+          Cancel
+        </button>
+                <button type="submit" class="btn" style="
+            padding: 1vh 2vw;
+            background-color: purple;
+            color: white;
+            width: auto;
+            font-size: small;
+          " (click)="advancedProfile.ngSubmit.emit()" [disabled]="!advancedProfile.valid">
+          Save
+        </button>
+            </div>
         </div>
-      </div>
-      <div
-        class="col-md-3"
-        style="text-align: end; margin: 20px"
-        [class.hideBlock]="!basic"
-      >
-        <button
-          class="btn"
-          style="margin-right: 2vw; text-decoration: underline; width: auto"
-          (click)="cancelForm()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn"
-          style="
-            padding: 1vh 2vw;
-            background-color: purple;
-            color: white;
-            width: auto;
-            font-size: small;
-          "
-          (click)="basicProfile.ngSubmit.emit()"
-          [disabled]="!basicProfile.valid"
-        >
-          Save
-        </button>
-      </div>
+        <div style="color: red; padding-bottom: 10px; font-size: 15px">
+            {{ profileError }}
+        </div>
+        <div class="row" [class.hideBlock]="!basic">
+            <div class="col-md-6 leftBox">
+                <form (ngSubmit)="saveExpertBasicProfile(basicProfile)" #basicProfile="ngForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name<sup>*</sup></label>
+                        <input type="text" id="fullName" name="fullName" ngModel class="form-control input-fields" required #fullName="ngModel" maxlength="50" [ngModel]="tutorProfile.fullName" autofocus />
 
-      <div
-        class="col-md-3"
-        style="text-align: end; margin: 20px"
-        [class.hideBlock]="basic"
-      >
-        <button
-          class="btn"
-          style="margin-right: 2vw; text-decoration: underline; width: auto"
-          (click)="cancelForm()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn"
-          style="
-            padding: 1vh 2vw;
-            background-color: purple;
-            color: white;
-            width: auto;
-            font-size: small;
-          "
-          (click)="advancedProfile.ngSubmit.emit()"
-          [disabled]="!advancedProfile.valid"
-        >
-          Save
-        </button>
-      </div>
-    </div>
-    <div style="color: red; padding-bottom: 10px; font-size: 15px">
-      {{ profileError }}
-    </div>
-    <div class="row" [class.hideBlock]="!basic">
-      <div class="col-md-6 leftBox">
-        <form
-          (ngSubmit)="saveExpertBasicProfile(basicProfile)"
-          #basicProfile="ngForm"
-        >
-          <div class="form-group">
-            <label for="fullName">Full Name<sup>*</sup></label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              ngModel
-              class="form-control input-fields"
-              required
-              #fullName="ngModel"
-              maxlength="50"
-              [ngModel]="tutorProfile.fullName"
-              autofocus
-            />
-
-            <span class="help-block" *ngIf="!fullName.valid && fullName.touched"
-              >Invalid Name</span
+                        <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span
             >
           </div>
 
@@ -179,25 +110,12 @@
                   <input type="email" id="email" name="email" ngModel [ngModel]="tutorProfile.email" class="form-control input-fields" required disabled #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
                   />
                   <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
-              </div> -->
+                    </div> -->
 
-          <div class="form-group">
-            <label for="dob">Date of Birth<sup>*</sup></label>
-            <input
-              type="date"
-              id="dob"
-              name="dob"
-              ngModel
-              class="form-control input-fields"
-              [ngModel]="tutorProfile.dateOfBirth"
-              dobValidator
-              required
-              #dob="ngModel"
-            />
-            <span
-              *ngIf="dob.errors?.invalidDob && dob.touched"
-              class="help-block"
-              >Invalid dob</span
+                    <div class="form-group">
+                        <label for="dob">Date of Birth<sup>*</sup></label>
+                        <input type="date" id="dob" name="dob" ngModel class="form-control input-fields" [ngModel]="tutorProfile.dateOfBirth" dobValidator required #dob="ngModel" />
+                        <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid dob</span
             >
           </div>
 
@@ -335,24 +253,7 @@
                 <label for="expertise" style="width: 100%"
                   >Area of Expertise<sup>*</sup></label
                 >
-                <div
-                  style="margin: 10px; margin-left: 0"
-                  *ngFor="let expertise of expertises; let i = index"
-                >
-                  <div class="tags">
-                    {{ expertise.area }}&nbsp; - &nbsp; ₹
-                    {{ expertise.price }}/hr
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-circle btn-sm"
-                    style="display: inline"
-                    (click)="deleteExpertise(i)"
-                    style="font-size: inherit"
-                  >
-                    <i class="fas fa-minus"></i>
-                  </button>
-                </div>
+               
 
                 <div style="position: relative">
                   <div
@@ -386,7 +287,7 @@
                         </mat-option>
                       </mat-autocomplete>
                     </div>
-
+                  
                     <div class="form-group" style="margin-bottom: 0">
                       <input
                         type="number"
@@ -417,6 +318,24 @@
                     </button>
                   </div>
                 </div>
+                <div
+                style="margin: 10px; margin-left: 0"
+                *ngFor="let expertise of expertises; let i = index"
+              >
+                <div class="tags">
+                  {{ expertise.area }}&nbsp; - &nbsp; ₹
+                  {{ expertise.price }}/hr
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-circle btn-sm"
+                  style="display: inline"
+                  (click)="deleteExpertise(i)"
+                  style="font-size: inherit"
+                >
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
                 <div
                   *ngIf="duplicateExpertiseArea"
                   style="color: red; margin-top: 10px"

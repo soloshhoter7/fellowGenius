@@ -75,7 +75,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RatingModule } from 'ng-starrating';
 import { AdvertisementBannerComponent } from './advertisement-banner/advertisement-banner.component';
 import { FiltersDialogComponent } from './search-results/filters-dialog/filters-dialog.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -148,7 +148,7 @@ export const appRoutes: Routes = [
     FiltersDialogComponent,
   ],
   imports: [
-    FontAwesomeModule,
+ 
 
     NoopAnimationsModule,
     MatInputModule,
@@ -177,7 +177,7 @@ export const appRoutes: Routes = [
     GoogleChartsModule,
     NgbModule,
     RatingModule,
-    FontAwesomeModule,
+
   ],
   entryComponents: [WelcomeComponent],
   providers: [
