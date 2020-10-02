@@ -444,18 +444,23 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
-    if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
-      if (!this.allFiltersApplied.show) {
-        this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
-      } else {
+
+    if(this.allFiltersApplied.price.length == 0 &&
+      this.allFiltersApplied.ratings.length == 0 &&
+      this.allFiltersApplied.subjects.length == 0){
+        if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
+          this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
+        }else if($event.target.value.localeCompare('sortHighToLow') == 0){
+          this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
+        }
+    }
+    else{
+      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
-      }
-    } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
-      if (this.allFiltersApplied.show) {
-        this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
-      } else {
+      }else if($event.target.value.localeCompare('sortHighToLow') == 0){
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
       }
     }
+
   }
 }
