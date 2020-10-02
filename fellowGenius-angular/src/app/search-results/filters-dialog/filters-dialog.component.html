@@ -14,6 +14,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="English"
+                  [checked]="subjectContains('English')"
                   (change)="searchBySubject($event)"
                 />English
                 <span class="filter-num">(123)</span>
@@ -25,6 +26,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="Physics"
+                  [checked]="subjectContains('Physics')"
                   (change)="searchBySubject($event)"
                 />Physics
                 <span class="filter-num">(123)</span>
@@ -36,6 +38,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="Chemistry"
+                  [checked]="subjectContains('Chemistry')"
                   (change)="searchBySubject($event)"
                 />Chemistry
                 <span class="filter-num">(123)</span>
@@ -47,6 +50,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="Mathematics"
+                  [checked]="subjectContains('Mathematics')"
                   (change)="searchBySubject($event)"
                 />Mathematics
                 <span class="filter-num">(123)</span>
@@ -58,6 +62,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="Science"
+                  [checked]="subjectContains('Science')"
                   (change)="searchBySubject($event)"
                 />Science
                 <span class="filter-num">(123)</span>
@@ -74,6 +79,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="100-199"
+                  [checked]="priceContains('100-199')"
                   (change)="searchByPrice($event)"
                 />100-199
               </label>
@@ -84,6 +90,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="200-399"
+                  [checked]="priceContains('200-399')"
                   (change)="searchByPrice($event)"
                 />200-399
               </label>
@@ -94,6 +101,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="400-699"
+                  [checked]="priceContains('400-699')"
                   (change)="searchByPrice($event)"
                 />400-699
               </label>
@@ -104,6 +112,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="700-999"
+                  [checked]="priceContains('700-999')"
                   (change)="searchByPrice($event)"
                 />700-999
               </label>
@@ -114,6 +123,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="1000-1499"
+                  [checked]="priceContains('1000-1499')"
                   (change)="searchByPrice($event)"
                 />1000-1499
               </label>
@@ -124,6 +134,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="1500-10000"
+                  [checked]="priceContains('1500-10000')"
                   (change)="searchByPrice($event)"
                 />1500+
               </label>
@@ -139,6 +150,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="4"
+                  [checked]="ratingContains('4')"
                   (change)="searchByRatings($event)"
                 />4 & up
               </label>
@@ -149,6 +161,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="3"
+                  [checked]="ratingContains('3')"
                   (change)="searchByRatings($event)"
                 />3 & up
               </label>
@@ -159,6 +172,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="2"
+                  [checked]="ratingContains('2')"
                   (change)="searchByRatings($event)"
                 />2 & up
               </label>
@@ -169,6 +183,7 @@
                   type="checkbox"
                   class="filter-input"
                   value="1"
+                  [checked]="ratingContains('1')"
                   (change)="searchByRatings($event)"
                 />1 & up
               </label>

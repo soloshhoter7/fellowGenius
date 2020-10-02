@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { YearService } from '@syncfusion/ej2-angular-schedule';
 import { filtersApplied } from 'src/app/model/filtersApplied';
 import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
@@ -10,7 +10,15 @@ import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
   styleUrls: ['./filters-dialog.component.css'],
 })
 export class FiltersDialogComponent implements OnInit {
-  constructor(private dialogRef: MatDialogRef<FiltersDialogComponent>) {}
+  constructor(
+    private dialogRef: MatDialogRef<FiltersDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) data
+  ) {
+    this.allFiltersApplied = data.allFiltersApplied;
+    this.subjectFiltersApplied = data.subjectFiltersApplied;
+    this.priceFiltersApplied = data.priceFiltersApplied;
+    this.ratingFilterApplied = data.ratingFiltersApplied;
+  }
 
   ngOnInit(): void {}
   closeDialog() {
@@ -29,9 +37,11 @@ export class FiltersDialogComponent implements OnInit {
 
   applyFilters() {
     var data = {
+      operation: 'apply',
       subjectFilters: this.subjectFiltersApplied,
       priceFiltersApplied: this.priceFiltersApplied,
       ratingFilterApplied: this.ratingFilterApplied,
+      allFiltersApplied: this.allFiltersApplied,
     };
     this.dialogRef.close(data);
   }
@@ -152,5 +162,16 @@ export class FiltersDialogComponent implements OnInit {
     ) {
       return true;
     }
+  }
+  subjectContains(subject) {
+    // var subject = $event.target.value;
+    return this.subjectFiltersApplied.includes(subject);
+  }
+
+  priceContains(price) {
+    return this.priceFiltersApplied.includes(price);
+  }
+  ratingContains(rating) {
+    return this.ratingFilterApplied.includes(rating);
   }
 }

@@ -90,20 +90,18 @@ export class HomeComponent implements OnInit {
       .observe(['(min-width: 800px)'])
       .subscribe((state: BreakpointState) => {
         if (state.matches) {
-          console.log('called open nav');
           this.openNav();
         } else {
-          console.log('called close nav');
           this.closeNav();
         }
       });
-    this.toggleNavigation = true;
-    if (this.screenWidth >= 450) {
-      this.openNav();
-    } else {
-      this.toggleNavigation = false;
-      this.closeNav();
-    }
+    // this.toggleNavigation = true;
+    // if (this.screenWidth >= 450) {
+    //   this.openNav();
+    // } else {
+    //   this.toggleNavigation = false;
+    //   this.closeNav();
+    // }
     if (this.isTokenValid()) {
       this.loginType = this.loginService.getLoginType();
       if (
@@ -170,12 +168,10 @@ export class HomeComponent implements OnInit {
   }
   openNav() {
     if (this.screenWidth >= 450) {
-      console.log('device is bigger');
       document.getElementById('sidenav').style.width = '230px';
       document.getElementById('mainContent').style.marginLeft = '230px';
     } else {
       document.getElementById('sidenav').style.width = '100%';
-      console.log('device is small');
     }
     this.toggleNavigation = true;
   }
@@ -184,6 +180,12 @@ export class HomeComponent implements OnInit {
     document.getElementById('sidenav').style.width = '0px';
     document.getElementById('mainContent').style.marginLeft = '0px';
     this.toggleNavigation = false;
+    setTimeout(() => {
+      if (document.getElementById('sidenav').style.width == '230px') {
+        document.getElementById('sidenav').style.width = '0px';
+        document.getElementById('mainContent').style.marginLeft = '0px';
+      }
+    }, 100);
   }
 
   navAction(index) {

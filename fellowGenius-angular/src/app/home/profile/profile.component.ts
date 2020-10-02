@@ -151,6 +151,7 @@ export class ProfileComponent implements OnInit {
       this.tutorProfileDetails.educationalQualifications = this.educationQualifications;
       this.tutorProfileDetails.professionalSkills =
         form.value.professionalSkills;
+      this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
       this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
       this.httpService
         .updateTutorProfile(this.tutorProfile)
@@ -346,7 +347,7 @@ export class ProfileComponent implements OnInit {
   advancedProfileToggle() {
     if (this.tutorService.tutorProfileDetails.profileCompleted < 50) {
       console.log('cannot continue to advanced profile');
-      this.profileError = 'complete basic profile first';
+      this.profileError = 'Complete basic profile first !';
     } else {
       this.basic = false;
     }

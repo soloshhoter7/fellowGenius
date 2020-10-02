@@ -5,7 +5,7 @@ import { tutorProfileDetails } from '../model/tutorProfileDetails';
 import { element } from 'protractor';
 import { LoginDetailsService } from '../service/login-details.service';
 import { ProfileService } from '../service/profile.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filtersApplied } from '../model/filtersApplied';
@@ -53,7 +53,6 @@ export class SearchResultsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
-    // console.log('in get screen size');
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     if (this.screenWidth <= 500) {
@@ -75,7 +74,6 @@ export class SearchResultsComponent implements OnInit {
     }
 
     this.fetchTutorList();
-    // console.log("login type ->" + this.loginService.getLoginType());
     this.callSearchBySubject = false;
     this.callSearchByPrice = false;
     this.findFromSearchResult = false;
@@ -183,13 +181,48 @@ export class SearchResultsComponent implements OnInit {
   }
 
   showFilters() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      subjectFiltersApplied: this.subjectFiltersApplied,
+      priceFiltersApplied: this.priceFiltersApplied,
+      ratingFiltersApplied: this.ratingFilterApplied,
+      allFiltersApplied: this.allFiltersApplied,
+    };
     // this.showMobileFilterView = !this.showMobileFilterView;
     // this.matDialog.open(FiltersDialogComponent);
-    const dialogRef = this.matDialog.open(FiltersDialogComponent);
+    const dialogRef = this.matDialog.open(FiltersDialogComponent, dialogConfig);
 
-    dialogRef
-      .afterClosed()
-      .subscribe((data) => console.log('Dialog output:', data));
+    dialogRef.afterClosed().subscribe((data) => {
+      console.log('Dialog output:', data);
+      if (data.operation == 'apply') {
+        console.log('applied');
+        for (let subject of data.subjectFiltersApplied) {
+          if (!this.subjectFiltersApplied.includes(subject)) {
+            this.subjectFiltersApplied.push(subject);
+          }
+        }
+
+        for (let price of data.priceFiltersApplied) {
+          if (!this.priceFiltersApplied.includes(price)) {
+            this.priceFiltersApplied.push(price);
+          }
+        }
+        for (let rating of data.ratingFiltersApplied) {
+          if (!this.ratingFilterApplied.includes(rating)) {
+            this.ratingFilterApplied.push(rating);
+          }
+        }
+        this.allFiltersApplied = data.allFiltersApplied;
+        this.httpService
+          .applyFilters(this.allFiltersApplied)
+          .subscribe((res) => {
+            console.log(res);
+            this.filteredArray = [];
+            this.filteredArray = res;
+          });
+      }
+    });
   }
   toLoginPage() {
     this.router.navigate(['login']);
@@ -214,6 +247,66 @@ export class SearchResultsComponent implements OnInit {
     });
   }
 
+  subjectContains(subject) {
+    // var subject = $event.target.value;
+    return this.subjectFiltersApplied.includes(subject);
+  }
+
+  priceContains(price) {
+    return this.priceFiltersApplied.includes(price);
+  }
+  ratingContains(rating) {
+    return this.ratingFilterApplied.includes(rating);
+  }
+  deleteSubject(subject) {
+    if (this.subjectFiltersApplied.includes(subject)) {
+      this.subjectFiltersApplied.splice(
+        this.subjectFiltersApplied.indexOf(subject),
+        1
+      );
+      this.allFiltersApplied.subjects.splice(
+        this.allFiltersApplied.subjects.indexOf(subject),
+        1
+      );
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+        this.filteredArray = [];
+        this.filteredArray = res;
+      });
+    }
+  }
+
+  deletePrice(price) {
+    if (this.priceFiltersApplied.includes(price)) {
+      this.priceFiltersApplied.splice(
+        this.priceFiltersApplied.indexOf(price),
+        1
+      );
+      this.allFiltersApplied.price.splice(
+        this.priceFiltersApplied.indexOf(price),
+        1
+      );
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+        this.filteredArray = [];
+        this.filteredArray = res;
+      });
+    }
+  }
+  deleteRating(rating) {
+    if (this.ratingFilterApplied.includes(rating)) {
+      this.ratingFilterApplied.splice(
+        this.ratingFilterApplied.indexOf(rating),
+        1
+      );
+      this.allFiltersApplied.ratings.splice(
+        this.allFiltersApplied.ratings.indexOf(rating * 20),
+        1
+      );
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+        this.filteredArray = [];
+        this.filteredArray = res;
+      });
+    }
+  }
   searchBySubject($event) {
     var subject = $event.target.value;
     if (this.subjectFiltersApplied.length == 0) {
@@ -240,7 +333,6 @@ export class SearchResultsComponent implements OnInit {
       }
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-      console.log(res);
       this.filteredArray = [];
       this.filteredArray = res;
       // console.log(res.toString().length == undefined);
@@ -273,7 +365,6 @@ export class SearchResultsComponent implements OnInit {
       }
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-      console.log(res);
       this.filteredArray = [];
       this.filteredArray = res;
     });
@@ -305,7 +396,6 @@ export class SearchResultsComponent implements OnInit {
       }
     }
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-      console.log(res);
       this.filteredArray = [];
       this.filteredArray = res;
     });
@@ -354,7 +444,6 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
-    console.log('in sort');
     if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
       if (!this.allFiltersApplied.show) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));

@@ -12,6 +12,7 @@ import { ProfileService } from '../service/profile.service';
   styleUrls: ['./test.component.css'],
 })
 export class TestComponent implements OnInit {
+  FilterView: boolean = false;
   showProfile;
   searchResults: tutorProfileDetails[] = [];
   filteredArray: tutorProfileDetails[] = [];
@@ -178,7 +179,8 @@ export class TestComponent implements OnInit {
   }
 
   showFilters() {
-    this.showMobileFilterView = !this.showMobileFilterView;
+    // this.showMobileFilterView = !this.showMobileFilterView;
+    this.FilterView = !this.FilterView;
   }
   toLoginPage() {
     this.router.navigate(['login']);

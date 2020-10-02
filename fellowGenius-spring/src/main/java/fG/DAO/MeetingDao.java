@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fG.Entity.BookingDetails;
+import fG.Entity.TutorProfileDetails;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryTutorProfileDetails;
 
@@ -94,9 +95,14 @@ public class MeetingDao {
 	}
 
 	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, Integer tid) {
-		System.out.println("---------------------------------------------------------------------- In dao");
 		System.out.println(meetingId + ":" + rating + ":" + reviewText);
 		repBooking.saveTutorRatings(meetingId, rating, reviewText);
+		TutorProfileDetails tutor = repTutorProfileDetails.idExist(tid);
+		if(tutor!=null) {
+			Integer newRating = (tutor.getRating() + rating)/2;
+			tutor.setRating(newRating);
+			repTutorProfileDetails.save(tutor);	
+		}
 		repTutorProfileDetails.updateReviewCount(tid);
 		return true;
 	}
