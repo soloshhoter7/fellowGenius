@@ -20,7 +20,9 @@ export class FiltersDialogComponent implements OnInit {
     this.ratingFilterApplied = data.ratingFiltersApplied;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
   closeDialog() {
     this.dialogRef.close();
   }
