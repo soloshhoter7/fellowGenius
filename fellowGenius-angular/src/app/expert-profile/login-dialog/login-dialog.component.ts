@@ -100,7 +100,7 @@ export class LoginDialogComponent implements OnInit {
   tutorAvailabilitySchedule: tutorAvailabilitySchedule;
   //---------------- configurations ----------------------
   config: MatSnackBarConfig = {
-    duration: 10000,
+    duration: 3000,
     horizontalPosition: 'center',
     verticalPosition: 'top',
   };
@@ -143,6 +143,11 @@ export class LoginDialogComponent implements OnInit {
               .subscribe((res) => {
                 this.studentService.setStudentBookings(res);
                 this.isLoading = false;
+                this.snackBar.open(
+                  'Logged in successfully',
+                  'close',
+                  this.config
+                );
                 this.dialogRef.closeAll();
               });
           });
@@ -203,15 +208,38 @@ export class LoginDialogComponent implements OnInit {
                       .subscribe((res) => {
                         this.studentService.setStudentBookings(res);
                         this.isLoading = false;
+                        this.snackBar.open(
+                          'Logged in successfully',
+                          'close',
+                          this.config
+                        );
                         this.dialogRef.closeAll();
                       });
                   });
               }
             } else {
-              this.errorText = 'Incorrect email or password';
-              this.isLoading = false;
-              this.hideContainer = '';
-              this.incorrectLoginDetails = true;
+              this.httpClient
+                .checkUser(this.socialLogin.email)
+                .subscribe((res) => {
+                  if (!res) {
+                    this.zone.run(() => {
+                      this.role = 'Learner';
+                      this.saveSocialLogin();
+                    });
+                  } else {
+                    this.isLoading = false;
+                    this.hideContainer = '';
+                    this.snackBar.open(
+                      'registration not successful ! email already exists !',
+                      'close',
+                      this.config
+                    );
+                  }
+                });
+              // this.errorText = 'Incorrect email or password';
+              // this.isLoading = false;
+              // this.hideContainer = '';
+              // this.incorrectLoginDetails = true;
             }
           });
         });
@@ -220,6 +248,64 @@ export class LoginDialogComponent implements OnInit {
         // alert(JSON.stringify(error, undefined, 2));
       }
     );
+  }
+
+  saveSocialLogin() {
+    this.registrationModel.fullName = this.socialLogin.fullName;
+    this.registrationModel.email = this.socialLogin.email;
+    this.registrationModel.password = this.socialLogin.id;
+    this.registrationModel.role = this.role;
+    this.httpClient.registerUser(this.registrationModel).subscribe((res) => {
+      if (res == true) {
+        this.loginModel.email = this.registrationModel.email;
+        this.loginModel.password = this.registrationModel.password;
+        // for logging in once registration is done
+        this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
+          this.cookieService.set('token', res['response']);
+          this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
+          this.userId = this.cookieService.get('userId');
+
+          if (this.registrationModel.role == 'Learner') {
+            this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
+              this.studentProfile = res;
+              this.studentService.setStudentProfileDetails(this.studentProfile);
+              this.loginService.setLoginType('Learner');
+              this.loginService.setTrType('signUp');
+              this.router.navigate(['home']);
+            });
+          } else if (this.registrationModel.role == 'Expert') {
+            this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
+              this.tutorProfile = res;
+              this.tutorService.setTutorDetails(this.tutorProfile);
+              this.httpClient
+                .getTutorProfileDetails(this.tutorProfile.tid)
+                .subscribe((res) => {
+                  this.tutorService.setTutorProfileDetails(res);
+                  this.httpClient
+                    .getScheduleData(this.tutorProfile.tid)
+                    .subscribe((res) => {
+                      this.tutorAvailabilitySchedule = res;
+                      this.tutorService.setPersonalAvailabilitySchedule(
+                        this.tutorAvailabilitySchedule
+                      );
+                      this.loginService.setLoginType('Expert');
+                      this.loginService.setTrType('signUp');
+                      this.router.navigate(['home']);
+                    });
+                });
+            });
+          }
+        });
+      } else if (res == false) {
+        this.snackBar.open(
+          'registration not successful ! email already exists !',
+          'close',
+          this.config
+        );
+        this.incorrectLoginDetails = true;
+        this.dialogRef.closeAll();
+      }
+    });
   }
 
   onSignUp(form: NgForm) {

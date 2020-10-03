@@ -370,6 +370,7 @@ export class ProfileComponent implements OnInit {
     } else {
       this.duplicateExpertiseArea = true;
       this.selectedExpertise = '';
+      this.priceForExpertise = '';
     }
   }
 

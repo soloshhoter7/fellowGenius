@@ -1,4 +1,9 @@
-<span class="material-icons close" (click)="closeNav()" style="cursor: pointer">
+<span
+  class="material-icons close"
+  (click)="closeNav()"
+  style="cursor: pointer"
+  *ngIf="!isLoading"
+>
   close
 </span>
 <div [class.hideBlock]="!login">

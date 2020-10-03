@@ -119,6 +119,7 @@ public class meetingController {
 	public void saveSchedule(@RequestBody TutorAvailabilityScheduleModel tutorAvailabilitySchedule) {
 		if (tutorAvailabilitySchedule.getTid() != null) {
 			userService.saveTutorAvailabilitySchedule(tutorAvailabilitySchedule);
+			System.out.println("at controller ->"+tutorAvailabilitySchedule);
 		} else {
 			System.out.println("tid is null");
 		}

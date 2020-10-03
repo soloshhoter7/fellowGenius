@@ -25,6 +25,14 @@ export class HttpService {
 
   filters: filtersApplied;
 
+  checkUser(email: string): Observable<Object> {
+    return this.http.get('http://localhost:8080/fellowGenius/userExists', {
+      params: {
+        email: email,
+      },
+    });
+  }
+
   applyFilters(
     filtersApplied: filtersApplied
   ): Observable<tutorProfileDetails[]> {

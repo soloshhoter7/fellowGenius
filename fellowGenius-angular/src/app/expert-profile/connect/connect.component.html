@@ -1,11 +1,16 @@
 <body>
   <div
     *ngIf="isLoading"
-    style="text-align: center; margin-top: 27%; z-index: 5"
+    style="
+      text-align: center;
+      margin-top: 27%;
+      z-index: 5;
+      height: 40vh;
+      width: 50vw;
+    "
   >
     <app-loading></app-loading>
   </div>
-  <span>here</span>
   <span
     class="material-icons close"
     (click)="closeNav()"

@@ -63,7 +63,7 @@ public class ScheduleService {
 			for (ScheduleData schedule : availableSchedules) {
 				int sh, sm, eh, em;
 				System.out.println("new schedule");
-
+				System.out.println(schedule);
 				// dates with time
 				
 				Date startTimeSchedule = new Date(schedule.StartTime);

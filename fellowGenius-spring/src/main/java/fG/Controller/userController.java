@@ -220,13 +220,14 @@ public class userController {
 	
 	@RequestMapping(value="/filtersApplied")
 	public List<TutorProfileDetailsModel> filtersApplied(@RequestBody FiltersApplied filtersApplied) {
-		System.out.println("--------------------------------------------------------------------------------------------");
-		System.out.println(Arrays.toString(filtersApplied.subjects));
-		System.out.println(Arrays.toString(filtersApplied.ratings));
-		System.out.println(Arrays.toString(filtersApplied.price));
 		return  service.filtersApplied(filtersApplied.subjects,filtersApplied.price,filtersApplied.ratings);
 			
 	}
 	
+	@RequestMapping(value="/userExists")
+	@ResponseBody
+	public boolean checkUserExists(String email) {
+		return service.checkUserExists(email);
+	}
 	
 }

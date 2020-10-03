@@ -576,6 +576,7 @@ public class UserService  implements UserDetailsService{
 	// for saving tutor Availability Schedule
 		public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
 			ArrayList<String> availableSchedules = new ArrayList<String>();
+			System.out.println(tutorAvailabilityScheduleModel.getAllAvailabilitySchedule());
 			for (ScheduleData schedule : tutorAvailabilityScheduleModel.getAllAvailabilitySchedule()) {
 				availableSchedules.add(schedule.serialize());
 			}
@@ -821,5 +822,13 @@ public class UserService  implements UserDetailsService{
 		}
 		
 	
+	}
+
+	public boolean checkUserExists(String email) {
+		if(repUsers.emailExist(email)!=null) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 }

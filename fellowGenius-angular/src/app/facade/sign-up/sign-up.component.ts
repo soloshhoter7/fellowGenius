@@ -228,8 +228,19 @@ export class SignUpComponent implements OnInit {
         this.socialLogin.fullName = profile.getName();
         this.socialLogin.email = profile.getEmail();
         this.socialService.setSocialDetails(this.socialLogin);
-        this.zone.run(() => {
-          this.openThankYouPage();
+        this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
+          if (!res) {
+            this.zone.run(() => {
+              this.openThankYouPage();
+            });
+          } else {
+            this.isLoading = false;
+            this.snackBar.open(
+              'registration not successful ! email already exists !',
+              'close',
+              this.config
+            );
+          }
         });
       },
       (error) => {
