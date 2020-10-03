@@ -1522,3 +1522,7 @@ textarea:focus {
     color: white !important;
     background-color: #7d0f7d !important;
 }
+
+.cdk-overlay-container {
+    position: absolute;
+}
