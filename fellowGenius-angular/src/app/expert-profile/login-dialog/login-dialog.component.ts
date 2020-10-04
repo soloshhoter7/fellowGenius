@@ -271,28 +271,12 @@ export class LoginDialogComponent implements OnInit {
               this.studentService.setStudentProfileDetails(this.studentProfile);
               this.loginService.setLoginType('Learner');
               this.loginService.setTrType('signUp');
-              this.router.navigate(['home']);
-            });
-          } else if (this.registrationModel.role == 'Expert') {
-            this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
-              this.tutorProfile = res;
-              this.tutorService.setTutorDetails(this.tutorProfile);
-              this.httpClient
-                .getTutorProfileDetails(this.tutorProfile.tid)
-                .subscribe((res) => {
-                  this.tutorService.setTutorProfileDetails(res);
-                  this.httpClient
-                    .getScheduleData(this.tutorProfile.tid)
-                    .subscribe((res) => {
-                      this.tutorAvailabilitySchedule = res;
-                      this.tutorService.setPersonalAvailabilitySchedule(
-                        this.tutorAvailabilitySchedule
-                      );
-                      this.loginService.setLoginType('Expert');
-                      this.loginService.setTrType('signUp');
-                      this.router.navigate(['home']);
-                    });
-                });
+              this.dialogRef.closeAll();
+              this.snackBar.open(
+                'Registration successful !',
+                'close',
+                this.config
+              );
             });
           }
         });
@@ -361,6 +345,11 @@ export class LoginDialogComponent implements OnInit {
                       this.loginService.setLoginType('Learner');
                       this.loginService.setTrType('signUp');
                       this.dialogRef.closeAll();
+                      this.snackBar.open(
+                        'Registration successful !',
+                        'close',
+                        this.config
+                      );
                     });
                 }
               });
