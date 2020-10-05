@@ -126,6 +126,17 @@
         ;
         width: 100%!important;
     }
+    .work-in-progress {
+        width: 300px!important;
+    }
+    .work-in-progress img,
+    .information-container {
+        display: block!important;
+        ;
+        float: left!important;
+        ;
+        width: 100%!important;
+    }
     .how-it-works-container {
         height: auto !important;
     }
