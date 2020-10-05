@@ -1556,3 +1556,38 @@ textarea:focus {
     font-weight: 700;
     font-size: 18px;
 }
+
+.work-in-progress {
+    width: 500px;
+    margin: 0 auto;
+    background-color: #f7e4f9;
+    border: 1px solid #7d0f7d;
+    padding: 20px;
+    height: 150px;
+}
+
+.work-in-progress img {
+    height: 130px;
+    float: right;
+}
+
+.information-container {
+    display: inline-block;
+    width: 250px;
+    float: left;
+    text-align: center;
+    line-height: 20px;
+    color: #7d0f7d;
+    margin-top: 30px;
+}
+
+.information-container span {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+.information-container .noinforheader {
+    font-weight: 700;
+    font-size: 18px;
+}
