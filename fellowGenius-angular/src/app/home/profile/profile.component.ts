@@ -378,7 +378,7 @@ export class ProfileComponent implements OnInit {
     var area = this.expertises[index];
     if (confirm('Are you sure you want to delete ?')) {
       this.httpService
-        .subtractArea(this.tutorProfile.tid, 'Expert', area)
+        .subtractArea(this.tutorProfile.tid, 'Expert', area.area)
         .subscribe();
       this.expertises.splice(index, 1);
     }
