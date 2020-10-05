@@ -75,6 +75,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RatingModule } from 'ng-starrating';
 import { AdvertisementBannerComponent } from './advertisement-banner/advertisement-banner.component';
 import { FiltersDialogComponent } from './search-results/filters-dialog/filters-dialog.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 export const appRoutes: Routes = [
   {
@@ -101,6 +102,7 @@ export const appRoutes: Routes = [
   { path: 'signUp', component: SignUpComponent },
   { path: 'meeting', component: MeetingComponent },
   { path: 'test', component: TestComponent },
+  { path: 'resetPassword', component: ResetPasswordComponent },
   { path: '', redirectTo: '/facade', pathMatch: 'full' },
 ];
 
@@ -146,10 +148,9 @@ export const appRoutes: Routes = [
     ExpertsComponent,
     AdvertisementBannerComponent,
     FiltersDialogComponent,
+    ResetPasswordComponent,
   ],
   imports: [
- 
-
     NoopAnimationsModule,
     MatInputModule,
     MatRadioModule,
@@ -177,7 +178,6 @@ export const appRoutes: Routes = [
     GoogleChartsModule,
     NgbModule,
     RatingModule,
-
   ],
   entryComponents: [WelcomeComponent],
   providers: [

@@ -131,6 +131,9 @@ export class StudentDashboardComponent implements OnInit {
   openRecordingsPage() {
     this.router.navigate(['home/recordings']);
   }
+  refreshPage() {
+    location.reload();
+  }
   // -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
 
   // for fetching pending review list

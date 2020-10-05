@@ -158,7 +158,9 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['home']);
   }
   // ------------------------------------------------------------------------------------------------------------------
-
+  toResetPassword() {
+    this.router.navigate(['resetPassword']);
+  }
   openThankYouPage() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;

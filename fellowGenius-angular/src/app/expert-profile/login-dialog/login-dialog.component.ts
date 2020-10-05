@@ -120,7 +120,9 @@ export class LoginDialogComponent implements OnInit {
       height: 'auto',
     });
   }
-
+  toResetPassword() {
+    this.router.navigate(['resetPassword']);
+  }
   onLogin(form: NgForm) {
     this.isLoading = true;
     this.hideContainer = 'hideBlock';

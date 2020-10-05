@@ -1,52 +1,71 @@
-<div class="primary-container">
-    <div class="breadcrumb-container">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-
-            <li class="active">Knowledge Base</li>
-        </ol>
+<div style="padding-top: 90px">
+  <div class="work-in-progress">
+    <img src="/assets/images/workinprogress.svg" />
+    <div class="information-container">
+      <span class="noinforheader">Work in Progress</span>
+      <span>For better Tomorrow</span>
     </div>
-    <div class="sort-container" style="right: 0">
-        <span>
-        <select style="margin-right: 1rem;">
-            <option>Sort By</option>
-            <option>Option 1</option>
-        </select>
+  </div>
+</div>
+
+<div class="primary-container" style="display: none">
+  <div class="breadcrumb-container">
+    <ol class="breadcrumb">
+      <li><a href="#">Home</a></li>
+
+      <li class="active">Knowledge Base</li>
+    </ol>
+  </div>
+  <div class="sort-container" style="right: 0">
+    <span>
+      <select style="margin-right: 1rem">
+        <option>Sort By</option>
+        <option>Option 1</option>
+      </select>
     </span>
-        <span class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Upload
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="javascript:;">Web Link</a
-              >
-              <a
-                class="dropdown-item"
-                href="javascript:;"
-                >Upload File</a
-              >
-            </div>
-        </span>
-    </div>
+    <span class="dropdown">
+      <button
+        class="btn btn-primary dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Upload
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="javascript:;">Web Link</a>
+        <a class="dropdown-item" href="javascript:;">Upload File</a>
+      </div>
+    </span>
+  </div>
 
-
-    <div class="content-container">
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col">Thumbnail</th>
-                    <th scope="col">Name,Date,Duration</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td scope="row" data-label="Thumbnail"><img src="assets/images/thumbnail_img.png"></td>
-                    <td data-label="Name,Date,Duration" class="name-information"><span>By:Name</span><span>August 4th 2020, 10:30 PM</span><span>30 mins</span></td>
-                </tr>
-                <tr>
-                    <td scope="row" data-label="Thumbnail"><img src="assets/images/thumbnail_img.png"></td>
-                    <td data-label="Name,Date,Duration" class="name-information">@mdo</td>
-                </tr>
-        </table>
-    </div>
+  <div class="content-container">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Thumbnail</th>
+          <th scope="col">Name,Date,Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td scope="row" data-label="Thumbnail">
+            <img src="assets/images/thumbnail_img.png" />
+          </td>
+          <td data-label="Name,Date,Duration" class="name-information">
+            <span>By:Name</span><span>August 4th 2020, 10:30 PM</span
+            ><span>30 mins</span>
+          </td>
+        </tr>
+        <tr>
+          <td scope="row" data-label="Thumbnail">
+            <img src="assets/images/thumbnail_img.png" />
+          </td>
+          <td data-label="Name,Date,Duration" class="name-information">@mdo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

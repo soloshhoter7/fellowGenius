@@ -1,6 +1,6 @@
 <div class="search-result-container" style="margin-top: 0; padding-top: 70px">
   <div class="search-cards-container">
-    <div
+    <!-- <div
       *ngIf="searchResults.length == 0"
       style="
         width: max-content;
@@ -13,7 +13,15 @@
     >
       <h1 style="font-size: 5vh">We're Sorry !</h1>
       <h2 style="font-size: 3vh">We can't seem to find any previous experts</h2>
+    </div> -->
+    <div *ngIf="searchResults.length == 0" class="no-recordsfound">
+      <img src="/assets/images/norecordsfound.svg" />
+      <div class="information-container">
+        <span class="noinforheader">We're Sorry</span>
+        <span> We can't seem to find any experts that match your search</span>
+      </div>
     </div>
+
     <ul>
       <div style="padding: 10px">
         <li class="search-result-card" *ngFor="let result of searchResults">

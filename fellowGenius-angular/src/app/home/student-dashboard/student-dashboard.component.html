@@ -102,8 +102,12 @@
         <div class="widget-information">
           <div class="widget-time">
             <span style="color: red" *ngIf="element.timeLeft == null"
-              >● &nbsp;About to start</span
-            >
+              >● &nbsp;About to start<i
+                class="fas fa-redo"
+                (click)="refreshPage()"
+                style="margin-left: 5px; color: black; cursor: pointer"
+              ></i
+            ></span>
           </div>
           <div class="widget-time" *ngIf="element.timeLeft != null">
             Live in:{{ element.timeLeft }}

@@ -61,7 +61,13 @@
           />
         </div>
         <div class="form-group button-container">
-          <a href="#" class="forgot-password"> Forgot-Password </a>
+          <a
+            href="javascript:;"
+            (click)="toResetPassword()"
+            class="forgot-password"
+          >
+            Forgot-Password
+          </a>
           <button class="btn btn-primary" type="submit" [disabled]="!l.valid">
             Sign in
           </button>

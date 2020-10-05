@@ -197,22 +197,30 @@ export class SearchResultsComponent implements OnInit {
       console.log('Dialog output:', data);
       if (data.operation == 'apply') {
         console.log('applied');
-        for (let subject of data.subjectFiltersApplied) {
-          if (!this.subjectFiltersApplied.includes(subject)) {
-            this.subjectFiltersApplied.push(subject);
+        if (data.subjectFiltersApplied) {
+          for (let subject of data.subjectFiltersApplied) {
+            if (!this.subjectFiltersApplied.includes(subject)) {
+              this.subjectFiltersApplied.push(subject);
+            }
           }
         }
 
-        for (let price of data.priceFiltersApplied) {
-          if (!this.priceFiltersApplied.includes(price)) {
-            this.priceFiltersApplied.push(price);
+        if (data.priceFiltersApplied) {
+          for (let price of data.priceFiltersApplied) {
+            if (!this.priceFiltersApplied.includes(price)) {
+              this.priceFiltersApplied.push(price);
+            }
           }
         }
-        for (let rating of data.ratingFiltersApplied) {
-          if (!this.ratingFilterApplied.includes(rating)) {
-            this.ratingFilterApplied.push(rating);
+
+        if (data.ratingFilterApplied) {
+          for (let rating of data.ratingFiltersApplied) {
+            if (!this.ratingFilterApplied.includes(rating)) {
+              this.ratingFilterApplied.push(rating);
+            }
           }
         }
+
         this.allFiltersApplied = data.allFiltersApplied;
         this.httpService
           .applyFilters(this.allFiltersApplied)
@@ -444,23 +452,22 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
-
-    if(this.allFiltersApplied.price.length == 0 &&
+    if (
+      this.allFiltersApplied.price.length == 0 &&
       this.allFiltersApplied.ratings.length == 0 &&
-      this.allFiltersApplied.subjects.length == 0){
-        if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
-          this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
-        }else if($event.target.value.localeCompare('sortHighToLow') == 0){
-          this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
-        }
-    }
-    else{
+      this.allFiltersApplied.subjects.length == 0
+    ) {
+      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
+        this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
+      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
+        this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
+      }
+    } else {
       if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
-      }else if($event.target.value.localeCompare('sortHighToLow') == 0){
+      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
       }
     }
-
   }
 }

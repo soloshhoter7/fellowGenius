@@ -25,6 +25,23 @@ export class HttpService {
 
   filters: filtersApplied;
 
+  updatePassword(userId, password): Observable<Object> {
+    let data = {
+      userId: userId.toString(),
+      password: password,
+    };
+    return this.http.post(
+      'http://localhost:8080/fellowGenius/updatePassword',
+      data
+    );
+  }
+  resetPasswordLink(email: string): Observable<Object> {
+    return this.http.get('http://localhost:8080/fellowGenius/sendResetLink', {
+      params: {
+        email: email,
+      },
+    });
+  }
   checkUser(email: string): Observable<Object> {
     return this.http.get('http://localhost:8080/fellowGenius/userExists', {
       params: {
