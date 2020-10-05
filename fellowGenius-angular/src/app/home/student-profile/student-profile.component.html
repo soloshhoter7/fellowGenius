@@ -182,21 +182,6 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="learning">Learning Areas<sup>*</sup></label>
-              <div
-                class="learningArea-fields"
-                *ngFor="let fields of learningAreas; let i = index"
-              >
-                <div class="tags">{{ fields }}</div>
-                <button
-                  type="button"
-                  class="btn btn-danger btn-circle btn-sm"
-                  style="display: inline"
-                  (click)="subtractLearningArea(i)"
-                  style="font-size: inherit"
-                >
-                  <i class="fas fa-minus"></i>
-                </button>
-              </div>
               <div>
                 <input
                   type="search"
@@ -230,6 +215,22 @@
                 <div *ngIf="duplicateArea" style="color: red; margin-top: 10px">
                   Duplicate learning area !
                 </div>
+              </div>
+              <div
+                class="learningArea-fields"
+                *ngFor="let fields of learningAreas; let i = index"
+                style="margin-top: 10px; margin-bottom: 10px"
+              >
+                <div class="tags">{{ fields }}</div>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-circle btn-sm"
+                  style="display: inline"
+                  (click)="subtractLearningArea(i)"
+                  style="font-size: inherit"
+                >
+                  <i class="fas fa-minus"></i>
+                </button>
               </div>
             </div>
           </div>

@@ -126,22 +126,39 @@ export class SignUpComponent implements OnInit {
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
       this.registrationModel.role = form.value.role;
-      setTimeout(() => {
-        if (this.timeOut == true) {
-          this.emailValid = true;
-          this.isLoading = false;
-          this.showInput = true;
-        }
-      }, 25000);
       this.httpClient
-        .verifyEmail(this.registrationModel.email)
+        .checkUser(this.registrationModel.email)
         .subscribe((res) => {
-          this.verificationOtp = res['response'];
+          if (!res == true) {
+            setTimeout(() => {
+              if (this.timeOut == true) {
+                this.emailValid = true;
+                this.isLoading = false;
+                this.showInput = true;
+              }
+            }, 25000);
+            this.httpClient
+              .verifyEmail(this.registrationModel.email)
+              .subscribe((res) => {
+                this.verificationOtp = res['response'];
 
-          this.timeOut = false;
-          this.verifyEmail = true;
-          this.isLoading = false;
-          this.showInput = false;
+                this.timeOut = false;
+                this.verifyEmail = true;
+                this.isLoading = false;
+                this.showInput = false;
+              });
+          } else {
+            console.log('user id already exists !');
+            this.timeOut = false;
+            // this.verifyEmail = true;
+            this.isLoading = false;
+            // this.showInput = false;
+            this.snackBar.open(
+              'Registration not successful. Email already exists !',
+              'close',
+              this.config
+            );
+          }
         });
     } else {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
