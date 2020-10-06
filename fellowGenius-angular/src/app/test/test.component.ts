@@ -1,8 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { filtersApplied } from '../model/filtersApplied';
 import { tutorProfileDetails } from '../model/tutorProfileDetails';
+import { FiltersDialogComponent } from '../search-results/filters-dialog/filters-dialog.component';
 import { HttpService } from '../service/http.service';
 import { LoginDetailsService } from '../service/login-details.service';
 import { ProfileService } from '../service/profile.service';
@@ -12,12 +14,12 @@ import { ProfileService } from '../service/profile.service';
   styleUrls: ['./test.component.css'],
 })
 export class TestComponent implements OnInit {
-  FilterView: boolean = false;
-  showProfile;
   searchResults: tutorProfileDetails[] = [];
   filteredArray: tutorProfileDetails[] = [];
+  allFiltersApplied: filtersApplied = new filtersApplied();
+  subjects: string[];
   // arrayToShow: tutorProfileDetails[];
-  allFiltersApplied = [];
+
   subjectFiltersApplied = [];
   priceFiltersApplied = [];
   ratingFilterApplied = [];
@@ -32,7 +34,7 @@ export class TestComponent implements OnInit {
   screenHeight: number;
   screenWidth: number;
   showMobileFilterView: boolean;
-  showMobileFilterButton: boolean;
+  showMobileFilterButton: boolean = false;
 
   constructor(
     private router: Router,
@@ -47,7 +49,6 @@ export class TestComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
-    console.log('in get screen size');
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
     if (this.screenWidth <= 500) {
@@ -61,8 +62,6 @@ export class TestComponent implements OnInit {
 
   ngOnInit(): void {
     if (window.screen.width <= 500) {
-      console.log(this.screenWidth);
-      console.log('size<500');
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
     } else {
@@ -70,107 +69,107 @@ export class TestComponent implements OnInit {
       this.showMobileFilterView = false;
     }
 
-    this.fetchTutorList();
-    // console.log("login type ->" + this.loginService.getLoginType());
+    // this.fetchTutorList();
     this.callSearchBySubject = false;
     this.callSearchByPrice = false;
     this.findFromSearchResult = false;
     this.findFromFilterSearch = false;
 
-    // this.searchResults = [
-    //   {
-    //     tid: 1234,
-    //     areaOfExpertise: ["Mathematics", "English", "Physics"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years aksjh a hj hdjkh jkj ahd ajkh adkah da djkajs d ak jk j sdlks k kl kls kk k",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Ajay Verma",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "Ajay.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "400",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 90,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 3578,
-    //     areaOfExpertise: ["Mathematics", "Chemistry", "Physics"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Shubham Verma",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "AJay.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "800",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 70,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 3572,
-    //     areaOfExpertise: ["Chemistry", "English", "Physics"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Muskan Verma",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "Muskan.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "500",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 50,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 8754,
-    //     areaOfExpertise: ["Science", "English"],
-    //     currentOrganisation: "Google",
-    //     description: "I have an experience of 10 years",
-    //     educationalQualifications: ["Btech(CSE)", "HTML", "CSS"],
-    //     fullName: "Abhinav Tyagi",
-    //     institute: "Panipat Institute of Engineering and Technology",
-    //     lessonCompleted: 0,
-    //     linkedInProfile: "Abhinav.linkedin",
-    //     previousOrganisations: ["PeopleStrong Pvt. Ltd"],
-    //     price1: "200",
-    //     price2: "400",
-    //     price3: "400",
-    //     professionalSkills: "Angular, JAVA",
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 20,
-    //     reviewCount: 10,
-    //     speciality: "Angular, JAVA",
-    //     yearsOfExperience: 10,
-    //   },
-    // ];
+    this.searchResults = [
+      {
+        tid: 1234,
+        areaOfExpertise: [],
+        currentOrganisation: 'Google',
+        description:
+          'I have an experience of 10 years aksjh a hj hdjkh jkj ahd ajkh adkah da djkajs d ak jk j sdlks k kl kls kk k',
+        educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
+        fullName: 'Ajay Verma',
+        institute: 'Panipat Institute of Engineering and Technology',
+        lessonCompleted: 0,
+        linkedInProfile: 'Ajay.linkedin',
+        previousOrganisations: ['PeopleStrong Pvt. Ltd'],
+        price1: '400',
+        price2: '400',
+        price3: '400',
+        professionalSkills: 'Angular, JAVA',
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 90,
+        reviewCount: 10,
+        speciality: 'Angular, JAVA',
+        yearsOfExperience: 10,
+      },
+      {
+        tid: 3578,
+        areaOfExpertise: [],
+        currentOrganisation: 'Google',
+        description: 'I have an experience of 10 years',
+        educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
+        fullName: 'Shubham Verma',
+        institute: 'Panipat Institute of Engineering and Technology',
+        lessonCompleted: 0,
+        linkedInProfile: 'AJay.linkedin',
+        previousOrganisations: ['PeopleStrong Pvt. Ltd'],
+        price1: '800',
+        price2: '400',
+        price3: '400',
+        professionalSkills: 'Angular, JAVA',
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 70,
+        reviewCount: 10,
+        speciality: 'Angular, JAVA',
+        yearsOfExperience: 10,
+      },
+      {
+        tid: 3572,
+        areaOfExpertise: [],
+        currentOrganisation: 'Google',
+        description: 'I have an experience of 10 years',
+        educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
+        fullName: 'Muskan Verma',
+        institute: 'Panipat Institute of Engineering and Technology',
+        lessonCompleted: 0,
+        linkedInProfile: 'Muskan.linkedin',
+        previousOrganisations: ['PeopleStrong Pvt. Ltd'],
+        price1: '500',
+        price2: '400',
+        price3: '400',
+        professionalSkills: 'Angular, JAVA',
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 50,
+        reviewCount: 10,
+        speciality: 'Angular, JAVA',
+        yearsOfExperience: 10,
+      },
+      {
+        tid: 8754,
+        areaOfExpertise: [],
+        currentOrganisation: 'Google',
+        description: 'I have an experience of 10 years',
+        educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
+        fullName: 'Abhinav Tyagi',
+        institute: 'Panipat Institute of Engineering and Technology',
+        lessonCompleted: 0,
+        linkedInProfile: 'Abhinav.linkedin',
+        previousOrganisations: ['PeopleStrong Pvt. Ltd'],
+        price1: '200',
+        price2: '400',
+        price3: '400',
+        professionalSkills: 'Angular, JAVA',
+        profileCompleted: 100,
+        profilePictureUrl: null,
+        rating: 20,
+        reviewCount: 10,
+        speciality: 'Angular, JAVA',
+        yearsOfExperience: 10,
+      },
+    ];
 
-    this.fetchTutorList();
+    // this.fetchTutorList();
 
-    // this.filteredArray = this.searchResults;
+    this.filteredArray = this.searchResults;
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
@@ -179,8 +178,56 @@ export class TestComponent implements OnInit {
   }
 
   showFilters() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      subjectFiltersApplied: this.subjectFiltersApplied,
+      priceFiltersApplied: this.priceFiltersApplied,
+      ratingFiltersApplied: this.ratingFilterApplied,
+      allFiltersApplied: this.allFiltersApplied,
+    };
     // this.showMobileFilterView = !this.showMobileFilterView;
-    this.FilterView = !this.FilterView;
+    // this.matDialog.open(FiltersDialogComponent);
+    const dialogRef = this.matDialog.open(FiltersDialogComponent, dialogConfig);
+
+    // dialogRef.afterClosed().subscribe((data) => {
+    //   console.log('Dialog output:', data);
+    //   if (data.operation == 'apply') {
+    //     console.log('applied');
+    //     if (data.subjectFiltersApplied) {
+    //       for (let subject of data.subjectFiltersApplied) {
+    //         if (!this.subjectFiltersApplied.includes(subject)) {
+    //           this.subjectFiltersApplied.push(subject);
+    //         }
+    //       }
+    //     }
+
+    //     if (data.priceFiltersApplied) {
+    //       for (let price of data.priceFiltersApplied) {
+    //         if (!this.priceFiltersApplied.includes(price)) {
+    //           this.priceFiltersApplied.push(price);
+    //         }
+    //       }
+    //     }
+
+    //     if (data.ratingFilterApplied) {
+    //       for (let rating of data.ratingFiltersApplied) {
+    //         if (!this.ratingFilterApplied.includes(rating)) {
+    //           this.ratingFilterApplied.push(rating);
+    //         }
+    //       }
+    //     }
+
+    //     this.allFiltersApplied = data.allFiltersApplied;
+    //     this.httpService
+    //       .applyFilters(this.allFiltersApplied)
+    //       .subscribe((res) => {
+    //         console.log(res);
+    //         this.filteredArray = [];
+    //         this.filteredArray = res;
+    //       });
+    //   }
+    // });
   }
   toLoginPage() {
     this.router.navigate(['login']);
@@ -202,496 +249,161 @@ export class TestComponent implements OnInit {
   fetchTutorList() {
     this.httpService.getTutorList().subscribe((req) => {
       this.searchResults = req;
-      console.log(this.searchResults[0].areaOfExpertise[0].area);
     });
   }
 
-  searchByPrice($event) {
-    this.callSearchBySubject = true;
+  subjectContains(subject) {
+    // var subject = $event.target.value;
+    return this.subjectFiltersApplied.includes(subject);
+  }
 
-    if (this.searchBySubject($event) && !this.callSearchByPrice) {
-      //input is 400-599
-      this.callSearchBySubject = false;
-      if (this.findFromSearchResult) {
-        this.findFromSearchResult = false;
+  priceContains(price) {
+    return this.priceFiltersApplied.includes(price);
+  }
+  ratingContains(rating) {
+    return this.ratingFilterApplied.includes(rating);
+  }
+  deleteSubject(subject) {
+    if (this.subjectFiltersApplied.includes(subject)) {
+      this.subjectFiltersApplied.splice(
+        this.subjectFiltersApplied.indexOf(subject),
+        1
+      );
+      this.allFiltersApplied.subjects.splice(
+        this.allFiltersApplied.subjects.indexOf(subject),
+        1
+      );
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
         this.filteredArray = [];
-        if (this.priceFiltersApplied.length == 0) {
-          this.priceFiltersApplied.push($event.target.value);
-          this.allFiltersApplied.push($event.target.value);
-          var price = $event.target.value.split('-');
-          var lowerValue = price[0];
-          var higherValue = price[1];
-          this.searchResults.filter((res) => {
-            if (
-              Number(res.price1) >= Number(lowerValue) &&
-              Number(res.price1) <= Number(higherValue)
-            ) {
-              // this.filteredArray.push(res);
-              // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-              // this.filteredArray.push(this.searchResults[this.searchResults.indexOf(res)]);
-              this.filteredArray.push(res);
-              // }
-            }
-          });
-        } else if (this.priceFiltersApplied.length == 1) {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.filteredArray = this.searchResults;
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.searchResults.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  if (
-                    !this.checkDuplicacyOfObjectInArray(
-                      this.filteredArray,
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    )
-                  ) {
-                    this.filteredArray.push(
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    );
-                  }
-                }
-              });
-            }
-          }
-        } else {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-
-            this.filteredArray = [];
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.searchResults.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  // if (!this.checkDuplicacyOfObjectInArray(this.filteredArray, this.searchResults[this.searchResults.indexOf(res)])) {
-                  this.filteredArray.push(res);
-                  // }
-                }
-              });
-            }
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.searchResults.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  if (
-                    !this.checkDuplicacyOfObjectInArray(
-                      this.filteredArray,
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    )
-                  ) {
-                    this.filteredArray.push(
-                      this.searchResults[this.searchResults.indexOf(res)]
-                    );
-                  }
-                }
-              });
-            }
-          }
-        }
-      }
-      if (this.findFromFilterSearch) {
-        this.findFromFilterSearch = false;
-
-        if (this.priceFiltersApplied.length == 1) {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.filteredArray.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  this.deletionElementFinder.push(res);
-                }
-              });
-            }
-            this.filteredArray = this.deletionElementFinder;
-            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-            this.elementsToBeDeleted = [];
-            this.deletionElementFinder = [];
-          }
-        } else {
-          if (
-            this.checkFiltersApplied(
-              this.priceFiltersApplied,
-              $event.target.value
-            )
-          ) {
-            this.priceFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            this.allFiltersApplied.splice(
-              this.priceFiltersApplied.indexOf($event.target.value),
-              1
-            );
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.filteredArray.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  this.deletionElementFinder.push(res);
-                }
-              });
-            }
-            this.filteredArray = this.deletionElementFinder;
-            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-            this.elementsToBeDeleted = [];
-            this.deletionElementFinder = [];
-          } else {
-            this.priceFiltersApplied.push($event.target.value);
-            this.allFiltersApplied.push($event.target.value);
-            for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-              var price = this.priceFiltersApplied[i].split('-');
-              var lowerValue = price[0];
-              var higherValue = price[1];
-              this.filteredArray.filter((res) => {
-                if (
-                  Number(res.price1) >= Number(lowerValue) &&
-                  Number(res.price1) <= Number(higherValue)
-                ) {
-                  this.deletionElementFinder.push(res);
-                }
-              });
-            }
-            this.filteredArray = this.deletionElementFinder;
-            // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-            // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-            this.elementsToBeDeleted = [];
-            this.deletionElementFinder = [];
-          }
-        }
-      }
+        this.filteredArray = res;
+      });
     }
+  }
 
-    if (this.callSearchByPrice) {
-      // input is subject not price
-      this.callSearchByPrice = false;
-      if (this.priceFiltersApplied.length == 1) {
-        var price = this.priceFiltersApplied[0].split('-');
-        var lowerValue = price[0];
-        var higherValue = price[1];
-        this.filteredArray.filter((res) => {
-          if (
-            Number(res.price1) < Number(lowerValue) ||
-            Number(res.price1) > Number(higherValue)
-          ) {
-            this.filteredArray.splice(i, 1);
-          }
-        });
+  deletePrice(price) {
+    if (this.priceFiltersApplied.includes(price)) {
+      this.priceFiltersApplied.splice(
+        this.priceFiltersApplied.indexOf(price),
+        1
+      );
+      this.allFiltersApplied.price.splice(
+        this.priceFiltersApplied.indexOf(price),
+        1
+      );
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+        this.filteredArray = [];
+        this.filteredArray = res;
+      });
+    }
+  }
+  deleteRating(rating) {
+    if (this.ratingFilterApplied.includes(rating)) {
+      this.ratingFilterApplied.splice(
+        this.ratingFilterApplied.indexOf(rating),
+        1
+      );
+      this.allFiltersApplied.ratings.splice(
+        this.allFiltersApplied.ratings.indexOf(rating * 20),
+        1
+      );
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+        this.filteredArray = [];
+        this.filteredArray = res;
+      });
+    }
+  }
+  searchBySubject($event) {
+    var subject = $event.target.value;
+    if (this.subjectFiltersApplied.length == 0) {
+      this.subjectFiltersApplied.push(subject);
+      this.allFiltersApplied.subjects.push(subject);
+      this.allFiltersApplied.show = true;
+    } else {
+      if (this.checkFiltersApplied(this.subjectFiltersApplied, subject)) {
+        this.subjectFiltersApplied.splice(
+          this.subjectFiltersApplied.indexOf(subject),
+          1
+        );
+        this.allFiltersApplied.subjects.splice(
+          this.allFiltersApplied.subjects.indexOf(subject),
+          1
+        );
+        if (this.allFiltersApplied.subjects.length == 0) {
+          this.allFiltersApplied.show = false;
+        }
       } else {
-        for (var i = 0; i < this.priceFiltersApplied.length; i++) {
-          var price = this.priceFiltersApplied[i].split('-');
-          var lowerValue = price[0];
-          var higherValue = price[1];
-          this.filteredArray.filter((res) => {
-            if (
-              Number(res.price1) >= Number(lowerValue) &&
-              Number(res.price1) <= Number(higherValue)
-            ) {
-              this.deletionElementFinder.push(res);
-            }
-          });
-        }
-        this.filteredArray = this.deletionElementFinder;
-        // this.elementsToBeDeleted =this.filteredArray.filter(x=>!this.deletionElementFinder.includes(x));
-        // this.filteredArray = this.filteredArray.filter(x=>!this.elementsToBeDeleted.includes(x));
-        this.elementsToBeDeleted = [];
-        this.deletionElementFinder = [];
+        this.subjectFiltersApplied.push(subject);
+        this.allFiltersApplied.subjects.push(subject);
+        this.allFiltersApplied.show = true;
       }
     }
+    // this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+    //   this.filteredArray = [];
+    //   this.filteredArray = res;
+    //   // console.log(res.toString().length == undefined);
+    // });
+  }
+
+  searchByPrice($event) {
+    var price = $event.target.value;
+    if (this.priceFiltersApplied.length == 0) {
+      this.priceFiltersApplied.push(price);
+      this.allFiltersApplied.price.push(price);
+      this.allFiltersApplied.show = true;
+    } else {
+      if (this.checkFiltersApplied(this.priceFiltersApplied, price)) {
+        this.priceFiltersApplied.splice(
+          this.priceFiltersApplied.indexOf(price),
+          1
+        );
+        this.allFiltersApplied.price.splice(
+          this.allFiltersApplied.price.indexOf(price),
+          1
+        );
+        if (this.allFiltersApplied.price.length == 0) {
+          this.allFiltersApplied.show = false;
+        }
+      } else {
+        this.priceFiltersApplied.push(price);
+        this.allFiltersApplied.price.push(price);
+        this.allFiltersApplied.show = true;
+      }
+    }
+    // this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+    //   this.filteredArray = [];
+    //   this.filteredArray = res;
+    // });
   }
 
   searchByRatings($event) {
-    if (
-      this.checkFiltersApplied(this.ratingFilterApplied, $event.target.value)
-    ) {
-      if (this.ratingFilterApplied.length == 1) {
-        this.filteredArray = [];
-        this.ratingFilterApplied.pop();
-        this.allFiltersApplied.splice(
-          this.allFiltersApplied.indexOf($event.target.value),
+    var ratings = $event.target.value;
+    if (this.ratingFilterApplied.length == 0) {
+      this.ratingFilterApplied.push(ratings);
+      this.allFiltersApplied.ratings.push(ratings * 20);
+      this.allFiltersApplied.show = true;
+    } else {
+      if (this.checkFiltersApplied(this.ratingFilterApplied, ratings)) {
+        this.ratingFilterApplied.splice(
+          this.ratingFilterApplied.indexOf(ratings),
           1
         );
-      } else {
-        var status = false;
-        for (var i = 0; i < this.ratingFilterApplied.length; i++) {
-          if ($event.target.value > this.ratingFilterApplied[i]) {
-            status = true;
-          }
-        }
-        if (status) {
-          this.ratingFilterApplied.splice(
-            this.ratingFilterApplied.indexOf($event.target.value),
-            1
-          );
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-        } else {
-          this.ratingFilterApplied.sort();
-          var smallest = Math.min.apply(Math, this.ratingFilterApplied);
-          var nextToSmallest = this.ratingFilterApplied[
-            this.ratingFilterApplied.indexOf(smallest) + 2
-          ];
-
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            if (
-              this.filteredArray[i].rating >= 20 * smallest &&
-              this.filteredArray[i].rating < 20 * nextToSmallest
-            ) {
-              this.filteredArray.splice(i, 1);
-            }
-          }
-          this.ratingFilterApplied.splice(
-            this.ratingFilterApplied.indexOf($event.target.value),
-            1
-          );
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-        }
-      }
-    } else {
-      this.ratingFilterApplied.push($event.target.value);
-      this.allFiltersApplied.push($event.target.value);
-      for (var i = 0; i < this.ratingFilterApplied.length; i++) {
-        this.searchResults.filter((res) => {
-          if (res.rating >= 20 * Number($event.target.value)) {
-            if (
-              !this.checkDuplicacyOfObjectInArray(
-                this.filteredArray,
-                this.searchResults[this.searchResults.indexOf(res)]
-              )
-            ) {
-              this.filteredArray.push(
-                this.searchResults[this.searchResults.indexOf(res)]
-              );
-            }
-          }
-        });
-      }
-    }
-  }
-
-  searchBySubject($event) {
-    if (this.subjectFiltersApplied.length == 0 && this.callSearchBySubject) {
-      //input is price
-      this.filteredArray = [];
-      this.callSearchBySubject = false;
-      this.callSearchByPrice = false;
-      this.findFromSearchResult = true;
-      return true;
-    }
-    if (this.subjectFiltersApplied.length != 0 && this.callSearchBySubject) {
-      this.filteredArray = [];
-      this.callSearchBySubject = false;
-      this.callSearchByPrice = false;
-      // input is price
-      this.findFromFilterSearch = true;
-      for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-        this.searchResults.filter((res) => {
-          if (res.areaOfExpertise.includes(this.subjectFiltersApplied[i])) {
-            if (
-              !this.checkDuplicacyOfObjectInArray(
-                this.filteredArray,
-                this.searchResults[this.searchResults.indexOf(res)]
-              )
-            ) {
-              this.filteredArray.push(
-                this.searchResults[this.searchResults.indexOf(res)]
-              );
-            }
-          }
-        });
-      }
-      return true;
-    }
-
-    if (!this.callSearchBySubject) {
-      // input is subject
-      // this.allFiltersApplied = [];
-      if (
-        this.checkFiltersApplied(
-          this.subjectFiltersApplied,
-          $event.target.value
-        )
-      ) {
-        if (this.subjectFiltersApplied.length == 1) {
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
-          this.subjectFiltersApplied.pop();
-          console.log(
-            'filtered array length : ' + (this.filteredArray.length - 1)
-          );
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            console.log(this.filteredArray[i].areaOfExpertise.length);
-            for (
-              var j = this.filteredArray[i].areaOfExpertise.length - 1;
-              j >= 0;
-              j--
-            ) {
-              if (
-                this.filteredArray[i].areaOfExpertise[j].area.includes(
-                  $event.target.value
-                )
-              ) {
-                this.filteredArray.splice(i, 1);
-              }
-            }
-          }
-        } else {
-          for (var i = this.filteredArray.length - 1; i >= 0; i--) {
-            for (
-              var j = 0;
-              j < this.filteredArray[i].areaOfExpertise.length;
-              j++
-            ) {
-              if (
-                this.filteredArray[i].areaOfExpertise[j].area.includes(
-                  $event.target.value
-                )
-              ) {
-                if (
-                  this.removeOrNot(
-                    this.filteredArray[i].areaOfExpertise[j],
-                    this.subjectFiltersApplied,
-                    $event.target.value
-                  )
-                ) {
-                  this.filteredArray.splice(i, 1);
-                }
-              }
-            }
-          }
-          this.subjectFiltersApplied.splice(
-            this.subjectFiltersApplied.indexOf($event.target.value),
-            1
-          );
-          this.allFiltersApplied.splice(
-            this.allFiltersApplied.indexOf($event.target.value),
-            1
-          );
+        this.allFiltersApplied.ratings.splice(
+          this.allFiltersApplied.ratings.indexOf(ratings * 20),
+          1
+        );
+        if (this.allFiltersApplied.ratings.length == 0) {
+          this.allFiltersApplied.show = false;
         }
       } else {
-        // this.subjectFiltersApplied.push($event.target.value);
-        // this.allFiltersApplied.push($event.target.value);
-        // for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-        //   this.searchResults.filter((res) => {
-        //     if (res.areaOfExpertise.includes($event.target.value)) {
-        //       if (
-        //         !this.checkDuplicacyOfObjectInArray(
-        //           this.filteredArray,
-        //           this.searchResults[this.searchResults.indexOf(res)]
-        //         )
-        //       ) {
-        //         this.filteredArray.push(
-        //           this.searchResults[this.searchResults.indexOf(res)]
-        //         );
-        //       }
-        //     }
-        //   });
-        // }
-        this.subjectFiltersApplied.push($event.target.value);
-        this.allFiltersApplied.push($event.target.value);
-        for (var i = 0; i < this.subjectFiltersApplied.length; i++) {
-          this.searchResults.filter((res) => {
-            for (var j = 0; j < res.areaOfExpertise.length; j++) {
-              if (res.areaOfExpertise[j].area.includes($event.target.value)) {
-                if (
-                  !this.checkDuplicacyOfObjectInArray(
-                    this.filteredArray,
-                    this.searchResults[this.searchResults.indexOf(res)]
-                  )
-                ) {
-                  this.filteredArray.push(
-                    this.searchResults[this.searchResults.indexOf(res)]
-                  );
-                }
-              }
-            }
-          });
-        }
-      }
-      if (this.priceFiltersApplied.length != 0) {
-        this.callSearchByPrice = true;
-        this.searchByPrice($event);
+        this.ratingFilterApplied.push(ratings);
+        this.allFiltersApplied.ratings.push(ratings * 20);
+        this.allFiltersApplied.show = true;
       }
     }
+    // this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+    //   this.filteredArray = [];
+    //   this.filteredArray = res;
+    // });
   }
 
   removeOrNot(areaOfExpertise, subjectFiltersApplied, eventTarget) {
@@ -732,17 +444,25 @@ export class TestComponent implements OnInit {
     }
   }
 
+  clearAllFilters() {
+    window.location.reload();
+  }
+
   sort($event) {
-    if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
-      if (this.allFiltersApplied.length == 0) {
+    if (
+      this.allFiltersApplied.price.length == 0 &&
+      this.allFiltersApplied.ratings.length == 0 &&
+      this.allFiltersApplied.subjects.length == 0
+    ) {
+      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
-      } else {
-        this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
-      }
-    } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
-      if (this.allFiltersApplied.length == 0) {
+      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
         this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
-      } else {
+      }
+    } else {
+      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
+        this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
+      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
       }
     }

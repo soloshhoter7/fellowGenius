@@ -56,48 +56,48 @@ import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryUsers;
 
 @Service
-public class UserService  implements UserDetailsService{
+public class UserService implements UserDetailsService {
 
 	@Autowired
 	dao dao;
-	
+
 	@Autowired
 	MeetingDao meetingDao;
-	
+
 	@Autowired
 	ScheduleService scheduleService;
-     
-	@Autowired 
+
+	@Autowired
 	repositoryStudentLogin repStudentLogin;
-	
+
 	@Autowired
 	repositoryTutorLogin repTutorLogin;
-	
+
 	@Autowired
 	repositorySocialLogin repSocialLogin;
-	
+
 	@Autowired
 	repositoryUsers repUsers;
-	
+
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
- 
+
 	public String validateUser(String email, String password) {
 		Users userLogin = repUsers.emailExist(email);
-		if(userLogin!=null) {
-			if(encoder.matches(password, userLogin.getPassword())) {
+		if (userLogin != null) {
+			if (encoder.matches(password, userLogin.getPassword())) {
 				return String.valueOf(userLogin.getUserId());
-			}else {
+			} else {
 				return null;
 			}
-		}else {
+		} else {
 			return null;
 		}
 	}
-	
+
 //	public String validateStudentUser(String email,String password) {
 //		StudentLogin studentLogin = repStudentLogin.emailExist(email);
 //		if(studentLogin!=null) {
@@ -110,7 +110,7 @@ public class UserService  implements UserDetailsService{
 //		 return null;	
 //		} 
 //	}
-	
+
 //	public User loadStudentByUserId(String userId) {
 //		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 //		if(dao.findStudentBySid(Integer.valueOf(userId))) {
@@ -120,18 +120,18 @@ public class UserService  implements UserDetailsService{
 //			return null;
 //		}
 //	}
-	
+
 	public User loadUserByUserId(String userId) {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		Users user = repUsers.idExists(Integer.valueOf(userId));
-		if(user!=null) {
-		    authorities.add(new SimpleGrantedAuthority(user.getRole()));
-			return new User(userId,"",authorities);
-		}else {
+		if (user != null) {
+			authorities.add(new SimpleGrantedAuthority(user.getRole()));
+			return new User(userId, "", authorities);
+		} else {
 			return null;
 		}
 	}
-	
+
 //	public String validateTutorUser(String email,String password) {
 //		
 //		SocialLogin socialLogin =	repSocialLogin.checkSocialLogin(email);
@@ -156,12 +156,12 @@ public class UserService  implements UserDetailsService{
 //			return null;
 //		}
 //	}
-	//for registering a user
+	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
-		if(repUsers.emailExist(registrationModel.getEmail())!=null) {
+		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
 			return false;
 		}
-		if(registrationModel.getRole().equals("Learner")) {
+		if (registrationModel.getRole().equals("Learner")) {
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());
 			studentProfile.setEmail(registrationModel.getEmail());
@@ -179,7 +179,7 @@ public class UserService  implements UserDetailsService{
 			} else {
 				return false;
 			}
-		}else if(registrationModel.getRole().equals("Expert")) {
+		} else if (registrationModel.getRole().equals("Expert")) {
 			TutorProfile tutorProfile = new TutorProfile();
 			tutorProfile.setContact(registrationModel.getContact());
 			tutorProfile.setEmail(registrationModel.getEmail());
@@ -193,7 +193,7 @@ public class UserService  implements UserDetailsService{
 				user.setUserId(tutorProfile.getTid());
 				user.setRole("Expert");
 				dao.saveUserLogin(user);
-				//creating tutor profile details tuple
+				// creating tutor profile details tuple
 				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 				tutProfileDetails.setTid(tutorProfile.getTid());
 				tutProfileDetails.setFullName(registrationModel.getFullName());
@@ -203,7 +203,7 @@ public class UserService  implements UserDetailsService{
 				tutProfileDetails.setReviewCount(0);
 				tutProfileDetails.setPrice1("400");
 				dao.saveTutorID(tutProfileDetails);
-				//creating tutor schedule tuple
+				// creating tutor schedule tuple
 				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
 				tutSchedule.setTid(tutorProfile.getTid());
 				tutSchedule.setFullName(tutorProfile.getFullName());
@@ -213,11 +213,11 @@ public class UserService  implements UserDetailsService{
 			} else {
 				return false;
 			}
-		}else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	// saving student registration details
 	public boolean saveStudentProfile(StudentProfileModel studentModel) {
 		StudentProfile studentProfile = new StudentProfile();
@@ -260,45 +260,45 @@ public class UserService  implements UserDetailsService{
 		stuProfileModel.setFullName(stuProfile.getFullName());
 		stuProfileModel.setProfilePictureUrl(stuProfile.getProfilePictureUrl());
 		stuProfileModel.setLinkedInProfile(stuProfile.getLinkedInProfile());
-		for(LearningAreas area:stuProfile.getLearningAreas()) {
+		for (LearningAreas area : stuProfile.getLearningAreas()) {
 			stuProfileModel.getLearningAreas().add(area.getSubject());
 		}
 		return stuProfileModel;
 	}
-	
-	// for updating student profile
-		public boolean updateStudentProfile(StudentProfileModel studentModel) {
-			StudentProfile studentProfileLoaded = dao.getStudentDetails(studentModel.getSid().toString());
-			StudentProfile studentProfile = new StudentProfile();
-			studentProfile.setContact(studentModel.getContact());
-			studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
-			studentProfile.setEmail(studentModel.getEmail());
-			studentProfile.setFullName(studentModel.getFullName());
-			studentProfile.setUserBookingId(null);
-			studentProfile.setSid(studentModel.getSid());
-			studentProfile.setProfilePictureUrl(studentModel.getProfilePictureUrl());
-			studentProfile.setLinkedInProfile(studentModel.getLinkedInProfile());
-			
-			
-			for(String area:studentModel.getLearningAreas()) {
-				LearningAreas subject = new LearningAreas();
-				subject.setUserId(studentProfile);
-				subject.setSubject(area);
-				if(!studentProfileLoaded.getLearningAreas().stream().filter(o -> o.getSubject().equals(area)).findFirst().isPresent()) {
-					studentProfile.getLearningAreas().add(subject);
-				}	
-			}
-			
-			dao.updateStudentProfile(studentProfile);
-			return true;
 
+	// for updating student profile
+	public boolean updateStudentProfile(StudentProfileModel studentModel) {
+		StudentProfile studentProfileLoaded = dao.getStudentDetails(studentModel.getSid().toString());
+		StudentProfile studentProfile = new StudentProfile();
+		studentProfile.setContact(studentModel.getContact());
+		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
+		studentProfile.setEmail(studentModel.getEmail());
+		studentProfile.setFullName(studentModel.getFullName());
+		studentProfile.setUserBookingId(null);
+		studentProfile.setSid(studentModel.getSid());
+		studentProfile.setProfilePictureUrl(studentModel.getProfilePictureUrl());
+		studentProfile.setLinkedInProfile(studentModel.getLinkedInProfile());
+
+		for (String area : studentModel.getLearningAreas()) {
+			LearningAreas subject = new LearningAreas();
+			subject.setUserId(studentProfile);
+			subject.setSubject(area);
+			if (!studentProfileLoaded.getLearningAreas().stream().filter(o -> o.getSubject().equals(area)).findFirst()
+					.isPresent()) {
+				studentProfile.getLearningAreas().add(subject);
+			}
 		}
-		
+
+		dao.updateStudentProfile(studentProfile);
+		return true;
+
+	}
+
 	// saving updating details of tutor
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
-		TutorProfileDetails	tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
+		TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
 		tutProfileDetails.setTid(tutorModel.getTid());
 		tutProfileDetails.setFullName(tutorModel.getFullName());
 		tutProfileDetails.setInstitute(tutorModel.getInstitute());
@@ -318,37 +318,47 @@ public class UserService  implements UserDetailsService{
 		tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
 		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
 		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
-		//for setting the expertise areas
-		Integer minPrice =Integer.MAX_VALUE;
+		// for setting the expertise areas
+		Integer minPrice = Integer.MAX_VALUE;
 		Integer maxPrice = 0;
-		for(expertise area:tutorModel.getAreaOfExpertise()) {
+		if (tutorProfileDetailsLoaded.getPrice1() != "400") {
+			if (tutorProfileDetailsLoaded.getPrice2() != null && tutorProfileDetailsLoaded.getPrice1() != null) {
+				minPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice2());
+				maxPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice1());
+			}
+		}
+
+		for (expertise area : tutorModel.getAreaOfExpertise()) {
 			ExpertiseAreas subject = new ExpertiseAreas();
 			subject.setUserId(tutProfileDetails);
 			subject.setSubject(area.getArea());
 			subject.setPrice(area.getPrice());
-			if(!tutorProfileDetailsLoaded.getAreaOfExpertise().stream().filter(o -> o.getSubject().equals(area.getArea())).findFirst().isPresent()) {
+			if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
+					.filter(o -> o.getSubject().equals(area.getArea())).findFirst().isPresent()) {
 				tutProfileDetails.getAreaOfExpertise().add(subject);
-				if(area.getPrice()>maxPrice) {
-					maxPrice=area.getPrice();
+				if (area.getPrice() > maxPrice) {
+					maxPrice = area.getPrice();
 				}
-				if(area.getPrice()<minPrice) {
+				if (area.getPrice() < minPrice) {
 					minPrice = area.getPrice();
 				}
 			}
-			
+
 		}
-		tutProfileDetails.setPrice1(minPrice.toString());
-		tutProfileDetails.setPrice2(maxPrice.toString());
-		
+		if (maxPrice != 0 && minPrice != Integer.MAX_VALUE) {
+			tutProfileDetails.setPrice1(minPrice.toString());
+			tutProfileDetails.setPrice2(maxPrice.toString());
+		}
+
 //		tutProfileDetails.setAreaOfExpertise(areas);
 		dao.updateTutorProfile(tutProfileDetails);
-		Integer profileCompleted =dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
-		//updating profile completed percentage
-		if(profileCompleted<50) {
-			dao.updateProfileCompleted(50, tutorModel.getTid());	
-		}else if(profileCompleted.equals(50)&&tutProfileDetails.getInstitute()==null) {
+		Integer profileCompleted = dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
+		// updating profile completed percentage
+		if (profileCompleted < 50) {
 			dao.updateProfileCompleted(50, tutorModel.getTid());
-		}else if(profileCompleted.equals(50)&&tutProfileDetails.getInstitute()!=null) {
+		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() == null) {
+			dao.updateProfileCompleted(50, tutorModel.getTid());
+		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() != null) {
 			dao.updateProfileCompleted(100, tutorModel.getTid());
 		}
 	}
@@ -382,37 +392,37 @@ public class UserService  implements UserDetailsService{
 	}
 
 	// saving registration details of tutor
-		public boolean saveTutorProfile(TutorProfileModel tutorModel) {
-			TutorProfile tutorProfile = new TutorProfile();
-			tutorProfile.setContact(tutorModel.getContact());
-			tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
-			tutorProfile.setEmail(tutorModel.getEmail());
-			tutorProfile.setFullName(tutorModel.getFullName());
-			tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-			tutorProfile.setTid(tutorModel.getTid());
-			
-			if (dao.saveTutorProfile(tutorProfile)) {
-				//saving tutor profile details
-				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
-				tutProfileDetails.setTid(tutorProfile.getTid());
-				tutProfileDetails.setProfileCompleted(12);
-				tutProfileDetails.setLessonCompleted(0);
-				tutProfileDetails.setRating(100);
-				tutProfileDetails.setReviewCount(0);
-				dao.saveTutorID(tutProfileDetails);
-				
-				//saving tutor schedule details
-				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
-				tutSchedule.setTid(tutorProfile.getTid());
-				tutSchedule.setFullName(tutorProfile.getFullName());
-				tutSchedule.setIsAvailable("yes");
-				dao.saveTutorAvailbilitySchedule(tutSchedule);
-				return true;
-			} else {
-				return false;
-			}
+	public boolean saveTutorProfile(TutorProfileModel tutorModel) {
+		TutorProfile tutorProfile = new TutorProfile();
+		tutorProfile.setContact(tutorModel.getContact());
+		tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
+		tutorProfile.setEmail(tutorModel.getEmail());
+		tutorProfile.setFullName(tutorModel.getFullName());
+		tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+		tutorProfile.setTid(tutorModel.getTid());
 
+		if (dao.saveTutorProfile(tutorProfile)) {
+			// saving tutor profile details
+			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			tutProfileDetails.setTid(tutorProfile.getTid());
+			tutProfileDetails.setProfileCompleted(12);
+			tutProfileDetails.setLessonCompleted(0);
+			tutProfileDetails.setRating(100);
+			tutProfileDetails.setReviewCount(0);
+			dao.saveTutorID(tutProfileDetails);
+
+			// saving tutor schedule details
+			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+			tutSchedule.setTid(tutorProfile.getTid());
+			tutSchedule.setFullName(tutorProfile.getFullName());
+			tutSchedule.setIsAvailable("yes");
+			dao.saveTutorAvailbilitySchedule(tutSchedule);
+			return true;
+		} else {
+			return false;
 		}
+
+	}
 
 	// for updating tutor basic info
 	public void updateTutorBasicInfo(TutorProfileModel tutorModel) {
@@ -424,11 +434,10 @@ public class UserService  implements UserDetailsService{
 		tutorProfile.setFullName(tutorModel.getFullName());
 		tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
 		dao.updateTutorBasicInfo(tutorProfile);
-		
-		if(dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted()<=50) {
-			dao.updateProfileCompleted(40, tutorProfile.getTid());	
+
+		if (dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted() <= 50) {
+			dao.updateProfileCompleted(40, tutorProfile.getTid());
 		}
-		
 
 	}
 
@@ -475,7 +484,7 @@ public class UserService  implements UserDetailsService{
 	public List<TutorProfileDetailsModel> getTutorList() {
 		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
 		List<TutorProfileDetails> tutList = dao.getTutorList();
-		for(TutorProfileDetails tutProfileDetails:tutList) {
+		for (TutorProfileDetails tutProfileDetails : tutList) {
 			TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
 			tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
 			tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
@@ -496,7 +505,7 @@ public class UserService  implements UserDetailsService{
 			tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
 			tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
 			tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
-			for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
+			for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
 				expertise exp = new expertise();
 				exp.setArea(area.getSubject());
 				exp.setPrice(area.getPrice());
@@ -519,7 +528,7 @@ public class UserService  implements UserDetailsService{
 
 	// getting tutor profile details with tid
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
-		System.out.println("get tutot profile details ->"+dao.getTutorProfileDetails(tid));
+		System.out.println("get tutot profile details ->" + dao.getTutorProfileDetails(tid));
 		TutorProfileDetails tutProfileDetails = dao.getTutorProfileDetails(tid);
 		TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
 		tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
@@ -541,13 +550,13 @@ public class UserService  implements UserDetailsService{
 		tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
 		tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
 		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
-		for(ExpertiseAreas area:tutProfileDetails.getAreaOfExpertise()) {
+		for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
 			expertise exp = new expertise();
 			exp.setArea(area.getSubject());
 			exp.setPrice(area.getPrice());
 			tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 		}
-		
+
 		return tutorProfileDetailsModel;
 	}
 
@@ -574,57 +583,55 @@ public class UserService  implements UserDetailsService{
 //	}
 
 	// for saving tutor Availability Schedule
-		public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
-			ArrayList<String> availableSchedules = new ArrayList<String>();
-			System.out.println(tutorAvailabilityScheduleModel.getAllAvailabilitySchedule());
-			for (ScheduleData schedule : tutorAvailabilityScheduleModel.getAllAvailabilitySchedule()) {
-				availableSchedules.add(schedule.serialize());
-			}
-			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
-			tutSchedule.setAllAvailabilitySchedule(availableSchedules);
-			tutSchedule.setFullName(tutorAvailabilityScheduleModel.getFullName());
-			tutSchedule.setTid(tutorAvailabilityScheduleModel.getTid());
-			tutSchedule.setIsAvailable(tutorAvailabilityScheduleModel.getIsAvailable());
-			dao.saveTutorAvailbilitySchedule(tutSchedule);
+	public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
+		ArrayList<String> availableSchedules = new ArrayList<String>();
+		System.out.println(tutorAvailabilityScheduleModel.getAllAvailabilitySchedule());
+		for (ScheduleData schedule : tutorAvailabilityScheduleModel.getAllAvailabilitySchedule()) {
+			availableSchedules.add(schedule.serialize());
 		}
+		TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+		tutSchedule.setAllAvailabilitySchedule(availableSchedules);
+		tutSchedule.setFullName(tutorAvailabilityScheduleModel.getFullName());
+		tutSchedule.setTid(tutorAvailabilityScheduleModel.getTid());
+		tutSchedule.setIsAvailable(tutorAvailabilityScheduleModel.getIsAvailable());
+		dao.saveTutorAvailbilitySchedule(tutSchedule);
+	}
 
-		// for getting tutor Availability Schedule after login
-		public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) throws ParseException {
-			TutorAvailabilityScheduleModel tutAvailModel = new TutorAvailabilityScheduleModel();
-			tutAvailModel = dao.getTutorAvailabilitySchedule(tid);
-			ArrayList<BookingDetails> bookings = (ArrayList<BookingDetails>) meetingDao.fetchAllTutorBookings(tid);
-			ArrayList<ScheduleData> bookingSchedule = new ArrayList<ScheduleData>();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			for (int i = 0; i < bookings.size(); i++) {
-				BookingDetails booking = bookings.get(i);
-				String Description;
-				Date startDate = formatter.parse(booking.getDateOfMeeting());
-				startDate.setHours(booking.getStartTimeHour());
-				startDate.setMinutes(booking.getStartTimeMinute());
+	// for getting tutor Availability Schedule after login
+	public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) throws ParseException {
+		TutorAvailabilityScheduleModel tutAvailModel = new TutorAvailabilityScheduleModel();
+		tutAvailModel = dao.getTutorAvailabilitySchedule(tid);
+		ArrayList<BookingDetails> bookings = (ArrayList<BookingDetails>) meetingDao.fetchAllTutorBookings(tid);
+		ArrayList<ScheduleData> bookingSchedule = new ArrayList<ScheduleData>();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		for (int i = 0; i < bookings.size(); i++) {
+			BookingDetails booking = bookings.get(i);
+			String Description;
+			Date startDate = formatter.parse(booking.getDateOfMeeting());
+			startDate.setHours(booking.getStartTimeHour());
+			startDate.setMinutes(booking.getStartTimeMinute());
 
-				Date endDate = formatter.parse(booking.getDateOfMeeting());
-				endDate.setHours(booking.getEndTimeHour());
-				endDate.setMinutes(booking.getEndTimeMinute());
-                Description = booking.getSubject() +"=>"+booking.getDescription();
-				ScheduleData schedule = new ScheduleData();
-				schedule.setDescription(Description);
-				schedule.setStartTime(startDate.toLocaleString());
-				schedule.setEndTime(endDate.toLocaleString());
-				schedule.setId(i + 1);
-				schedule.setSubject(booking.getStudentName());
-				bookingSchedule.add(schedule);
-			}
-			tutAvailModel.setAllMeetingsSchedule(bookingSchedule);
-			return tutAvailModel;
+			Date endDate = formatter.parse(booking.getDateOfMeeting());
+			endDate.setHours(booking.getEndTimeHour());
+			endDate.setMinutes(booking.getEndTimeMinute());
+			Description = booking.getSubject() + "=>" + booking.getDescription();
+			ScheduleData schedule = new ScheduleData();
+			schedule.setDescription(Description);
+			schedule.setStartTime(startDate.toLocaleString());
+			schedule.setEndTime(endDate.toLocaleString());
+			schedule.setId(i + 1);
+			schedule.setSubject(booking.getStudentName());
+			bookingSchedule.add(schedule);
 		}
+		tutAvailModel.setAllMeetingsSchedule(bookingSchedule);
+		return tutAvailModel;
+	}
 
 	// get tutor time array with tid
 	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) {
 		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		return scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
 	}
-
-	
 
 	// for fetching top tutor list
 	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject) {
@@ -638,7 +645,8 @@ public class UserService  implements UserDetailsService{
 
 	// for getting student meetings schedule
 	public ArrayList<ScheduleData> getStudentSchedule(String sid) throws ParseException {
-		ArrayList<BookingDetails> bookings = (ArrayList<BookingDetails>) meetingDao.fetchAllStudentBookings(Integer.valueOf(sid));
+		ArrayList<BookingDetails> bookings = (ArrayList<BookingDetails>) meetingDao
+				.fetchAllStudentBookings(Integer.valueOf(sid));
 		ArrayList<ScheduleData> bookingSchedule = new ArrayList<ScheduleData>();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		System.out.println("bookings array size ->" + bookings.size());
@@ -665,70 +673,65 @@ public class UserService  implements UserDetailsService{
 
 	// for sending verification email
 	public AuthenticationResponse verifyEmail(String email) {
-			String to = email;
-			String from = "fellowGenius.tech@gmail.com";
-	      
-			Properties props = new Properties();
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.port", 587);
-	      
-	      Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator()
-	     {	
-	    	  protected PasswordAuthentication getPasswordAuthentication() {
-	    		  return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fG15051209");
-	    	  }
-	    	  
-	      });
+		String to = email;
+		String from = "fellowGenius.tech@gmail.com";
 
-	      int m = (int) Math.pow(10, 5);
-  		String otp =String.valueOf((m + new Random().nextInt(9 * m)));
-  		
-	      try {
-	            MimeMessage message = new MimeMessage(session);  
-	            
-		   message.setFrom(new InternetAddress(from));
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", 587);
 
-		   
-		   message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fG15051209");
+			}
 
-		   
-		   message.setSubject("Welcome to FellowGenius");
+		});
 
-		   
-		   message.setContent(
-	              "<html> <head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/>"
-	              + " <style>.Box{box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);width: 100%;height: auto;text-align: center;padding: "
-	              + "20px;margin-top: 10px;}.logo{color: #241084;font-weight: 500;line-height: 2rem;font-size: xx-large;}</style> "
-	              + "</head><body> <div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-3\">"
-	              + "</div><div class=\"col-sm-6\"> <div class=\"Box\"> <div class=\"box-header\"> <h1 class=\"logo\">fellowGenius</h1> "
-	              + "</div><div class=\"box-body\"> <h2>Welcome to fellow Genius</h2> "
-	              + "<p>Please Verify your account by entering the One-time-password Provided below :</p><h2 style=\"padding: 20px;"
-	              + "background-color: #e0e0e0;width: max-content;margin:auto\">"+ otp+ "</h2> </div></div></div>"
-	              + "<div class=\"com-sm-3\"></div></div></div></body></html>" ,
-	             "text/html");
+		int m = (int) Math.pow(10, 5);
+		String otp = String.valueOf((m + new Random().nextInt(9 * m)));
 
-		   
-		   Transport.send(message);
+		try {
+			MimeMessage message = new MimeMessage(session);
 
-		   System.out.println("Sent message successfully....");
+			message.setFrom(new InternetAddress(from));
 
-	      } catch (MessagingException e) {
-		   e.printStackTrace();
-		   throw new RuntimeException(e);
-	      }
-	      String otpFinal = encoder.encode(otp);
-	      System.out.println(otpFinal);
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+			message.setSubject("Welcome to FellowGenius");
+
+			message.setContent(
+					"<html> <head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/>"
+							+ " <style>.Box{box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);width: 100%;height: auto;text-align: center;padding: "
+							+ "20px;margin-top: 10px;}.logo{color: #241084;font-weight: 500;line-height: 2rem;font-size: xx-large;}</style> "
+							+ "</head><body> <div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-3\">"
+							+ "</div><div class=\"col-sm-6\"> <div class=\"Box\"> <div class=\"box-header\"> <h1 class=\"logo\">fellowGenius</h1> "
+							+ "</div><div class=\"box-body\"> <h2>Welcome to fellow Genius</h2> "
+							+ "<p>Please Verify your account by entering the One-time-password Provided below :</p><h2 style=\"padding: 20px;"
+							+ "background-color: #e0e0e0;width: max-content;margin:auto\">" + otp
+							+ "</h2> </div></div></div>" + "<div class=\"com-sm-3\"></div></div></div></body></html>",
+					"text/html");
+
+			Transport.send(message);
+
+			System.out.println("Sent message successfully....");
+
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		String otpFinal = encoder.encode(otp);
+		System.out.println(otpFinal);
 		return new AuthenticationResponse(otpFinal);
-		
+
 	}
-	
+
 	// fetch if the tutor is available ?
 	public boolean getTutorIsAvailable(String tid) {
-		if(dao.getTutorAvailabilitySchedule(Integer.valueOf(tid)).getIsAvailable().equals("yes")){
+		if (dao.getTutorAvailabilitySchedule(Integer.valueOf(tid)).getIsAvailable().equals("yes")) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -744,13 +747,13 @@ public class UserService  implements UserDetailsService{
 	}
 
 	public void subtractArea(int id, String subject, String role) {
-		dao.subtractArea(id,subject,role);
+		dao.subtractArea(id, subject, role);
 	}
 
 	public List<TutorProfileDetailsModel> fetchAllLinkedTutors(Integer userId) {
 		List<TutorProfileDetails> tutors = dao.fetchAllLinkedTutors(userId);
 		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
-		for(TutorProfileDetails tutor: tutors) { 
+		for (TutorProfileDetails tutor : tutors) {
 			TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
 			tutorProfileDetailsModel.setTid(tutor.getTid());
 			tutorProfileDetailsModel.setFullName(tutor.getFullName());
@@ -771,7 +774,7 @@ public class UserService  implements UserDetailsService{
 			tutorProfileDetailsModel.setProfileCompleted(tutor.getProfileCompleted());
 			tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
 			tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
-			for(ExpertiseAreas area:tutor.getAreaOfExpertise()) {
+			for (ExpertiseAreas area : tutor.getAreaOfExpertise()) {
 				expertise exp = new expertise();
 				exp.setArea(area.getSubject());
 				exp.setPrice(area.getPrice());
@@ -780,16 +783,16 @@ public class UserService  implements UserDetailsService{
 			tutorsModel.add(tutorProfileDetailsModel);
 		}
 		return tutorsModel;
-		
+
 	}
 
 	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings) {
 		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings);
-		if(tutors==null) {
+		if (tutors == null) {
 			return null;
-		}else {
+		} else {
 			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
-			for(TutorProfileDetails tutor: tutors) { 
+			for (TutorProfileDetails tutor : tutors) {
 				TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
 				tutorProfileDetailsModel.setTid(tutor.getTid());
 				tutorProfileDetailsModel.setFullName(tutor.getFullName());
@@ -810,7 +813,7 @@ public class UserService  implements UserDetailsService{
 				tutorProfileDetailsModel.setProfileCompleted(tutor.getProfileCompleted());
 				tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
 				tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
-				for(ExpertiseAreas area:tutor.getAreaOfExpertise()) {
+				for (ExpertiseAreas area : tutor.getAreaOfExpertise()) {
 					expertise exp = new expertise();
 					exp.setArea(area.getSubject());
 					exp.setPrice(area.getPrice());
@@ -820,15 +823,77 @@ public class UserService  implements UserDetailsService{
 			}
 			return tutorsModel;
 		}
-		
-	
+
 	}
 
 	public boolean checkUserExists(String email) {
-		if(repUsers.emailExist(email)!=null) {
+		if (repUsers.emailExist(email) != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean sendResetLink(String email) {
+		Users user = repUsers.emailExist(email);
+		if (user != null) {
+			String token = user.getUserId().toString();
+			String directUrl = "http://localhost:4200/#/resetPassword?token="+token;
+			System.out.println(directUrl);
+			String to = email;
+			String from = "fellowGenius.tech@gmail.com";
+
+			Properties props = new Properties();
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.port", 587);
+
+			Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fG15051209");
+				}
+
+			});
+
+			try {
+				MimeMessage message = new MimeMessage(session);
+
+				message.setFrom(new InternetAddress(from));
+
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+				message.setSubject("Reset your password");
+
+				message.setContent(
+						"<html> <head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);width: 100%;height: auto;text-align: center;padding: 20px;margin-top: 10px;}.logo{color: #241084;font-weight: 500;line-height: 2rem;font-size: xx-large;}</style> </head><body> <div class=\"container-fluid\"> <div class=\"row\">"
+						+ " <div class=\"col-sm-3\"></div><div class=\"col-sm-6\"> <div class=\"Box\"> <div class=\"box-header\"> <h1 class=\"logo\">fellowGenius</h1> </div><div class=\"box-body\">"
+						+ " <h2>Reset your password</h2> <p>Please click on the link mentioned below to verify and reset your password</p>"
+						+ "<a href=\""+directUrl+"\" class=\"btn btn-primary\">Reset Link</a> "
+						+ "</div></div></div><div class=\"com-sm-3\"></div></div></div></body></html>",
+						"text/html");
+
+				Transport.send(message);
+
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean updatePassword(String userId, String password) {
+		System.out.println(userId);
+		if(repUsers.idExists(Integer.valueOf(userId))!=null) {
+			String newPassword = encoder.encode(password);
+			repUsers.updatePassword(Integer.valueOf(userId),newPassword);
 			return true;
 		}else {
-			return false;
+			return false;	
 		}
 	}
 }

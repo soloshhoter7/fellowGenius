@@ -77,10 +77,6 @@ img {
 .timeSlots {
   float: left;
   margin-right: 10px;
-  /* padding-left: 7px; */
-  /* border: 0.8px solid #241084; */
-  /* color: #241084;
-  /* padding-right: 7px; */
   height: 30px;
   border: 1px solid #e30084;
   border-radius: 25px;
@@ -93,20 +89,14 @@ img {
 
 .selectedTimeSlots {
   float: left;
-  /* border: 0.8px solid #241084; */
-  /* margin-right: 10px; */
-  /* padding-left: 7px;
-  padding-right: 7px;
-  border-radius: 9px; */
+
   color: white;
-  /* background-color: #241084; */
   background-color: #e30084;
   z-index: 2;
 }
 
 .selectedTimeSlots:hover {
   color: white;
-  /* background-color: #241084; */
   background-color: #e30084;
 }
 
@@ -124,28 +114,12 @@ img {
 }
 
 .startClass {
-  /* float: left; */
-  /* border: 0.8px solid #241084; */
-  /* margin-right: 10px;
-  padding-left: 7px;
-  padding-right: 7px;
-  border-radius: 9px; */
-  /* color: white; */
-  /* background-color: #241084; */
   background-color: #e30084;
   color: white;
   z-index: 2;
 }
 
 .endClass {
-  /* float: left;
-  border: 0.8px solid #241084;
-  margin-right: 10px;
-  padding-left: 7px;
-  padding-right: 7px;
-  border-radius: 9px;
-  color: white;
-  background-color: #241084; */
   background-color: #e30084;
   color: white;
   z-index: 2;

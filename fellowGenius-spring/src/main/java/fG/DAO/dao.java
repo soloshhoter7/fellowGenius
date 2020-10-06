@@ -336,7 +336,9 @@ public class dao {
 		if(role.equals("Learner")) {
 			repLearingAreas.deleteSubject(id, subject);
 		}else if(role.equals("Expert")) {
-			repExpertiseAreas.deleteSubject(id, subject);
+			System.out.println("called expert");
+			System.out.println(id+":"+subject+":"+role);
+			System.out.println(repExpertiseAreas.deleteSubject(id, subject));
 		}
 	}
 

@@ -2,7 +2,6 @@ package fG.Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import fG.Entity.TutorProfileDetails;
 import fG.Model.FiltersApplied;
 import fG.Model.SocialLoginModel;
-import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
 import fG.Model.registrationModel;
+import fG.Model.updatePasswordModel;
 import fG.Service.UserService;
 
 @RestController
@@ -230,4 +229,16 @@ public class userController {
 		return service.checkUserExists(email);
 	}
 	
+	@RequestMapping(value="/sendResetLink")
+	@ResponseBody
+	public boolean sendResetLink(String email) {
+		return service.sendResetLink(email);
+	}
+	
+	@RequestMapping(value="/updatePassword")
+	@ResponseBody
+	public boolean updatePassword(@RequestBody updatePasswordModel data) {
+		System.out.println(data.getUserId());
+		return service.updatePassword(data.getUserId(),data.getPassword());
+	}
 }

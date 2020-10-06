@@ -121,6 +121,7 @@ export class LoginDialogComponent implements OnInit {
     });
   }
   toResetPassword() {
+    this.dialogRef.closeAll();
     this.router.navigate(['resetPassword']);
   }
   onLogin(form: NgForm) {
@@ -232,10 +233,12 @@ export class LoginDialogComponent implements OnInit {
                     this.isLoading = false;
                     this.hideContainer = '';
                     this.snackBar.open(
-                      'registration not successful ! email already exists !',
+                      'Login not successful !',
                       'close',
                       this.config
                     );
+                    this.errorText = 'Incorrect email or password';
+                    this.incorrectLoginDetails = true;
                   }
                 });
               // this.errorText = 'Incorrect email or password';
@@ -288,6 +291,7 @@ export class LoginDialogComponent implements OnInit {
           'close',
           this.config
         );
+        this.errorText = 'Incorrect email or password';
         this.incorrectLoginDetails = true;
         this.dialogRef.closeAll();
       }
@@ -362,6 +366,7 @@ export class LoginDialogComponent implements OnInit {
                 this.config
               );
               this.incorrectLoginDetails = true;
+              this.errorText = 'Incorrect email or password';
               this.dialogRef.closeAll();
             }
           });
