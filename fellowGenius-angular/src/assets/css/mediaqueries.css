@@ -88,13 +88,7 @@
     .bg-signup {
         background: transparent !important;
     }
-    .search-result-container {
-        position: absolute;
-        /* top: 230px; */
-        top: 360px;
-        display: inline-block;
-        float: left;
-    }
+    .search-result-container {}
     .search-result-container .filter-container {
         flex: 1 !important;
         width: 100% !important;
