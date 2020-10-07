@@ -148,7 +148,6 @@ export class SignUpComponent implements OnInit {
                 this.showInput = false;
               });
           } else {
-            console.log('user id already exists !');
             this.timeOut = false;
             // this.verifyEmail = true;
             this.isLoading = false;

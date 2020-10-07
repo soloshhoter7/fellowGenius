@@ -188,24 +188,6 @@ export const appRoutes: Routes = [
     WorkWeekService,
     MonthService,
     MonthAgendaService,
-    // {
-    //   provide: "SocialAuthServiceConfig",
-    //   useValue: {
-    //     autoLogin: false,
-    //     providers: [
-    //       {
-    //         id: GoogleLoginProvider.PROVIDER_ID,
-    //         provider: new GoogleLoginProvider(
-    //           "254899928533-k6lru4oe7sbmpe22ns0m11rvtbokk3qk.apps.googleusercontent.com"
-    //         ),
-    //       },
-    //       {
-    //         id: FacebookLoginProvider.PROVIDER_ID,
-    //         provider: new FacebookLoginProvider("561602290896109"),
-    //       },
-    //     ],
-    //   } as SocialAuthServiceConfig,
-    // },
   ],
   bootstrap: [AppComponent],
 })

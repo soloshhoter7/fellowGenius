@@ -194,9 +194,7 @@ export class SearchResultsComponent implements OnInit {
     const dialogRef = this.matDialog.open(FiltersDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe((data) => {
-      console.log('Dialog output:', data);
       if (data.operation == 'apply') {
-        console.log('applied');
         if (data.subjectFiltersApplied) {
           for (let subject of data.subjectFiltersApplied) {
             if (!this.subjectFiltersApplied.includes(subject)) {
@@ -225,7 +223,6 @@ export class SearchResultsComponent implements OnInit {
         this.httpService
           .applyFilters(this.allFiltersApplied)
           .subscribe((res) => {
-            console.log(res);
             this.filteredArray = [];
             this.filteredArray = res;
           });

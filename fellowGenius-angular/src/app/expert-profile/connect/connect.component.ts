@@ -149,7 +149,6 @@ export class ConnectComponent implements OnInit {
   }
 
   initPay(): void {
-    console.log(this.preparePaymentDetails());
     this.rzp = new this.winRef.nativeWindow['Razorpay'](
       this.preparePaymentDetails()
     );
@@ -202,12 +201,10 @@ export class ConnectComponent implements OnInit {
 
   createBooking(res: any) {
     if (this.paymentSuccessful) {
-      console.log(this.paymentSuccessful);
       this.bookingDetails.razorpay_payment_id = res.razorpay_payment_id;
       this.bookingDetails.razorpay_order_id = res.razorpay_order_id;
       this.bookingDetails.razorpay_signature = res.razorpay_signature;
       this.bookingDetails.amount = this.payableAmount;
-      console.log(this.bookingDetails);
       this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
         if (res == true) {
           this.isLoading = false;
