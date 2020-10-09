@@ -9,6 +9,8 @@ import {
   View,
   EventRenderedArgs,
   ActionEventArgs,
+  PopupCloseEventArgs,
+  PopupOpenEventArgs,
 } from '@syncfusion/ej2-angular-schedule';
 import * as jwt_decode from 'jwt-decode';
 
@@ -26,7 +28,7 @@ import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedu
 import { TutorService } from 'src/app/service/tutor.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { CookieService } from 'ngx-cookie-service';
-
+import { Query } from '@syncfusion/ej2-data';
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -173,7 +175,6 @@ export class tutorScheduleComponent implements OnInit {
         this.tutorAvailabilitySchedule.tid = this.userId;
       }
 
-      console.log(this.tutorAvailabilitySchedule);
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
@@ -181,6 +182,26 @@ export class tutorScheduleComponent implements OnInit {
         });
     }, 3000);
   }
+  // public onPopupOpen(args: PopupOpenEventArgs): void {
+  //   if (args.type == 'Editor') {
+  //     (this.scheduleObj.eventWindow as any).recurrenceEditor.frequencies = [
+  //       'daily',
+  //       'never',
+  //     ];
+  //     (document.querySelector(
+  //       '.e-repeat-interval'
+  //     ) as any).ej2_instances[0].max = 1;
+  //     let end = (document.querySelector('.e-end-on-element') as any)
+  //       .ej2_instances[0];
+  //     end.query = new Query().where('value', 'equal', 'never');
+  //     end.setProperties(
+  //       { query: new Query().where('value', 'equal', 'never') },
+  //       true
+  //     );
+  //     end.dataBind();
+  //   }
+  // }
+
   public onEventRendered(args: any): void {
     if (args.data.Type == 'booking') {
       args.element.style.backgroundColor = '#e30084';

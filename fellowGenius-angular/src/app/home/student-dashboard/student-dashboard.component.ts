@@ -12,6 +12,7 @@ import { ProfileService } from 'src/app/service/profile.service';
 import { DeletePopupComponent } from './delete-popup/delete-popup.component';
 import { StarRatingComponent } from 'ng-starrating';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -47,7 +48,8 @@ export class StudentDashboardComponent implements OnInit {
     public router: Router,
     public dialog: MatDialog,
     public profileService: ProfileService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private locationStrategy: LocationStrategy
   ) {
     setInterval(() => {
       this.now = new Date();
@@ -72,6 +74,7 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.preventBackButton();
     if (window.innerWidth <= 800) {
       this.studentChartWidth = '320';
     }
@@ -86,10 +89,18 @@ export class StudentDashboardComponent implements OnInit {
       this.handleRefresh();
     }
   }
+  toBookingsPage() {
+    this.router.navigate(['home/studentBookings']);
+  }
   cancelReview() {
     console.log('canceledReviews');
   }
-
+  preventBackButton() {
+    history.pushState(null, null, location.href);
+    this.locationStrategy.onPopState(() => {
+      history.pushState(null, null, location.href);
+    });
+  }
   saveRating(profile: any, rating: any) {
     var meetingId = profile.meetingId;
     var review = ' ';

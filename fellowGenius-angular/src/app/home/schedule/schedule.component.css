@@ -107,3 +107,11 @@ label {
 .hideBlock {
   display: none;
 }
+.e-schedule-dialog
+  .e-numeric.e-control-wrapper.e-input-group
+  .e-input-group-icon {
+  pointer-events: none !important;
+}
+.e-schedule-dialog .e-all-day-time-zone-row {
+  display: none !important;
+}

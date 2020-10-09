@@ -14,20 +14,22 @@ export class FiltersDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<FiltersDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    this.allFiltersApplied = new filtersApplied();
     this.allFiltersApplied = data.allFiltersApplied;
     this.subjectFiltersApplied = data.subjectFiltersApplied;
     this.priceFiltersApplied = data.priceFiltersApplied;
     this.ratingFilterApplied = data.ratingFiltersApplied;
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
   closeDialog() {
-    this.dialogRef.close();
+    var data = {
+      operation: 'cancel',
+    };
+    this.dialogRef.close(data);
   }
 
-  allFiltersApplied: filtersApplied = new filtersApplied();
+  allFiltersApplied;
   subjects: string[];
   // arrayToShow: tutorProfileDetails[];
 

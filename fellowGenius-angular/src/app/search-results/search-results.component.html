@@ -44,15 +44,15 @@
             </li>
           </ul>
         </div>
-        <button
-          *ngIf="false"
+        <!-- <button
+          *ngIf="showMobileFilterButton"
           class="btn btn-primary"
           type="button"
           style="margin: 10px; z-index: 5"
           (click)="showFilters()"
         >
           Filter
-        </button>
+        </button> -->
       </div>
       <div class="col-md-4" style="float: right">
         <div class="sort-by-container" style="width: 100%">
@@ -436,22 +436,19 @@
             </div>
           </li>
         </div>
-
-        <div
-          *ngIf="
-            (allFiltersApplied.price.length != 0 ||
-              allFiltersApplied.ratings.length != 0 ||
-              allFiltersApplied.subjects.length != 0) &&
-            filteredArray.length == 0
-          "
-          class="no-recordsfound"
-        >
-          <img src="/assets/images/norecordsfound.svg" />
-          <div class="information-container">
-            <span class="noinforheader">We're Sorry</span>
-            <span>
-              We can't seem to find any experts that match your search</span
-            >
+        <div *ngIf="allFiltersApplied">
+          <div
+            *ngIf="checkFilters() && filteredArray.length == 0"
+            class="no-recordsfound"
+            style="float: left"
+          >
+            <img src="/assets/images/norecordsfound.svg" />
+            <div class="information-container">
+              <span class="noinforheader">We're Sorry</span>
+              <span>
+                We can't seem to find any experts that match your search</span
+              >
+            </div>
           </div>
         </div>
       </ul>

@@ -23,6 +23,7 @@ import { map, startWith } from 'rxjs/operators';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 import { AppComponent } from '../app.component';
+import { LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -74,7 +75,7 @@ export class HomeComponent implements OnInit {
     private studentService: StudentService,
     private cookieService: CookieService,
     private breakpointObserver: BreakpointObserver,
-    private appComp: AppComponent
+    private locationStrategy: LocationStrategy
   ) {
     this.getScreenSize();
   }
@@ -85,6 +86,7 @@ export class HomeComponent implements OnInit {
     this.screenWidth = window.innerWidth;
   }
   ngOnInit() {
+    this.preventBackButton();
     this.toggleNavigation = true;
     this.breakpointObserver
       .observe(['(min-width: 800px)'])
@@ -302,7 +304,12 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['searchResults']);
     }
   }
-
+  preventBackButton() {
+    history.pushState(null, null, location.href);
+    this.locationStrategy.onPopState(() => {
+      history.pushState(null, null, location.href);
+    });
+  }
   handleRefresh() {
     this.userId = this.cookieService.get('userId');
     if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {

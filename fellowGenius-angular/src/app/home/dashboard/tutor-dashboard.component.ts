@@ -9,6 +9,7 @@ import { MeetingService } from 'src/app/service/meeting.service';
 import { Router } from '@angular/router';
 import { stringify } from 'querystring';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
+import { LocationStrategy } from '@angular/common';
 L10n.load({
   'en-US': {
     schedule: {
@@ -28,7 +29,8 @@ export class TutorDashboardComponent implements OnInit {
     public tutorService: TutorService,
     public meetingService: MeetingService,
     public router: Router,
-    public loginService: LoginDetailsService
+    public loginService: LoginDetailsService,
+    private locationStrategy: LocationStrategy
   ) {
     setInterval(() => {
       this.now = new Date();
@@ -104,6 +106,7 @@ export class TutorDashboardComponent implements OnInit {
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   recentReviewsList: bookingDetails[] = [];
   ngOnInit(): void {
+    this.preventBackButton();
     if (window.innerWidth <= 800) {
       this.tutorChartWidth = '320';
     }
@@ -518,5 +521,11 @@ export class TutorDashboardComponent implements OnInit {
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
     this.router.navigate(['meeting']);
+  }
+  preventBackButton() {
+    history.pushState(null, null, location.href);
+    this.locationStrategy.onPopState(() => {
+      history.pushState(null, null, location.href);
+    });
   }
 }

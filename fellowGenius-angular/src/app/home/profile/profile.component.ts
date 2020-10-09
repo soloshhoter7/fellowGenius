@@ -346,7 +346,6 @@ export class ProfileComponent implements OnInit {
   }
   advancedProfileToggle() {
     if (this.tutorService.tutorProfileDetails.profileCompleted < 50) {
-      console.log('cannot continue to advanced profile');
       this.profileError = 'Complete basic profile first !';
     } else {
       this.basic = false;
@@ -355,12 +354,10 @@ export class ProfileComponent implements OnInit {
 
   saveExpertise() {
     this.addExpertise = new expertise();
-    console.log(this.selectedExpertise + ':' + this.priceForExpertise);
     if (!this.expertiseDuplicacyCheck(this.selectedExpertise)) {
       this.addExpertise.area = this.selectedExpertise;
       this.addExpertise.price = this.priceForExpertise;
       this.expertises.push(this.addExpertise);
-      console.log(this.expertises);
       this.selectedExpertise = '';
       this.priceForExpertise = '';
 

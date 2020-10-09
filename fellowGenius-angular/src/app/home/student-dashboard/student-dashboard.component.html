@@ -70,7 +70,7 @@
             </div>
             <div class="subject-thumbnail"></div>
             <div class="subject-description">
-              <span>{{ element.studentName }}</span>
+              <span>{{ element.tutorName }}</span>
               <span
                 >{{ element.startTimeHour }}:{{
                   element.startTimeMinute | zero
@@ -91,7 +91,9 @@
               </button>
             </div>
           </div>
-          <div class="widget-footer"><a href="">view more</a></div>
+          <div class="widget-footer">
+            <a (click)="toBookingsPage()">view more</a>
+          </div>
         </div>
       </div>
 
@@ -114,7 +116,7 @@
           </div>
           <div class="subject-thumbnail"></div>
           <div class="subject-description">
-            <span>{{ element.studentName }}</span>
+            <span>{{ element.tutorName }}</span>
             <span>{{ element.dateOfMeeting }}</span>
             <span
               >{{ element.startTimeHour }}:{{
@@ -138,7 +140,7 @@
           </div>
         </div>
         <div class="widget-footer">
-          <a href="javascript:;" (click)="openRecordingsPage()">view more</a>
+          <a href="javascript:;" (click)="toBookingsPage()">view more</a>
         </div>
       </div>
     </div>
@@ -248,9 +250,9 @@
           </button> -->
         </div>
       </div>
-      <div class="widget-footer" *ngIf="pendingReviews.length > 3">
+      <!-- <div class="widget-footer" *ngIf="pendingReviews.length > 3">
         <a href="">view more</a>
-      </div>
+      </div> -->
     </div>
   </div>
 </body>

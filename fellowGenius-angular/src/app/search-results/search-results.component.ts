@@ -20,7 +20,7 @@ import { FiltersDialogComponent } from './filters-dialog/filters-dialog.componen
 export class SearchResultsComponent implements OnInit {
   searchResults: tutorProfileDetails[] = [];
   filteredArray: tutorProfileDetails[] = [];
-  allFiltersApplied: filtersApplied = new filtersApplied();
+  allFiltersApplied: filtersApplied;
   subjects: string[];
   // arrayToShow: tutorProfileDetails[];
 
@@ -49,6 +49,7 @@ export class SearchResultsComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {
     this.getScreenSize();
+    this.allFiltersApplied = new filtersApplied();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -179,7 +180,31 @@ export class SearchResultsComponent implements OnInit {
   onSignUp() {
     this.router.navigate(['signUp']);
   }
-
+  checkFilters() {
+    if (this.allFiltersApplied) {
+      if (this.allFiltersApplied.subjects) {
+        if (this.allFiltersApplied.subjects.length != 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      if (this.allFiltersApplied.price) {
+        if (this.allFiltersApplied.price.length != 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      if (this.allFiltersApplied.ratings) {
+        if (this.allFiltersApplied.ratings.length != 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+  }
   showFilters() {
     const dialogConfig = new MatDialogConfig();
 
@@ -195,24 +220,23 @@ export class SearchResultsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((data) => {
       if (data.operation == 'apply') {
-        if (data.subjectFiltersApplied) {
-          for (let subject of data.subjectFiltersApplied) {
+        if (data.subjectFilters != null) {
+          for (let subject of data.subjectFilters) {
             if (!this.subjectFiltersApplied.includes(subject)) {
               this.subjectFiltersApplied.push(subject);
             }
           }
         }
 
-        if (data.priceFiltersApplied) {
+        if (data.priceFiltersApplied != null) {
           for (let price of data.priceFiltersApplied) {
             if (!this.priceFiltersApplied.includes(price)) {
               this.priceFiltersApplied.push(price);
             }
           }
         }
-
-        if (data.ratingFilterApplied) {
-          for (let rating of data.ratingFiltersApplied) {
+        if (data.ratingFilterApplied != null) {
+          for (let rating of data.ratingFilterApplied) {
             if (!this.ratingFilterApplied.includes(rating)) {
               this.ratingFilterApplied.push(rating);
             }
