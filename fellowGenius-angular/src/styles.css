@@ -444,11 +444,11 @@ textarea:focus {
 
 .how-it-works-container .separtor-how-it-works {
     position: absolute;
-    top: 160px;
+    top: 180px;
     left: 18%;
     background: #e30084;
     height: 3px;
-    width: 65%;
+    width: 63%;
 }
 
 .how-it-works-container .separtor-how-it-works .dot {
@@ -467,7 +467,7 @@ textarea:focus {
 
 .how-it-works-container .separtor-how-it-works .center-dot {
     position: absolute;
-    left: 50%;
+    left: 49%;
     top: -3px;
 }
 
@@ -490,12 +490,13 @@ textarea:focus {
     user-select: none;
     text-align: center;
     position: relative;
-    padding: 15px 35px;
+    padding: 40px;
     -webkit-transition: 0.4s ease-in-out;
     transition: 0.4s ease-in-out;
     width: 33%;
     display: inline-block;
     float: left;
+    border: 1px solid red;
 }
 
 .how-it-works-container .process .process__item .process__number {
@@ -509,7 +510,7 @@ textarea:focus {
     height: 60px;
     border-radius: 100%;
     position: relative;
-    left: 48%;
+    left: 40%;
 }
 
 .how-it-works-container .process .process__item .process__title {
@@ -518,7 +519,8 @@ textarea:focus {
     color: #761175;
     margin-top: 50px;
     text-transform: uppercase;
-    margin-left: 50px;
+    width: 100%;
+    text-align: center;
 }
 
 .how-it-works-container .process .process__item .process__subtitle {
@@ -528,6 +530,7 @@ textarea:focus {
     margin-top: 10px;
     line-height: 1.5;
     text-align: center;
+    width: 100%;
 }
 
 .how-it-works-container .process .process__item:hover .process__number {
