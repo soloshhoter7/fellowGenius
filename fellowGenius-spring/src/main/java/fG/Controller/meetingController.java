@@ -192,8 +192,6 @@ public class meetingController {
 	@ResponseBody
 	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, String tid) {
 		Integer tutid = Integer.valueOf(tid);
-		System.out.println("----------------------------------------------------------------------");
-		System.out.println(meetingId + ":" + rating + ":" + reviewText +":" + tid);
 		return meetingService.saveTutorRatings(meetingId, rating, reviewText, tutid);
 	}
 	

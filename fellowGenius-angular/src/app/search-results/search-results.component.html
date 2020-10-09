@@ -1,63 +1,53 @@
 <app-nav-bar></app-nav-bar>
 <app-advertisement-banner></app-advertisement-banner>
 <div class="content-container">
-  <div class="row" style="margin: 0">
-    <div class="col">
-      <div class="breadcrumb-container">
-        <ol class="breadcrumb">
-          <li><a href="#">Home</a></li>
+    <div class="row" style="margin: 0">
+        <div class="col">
+            <div class="breadcrumb-container">
+                <ol class="breadcrumb">
+                    <li><a href="#">Home</a></li>
 
-          <li class="active">Data</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-
-  <div class="fliter-tag-container">
-    <div class="row" style="margin: 0; width: 100%">
-      <div class="col-md-8">
-        <div class="filters-content">
-          <ul class="nav nav-pills">
-            <li class="nav-item" *ngFor="let filters of subjectFiltersApplied">
-              <a class="nav-link">
-                <span [innerHTML]="filters"></span>
-                <span class="material-icons" (click)="deleteSubject(filters)">
-                  close
-                </span></a
-              >
-            </li>
-            <li class="nav-item" *ngFor="let filters of priceFiltersApplied">
-              <a class="nav-link">
-                <span [innerHTML]="filters"></span>
-                <span class="material-icons" (click)="deletePrice(filters)">
-                  close
-                </span></a
-              >
-            </li>
-            <li class="nav-item" *ngFor="let filters of ratingFilterApplied">
-              <a class="nav-link">
-                <span>{{ filters }}&nbsp; & up</span>
-                <span class="material-icons" (click)="deleteRating(filters)">
-                  close
-                </span></a
-              >
-            </li>
-          </ul>
+                    <li class="active">Data</li>
+                </ol>
+            </div>
         </div>
-        <!-- <button
-          *ngIf="showMobileFilterButton"
-          class="btn btn-primary"
-          type="button"
-          style="margin: 10px; z-index: 5"
-          (click)="showFilters()"
-        >
+    </div>
+
+    <div class="fliter-tag-container">
+        <div class="row" style="margin: 0; width: 100%">
+            <div class="col-md-8">
+                <div class="filters-content">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item" *ngFor="let filters of subjectFiltersApplied">
+                            <a class="nav-link">
+                                <span [innerHTML]="filters"></span>
+                                <span class="material-icons" (click)="deleteSubject(filters)">
+                  close
+                </span></a>
+                        </li>
+                        <li class="nav-item" *ngFor="let filters of priceFiltersApplied">
+                            <a class="nav-link">
+                                <span [innerHTML]="filters"></span>
+                                <span class="material-icons" (click)="deletePrice(filters)">
+                  close
+                </span></a>
+                        </li>
+                        <li class="nav-item" *ngFor="let filters of ratingFilterApplied">
+                            <a class="nav-link">
+                                <span>{{ filters }}&nbsp; & up</span>
+                                <span class="material-icons" (click)="deleteRating(filters)">
+                  close
+                </span></a>
+                        </li>
+                    </ul>
+                </div>
+                <button *ngIf="showMobileFilterButton" class="btn btn-primary" type="button" style="margin: 10px; z-index: 5" (click)="showFilters()">
           Filter
-        </button> -->
-      </div>
-      <div class="col-md-4" style="float: right">
-        <div class="sort-by-container" style="width: 100%">
-          <span
-            ><a href="javascript:;" (click)="clearAllFilters()"
+        </button>
+            </div>
+            <div class="col-md-4" style="float: right">
+                <div class="sort-by-container" style="width: 100%">
+                    <span><a href="javascript:;" (click)="clearAllFilters()"
               >clear filters</a
             ></span
           >
@@ -74,7 +64,7 @@
   <div class="search-result-container rowto">
     <div class="filter-container columnto" [hidden]="showMobileFilterView">
       <div class="filter-category">
-        <span class="filter-category-header" *ngIf="!showMobileFilterView"
+        <span *ngIf="!showMobileFilterView" class="filter-category-header"
           >Subjects</span
         >
         <ul class="filter-category-list">
@@ -88,10 +78,10 @@
                 (change)="searchBySubject($event)"
               />English
               <span class="filter-num">(123)</span>
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                    </label>
+                    </li>
+                    <li>
+                        <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -101,9 +91,9 @@
               />Physics
               <span class="filter-num">(123)</span>
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                    </li>
+                    <li>
+                        <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -113,9 +103,9 @@
               />Chemistry
               <span class="filter-num">(123)</span>
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                    </li>
+                    <li>
+                        <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -125,9 +115,9 @@
               />Mathematics
               <span class="filter-num">(123)</span>
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                    </li>
+                    <li>
+                        <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -137,12 +127,11 @@
               />Science
               <span class="filter-num">(123)</span>
             </label>
-          </li>
-        </ul>
-      </div>
-      <div class="filter-category">
-        <span class="filter-category-header" *ngIf="!showMobileFilterView"
-          >Price</span
+                    </li>
+                    </ul>
+                </div>
+                <div class="filter-category">
+                    <span class="filter-category-header" *ngIf="!showMobileFilterView">Price</span
         >
         <ul class="filter-category-list">
           <li style="width: 50%">
@@ -215,9 +204,9 @@
       </div>
       <div class="filter-category">
         <span class="filter-category-header">Avg. Reviews</span>
-        <ul class="filter-category-list">
-          <li>
-            <label class="filters-label">
+                    <ul class="filter-category-list">
+                        <li>
+                            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -226,9 +215,9 @@
                 (change)="searchByRatings($event)"
               />4 & up
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                        </li>
+                        <li>
+                            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -237,9 +226,9 @@
                 (change)="searchByRatings($event)"
               />3 & up
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                        </li>
+                        <li>
+                            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -248,9 +237,9 @@
                 (change)="searchByRatings($event)"
               />2 & up
             </label>
-          </li>
-          <li>
-            <label class="filters-label">
+                        </li>
+                        <li>
+                            <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
@@ -259,12 +248,12 @@
                 (change)="searchByRatings($event)"
               />1 & up
             </label>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="search-cards-container columnto">
-      <!-- <div *ngIf="searchResults.length == 0" style="
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search-cards-container columnto">
+                <!-- <div *ngIf="searchResults.length == 0" style="
           width: max-content;
           margin: auto;
           padding: 10px;
@@ -277,72 +266,52 @@
                         We can't seem to find any previous experts
                     </h2>
                 </div> -->
-      <ul class="rowto">
-        <!-- <div *ngIf="allFiltersApplied.length == 0"> -->
-        <!-- ....................................................... -->
-        <div
-          *ngIf="
+                <ul class="rowto">
+                    <!-- <div *ngIf="allFiltersApplied.length == 0"> -->
+                    <!-- ....................................................... -->
+                    <div *ngIf="
             allFiltersApplied.price.length == 0 &&
             allFiltersApplied.ratings.length == 0 &&
             allFiltersApplied.subjects.length == 0
-          "
-        >
-          <li class="search-result-card" *ngFor="let result of searchResults">
-            <div
-              class="result-profile-pic"
-              [ngStyle]="{
+          ">
+                        <li class="search-result-card" *ngFor="let result of searchResults">
+                            <div class="result-profile-pic" [ngStyle]="{
                 'background-image': 'url(' + result.profilePictureUrl + ')'
-              }"
-              default="../../assets/images/default-user-image.png"
-            ></div>
-            <div class="result-card-header">
-              <span class="result-card-name" [innerHTML]="result.fullName">
+              }" default="../../assets/images/default-user-image.png"></div>
+                            <div class="result-card-header">
+                                <span class="result-card-name" [innerHTML]="result.fullName">
               </span>
-              <span
-                class="result-card-specalizaiton"
-                [innerHTML]="result.institute"
-              >
+                                <span class="result-card-specalizaiton" [innerHTML]="result.institute">
               </span>
-              <div class="stars-outer">
-                <div class="stars-inner" [style.width.%]="result.rating"></div>
-              </div>
-            </div>
+                                <div class="stars-outer">
+                                    <div class="stars-inner" [style.width.%]="result.rating"></div>
+                                </div>
+                            </div>
 
-            <div class="result-card-content">
-              <div class="numbers-container">
-                <div class="fee_per_attribute">
-                  ₹<span
-                    class="number"
-                    style="display: contents; color: #7d0f7d"
-                    [innerHTML]="result.price1"
-                  ></span>
-                  <span class="info">per hour</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <span class="number" [innerHTML]="result.reviewCount"></span>
-                  <span class="info">REVIEWS</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <span
-                    class="number"
-                    [innerHTML]="result.lessonCompleted"
-                  ></span>
-                  <span class="info">Sessions</span>
-                </div>
-              </div>
+                            <div class="result-card-content">
+                                <div class="numbers-container">
+                                    <div class="fee_per_attribute">
+                                        ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span>
+                                        <span class="info">per hour</span>
+                                    </div>
+                                    <div class="separtor"></div>
+                                    <div>
+                                        <span class="number" [innerHTML]="result.reviewCount"></span>
+                                        <span class="info">REVIEWS</span>
+                                    </div>
+                                    <div class="separtor"></div>
+                                    <div>
+                                        <span class="number" [innerHTML]="result.lessonCompleted"></span>
+                                        <span class="info">Sessions</span>
+                                    </div>
+                                </div>
 
-              <div
-                class="result-card-descirption"
-                [innerHTML]="result.description | shorten"
-              ></div>
+                                <div class="result-card-descirption" [innerHTML]="result.description | shorten"></div>
 
-              <div class="result-card-tutorsfor">
-                <b> Tutors For</b>
-                <div class="tutor-sub">
-                  <span *ngFor="let skills of result.areaOfExpertise"
-                    >{{ skills.area }}, &nbsp;</span
+                                <div class="result-card-tutorsfor">
+                                    <b> Tutors For</b>
+                                    <div class="tutor-sub">
+                                        <span *ngFor="let skills of result.areaOfExpertise">{{ skills.area }}, &nbsp;</span
                   >
                 </div>
               </div>
@@ -372,56 +341,42 @@
               <span class="result-card-name" [innerHTML]="result.fullName">
                 <!-- Alex Chemoricle -->
               </span>
-              <span
-                class="result-card-specalizaiton"
-                [innerHTML]="result.institute"
-              >
+                                        <span class="result-card-specalizaiton" [innerHTML]="result.institute">
                 <!-- Exterior University - politics [bachelors] -->
               </span>
-              <div class="stars-outer">
-                <div class="stars-inner" [style.width.%]="result.rating"></div>
-                <!-- <div class="stars-inner" style="width: 90%;"></div> -->
-              </div>
-            </div>
+                                        <div class="stars-outer">
+                                            <div class="stars-inner" [style.width.%]="result.rating"></div>
+                                            <!-- <div class="stars-inner" style="width: 90%;"></div> -->
+                                        </div>
+                                    </div>
 
-            <div class="result-card-content">
-              <div class="numbers-container">
-                <div class="fee_per_attribute">
-                  <!-- ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span> -->
-                  ₹<span
-                    class="number"
-                    style="display: contents; color: #7d0f7d"
-                    [innerHTML]="result.price1"
-                  ></span>
-                  <span class="info">per hour</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <span class="number" [innerHTML]="result.reviewCount"></span>
-                  <span class="info">REVIEWS</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <span
-                    class="number"
-                    [innerHTML]="result.lessonCompleted"
-                  ></span>
-                  <span class="info">Sessions</span>
-                </div>
-              </div>
+                                    <div class="result-card-content">
+                                        <div class="numbers-container">
+                                            <div class="fee_per_attribute">
+                                                <!-- ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span> -->
+                                                ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span>
+                                                <span class="info">per hour</span>
+                                            </div>
+                                            <div class="separtor"></div>
+                                            <div>
+                                                <span class="number" [innerHTML]="result.reviewCount"></span>
+                                                <span class="info">REVIEWS</span>
+                                            </div>
+                                            <div class="separtor"></div>
+                                            <div>
+                                                <span class="number" [innerHTML]="result.lessonCompleted"></span>
+                                                <span class="info">Sessions</span>
+                                            </div>
+                                        </div>
 
-              <div
-                class="result-card-descirption"
-                [innerHTML]="result.description | shorten"
-              >
-                <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
-              </div>
+                                        <div class="result-card-descirption" [innerHTML]="result.description | shorten">
+                                            <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
+                                        </div>
 
-              <div class="result-card-tutorsfor">
-                <b> Tutors For</b>
-                <div class="tutor-sub">
-                  <span *ngFor="let skills of result.areaOfExpertise"
-                    >{{ skills.area }}, &nbsp;</span
+                                        <div class="result-card-tutorsfor">
+                                            <b> Tutors For</b>
+                                            <div class="tutor-sub">
+                                                <span *ngFor="let skills of result.areaOfExpertise">{{ skills.area }}, &nbsp;</span
                   >
                 </div>
               </div>
@@ -436,19 +391,22 @@
             </div>
           </li>
         </div>
-        <div *ngIf="allFiltersApplied">
-          <div
-            *ngIf="checkFilters() && filteredArray.length == 0"
-            class="no-recordsfound"
-            style="float: left"
-          >
-            <img src="/assets/images/norecordsfound.svg" />
-            <div class="information-container">
-              <span class="noinforheader">We're Sorry</span>
-              <span>
-                We can't seem to find any experts that match your search</span
-              >
-            </div>
+
+        <div
+          *ngIf="
+            (allFiltersApplied.price.length != 0 ||
+              allFiltersApplied.ratings.length != 0 ||
+              allFiltersApplied.subjects.length != 0) &&
+            filteredArray.length == 0
+          "
+          class="no-recordsfound"
+        >
+          <img src="/assets/images/norecordsfound.svg" />
+          <div class="information-container">
+            <span class="noinforheader">We're Sorry</span>
+                                                <span>
+              We can't seem to find any experts that match your search</span
+            >
           </div>
         </div>
       </ul>

@@ -41,11 +41,26 @@ button {
     /* wrap extended text*/
 }
 
-.content-body .filter-container .filter-category-list li label {
+.content-body .filter-container .filter-category-list li input[type="checkbox"] {
+    display: none;
+}
+
+.content-body .filter-container .filter-category-list li input[type="checkbox"]:checked+span {
     margin-bottom: 0px;
     color: #FFFFFF;
     width: auto;
-    background-color: gray;
+    background-color: #e30084;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+}
+
+.content-body .filter-container .filter-category-list li span {
+    margin-bottom: 0px;
+    color: #000000;
+    width: auto;
+    border: 1px solid #e30084;
     padding: 5px;
     border-radius: 5px;
     display: inline-block;

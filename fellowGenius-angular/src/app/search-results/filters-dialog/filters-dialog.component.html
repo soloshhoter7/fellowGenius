@@ -11,11 +11,59 @@
                 <ul class="filter-category-list">
                     <li>
                         <label class="filters-label">
-                 <input type="checkbox" class="filter-input" value="English" [checked]="subjectContains('English')" (change)="searchBySubject($event)" />English
-    <span class="filter-num">(123)</span>
-              </label>
+                 <input type="checkbox" class="filter-input" value="English" [checked]="subjectContains('English')" (change)="searchBySubject($event)" />
+                 <span>English
+    <label class="filter-num">(123)</label></span>
+                        </label>
                     </li>
-
+                    <li>
+                      <label class="filters-label">
+            <input
+              type="checkbox"
+              class="filter-input"
+              value="Physics"
+              [checked]="subjectContains('Physics')"
+              (change)="searchBySubject($event)"
+            />Physics
+            <span class="filter-num">(123)</span>
+          </label>
+                  </li>
+                  <li>
+                      <label class="filters-label">
+            <input
+              type="checkbox"
+              class="filter-input"
+              value="Chemistry"
+              [checked]="subjectContains('Chemistry')"
+              (change)="searchBySubject($event)"
+            />Chemistry
+            <span class="filter-num">(123)</span>
+          </label>
+                  </li>
+                  <li>
+                      <label class="filters-label">
+            <input
+              type="checkbox"
+              class="filter-input"
+              value="Mathematics"
+              [checked]="subjectContains('Mathematics')"
+              (change)="searchBySubject($event)"
+            />Mathematics
+            <span class="filter-num">(123)</span>
+          </label>
+                  </li>
+                  <li>
+                      <label class="filters-label">
+            <input
+              type="checkbox"
+              class="filter-input"
+              value="Science"
+              [checked]="subjectContains('Science')"
+              (change)="searchBySubject($event)"
+            />Science
+            <span class="filter-num">(123)</span>
+          </label>
+                  </li>
                 </ul>
             </div>
             <div class="filter-category">
@@ -29,7 +77,7 @@
                   value="100-199"
                   [checked]="priceContains('100-199')"
                   (change)="searchByPrice($event)"
-                />100-199
+                /><span>100-199</span>
               </label>
                     </li>
                     <li>
@@ -40,7 +88,7 @@
                   value="200-399"
                   [checked]="priceContains('200-399')"
                   (change)="searchByPrice($event)"
-                />200-399
+                /><span>200-399</span>
               </label>
                     </li>
                     <li>
@@ -51,7 +99,7 @@
                   value="400-699"
                   [checked]="priceContains('400-699')"
                   (change)="searchByPrice($event)"
-                />400-699
+                /><span>400-699</span>
               </label>
                     </li>
                     <li>
@@ -62,7 +110,7 @@
                   value="700-999"
                   [checked]="priceContains('700-999')"
                   (change)="searchByPrice($event)"
-                />700-999
+                /><span>700-999</span>
               </label>
                     </li>
                     <li>
@@ -73,7 +121,7 @@
                   value="1000-1499"
                   [checked]="priceContains('1000-1499')"
                   (change)="searchByPrice($event)"
-                />1000-1499
+                /><span>1000-1499</span>
               </label>
                     </li>
                     <li>
@@ -84,7 +132,7 @@
                   value="1500-10000"
                   [checked]="priceContains('1500-10000')"
                   (change)="searchByPrice($event)"
-                />1500+
+                /> <span>1500+</span>
               </label>
                     </li>
                 </ul>
@@ -100,7 +148,7 @@
                   value="4"
                   [checked]="ratingContains('4')"
                   (change)="searchByRatings($event)"
-                />4 & up
+                /><span>M4 & up</span>
               </label>
                     </li>
                     <li>
@@ -111,7 +159,7 @@
                   value="3"
                   [checked]="ratingContains('3')"
                   (change)="searchByRatings($event)"
-                />3 & up
+                /><span>3 & up</span>
               </label>
                     </li>
                     <li>
@@ -122,7 +170,7 @@
                   value="2"
                   [checked]="ratingContains('2')"
                   (change)="searchByRatings($event)"
-                />2 & up
+                /><span>2 & up</span>
               </label>
                     </li>
                     <li>
@@ -133,7 +181,7 @@
                   value="1"
                   [checked]="ratingContains('1')"
                   (change)="searchByRatings($event)"
-                />1 & up
+                /><span>1 & up</span>
               </label>
                     </li>
                 </ul>

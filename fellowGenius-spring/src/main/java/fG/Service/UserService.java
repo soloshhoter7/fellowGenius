@@ -838,7 +838,7 @@ public class UserService implements UserDetailsService {
 		Users user = repUsers.emailExist(email);
 		if (user != null) {
 			String token = user.getUserId().toString();
-			String directUrl = "http://localhost:4200/#/resetPassword?token="+token;
+			String directUrl = "https://fellowgenius.com/#/resetPassword?token="+token;
 			System.out.println(directUrl);
 			String to = email;
 			String from = "fellowGenius.tech@gmail.com";

@@ -447,12 +447,12 @@ textarea:focus {
 }
 
 .how-it-works-container .separtor-how-it-works {
-  position: absolute;
-  top: 160px;
-  left: 18%;
-  background: #e30084;
-  height: 3px;
-  width: 65%;
+    position: absolute;
+    top: 180px;
+    left: 18%;
+    background: #e30084;
+    height: 3px;
+    width: 63%;
 }
 
 .how-it-works-container .separtor-how-it-works .dot {
@@ -470,9 +470,9 @@ textarea:focus {
 }
 
 .how-it-works-container .separtor-how-it-works .center-dot {
-  position: absolute;
-  left: 50%;
-  top: -3px;
+    position: absolute;
+    left: 49%;
+    top: -3px;
 }
 
 .how-it-works-container .separtor-how-it-works .right-dot {
@@ -488,50 +488,52 @@ textarea:focus {
 }
 
 .how-it-works-container .process .process__item {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: center;
-  position: relative;
-  padding: 15px 35px;
-  -webkit-transition: 0.4s ease-in-out;
-  transition: 0.4s ease-in-out;
-  width: 33%;
-  display: inline-block;
-  float: left;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+    position: relative;
+    padding: 40px;
+    -webkit-transition: 0.4s ease-in-out;
+    transition: 0.4s ease-in-out;
+    width: 33%;
+    display: inline-block;
+    float: left;
 }
 
 .how-it-works-container .process .process__item .process__number {
-  font-size: 40px;
-  display: block;
-  color: #ffffff;
-  background-color: #e30084;
-  -webkit-transition: 0.4s ease-in-out;
-  transition: 0.4s ease-in-out;
-  width: 60px;
-  height: 60px;
-  border-radius: 100%;
-  position: relative;
-  left: 48%;
+    font-size: 40px;
+    display: block;
+    color: #ffffff;
+    background-color: #e30084;
+    -webkit-transition: 0.4s ease-in-out;
+    transition: 0.4s ease-in-out;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    position: relative;
+    left: 40%;
 }
 
 .how-it-works-container .process .process__item .process__title {
-  display: block;
-  font-size: 25px;
-  color: #761175;
-  margin-top: 50px;
-  text-transform: uppercase;
-  margin-left: 50px;
+    display: block;
+    font-size: 25px;
+    color: #761175;
+    margin-top: 50px;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
 }
 
 .how-it-works-container .process .process__item .process__subtitle {
-  display: block;
-  font-size: 16px;
-  color: #8c8c8c;
-  margin-top: 10px;
-  line-height: 1.5;
-  text-align: center;
+    display: block;
+    font-size: 16px;
+    color: #8c8c8c;
+    margin-top: 10px;
+    line-height: 1.5;
+    text-align: center;
+    width: 100%;
 }
 
 .how-it-works-container .process .process__item:hover .process__number {
