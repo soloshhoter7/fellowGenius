@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileService } from 'src/app/service/profile.service';
 import { DeletePopupComponent } from './delete-popup/delete-popup.component';
-import { StarRatingComponent } from 'ng-starrating';
+//import { StarRatingComponent } from 'ng-starrating';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
