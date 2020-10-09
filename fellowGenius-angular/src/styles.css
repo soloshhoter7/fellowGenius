@@ -496,7 +496,6 @@ textarea:focus {
     width: 33%;
     display: inline-block;
     float: left;
-    border: 1px solid red;
 }
 
 .how-it-works-container .process .process__item .process__number {
