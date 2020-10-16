@@ -130,7 +130,9 @@
     width: 100% !important;
   }
   .work-in-progress {
-    width: 300px !important;
+    width: 300px!important;
+    height: 240px !important;
+    margin-top: 80px!important;
   }
   .work-in-progress img,
   .information-container {

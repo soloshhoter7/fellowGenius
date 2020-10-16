@@ -7,7 +7,7 @@
                 <ol class="breadcrumb">
                     <li><a href="#">Home</a></li>
 
-                    <li class="active">Data</li>
+                    <li class="active" [innerHtml]="selectedSubject"></li>
                 </ol>
             </div>
         </div>
@@ -41,9 +41,9 @@
                         </li>
                     </ul>
                 </div>
-                <button *ngIf="showMobileFilterButton" class="btn btn-primary" type="button" style="margin: 10px; z-index: 5" (click)="showFilters()">
+                <!-- <button *ngIf="showMobileFilterButton" class="btn btn-primary" type="button" style="margin: 10px; z-index: 5" (click)="showFilters()">
           Filter
-        </button>
+        </button> -->
             </div>
             <div class="col-md-4" style="float: right">
                 <div class="sort-by-container" style="width: 100%">
@@ -394,9 +394,7 @@
 
         <div
           *ngIf="
-            (allFiltersApplied.price.length != 0 ||
-              allFiltersApplied.ratings.length != 0 ||
-              allFiltersApplied.subjects.length != 0) &&
+            checkFilters() &&
             filteredArray.length == 0
           "
           class="no-recordsfound"

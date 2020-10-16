@@ -300,8 +300,9 @@ export class HomeComponent implements OnInit {
   displaySelectedSubjects() {
     if (this.selectedSubject) {
       this.loginService.setLoginType(this.loginType);
-
-      this.router.navigate(['searchResults']);
+      this.router.navigate(['searchResults'], {
+        queryParams: { subject: this.selectedSubject },
+      });
     }
   }
   preventBackButton() {

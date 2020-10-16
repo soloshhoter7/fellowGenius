@@ -19,14 +19,14 @@ export class BasicAuthHttpInterceptorService implements HttpInterceptor {
     // 'https://backend.fellowgenius.com/authenticate',
     // 'https://backend.fellowgenius.com/fellowgenius/fetchTutorList',
     // 'http://localhost:8080/fellowGenius/meeting/sendEmail',
-    'http://localhost:8080/fellowGenius/registerStudent',
-    'http://localhost:8080/fellowGenius/registerTutor',
-    'http://localhost:8080/fellowGenius/registerUser',
-    'http://localhost:8080/fellowGenius/registerSocialLogin',
-    'http://localhost:8080/authenticateStudent',
-    'http://localhost:8080/authenticateTutor',
-    'http://localhost:8080/authenticate',
-    'http://localhost:8080/fellowgenius/fetchTutorList',
+    'http://localhost:5000/fellowGenius/registerStudent',
+    'http://localhost:5000/fellowGenius/registerTutor',
+    'http://localhost:5000/fellowGenius/registerUser',
+    'http://localhost:5000/fellowGenius/registerSocialLogin',
+    'http://localhost:5000/authenticateStudent',
+    'http://localhost:5000/authenticateTutor',
+    'http://localhost:5000/authenticate',
+    'http://localhost:5000/fellowgenius/fetchTutorList',
   ];
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     var token = this.cookieService.get('token');

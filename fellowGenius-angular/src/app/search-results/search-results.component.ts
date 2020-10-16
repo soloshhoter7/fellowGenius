@@ -22,6 +22,7 @@ export class SearchResultsComponent implements OnInit {
   filteredArray: tutorProfileDetails[] = [];
   allFiltersApplied: filtersApplied;
   subjects: string[];
+  selectedSubject;
   // arrayToShow: tutorProfileDetails[];
 
   subjectFiltersApplied = [];
@@ -46,7 +47,7 @@ export class SearchResultsComponent implements OnInit {
     private loginService: LoginDetailsService,
     private profileService: ProfileService,
     private matDialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.getScreenSize();
     this.allFiltersApplied = new filtersApplied();
@@ -66,6 +67,9 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.selectedSubject = params['subject'];
+    });
     if (window.screen.width <= 500) {
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
@@ -181,28 +185,40 @@ export class SearchResultsComponent implements OnInit {
     this.router.navigate(['signUp']);
   }
   checkFilters() {
+    var subjectFiltersLength,ratingFiltersLength,priceFiltersLength;
     if (this.allFiltersApplied) {
       if (this.allFiltersApplied.subjects) {
         if (this.allFiltersApplied.subjects.length != 0) {
-          return true;
+          subjectFiltersLength = true;
         } else {
-          return false;
+          subjectFiltersLength = false;
         }
       }
       if (this.allFiltersApplied.price) {
         if (this.allFiltersApplied.price.length != 0) {
-          return true;
+          priceFiltersLength = true;
         } else {
-          return false;
+          priceFiltersLength = false;
         }
       }
       if (this.allFiltersApplied.ratings) {
         if (this.allFiltersApplied.ratings.length != 0) {
-          return true;
+          ratingFiltersLength = true;
         } else {
-          return false;
+          ratingFiltersLength = false;
         }
       }
+      // console.log(subjectFiltersLength);
+      // console.log(priceFiltersLength);
+      // console.log(ratingFiltersLength);
+      if(subjectFiltersLength||priceFiltersLength||ratingFiltersLength){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      console.log('no filters')
+      return false;
     }
   }
   showFilters() {
@@ -244,6 +260,7 @@ export class SearchResultsComponent implements OnInit {
         }
 
         this.allFiltersApplied = data.allFiltersApplied;
+        // console.log(this.checkFilters())
         this.httpService
           .applyFilters(this.allFiltersApplied)
           .subscribe((res) => {

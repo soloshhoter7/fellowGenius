@@ -54,8 +54,8 @@ export class ResetPasswordComponent implements OnInit {
       //   });
     });
   }
-  toFacadePage() {
-    this.router.navigate(['facade']);
+  toLoginPage() {
+    this.router.navigate(['login']);
   }
 
   onReset(form) {

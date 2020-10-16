@@ -31,13 +31,13 @@ export class HttpService {
       password: password,
     };
     return this.http.post(
-      'http://localhost:8080/fellowGenius/updatePassword',
+      'http://localhost:5000/fellowGenius/updatePassword',
       data
     );
   }
   resetPasswordLink(email: string): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/sendResetLink',
+      'http://localhost:5000/fellowGenius/sendResetLink',
       {
         params: {
           email: email,
@@ -47,7 +47,7 @@ export class HttpService {
   }
   checkUser(email: string): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/userExists',
+      'http://localhost:5000/fellowGenius/userExists',
       {
         params: {
           email: email,
@@ -60,7 +60,7 @@ export class HttpService {
     filtersApplied: filtersApplied
   ): Observable<tutorProfileDetails[]> {
     return this.http.post<tutorProfileDetails[]>(
-      'http://localhost:8080/fellowGenius/filtersApplied',
+      'http://localhost:5000/fellowGenius/filtersApplied',
       filtersApplied
     );
   }
@@ -68,7 +68,7 @@ export class HttpService {
   // fetch pending reviewList at student dashboard
   fetchPendingReviewsList(studentid: number): Observable<bookingDetails[]> {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/fetchPendingReviewsList',
+      'http://localhost:5000/fellowGenius/meeting/fetchPendingReviewsList',
       {
         params: {
           sid: studentid.toString(),
@@ -80,7 +80,7 @@ export class HttpService {
   // fetch expert recent reviews
   fetchExpertRecentReviews(tid: number): Observable<bookingDetails[]> {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/expertRecentReviews',
+      'http://localhost:5000/fellowGenius/meeting/expertRecentReviews',
       {
         params: {
           tid: tid.toString(),
@@ -97,7 +97,7 @@ export class HttpService {
     tid: number
   ): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/meeting/saveTutorRatings',
+      'http://localhost:5000/fellowGenius/meeting/saveTutorRatings',
       {
         params: {
           meetingId: meetingId,
@@ -112,7 +112,7 @@ export class HttpService {
   // for saving student profile details
   registerUser(registrationModel: registrationModel): Observable<Object> {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/registerUser',
+      'http://localhost:5000/fellowGenius/registerUser',
       registrationModel
     );
   }
@@ -120,7 +120,7 @@ export class HttpService {
   //verifyEmail
   verifyEmail(email: string): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/meeting/sendEmail',
+      'http://localhost:5000/fellowGenius/meeting/sendEmail',
       {
         params: {
           email: email,
@@ -132,14 +132,14 @@ export class HttpService {
   //UPDATED
   updateStudentProfile(studentModel: StudentProfileModel): Observable<Object> {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/updateStudentProfile',
+      'http://localhost:5000/fellowGenius/updateStudentProfile',
       studentModel
     );
   }
 
   // for checking student login
   checkLogin(loginModel: loginModel): Observable<Object> {
-    return this.http.post('http://localhost:8080/authenticate', {
+    return this.http.post('http://localhost:5000/authenticate', {
       email: loginModel.email,
       password: loginModel.password,
     });
@@ -148,7 +148,7 @@ export class HttpService {
   // for	getting	student	details	after login
   getStudentDetails(userId): Observable<StudentProfileModel> {
     return this.http.get<StudentProfileModel>(
-      'http://localhost:8080/fellowGenius/getStudentDetails',
+      'http://localhost:5000/fellowGenius/getStudentDetails',
       {
         params: {
           userId: userId.toString(),
@@ -160,7 +160,7 @@ export class HttpService {
   // for saving tutor profile
   saveTutorProfile(tutorModel: tutorProfile): Observable<Object> {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/registerTutor',
+      'http://localhost:5000/fellowGenius/registerTutor',
       tutorModel
     );
   }
@@ -168,7 +168,7 @@ export class HttpService {
   //for updating tutor profile after completing basic info form
   updateTutorProfile(basicInfo: tutorProfile) {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/updateTutorBasicInfo',
+      'http://localhost:5000/fellowGenius/updateTutorBasicInfo',
       basicInfo
     );
   }
@@ -177,7 +177,7 @@ export class HttpService {
   //UPDATED
   fetchAllLinkedTutors(sid: Number): Observable<tutorProfileDetails[]> {
     return this.http.get<tutorProfileDetails[]>(
-      'http://localhost:8080/fellowGenius/fetchAllLinkedTutors',
+      'http://localhost:5000/fellowGenius/fetchAllLinkedTutors',
       {
         params: {
           userId: sid.toString(),
@@ -188,14 +188,14 @@ export class HttpService {
   //for updating tutor profile details after completing tutor profile details form
   updateTutorProfileDetails(tutorProfileDetails: tutorProfileDetails) {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/updateTutor',
+      'http://localhost:5000/fellowGenius/updateTutor',
       tutorProfileDetails
     );
   }
 
   updateTutorVerification(tutorVerification: TutorVerification) {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/updateTutorVerification',
+      'http://localhost:5000/fellowGenius/updateTutorVerification',
       tutorVerification
     );
   }
@@ -203,7 +203,7 @@ export class HttpService {
   // for checking tutor login
   checkTutorLogin(tutorLoginModel: tutorLoginModel): Observable<Object> {
     return this.http.post(
-      'http://localhost:8080/authenticateTutor',
+      'http://localhost:5000/authenticateTutor',
       {
         email: tutorLoginModel.email,
         password: tutorLoginModel.password,
@@ -214,7 +214,7 @@ export class HttpService {
   // for getting tutor details after login
   getTutorDetails(userId): Observable<tutorProfile> {
     return this.http.get<tutorProfile>(
-      'http://localhost:8080/fellowGenius/getTutorDetails',
+      'http://localhost:5000/fellowGenius/getTutorDetails',
       {
         params: {
           userId: userId.toString(),
@@ -226,14 +226,14 @@ export class HttpService {
   //fetch all the tutors for find tutor page
   getTutorList() {
     return this.http.get<tutorProfileDetails[]>(
-      'http://localhost:8080/fellowGenius/fetchTutorList'
+      'http://localhost:5000/fellowGenius/fetchTutorList'
     );
   }
 
   //fetch Top Tutors List
   fetchTopTutors(subject: string) {
     return this.http.get<tutorProfileDetails[]>(
-      'http://localhost:8080/fellowGenius/fetchTopTutorList',
+      'http://localhost:5000/fellowGenius/fetchTopTutorList',
       {
         params: {
           subject: subject,
@@ -245,7 +245,7 @@ export class HttpService {
   //for updating booking status
   updateBookingStatus(bid: number, approvalStatus: string): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/meeting/updateBookingStatus',
+      'http://localhost:5000/fellowGenius/meeting/updateBookingStatus',
       {
         params: {
           bid: bid.toString(),
@@ -257,7 +257,7 @@ export class HttpService {
 
   getTutorProfileDetails(tid: number): Observable<tutorProfileDetails> {
     return this.http.get<tutorProfileDetails>(
-      'http://localhost:8080/fellowGenius/getTutorProfileDetails',
+      'http://localhost:5000/fellowGenius/getTutorProfileDetails',
       {
         params: {
           tid: tid.toString(),
@@ -269,7 +269,7 @@ export class HttpService {
   //for saving  booking Details
   saveBooking(bookingModel: bookingDetails): Observable<Object> {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/meeting/saveMeeting',
+      'http://localhost:5000/fellowGenius/meeting/saveMeeting',
       bookingModel
     );
   }
@@ -277,7 +277,7 @@ export class HttpService {
   //get Tutor Meetings
   getTutorBookings(tid: number): Observable<bookingDetails[]> {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/findTutorBookings',
+      'http://localhost:5000/fellowGenius/meeting/findTutorBookings',
       {
         params: {
           tid: tid.toString(),
@@ -289,7 +289,7 @@ export class HttpService {
   // for fetching student booking list student
   findStudentBookings(sid: number) {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/findStudentBookings',
+      'http://localhost:5000/fellowGenius/meeting/findStudentBookings',
       {
         params: {
           studentid: sid.toString(),
@@ -301,7 +301,7 @@ export class HttpService {
   //delete My Booking
   deleteMyBooking(bid: number) {
     return this.http.get<bookingDetails>(
-      'http://localhost:8080/fellowGenius/meeting/deleteMyBooking',
+      'http://localhost:5000/fellowGenius/meeting/deleteMyBooking',
       {
         params: {
           bid: bid.toString(),
@@ -313,7 +313,7 @@ export class HttpService {
   //for fetching  approved meetings student
   fetchApprovedMeetings(sid: number) {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/fetchApprovedList',
+      'http://localhost:5000/fellowGenius/meeting/fetchApprovedList',
       {
         params: {
           studentid: sid.toString(),
@@ -325,7 +325,7 @@ export class HttpService {
   //for fetching approved meetings tutor
   fetchApprovedMeetingsTutor(tid: number) {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/fetchApprovedListTutor',
+      'http://localhost:5000/fellowGenius/meeting/fetchApprovedListTutor',
       {
         params: {
           tutorId: tid.toString(),
@@ -337,7 +337,7 @@ export class HttpService {
   //for fetching live meetings tutor
   fetchLiveMeetingsTutor(tid: number) {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/fetchLiveMeetingListTutor',
+      'http://localhost:5000/fellowGenius/meeting/fetchLiveMeetingListTutor',
       {
         params: {
           tutorId: tid.toString(),
@@ -349,7 +349,7 @@ export class HttpService {
   //for fetching live meetings student
   fetchLiveMeetingsStudent(sid: number) {
     return this.http.get<bookingDetails[]>(
-      'http://localhost:8080/fellowGenius/meeting/fetchLiveMeetingListStudent',
+      'http://localhost:5000/fellowGenius/meeting/fetchLiveMeetingListStudent',
       {
         params: {
           sid: sid.toString(),
@@ -361,7 +361,7 @@ export class HttpService {
   //for saving using social login details
   saveSocialLogin(socialLogin: socialLogin): Observable<object> {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/registerSocialLogin',
+      'http://localhost:5000/fellowGenius/registerSocialLogin',
       socialLogin
     );
   }
@@ -369,7 +369,7 @@ export class HttpService {
   //for login using social login details
   checkSocialLogin(email: string): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/ckeckSocialLogin',
+      'http://localhost:5000/fellowGenius/ckeckSocialLogin',
       {
         params: {
           email: email,
@@ -381,7 +381,7 @@ export class HttpService {
   //for editing tutorProfile details
   editTutorProfileDetails(updateTutorProfileDetails: tutorProfileDetails) {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/editTutorProfileDetails',
+      'http://localhost:5000/fellowGenius/editTutorProfileDetails',
       updateTutorProfileDetails
     );
   }
@@ -389,7 +389,7 @@ export class HttpService {
   //for editing name, email, contact, dob, addressline1, addressline2
   editBasicInfo(updatedBasicInfo: tutorProfile): Observable<Object> {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/editTutorBasicInfo',
+      'http://localhost:5000/fellowGenius/editTutorBasicInfo',
       updatedBasicInfo
     );
   }
@@ -397,7 +397,7 @@ export class HttpService {
   //for editing city, state, country
   editBasicProfile(updateBasicProfile: tutorProfile) {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/editTutorBasicInfo',
+      'http://localhost:5000/fellowGenius/editTutorBasicInfo',
       updateBasicProfile
     );
   }
@@ -405,7 +405,7 @@ export class HttpService {
   //save ScheduleData
   saveScheduleData(tutorAvailableSchedule: tutorAvailabilitySchedule) {
     return this.http.post(
-      'http://localhost:8080/fellowGenius/meeting/saveSchedule',
+      'http://localhost:5000/fellowGenius/meeting/saveSchedule',
       tutorAvailableSchedule
     );
   }
@@ -413,7 +413,7 @@ export class HttpService {
   //getting tutor availabilitySchedule after login
   getScheduleData(tid: number): Observable<tutorAvailabilitySchedule> {
     return this.http.get<tutorAvailabilitySchedule>(
-      'http://localhost:8080/fellowGenius/meeting/getSchedule',
+      'http://localhost:5000/fellowGenius/meeting/getSchedule',
       {
         params: {
           tid: tid.toString(),
@@ -425,7 +425,7 @@ export class HttpService {
   // getting tutor avqailable time slots
   getTutorTimeAvailabilityTimeArray(tid: number) {
     return this.http.get<ScheduleTime[]>(
-      'http://localhost:8080/fellowGenius/meeting/getTutorTimeArray',
+      'http://localhost:5000/fellowGenius/meeting/getTutorTimeArray',
       {
         params: {
           tid: tid.toString(),
@@ -437,7 +437,7 @@ export class HttpService {
   //for updating availability status
   changeAvailabilityStatus(tid: number, isAvailable: string) {
     return this.http.get<tutorAvailabilitySchedule>(
-      'http://localhost:8080/fellowGenius/changeAvailabilityStatus',
+      'http://localhost:5000/fellowGenius/changeAvailabilityStatus',
       {
         params: {
           tid: tid.toString(),
@@ -450,7 +450,7 @@ export class HttpService {
   // getting student meetings
   getStudentSchedule(sid: number): Observable<scheduleData[]> {
     return this.http.get<scheduleData[]>(
-      'http://localhost:8080/fellowGenius/meeting/getStudentSchedule',
+      'http://localhost:5000/fellowGenius/meeting/getStudentSchedule',
       {
         params: {
           sid: sid.toString(),
@@ -461,7 +461,7 @@ export class HttpService {
 
   getTutorIsAvailable(tid: number): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/meeting/getTutorIsAvailable',
+      'http://localhost:5000/fellowGenius/meeting/getTutorIsAvailable',
       {
         params: {
           tid: tid.toString(),
@@ -472,7 +472,7 @@ export class HttpService {
 
   isBookingValid(booking: bookingDetails): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/meeting/isBookingValid',
+      'http://localhost:5000/fellowGenius/meeting/isBookingValid',
       {
         params: {
           sh: booking.startTimeHour.toString(),
@@ -488,7 +488,7 @@ export class HttpService {
 
   subtractArea(userId, role, subject): Observable<Object> {
     return this.http.get(
-      'http://localhost:8080/fellowGenius/subtractArea',
+      'http://localhost:5000/fellowGenius/subtractArea',
       {
         params: {
           userId: userId.toString(),
@@ -501,7 +501,7 @@ export class HttpService {
 
   fetchTutorProfileDetails(userId): Observable<tutorProfileDetails> {
     return this.http.get<tutorProfileDetails>(
-      'http://localhost:8080/fellowGenius/fetchTutorProfileDetails',
+      'http://localhost:5000/fellowGenius/fetchTutorProfileDetails',
       {
         params: {
           tid: userId.toString(),
