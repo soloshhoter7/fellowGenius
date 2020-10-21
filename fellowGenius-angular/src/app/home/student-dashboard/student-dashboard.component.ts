@@ -81,7 +81,7 @@ export class StudentDashboardComponent implements OnInit {
     this.sid = this.studentService.getStudentProfileDetails().sid;
     if (this.sid) {
       this.fetchPendingReviewsList();
-      this.fetchTutorList();
+      // this.fetchTutorList();
       this.findStudentPendingBookings();
       this.fetchApprovedMeetings();
       this.fetchLiveMeetings();
@@ -385,12 +385,12 @@ export class StudentDashboardComponent implements OnInit {
     }
   }
   // -------------------------------------------------------------------------------------------------------------------------------------------------
-  fetchTutorList() {
-    this.httpService.getTutorList().subscribe((req) => {
-      this.filterSearch = req;
-      this.tutorService.tutorList = req;
-    });
-  }
+  // fetchTutorList() {
+  //   this.httpService.getTutorList().subscribe((req) => {
+  //     this.filterSearch = req;
+  //     this.tutorService.tutorList = req;
+  //   });
+  // }
   onJoin(booking: bookingDetails) {
     this.joinMeeting.role = 'student';
     this.joinMeeting.roomId = 123;
@@ -419,7 +419,7 @@ export class StudentDashboardComponent implements OnInit {
     setTimeout(() => {
       this.sid = this.studentService.getStudentProfileDetails().sid;
       this.fetchPendingReviewsList();
-      this.fetchTutorList();
+      // this.fetchTutorList();
       this.findStudentPendingBookings();
       this.fetchApprovedMeetings();
       this.fetchLiveMeetings();

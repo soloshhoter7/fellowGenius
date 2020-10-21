@@ -36,6 +36,7 @@ export class ExpertProfileComponent implements OnInit {
   teacherProfile = new tutorProfileDetails();
   meetingDetails = new meetingDetails();
   bookingDetails = new bookingDetails();
+  reviewList:bookingDetails[] = [];
   clickedIndex: number;
   startDate: string;
   startTimeString = 'Start Time';
@@ -104,9 +105,10 @@ export class ExpertProfileComponent implements OnInit {
         .subscribe((res) => {
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
+          this.fetchExpertReviews();
         });
     });
-
+   
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
@@ -124,6 +126,14 @@ export class ExpertProfileComponent implements OnInit {
       });
     }
     // this.router.navigate(['home/studentDashboard'])
+  }
+  fetchExpertReviews(){
+    
+    this.httpService.fetchExpertRecentReviews(this.teacherProfile.tid).subscribe((res)=>{
+      this.reviewList = res;
+      console.log(this.reviewList);
+    })
+
   }
 }
 export class dateModel {

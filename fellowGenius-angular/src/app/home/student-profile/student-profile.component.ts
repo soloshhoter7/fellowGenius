@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { StudentProfileModel } from 'src/app/model/studentProfile';
 import { StudentService } from 'src/app/service/student.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -11,6 +11,8 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component';
+import { Router } from '@angular/router';
+import { ɵZoneScheduler } from '@angular/fire';
 
 @Component({
   selector: 'app-student-profile',
@@ -23,7 +25,9 @@ export class StudentProfileComponent implements OnInit {
     private matDialog: MatDialog,
     private snackBar: MatSnackBar,
     private firebaseStorage: AngularFireStorage,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private router:Router,
+    private zone:NgZone
   ) {}
   isLoading3: boolean = false;
   profilePicUploadStatus: boolean;
@@ -135,6 +139,7 @@ export class StudentProfileComponent implements OnInit {
   }
 
   saveStudentProfile(form: NgForm) {
+
     this.studentProfile.contact = form.value.contact;
     this.studentProfile.dateOfBirth = form.value.dob;
     this.studentProfile.fullName = form.value.fullName;
@@ -146,12 +151,20 @@ export class StudentProfileComponent implements OnInit {
         .updateStudentProfile(this.studentProfile)
         .subscribe((res) => {
           this.studentService.setStudentProfileDetails(this.studentProfile);
-          this.snackBar.open(
-            'information saved successfully !',
-            'close',
-            this.config
-          );
-          location.reload();
+        
+          console.log('navigating');
+            this.zone.run(()=>{
+              this.snackBar.open(
+                'information saved successfully !',
+                'close',
+                this.config
+              );
+              setTimeout(()=>{
+                this.router.navigate(['/home/studentDashboard'])   
+              },1000)
+             
+            })
+         
         });
     } else {
     }

@@ -168,7 +168,7 @@
         >
       </li>
 
-      <!-- <li
+      <li
         class="nav-item"
         routerLinkActive="nav-item-active"
         [routerLinkActiveOptions]="{ exact: true }"
@@ -180,7 +180,7 @@
           (click)="onNavigationClick()"
           >Experts</a
         >
-      </li> -->
+      </li>
 
       <li
         class="nav-item"
@@ -311,7 +311,7 @@
           style="cursor: pointer"
           (click)="onSignOut()"
         ></span>
-        <div class="dropdown">
+        <!-- <div class="dropdown">
           <button
             class="btn btn-primary dropdown-toggle"
             type="button"
@@ -322,7 +322,7 @@
           >
             {{ loginType }}
           </button>
-          <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a
               class="dropdown-item"
               href="javascript:;"
@@ -335,8 +335,8 @@
               *ngIf="loginType == 'Expert'"
               >Learner</a
             >
-          </div> -->
-        </div>
+          </div>
+        </div> -->
       </div>
     </div>
     <router-outlet></router-outlet>

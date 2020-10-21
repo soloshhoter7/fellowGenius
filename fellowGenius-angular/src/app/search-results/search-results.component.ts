@@ -78,7 +78,6 @@ export class SearchResultsComponent implements OnInit {
       this.showMobileFilterView = false;
     }
 
-    this.fetchTutorList();
     this.callSearchBySubject = false;
     this.callSearchByPrice = false;
     this.findFromSearchResult = false;
@@ -288,7 +287,7 @@ export class SearchResultsComponent implements OnInit {
   // 	});
   // }
   fetchTutorList() {
-    this.httpService.getTutorList().subscribe((req) => {
+    this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
       this.searchResults = req;
     });
   }

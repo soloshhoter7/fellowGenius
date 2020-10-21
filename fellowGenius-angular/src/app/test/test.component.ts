@@ -247,7 +247,7 @@ export class TestComponent implements OnInit {
   // 	});
   // }
   fetchTutorList() {
-    this.httpService.getTutorList().subscribe((req) => {
+    this.httpService.getTutorList('Mathematics').subscribe((req) => {
       this.searchResults = req;
     });
   }

@@ -62,7 +62,7 @@
         </div>
       </form>
       <div class="login-instead">
-        <span>Login instead</span>
+        <span>or</span>
         <button
           class="btn btn-secondary"
           (click)="prepareLoginButton()"
@@ -222,7 +222,7 @@
           class="form-group button-container"
           [ngStyle]="{ 'margin-bottom': verifyEmail ? '35vh' : '' }"
         >
-          <a href="javascript:;" (click)="toSignUp()" class="forgot-password">
+          <a href="javascript:;" (click)="toSignUp()" class="forgot-password" style="color: #007bff;">
             Login Instead
           </a>
           <button class="btn btn-primary" type="submit" [disabled]="!t.valid">

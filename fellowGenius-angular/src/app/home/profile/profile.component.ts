@@ -46,7 +46,8 @@ export class ProfileComponent implements OnInit {
     public httpService: HttpService,
     public firebaseStorage: AngularFireStorage,
     public snackBar: MatSnackBar,
-    public matDialog: MatDialog
+    public matDialog: MatDialog,
+    private router:Router
   ) {}
 
   basic = true;
@@ -171,7 +172,7 @@ export class ProfileComponent implements OnInit {
                 'close',
                 this.config
               );
-              location.reload();
+              this.advancedProfileToggle();
             });
         });
     }
@@ -203,7 +204,7 @@ export class ProfileComponent implements OnInit {
               'close',
               this.config
             );
-            location.reload();
+            this.router.navigate(['/home/tutorDashboard']);
           });
       } else {
         this.errorText = 'Enter atleast one area of Expertise !';
