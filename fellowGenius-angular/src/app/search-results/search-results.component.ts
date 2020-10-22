@@ -489,21 +489,30 @@ export class SearchResultsComponent implements OnInit {
   }
 
   sort($event) {
+   
     if (
       this.allFiltersApplied.price.length == 0 &&
       this.allFiltersApplied.ratings.length == 0 &&
       this.allFiltersApplied.subjects.length == 0
     ) {
-      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
+      if ($event.target.value.localeCompare('priceLowToHigh') == 0) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
-      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
+      } else if ($event.target.value.localeCompare('priceHighToLow') == 0) {
         this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
+      } else if ($event.target.value.localeCompare('ratingLowToHigh') == 0){
+        this.searchResults.sort((a,b) => a.rating - b.rating);
+      } else if ($event.target.value.localeCompare('ratingHighToLow') == 0){
+        this.searchResults.sort((a,b) => b.rating - a.rating);
       }
     } else {
-      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
+      if ($event.target.value.localeCompare('priceLowToHigh') == 0) {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
-      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
+      } else if ($event.target.value.localeCompare('priceHighToLow') == 0) {
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
+      } else if ($event.target.value.localeCompare('ratingLowToHigh') == 0){
+        this.filteredArray.sort((a,b) => a.rating - b.rating);
+      } else if ($event.target.value.localeCompare('ratingHighToLow') == 0){
+        this.filteredArray.sort((a,b) => b.rating - a.rating);
       }
     }
   }

@@ -38,75 +38,61 @@
 </div> -->
 <app-nav-bar></app-nav-bar>
 <div class="search-container">
-  <div class="search-bg-left"></div>
-  <div class="search-box-container">
-    <div class="input-group">
-      <span class="input-group-header">Find a Genius Coach</span>
-      <form>
-        <button class="searchButton" (click)="displaySelectedSubjects()">
+    <div class="search-bg-left"></div>
+    <div class="search-box-container">
+        <div class="input-group">
+            <span class="input-group-header">Find a Genius Coach</span>
+            <form>
+                <button class="searchButton" (click)="displaySelectedSubjects()">
           <i class="fa fa-search" aria-hidden="true"></i>
         </button>
-        <input
-          type="search"
-          name="search"
-          placeholder="Search by Subjects"
-          [formControl]="myControl"
-          [matAutocomplete]="auto"
-          [(ngModel)]="selectedSubject"
-        />
-        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-          <mat-option
-            *ngFor="let option of filteredOptions | async"
-            [value]="option"
-          >
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
-      </form>
-      <span class="input-group-footer"
-        >Learn from the world’s best experts. It’s fast and easy with
+                <input type="search" name="search" placeholder="Search by Subjects" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="selectedSubject" />
+                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{ option }}
+                    </mat-option>
+                </mat-autocomplete>
+            </form>
+            <span class="input-group-footer">Learn from the world’s best experts. It’s fast and easy with
         fellowGenius!
       </span>
-      <!-- <span class="input-group-btn">
+            <!-- <span class="input-group-btn">
         <button class="btn btn-default" type="button">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         </button>
       </span>
        -->
+        </div>
+        <!-- /input-group -->
     </div>
-    <!-- /input-group -->
-  </div>
 </div>
 <app-advertisement-banner></app-advertisement-banner>
 <div class="how-it-works-container">
-  <div class="separtor-how-it-works">
-    <div class="dot left-dot"></div>
-    <div class="dot center-dot"></div>
-    <div class="dot right-dot"></div>
-  </div>
-  <h1 class="header-panel">How it works?</h1>
-  <ul class="process">
-    <li class="process__item">
-      <span class="process__number">1</span>
-      <span class="process__title">REGISTER</span>
-      <span class="process__subtitle"
-        >Create your account in few easy steps. Verify.</span
+    <div class="separtor-how-it-works">
+        <div class="dot left-dot"></div>
+        <div class="dot center-dot"></div>
+        <div class="dot right-dot"></div>
+    </div>
+    <h1 class="header-panel">How it works?</h1>
+    <ul class="process">
+        <li class="process__item">
+            <span class="process__number">1</span>
+            <span class="process__title">REGISTER</span>
+            <span class="process__subtitle">Create your account in few easy steps. Verify.</span
       >
     </li>
 
     <li class="process__item">
       <span class="process__number">2</span>
-      <span class="process__title">SEARCH</span>
-      <span class="process__subtitle"
-        >Find an Expert. Send a request to schedule a class.
+            <span class="process__title">SEARCH</span>
+            <span class="process__subtitle">Find an Expert. Send a request to schedule a class.
       </span>
-    </li>
+        </li>
 
-    <li class="process__item">
-      <span class="process__number">3</span>
-      <span class="process__title">Start learning</span>
-      <span class="process__subtitle"
-        >Pay the fee and start your classes immediately.</span
+        <li class="process__item">
+            <span class="process__number">3</span>
+            <span class="process__title">Start learning</span>
+            <span class="process__subtitle">Pay the fee and start your classes immediately.</span
       >
     </li>
   </ul>
@@ -150,67 +136,57 @@
               ></div>
               <div class="result-card-header">
                 <span class="result-card-name" [innerHTML]="slide.name"></span>
-                <span
-                  class="result-card-specalizaiton"
-                  [innerHTML]="slide.specialisation"
-                >
+            <span class="result-card-specalizaiton" [innerHTML]="slide.specialisation">
                   Exterior University - politics [bachelors]
                 </span>
-                <div class="stars-outer">
-                  <div class="stars-inner" [style.width.%]="slide.rating"></div>
-                  <!-- <div class="stars-inner" style="width: 90%"></div> -->
-                </div>
-              </div>
+            <div class="stars-outer">
+                <div class="stars-inner" [style.width.%]="slide.rating"></div>
+                <!-- <div class="stars-inner" style="width: 90%"></div> -->
+            </div>
+</div>
 
-              <div class="result-card-content">
-                <div class="numbers-container">
-                  <div>
-                    <span
-                      class="number"
-                      [innerHTML]="slide.studentsCount"
-                    ></span>
-                    <span class="info">STUDENTS</span>
-                  </div>
-                  <div class="separtor"></div>
-                  <div>
-                    <span class="number" [innerHTML]="slide.sessionsCount"
-                      >2007</span
+<div class="result-card-content">
+    <div class="numbers-container">
+        <div>
+            <span class="number" [innerHTML]="slide.studentsCount"></span>
+            <span class="info">STUDENTS</span>
+        </div>
+        <div class="separtor"></div>
+        <div>
+            <span class="number" [innerHTML]="slide.sessionsCount">2007</span
                     >
                     <span class="info">Sessions</span>
-                  </div>
-                </div>
+        </div>
+    </div>
 
-                <div
-                  class="result-card-descirption"
-                  [innerHTML]="slide.review"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </ng-container>
-    </owl-carousel-o>
-  </div>
+    <div class="result-card-descirption" [innerHTML]="slide.review"></div>
+</div>
+</div>
+</div>
+</ng-template>
+</ng-container>
+</owl-carousel-o>
+</div>
 
-  <div class="footer-container">
+<div class="footer-container">
     <div class="footer-inner">
-      <section class="footer-item">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Terms and Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Contact Us</a></li>
-        </ul>
-      </section>
+        <section class="footer-item">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Terms and Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </section>
 
-      <!-- <section class="footer-item">
+        <!-- <section class="footer-item">
         <ul>
      
         </ul>
       </section> -->
-      <div class="copyright-container">
-        <span>&#169; copyright 2020</span>
-      </div>
+        <div class="copyright-container">
+            <span>&#169; copyright 2020</span>
+        </div>
     </div>
-  </div>
+</div>
 </div>
