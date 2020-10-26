@@ -168,8 +168,21 @@ public class dao {
 	}
 
 	// for getting tutors list whose profile completed is 100% for finding tutors 
-	public List<TutorProfileDetails> getTutorList() {
-		return repTutorProfileDetails.findAllTutors();
+	public List<TutorProfileDetails> getTutorList(String subject) {
+		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();
+		System.out.println(subject);
+		List<ExpertiseAreas> areas = repExpertiseAreas.searchBySubject(subject);
+		System.out.println(areas);
+		if(areas!=null) {
+			for(ExpertiseAreas results:areas) {
+				if(!tutors.contains(results.getUserId())) {
+					tutors.add(results.getUserId());
+				}
+			}
+		}
+
+//		return repTutorProfileDetails.findAllTutors();
+		return tutors;
 	}
 
 	// for getting tutor details using email

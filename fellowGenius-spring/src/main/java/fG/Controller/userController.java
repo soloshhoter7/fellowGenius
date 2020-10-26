@@ -159,8 +159,9 @@ public class userController {
 //	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/fetchTutorList", produces = "application/JSON")
 	@ResponseBody
-	public List<TutorProfileDetailsModel> tutorList() {
-		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList();
+	public List<TutorProfileDetailsModel> tutorList(String subject) {
+		System.out.println("in controller"+subject);
+		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList(subject);
 		return tutorProfileDetails;
 	}
  

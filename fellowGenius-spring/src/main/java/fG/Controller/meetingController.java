@@ -195,10 +195,9 @@ public class meetingController {
 		return meetingService.saveTutorRatings(meetingId, rating, reviewText, tutid);
 	}
 	
-	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value="/expertRecentReviews")
 	@ResponseBody
-	public List<BookingDetails> fetchExpertRecentReviews(String tid){
+	public List<BookingDetailsModel> fetchExpertRecentReviews(String tid){
 		return meetingService.fetchExpertRecentReviews(Integer.valueOf(tid));
 	}
 }
