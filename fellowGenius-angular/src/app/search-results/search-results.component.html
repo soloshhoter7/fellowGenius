@@ -53,9 +53,11 @@
           >
           <span style="margin-left: 15px">Sort By</span
           ><select (change)="sort($event)">
-            <option>Price</option>
-            <option value="sortLowToHigh">Low to High</option>
-            <option value="sortHighToLow">High to Low</option>
+            <option selected disabled>Sort</option>
+            <option value="priceLowToHigh">Price: Low to High</option>
+            <option value="priceHighToLow">Price: High to Low</option>
+            <option value="ratingLowToHigh">Rating: Low to High</option>
+            <option value="ratingHighToLow">Rating: High to Low</option>
           </select>
         </div>
       </div>
@@ -297,7 +299,7 @@
                                     <div class="separtor"></div>
                                     <div>
                                         <a class="number" [innerHTML]="result.reviewCount" href="javascript:;" (click)="viewProfile(result)" style="color: #007bff;"></a>
-                                        <a class="info" href="javascript:;" (click)="viewProfile(result)" >REVIEWS</a>
+                                        <a class="info" href="javascript:;" (click)="viewProfile(result)">REVIEWS</a>
                                     </div>
                                     <div class="separtor"></div>
                                     <div>
