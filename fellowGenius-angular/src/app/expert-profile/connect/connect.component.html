@@ -107,6 +107,53 @@
             </p>
             <div class="errorMessage">{{ errorMessage }}</div>
           </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-3">
+                <!-- <mat-form-field appearance="fill">
+                  <mat-label>Date</mat-label>
+                  <mat-select>
+                    <mat-option *ngFor="let todayDate of scheduleDates; let z = index" [value]="todayDate">
+                      {{ fullDate[z] | date: "fullDate" }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+                <mat-form-field appearance="fill">
+                  <mat-label>Choose Date</mat-label>
+                  <mat-select [(value)]="selectedDate" (selectionChange)="dateChange()">
+                    <mat-option *ngFor="let todayDate of scheduleDates; let z = index" [value]="todayDate">
+                      {{ fullDate[z] | date: "fullDate" }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3" *ngIf="noSchedule">
+                <span style="font-size: large;">
+                  No available schedules
+                </span>
+              
+              </div>
+              <div class="col-md-3" *ngIf="!noSchedule">
+                <mat-form-field appearance="fill" style="width: 80px;">
+                  <mat-label>Start</mat-label>
+                  <mat-select [(value)]="startTimeValue" (selectionChange)="startSlotChange()" >
+                    <mat-option *ngFor="let time of startSlots; let i = index"  [value]="i">
+                      <span *ngIf="selectedDate.date == time.date">{{ time.hours }}:{{ time.minutes | zero }}</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <span style="font-size: 25px;margin: 5px;">&nbsp;-&nbsp;</span>
+                <mat-form-field appearance="fill" style="width: 80px;">
+                  <mat-label>End</mat-label>
+                  <mat-select [(value)]="endTimeValue">
+                    <mat-option *ngFor="let time of endSlots; let i = index" [value]="i">
+                      <span *ngIf="selectedDate.date == time.date">{{ time.hours }}:{{ time.minutes | zero }}</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
           <div style="height: 40vh; max-height: 40vh; overflow-y: scroll">
             <div class="container">
               <div class="row" style="max-width: 910px">

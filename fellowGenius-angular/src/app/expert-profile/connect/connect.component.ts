@@ -33,9 +33,13 @@ export class ConnectComponent implements OnInit {
     panelClass: ['snackbar'],
   };
   selectedSubject;
+  startTimeValue;
+  endTimeValue;
   areaOfExpertises = [];
   startDisabled: boolean;
   endDisabled: boolean;
+  noSchedule:boolean = false;
+  selectedStart;
   isTutorAvailable: boolean;
   isLoading: boolean = false;
   teacherProfile = new tutorProfileDetails();
@@ -86,10 +90,13 @@ export class ConnectComponent implements OnInit {
     closeOnSelect: false,
   };
   ScheduleTime: ScheduleTime[] = [];
+  startSlots:ScheduleTime[] =[];
+  endSlots:ScheduleTime[]=[];
   fullDate = [];
   clickedIndex1: number;
   clickedIndex2: number;
   userId;
+  selectedDate;
   profilePictureUrl = '../../assets/images/default-user-image.png';
   private _window: ICustomWindow;
   public rzp: any;
@@ -125,7 +132,7 @@ export class ConnectComponent implements OnInit {
           this.areaOfExpertises = this.teacherProfile.areaOfExpertise;
         });
     });
-
+  
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
@@ -139,6 +146,11 @@ export class ConnectComponent implements OnInit {
             .getTutorTimeAvailabilityTimeArray(this.userId)
             .subscribe((res) => {
               this.ScheduleTime = res;
+              console.log(this.ScheduleTime)
+              this.selectedDate = this.scheduleDates[0];
+              setTimeout(()=>{
+                this.dateChange()
+              },1000)
               this.manipulateTimeSlots();
             });
         } else if (res == false) {
@@ -147,7 +159,41 @@ export class ConnectComponent implements OnInit {
       });
     }
   }
-
+ 
+  dateChange(){
+    if(this.selectedDate.hasElements == false){
+      this.noSchedule= true;
+    }else if(this.selectedDate.hasElements == true){
+      this.noSchedule=false
+      this.fillSlots('start');
+    }
+  }
+  startSlotChange(){
+    this.endSlots = [];
+    var i;
+    for(i=this.startTimeValue+1;i<this.startSlots.length;i++){
+      this.endSlots.push(this.startSlots[i]);
+    }
+  }
+  fillSlots(method){
+    if(method=='start'){
+      this.startSlots=[];
+      this.endSlots=[];
+      for(let time of this.ScheduleTime){
+        if(time.date == this.selectedDate.date){
+          this.startSlots.push(time);
+        }
+      }
+      var i;
+      for(i=1;i<this.startSlots.length;i++){
+        this.endSlots.push(this.startSlots[i]);
+      }
+      this.startTimeValue = 0;
+      this.endTimeValue = 0;
+      console.log(this.startTimeValue);
+      console.log(this.endTimeValue)
+    }
+  }
   initPay(): void {
     this.rzp = new this.winRef.nativeWindow['Razorpay'](
       this.preparePaymentDetails()
@@ -250,7 +296,7 @@ export class ConnectComponent implements OnInit {
       }
     });
   }
-
+  
   closeNav() {
     this.dialogRef.closeAll();
   }

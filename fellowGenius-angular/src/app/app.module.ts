@@ -73,7 +73,7 @@ import { ExpertsComponent } from './home/experts/experts.component';
 import { AdvertisementBannerComponent } from './advertisement-banner/advertisement-banner.component';
 import { FiltersDialogComponent } from './search-results/filters-dialog/filters-dialog.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-
+import {MatSelectModule} from '@angular/material/select';
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -160,6 +160,7 @@ export const appRoutes: Routes = [
     HttpClientModule,
     BrowserAnimationsModule,
     MatChipsModule,
+    MatSelectModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatIconModule,

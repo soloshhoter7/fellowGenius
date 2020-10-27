@@ -164,7 +164,7 @@ public class userController {
 		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList(subject);
 		return tutorProfileDetails;
 	}
- 
+  
 	@RequestMapping(value="/fetchTutorProfileDetails",produces = "application/JSON")
 	@ResponseBody
 	public TutorProfileDetailsModel fetchTutorProfileDetails(String tid) {
