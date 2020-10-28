@@ -2,11 +2,13 @@ package fG.Model;
 
 public class TutorProfileModel {
 	Integer tid;
+	Integer bookingId;
 	String fullName;
 	String email;
 	String dateOfBirth;
 	String contact;
 	String profilePictureUrl;
+	
 	public Integer getTid() {
 		return tid;
 	}
@@ -43,10 +45,18 @@ public class TutorProfileModel {
 	public void setProfilePictureUrl(String profilePictureUrl) {
 		this.profilePictureUrl = profilePictureUrl;
 	}
+	
+	public Integer getBookingId() {
+		return bookingId;
+	}
+	public void setBookingId(Integer bookingId) {
+		this.bookingId = bookingId;
+	}
 	@Override
 	public String toString() {
-		return "TutorProfileModel [tid=" + tid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
-				+ dateOfBirth + ", contact=" + contact + ", profilePictureUrl=" + profilePictureUrl + "]";
+		return "TutorProfileModel [tid=" + tid + ", bookingId=" + bookingId + ", fullName=" + fullName + ", email="
+				+ email + ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", profilePictureUrl="
+				+ profilePictureUrl + "]";
 	}
 	
 }

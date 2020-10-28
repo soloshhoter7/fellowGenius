@@ -276,7 +276,7 @@ export class SearchResultsComponent implements OnInit {
   viewProfile(profile: tutorProfileDetails) {
     this.profileService.setProfile(profile);
     this.router.navigate(['viewTutors'], {
-      queryParams: { page: profile.tid },
+      queryParams: { page: profile.bookingId },
     });
   }
 
@@ -288,6 +288,7 @@ export class SearchResultsComponent implements OnInit {
   // }
   fetchTutorList() {
     this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
+      console.log(req)
       this.searchResults = req;
     });
   }

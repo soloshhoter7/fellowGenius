@@ -97,10 +97,12 @@ public class MeetingDao {
 	public boolean saveTutorRatings(String meetingId, Integer rating, String reviewText, Integer tid) {
 		System.out.println(meetingId + ":" + rating + ":" + reviewText);
 		repBooking.saveTutorRatings(meetingId, rating, reviewText);
-		TutorProfileDetails tutor = repTutorProfileDetails.idExist(tid);
+		TutorProfileDetails tutor = repTutorProfileDetails.bookingIdExist(tid);
+		System.out.println(tutor);
 		if(tutor!=null) {
 			Integer newRating = (tutor.getRating() + rating)/2;
 			tutor.setRating(newRating);
+			System.out.println(tutor);
 			repTutorProfileDetails.save(tutor);	
 		}
 		repTutorProfileDetails.updateReviewCount(tid);

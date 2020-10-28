@@ -200,7 +200,7 @@ export class SignUpComponent implements OnInit {
                         .subscribe((res) => {
                           this.tutorService.setTutorProfileDetails(res);
                           this.httpClient
-                            .getScheduleData(this.tutorProfile.tid)
+                            .getScheduleData(this.tutorProfile.bookingId)
                             .subscribe((res) => {
                               this.tutorAvailabilitySchedule = res;
                               this.tutorService.setPersonalAvailabilitySchedule(
@@ -225,6 +225,7 @@ export class SignUpComponent implements OnInit {
             }
           });
       } else {
+        console.log('wrong otp')
         this.wrongOtp = true;
       }
     }
@@ -297,7 +298,7 @@ export class SignUpComponent implements OnInit {
                 .subscribe((res) => {
                   this.tutorService.setTutorProfileDetails(res);
                   this.httpClient
-                    .getScheduleData(this.tutorProfile.tid)
+                    .getScheduleData(this.tutorProfile.bookingId)
                     .subscribe((res) => {
                       this.tutorAvailabilitySchedule = res;
                       this.tutorService.setPersonalAvailabilitySchedule(

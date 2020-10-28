@@ -61,7 +61,7 @@ export class BookingsComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.httpService
-        .getScheduleData(this.tutorService.getTutorDetials().tid)
+        .getScheduleData(this.tutorService.getTutorDetials().bookingId)
         .subscribe((res) => {
           this.tutorService.setPersonalAvailabilitySchedule(res);
           this.meetingSchedule = res.allMeetingsSchedule;

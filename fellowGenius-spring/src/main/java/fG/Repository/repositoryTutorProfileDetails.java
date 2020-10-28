@@ -28,6 +28,9 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 	@Query(value = "SELECT * FROM tutor_profile_details WHERE tid=?1", nativeQuery = true)
 	TutorProfileDetails idExist(Integer tid);
 	
+	@Query(value = "SELECT * FROM tutor_profile_details WHERE booking_id=?1", nativeQuery = true)
+	TutorProfileDetails bookingIdExist(Integer bookingId);
+	
 	@Transactional
 	@Modifying
 	@Query(value ="UPDATE tutor_profile_details SET profile_completed=?1 where tid =?2", nativeQuery = true)
@@ -46,8 +49,8 @@ public interface repositoryTutorProfileDetails extends JpaRepository<TutorProfil
 
 	@Modifying
 	@Transactional
-	@Query(value ="UPDATE tutor_profile_details SET review_count = review_count +1 WHERE tid =?1" ,nativeQuery =true)
-	void updateReviewCount(Integer tid);
+	@Query(value ="UPDATE tutor_profile_details SET review_count = review_count +1 WHERE booking_id =?1" ,nativeQuery =true)
+	void updateReviewCount(Integer bookingId);
 
 	@Query(value="SELECT * FROM tutor_profile_details WHERE rating >= ?1", nativeQuery = true)
 	public List<TutorProfileDetails> searchByRatings(Integer ratings);

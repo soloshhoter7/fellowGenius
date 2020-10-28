@@ -5,6 +5,7 @@ import java.util.List;
 
 public class TutorProfileDetailsModel {
 	Integer tid;
+	Integer bookingId;
 	String fullName;
 	String institute;
 	ArrayList<String> educationalQualifications;
@@ -145,16 +146,25 @@ public class TutorProfileDetailsModel {
 	public void setLinkedInProfile(String linkedInProfile) {
 		this.linkedInProfile = linkedInProfile;
 	}
+	
+	public Integer getBookingId() {
+		return bookingId;
+	}
+	public void setBookingId(Integer bookingId) {
+		this.bookingId = bookingId;
+	}
 	@Override
 	public String toString() {
-		return "TutorProfileDetailsModel [tid=" + tid + ", fullName=" + fullName + ", institute=" + institute
-				+ ", educationalQualifications=" + educationalQualifications + ", price1=" + price1 + ", price2="
-				+ price2 + ", price3=" + price3 + ", description=" + description + ", speciality=" + speciality
-				+ ", rating=" + rating + ", reviewCount=" + reviewCount + ", lessonCompleted=" + lessonCompleted
-				+ ", profilePictureUrl=" + profilePictureUrl + ", professionalSkills=" + professionalSkills
-				+ ", currentOrganisation=" + currentOrganisation + ", previousOrganisations=" + previousOrganisations
-				+ ", areaOfExpertise=" + areaOfExpertise + ", profileCompleted=" + profileCompleted
-				+ ", yearsOfExperience=" + yearsOfExperience + ", linkedInProfile=" + linkedInProfile + "]";
+		return "TutorProfileDetailsModel [tid=" + tid + ", bookingId=" + bookingId + ", fullName=" + fullName
+				+ ", institute=" + institute + ", educationalQualifications=" + educationalQualifications + ", price1="
+				+ price1 + ", price2=" + price2 + ", price3=" + price3 + ", description=" + description
+				+ ", speciality=" + speciality + ", rating=" + rating + ", reviewCount=" + reviewCount
+				+ ", lessonCompleted=" + lessonCompleted + ", profilePictureUrl=" + profilePictureUrl
+				+ ", professionalSkills=" + professionalSkills + ", currentOrganisation=" + currentOrganisation
+				+ ", previousOrganisations=" + previousOrganisations + ", areaOfExpertise=" + areaOfExpertise
+				+ ", profileCompleted=" + profileCompleted + ", yearsOfExperience=" + yearsOfExperience
+				+ ", linkedInProfile=" + linkedInProfile + "]";
 	}
+	
 	
 }

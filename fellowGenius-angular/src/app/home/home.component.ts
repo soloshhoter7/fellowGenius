@@ -338,18 +338,20 @@ export class HomeComponent implements OnInit {
       this.loginService.setLoginType(this.loginType);
 
       this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+        console.log(res);
         this.tutorProfile = res;
         this.tutorService.setTutorDetails(this.tutorProfile);
         this.httpService
           .getTutorProfileDetails(this.userId)
           .subscribe((res) => {
+            console.log(res)
             this.tutorProfileDetails = res;
             if (this.tutorProfileDetails.profilePictureUrl != null) {
               this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
             }
             this.tutorService.setTutorProfileDetails(res);
-            this.subject = this.tutorProfileDetails.educationalQualifications[0];
-            this.httpService.getScheduleData(this.userId).subscribe((res) => {
+            // this.subject = this.tutorProfileDetails.educationalQualifications[0];
+            this.httpService.getScheduleData(this.tutorProfile.bookingId).subscribe((res) => {
               this.tutorService.setPersonalAvailabilitySchedule(res);
               if (
                 this.tutorService.getPersonalAvailabilitySchedule()

@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 public class TutorProfileDetails {
 	@Id
 	Integer tid;
+	Integer bookingId;
 	String fullName;
 	String institute;
 	
@@ -144,9 +145,6 @@ public class TutorProfileDetails {
 	public void setPreviousOrganisations(ArrayList<String> previousOrganisations) {
 		this.previousOrganisations = previousOrganisations;
 	}
-	
-
-
 	public Set<ExpertiseAreas> getAreaOfExpertise() {
 		return areaOfExpertise;
 	}
@@ -171,17 +169,26 @@ public class TutorProfileDetails {
 	public void setLinkedInProfile(String linkedInProfile) {
 		this.linkedInProfile = linkedInProfile;
 	}
+	
+	public Integer getBookingId() {
+		return bookingId;
+	}
+	public void setBookingId(Integer bookingId) {
+		this.bookingId = bookingId;
+	}
 	@Override
 	public String toString() {
-		return "TutorProfileDetails [tid=" + tid + ", fullName=" + fullName + ", institute=" + institute
-				+ ", educationalQualifications=" + educationalQualifications + ", price1=" + price1 + ", price2="
-				+ price2 + ", price3=" + price3 + ", description=" + description + ", speciality=" + speciality
-				+ ", rating=" + rating + ", reviewCount=" + reviewCount + ", lessonCompleted=" + lessonCompleted
-				+ ", profilePictureUrl=" + profilePictureUrl + ", professionalSkills=" + professionalSkills
-				+ ", currentOrganisation=" + currentOrganisation + ", previousOrganisations=" + previousOrganisations
+		return "TutorProfileDetails [tid=" + tid + ", bookingId=" + bookingId + ", fullName=" + fullName
+				+ ", institute=" + institute + ", educationalQualifications=" + educationalQualifications + ", price1="
+				+ price1 + ", price2=" + price2 + ", price3=" + price3 + ", description=" + description
+				+ ", speciality=" + speciality + ", rating=" + rating + ", reviewCount=" + reviewCount
+				+ ", lessonCompleted=" + lessonCompleted + ", profilePictureUrl=" + profilePictureUrl
+				+ ", professionalSkills=" + professionalSkills + ", currentOrganisation=" + currentOrganisation
+				+ ", previousOrganisations=" + previousOrganisations + ", areaOfExpertise=" + areaOfExpertise
 				+ ", profileCompleted=" + profileCompleted + ", yearsOfExperience=" + yearsOfExperience
 				+ ", linkedInProfile=" + linkedInProfile + "]";
 	}
+	
 
 	
 }

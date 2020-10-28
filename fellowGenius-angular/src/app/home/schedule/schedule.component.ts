@@ -48,7 +48,7 @@ export class tutorScheduleComponent implements OnInit {
       this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
       // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
       this.tutorAvailabilitySchedule.fullName = this.tutorService.getTutorDetials().fullName;
-      this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().tid;
+      this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().bookingId;
       this.tutorAvailabilitySchedule.isAvailable = this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
       this.copySchedule();
       this.copyBookings();
@@ -91,12 +91,15 @@ export class tutorScheduleComponent implements OnInit {
   handleRefresh() {
     if (this.cookieService.get('userId')) {
       this.userId = this.cookieService.get('userId');
-      this.httpService
-        .getScheduleData(parseInt(this.userId))
+      var bookingId;
+      this.httpService.getTutorDetails(this.userId).subscribe((res)=>{
+        bookingId = res.bookingId;
+        this.httpService
+        .getScheduleData(parseInt(bookingId))
         .subscribe((res) => {
           this.tutorService.setPersonalAvailabilitySchedule(res);
           this.tutorAvailabilitySchedule.fullName = this.tutorService.getTutorDetials().fullName;
-          this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().tid;
+          this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().bookingId;
           this.tutorAvailabilitySchedule.isAvailable = this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
           this.availabiltiySchedules = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
           this.copySchedule();
@@ -109,6 +112,8 @@ export class tutorScheduleComponent implements OnInit {
           this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
           // this.scheduleObj.eventSettings.dataSource = this.combinedSchedule;
         });
+      })
+      
     }
   }
 
@@ -172,7 +177,7 @@ export class tutorScheduleComponent implements OnInit {
     setTimeout(() => {
       //<<<---    using ()=> syntax
       if (this.userId != null) {
-        this.tutorAvailabilitySchedule.tid = this.userId;
+        this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().bookingId;
       }
 
       this.httpService

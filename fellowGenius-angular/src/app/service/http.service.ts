@@ -463,12 +463,12 @@ export class HttpService {
     );
   }
 
-  getTutorIsAvailable(tid: number): Observable<Object> {
+  getTutorIsAvailable(bookingId: number): Observable<Object> {
     return this.http.get(
       'http://localhost:5000/fellowGenius/meeting/getTutorIsAvailable',
       {
         params: {
-          tid: tid.toString(),
+          bookingId: bookingId.toString(),
         },
       }
     );
@@ -509,6 +509,16 @@ export class HttpService {
       {
         params: {
           tid: userId.toString(),
+        },
+      }
+    );
+  }
+  fetchBookingTutorProfileDetails(bookingId): Observable<tutorProfileDetails> {
+    return this.http.get<tutorProfileDetails>(
+      'http://localhost:5000/fellowGenius/fetchBookingTutorProfileDetails',
+      {
+        params: {
+          bookingId: bookingId.toString(),
         },
       }
     );

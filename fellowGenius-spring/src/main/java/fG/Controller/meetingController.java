@@ -163,8 +163,8 @@ public class meetingController {
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value="/getTutorIsAvailable")
 	@ResponseBody
-	public boolean getIsAvailable(String tid) {
-		return userService.getTutorIsAvailable(tid);
+	public boolean getIsAvailable(String bookingId) {
+		return userService.getTutorIsAvailable(bookingId);
 	}
 	
 	

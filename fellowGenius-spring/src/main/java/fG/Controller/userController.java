@@ -38,17 +38,6 @@ public class userController {
 		return service.saveUserProfile(registrationModel);
 	}
 	
-//	// for saving student registration details
-////	@PreAuthorize("hasAuthority('STUDENT')")
-//	@RequestMapping(value = "/registerStudent")
-//	public boolean saveStudentProfile(@RequestBody StudentProfileModel studentModel) throws IOException {
-//		if (service.saveStudentProfile(studentModel)) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-
 	//for updating student profile
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value= "/updateStudentProfile")
@@ -57,13 +46,6 @@ public class userController {
 		
 	}
 	
-//	// for checking student login
-//	@PreAuthorize("hasAuthority('Learner')")
-//	@RequestMapping(value = "/loginStudent")
-//	public boolean onLoginStudent(@RequestBody StudentLoginModel studentLoginModel) {
-//		return service.onStudentLogin(studentLoginModel);
-//	}
-
 	// for getting student details after login
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/getStudentDetails", produces = { "application/json" })
@@ -118,7 +100,6 @@ public class userController {
 	@RequestMapping(value = "/updateTutor", produces = "application/JSON")
 	public void updateTutorProfile(@RequestBody TutorProfileDetailsModel tutorDetailsModel)
 			throws IOException, IllegalArgumentException, IllegalAccessException {
-		System.out.println("tutor details model ->"+tutorDetailsModel);
 		service.updateTutorProfileDetails(tutorDetailsModel);
 
 	}
@@ -131,14 +112,14 @@ public class userController {
 
 	}
 
-	// for editing tutor details
-	@PreAuthorize("hasAuthority('Expert')")
-	@RequestMapping(value = "/editTutorProfileDetails", produces = "application/JSON")
-	public void editTutorProfile(@RequestBody TutorProfileDetailsModel tutorDetailsModel)
-			throws IOException, IllegalArgumentException, IllegalAccessException {
-		service.editTutorProfileDetails(tutorDetailsModel);
-
-	}
+//	// for editing tutor details
+//	@PreAuthorize("hasAuthority('Expert')")
+//	@RequestMapping(value = "/editTutorProfileDetails", produces = "application/JSON")
+//	public void editTutorProfile(@RequestBody TutorProfileDetailsModel tutorDetailsModel)
+//			throws IOException, IllegalArgumentException, IllegalAccessException {
+//		service.editTutorProfileDetails(tutorDetailsModel);
+//
+//	}
 
 	// for updating tutor Verification
 	@PreAuthorize("hasAuthority('Expert')")
@@ -147,13 +128,6 @@ public class userController {
 		System.out.println(tutorVerify.getTid());
 		service.updateTutorVerification(tutorVerify);
 	}
-
-//	// for checking tutor login
-//	@PreAuthorize("hasAuthority('TUTOR')")
-//	@RequestMapping(value = "/loginTutor", produces = "application/JSON")
-//	public boolean onLoginTutor(@RequestBody TutorLoginModel tutorLoginModel) {
-//		return service.onTutorLogin(tutorLoginModel);
-//	}
 
 	// for getting the list of teachers with 100% profile completion
 //	@PreAuthorize("hasAuthority('Learner')")
@@ -170,6 +144,12 @@ public class userController {
 	public TutorProfileDetailsModel fetchTutorProfileDetails(String tid) {
 		return service.getTutorProfileDetails(Integer.valueOf(tid));
 	}
+	
+	@RequestMapping(value="/fetchBookingTutorProfileDetails",produces = "application/JSON")
+	@ResponseBody
+	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(String bookingId) {
+		return service.fetchBookingTutorProfileDetails(Integer.valueOf(bookingId));
+	}
 	// register social login
 //	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerSocialLogin")
@@ -177,15 +157,6 @@ public class userController {
 		return service.registerSocialLogin(socialLoginModel);
 	}
 
-//	// check social login
-//	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
-//	@RequestMapping(value = "/ckeckSocialLogin")
-//	@ResponseBody
-//	public boolean checkSocialLogin(String id) {
-//		System.out.println("In check social login" + id);
-//		return service.checkSocialLogin(email);
-//	}
-//	
 	// to change tutor availability status
 	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value="/changeAvailabilityStatus")
@@ -211,7 +182,6 @@ public class userController {
 	@RequestMapping(value="/fetchAllLinkedTutors")
 	@ResponseBody
 	public List<TutorProfileDetailsModel> fetchAllLinkedTutors(Integer userId) {
-		System.out.println("--------------------------------------------------------------------------------------------");
 		System.out.println(userId);
 		return service.fetchAllLinkedTutors(userId);
 	

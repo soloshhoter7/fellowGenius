@@ -147,6 +147,7 @@ export class ProfileComponent implements OnInit {
       this.tutorProfile.contact = form.value.contact;
       this.tutorProfile.dateOfBirth = form.value.dob;
       this.tutorProfile.fullName = form.value.fullName;
+      this.tutorProfile.bookingId = this.tutorService.getTutorDetials().bookingId;
       this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
       this.tutorProfileDetails.tid = this.userId;
       this.tutorProfileDetails.educationalQualifications = this.educationQualifications;
@@ -154,6 +155,7 @@ export class ProfileComponent implements OnInit {
         form.value.professionalSkills;
       this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
       this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+      this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId
       this.httpService
         .updateTutorProfile(this.tutorProfile)
         .subscribe((res) => {
@@ -192,6 +194,7 @@ export class ProfileComponent implements OnInit {
         this.tutorProfileDetails.previousOrganisations = this.previousOraganisations;
         this.tutorProfileDetails.description = form.value.description;
         this.tutorProfileDetails.speciality = form.value.speciality;
+        this.tutorProfileDetails.bookingId = this.tutorService.getTutorProfileDetails().bookingId;
         if (this.tutorProfileDetails.profileCompleted == 50) {
           this.tutorProfileDetails.profileCompleted = 100;
         }

@@ -18,11 +18,7 @@ public class TutorProfile {
 			strategy = "fG.Service.IdGenerator")
 	Integer tid;
 	
-	@GeneratedValue(generator = "id_seq")
-	@GenericGenerator(
-			name = "id_seq", 
-			strategy = "fG.Service.IdGenerator")
-	Integer userBookingId;
+	Integer bookingId;
 	
 	@Column(name="fullname")
 	String fullName;
@@ -37,11 +33,12 @@ public class TutorProfile {
 	public void setTid(Integer tid) {
 		this.tid = tid;
 	}
-	public Integer getUserBookingId() {
-		return userBookingId;
+	
+	public Integer getBookingId() {
+		return bookingId;
 	}
-	public void setUserBookingId(Integer userBookingId) {
-		this.userBookingId = userBookingId;
+	public void setBookingId(Integer bookingId) {
+		this.bookingId = bookingId;
 	}
 	public String getFullName() {
 		return fullName;
@@ -75,10 +72,11 @@ public class TutorProfile {
 	}
 	@Override
 	public String toString() {
-		return "TutorProfile [tid=" + tid + ", userBookingId=" + userBookingId + ", fullName=" + fullName + ", email="
-				+ email + ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", profilePictureUrl="
-				+ profilePictureUrl + "]";
+		return "TutorProfile [tid=" + tid + ", bookingId=" + bookingId + ", fullName=" + fullName + ", email=" + email
+				+ ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", profilePictureUrl=" + profilePictureUrl
+				+ "]";
 	}
+	
 	
 	
 	

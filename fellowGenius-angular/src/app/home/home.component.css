@@ -322,7 +322,9 @@ label {
 .hideBlock {
   display: none;
 }
-
+.expertNavHeight{
+  height: 65px !important;
+}
 /*
 @media screen and (min-width: 500px) {
     /* .sidenav {
