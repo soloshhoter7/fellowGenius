@@ -159,11 +159,7 @@ export class StudentProfileComponent implements OnInit {
                 'close',
                 this.config
               );
-              setTimeout(()=>{
-                this.router.navigate(['/home/studentDashboard']);
-                window.location.reload();   
-              },1000)
-             
+              this.router.navigate(['/home/studentDashboard']);
             })
          
         });

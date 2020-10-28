@@ -307,7 +307,8 @@ export class ConnectComponent implements OnInit {
 
   timeSelector(event, index: number, todayDate: string) {
     this.clickedIndex = index;
-
+    console.log("this is event");
+    console.log(event);
     // if start time and end time are null
     if (
       this.st.sh == -1 &&

@@ -73,7 +73,9 @@ import { ExpertsComponent } from './home/experts/experts.component';
 import { AdvertisementBannerComponent } from './advertisement-banner/advertisement-banner.component';
 import { FiltersDialogComponent } from './search-results/filters-dialog/filters-dialog.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule} from '@angular/material/select';
+import { TimeMedian } from './pipes/timeMedian';
+import { TimeConverter} from './pipes/timeConverter';
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -110,9 +112,9 @@ export const appRoutes: Routes = [
     AppComponent,
     HomeComponent,
     MeetingComponent,
-
+    TimeMedian,
+    TimeConverter,
     BookingsComponent,
-
     FacadeComponent,
     LoginComponent,
     SignUpComponent,
