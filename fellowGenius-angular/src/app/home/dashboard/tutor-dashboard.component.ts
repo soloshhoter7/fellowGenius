@@ -145,7 +145,7 @@ export class TutorDashboardComponent implements OnInit {
   }
   fetchExpertRecentReviews() {
     this.httpService
-      .fetchExpertRecentReviews(this.tutorProfileDetails.tid)
+      .fetchExpertRecentReviews(this.tutorProfileDetails.bookingId)
       .subscribe((res) => {
         this.recentReviewsList = res;
       });
@@ -198,7 +198,7 @@ export class TutorDashboardComponent implements OnInit {
   fetchTutorPendingBookings() {
     if (this.loginService.getLoginType() == 'Expert') {
       this.httpService
-        .getTutorBookings(this.tutorService.getTutorDetials().tid)
+        .getTutorBookings(this.tutorService.getTutorDetials().bookingId)
         .subscribe((res) => {
           this.bookingList = res;
           if (this.bookingList.length == 0) {
@@ -214,7 +214,7 @@ export class TutorDashboardComponent implements OnInit {
   //for fetching accepted booking requests
   fetchTutorApprovedMeetings() {
     this.httpService
-      .fetchApprovedMeetingsTutor(this.tutorService.getTutorDetials().tid)
+      .fetchApprovedMeetingsTutor(this.tutorService.getTutorDetials().bookingId)
       .subscribe((res) => {
         this.meetingList = res;
         this.sortMeetings(this.meetingList);
@@ -237,7 +237,7 @@ export class TutorDashboardComponent implements OnInit {
   //for fetching live meetings
   fetchTutorLiveMeetings() {
     this.httpService
-      .fetchLiveMeetingsTutor(this.tutorService.getTutorDetials().tid)
+      .fetchLiveMeetingsTutor(this.tutorService.getTutorDetials().bookingId)
       .subscribe((res) => {
         this.liveMeetingList = res;
         if (this.liveMeetingList.length == 0) {

@@ -147,7 +147,7 @@ export class AppComponent implements OnInit {
             this.tutorProfileDetails = res;
 
             this.tutorService.setTutorProfileDetails(res);
-            this.httpService.getScheduleData(this.userId).subscribe((res) => {
+            this.httpService.getScheduleData(this.tutorProfileDetails.bookingId).subscribe((res) => {
               this.tutorService.setPersonalAvailabilitySchedule(res);
               if (
                 this.tutorService.getPersonalAvailabilitySchedule()

@@ -160,6 +160,7 @@ export class StudentProfileComponent implements OnInit {
                 this.config
               );
               this.router.navigate(['/home/studentDashboard']);
+             
             })
          
         });

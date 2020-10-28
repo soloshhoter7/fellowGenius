@@ -1,5 +1,6 @@
 export class tutorProfileDetails {
   public tid: number;
+  public bookingId:number;
   public fullName: string;
   public institute: string;
   public educationalQualifications: string[] = [];

@@ -129,7 +129,7 @@ export class LoginComponent implements OnInit {
                   this.tutorProfileDetails
                 );
                 this.httpService
-                  .getScheduleData(this.tutorProfile.tid)
+                  .getScheduleData(this.tutorProfile.bookingId)
                   .subscribe((res) => {
                     this.tutorAvailabilitySchedule = res;
                     this.tutorService.setPersonalAvailabilitySchedule(
@@ -243,7 +243,7 @@ export class LoginComponent implements OnInit {
                           this.tutorProfileDetails
                         );
                         this.httpService
-                          .getScheduleData(this.tutorProfile.tid)
+                          .getScheduleData(this.tutorProfile.bookingId)
                           .subscribe((res) => {
                             this.tutorAvailabilitySchedule = res;
                             this.tutorService.setPersonalAvailabilitySchedule(
@@ -342,7 +342,7 @@ export class LoginComponent implements OnInit {
                 .subscribe((res) => {
                   this.tutorService.setTutorProfileDetails(res);
                   this.httpService
-                    .getScheduleData(this.tutorProfile.tid)
+                    .getScheduleData(this.tutorProfile.bookingId)
                     .subscribe((res) => {
                       this.tutorAvailabilitySchedule = res;
                       this.tutorService.setPersonalAvailabilitySchedule(

@@ -273,13 +273,13 @@
         position: absolute;
     }
     .main-content .header {
-        height: 150px !important;
+        height: 120px !important;
         margin-bottom: 10px;
     }
     .main-content .header .search-box-container {
         width: 100%;
-        left: 15px;
-        top: 110px;
+        left: 1px;
+        top: 75px;
     }
     .main-content .header .search-box-container .input-group .searchButton {
         right: 30px !important;

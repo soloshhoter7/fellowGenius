@@ -52,6 +52,7 @@ import fG.Model.registrationModel;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryTutorLogin;
+import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryUsers;
 
@@ -78,7 +79,10 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	repositoryUsers repUsers;
-
+    
+	@Autowired
+	repositoryTutorProfile repTutorProfile;
+	
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
 
@@ -98,28 +102,6 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-//	public String validateStudentUser(String email,String password) {
-//		StudentLogin studentLogin = repStudentLogin.emailExist(email);
-//		if(studentLogin!=null) {
-//			if(encoder.matches(password, studentLogin.getPassword())) {
-//			return String.valueOf(studentLogin.getStudentProfile().getSid());
-//			}else {
-//				return null;
-//			}
-//		}else {
-//		 return null;	
-//		} 
-//	}
-
-//	public User loadStudentByUserId(String userId) {
-//		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//		if(dao.findStudentBySid(Integer.valueOf(userId))) {
-//		    authorities.add(new SimpleGrantedAuthority("STUDENT"));
-//			return new User(userId,"",authorities);
-//		}else {
-//			return null;
-//		}
-//	}
 
 	public User loadUserByUserId(String userId) {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -132,30 +114,6 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-//	public String validateTutorUser(String email,String password) {
-//		
-//		SocialLogin socialLogin =	repSocialLogin.checkSocialLogin(email);
-//		TutorLogin tutLogin = repTutorLogin.validation(email);
-//		
-//		if(socialLogin!=null && socialLogin.getId().equals(password)) {
-//			return String.valueOf(socialLogin.getTid());
-//		}else if(tutLogin!=null && encoder.matches(password, tutLogin.getPassword())) {
-//			return String.valueOf(tutLogin.getTutorProfile().getTid());
-//		}else {
-//			return null;
-//		}
-//		
-//	}
-//	
-//	public User loadTutorByUserId(String userId) {
-//		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//		if(dao.getTutorProfile(Integer.valueOf(userId))!=null) {
-//		    authorities.add(new SimpleGrantedAuthority("TUTOR"));
-//			return new User(userId,"",authorities);
-//		}else {
-//			return null;
-//		}
-//	}
 	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
 		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
@@ -184,6 +142,7 @@ public class UserService implements UserDetailsService {
 			tutorProfile.setContact(registrationModel.getContact());
 			tutorProfile.setEmail(registrationModel.getEmail());
 			tutorProfile.setFullName(registrationModel.getFullName());
+			tutorProfile.setBookingId(genUserBookingId());
 
 			if (dao.saveTutorProfile(tutorProfile)) {
 
@@ -202,10 +161,11 @@ public class UserService implements UserDetailsService {
 				tutProfileDetails.setRating(100);
 				tutProfileDetails.setReviewCount(0);
 				tutProfileDetails.setPrice1("400");
+				tutProfileDetails.setBookingId(tutorProfile.getBookingId());
 				dao.saveTutorID(tutProfileDetails);
 				// creating tutor schedule tuple
 				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
-				tutSchedule.setTid(tutorProfile.getTid());
+				tutSchedule.setTid(tutorProfile.getBookingId());
 				tutSchedule.setFullName(tutorProfile.getFullName());
 				tutSchedule.setIsAvailable("yes");
 				dao.saveTutorAvailbilitySchedule(tutSchedule);
@@ -217,7 +177,15 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
-
+	public Integer genUserBookingId() {
+	  IdGenerator id = new IdGenerator();
+	  Integer bookingId = id.generate9DigitNumber();
+	  if(repTutorProfile.findByBookingId(bookingId)==null) {
+		  return bookingId;
+	  }else {
+		return genUserBookingId();
+	  }
+	}
 	// saving student registration details
 	public boolean saveStudentProfile(StudentProfileModel studentModel) {
 		StudentProfile studentProfile = new StudentProfile();
@@ -318,6 +286,7 @@ public class UserService implements UserDetailsService {
 		tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
 		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
 		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
+		tutProfileDetails.setBookingId(tutorModel.getBookingId());
 		// for setting the expertise areas
 		Integer minPrice = Integer.MAX_VALUE;
 		Integer maxPrice = 0;
@@ -363,34 +332,6 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-	// for editing tutor profile details
-	public void editTutorProfileDetails(TutorProfileDetailsModel tutorModel)
-			throws IllegalArgumentException, IllegalAccessException {
-		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
-		tutProfileDetails.setDescription(tutorModel.getDescription());
-		tutProfileDetails.setFullName(tutorModel.getFullName());
-//		tutProfileDetails.setGradeLevel(tutorModel.getGradeLevel());
-//		tutProfileDetails.setGraduationYear(tutorModel.getGraduationYear());
-		tutProfileDetails.setLessonCompleted(tutorModel.getLessonCompleted());
-//		tutProfileDetails.setMajorSubject(tutorModel.getMajorSubject());
-		tutProfileDetails.setPrice1(tutorModel.getPrice1());
-		tutProfileDetails.setPrice2(tutorModel.getPrice2());
-		tutProfileDetails.setPrice3(tutorModel.getPrice3());
-		tutProfileDetails.setProfileCompleted(tutorModel.getProfileCompleted());
-		tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-		tutProfileDetails.setRating(tutorModel.getRating());
-		tutProfileDetails.setReviewCount(tutorModel.getReviewCount());
-//		tutProfileDetails.setStudyInstitution(tutorModel.getStudyInstitution());
-//		tutProfileDetails.setSubject1(tutorModel.getSubject1());
-//		tutProfileDetails.setSubject2(tutorModel.getSubject2());
-//		tutProfileDetails.setSubject3(tutorModel.getSubject3());
-		tutProfileDetails.setTid(tutorModel.getTid());
-//		tutProfileDetails.setWorkInstitution(tutorModel.getWorkInstitution());
-//		tutProfileDetails.setWorkTitle(tutorModel.getWorkTitle());
-		tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
-		dao.updateTutorProfile(tutProfileDetails);
-	}
-
 	// saving registration details of tutor
 	public boolean saveTutorProfile(TutorProfileModel tutorModel) {
 		TutorProfile tutorProfile = new TutorProfile();
@@ -433,6 +374,7 @@ public class UserService implements UserDetailsService {
 		tutorProfile.setEmail(tutorModel.getEmail());
 		tutorProfile.setFullName(tutorModel.getFullName());
 		tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+		tutorProfile.setBookingId(tutorModel.getBookingId());
 		dao.updateTutorBasicInfo(tutorProfile);
 
 		if (dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted() <= 50) {
@@ -449,34 +391,23 @@ public class UserService implements UserDetailsService {
 		tutorProfile.setDateOfBirth(tutorModel.getDateOfBirth());
 		tutorProfile.setEmail(tutorModel.getEmail());
 		tutorProfile.setFullName(tutorModel.getFullName());
-//		tutorProfile.setAddressLine1(tutorModel.getAddressLine1());
-//		tutorProfile.setAddressLine2(tutorModel.getAddressLine2());
-//		tutorProfile.setCountry(tutorModel.getCountry());
-//		tutorProfile.setState(tutorModel.getState());
 		tutorProfile.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-//		tutorProfile.setCity(tutorModel.getCity());
 		dao.updateTutorBasicInfo(tutorProfile);
 	}
-
-//	// validation of tutor login
-//	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
-//		if (dao.onTutorLogin(tutorLoginModel)) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 
 	// getting tutor details after login
 	public TutorProfileModel getTutorDetails(String userId) {
 		TutorProfileModel tutorProfileModel = new TutorProfileModel();
 		TutorProfile tutorProfile = dao.getTutorDetails(userId);
+		System.out.println("tutorProfile => "+tutorProfile);
 		tutorProfileModel.setContact(tutorProfile.getContact());
 		tutorProfileModel.setDateOfBirth(tutorProfile.getDateOfBirth());
 		tutorProfileModel.setEmail(tutorProfile.getEmail());
 		tutorProfileModel.setFullName(tutorProfile.getFullName());
 		tutorProfileModel.setTid(tutorProfile.getTid());
 		tutorProfileModel.setProfilePictureUrl(tutorProfile.getProfilePictureUrl());
+		tutorProfileModel.setBookingId(tutorProfile.getBookingId());
+		System.out.println("tutorProfileModel =>"+tutorProfileModel);
 		return tutorProfileModel;
 	}
 
@@ -485,33 +416,9 @@ public class UserService implements UserDetailsService {
 		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
 		List<TutorProfileDetails> tutList = dao.getTutorList(subject);
 		for (TutorProfileDetails tutProfileDetails : tutList) {
-			TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
-			tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
-			tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
-			tutorProfileDetailsModel.setInstitute(tutProfileDetails.getInstitute());
-			tutorProfileDetailsModel.setEducationalQualifications(tutProfileDetails.getEducationalQualifications());
-			tutorProfileDetailsModel.setPrice1(tutProfileDetails.getPrice1());
-			tutorProfileDetailsModel.setPrice2(tutProfileDetails.getPrice2());
-			tutorProfileDetailsModel.setPrice3(tutProfileDetails.getPrice3());
-			tutorProfileDetailsModel.setDescription(tutProfileDetails.getDescription());
-			tutorProfileDetailsModel.setSpeciality(tutProfileDetails.getSpeciality());
-			tutorProfileDetailsModel.setRating(tutProfileDetails.getRating());
-			tutorProfileDetailsModel.setReviewCount(tutProfileDetails.getReviewCount());
-			tutorProfileDetailsModel.setLessonCompleted(tutProfileDetails.getLessonCompleted());
-			tutorProfileDetailsModel.setProfilePictureUrl(tutProfileDetails.getProfilePictureUrl());
-			tutorProfileDetailsModel.setProfessionalSkills(tutProfileDetails.getProfessionalSkills());
-			tutorProfileDetailsModel.setCurrentOrganisation(tutProfileDetails.getCurrentOrganisation());
-			tutorProfileDetailsModel.setPreviousOrganisations(tutProfileDetails.getPreviousOrganisations());
-			tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
-			tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
-			tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
-			for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
-				expertise exp = new expertise();
-				exp.setArea(area.getSubject());
-				exp.setPrice(area.getPrice());
-				tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
-			}
-			tutListModel.add(tutorProfileDetailsModel);
+			TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+			tutorModel.setTid(null);
+			tutListModel.add(tutorModel);
 		}
 		return tutListModel;
 	}
@@ -525,11 +432,21 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
-
+	//getting tutor profile details with tutor bookingId
+	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(Integer bookingId) {
+		TutorProfileDetails tutProfileDetails = dao.fetchTutorProfileDetailsByBookingId(bookingId);
+		TutorProfileDetailsModel tutProfileDetailsModel =copyTutorProfileDetails(tutProfileDetails);
+		tutProfileDetailsModel.setTid(null);
+		return tutProfileDetailsModel;
+	}
 	// getting tutor profile details with tid
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
-		System.out.println("get tutot profile details ->" + dao.getTutorProfileDetails(tid));
 		TutorProfileDetails tutProfileDetails = dao.getTutorProfileDetails(tid);
+	    return copyTutorProfileDetails(tutProfileDetails);
+	}
+	
+	//from copying content of tutorProfileDetails entity to model
+	public TutorProfileDetailsModel copyTutorProfileDetails(TutorProfileDetails tutProfileDetails) {
 		TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
 		tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
 		tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
@@ -550,16 +467,16 @@ public class UserService implements UserDetailsService {
 		tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
 		tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
 		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
+		tutorProfileDetailsModel.setBookingId(tutProfileDetails.getBookingId());
 		for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
 			expertise exp = new expertise();
 			exp.setArea(area.getSubject());
 			exp.setPrice(area.getPrice());
 			tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 		}
-
 		return tutorProfileDetailsModel;
 	}
-
+	
 	// for saving social login details
 	public boolean registerSocialLogin(SocialLoginModel socialLoginModel) {
 		SocialLogin socialLogin = new SocialLogin();
@@ -573,14 +490,6 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-//	// for checking social login
-//	public boolean checkSocialLogin(String email) {
-//		if (dao.checkSocialLogin(email)) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 
 	// for saving tutor Availability Schedule
 	public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
@@ -732,8 +641,8 @@ public class UserService implements UserDetailsService {
 	}
 
 	// fetch if the tutor is available ?
-	public boolean getTutorIsAvailable(String tid) {
-		if (dao.getTutorAvailabilitySchedule(Integer.valueOf(tid)).getIsAvailable().equals("yes")) {
+	public boolean getTutorIsAvailable(String bookingId) {
+		if (dao.getTutorAvailabilitySchedule(Integer.valueOf(bookingId)).getIsAvailable().equals("yes")) {
 			return true;
 		} else {
 			return false;
@@ -758,33 +667,7 @@ public class UserService implements UserDetailsService {
 		List<TutorProfileDetails> tutors = dao.fetchAllLinkedTutors(userId);
 		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 		for (TutorProfileDetails tutor : tutors) {
-			TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
-			tutorProfileDetailsModel.setTid(tutor.getTid());
-			tutorProfileDetailsModel.setFullName(tutor.getFullName());
-			tutorProfileDetailsModel.setInstitute(tutor.getInstitute());
-			tutorProfileDetailsModel.setEducationalQualifications(tutor.getEducationalQualifications());
-			tutorProfileDetailsModel.setPrice1(tutor.getPrice1());
-			tutorProfileDetailsModel.setPrice2(tutor.getPrice2());
-			tutorProfileDetailsModel.setPrice3(tutor.getPrice3());
-			tutorProfileDetailsModel.setDescription(tutor.getDescription());
-			tutorProfileDetailsModel.setSpeciality(tutor.getSpeciality());
-			tutorProfileDetailsModel.setRating(tutor.getRating());
-			tutorProfileDetailsModel.setReviewCount(tutor.getReviewCount());
-			tutorProfileDetailsModel.setLessonCompleted(tutor.getLessonCompleted());
-			tutorProfileDetailsModel.setProfilePictureUrl(tutor.getProfilePictureUrl());
-			tutorProfileDetailsModel.setProfessionalSkills(tutor.getProfessionalSkills());
-			tutorProfileDetailsModel.setCurrentOrganisation(tutor.getCurrentOrganisation());
-			tutorProfileDetailsModel.setPreviousOrganisations(tutor.getPreviousOrganisations());
-			tutorProfileDetailsModel.setProfileCompleted(tutor.getProfileCompleted());
-			tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
-			tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
-			for (ExpertiseAreas area : tutor.getAreaOfExpertise()) {
-				expertise exp = new expertise();
-				exp.setArea(area.getSubject());
-				exp.setPrice(area.getPrice());
-				tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
-			}
-			tutorsModel.add(tutorProfileDetailsModel);
+			tutorsModel.add(copyTutorProfileDetails(tutor));
 		}
 		return tutorsModel;
 
@@ -797,33 +680,7 @@ public class UserService implements UserDetailsService {
 		} else {
 			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 			for (TutorProfileDetails tutor : tutors) {
-				TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
-				tutorProfileDetailsModel.setTid(tutor.getTid());
-				tutorProfileDetailsModel.setFullName(tutor.getFullName());
-				tutorProfileDetailsModel.setInstitute(tutor.getInstitute());
-				tutorProfileDetailsModel.setEducationalQualifications(tutor.getEducationalQualifications());
-				tutorProfileDetailsModel.setPrice1(tutor.getPrice1());
-				tutorProfileDetailsModel.setPrice2(tutor.getPrice2());
-				tutorProfileDetailsModel.setPrice3(tutor.getPrice3());
-				tutorProfileDetailsModel.setDescription(tutor.getDescription());
-				tutorProfileDetailsModel.setSpeciality(tutor.getSpeciality());
-				tutorProfileDetailsModel.setRating(tutor.getRating());
-				tutorProfileDetailsModel.setReviewCount(tutor.getReviewCount());
-				tutorProfileDetailsModel.setLessonCompleted(tutor.getLessonCompleted());
-				tutorProfileDetailsModel.setProfilePictureUrl(tutor.getProfilePictureUrl());
-				tutorProfileDetailsModel.setProfessionalSkills(tutor.getProfessionalSkills());
-				tutorProfileDetailsModel.setCurrentOrganisation(tutor.getCurrentOrganisation());
-				tutorProfileDetailsModel.setPreviousOrganisations(tutor.getPreviousOrganisations());
-				tutorProfileDetailsModel.setProfileCompleted(tutor.getProfileCompleted());
-				tutorProfileDetailsModel.setYearsOfExperience(tutor.getYearsOfExperience());
-				tutorProfileDetailsModel.setLinkedInProfile(tutor.getLinkedInProfile());
-				for (ExpertiseAreas area : tutor.getAreaOfExpertise()) {
-					expertise exp = new expertise();
-					exp.setArea(area.getSubject());
-					exp.setPrice(area.getPrice());
-					tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
-				}
-				tutorsModel.add(tutorProfileDetailsModel);
+				tutorsModel.add(copyTutorProfileDetails(tutor));
 			}
 			return tutorsModel;
 		}

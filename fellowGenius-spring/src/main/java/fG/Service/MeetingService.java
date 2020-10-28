@@ -90,7 +90,7 @@ public class MeetingService {
 		try {
 			MimeMessage message = new MimeMessage(session);
 			if (booking.getApprovalStatus().equals("Pending")) {
-				TutorProfile tutProfile = userDao.getTutorProfile(id);
+				TutorProfile tutProfile = userDao.fetchTutorProfileByBookingId(id);
 				String to = tutProfile.getEmail();
 				message.setFrom(new InternetAddress(from));
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));

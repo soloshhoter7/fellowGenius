@@ -268,7 +268,7 @@
   </div>
   <div id="mainContent" class="main-content" style="position: relative">
     <div [class]="overlay"></div>
-    <div class="header" id="headerContent">
+    <div class="header" id="headerContent" [class.expertNavHeight]="loginType == 'Expert'">
       <!-- <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span> -->
       <span class="fa fa-bars hum-burger" (click)="toggleNav()"></span>
       <div class="logo" (click)="toFacade()"></div>

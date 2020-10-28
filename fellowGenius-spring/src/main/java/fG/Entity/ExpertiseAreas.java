@@ -62,8 +62,10 @@ public class ExpertiseAreas {
 
 	@Override
 	public String toString() {
-		return "ExpertiseAreas [id=" + id + ", subject=" + subject + ", price=" + price + ", userId=" + userId + "]";
+		return "ExpertiseAreas [id=" + id + ", subject=" + subject + ", price=" + price + "]";
 	}
+
+
 
 	
 }

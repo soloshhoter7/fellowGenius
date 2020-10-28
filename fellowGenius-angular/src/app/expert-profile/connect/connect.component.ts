@@ -124,7 +124,7 @@ export class ConnectComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['page'];
       this.httpService
-        .fetchTutorProfileDetails(this.userId)
+        .fetchBookingTutorProfileDetails(this.userId)
         .subscribe((res) => {
           this.teacherProfile = res;
           this.amount = parseInt(this.teacherProfile.price1);
@@ -146,10 +146,9 @@ export class ConnectComponent implements OnInit {
             .getTutorTimeAvailabilityTimeArray(this.userId)
             .subscribe((res) => {
               this.ScheduleTime = res;
-              console.log(this.ScheduleTime)
               this.selectedDate = this.scheduleDates[0];
               setTimeout(()=>{
-                this.dateChange()
+                this.dateChange();
               },1000)
               this.manipulateTimeSlots();
             });
@@ -164,7 +163,7 @@ export class ConnectComponent implements OnInit {
     if(this.selectedDate.hasElements == false){
       this.noSchedule= true;
     }else if(this.selectedDate.hasElements == true){
-      this.noSchedule=false
+      this.noSchedule=false;
       this.fillSlots('start');
     }
   }
@@ -190,8 +189,6 @@ export class ConnectComponent implements OnInit {
       }
       this.startTimeValue = 0;
       this.endTimeValue = 0;
-      console.log(this.startTimeValue);
-      console.log(this.endTimeValue)
     }
   }
   initPay(): void {
@@ -279,7 +276,7 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.endTimeHour = this.et.eh;
     this.bookingDetails.endTimeMinute = this.et.em;
     this.bookingDetails.meetingId = this.onGenerateString(10);
-    this.bookingDetails.tutorId = this.teacherProfile.tid;
+    this.bookingDetails.tutorId = this.teacherProfile.bookingId;
     this.bookingDetails.studentName = this.studentService.getStudentProfileDetails().fullName;
     this.bookingDetails.tutorName = this.teacherProfile.fullName;
     this.bookingDetails.tutorProfilePictureUrl = this.teacherProfile.profilePictureUrl;

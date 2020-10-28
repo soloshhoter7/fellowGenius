@@ -101,8 +101,9 @@ export class ExpertProfileComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['page'];
       this.httpService
-        .fetchTutorProfileDetails(this.userId)
+        .fetchBookingTutorProfileDetails(this.userId)
         .subscribe((res) => {
+          console.log(res)
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           this.fetchExpertReviews();
@@ -128,10 +129,8 @@ export class ExpertProfileComponent implements OnInit {
     // this.router.navigate(['home/studentDashboard'])
   }
   fetchExpertReviews(){
-    
-    this.httpService.fetchExpertRecentReviews(this.teacherProfile.tid).subscribe((res)=>{
+    this.httpService.fetchExpertRecentReviews(this.teacherProfile.bookingId).subscribe((res)=>{
       this.reviewList = res;
-      console.log(this.reviewList);
     })
 
   }

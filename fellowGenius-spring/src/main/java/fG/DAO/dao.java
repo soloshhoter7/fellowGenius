@@ -215,7 +215,13 @@ public class dao {
 		System.out.println("oeee"+repTutorProfileDetails.idExist(tid));
 		return repTutorProfileDetails.idExist(tid);
 	}
-
+    
+	public TutorProfileDetails fetchTutorProfileDetailsByBookingId(Integer bookingId) {
+		return repTutorProfileDetails.bookingIdExist(bookingId);
+	}
+	public TutorProfile fetchTutorProfileByBookingId(Integer bookingId) {
+		return repTutorProfile.findByBookingId(bookingId);
+	}
 	// for updating profile completed %
 	public void updateProfileCompleted(Integer profileCompleted, Integer tid) {
 		repTutorProfileDetails.updateProfileCompleted(profileCompleted, tid);
@@ -359,8 +365,8 @@ public class dao {
 		List<BookingDetails> bookinglist = repBooking.fetchAllLinkedTutors(userId);
 		List<TutorProfileDetails> tutorsList = new ArrayList<TutorProfileDetails>();
 		for(BookingDetails id: bookinglist) {
-			if(!tutorsList.stream().filter(o->o.getTid().equals(id.getTutorId())).findFirst().isPresent()) {
-				tutorsList.add(repTutorProfileDetails.idExist(id.getTutorId()));		
+			if(!tutorsList.stream().filter(o->o.getBookingId().equals(id.getTutorId())).findFirst().isPresent()) {
+				tutorsList.add(repTutorProfileDetails.bookingIdExist(id.getTutorId()));		
 			}
 		}
 		return tutorsList;
