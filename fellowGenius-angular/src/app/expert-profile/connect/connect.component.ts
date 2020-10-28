@@ -170,6 +170,7 @@ export class ConnectComponent implements OnInit {
   startSlotChange(){
     this.endSlots = [];
     var i;
+    console.log(this.startTimeValue);
     for(i=this.startTimeValue+1;i<this.startSlots.length;i++){
       this.endSlots.push(this.startSlots[i]);
     }
@@ -264,9 +265,25 @@ export class ConnectComponent implements OnInit {
     }
   }
   onBooking() {
+    console.log(this.startSlots[this.startTimeValue]);
+    console.log(this.endSlots[this.endTimeValue]);
+    console.log(this.selectedDate);
+    
+    var startIndex,endIndex;
+    startIndex = this.ScheduleTime.indexOf(this.startSlots[this.startTimeValue]);
+    endIndex = this.ScheduleTime.indexOf(this.endSlots[this.endTimeValue]);
+
+    this.timeSelector(this.startSlots[this.startTimeValue], startIndex);
+    this.timeSelector(this.endSlots[this.endTimeValue], endIndex);
+
+    
+
     this.bookingDetails.startTimeHour = this.st.sh;
+    // this.bookingDetails.startTimeHour = this.startSlots[this.startTimeValue].hours;
     this.bookingDetails.startTimeMinute = this.st.sm;
+    // this.bookingDetails.startTimeMinute = this.startSlots[this.startTimeValue].minutes;
     this.bookingDetails.dateOfMeeting = this.startDate;
+    // this.bookingDetails.dateOfMeeting = this.selectedDate;
     this.bookingDetails.duration = this.findDuration(
       this.st.sh,
       this.st.sm,
@@ -283,15 +300,16 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
     this.calculatePrice(this.bookingDetails.subject);
     this.processingPayment = false;
-    this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
-      if (res) {
-        this.isLoading = true;
-        this.initPay();
-      } else if (!res) {
-        this.errorMessage =
-          'Tutor is busy in between your selected time slots !';
-      }
-    });
+    console.log(this.bookingDetails);
+    // this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
+    //   if (res) {
+    //     this.isLoading = true;
+    //     this.initPay();
+    //   } else if (!res) {
+    //     this.errorMessage =
+    //       'Tutor is busy in between your selected time slots !';
+    //   }
+    // });
   }
   
   closeNav() {
@@ -302,7 +320,7 @@ export class ConnectComponent implements OnInit {
     this.dialog.open(ConnectComponent);
   }
 
-  timeSelector(event, index: number, todayDate: string) {
+  timeSelector(event, index: number) {
     this.clickedIndex = index;
     console.log("this is event");
     console.log(event);
@@ -328,11 +346,9 @@ export class ConnectComponent implements OnInit {
       this.errorMessage = '';
 
       //case 1 or case 3
-      if (
-        this.tempArray.clickIndex1 == null &&
-        this.tempArray.clickIndex2 == null &&
-        (this.clickedIndex - 1 == -1 ||
-          this.ScheduleTime[this.clickedIndex - 1].date != event.date)
+      if (this.tempArray.clickIndex1 == null &&
+        this.tempArray.clickIndex2 == null && 
+        (this.clickedIndex - 1 == -1 || this.ScheduleTime[this.clickedIndex - 1].date != event.date)
       ) {
         if (this.clickedIndex - 1 == -1) {
         }
@@ -556,6 +572,8 @@ export class ConnectComponent implements OnInit {
         this.case5a = true;
       }
     }
+
+    console.log(this.bookingDetails.bookingCase);
   }
 
   timeFrom = (X) => {

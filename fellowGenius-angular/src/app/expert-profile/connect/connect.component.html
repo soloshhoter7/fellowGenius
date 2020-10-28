@@ -123,7 +123,9 @@
 
                                     </div>
                                     <div class="col-md-3" *ngIf="!noSchedule">
+                                        <br>
                                         <mat-form-field appearance="fill" style="width: 80px;">
+
                                             <mat-label>Start</mat-label>
                                             <mat-select [(value)]="startTimeValue" (selectionChange)="startSlotChange()">
                                                 <mat-option *ngFor="let time of startSlots; let i = index" [value]="i">
@@ -131,6 +133,7 @@
                                                 </mat-option>
                                             </mat-select>
                                         </mat-form-field>
+                                        <br>
                                         <span style="font-size: 25px;margin: 5px;">&nbsp;-&nbsp;</span>
                                         <mat-form-field appearance="fill" style="width: 80px;">
                                             <mat-label>End</mat-label>
@@ -143,7 +146,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="height: 40vh; max-height: 40vh; overflow-y: scroll">
+                            <!-- <div style="height: 40vh; max-height: 40vh; overflow-y: scroll">
                                 <div class="container">
                                     <div class="row" style="max-width: 910px">
                                         <div *ngFor="let todayDate of scheduleDates; let z = index" class="dayColumn">
@@ -172,7 +175,7 @@
                               time.hours == et.eh &&
                               time.minutes == et.em &&
                               startDate == time.date
-                          }" (click)="timeSelector(time, i, todayDate)">
+                          }" (click)="timeSelector(time, i)">
                                                             {{ time.hours }}:{{ time.minutes | zero }}
                                                         </div>
                                                     </div>
@@ -184,13 +187,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="connect-footer">
                             <div style="float: right">
-                                <button class="btn btn-primary" (click)="onBooking()" [disabled]="
-                startDisabled || endDisabled || !bookingDetails.subject
-              ">
+                                <button class="btn btn-primary" (click)="onBooking()" [disabled]="!bookingDetails.subject">
               Submit
             </button>
                             </div>
