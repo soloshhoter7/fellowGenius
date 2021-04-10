@@ -1,0 +1,15 @@
+p {
+	display: block;
+	font-size: medium;
+}
+h2 {
+	margin-bottom: 20px!important;
+	color: #e30084;
+    font-weight: 600;
+    margin: auto;
+}
+h1 {
+	font-weight: 600;
+    color: #892687;
+    text-align: center;
+}

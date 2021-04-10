@@ -225,7 +225,6 @@ export class SignUpComponent implements OnInit {
             }
           });
       } else {
-        console.log('wrong otp')
         this.wrongOtp = true;
       }
     }

@@ -23,8 +23,8 @@
       </span>
       <span class="greet">Thank you</span>
       <span *ngIf="loginType"
-        >Your regisration is almost complete & Please get a head start by
-        updating your profile & manage your dashboard.<br />
+        >Your registration is almost complete. Please update your profile now by
+        visiting your Dashboard. <br />
         <div class="goToDashboard-margin">
           <button type="button" class="btn btn-primary" (click)="continue()">
             Go to Dashboard
@@ -33,9 +33,9 @@
       </span>
 
       <span *ngIf="!loginType"
-        >Your regisration is almost complete & Please get a head start by
-        choosing your role</span
-      >
+        >Your registration is almost complete. Please select your role below to
+        get proceed.
+      </span>
       <div style="margin-top: 10px" *ngIf="!loginType">
         <!-- <form (ngSubmit)="toDashboard(t)" #t="ngForm"> -->
         <div class="form-group">

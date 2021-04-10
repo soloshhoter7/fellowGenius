@@ -1,9 +1,9 @@
 <app-nav-bar></app-nav-bar>
 <div class="content-container" style="background-color: black">
   <div class="breadcrumb-container">
-    <ol class="breadcrumb" style="font-size:15px;">
-      <li><a routerLink='../facade'>Home</a></li>
-      <li><a routerLink='../searchResults'>Search Results</a></li>
+    <ol class="breadcrumb" style="font-size: 15px">
+      <li><a routerLink="../facade">Home</a></li>
+      <li><a routerLink="../searchResults">Search Results</a></li>
       <li class="active">Profile</li>
     </ol>
   </div>
@@ -29,6 +29,7 @@
 
         <div class="basic-information">
           <span class="profile-name">{{ teacherProfile.fullName }}</span>
+          <span class="profile-skills">{{ teacherProfile.institute }}</span>
           <span class="profile-skills">{{
             teacherProfile.professionalSkills
           }}</span>
@@ -146,22 +147,24 @@
           <div class="col-md-12">
             <div class="description-header">Reviews</div>
             <div class="content-container">
-             <span *ngIf="reviewList.length==0">No Reviews</span>
-             <table>
-               <tr *ngFor="let review of reviewList">
-                 <td [innerHTML]="review.studentName">
-                 </td>
-                 <td>
-                  <div class="stars-outer" style="position: relative;margin-left: 10px;">
+              <span *ngIf="reviewList.length == 0">No Reviews</span>
+              <table>
+                <tr *ngFor="let review of reviewList">
+                  <td [innerHTML]="review.studentName"></td>
+                  <td>
                     <div
-                      class="stars-inner"
-                      [style.width.%]="review.rating"
-                    ></div>
-                    <!-- <div class="stars-inner"></div> -->
-                  </div>
-                 </td>
-               </tr>
-             </table>
+                      class="stars-outer"
+                      style="position: relative; margin-left: 10px"
+                    >
+                      <div
+                        class="stars-inner"
+                        [style.width.%]="review.rating"
+                      ></div>
+                      <!-- <div class="stars-inner"></div> -->
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
           <br /><br /><br /><br /><br /><br /><br /><br /><br />

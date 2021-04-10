@@ -83,7 +83,7 @@ public class MeetingService {
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fG15051209");
+				return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fellowG12091505.");
 			}
 		});
 

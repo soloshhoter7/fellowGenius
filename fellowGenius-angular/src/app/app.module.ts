@@ -76,6 +76,9 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { MatSelectModule} from '@angular/material/select';
 import { TimeMedian } from './pipes/timeMedian';
 import { TimeConverter} from './pipes/timeConverter';
+import { AboutUsComponent } from './facade/about-us/about-us.component';
+import { FaqComponent } from './facade/faq/faq.component';
+import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -95,6 +98,9 @@ export const appRoutes: Routes = [
     ],
   },
   { path: 'facade', component: FacadeComponent },
+  { path:'how-it-works', component:HowItWorksComponent},
+  { path:'faq', component:FaqComponent},
+  { path:'about-us',component:AboutUsComponent},
   { path: 'searchResults', component: SearchResultsComponent },
   { path: 'viewTutors', component: ExpertProfileComponent },
   { path: 'login', component: LoginComponent },
@@ -148,6 +154,9 @@ export const appRoutes: Routes = [
     AdvertisementBannerComponent,
     FiltersDialogComponent,
     ResetPasswordComponent,
+    AboutUsComponent,
+    FaqComponent,
+    HowItWorksComponent,
   ],
   imports: [
     NoopAnimationsModule,

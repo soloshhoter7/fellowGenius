@@ -1,0 +1,19 @@
+p {
+	display: block;
+	font-size: medium;
+}
+h2 {
+	margin-bottom: 30px;
+	color:#e30084;
+    font-weight: 600;
+    margin: auto;
+    margin-top: 10px!important;
+    margin-bottom: 10px!important;
+}
+h1 {
+	font-weight: 600;
+	color: #892687;
+}
+h4{
+    font-weight: 600;
+}

@@ -4,7 +4,6 @@ import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 })
 export class TimeConverter implements PipeTransform {
 	transform(value: any) {
-        console.log(value);
         if(value<=12){
             return value;
         }else{

@@ -67,9 +67,9 @@ export class HomeComponent implements OnInit {
   constructor(
     public router: Router,
     public meetingService: MeetingService,
-    private studentServce: StudentService,
+    public studentServce: StudentService,
     private loginService: LoginDetailsService,
-    private tutorService: TutorService,
+    public tutorService: TutorService,
     private dialog: MatDialog,
     private httpService: HttpService,
     private studentService: StudentService,
@@ -112,8 +112,8 @@ export class HomeComponent implements OnInit {
         this.studentService.getStudentProfileDetails().fullName != null
       ) {
         this.studentProfile = this.studentServce.getStudentProfileDetails();
-        if (this.studentProfile.profilePictureUrl != null) {
-          this.profilePictureUrl = this.studentProfile.profilePictureUrl;
+        if (this.studentServce.getStudentProfileDetails().profilePictureUrl == null) {
+          this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
         }
         this.calculateStudentProfilePercentage();
         this.router.navigate(['home/studentDashboard']);
@@ -130,8 +130,14 @@ export class HomeComponent implements OnInit {
       ) {
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-        if (this.tutorProfileDetails.profilePictureUrl != null) {
-          this.profilePictureUrl = this.tutorProfile.profilePictureUrl;
+        // if (this.tutorProfileDetails.profilePictureUrl != null) {
+        //   this.profilePictureUrl = this.tutorService.getTutorDetials().profilePictureUrl;
+        // }else{
+        //   this.
+        // }
+
+        if(this.tutorService.getTutorDetials().profilePictureUrl == null){
+          this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl
         }
         if (
           this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
@@ -216,7 +222,7 @@ export class HomeComponent implements OnInit {
       return false;
     }
   }
-  calculateStudentProfilePercentage() {
+  public calculateStudentProfilePercentage() {
     var filled = 2;
     var totalFields = 6;
     if (this.studentProfile.dateOfBirth != null) {
@@ -320,11 +326,14 @@ export class HomeComponent implements OnInit {
 
       this.httpService.getStudentDetails(this.userId).subscribe((res) => {
         this.studentProfile = res;
-        if (this.studentProfile.profilePictureUrl != null) {
-          this.profilePictureUrl = this.studentProfile.profilePictureUrl;
-        }
+       
         this.calculateStudentProfilePercentage();
         this.studentService.setStudentProfileDetails(this.studentProfile);
+        console.log(this.studentServce.getStudentProfileDetails().profilePictureUrl)
+        if (this.studentServce.getStudentProfileDetails().profilePictureUrl == null) {
+          console.log(this.profilePictureUrl)
+          this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
+        }
         this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
           this.studentService.setStudentBookings(res);
           // this.router.navigate([ 'home/studentDashboard' ]);
@@ -338,17 +347,18 @@ export class HomeComponent implements OnInit {
       this.loginService.setLoginType(this.loginType);
 
       this.httpService.getTutorDetails(this.userId).subscribe((res) => {
-        console.log(res);
         this.tutorProfile = res;
         this.tutorService.setTutorDetails(this.tutorProfile);
         this.httpService
           .getTutorProfileDetails(this.userId)
           .subscribe((res) => {
-            console.log(res)
             this.tutorProfileDetails = res;
-            if (this.tutorProfileDetails.profilePictureUrl != null) {
-              this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
-            }
+            // if (this.tutorProfileDetails.profilePictureUrl != null) {
+            //   this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
+            // }
+        if(this.tutorService.getTutorDetials().profilePictureUrl == null){
+          this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl
+        }
             this.tutorService.setTutorProfileDetails(res);
             // this.subject = this.tutorProfileDetails.educationalQualifications[0];
             this.httpService.getScheduleData(this.tutorProfile.bookingId).subscribe((res) => {

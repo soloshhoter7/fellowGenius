@@ -25,6 +25,8 @@ export class FacadeComponent implements OnInit {
   switchView: boolean = false;
   showContainer: boolean = false;
   reviewsView = true;
+  firstName='shubham';
+  lastName='sharma'
   myControl = new FormControl();
   options: string[] = [
     'Mathematics',

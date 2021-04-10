@@ -17,7 +17,7 @@
     display: none;
   }
   .search-result-container .search-cards-container .search-result-card {
-    margin-top: 5rem;
+    margin-top: 1rem;
     margin-left: -10px !important;
   }
   button {

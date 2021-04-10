@@ -261,24 +261,14 @@ export class TutorDashboardComponent implements OnInit {
       var aDate = a.dateOfMeeting.split("/")[0];
       var aHour = a.startTimeHour;
       var aMinute = a.startTimeMinute;
-      // var aDateTime = new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0);
-      // console.log(aDateTime);
 
-      console.log(aDate + "/" + aMonth + "/" + aYear + "..." + aHour + ":" + aMinute);
+
       var bYear = b.dateOfMeeting.split("/")[2];
       var bMonth = b.dateOfMeeting.split("/")[1]-1;
       var bDate = b.dateOfMeeting.split("/")[0];
       var bHour = b.startTimeHour;
       var bMinute = b.startTimeMinute;
-      // var bDateTime = new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0);
-      // console.log(bDateTime);
 
-      // console.log(bDate + "/" + bMonth + "/" + bYear + "...." + bHour + ":" + bMinute);
-      // console.log("this is a");
-      // console.log(a);
-      // console.log("this is b");
-      // console.log(b);
-      // return b.dateOfMeeting - a.dateOfMeeting;
       return new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0).valueOf() - new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0).valueOf();
 
     });

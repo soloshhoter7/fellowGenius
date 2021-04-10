@@ -91,6 +91,7 @@ export class ConnectComponent implements OnInit {
   };
   ScheduleTime: ScheduleTime[] = [];
   startSlots:ScheduleTime[] =[];
+  startSlotsCopy:ScheduleTime[] = [];
   endSlots:ScheduleTime[]=[];
   fullDate = [];
   clickedIndex1: number;
@@ -105,7 +106,7 @@ export class ConnectComponent implements OnInit {
   payableAmount = 0;
   processingPayment: boolean;
   paymentResponse: any = {};
-
+  duration;
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -170,26 +171,37 @@ export class ConnectComponent implements OnInit {
   startSlotChange(){
     this.endSlots = [];
     var i;
-    console.log(this.startTimeValue);
-    for(i=this.startTimeValue+1;i<this.startSlots.length;i++){
-      this.endSlots.push(this.startSlots[i]);
+    for(i=this.startTimeValue+1;i<this.startSlotsCopy.length;i++){
+      this.endSlots.push(this.startSlotsCopy[i]);
     }
   }
   fillSlots(method){
     if(method=='start'){
       this.startSlots=[];
       this.endSlots=[];
+      this.startSlotsCopy=[];
+      console.log(this.endSlots);
+      console.log(this.startSlots);
       for(let time of this.ScheduleTime){
         if(time.date == this.selectedDate.date){
           this.startSlots.push(time);
         }
       }
+      for(let time of this.ScheduleTime){
+        if(time.date == this.selectedDate.date){
+          this.startSlotsCopy.push(time);
+        }
+      }
       var i;
-      for(i=1;i<this.startSlots.length;i++){
-        this.endSlots.push(this.startSlots[i]);
+      for(i=1;i<this.startSlotsCopy.length;i++){
+        this.endSlots.push(this.startSlotsCopy[i]);
       }
       this.startTimeValue = 0;
       this.endTimeValue = 0;
+      this.startSlots.pop();
+      console.log(this.startSlots);
+      console.log(this.endSlots);
+      console.log(this.startSlotsCopy)
     }
   }
   initPay(): void {
@@ -265,10 +277,6 @@ export class ConnectComponent implements OnInit {
     }
   }
   onBooking() {
-    console.log(this.startSlots[this.startTimeValue]);
-    console.log(this.endSlots[this.endTimeValue]);
-    console.log(this.selectedDate);
-    
     var startIndex,endIndex;
     startIndex = this.ScheduleTime.indexOf(this.startSlots[this.startTimeValue]);
     endIndex = this.ScheduleTime.indexOf(this.endSlots[this.endTimeValue]);
@@ -290,6 +298,7 @@ export class ConnectComponent implements OnInit {
       this.et.eh,
       this.et.em
     );
+    
     this.bookingDetails.endTimeHour = this.et.eh;
     this.bookingDetails.endTimeMinute = this.et.em;
     this.bookingDetails.meetingId = this.onGenerateString(10);
@@ -300,16 +309,15 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.studentId = this.studentService.getStudentProfileDetails().sid;
     this.calculatePrice(this.bookingDetails.subject);
     this.processingPayment = false;
-    console.log(this.bookingDetails);
-    // this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
-    //   if (res) {
-    //     this.isLoading = true;
-    //     this.initPay();
-    //   } else if (!res) {
-    //     this.errorMessage =
-    //       'Tutor is busy in between your selected time slots !';
-    //   }
-    // });
+    this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
+      if (res) {
+        this.isLoading = true;
+        this.initPay();
+      } else if (!res) {
+        this.errorMessage =
+          'Tutor is busy in between your selected time slots !';
+      }
+    });
   }
   
   closeNav() {
@@ -322,8 +330,6 @@ export class ConnectComponent implements OnInit {
 
   timeSelector(event, index: number) {
     this.clickedIndex = index;
-    console.log("this is event");
-    console.log(event);
     // if start time and end time are null
     if (
       this.st.sh == -1 &&
@@ -572,8 +578,6 @@ export class ConnectComponent implements OnInit {
         this.case5a = true;
       }
     }
-
-    console.log(this.bookingDetails.bookingCase);
   }
 
   timeFrom = (X) => {

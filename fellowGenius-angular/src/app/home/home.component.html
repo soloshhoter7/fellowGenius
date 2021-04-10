@@ -10,10 +10,26 @@
 
     <div class="profile-section-sidenav" [class.hideBlock]="!toggleNavigation">
       <div
+        *ngIf="loginType == 'Expert'"
         (click)="openProfile(); onNavigationClick()"
         class="profile-thumbnail"
         style="cursor: pointer"
-        [ngStyle]="{ 'background-image': 'url(' + profilePictureUrl + ')' }"
+        [ngStyle]="{
+          'background-image':
+            'url(' + tutorService.getTutorDetials().profilePictureUrl + ')'
+        }"
+      ></div>
+      <div
+        *ngIf="loginType == 'Learner'"
+        (click)="openProfile(); onNavigationClick()"
+        class="profile-thumbnail"
+        style="cursor: pointer"
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            studentServce.getStudentProfileDetails().profilePictureUrl +
+            ')'
+        }"
       >
         <!-- <img src="../../assets/images/default-user-image.png" alt=""> -->
       </div>
@@ -73,12 +89,12 @@
           class="progressbar-information"
         >
           <span
-            >You have
+            >Your profile is
             <label>{{ 100 - tutorProfileDetails.profileCompleted }}% </label>
-            left.</span
+            incomplete.</span
           >
           <span class="hyperlink-cont"
-            >Please get a head start by
+            >Get a head start by
             <a href="javascript:;" (click)="openProfile(); onNavigationClick()"
               >completing it now</a
             ></span
@@ -268,7 +284,11 @@
   </div>
   <div id="mainContent" class="main-content" style="position: relative">
     <div [class]="overlay"></div>
-    <div class="header" id="headerContent" [class.expertNavHeight]="loginType == 'Expert'">
+    <div
+      class="header"
+      id="headerContent"
+      [class.expertNavHeight]="loginType == 'Expert'"
+    >
       <!-- <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span> -->
       <span class="fa fa-bars hum-burger" (click)="toggleNav()"></span>
       <div class="logo" (click)="toFacade()"></div>

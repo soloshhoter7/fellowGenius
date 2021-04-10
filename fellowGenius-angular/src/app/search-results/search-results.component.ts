@@ -207,9 +207,7 @@ export class SearchResultsComponent implements OnInit {
           ratingFiltersLength = false;
         }
       }
-      // console.log(subjectFiltersLength);
-      // console.log(priceFiltersLength);
-      // console.log(ratingFiltersLength);
+
       if(subjectFiltersLength||priceFiltersLength||ratingFiltersLength){
         return true;
       }else{
@@ -259,7 +257,6 @@ export class SearchResultsComponent implements OnInit {
         }
 
         this.allFiltersApplied = data.allFiltersApplied;
-        // console.log(this.checkFilters())
         this.httpService
           .applyFilters(this.allFiltersApplied)
           .subscribe((res) => {
@@ -269,6 +266,7 @@ export class SearchResultsComponent implements OnInit {
       }
     });
   }
+
   toLoginPage() {
     this.router.navigate(['login']);
   }
@@ -288,7 +286,7 @@ export class SearchResultsComponent implements OnInit {
   // }
   fetchTutorList() {
     this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
-      console.log(req)
+    
       this.searchResults = req;
     });
   }
@@ -381,7 +379,6 @@ export class SearchResultsComponent implements OnInit {
     this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
       this.filteredArray = [];
       this.filteredArray = res;
-      // console.log(res.toString().length == undefined);
     });
   }
 

@@ -103,7 +103,6 @@ export class ExpertProfileComponent implements OnInit {
       this.httpService
         .fetchBookingTutorProfileDetails(this.userId)
         .subscribe((res) => {
-          console.log(res)
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           this.fetchExpertReviews();
