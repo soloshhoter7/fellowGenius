@@ -8,6 +8,8 @@ import { throwError } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { HttpService } from '../service/http.service';
+import { Category } from '../model/category';
 
 @Component({
   selector: 'app-facade',
@@ -19,7 +21,7 @@ export class FacadeComponent implements OnInit {
     private router: Router,
     private loginDetailsService: LoginDetailsService,
     public breakpointObserver: BreakpointObserver,
-    private readonly http: HttpClient,
+    private httpService:HttpService,
     
   ) {}
   switchView: boolean = false;
@@ -29,15 +31,7 @@ export class FacadeComponent implements OnInit {
   lastName='sharma'
   myControl = new FormControl();
   options: string[] = [
-    'Mathematics',
-    'English',
-    'Science',
-    'Social Science',
-    'History',
-    'Political Science',
-    'Geography',
-    'Physics',
-    'Chemistry',
+   'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
   ];
   filteredOptions: Observable<string[]>;
 
@@ -120,12 +114,33 @@ export class FacadeComponent implements OnInit {
     //       this.switchView = true;
     //     }
     //   });
+    // this.getAllCategories();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );
   }
-
+  getAllCategories(){
+    console.log('///fetching all categories');
+    
+    this.httpService.getAllCategories().subscribe((res)=>{
+      let categories:Category[] = res;
+      console.log(categories);
+      if(categories.length>0){
+        console.log('inside if');
+        for(var i=0;i<categories.length;i++){
+          console.log(categories[i].category);
+          this.options.push(categories[i].category);
+        }
+      }
+     console.log(this.options);
+      // if(categories.length>0){
+      //   // categories.forEach(function (value){
+      //   //   this.categories.push(value.category);
+      //   // })
+      // }
+    });
+  }
   switchReviewsView() {
     this.reviewsView = !this.reviewsView;
   }

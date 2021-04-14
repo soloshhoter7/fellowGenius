@@ -22,6 +22,9 @@ export class NavBarComponent implements OnInit {
   loginType;
   studentProfile: StudentProfileModel;
   tutorProfile: tutorProfile;
+  options: string[] = [
+    'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
+   ];
   ngOnInit(): void {
     this.loginType = this.loginService.getLoginType();
     if (this.loginType == 'Learner') {
@@ -46,6 +49,13 @@ export class NavBarComponent implements OnInit {
       this.router.navigate(['home/studentDashboard']);
     } else if (this.loginService.getLoginType() == 'Expert') {
       this.router.navigate(['home/tutorDashboard']);
+    }
+  }
+  displaySelectedSubjects(category) {
+    if (category!=null) {
+      this.router.navigate(['searchResults'], {
+        queryParams: { subject: category },
+      });
     }
   }
   onSignOut() {

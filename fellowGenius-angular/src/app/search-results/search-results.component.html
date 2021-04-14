@@ -74,19 +74,19 @@
           >Subjects</span
         >
         <ul class="filter-category-list">
-          <li>
+          <li *ngFor="let sc of subCategories">
             <label class="filters-label">
               <input
                 type="checkbox"
                 class="filter-input"
-                value="English"
-                [checked]="subjectContains('English')"
+                [value]="sc.subCategory"
+                [checked]="subjectContains(sc.subCategory)"
                 (change)="searchBySubject($event)"
-              />English
+              />{{ sc.subCategory }}
               <span class="filter-num">(123)</span>
             </label>
           </li>
-          <li>
+          <!-- <li>
             <label class="filters-label">
               <input
                 type="checkbox"
@@ -133,7 +133,7 @@
               />Science
               <span class="filter-num">(123)</span>
             </label>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="filter-category">

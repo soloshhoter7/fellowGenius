@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { filtersApplied } from '../model/filtersApplied';
 import { subject } from '../model/subject';
 import { FiltersDialogComponent } from './filters-dialog/filters-dialog.component';
+import { Category } from '../model/category';
 
 @Component({
   selector: 'app-search-results',
@@ -40,7 +41,7 @@ export class SearchResultsComponent implements OnInit {
   screenWidth: number;
   showMobileFilterView: boolean;
   showMobileFilterButton: boolean = false;
-
+  subCategories:Category[]=[];
   constructor(
     private router: Router,
     private httpService: HttpService,
@@ -70,6 +71,7 @@ export class SearchResultsComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedSubject = params['subject'];
     });
+    this.getSubCategories();
     if (window.screen.width <= 500) {
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
@@ -182,6 +184,15 @@ export class SearchResultsComponent implements OnInit {
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
   onSignUp() {
     this.router.navigate(['signUp']);
+  }
+  getSubCategories(){
+    if(this.selectedSubject!=null){
+      this.httpService.getSubCategories(this.selectedSubject).subscribe((res)=>{
+        this.subCategories=res;
+        console.log(this.subCategories);
+      });
+  }
+    
   }
   checkFilters() {
     var subjectFiltersLength,ratingFiltersLength,priceFiltersLength;

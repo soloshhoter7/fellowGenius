@@ -9,10 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fG.Entity.TutorProfileDetails;
+import fG.Model.Category;
 import fG.Model.FiltersApplied;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentProfileModel;
@@ -24,8 +26,8 @@ import fG.Model.updatePasswordModel;
 import fG.Service.UserService;
 
 @RestController
-@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/fellowGenius")
 public class userController {
 
@@ -211,5 +213,34 @@ public class userController {
 	public boolean updatePassword(@RequestBody updatePasswordModel data) {
 		System.out.println(data.getUserId());
 		return service.updatePassword(data.getUserId(),data.getPassword());
+	}
+	
+	@RequestMapping(value="/addCategories",  method=RequestMethod.POST)
+	public boolean addNewCategory(@RequestBody Category category) {
+		return service.addNewCategory(category);
+	}
+	
+	@RequestMapping(value="/getAllCategories",method=RequestMethod.GET)
+	public List<Category> getAllCategories(){
+//		System.out.println("hitted!");
+		return service.getAllCategories();
+	}
+	
+	@RequestMapping(value="/addSubCategories",method = RequestMethod.POST)
+	public boolean addNewSubCategories(@RequestBody Category category) {
+		System.out.println(category);
+		return service.addNewSubCategories(category);
+	}
+	
+	@RequestMapping(value="/getSubCategories",method = RequestMethod.GET)
+	public List<Category> getSubCategories(String category){
+		System.out.println("getSubcategory : "+category);
+		return service.getSubCategories(category);
+	}
+	
+	@RequestMapping(value="/getAllSubCategories",method=RequestMethod.GET)
+	public List<Category> getAllSubCategories(){
+//		System.out.println("hitted!");
+		return service.getAllSubCategories();
 	}
 }

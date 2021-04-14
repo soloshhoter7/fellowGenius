@@ -28,17 +28,20 @@ import org.springframework.stereotype.Service;
 import fG.DAO.MeetingDao;
 import fG.DAO.dao;
 import fG.Entity.BookingDetails;
+import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
 import fG.Entity.LearningAreas;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
+import fG.Entity.SubcategoryList;
 import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.Users;
 import fG.Model.AuthenticationResponse;
+import fG.Model.Category;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentLoginModel;
@@ -49,8 +52,10 @@ import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
+import fG.Repository.repositoryCategory;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
+import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
@@ -85,7 +90,13 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
-
+	
+	@Autowired 
+	repositoryCategory repCategory;
+	
+	@Autowired 
+	repositorySubCategoryList repSubcategory;
+	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
@@ -759,5 +770,90 @@ public class UserService implements UserDetailsService {
 		}else {
 			return false;	
 		}
+	}
+
+	//to create new subject category
+	public boolean addNewCategory(Category category) {
+		// TODO Auto-generated method stub
+		CategoryList newCategory = new CategoryList();
+		List<CategoryList> allCategories = new ArrayList<CategoryList>();
+		allCategories = repCategory.findAll();
+		int categoryFoundFlag=0;
+		if(allCategories.size()>0) {
+			for(CategoryList c:allCategories) {
+				if(c.getCategoryName().equals(category.getCategory())) {
+					categoryFoundFlag=1;
+				}
+			}
+		}
+		if(categoryFoundFlag!=1) {
+			newCategory.setCategoryName(category.getCategory());
+			repCategory.save(newCategory);
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+
+	public List<Category> getAllCategories() {
+		List<CategoryList> categoryEntity = repCategory.findAll();
+		List<Category> categoryModel = new ArrayList<Category>();
+		if(categoryEntity!=null) {
+			for(CategoryList c:categoryEntity) {
+				Category newC = new Category();
+				newC.setCategory(c.getCategoryName());
+				categoryModel.add(newC);
+			}
+		}
+		return categoryModel;
+	}
+
+
+	public boolean addNewSubCategories(Category category) {
+		SubcategoryList subCateg = new SubcategoryList();
+		CategoryList categ = repCategory.findCategory(category.getCategory());
+		if(categ!=null) {
+			subCateg.setCategory(categ);
+			subCateg.setSubCategoryName(category.getSubCategory());
+			repSubcategory.save(subCateg);
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+
+	public List<Category> getSubCategories(String category) {
+		CategoryList  categ = repCategory.findCategory(category);
+		List<Category> subCategsModel = new ArrayList<Category>();
+		if(categ!=null) {
+			List<SubcategoryList> subCategs = repSubcategory.findSubCategories(categ.getCategoryId());
+			System.out.println(subCategs);
+			if(subCategs!=null) {
+				for(SubcategoryList sc:subCategs) {
+					Category cat = new Category();
+					cat.setCategory(sc.getCategory().getCategoryName());
+					cat.setSubCategory(sc.getSubCategoryName());
+					subCategsModel.add(cat);
+				}
+			}	
+		}
+		
+		return subCategsModel;
+	}
+	
+	public List<Category> getAllSubCategories(){
+		List<Category> categModel = new ArrayList<Category>();
+		List<SubcategoryList> subCategs = repSubcategory.findAll();
+		if(subCategs!=null) {
+			for(SubcategoryList sc:subCategs) {
+				Category categ = new Category();
+				categ.setCategory(sc.getCategory().getCategoryName());
+				categ.setSubCategory(sc.getSubCategoryName());
+				categModel.add(categ);
+			}
+		}
+		return categModel;
 	}
 }

@@ -79,6 +79,7 @@ import { TimeConverter} from './pipes/timeConverter';
 import { AboutUsComponent } from './facade/about-us/about-us.component';
 import { FaqComponent } from './facade/faq/faq.component';
 import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
+import { CategoriesComponent } from './admin-panel/categories/categories.component';
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -108,6 +109,7 @@ export const appRoutes: Routes = [
   { path: 'meeting', component: MeetingComponent },
   { path: 'test', component: TestComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
+  { path: 'admin/categories', component:CategoriesComponent},
   { path: '', redirectTo: '/facade', pathMatch: 'full' },
 ];
 
@@ -157,6 +159,7 @@ export const appRoutes: Routes = [
     AboutUsComponent,
     FaqComponent,
     HowItWorksComponent,
+    CategoriesComponent,
   ],
   imports: [
     NoopAnimationsModule,

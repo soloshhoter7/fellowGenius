@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin; 
 
 @Controller
-@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "http://localhost:4200")
 public class WebSocketController {
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;

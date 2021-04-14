@@ -63,6 +63,21 @@
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
+        <!-- <div> -->
+        <a
+          class="nav-item nav-link active"
+          *ngFor="let option of options"
+          style="
+            margin-right: 1vw;
+            cursor: pointer;
+            color: #3f023f;
+            font-weight: bolder;
+          "
+          (click)="displaySelectedSubjects(option)"
+          >{{ option }}</a
+        >
+        <!-- </div> -->
+
         <a class="nav-item nav-link active" href="#">Home</a>
         <a class="nav-item nav-link active" routerLink="/how-it-works"
           >How it works</a

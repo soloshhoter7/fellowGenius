@@ -16,6 +16,7 @@ import { ScheduleTime } from '../model/ScheduleTime';
 import { registrationModel } from '../model/registration';
 import { loginModel } from '../model/login';
 import { filtersApplied } from '../model/filtersApplied';
+import { Category } from '../model/category';
 
 @Injectable({
   providedIn: 'root',
@@ -522,5 +523,33 @@ export class HttpService {
         },
       }
     );
+  }
+  
+  addNewCategory(category:Category):Observable<Object>{
+    return this.http.post<Object>('http://localhost:5000/fellowGenius/addCategories',{
+      category:category.category,
+      subCategory:category.subCategory
+    });
+  }
+  getAllCategories():Observable<Category[]>{
+    return this.http.get<Category[]>('http://localhost:5000/fellowGenius/getAllCategories');
+  }
+  addNewSubCategory(category:Category):Observable<Object>{
+    return this.http.post<Object>('http://localhost:5000/fellowGenius/addSubCategories',
+    {
+      category:category.category,
+      subCategory:category.subCategory
+    })
+  }
+  getSubCategories(category:string):Observable<Category[]>{
+    return this.http.get<Category[]>('http://localhost:5000/fellowGenius/getSubCategories',
+    {
+      params:{
+        category:category
+      }
+    })
+  }
+  getAllSubCategories():Observable<Category[]>{
+    return this.http.get<Category[]>('http://localhost:5000/fellowGenius/getAllSubCategories');
   }
 }

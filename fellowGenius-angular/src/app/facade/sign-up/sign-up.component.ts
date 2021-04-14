@@ -186,7 +186,8 @@ export class SignUpComponent implements OnInit {
                       );
                       this.loginService.setLoginType('Learner');
                       this.loginService.setTrType('signUp');
-                      this.router.navigate(['home']);
+                      // this.router.navigate(['home']);
+                      this.toFacadePage();
                     });
                 } else if (this.registrationModel.role == 'Expert') {
                   this.httpClient
@@ -208,7 +209,9 @@ export class SignUpComponent implements OnInit {
                               );
                               this.loginService.setLoginType('Expert');
                               this.loginService.setTrType('signUp');
-                              this.router.navigate(['home']);
+                              // this.router.navigate(['home']);
+                              this.toFacadePage();
+                        
                             });
                         });
                     });
@@ -305,7 +308,8 @@ export class SignUpComponent implements OnInit {
                       );
                       this.loginService.setLoginType('Expert');
                       this.loginService.setTrType('signUp');
-                      this.router.navigate(['home']);
+                      // this.router.navigate(['home']);
+                      this.toFacadePage();
                     });
                 });
             });
