@@ -114,7 +114,8 @@ export class LoginComponent implements OnInit {
               .subscribe((res) => {
                 this.studentService.setStudentBookings(res);
                 this.isLoading = false;
-                this.router.navigate(['home']);
+                // this.router.navigate(['home']);
+                this.toFacade();
               });
           });
         } else if (role == 'Expert') {
@@ -138,7 +139,8 @@ export class LoginComponent implements OnInit {
                     this.loginDetailsService.setTrType('login');
                     this.loginDetailsService.setLoginType('Expert');
                     this.isLoading = false;
-                    this.router.navigate(['/home']);
+                    // this.router.navigate(['/home']);
+                    this.toFacade();
                   });
               });
           });
@@ -226,7 +228,8 @@ export class LoginComponent implements OnInit {
                       .subscribe((res) => {
                         this.studentService.setStudentBookings(res);
                         this.isLoading = false;
-                        this.router.navigate(['home']);
+                        // this.router.navigate(['home']);
+                        this.toFacade();
                       });
                   });
               } else if (role == 'Expert') {
@@ -252,7 +255,8 @@ export class LoginComponent implements OnInit {
                             this.loginDetailsService.setTrType('login');
                             this.loginDetailsService.setLoginType('Expert');
                             this.isLoading = false;
-                            this.router.navigate(['/home']);
+                            // this.router.navigate(['/home']);
+                            this.toFacade();
                           });
                       });
                   });
@@ -350,7 +354,8 @@ export class LoginComponent implements OnInit {
                       );
                       this.loginDetailsService.setLoginType('Expert');
                       this.loginDetailsService.setTrType('signUp');
-                      this.router.navigate(['home']);
+                      // this.router.navigate(['home']);
+                      this.toFacade();
                     });
                 });
             });

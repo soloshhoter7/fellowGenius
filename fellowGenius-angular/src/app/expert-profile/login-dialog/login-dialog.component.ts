@@ -171,8 +171,10 @@ export class LoginDialogComponent implements OnInit {
   // ------------------------------------------------------------------------------------------------------------------
   //google login
   prepareLoginButton() {
+    console.log('called')
     if (this.auth2 == null) {
       location.reload();
+      console.log('auth 2 null')
     }
     this.auth2.attachClickHandler(
       this.googleLogIn.nativeElement,
@@ -185,7 +187,7 @@ export class LoginDialogComponent implements OnInit {
         this.socialService.setSocialDetails(this.socialLogin);
 
         this.zone.run(() => {
-          this.isLoading = true;
+          // this.isLoading = true;
           this.hideContainer = 'hideBlock';
           this.loginModel.email = this.socialLogin.email;
           this.loginModel.password = this.socialLogin.id;
@@ -222,6 +224,22 @@ export class LoginDialogComponent implements OnInit {
                         this.dialogRef.closeAll();
                       });
                   });
+              }else{
+                // this.isLoading=false;
+                if(this.login){
+                  this.snackBar.open(
+                  'Try logging as Learner.',
+                  'close',
+                  this.config
+                );
+                }else{
+                  this.snackBar.open(
+                    'Try using a different account.',
+                    'close',
+                    this.config
+                  );
+                }
+                
               }
             } else {
               this.httpClient
@@ -290,7 +308,7 @@ export class LoginDialogComponent implements OnInit {
         });
       } else if (res == false) {
         this.snackBar.open(
-          'registration not successful ! email already exists !',
+          'You are already registered. Please Login.',
           'close',
           this.config
         );
@@ -309,22 +327,39 @@ export class LoginDialogComponent implements OnInit {
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
       this.registrationModel.role = 'Learner';
-      setTimeout(() => {
-        if (this.timeOut == true) {
-          this.emailValid = true;
-          this.isLoading = false;
-          this.showInput = true;
-        }
-      }, 25000);
       this.httpClient
-        .verifyEmail(this.registrationModel.email)
+        .checkUser(this.registrationModel.email)
         .subscribe((res) => {
-          this.verificationOtp = res['response'];
+          if (!res == true) {
+            setTimeout(() => {
+              if (this.timeOut == true) {
+                this.emailValid = true;
+                this.isLoading = false;
+                this.showInput = true;
+              }
+            }, 25000);
+            this.httpClient
+              .verifyEmail(this.registrationModel.email)
+              .subscribe((res) => {
+                this.verificationOtp = res['response'];
 
-          this.timeOut = false;
-          this.verifyEmail = true;
-          this.isLoading = false;
-          this.showInput = false;
+                this.timeOut = false;
+                this.verifyEmail = true;
+                this.isLoading = false;
+                this.showInput = false;
+              });
+          } else {
+            this.timeOut = false;
+            // this.verifyEmail = true;
+            this.isLoading = false;
+            // this.showInput = false;
+            this.snackBar.open(
+              'You are already registered. Please Login.',
+              'close',
+              this.config
+            );
+            this.login=true;
+          }
         });
     } else {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {

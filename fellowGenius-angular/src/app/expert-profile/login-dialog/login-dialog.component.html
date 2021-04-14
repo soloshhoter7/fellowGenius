@@ -61,21 +61,6 @@
           </button>
         </div>
       </form>
-      <div class="login-instead">
-        <span>or</span>
-        <button
-          class="btn btn-secondary"
-          (click)="prepareLoginButton()"
-          #googleLogIn
-        >
-          <i class="fa fa-google social-icons" style="margin-right: 5px"></i>
-          <p style="display: inline; font-size: larger">Login Using Google</p>
-        </button>
-        <span> New to FellowGenius? </span>
-        <a href="javascript:;" (click)="toSignUp()" class="forgot-password"
-          >Sign up</a
-        >
-      </div>
     </div>
   </div>
 </div>
@@ -222,9 +207,15 @@
           class="form-group button-container"
           [ngStyle]="{ 'margin-bottom': verifyEmail ? '35vh' : '' }"
         >
-          <a href="javascript:;" (click)="toSignUp()" class="forgot-password" style="color: #007bff;">
+          <a
+            href="javascript:;"
+            (click)="toSignUp()"
+            class="forgot-password"
+            style="color: #007bff"
+          >
             Login Instead
           </a>
+
           <button class="btn btn-primary" type="submit" [disabled]="!t.valid">
             Next
           </button>
@@ -238,5 +229,23 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+<div class="login-instead" [class.hideBlock]="isLoading || verifyEmail">
+  <span>or</span>
+  <button class="btn btn-secondary" (click)="prepareLoginButton()" #googleLogIn>
+    <i class="fa fa-google social-icons" style="margin-right: 5px"></i>
+    <p style="display: inline; font-size: larger" *ngIf="login">
+      Login Using Google
+    </p>
+    <p style="display: inline; font-size: larger" *ngIf="!login">
+      Sign up Using Google
+    </p>
+  </button>
+  <div *ngIf="login">
+    <span> New to FellowGenius? </span>
+    <a href="javascript:;" (click)="toSignUp()" class="forgot-password"
+      >Sign up</a
+    >
   </div>
 </div>

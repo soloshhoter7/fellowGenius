@@ -153,10 +153,11 @@ export class SignUpComponent implements OnInit {
             this.isLoading = false;
             // this.showInput = false;
             this.snackBar.open(
-              'Registration not successful. Email already exists !',
+              'You are already registered. Please Login.',
               'close',
               this.config
             );
+            this.router.navigate(['login']);
           }
         });
     } else {
@@ -255,10 +256,11 @@ export class SignUpComponent implements OnInit {
           } else {
             this.isLoading = false;
             this.snackBar.open(
-              'registration not successful ! email already exists !',
+              'You are already registered. Please Login',
               'close',
               this.config
             );
+            this.router.navigate(['login']);
           }
         });
       },
@@ -289,7 +291,8 @@ export class SignUpComponent implements OnInit {
               this.studentService.setStudentProfileDetails(this.studentProfile);
               this.loginService.setLoginType('Learner');
               this.loginService.setTrType('signUp');
-              this.router.navigate(['home']);
+              // this.router.navigate(['home']);
+              this.toFacadePage();
             });
           } else if (this.registrationModel.role == 'Expert') {
             this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
