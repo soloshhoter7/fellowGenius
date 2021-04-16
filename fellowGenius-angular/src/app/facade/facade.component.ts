@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { HttpService } from '../service/http.service';
 import { Category } from '../model/category';
+import { WebSocketService } from '../service/web-socket.service';
 
 @Component({
   selector: 'app-facade',
@@ -22,6 +23,7 @@ export class FacadeComponent implements OnInit {
     private loginDetailsService: LoginDetailsService,
     public breakpointObserver: BreakpointObserver,
     private httpService:HttpService,
+    private webSocketService:WebSocketService
     
   ) {}
   switchView: boolean = false;
@@ -119,6 +121,12 @@ export class FacadeComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+  }
+  sendData(){
+    // this.webSocketService.sendMessageToMeeting('724402542');
+    this.httpService.randomApi().subscribe((res)=>{
+      console.log(res);
+    })
   }
   getAllCategories(){
     console.log('///fetching all categories');

@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin; 
 
@@ -24,6 +25,12 @@ public class WebSocketController {
 	    return exception.getMessage();
     }
 	
+	public String sendMeetingNotificationWebSocket(@DestinationVariable String userId,@Payload String Notification) {
+		
+		this.messagingTemplate.convertAndSend("/user/Notifications/"+userId, Notification);
+		System.out.println("notification sending to "+userId+" as : "+Notification);
+		return Notification;
+	}
 	
 	// sending whiteBoard data 
 	@MessageMapping("/sendData/{bookingId}")
@@ -32,6 +39,12 @@ public class WebSocketController {
 		return coordinates;
 	}
 	
+	@MessageMapping("/sendNotification/{userId}")
+	@SendTo("/user/Notifications/{userId}")
+	public String sendmessage(@DestinationVariable String userId, @Payload String message) {
+//		System.out.println("hello!");
+		return message;
+	}
 	// for chatting inside the meeting
 	@MessageMapping("/sendChat/{bookingId}")
 	@SendTo("/inbox/MeetingChat/{bookingId}")
@@ -46,5 +59,13 @@ public class WebSocketController {
 	public String onRecievedFile(@DestinationVariable String bookingId,@Payload String file) {
 		return file;
 	}
+	
+//	@MessageMapping("/sendNotification/{bookingId}")
+//	@SendTo("/user/Notifications/{userId}")
+//	public String sendMeetingNotificationWebSocket(@DestinationVariable String userId,@Payload String Notification) {
+//		System.out.println("notification sending to "+userId+" as : "+Notification);
+//		return Notification;
+//	}
+//	
 }
 

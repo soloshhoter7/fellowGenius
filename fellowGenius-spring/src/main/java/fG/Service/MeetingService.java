@@ -18,6 +18,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fG.DAO.MeetingDao;
@@ -31,6 +36,8 @@ import fG.Repository.repositoryBooking;
 
 @Service
 public class MeetingService {
+	@Autowired
+	private SimpMessageSendingOperations messagingTemplate;
 
 	@Autowired
 	MeetingDao meetingDao;
@@ -43,6 +50,7 @@ public class MeetingService {
 
 	@Autowired
 	repositoryBooking repBooking;
+	
 	// to save the bookings requested by student
 	public boolean saveBooking(BookingDetailsModel bookingModel) {
 		BookingDetails booking = new BookingDetails();
@@ -67,6 +75,8 @@ public class MeetingService {
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
 		booking.setRazorpay_payment_id(bookingModel.getRazorpay_payment_id());
 		booking.setRazorpay_signature(bookingModel.getRazorpay_signature());
+		String message ="New appointment request";
+//		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
 		sendNotificationTutor(bookingModel.getTutorId(), booking);
 		return meetingDao.saveBooking(booking);
 	}

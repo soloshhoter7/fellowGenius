@@ -24,6 +24,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 import { AppComponent } from '../app.component';
 import { LocationStrategy } from '@angular/common';
+import { NotificationService } from '../service/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -47,6 +48,7 @@ export class HomeComponent implements OnInit {
   overlay;
   screenHeight: number;
   screenWidth: number;
+  notificationCount=0;
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   options: string[] = [
     'Mathematics',
@@ -75,7 +77,8 @@ export class HomeComponent implements OnInit {
     private studentService: StudentService,
     private cookieService: CookieService,
     private breakpointObserver: BreakpointObserver,
-    private locationStrategy: LocationStrategy
+    private locationStrategy: LocationStrategy,
+    private notificationService:NotificationService
   ) {
     this.getScreenSize();
   }
@@ -165,6 +168,9 @@ export class HomeComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+  }
+  getNotificationCount(){
+    return this.notificationService.getNotificationCount();
   }
   onNavigationClick() {
     if (this.screenWidth <= 500) {

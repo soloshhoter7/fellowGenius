@@ -331,6 +331,13 @@
           style="cursor: pointer"
           (click)="onSignOut()"
         ></span>
+        <span
+          class="fa fa-bell"
+          style="cursor: pointer; margin-right: 20px; position: relative"
+          ><span class="notificationNum" *ngIf="getNotificationCount() != 0">{{
+            getNotificationCount()
+          }}</span></span
+        >
         <!-- <div class="dropdown">
           <button
             class="btn btn-primary dropdown-toggle"

@@ -552,4 +552,7 @@ export class HttpService {
   getAllSubCategories():Observable<Category[]>{
     return this.http.get<Category[]>('http://localhost:5000/fellowGenius/getAllSubCategories');
   }
+  randomApi():Observable<Object>{
+    return this.http.get<Object>('http://localhost:5000/fellowGenius/randomapi');
+  }
 }

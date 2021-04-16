@@ -29,6 +29,7 @@ import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { registrationModel } from 'src/app/model/registration';
 import * as jwt_decode from 'jwt-decode';
+import { WebSocketService } from 'src/app/service/web-socket.service';
 declare const FB: any;
 @Component({
   selector: 'app-login',
@@ -46,7 +47,8 @@ export class LoginComponent implements OnInit {
     private socialService: SocialService,
     private zone: NgZone,
     private cookieService: CookieService,
-    private dialogRef: MatDialog
+    private dialogRef: MatDialog,
+    private webSocketService:WebSocketService
   ) {}
 
   @ViewChild('googleSignUp', { static: true })
@@ -114,6 +116,7 @@ export class LoginComponent implements OnInit {
               .subscribe((res) => {
                 this.studentService.setStudentBookings(res);
                 this.isLoading = false;
+                this.webSocketService.connectToUserWebSocket(this.userId);
                 // this.router.navigate(['home']);
                 this.toFacade();
               });
@@ -139,6 +142,7 @@ export class LoginComponent implements OnInit {
                     this.loginDetailsService.setTrType('login');
                     this.loginDetailsService.setLoginType('Expert');
                     this.isLoading = false;
+                    this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
                     // this.router.navigate(['/home']);
                     this.toFacade();
                   });
@@ -228,6 +232,7 @@ export class LoginComponent implements OnInit {
                       .subscribe((res) => {
                         this.studentService.setStudentBookings(res);
                         this.isLoading = false;
+                        this.webSocketService.connectToUserWebSocket(this.userId);
                         // this.router.navigate(['home']);
                         this.toFacade();
                       });
@@ -255,6 +260,7 @@ export class LoginComponent implements OnInit {
                             this.loginDetailsService.setTrType('login');
                             this.loginDetailsService.setLoginType('Expert');
                             this.isLoading = false;
+                            this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
                             // this.router.navigate(['/home']);
                             this.toFacade();
                           });

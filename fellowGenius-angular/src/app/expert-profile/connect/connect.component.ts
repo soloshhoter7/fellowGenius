@@ -20,6 +20,7 @@ import {
   WindowRefService,
 } from 'src/app/service/window-ref.service';
 import { Observable } from 'rxjs';
+import { WebSocketService } from 'src/app/service/web-socket.service';
 @Component({
   selector: 'app-connect',
   templateUrl: './connect.component.html',
@@ -119,7 +120,9 @@ export class ConnectComponent implements OnInit {
     private loginService: LoginDetailsService,
     private dialog: MatDialog,
     private zone: NgZone,
-    private winRef: WindowRefService
+    private winRef: WindowRefService,
+    private webSocket:WebSocketService
+
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -264,7 +267,7 @@ export class ConnectComponent implements OnInit {
       this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
         if (res == true) {
           this.isLoading = false;
-
+          this.webSocket.sendAppointmentRequestNotfication((this.bookingDetails.tutorId).toString());
           this.snackBar.open(
             'Booking submitted successfully !',
             'close',

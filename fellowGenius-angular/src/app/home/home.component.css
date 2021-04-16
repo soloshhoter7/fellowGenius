@@ -325,6 +325,16 @@ label {
 .expertNavHeight{
   height: 65px !important;
 }
+.notificationNum{
+  background-color: red;
+  position: absolute;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 45%;
+  line-height: 20px;
+  color: white;
+  top: -6px;
+}
 /*
 @media screen and (min-width: 500px) {
     /* .sidenav {
