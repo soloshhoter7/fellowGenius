@@ -23,7 +23,8 @@ export class NavBarComponent implements OnInit {
   studentProfile: StudentProfileModel;
   tutorProfile: tutorProfile;
   options: string[] = [
-    'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
+    'Tools','Marketing','Content','Project Management','Sales','E-comm',
+    // 'Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
    ];
   ngOnInit(): void {
     this.loginType = this.loginService.getLoginType();

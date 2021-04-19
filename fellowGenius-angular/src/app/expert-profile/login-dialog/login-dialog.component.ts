@@ -29,6 +29,7 @@ import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedu
 import { SocialService } from 'src/app/service/social.service';
 import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -49,13 +50,10 @@ export class LoginDialogComponent implements OnInit {
   constructor(
     private router: Router,
     private httpClient: HttpService,
-    private studentService: StudentService,
-    private tutorService: TutorService,
-    private loginService: LoginDetailsService,
     private snackBar: MatSnackBar,
     private dialogRef: MatDialog,
-    private cookieService: CookieService,
     private socialService: SocialService,
+    private authService:AuthService,
     private zone: NgZone
   ) {}
   // --- parent child relationships ------------
@@ -114,61 +112,67 @@ export class LoginDialogComponent implements OnInit {
   studentLoginDetails = new StudentLoginModel();
 
   errorText: string;
+
+  //for opening terms and conditions
   openTermsAndConditions() {
     this.dialogRef.open(TermsAndConditionsComponent, {
       width: 'auto',
       height: 'auto',
     });
   }
+
+  //to call reset password
   toResetPassword() {
     this.dialogRef.closeAll();
     this.router.navigate(['resetPassword']);
   }
+  //for logging in
   onLogin(form: NgForm) {
     this.isLoading = true;
     this.hideContainer = 'hideBlock';
     this.loginModel.email = form.value.email;
     this.loginModel.password = form.value.password;
-    this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-      if (res['response'] != 'false') {
-        var role = jwt_decode(res['response'])['ROLE'];
-        if (role == 'Learner') {
-          this.cookieService.set('token', res['response']);
-          this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
-          this.userId = this.cookieService.get('userId');
-          this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
-            this.studentProfile = res;
-            this.studentService.setStudentProfileDetails(this.studentProfile);
-            this.loginService.setTrType('login');
-            this.loginService.setLoginType('Learner');
-            this.httpClient
-              .getStudentSchedule(this.studentProfile.sid)
-              .subscribe((res) => {
-                this.studentService.setStudentBookings(res);
-                this.isLoading = false;
-                this.snackBar.open(
-                  'Logged in successfully',
-                  'close',
-                  this.config
-                );
-                this.dialogRef.closeAll();
-              });
-          });
-        } else {
-          this.errorText = 'Incorrect email or password';
-          this.isLoading = false;
-          this.hideContainer = '';
-          this.incorrectLoginDetails = true;
-        }
-      } else {
+    this.authService.onLogin(this.loginModel);
+    this.authService.getAuthStatusListener().subscribe((res)=>{
+      if(res==false){
         this.errorText = 'Incorrect email or password';
         this.isLoading = false;
         this.hideContainer = '';
         this.incorrectLoginDetails = true;
+      }else if(res==true){
+        this.isLoading = false;
+        this.snackBar.open(
+        'Logged in successfully',
+        'close',
+        this.config
+        );
+
+        this.dialogRef.closeAll();
       }
     });
   }
-  // ------------------------------------------------------------------------------------------------------------------
+  //for opening the thank you page and saving social login
+  openThankYouPage() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((data) => {
+      this.role = data;
+      this.registrationModel.role=this.role;
+      this.authService.saveSocialLogin(this.registrationModel);
+      this.authService.getAuthStatusListener().subscribe((res)=>{
+        if(res==true){
+          this.isLoading = false;
+        this.snackBar.open(
+        'Logged in successfully',
+        'close',
+        this.config
+        );
+        this.dialogRef.closeAll();
+        }
+      })
+    });
+  }
   //google login
   prepareLoginButton() {
     console.log('called')
@@ -191,132 +195,46 @@ export class LoginDialogComponent implements OnInit {
           this.hideContainer = 'hideBlock';
           this.loginModel.email = this.socialLogin.email;
           this.loginModel.password = this.socialLogin.id;
-          this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-            if (res['response'] != 'false') {
-              var role = jwt_decode(res['response'])['ROLE'];
-
-              if (role == 'Learner') {
-                this.cookieService.set('token', res['response']);
-                this.cookieService.set(
-                  'userId',
-                  jwt_decode(res['response'])['sub']
-                );
-                this.userId = this.cookieService.get('userId');
-                this.httpClient
-                  .getStudentDetails(this.userId)
-                  .subscribe((res) => {
-                    this.studentProfile = res;
-                    this.studentService.setStudentProfileDetails(
-                      this.studentProfile
-                    );
-                    this.loginService.setTrType('login');
-                    this.loginService.setLoginType('Learner');
-                    this.httpClient
-                      .getStudentSchedule(this.studentProfile.sid)
-                      .subscribe((res) => {
-                        this.studentService.setStudentBookings(res);
-                        this.isLoading = false;
-                        this.snackBar.open(
-                          'Logged in successfully',
-                          'close',
-                          this.config
-                        );
-                        this.dialogRef.closeAll();
-                      });
+          console.log(this.loginModel);
+          this.authService.onLogin(this.loginModel);
+          
+          this.authService.getAuthStatusListener().subscribe((res)=>{
+            if(res==false){
+              this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
+                if (!res) {
+                  this.zone.run(() => {
+                    this.registrationModel.fullName = this.socialLogin.fullName;
+        this.registrationModel.email = this.socialLogin.email;
+        this.registrationModel.password = this.socialLogin.id;
+                    this.openThankYouPage();
                   });
-              }else{
-                // this.isLoading=false;
-                if(this.login){
+                } 
+                else {
+                  this.isLoading = false;
                   this.snackBar.open(
-                  'Try logging as Learner.',
-                  'close',
-                  this.config
-                );
-                }else{
-                  this.snackBar.open(
-                    'Try using a different account.',
+                    'login not successful',
                     'close',
                     this.config
                   );
                 }
-                
-              }
-            } else {
-              this.httpClient
-                .checkUser(this.socialLogin.email)
-                .subscribe((res) => {
-                  if (!res) {
-                    this.zone.run(() => {
-                      this.role = 'Learner';
-                      this.saveSocialLogin();
-                    });
-                  } else {
-                    this.isLoading = false;
-                    this.hideContainer = '';
-                    this.snackBar.open(
-                      'Login not successful !',
-                      'close',
-                      this.config
-                    );
-                    this.errorText = 'Incorrect email or password';
-                    this.incorrectLoginDetails = true;
-                  }
-                });
-              // this.errorText = 'Incorrect email or password';
-              // this.isLoading = false;
-              // this.hideContainer = '';
-              // this.incorrectLoginDetails = true;
+              });
+            }else if(res==true){
+              this.isLoading = false;
+              this.snackBar.open(
+              'Logged in successfully',
+              'close',
+              this.config
+              );
+              this.dialogRef.closeAll();
             }
-          });
+
+          })
         });
       },
       (error) => {
         // alert(JSON.stringify(error, undefined, 2));
       }
     );
-  }
-
-  saveSocialLogin() {
-    this.registrationModel.fullName = this.socialLogin.fullName;
-    this.registrationModel.email = this.socialLogin.email;
-    this.registrationModel.password = this.socialLogin.id;
-    this.registrationModel.role = this.role;
-    this.httpClient.registerUser(this.registrationModel).subscribe((res) => {
-      if (res == true) {
-        this.loginModel.email = this.registrationModel.email;
-        this.loginModel.password = this.registrationModel.password;
-        // for logging in once registration is done
-        this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-          this.cookieService.set('token', res['response']);
-          this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
-          this.userId = this.cookieService.get('userId');
-
-          if (this.registrationModel.role == 'Learner') {
-            this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
-              this.studentProfile = res;
-              this.studentService.setStudentProfileDetails(this.studentProfile);
-              this.loginService.setLoginType('Learner');
-              this.loginService.setTrType('signUp');
-              this.dialogRef.closeAll();
-              this.snackBar.open(
-                'Registration successful !',
-                'close',
-                this.config
-              );
-            });
-          }
-        });
-      } else if (res == false) {
-        this.snackBar.open(
-          'You are already registered. Please Login.',
-          'close',
-          this.config
-        );
-        this.errorText = 'Incorrect email or password';
-        this.incorrectLoginDetails = true;
-        this.dialogRef.closeAll();
-      }
-    });
   }
 
   onSignUp(form: NgForm) {
@@ -326,7 +244,8 @@ export class LoginDialogComponent implements OnInit {
       this.registrationModel.email = form.value.email;
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
-      this.registrationModel.role = 'Learner';
+      // this.registrationModel.role = 'Learner';
+      this.registrationModel.role = form.value.role;
       this.httpClient
         .checkUser(this.registrationModel.email)
         .subscribe((res) => {
@@ -363,51 +282,26 @@ export class LoginDialogComponent implements OnInit {
         });
     } else {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-        this.httpClient
-          .registerUser(this.registrationModel)
-          .subscribe((res) => {
-            if (res == true) {
-              this.loginModel.email = this.registrationModel.email;
-              this.loginModel.password = this.registrationModel.password;
-              // for logging in once registration is done
-              this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-                this.cookieService.set('token', res['response']);
-                this.cookieService.set(
-                  'userId',
-                  jwt_decode(res['response'])['sub']
-                );
-                this.userId = this.cookieService.get('userId');
-
-                if (this.registrationModel.role == 'Learner') {
-                  this.httpClient
-                    .getStudentDetails(this.userId)
-                    .subscribe((res) => {
-                      this.studentProfile = res;
-                      this.studentService.setStudentProfileDetails(
-                        this.studentProfile
-                      );
-                      this.loginService.setLoginType('Learner');
-                      this.loginService.setTrType('signUp');
-                      this.dialogRef.closeAll();
-                      this.snackBar.open(
-                        'Registration successful !',
-                        'close',
-                        this.config
-                      );
-                    });
-                }
-              });
-            } else if (res == false) {
-              this.snackBar.open(
-                'registration not successful ! email already exists !',
-                'close',
-                this.config
-              );
-              this.incorrectLoginDetails = true;
-              this.errorText = 'Incorrect email or password';
-              this.dialogRef.closeAll();
-            }
-          });
+        this.authService.onSignUp(this.registrationModel);
+        this.authService.getAuthStatusListener().subscribe((res)=>{
+          if(res==false){
+            this.snackBar.open(
+              'registration not successful ! email already exists !',
+              'close',
+              this.config
+            );
+            this.incorrectLoginDetails = true;
+            this.dialogRef.closeAll();
+          }else if(res==true){
+            this.isLoading = false;
+          this.snackBar.open(
+          'Logged in successfully',
+          'close',
+          this.config
+          );
+          this.dialogRef.closeAll();
+          }
+        });
       } else {
         this.wrongOtp = true;
       }

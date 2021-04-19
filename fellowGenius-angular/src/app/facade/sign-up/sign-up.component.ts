@@ -28,6 +28,7 @@ import { socialLogin } from 'src/app/model/socialModel';
 import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedule';
 import { SocialService } from 'src/app/service/social.service';
 import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
+import { AuthService } from 'src/app/service/auth.service';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -44,7 +45,8 @@ export class SignUpComponent implements OnInit {
     private dialogRef: MatDialog,
     private cookieService: CookieService,
     private socialService: SocialService,
-    private zone: NgZone
+    private zone: NgZone,
+    private authService:AuthService
   ) {}
   // --- parent child relationships ------------
   @ViewChild('loginRef', { static: true })
@@ -107,8 +109,18 @@ export class SignUpComponent implements OnInit {
     dialogConfig.disableClose = true;
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
+      console.log('the role',data);
       this.role = data;
-      this.saveSocialLogin();
+      this.registrationModel.role=this.role;
+      console.log(this.registrationModel);
+      this.authService.saveSocialLogin(this.registrationModel);
+      this.authService.getAuthStatusListener().subscribe((res)=>{
+        console.log('auth listener result!')
+        console.log(res);
+        if(res==true){
+          this.toFacadePage();
+        }
+      })
     });
   }
   openTermsAndConditions() {
@@ -162,72 +174,20 @@ export class SignUpComponent implements OnInit {
         });
     } else {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-        this.httpClient
-          .registerUser(this.registrationModel)
-          .subscribe((res) => {
-            if (res == true) {
-              this.loginModel.email = this.registrationModel.email;
-              this.loginModel.password = this.registrationModel.password;
-              // for logging in once registration is done
-              this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-                this.cookieService.set('token', res['response']);
-                this.cookieService.set(
-                  'userId',
-                  jwt_decode(res['response'])['sub']
-                );
-                this.userId = this.cookieService.get('userId');
-
-                if (this.registrationModel.role == 'Learner') {
-                  this.httpClient
-                    .getStudentDetails(this.userId)
-                    .subscribe((res) => {
-                      this.studentProfile = res;
-                      this.studentService.setStudentProfileDetails(
-                        this.studentProfile
-                      );
-                      this.loginService.setLoginType('Learner');
-                      this.loginService.setTrType('signUp');
-                      // this.router.navigate(['home']);
-                      this.toFacadePage();
-                    });
-                } else if (this.registrationModel.role == 'Expert') {
-                  this.httpClient
-                    .getTutorDetails(this.userId)
-                    .subscribe((res) => {
-                      this.tutorProfile = res;
-                      this.tutorService.setTutorDetails(this.tutorProfile);
-
-                      this.httpClient
-                        .getTutorProfileDetails(this.tutorProfile.tid)
-                        .subscribe((res) => {
-                          this.tutorService.setTutorProfileDetails(res);
-                          this.httpClient
-                            .getScheduleData(this.tutorProfile.bookingId)
-                            .subscribe((res) => {
-                              this.tutorAvailabilitySchedule = res;
-                              this.tutorService.setPersonalAvailabilitySchedule(
-                                this.tutorAvailabilitySchedule
-                              );
-                              this.loginService.setLoginType('Expert');
-                              this.loginService.setTrType('signUp');
-                              // this.router.navigate(['home']);
-                              this.toFacadePage();
-                        
-                            });
-                        });
-                    });
-                }
-              });
-            } else if (res == false) {
-              this.snackBar.open(
-                'registration not successful ! email already exists !',
-                'close',
-                this.config
-              );
-              this.incorrectLoginDetails = true;
-              this.dialogRef.closeAll();
-            }
-          });
+        this.authService.onSignUp(this.registrationModel);
+        this.authService.getAuthStatusListener().subscribe((res)=>{
+          if(res==false){
+            this.snackBar.open(
+              'registration not successful ! email already exists !',
+              'close',
+              this.config
+            );
+            this.incorrectLoginDetails = true;
+            this.dialogRef.closeAll();
+          }else if(res==true){
+            this.toFacadePage();
+          }
+        })
       } else {
         this.wrongOtp = true;
       }
@@ -248,9 +208,13 @@ export class SignUpComponent implements OnInit {
         this.socialLogin.fullName = profile.getName();
         this.socialLogin.email = profile.getEmail();
         this.socialService.setSocialDetails(this.socialLogin);
+        this.registrationModel.fullName = this.socialLogin.fullName;
+        this.registrationModel.email = this.socialLogin.email;
+        this.registrationModel.password = this.socialLogin.id;
         this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
           if (!res) {
             this.zone.run(() => {
+              console.log('opening thank you page');
               this.openThankYouPage();
             });
           } else {
@@ -270,65 +234,7 @@ export class SignUpComponent implements OnInit {
     );
   }
 
-  saveSocialLogin() {
-    this.registrationModel.fullName = this.socialLogin.fullName;
-    this.registrationModel.email = this.socialLogin.email;
-    this.registrationModel.password = this.socialLogin.id;
-    this.registrationModel.role = this.role;
-    this.httpClient.registerUser(this.registrationModel).subscribe((res) => {
-      if (res == true) {
-        this.loginModel.email = this.registrationModel.email;
-        this.loginModel.password = this.registrationModel.password;
-        // for logging in once registration is done
-        this.httpClient.checkLogin(this.loginModel).subscribe((res) => {
-          this.cookieService.set('token', res['response']);
-          this.cookieService.set('userId', jwt_decode(res['response'])['sub']);
-          this.userId = this.cookieService.get('userId');
-
-          if (this.registrationModel.role == 'Learner') {
-            this.httpClient.getStudentDetails(this.userId).subscribe((res) => {
-              this.studentProfile = res;
-              this.studentService.setStudentProfileDetails(this.studentProfile);
-              this.loginService.setLoginType('Learner');
-              this.loginService.setTrType('signUp');
-              // this.router.navigate(['home']);
-              this.toFacadePage();
-            });
-          } else if (this.registrationModel.role == 'Expert') {
-            this.httpClient.getTutorDetails(this.userId).subscribe((res) => {
-              this.tutorProfile = res;
-              this.tutorService.setTutorDetails(this.tutorProfile);
-              this.httpClient
-                .getTutorProfileDetails(this.tutorProfile.tid)
-                .subscribe((res) => {
-                  this.tutorService.setTutorProfileDetails(res);
-                  this.httpClient
-                    .getScheduleData(this.tutorProfile.bookingId)
-                    .subscribe((res) => {
-                      this.tutorAvailabilitySchedule = res;
-                      this.tutorService.setPersonalAvailabilitySchedule(
-                        this.tutorAvailabilitySchedule
-                      );
-                      this.loginService.setLoginType('Expert');
-                      this.loginService.setTrType('signUp');
-                      // this.router.navigate(['home']);
-                      this.toFacadePage();
-                    });
-                });
-            });
-          }
-        });
-      } else if (res == false) {
-        this.snackBar.open(
-          'registration not successful ! email already exists !',
-          'close',
-          this.config
-        );
-        this.incorrectLoginDetails = true;
-        this.dialogRef.closeAll();
-      }
-    });
-  }
+  
   googleSDK() {
     window['googleSDKLoaded'] = () => {
       window['gapi'].load('auth2', () => {

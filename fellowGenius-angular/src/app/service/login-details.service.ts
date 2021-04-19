@@ -8,6 +8,7 @@ export class LoginDetailsService {
 	studentLoginModel = new StudentLoginModel();
 	trType: string;
 	loginType: string;
+	private userId:string;
 	constructor() {}
 
 	setLoginType(loginType: string) {
@@ -15,6 +16,12 @@ export class LoginDetailsService {
 	}
 	getLoginType() {
 		return this.loginType;
+	}
+	setUserId(userId:string){
+		this.userId=userId;
+	}
+	getUserId(){
+		return this.userId;
 	}
 	setTrType(trType: string) {
 		this.trType = trType;

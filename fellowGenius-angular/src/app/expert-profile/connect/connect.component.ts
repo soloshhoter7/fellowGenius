@@ -267,7 +267,7 @@ export class ConnectComponent implements OnInit {
       this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
         if (res == true) {
           this.isLoading = false;
-          this.webSocket.sendAppointmentRequestNotfication((this.bookingDetails.tutorId).toString());
+          this.webSocket.sendAppointmentNotfication((this.bookingDetails.tutorId).toString());
           this.snackBar.open(
             'Booking submitted successfully !',
             'close',

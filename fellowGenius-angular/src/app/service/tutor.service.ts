@@ -4,6 +4,10 @@ import { tutorLoginModel } from '../model/tutorLoginModel';
 import { tutorProfile } from '../model/tutorProfile';
 import { tutorAvailabilitySchedule } from '../model/tutorAvailabilitySchedule';
 import { scheduleData } from '../model/scheduleData';
+import { LoginDetailsService } from './login-details.service';
+import { HttpService } from './http.service';
+import { bookingDetails } from '../model/bookingDetails';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +18,21 @@ export class TutorService {
   tutorProfileDetails = new tutorProfileDetails();
   tutorProfile = new tutorProfile();
   tutorLogin = new tutorLoginModel();
-  tutorList: tutorProfileDetails[];
-
+ 
   editVariable: string;
 
-  constructor() {}
+//tutor dashboard stuff
+  tutorList: tutorProfileDetails[];
+  private bookingList: bookingDetails[] = [];
+  pendingRequestsCount = 0;
+  bookingRequestMessage = '';
+//////////////////////////
+  bookingsChanged = new Subject<bookingDetails[]>();
+  constructor(
+    private loginService:LoginDetailsService,
+    private httpService:HttpService,
+    // private tutorService:TutorService
+    ) {}
 
   setTutorLogin(tutorLogin: tutorLoginModel) {
     this.tutorLogin = tutorLogin;
@@ -53,6 +67,13 @@ export class TutorService {
   getPersonalAvailabilitySchedule() {
     return this.personalAvailablitySchedule;
   }
+  getBookings(){
+    return this.bookingList.slice();
+  }
+  setBookings(bookings:bookingDetails[]){
+    this.bookingList = bookings;
+    this.bookingsChanged.next(this.bookingList.slice());
+  }
   manipulateMeetingSchedule() {
     for (let schedule of this.getPersonalAvailabilitySchedule()
       .allMeetingsSchedule) {
@@ -69,5 +90,15 @@ export class TutorService {
       .allAvailabilitySchedule) {
       schedule.Type = 'availability';
     }
+  }
+// tutor dashboard stuff/////////////
+  fetchTutorPendingBookings(){
+    if (this.loginService.getLoginType() == 'Expert') {
+      this.httpService
+        .getTutorBookings(this.getTutorDetials().bookingId)
+        .subscribe((res) => {
+          this.setBookings(res);
+        });
+      }
   }
 }

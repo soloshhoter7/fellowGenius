@@ -176,6 +176,13 @@
             >Invalid contact</span
           >
         </div>
+        <div class="form-group" *ngIf="showInput">
+          <label class="form-control-placeholder" for="role">Role</label>
+          <select class="form-control" ngModel name="role" required>
+            <option>Learner</option>
+            <option>Expert</option>
+          </select>
+        </div>
 
         <p *ngIf="verifyEmail" style="color: rgba(0, 0, 0, 0.8); width: 75%">
           Your Verification Code has been sent to your Email, Please verify your

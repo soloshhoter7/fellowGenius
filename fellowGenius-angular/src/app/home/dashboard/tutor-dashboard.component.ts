@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { stringify } from 'querystring';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { LocationStrategy } from '@angular/common';
+import { WebSocketService } from 'src/app/service/web-socket.service';
+// import { ConsoleReporter } from 'jasmine';
 L10n.load({
   'en-US': {
     schedule: {
@@ -30,7 +32,8 @@ export class TutorDashboardComponent implements OnInit {
     public meetingService: MeetingService,
     public router: Router,
     public loginService: LoginDetailsService,
-    private locationStrategy: LocationStrategy
+    private locationStrategy: LocationStrategy,
+    private webSocketService:WebSocketService
   ) {
     setInterval(() => {
       this.now = new Date();
@@ -115,13 +118,30 @@ export class TutorDashboardComponent implements OnInit {
       this.loginService.getLoginType() == 'Expert' &&
       this.tutorProfileDetails.tid
     ) {
-      this.fetchTutorPendingBookings();
+      // this.fetchTutorPendingBookings();
+      this.initialisePendingRequests();
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
       this.fetchExpertRecentReviews();
     } else {
       this.handleRefresh();
     }
+  }
+
+  initialisePendingRequests(){
+    this.tutorService.fetchTutorPendingBookings();
+    this.tutorService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
+      console.log(booking);
+      this.bookingList = booking;
+
+      if (this.bookingList.length == 0) {
+        this.bookingRequestMessage = 'No booking requests pending.';
+        this.pendingRequestsCount = 0;
+      } else {
+        this.pendingRequestsCount = this.bookingList.length;
+      }
+    })
+    this.bookingList=this.tutorService.getBookings();
   }
   viewPendingRequests() {
     this.takeAction = !this.takeAction;
@@ -134,7 +154,8 @@ export class TutorDashboardComponent implements OnInit {
     setTimeout(() => {
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
       this.loginService.setLoginType('Expert');
-      this.fetchTutorPendingBookings();
+      // this.fetchTutorPendingBookings();
+      this.initialisePendingRequests();
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
       this.fetchExpertRecentReviews();
@@ -166,6 +187,7 @@ export class TutorDashboardComponent implements OnInit {
             this.pendingRequestsCount = 0;
             this.takeAction = false;
           }
+          this.webSocketService.sendAppointmentNotfication((booking.studentId).toString());
           this.before10MinutesTime(booking);
           this.enableJoinNow(booking);
           this.timeLeft(booking);
@@ -194,22 +216,23 @@ export class TutorDashboardComponent implements OnInit {
       });
   }
 
-  //for fetching pending tutor booking requests
-  fetchTutorPendingBookings() {
-    if (this.loginService.getLoginType() == 'Expert') {
-      this.httpService
-        .getTutorBookings(this.tutorService.getTutorDetials().bookingId)
-        .subscribe((res) => {
-          this.bookingList = res;
-          if (this.bookingList.length == 0) {
-            this.bookingRequestMessage = 'No booking requests pending.';
-            this.pendingRequestsCount = 0;
-          } else {
-            this.pendingRequestsCount = this.bookingList.length;
-          }
-        });
-    }
-  }
+  // for fetching pending tutor booking requests
+  // fetchTutorPendingBookings() {
+  //   if (this.loginService.getLoginType() == 'Expert') {
+  //     // this.httpService
+  //     //   .getTutorBookings(this.tutorService.getTutorDetials().bookingId)
+  //     this.tutorService.fetchTutorPendingBookings()
+  //       .subscribe((res) => {
+  //         this.bookingList = res;
+  //         if (this.bookingList.length == 0) {
+  //           this.bookingRequestMessage = 'No booking requests pending.';
+  //           this.pendingRequestsCount = 0;
+  //         } else {
+  //           this.pendingRequestsCount = this.bookingList.length;
+  //         }
+  //       });
+  //   }
+  // }
 
   //for fetching accepted booking requests
   fetchTutorApprovedMeetings() {

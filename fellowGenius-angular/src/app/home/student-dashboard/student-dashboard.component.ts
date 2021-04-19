@@ -82,9 +82,12 @@ export class StudentDashboardComponent implements OnInit {
     if (this.sid) {
       this.fetchPendingReviewsList();
       // this.fetchTutorList();
-      this.findStudentPendingBookings();
-      this.fetchApprovedMeetings();
-      this.fetchLiveMeetings();
+      // this.findStudentPendingBookings();
+      this.initialiseStudentPendingRequest();
+      // this.fetchApprovedMeetings();
+      this.intialiseStudentApprovedBookings();
+      this.initialiseLiveMeetingList();
+      // this.fetchLiveMeetings();
     } else {
       this.handleRefresh();
     }
@@ -146,7 +149,63 @@ export class StudentDashboardComponent implements OnInit {
     location.reload();
   }
   // -----------------------------------------------fetching all kind of meetings --------------------------------------------------------------------
+  handleRefresh() {
+    setTimeout(() => {
+      this.sid = this.studentService.getStudentProfileDetails().sid;
+      this.fetchPendingReviewsList();
+      // this.fetchTutorList();
+      // this.findStudentPendingBookings();
+      this.initialiseStudentPendingRequest();
+      // this.fetchApprovedMeetings();
+      this.intialiseStudentApprovedBookings();
+      // this.fetchLiveMeetings();
+      this.initialiseLiveMeetingList();
+      // this.fetchTopTutors();
+    }, 1000);
+  }
 
+  initialiseStudentPendingRequest(){
+    this.studentService.fetchStudentPendingBookings();
+    this.studentService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
+      this.bookingList=booking;
+      if (this.bookingList.length == 0) {
+        this.emptyBookingList = true;
+        this.pendingRequestsCount = 0;
+      } else {
+        this.pendingRequestsCount = this.bookingList.length;
+      }
+    })
+  }
+
+  intialiseStudentApprovedBookings(){
+    this.studentService.fetchApprovedStudentMeetings();
+    this.studentService.approvedBookingsChanged.subscribe((booking:bookingDetails[])=>{
+      this.approvedList=booking;
+      this.sortMeetings(this.approvedList);
+      
+      if (this.approvedList.length == 0) {
+        this.emptyApprovedList = true;
+      }
+      for (let booking of this.approvedList) {
+        this.timeLeft(booking);
+        if (this.approvedList.length == 0) {
+          this.emptyApprovedList = true;
+        }
+      }
+    })
+  }
+  initialiseLiveMeetingList(){
+    this.studentService.fetchLiveMeetings();
+    this.studentService.liveMeetingsChanged.subscribe((booking:bookingDetails[])=>{
+      this.liveMeetingList = booking;
+      if (this.liveMeetingList.length == 0) {
+        this.emptyLiveList = true;
+      }
+      for (let booking of this.liveMeetingList) {
+        this.eliminateLiveMeetings(booking, this.liveMeetingList);
+      }
+    })
+  }
   // for fetching pending review list
   fetchPendingReviewsList() {
     this.httpService.fetchPendingReviewsList(this.sid).subscribe((res) => {
@@ -164,36 +223,36 @@ export class StudentDashboardComponent implements OnInit {
       .subscribe((res) => {});
   }
   // for fetching student pending bookings
-  findStudentPendingBookings() {
-    this.httpService.findStudentBookings(this.sid).subscribe((res) => {
-      this.bookingList = res;
-      this.meetingService.studentPendingRequests(this.bookingList);
-      if (this.bookingList.length == 0) {
-        this.emptyBookingList = true;
-        this.pendingRequestsCount = 0;
-      } else {
-        this.pendingRequestsCount = this.bookingList.length;
-      }
-    });
-  }
+  // findStudentPendingBookings() {
+  //   this.httpService.findStudentBookings(this.sid).subscribe((res) => {
+  //     this.bookingList = res;
+  //     this.meetingService.studentPendingRequests(this.bookingList);
+  //     if (this.bookingList.length == 0) {
+  //       this.emptyBookingList = true;
+  //       this.pendingRequestsCount = 0;
+  //     } else {
+  //       this.pendingRequestsCount = this.bookingList.length;
+  //     }
+  //   });
+  // }
 
   //for fetching student approved meetings
-  fetchApprovedMeetings() {
-    this.httpService.fetchApprovedMeetings(this.sid).subscribe((res) => {
-      this.approvedList = res;
-      this.sortMeetings(this.approvedList);
+  // fetchApprovedMeetings() {
+  //   this.httpService.fetchApprovedMeetings(this.sid).subscribe((res) => {
+  //     this.approvedList = res;
+  //     this.sortMeetings(this.approvedList);
       
-      if (this.approvedList.length == 0) {
-        this.emptyApprovedList = true;
-      }
-      for (let booking of this.approvedList) {
-        this.timeLeft(booking);
-        if (this.approvedList.length == 0) {
-          this.emptyApprovedList = true;
-        }
-      }
-    });
-  }
+  //     if (this.approvedList.length == 0) {
+  //       this.emptyApprovedList = true;
+  //     }
+  //     for (let booking of this.approvedList) {
+  //       this.timeLeft(booking);
+  //       if (this.approvedList.length == 0) {
+  //         this.emptyApprovedList = true;
+  //       }
+  //     }
+  //   });
+  // }
 
   sortMeetings(meetingList) {
     meetingList.sort(function (a, b) {
@@ -227,17 +286,17 @@ export class StudentDashboardComponent implements OnInit {
     });
   }
   //for fetching student live meetings
-  fetchLiveMeetings() {
-    this.httpService.fetchLiveMeetingsStudent(this.sid).subscribe((res) => {
-      this.liveMeetingList = res;
-      if (this.liveMeetingList.length == 0) {
-        this.emptyLiveList = true;
-      }
-      for (let booking of this.liveMeetingList) {
-        this.eliminateLiveMeetings(booking, this.liveMeetingList);
-      }
-    });
-  }
+  // fetchLiveMeetings() {
+  //   this.httpService.fetchLiveMeetingsStudent(this.sid).subscribe((res) => {
+  //     this.liveMeetingList = res;
+  //     if (this.liveMeetingList.length == 0) {
+  //       this.emptyLiveList = true;
+  //     }
+  //     for (let booking of this.liveMeetingList) {
+  //       this.eliminateLiveMeetings(booking, this.liveMeetingList);
+  //     }
+  //   });
+  // }
 
   // --------------------------------------------------meeting operations-----------------------------------------------------------------------------
   eliminateLiveMeetings(booking: bookingDetails, list: bookingDetails[]) {
@@ -448,15 +507,5 @@ export class StudentDashboardComponent implements OnInit {
       }
     });
   }
-  handleRefresh() {
-    setTimeout(() => {
-      this.sid = this.studentService.getStudentProfileDetails().sid;
-      this.fetchPendingReviewsList();
-      // this.fetchTutorList();
-      this.findStudentPendingBookings();
-      this.fetchApprovedMeetings();
-      this.fetchLiveMeetings();
-      // this.fetchTopTutors();
-    }, 1000);
-  }
+  
 }
