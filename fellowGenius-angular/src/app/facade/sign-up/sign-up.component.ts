@@ -103,7 +103,9 @@ export class SignUpComponent implements OnInit {
   toFacadePage() {
     this.router.navigate(['facade']);
   }
-
+  toHome() {
+    this.router.navigate(['home']);
+  }
   openThankYouPage() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -118,7 +120,11 @@ export class SignUpComponent implements OnInit {
         console.log('auth listener result!')
         console.log(res);
         if(res==true){
-          this.toFacadePage();
+          if(this.loginService.getLoginType()=='Learner'){
+            this.toFacadePage();
+          }else if(this.loginService.getLoginType()=='Expert'){
+            this.toHome();
+          }
         }
       })
     });
@@ -185,7 +191,11 @@ export class SignUpComponent implements OnInit {
             this.incorrectLoginDetails = true;
             this.dialogRef.closeAll();
           }else if(res==true){
-            this.toFacadePage();
+            if(this.loginService.getLoginType()=='Learner'){
+              this.toFacadePage();
+            }else if(this.loginService.getLoginType()=='Expert'){
+              this.toHome();
+            }
           }
         })
       } else {

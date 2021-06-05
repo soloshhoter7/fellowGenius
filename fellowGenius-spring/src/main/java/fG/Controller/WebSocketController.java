@@ -7,9 +7,13 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin; 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import fG.Service.MeetingService; 
 
 @Controller
 //@CrossOrigin(origins = "https://fellowgenius.com")
@@ -17,6 +21,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class WebSocketController {
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
+	@Autowired
+	private MeetingService service;
 	
 	// for error handling
 	@MessageExceptionHandler
@@ -42,8 +48,10 @@ public class WebSocketController {
 	@MessageMapping("/sendNotification/{userId}")
 	@SendTo("/user/Notifications/{userId}")
 	public String sendmessage(@DestinationVariable String userId, @Payload String message) {
-//		System.out.println("hello!");
-		return message;
+		JsonObject msg= new JsonParser().parse(message).getAsJsonObject();
+		System.out.println(msg);
+		service.saveNotification(msg);
+		return "updateNotification";
 	}
 	// for chatting inside the meeting
 	@MessageMapping("/sendChat/{bookingId}")

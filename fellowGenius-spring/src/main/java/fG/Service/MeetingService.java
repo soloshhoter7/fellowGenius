@@ -18,21 +18,21 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.JsonObject;
 
 import fG.DAO.MeetingDao;
 import fG.DAO.dao;
 import fG.Entity.BookingDetails;
+import fG.Entity.Notification;
 import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfile;
 import fG.Model.BookingDetailsModel;
 import fG.Model.ScheduleTime;
 import fG.Repository.repositoryBooking;
+import fG.Repository.repositoryNotification;
 
 @Service
 public class MeetingService {
@@ -51,6 +51,21 @@ public class MeetingService {
 	@Autowired
 	repositoryBooking repBooking;
 	
+	@Autowired
+	repositoryNotification repNotification;
+	
+	public void saveNotification(JsonObject msg) {
+		Notification notification = new Notification(
+				msg.get("entityType").getAsInt(),
+				msg.get("entityTypeId").getAsInt(),
+				msg.get("actorId").getAsString(),
+				msg.get("notifierId").getAsString(),
+				msg.get("pictureUrl").getAsString(),
+				false
+				);	
+		repNotification.save(notification);
+				
+	}
 	// to save the bookings requested by student
 	public boolean saveBooking(BookingDetailsModel bookingModel) {
 		BookingDetails booking = new BookingDetails();

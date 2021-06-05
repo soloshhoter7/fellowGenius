@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fG.Entity.TutorProfileDetails;
 import fG.Model.Category;
 import fG.Model.FiltersApplied;
+import fG.Model.NotificationModel;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorProfileDetailsModel;
@@ -23,7 +24,6 @@ import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
 import fG.Model.registrationModel;
 import fG.Model.updatePasswordModel;
-import fG.Service.MeetingService;
 import fG.Service.UserService;
 
 @RestController
@@ -244,5 +244,9 @@ public class userController {
 //		System.out.println("hitted!");
 		return service.getAllSubCategories();
 	}
-
+	
+	@RequestMapping(value="/fetchNotifications",method=RequestMethod.GET)
+	public List<NotificationModel> fetchNotifications(String userId){
+		return service.fetchNotifications(userId);
+	}
 }

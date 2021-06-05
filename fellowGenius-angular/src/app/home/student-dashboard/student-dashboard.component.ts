@@ -13,6 +13,7 @@ import { DeletePopupComponent } from './delete-popup/delete-popup.component';
 //import { StarRatingComponent } from 'ng-starrating';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { LocationStrategy } from '@angular/common';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -23,7 +24,7 @@ export class StudentDashboardComponent implements OnInit {
   selected = 0;
   hovered = 0;
   readonly = false;
-  viewPending;
+  viewPending=true;
   pendingRequestsCount = 0;
   joinMeeting = new meetingDetails();
   sid: number;
@@ -152,7 +153,7 @@ export class StudentDashboardComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.sid = this.studentService.getStudentProfileDetails().sid;
-      this.fetchPendingReviewsList();
+      // this.fetchPendingReviewsList();
       // this.fetchTutorList();
       // this.findStudentPendingBookings();
       this.initialiseStudentPendingRequest();
@@ -166,6 +167,8 @@ export class StudentDashboardComponent implements OnInit {
 
   initialiseStudentPendingRequest(){
     this.studentService.fetchStudentPendingBookings();
+    this.pendingRequestsCount=0
+    console.log("pending reques =>",this.pendingRequestsCount);
     this.studentService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
       this.bookingList=booking;
       if (this.bookingList.length == 0) {
@@ -174,6 +177,7 @@ export class StudentDashboardComponent implements OnInit {
       } else {
         this.pendingRequestsCount = this.bookingList.length;
       }
+      console.log("pending reques =>",this.pendingRequestsCount)
     })
   }
 
@@ -210,6 +214,7 @@ export class StudentDashboardComponent implements OnInit {
   fetchPendingReviewsList() {
     this.httpService.fetchPendingReviewsList(this.sid).subscribe((res) => {
       this.pendingReviewList = res;
+      console.log("pending requests ->",this.pendingRequestsCount);
     });
   }
 

@@ -19,6 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SocialService } from './social.service';
 import { Subject } from 'rxjs';
+import { NotificationService } from './notification.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -30,12 +31,9 @@ export class AuthService {
     private httpService: HttpService,
     private studentService: StudentService,
     private tutorService: TutorService,
-    private snackBar: MatSnackBar,
-    private socialService: SocialService,
-    private zone: NgZone,
     private cookieService: CookieService,
-    private dialogRef: MatDialog,
-    private webSocketService:WebSocketService
+    private webSocketService:WebSocketService,
+    private notificationService:NotificationService
   ) { }
   
   private authStatusListener = new Subject<boolean>();
@@ -121,6 +119,7 @@ export class AuthService {
           this.studentService.setStudentBookings(res);
           this.isAuthenticated=true;
           this.webSocketService.connectToUserWebSocket(this.userId);
+          this.notificationService.fetchNotification();
           // this.router.navigate([ 'home/studentDashboard' ]);
         });
       });
@@ -143,6 +142,7 @@ export class AuthService {
               this.tutorService.setPersonalAvailabilitySchedule(res);
               this.isAuthenticated=true;
               this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+              this.notificationService.fetchNotification();
             });
           });
       });
@@ -171,6 +171,7 @@ export class AuthService {
                 this.webSocketService.connectToUserWebSocket(this.userId);
                 this.isAuthenticated =true;
                 this.authStatusListener.next(true);
+                this.notificationService.fetchNotification();
                 // this.router.navigate(['home']);
                 // this.toFacade();
               });
@@ -199,6 +200,7 @@ export class AuthService {
                     this.isAuthenticated=true;
                     this.authStatusListener.next(true);
                     this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                    this.notificationService.fetchNotification();
                     // this.router.navigate(['/home']);
                     // this.toFacade();
                   });
@@ -242,6 +244,7 @@ export class AuthService {
                       this.isAuthenticated=true;
                       this.authStatusListener.next(true);
                       this.webSocketService.connectToUserWebSocket(this.userId);
+                      this.notificationService.fetchNotification();
                       // this.router.navigate(['home']);
                       // this.toFacade();
                     });
@@ -268,6 +271,7 @@ export class AuthService {
                               this.isAuthenticated=true;
                               this.authStatusListener.next(true);
                               this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                              this.notificationService.fetchNotification();
                               // this.router.navigate(['home']);
                               // this.toFacade();
                         
@@ -307,6 +311,7 @@ export class AuthService {
               this.isAuthenticated=true;
               this.authStatusListener.next(true);
               this.webSocketService.connectToUserWebSocket(this.userId);
+              this.notificationService.fetchNotification();
               // this.router.navigate(['home']);
               // this.toFacade();
             });
@@ -330,6 +335,7 @@ export class AuthService {
                       this.isAuthenticated=true;
                       this.authStatusListener.next(true);
                       this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                      this.notificationService.fetchNotification();
                       // this.router.navigate(['home']);
                       // this.toFacade();
                     });

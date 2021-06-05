@@ -92,7 +92,7 @@ export class TutorDashboardComponent implements OnInit {
     this.earningPeriod = value;
   }
   // ---------------------------------------------------------------------
-  takeAction;
+  takeAction = true;
   pendingRequestsCount = 0;
   showCard: boolean = true;
   bookingRequestMessage = '';
@@ -187,7 +187,15 @@ export class TutorDashboardComponent implements OnInit {
             this.pendingRequestsCount = 0;
             this.takeAction = false;
           }
-          this.webSocketService.sendAppointmentNotfication((booking.studentId).toString());
+          let data = JSON.stringify({
+            entityType: "1",
+            entityTypeId:"12",
+            actorId:booking.tutorId,
+            notifierId:booking.studentId,
+            pictureUrl:booking.tutorProfilePictureUrl,
+            readStatus:false
+          });
+          this.webSocketService.sendAppointmentNotfication(data,(booking.studentId).toString());
           this.before10MinutesTime(booking);
           this.enableJoinNow(booking);
           this.timeLeft(booking);

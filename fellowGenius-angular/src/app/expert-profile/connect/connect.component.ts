@@ -267,7 +267,15 @@ export class ConnectComponent implements OnInit {
       this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
         if (res == true) {
           this.isLoading = false;
-          this.webSocket.sendAppointmentNotfication((this.bookingDetails.tutorId).toString());
+          let data = JSON.stringify({
+            entityType: "1",
+            entityTypeId:"11",
+            actorId:this.bookingDetails.studentId,
+            notifierId:this.bookingDetails.tutorId,
+            pictureUrl:this.studentService.studentProfile.profilePictureUrl,
+            readStatus:false
+          });
+          this.webSocket.sendAppointmentNotfication(data,(this.bookingDetails.tutorId).toString());
           this.snackBar.open(
             'Booking submitted successfully !',
             'close',
@@ -401,12 +409,16 @@ export class ConnectComponent implements OnInit {
               this.endTimeString = this.et.eh + ':' + this.et.em;
             }
             this.errorMessage = '';
-
+            console.log("eventt");
+            console.log(this.ScheduleTime);
+            console.log(this.clickedIndex);
+            console.log(event.date); 
             //case 1 or case 4 or case 5
             if (
               this.tempArray.clickIndex1 != null &&
               this.tempArray.clickIndex2 == null &&
-              this.ScheduleTime[this.clickedIndex + 1].date == event.date
+              this.ScheduleTime[this.clickedIndex].date == event.date
+              // this.ScheduleTime[this.clickedIndex + 1].date == event.date
             ) {
               if (this.tempArray.clickIndex1 != null) {
               }

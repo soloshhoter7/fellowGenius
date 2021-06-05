@@ -334,10 +334,32 @@
         <span
           class="fa fa-bell"
           style="cursor: pointer; margin-right: 20px; position: relative"
+          (click)="displayNotifications()"
           ><span class="notificationNum" *ngIf="getNotificationCount() != 0">{{
             getNotificationCount()
           }}</span></span
         >
+        <div class="box" *ngIf="showNotifications">
+          <h3>Notifications</h3>
+          <p *ngIf="notifications.length == 0">No new notifications !</p>
+          <div class="notify_item" *ngFor="let n of notifications">
+            <div class="notify_img">
+              <img
+                style="border-radius: 50%; width: 40px; height: 40px"
+                [src]="n.pictureUrl"
+                alt="img"
+              />
+            </div>
+
+            <div class="notify_ingo">
+              <p>{{ n.message }}</p>
+              <span class="notify_time">{{ n.timestamp | date: "short" }}</span>
+            </div>
+            <div class="notify_read">
+              <span *ngIf="n.readStatus == false">•</span>
+            </div>
+          </div>
+        </div>
         <!-- <div class="dropdown">
           <button
             class="btn btn-primary dropdown-toggle"

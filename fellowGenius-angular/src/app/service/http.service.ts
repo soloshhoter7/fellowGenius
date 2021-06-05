@@ -17,6 +17,7 @@ import { registrationModel } from '../model/registration';
 import { loginModel } from '../model/login';
 import { filtersApplied } from '../model/filtersApplied';
 import { Category } from '../model/category';
+import { NotificationModel } from '../model/notification';
 
 @Injectable({
   providedIn: 'root',
@@ -551,6 +552,13 @@ export class HttpService {
   }
   getAllSubCategories():Observable<Category[]>{
     return this.http.get<Category[]>('http://localhost:5000/fellowGenius/getAllSubCategories');
+  }
+  fetchNotifications(userId:string):Observable<NotificationModel[]>{
+    return this.http.get<NotificationModel[]>('http://localhost:5000/fellowGenius/fetchNotifications',{
+      params:{
+        userId:userId
+      }
+    })
   }
   randomApi():Observable<Object>{
     return this.http.get<Object>('http://localhost:5000/fellowGenius/randomapi');

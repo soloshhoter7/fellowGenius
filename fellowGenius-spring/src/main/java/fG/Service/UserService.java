@@ -3,6 +3,8 @@ package fG.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -31,6 +33,7 @@ import fG.Entity.BookingDetails;
 import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
 import fG.Entity.LearningAreas;
+import fG.Entity.Notification;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -42,6 +45,7 @@ import fG.Entity.TutorProfileDetails;
 import fG.Entity.Users;
 import fG.Model.AuthenticationResponse;
 import fG.Model.Category;
+import fG.Model.NotificationModel;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentLoginModel;
@@ -53,8 +57,10 @@ import fG.Model.TutorVerificationModel;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
 import fG.Repository.repositoryCategory;
+import fG.Repository.repositoryNotification;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
+import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
@@ -96,6 +102,12 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired 
 	repositorySubCategoryList repSubcategory;
+	
+	@Autowired 
+	repositoryNotification repNotification;
+	
+	@Autowired
+	repositoryStudentProfile repStudentProfile;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -856,4 +868,42 @@ public class UserService implements UserDetailsService {
 		}
 		return categModel;
 	}
+
+	//for fetching notifications using userId
+	public List<NotificationModel> fetchNotifications(String userId) {
+		List<NotificationModel> notifList = new ArrayList<NotificationModel>();
+		if(userId!=null) {
+			List<Notification> notifications = repNotification.notificationExist(userId);
+			if(notifications!=null) {
+				for(Notification n:notifications) {
+					NotificationModel nModel = new NotificationModel();
+					nModel.setPictureUrl(n.getPictureUrl());
+					nModel.setReadStatus(n.isReadStatus());
+					nModel.setTimestamp(n.getTimestamp());
+					String message="";
+					if(n.getEntityTypeId()==11) {
+					 StudentProfile sp = repStudentProfile.idExist(Integer.valueOf(n.getActorId()));
+					 message = sp.getFullName()+ " sent you an appointment request";
+					}else if(n.getEntityTypeId()==12) {
+					 TutorProfile tp = repTutorProfile.findByBookingId(Integer.valueOf(n.getActorId()));
+					 message = tp.getFullName()+" has accepted your appointment request";
+					}else if(n.getEntityTypeId()==13) {
+						 StudentProfile sp = repStudentProfile.idExist(Integer.valueOf(n.getActorId()));
+						 message = sp.getFullName()+ " has cancelled its recent appointment";
+					}
+					nModel.setMessage(message);
+					notifList.add(nModel);
+				}
+			}
+			if(notifList!=null) {
+				Collections.sort(notifList, new Comparator<NotificationModel>() {
+				    public int compare(NotificationModel n1, NotificationModel n2) {
+				        return n2.getTimestamp().compareTo(n1.getTimestamp());
+				    }
+				});
+			}
+		}
+		return notifList;
+	}
+
 }

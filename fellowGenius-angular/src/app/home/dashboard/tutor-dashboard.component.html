@@ -12,11 +12,14 @@
     </div>
     <div
       class="widget pending-reviews-list"
-      *ngIf="takeAction"
+      *ngIf="takeAction&&pendingRequestsCount!=0"
       style="min-height: 0; max-height: 250px"
     >
       <div class="widget-header">Pending Requests</div>
       <div class="widget-information" style="height: auto">
+        <span *ngIf="pendingRequestsCount==0"
+          >No pending requests</span
+        >
         <div class="list-panel" *ngFor="let element of bookingList">
           <div
             class="list-thumbnail"

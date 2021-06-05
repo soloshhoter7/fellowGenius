@@ -382,3 +382,36 @@ label {
         overflow: hidden;
     }
 } */
+.box{
+  background: #ffffff;
+  border: 1px solid #3f023f;
+  box-shadow: 0 2px 34px 0 rgb(0 0 0 / 9%);
+  border-radius: 12px;
+  width: 350px;
+  padding: 10px;
+  position: absolute;
+  float: left;
+  top: 42px;
+  right: 0;
+  z-index: 1000;
+}
+.notify_item{
+  display: flex;
+  align-items:center;
+  padding: 10px 0;
+  border-bottom: 1px solid #dbdaff;
+}
+.notify_item:last-child{
+  border-bottom: 0px;
+}
+.notify_img{
+  margin-right: 15px;
+}
+.notify_time{
+  color: #c5c5a6;
+  font-size: 12px;
+}
+.notify_read{
+  font-size: 25px;
+  margin-left: 10px;
+}

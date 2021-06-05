@@ -42,16 +42,17 @@ export class WebSocketService {
 			});
 			that.ws.subscribe('/user/Notifications/' +userId, (message) => {
 				console.log(message);
-				var res = JSON.parse(message.body);
+				// var res = JSON.parse(message.body);
 
-				if(res.message=="new appointment notification"){
-					console.log('message matched!')
+				if(message.body=="updateNotification"){
+					console.log('message matched');
 					if(this.loginType&&this.loginType=='Expert'&&this.tutorService.getTutorDetials().tid!=null){
-						this.notificationService.increaseNotificationCount(1);
+						// this.notificationService.increaseNotificationCount(1);
 						// location.reload();
+						this.notificationService.fetchNotification();
 						this.tutorService.fetchTutorPendingBookings();
 					}else if(this.loginType&&this.loginType=='Learner'&&this.studentService.getStudentProfileDetails().sid!=null){
-						this.notificationService.increaseNotificationCount(1);
+						this.notificationService.fetchNotification();
 						this.studentService.fetchStudentPendingBookings();
 					}
 				}
@@ -69,10 +70,7 @@ export class WebSocketService {
 		);
 		
 	}
-	sendAppointmentNotfication( userId: string) {
-		let data = JSON.stringify({
-		  message: "new appointment notification",
-		});
+	sendAppointmentNotfication( data,userId) {
 		this.ws.send('/sendNotification/' + userId, {}, data);
 	}
 

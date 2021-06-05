@@ -105,7 +105,11 @@ export class LoginComponent implements OnInit {
         this.hideContainer = '';
         this.incorrectLoginDetails = true;
       }else if(res==true){
-        this.toFacade();
+        if(this.loginDetailsService.getLoginType()=='Learner'){
+          this.toFacade();
+        }else if(this.loginDetailsService.getLoginType()=='Expert'){
+          this.toHome();
+        }
       }
     });
   }
@@ -128,7 +132,11 @@ export class LoginComponent implements OnInit {
       this.authService.saveSocialLogin(this.registrationModel);
       this.authService.getAuthStatusListener().subscribe((res)=>{
         if(res==true){
-          this.toFacade();
+          if(this.loginDetailsService.getLoginType()=='Learner'){
+            this.toFacade();
+          }else if(this.loginDetailsService.getLoginType()=='Expert'){
+            this.toHome();
+          }
         }
       })
     });
@@ -185,7 +193,11 @@ export class LoginComponent implements OnInit {
           }
         });
       }else if(res==true){
-        this.toFacade();
+        if(this.loginDetailsService.getLoginType()=='Learner'){
+          this.toFacade();
+        }else if(this.loginDetailsService.getLoginType()=='Expert'){
+          this.toHome();
+        }  
       }
     });
         });

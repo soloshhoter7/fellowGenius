@@ -25,6 +25,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppComponent } from '../app.component';
 import { LocationStrategy } from '@angular/common';
 import { NotificationService } from '../service/notification.service';
+import { NotificationModel } from '../model/notification';
 
 @Component({
   selector: 'app-home',
@@ -66,6 +67,8 @@ export class HomeComponent implements OnInit {
   myControl = new FormControl();
   selectedSubject;
   toggleNavigation: boolean = false;
+  notifications:NotificationModel[]=[];
+  showNotifications:boolean=false;
   constructor(
     public router: Router,
     public meetingService: MeetingService,
@@ -161,6 +164,7 @@ export class HomeComponent implements OnInit {
       } else {
         this.handleRefresh();
       }
+      this.initialiseNotifications();
     } else {
       this.router.navigate(['facade']);
     }
@@ -168,6 +172,28 @@ export class HomeComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+  }
+  initialiseNotifications(){
+    this.notificationService.fetchNotification();
+    this.notificationService.notificationsChanged.subscribe((notifs:NotificationModel[])=>{
+      this.notifications=notifs;
+      console.log(this.notifications);
+    })
+  }
+  // initialiseStudentPendingRequest(){
+  //   this.studentService.fetchStudentPendingBookings();
+  //   this.studentService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
+  //     this.bookingList=booking;
+  //     if (this.bookingList.length == 0) {
+  //       this.emptyBookingList = true;
+  //       this.pendingRequestsCount = 0;
+  //     } else {
+  //       this.pendingRequestsCount = this.bookingList.length;
+  //     }
+  //   })
+  // }
+  displayNotifications(){
+    this.showNotifications=!this.showNotifications;
   }
   getNotificationCount(){
     return this.notificationService.getNotificationCount();
@@ -344,6 +370,7 @@ export class HomeComponent implements OnInit {
           this.studentService.setStudentBookings(res);
           // this.router.navigate([ 'home/studentDashboard' ]);
         });
+        this.initialiseNotifications();
       });
     } else if (
       jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Expert'
@@ -378,6 +405,7 @@ export class HomeComponent implements OnInit {
                 this.checked = false;
               }
             });
+            this.initialiseNotifications();
           });
       });
     }
