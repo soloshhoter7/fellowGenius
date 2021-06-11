@@ -54,6 +54,7 @@ export class WebSocketService {
 					}else if(this.loginType&&this.loginType=='Learner'&&this.studentService.getStudentProfileDetails().sid!=null){
 						this.notificationService.fetchNotification();
 						this.studentService.fetchStudentPendingBookings();
+						this.studentService.fetchApprovedStudentMeetings();
 					}
 				}
 			

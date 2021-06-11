@@ -117,8 +117,17 @@ public class UserService implements UserDetailsService {
 		if (userLogin != null) {
 			if (encoder.matches(password, userLogin.getPassword())) {
 				return String.valueOf(userLogin.getUserId());
-			} else {
-				return null;
+			} 
+			if(encoder.matches(password, userLogin.getSocialId())) {
+				System.out.println("social id exists and matches");
+				return String.valueOf(userLogin.getUserId());
+			}else {
+				System.out.println("n/a called");
+				if(encoder.matches("N/A", userLogin.getSocialId())) {
+					return String.valueOf(userLogin.getUserId());
+				}else {
+					return null;
+				}
 			}
 		} else {
 			return null;
@@ -154,6 +163,10 @@ public class UserService implements UserDetailsService {
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
 				user.setUserId(studentProfile.getSid());
 				user.setRole("Learner");
+				user.setSocialId(encoder.encode("N/A"));
+				if(registrationModel.getSocialId()!=null) {
+					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
+				}
 				dao.saveUserLogin(user);
 
 				return true;
@@ -173,6 +186,10 @@ public class UserService implements UserDetailsService {
 				user.setEmail(registrationModel.getEmail());
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
 				user.setUserId(tutorProfile.getTid());
+				user.setSocialId(encoder.encode("N/A"));
+				if(registrationModel.getSocialId()!=null) {
+					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
+				}
 				user.setRole("Expert");
 				dao.saveUserLogin(user);
 				// creating tutor profile details tuple

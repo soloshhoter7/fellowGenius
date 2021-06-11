@@ -33,12 +33,15 @@
       </span>
 
       <span *ngIf="!loginType"
-        >Your registration is almost complete. Please select your role below to
+        >Your registration is almost complete. Please select your role  and enter a password below to
         get proceed.
       </span>
       <div style="margin-top: 10px" *ngIf="!loginType">
         <!-- <form (ngSubmit)="toDashboard(t)" #t="ngForm"> -->
-        <div class="form-group">
+
+
+        <!-- for choosing the role -->
+          <div class="form-group">
           <label class="form-control-placeholder" for="role">Choose Role</label>
           <!-- <select class="form-control"  name="role" ngModel required>
               <option>Learner</option>
@@ -55,9 +58,53 @@
             </mat-radio-group>
           </div>
         </div>
+        
+
+        <!-- for entering the password -->
+        <div class="form-group">
+          <label class="form-control-placeholder" for="password"
+            >Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            [(ngModel)]="data.name"
+            required
+            [pattern]="passwordPattern"
+            minlength="8"
+            maxlength="20"
+            #password="ngModel"
+          />
+          <!-- <input
+          type="password"
+          id="password"
+          class="form-control"
+          name="password"
+          [(ngModel)]="password"
+          [type]="hide ? 'password' : 'text'"
+          required
+          [pattern]="passwordPattern"
+          minlength="8"
+          maxlength="20"
+          #password="ngModel"
+        /> -->
+          <!-- <span class="help-block" *ngIf="!password.valid && password.touched"
+            >Your password must be a minimum of 8 characters long. Your PW must
+            contain at least one uppercase letter (A-Z), one lowercase (a-z),
+            one number (0-9), and one special character (@, #,&, %).</span
+          > -->
+          <span class="help-block"
+            >Your password must be a minimum of 8 characters long. Your PW must
+            contain at least one uppercase letter (A-Z), one lowercase (a-z),
+            one number (0-9), and one special character (@, #,&, %).</span
+          >
+        </div>
+
+
         <!-- <button type="submit">Go to Dashboard</button> -->
         <div *ngIf="!loginType">
-          <button type="button" class="btn btn-primary" (click)="toDashboard()">
+          <button type="button" class="btn btn-primary" (click)="toDashboard()" [disabled]="!password.valid">
             Continue
           </button>
         </div>

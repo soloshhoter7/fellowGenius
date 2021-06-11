@@ -157,8 +157,9 @@ export class LoginDialogComponent implements OnInit {
     dialogConfig.disableClose = true;
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
-      this.role = data;
-      this.registrationModel.role=this.role;
+      this.role = data.role;
+      this.registrationModel.role=data.role;
+      this.registrationModel.password = data.password;
       this.authService.saveSocialLogin(this.registrationModel);
       this.authService.getAuthStatusListener().subscribe((res)=>{
         if(res==true){

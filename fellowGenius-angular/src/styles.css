@@ -371,8 +371,8 @@ textarea:focus {
 }
 
 .bg-thankyou-container {
-    width: 500px;
-    height: 350px;
+    width: 550px;
+    height: 420px;
     background: url(assets/images/thankyou_bg.svg) no-repeat;
     background-position: bottom left;
     padding-right: 0px !important;
@@ -387,7 +387,7 @@ textarea:focus {
 
 .bg-thankyou-container .thankyou-container {
     left: 250px;
-    top: 120px;
+    top: 60px;
     position: absolute;
     display: block;
     float: left;

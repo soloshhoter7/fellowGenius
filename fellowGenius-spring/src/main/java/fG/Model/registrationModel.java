@@ -7,6 +7,7 @@ public class registrationModel {
 	 String contact;
 	 String password;
 	 String role;
+	 String socialId;
 	public String getFullName() {
 		return fullName;
 	}
@@ -37,10 +38,18 @@ public class registrationModel {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+	public String getSocialId() {
+		return socialId;
+	}
+	public void setSocialId(String socialId) {
+		this.socialId = socialId;
+	}
 	@Override
 	public String toString() {
 		return "registrationModel [fullName=" + fullName + ", email=" + email + ", contact=" + contact + ", password="
-				+ password + ", role=" + role + "]";
+				+ password + ", role=" + role + ", socialId=" + socialId + "]";
 	}
+	
 	 
 }

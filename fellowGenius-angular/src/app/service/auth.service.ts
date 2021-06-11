@@ -223,6 +223,7 @@ export class AuthService {
               this.loginModel.email = registrationModel.email;
               this.loginModel.password = registrationModel.password;
               // for logging in once registration is done
+              console.log('login model in auth=>',this.loginModel)
               this.httpService.checkLogin(this.loginModel).subscribe((res) => {
                 this.cookieService.set('token', res['response']);
                 this.cookieService.set(

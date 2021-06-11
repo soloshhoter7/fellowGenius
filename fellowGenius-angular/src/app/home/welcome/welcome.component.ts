@@ -11,6 +11,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { SocialService } from 'src/app/service/social.service';
+import { AppData } from 'src/app/model/AppData';
 
 @Component({
   selector: 'app-welcome',
@@ -38,6 +39,15 @@ export class WelcomeComponent implements OnInit {
   socialLogin = false;
   socialLoginName;
   role = 'Learner';
+  hide: boolean = true;
+  password:string = ' ';
+  data =  new AppData('');
+    // ---------- patterns --------------------------------
+    mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+    passwordPattern =
+      '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+
+      
   ngOnInit() {
     if (this.loginService.getLoginType()) {
       this.loginType = this.loginService.getLoginType();
@@ -60,8 +70,15 @@ export class WelcomeComponent implements OnInit {
   }
   toDashboard() {
     // this.role = form.value.role;
-    if (this.role == 'Learner' || this.role == 'Expert') {
-      this.dialogRef.close(this.role);
+    console.log(this.role);
+    console.log(this.data.name);
+    if ((this.role == 'Learner' || this.role == 'Expert')&&(this.data.name!=null)) {
+      
+      let dialogData = {
+        role:this.role,
+        password:this.data.name
+      };
+      this.dialogRef.close(dialogData);
     }
   }
 }

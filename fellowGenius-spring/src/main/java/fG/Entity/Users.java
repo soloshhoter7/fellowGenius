@@ -14,6 +14,8 @@ public class Users {
 
 	String password;
     
+	String socialId;
+	
 	String role;
 
 	public Integer getUserId() {
@@ -47,11 +49,23 @@ public class Users {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	 
+	
+	public String getSocialId() {
+		return socialId;
+	}
+
+	public void setSocialId(String socialId) {
+		this.socialId = socialId;
+	}
 
 	@Override
 	public String toString() {
-		return "Users [userId=" + userId + ", email=" + email + ", password=" + password + ", role=" + role + "]";
+		return "Users [userId=" + userId + ", email=" + email + ", password=" + password + ", socialId=" + socialId
+				+ ", role=" + role + "]";
 	}
+
+	
 
 	
 }

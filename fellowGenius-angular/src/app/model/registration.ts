@@ -4,4 +4,5 @@ export class registrationModel {
 	public contact: string;
 	public password: string;
 	public role: string;
+	public socialId:string;
 }

@@ -110,10 +110,13 @@ export class SignUpComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
+    // console.log('dialog maine khola hai')
     dialogRef.afterClosed().subscribe((data) => {
-      console.log('the role',data);
-      this.role = data;
-      this.registrationModel.role=this.role;
+      // console.log('hereeeee');
+      // console.log('data=>',data);
+      this.role = data.role;
+      this.registrationModel.role=data.role;
+      this.registrationModel.password = data.password;
       console.log(this.registrationModel);
       this.authService.saveSocialLogin(this.registrationModel);
       this.authService.getAuthStatusListener().subscribe((res)=>{
@@ -180,7 +183,9 @@ export class SignUpComponent implements OnInit {
         });
     } else {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
+        console.log('registration model in sign up',this.registrationModel);
         this.authService.onSignUp(this.registrationModel);
+        
         this.authService.getAuthStatusListener().subscribe((res)=>{
           if(res==false){
             this.snackBar.open(
@@ -220,7 +225,8 @@ export class SignUpComponent implements OnInit {
         this.socialService.setSocialDetails(this.socialLogin);
         this.registrationModel.fullName = this.socialLogin.fullName;
         this.registrationModel.email = this.socialLogin.email;
-        this.registrationModel.password = this.socialLogin.id;
+        // this.registrationModel.password = this.socialLogin.id;
+        this.registrationModel.socialId = this.socialLogin.id;
         this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
           if (!res) {
             this.zone.run(() => {
