@@ -115,3 +115,6 @@ label {
 .e-schedule-dialog .e-all-day-time-zone-row {
   display: none !important;
 }
+.hide{
+  display: none;
+}

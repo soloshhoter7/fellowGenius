@@ -251,7 +251,7 @@ export class ConnectComponent implements OnInit {
   calculatePrice(subject: any) {
     var subjectPrice;
     for (let area of this.teacherProfile.areaOfExpertise) {
-      if (area.area == subject) {
+      if (area.subCategory == subject) {
         subjectPrice = area.price;
       }
     }

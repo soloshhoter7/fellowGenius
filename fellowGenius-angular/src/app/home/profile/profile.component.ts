@@ -31,6 +31,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-profile-picture/upload-profile-picture.component';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { Category } from 'src/app/model/category';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-profile',
@@ -48,7 +50,9 @@ export class ProfileComponent implements OnInit {
     public snackBar: MatSnackBar,
     public matDialog: MatDialog,
     private router:Router
-  ) {}
+  ) {
+    this.fillOptions();   
+  }
 
   basic = true;
   myControl = new FormControl();
@@ -67,17 +71,7 @@ export class ProfileComponent implements OnInit {
     horizontalPosition: 'center',
     verticalPosition: 'top',
   };
-  options: string[] = [
-    'Mathematics',
-    'English',
-    'Science',
-    'Social Science',
-    'History',
-    'Political Science',
-    'Geography',
-    'Physics',
-    'Chemistry',
-  ];
+  options: string[] = [];
   //data fields
   selectedExpertise;
   expertises: expertise[] = [];
@@ -92,7 +86,13 @@ export class ProfileComponent implements OnInit {
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   uploadedProfilePicture: File = null;
   priceForExpertise;
+  selectedValue;
+  categories:Category[] = [];
+  subCategories:Category[] = [];
+  selectedCategory;
+  selectedSubCategory;
   ngOnInit() {
+    this.getAllCategories();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -139,7 +139,38 @@ export class ProfileComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
-
+  
+  fillOptions(){
+this.httpService.getAllSubCategories().subscribe((res)=>{
+        this.subCategories = res;
+        if(this.subCategories.length>0){
+          for(var i=0;i<this.subCategories.length;i++){
+            this.options.push(this.subCategories[i].subCategory);
+          }
+        }
+      })
+  }
+  filterSCfromCateg(){
+    return this.subCategories.filter(x=>x.category==this.selectedCategory)
+  }
+  getAllCategories(){
+    this.httpService.getAllCategories().subscribe((res)=>{
+      let categories:Category[] = res;
+      if(categories.length>0){
+        for(var i=0;i<categories.length;i++){
+          let categ=new Category();
+          categ.category=categories[i].category
+          this.categories.push(categ);
+          // this.selectedValue=this.categories[0].category;
+        }
+      }
+      this.httpService.getAllSubCategories().subscribe((res)=>{
+        this.subCategories = res;
+      })
+     console.log(this.categories);
+    });
+  }
+  
   saveExpertBasicProfile(form: any) {
     this.userId = this.cookieService.get('userId');
     if (this.userId) {
@@ -198,6 +229,7 @@ export class ProfileComponent implements OnInit {
         if (this.tutorProfileDetails.profileCompleted == 50) {
           this.tutorProfileDetails.profileCompleted = 100;
         }
+        console.log('informations saved',this.tutorProfileDetails);
         this.httpService
           .updateTutorProfileDetails(this.tutorProfileDetails)
           .subscribe((res) => {
@@ -222,9 +254,9 @@ export class ProfileComponent implements OnInit {
   duplicacyCheck(fields: Object[], item: string) {
     return fields.includes(item);
   }
-  expertiseDuplicacyCheck(subject) {
-    for (let area of this.expertises) {
-      if (area.area == subject) {
+  expertiseDuplicacyCheck(category,subcategory) {
+    for (let expertise of this.expertises) {
+      if (expertise.category == category && expertise.subCategory == subcategory) {
         return true;
       }
     }
@@ -355,14 +387,52 @@ export class ProfileComponent implements OnInit {
       this.basic = false;
     }
   }
+  findSubCategory(sc){
+    let category;
+   if(sc){
+     console.log("selected subcategory",this.selectedSubCategory);
+     for(let i =0;i<this.subCategories.length;i++){
+      if(this.subCategories[i].subCategory == sc){
+        return this.subCategories[i].category;
+      }
+     }
+   }else{
+     return null;
+   }
+  }
+  // saveExpertise() {
+  //   this.addExpertise = new expertise();
+  //   this.selectedSubCategory = this.selectedExpertise;
+  //   this.selectedCategory = this.findSubCategory(this.selectedSubCategory);
+  //   console.log(this.selectedCategory);
+  //   if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
+  //     this.addExpertise.category = this.selectedCategory;
+  //     this.addExpertise.subCategory = this.selectedSubCategory;
+  //     this.addExpertise.price = this.priceForExpertise;
+  //     this.expertises.push(this.addExpertise);
+  //     this.selectedExpertise = '';
+  //     this.priceForExpertise = '';
 
+  //     if (this.duplicateExpertiseArea == true) {
+  //       this.duplicateExpertiseArea = false;
+  //     }
+  //   } else {
+  //     this.duplicateExpertiseArea = true;
+  //     this.selectedExpertise = '';
+  //     this.priceForExpertise = '';
+  //   }
+  // }
+
+  // save expertise for multiple domains 
   saveExpertise() {
     this.addExpertise = new expertise();
-    if (!this.expertiseDuplicacyCheck(this.selectedExpertise)) {
-      this.addExpertise.area = this.selectedExpertise;
+    if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
+      this.addExpertise.category = this.selectedCategory;
+      this.addExpertise.subCategory = this.selectedSubCategory;
       this.addExpertise.price = this.priceForExpertise;
       this.expertises.push(this.addExpertise);
-      this.selectedExpertise = '';
+      this.selectedCategory = '';
+      this.selectedSubCategory = '';
       this.priceForExpertise = '';
 
       if (this.duplicateExpertiseArea == true) {
@@ -371,6 +441,7 @@ export class ProfileComponent implements OnInit {
     } else {
       this.duplicateExpertiseArea = true;
       this.selectedExpertise = '';
+      this.selectedSubCategory = '';
       this.priceForExpertise = '';
     }
   }
@@ -379,7 +450,7 @@ export class ProfileComponent implements OnInit {
     var area = this.expertises[index];
     if (confirm('Are you sure you want to delete ?')) {
       this.httpService
-        .subtractArea(this.tutorProfile.tid, 'Expert', area.area)
+        .subtractArea(this.tutorProfile.tid, 'Expert', area.subCategory)
         .subscribe();
       this.expertises.splice(index, 1);
     }

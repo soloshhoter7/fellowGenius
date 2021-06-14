@@ -22,6 +22,7 @@ export class tutorProfileDetails {
   public linkedInProfile: string;
 }
 export class expertise {
-  public area: string;
+  public category: string;
+  public subCategory:string;
   public price: number;
 }

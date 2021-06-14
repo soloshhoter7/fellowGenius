@@ -14,6 +14,7 @@ import { UploadProfilePictureComponent } from 'src/app/facade/sign-up/upload-pro
 import { Router } from '@angular/router';
 import { ɵZoneScheduler } from '@angular/fire';
 import { HomeComponent } from '../home.component';
+import { Category } from 'src/app/model/category';
 
 @Component({
   selector: 'app-student-profile',
@@ -41,20 +42,10 @@ export class StudentProfileComponent implements OnInit {
   };
   studentProfile: StudentProfileModel;
   myControl = new FormControl();
-  options: string[] = [
-    'Mathematics',
-    'English',
-    'Science',
-    'Social Science',
-    'History',
-    'Political Science',
-    'Geography',
-    'Physics',
-    'Chemistry',
-  ];
+  options: string[] = [];
   filteredOptions: Observable<string[]>;
   // learningAreas = new Array(3);
-
+  subCategories:Category[]=[];
   index: Number;
   learningArea;
   learningAreas: string[] = [];
@@ -71,6 +62,7 @@ export class StudentProfileComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -95,6 +87,16 @@ export class StudentProfileComponent implements OnInit {
     );
   }
 
+  fillOptions(){
+    this.httpService.getAllSubCategories().subscribe((res)=>{
+            this.subCategories = res;
+            if(this.subCategories.length>0){
+              for(var i=0;i<this.subCategories.length;i++){
+                this.options.push(this.subCategories[i].subCategory);
+              }
+            }
+          })
+      }
   cancelForm() {
     location.reload();
   }

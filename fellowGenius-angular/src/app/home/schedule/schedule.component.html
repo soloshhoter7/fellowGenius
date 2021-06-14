@@ -13,7 +13,7 @@
  
 </body> -->
 
-<body style="background-color: #f9fafc">
+<body style="background-color: #f9fafc;height: 100vh;">
   <div
     style="width: 95%; margin: auto; padding-top: 80px; padding-bottom: 15px"
   >
@@ -36,8 +36,13 @@
       </button>
     </div>
   </div>
-
-  <div class="Box" style="width: 95%; margin: auto; padding: 0">
+  <div
+    *ngIf="isLoading"
+    style="width: max-content; margin: auto; padding-top: 20vh"
+  >
+    <app-loading></app-loading>
+  </div>
+  <div class="Box" style="width: 95%; margin: auto; padding: 0" [class.hide]="isLoading">
     <ejs-schedule
       #scheduleObj
       width="100%"

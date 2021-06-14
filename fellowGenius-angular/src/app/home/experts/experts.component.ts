@@ -40,7 +40,7 @@ export class ExpertsComponent implements OnInit {
 
   viewProfile(profile: tutorProfileDetails) {
     this.router.navigate(["viewTutors"], {
-      queryParams: { page: profile.tid },
+      queryParams: { page: profile.bookingId },
     });
   }
 }

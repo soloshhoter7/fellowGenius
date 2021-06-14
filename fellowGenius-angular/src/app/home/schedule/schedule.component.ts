@@ -29,6 +29,7 @@ import { TutorService } from 'src/app/service/tutor.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Query } from '@syncfusion/ej2-data';
+import { ThrowStmt } from '@angular/compiler';
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -75,6 +76,7 @@ export class tutorScheduleComponent implements OnInit {
   bookingSchedule: scheduleData[] = [];
   combinedSchedule: scheduleData[] = [];
   userId;
+  isLoading=false;
   // public eventSettings: EventSettingsModel = {
   // 	// dataSource:
   // 	dataSource: this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule
@@ -174,6 +176,7 @@ export class tutorScheduleComponent implements OnInit {
   addEvents(appointment: scheduleData) {
     this.availableSchedules.push(appointment);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
+    this.isLoading=true;
     setTimeout(() => {
       //<<<---    using ()=> syntax
       if (this.userId != null) {
@@ -184,6 +187,7 @@ export class tutorScheduleComponent implements OnInit {
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
           this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+          this.isLoading=false;
         });
     }, 3000);
   }
@@ -225,11 +229,13 @@ export class tutorScheduleComponent implements OnInit {
       this.availableSchedules[updateIndex] = newAppointment;
     }
     this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
+    this.isLoading=true;
     setTimeout(() => {
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
           this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+          this.isLoading=false;
         });
     }, 3000);
   }
@@ -240,23 +246,27 @@ export class tutorScheduleComponent implements OnInit {
     );
     this.availableSchedules.splice(deleteIndex, 1);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
+    this.isLoading=true;
     setTimeout(() => {
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
           this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+          this.isLoading=false;
         });
     }, 3000);
   }
   //for updating special case
   updateSpecialEvents() {
     this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
+    this.isLoading=true;
     setTimeout(() => {
       //<<<---    using ()=> syntax
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
           this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
+          this.isLoading=false;
         });
     }, 3000);
   }
@@ -268,13 +278,14 @@ export class tutorScheduleComponent implements OnInit {
     //when an event is created
     if (args.requestType === 'eventCreate') {
       schedule = args.addedRecords;
+      // this.isLoading=!this.isLoading;
       setTimeout(() => {
         this.addEvents(this.copyAppointment(schedule[0]));
       }, 3000);
     } else if (args.requestType === 'eventChange') {
       // when an event is changed
       schedule = args.changedRecords;
-
+      this.isLoading=!this.isLoading;
       setTimeout(() => {
         if (
           schedule[0].Guid != null &&
@@ -300,6 +311,7 @@ export class tutorScheduleComponent implements OnInit {
         } else {
           //normal updation
           this.updateEvents(this.copyAppointment(schedule[0]));
+
         }
       }, 3000);
     } else if (args.requestType === 'eventRemove') {

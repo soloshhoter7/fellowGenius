@@ -334,7 +334,7 @@
                 >
               </div>
 
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="expertise" style="width: 100%"
                   >Area of Expertise<sup>*</sup></label
                 >
@@ -407,7 +407,118 @@
                   *ngFor="let expertise of expertises; let i = index"
                 >
                   <div class="tags">
-                    {{ expertise.area }}&nbsp; - &nbsp; ₹
+                    {{ expertise.subCategory }} : {{ expertise.category }}&nbsp; - &nbsp; ₹
+                    {{ expertise.price }}/hr
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-circle btn-sm"
+                    style="display: inline"
+                    (click)="deleteExpertise(i)"
+                    style="font-size: inherit"
+                  >
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <div
+                  *ngIf="duplicateExpertiseArea"
+                  style="color: red; margin-top: 10px"
+                >
+                  Expertise already exists !
+                </div>
+                <p class="errorMessage">{{ errorText }}</p>
+              </div> -->
+
+
+
+
+              <!-- ------------------ one with domains and subdomains ---------------- -->
+
+
+
+
+              <div class="form-group">
+                <label for="expertise" style="width: 100%"
+                  >Area of Expertise<sup>*</sup></label
+                >
+
+                <div style="position: relative">
+                  <div
+                    style="
+                      width: 80%;
+                      display: inline-block;
+                      background: white;
+                      padding: 10px;
+                      box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+                    "
+                  >
+                  <div class="form-group" style="margin-bottom: 0.5rem;">
+                    <label for="chooseCategory">Choose Domain</label>
+                    <select
+                      class="form-control"
+                      id="chooseCategory"
+                      name="categoryName"
+                      [(ngModel)]="selectedCategory"
+                      ngModel
+                    >
+                      <option *ngFor="let categ of categories" [value]="categ.category">
+                        {{ categ.category }}
+                      </option>
+                    </select>
+                  </div>
+            
+                  <div class="form-group">
+                    <label for="subCategoryInput">Choose Topic</label>
+                    <select
+                      class="form-control"
+                      id="chooseSubCategory"
+                      name="subCategoryName"
+                      [(ngModel)]="selectedSubCategory"
+                      [disabled]="!selectedCategory"
+                      ngModel
+                    >
+                      <option *ngFor="let sc of filterSCfromCateg()" [value]="sc.subCategory">
+                        {{ sc.subCategory }}
+                      </option>
+                    </select>
+                  </div>
+
+                    <div class="form-group" style="margin-bottom: 0">
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="price"
+                        placeholder="Enter price per hour"
+                        [(ngModel)]="priceForExpertise"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      width: max-content;
+                      display: inline;
+                      margin-left: 5px;
+                      position: absolute;
+                      top: 40px;
+                    "
+                  >
+                    <button
+                      [disabled]="!selectedCategory || !selectedSubCategory || !priceForExpertise"
+                      type="button"
+                      class="btn btn-success btn-circle btn-sm"
+                      (click)="saveExpertise()"
+                      style="font-size: inherit; display: inline"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  style="margin: 10px; margin-left: 0"
+                  *ngFor="let expertise of expertises; let i = index"
+                >
+                  <div class="tags">
+                    {{ expertise.category }} : {{expertise.subCategory}} &nbsp; - &nbsp; ₹
                     {{ expertise.price }}/hr
                   </div>
                   <button
@@ -428,6 +539,12 @@
                 </div>
                 <p class="errorMessage">{{ errorText }}</p>
               </div>
+
+              
+
+
+              <!-- --------------------- ----------------------------------- -->
+
 
               <div class="form-group">
                 <label for="description">Description<sup>*</sup></label>

@@ -52,16 +52,8 @@ export class HomeComponent implements OnInit {
   notificationCount=0;
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   options: string[] = [
-    'Mathematics',
-    'English',
-    'Science',
-    'Social Science',
-    'History',
-    'Political Science',
-    'Geography',
-    'Physics',
-    'Chemistry',
-  ];
+    'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
+   ];
   subject;
   filteredOptions: Observable<string[]>;
   myControl = new FormControl();

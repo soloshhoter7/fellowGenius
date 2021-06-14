@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { StudentProfileModel } from '../model/studentProfile';
 import { tutorProfile } from '../model/tutorProfile';
@@ -14,6 +14,7 @@ import { TutorService } from '../service/tutor.service';
 export class NavBarComponent implements OnInit {
   constructor(
     public router: Router,
+    private route:ActivatedRoute,
     public loginService: LoginDetailsService,
     public cookieService: CookieService,
     public studentService: StudentService,
@@ -60,10 +61,13 @@ export class NavBarComponent implements OnInit {
     }
   }
   onSignOut() {
+    let currentRoute = this.route.snapshot.routeConfig.component.name;
     this.cookieService.delete('token');
     this.cookieService.delete('userId');
     this.loginService.setLoginType(null);
     this.loginService.setTrType(null);
-    this.router.navigate(['']);
+    if(currentRoute!='ExpertProfileComponent'){
+      this.router.navigate(['']);
+    }
   }
 }

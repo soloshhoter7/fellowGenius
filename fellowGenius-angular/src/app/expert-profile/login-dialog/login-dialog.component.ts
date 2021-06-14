@@ -30,6 +30,7 @@ import { SocialService } from 'src/app/service/social.service';
 import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 import { AuthService } from 'src/app/service/auth.service';
+import { ConnectComponent } from '../connect/connect.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -54,6 +55,7 @@ export class LoginDialogComponent implements OnInit {
     private dialogRef: MatDialog,
     private socialService: SocialService,
     private authService:AuthService,
+    private loginService:LoginDetailsService,
     private zone: NgZone
   ) {}
   // --- parent child relationships ------------
@@ -126,6 +128,24 @@ export class LoginDialogComponent implements OnInit {
     this.dialogRef.closeAll();
     this.router.navigate(['resetPassword']);
   }
+
+  openConnectPage() {
+      console.log(this.loginService.getLoginType());
+      if (this.loginService.getLoginType() != null && this.loginService.getLoginType()=='Learner') {
+        this.dialogRef.open(ConnectComponent, {
+          height: 'auto',
+          width: 'auto',
+        });
+      } else {
+        this.dialogRef.open(LoginDialogComponent, {
+          width: 'auto',
+          height: 'auto',
+        });
+      }
+    // this.router.navigate(['home/studentDashboard'])
+  }
+
+
   //for logging in
   onLogin(form: NgForm) {
     this.isLoading = true;
@@ -146,8 +166,8 @@ export class LoginDialogComponent implements OnInit {
         'close',
         this.config
         );
-
         this.dialogRef.closeAll();
+        this.openConnectPage();
       }
     });
   }
@@ -170,6 +190,7 @@ export class LoginDialogComponent implements OnInit {
         this.config
         );
         this.dialogRef.closeAll();
+        this.openConnectPage();
         }
       })
     });
@@ -227,6 +248,7 @@ export class LoginDialogComponent implements OnInit {
               this.config
               );
               this.dialogRef.closeAll();
+              this.openConnectPage();
             }
 
           })
@@ -301,6 +323,7 @@ export class LoginDialogComponent implements OnInit {
           this.config
           );
           this.dialogRef.closeAll();
+          this.openConnectPage();
           }
         });
       } else {
