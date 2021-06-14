@@ -339,20 +339,24 @@ public class UserService implements UserDetailsService {
 
 		for (expertise area : tutorModel.getAreaOfExpertise()) {
 			ExpertiseAreas subject = new ExpertiseAreas();
-			subject.setUserId(tutProfileDetails);
-			subject.setSubject(area.getArea());
-			subject.setPrice(area.getPrice());
-			if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
-					.filter(o -> o.getSubject().equals(area.getArea())).findFirst().isPresent()) {
-				tutProfileDetails.getAreaOfExpertise().add(subject);
-				if (area.getPrice() > maxPrice) {
-					maxPrice = area.getPrice();
+			SubcategoryList subCateg = repSubcategory.findSubCategoryByName(area.getSubCategory());
+			if(subCateg!=null) {
+				subject.setUserId(tutProfileDetails);
+				subject.setSubCategory(subCateg);
+				subject.setCategory(subCateg.getCategory());
+				subject.setPrice(area.getPrice());
+				if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
+						.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst().isPresent()) {
+					tutProfileDetails.getAreaOfExpertise().add(subject);
+					if (area.getPrice() > maxPrice) {
+						maxPrice = area.getPrice();
+					}
+					if (area.getPrice() < minPrice) {
+						minPrice = area.getPrice();
+					}
 				}
-				if (area.getPrice() < minPrice) {
-					minPrice = area.getPrice();
-				}
+				
 			}
-
 		}
 		if (maxPrice != 0 && minPrice != Integer.MAX_VALUE) {
 			tutProfileDetails.setPrice1(minPrice.toString());
@@ -510,7 +514,8 @@ public class UserService implements UserDetailsService {
 		tutorProfileDetailsModel.setBookingId(tutProfileDetails.getBookingId());
 		for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
 			expertise exp = new expertise();
-			exp.setArea(area.getSubject());
+			exp.setCategory(area.getCategory().getCategoryName());
+			exp.setSubCategory(area.getSubCategory().getSubCategoryName());
 			exp.setPrice(area.getPrice());
 			tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 		}

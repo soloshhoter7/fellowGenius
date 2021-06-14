@@ -1,22 +1,30 @@
 package fG.Model;
 
 public class expertise {
-	String area;
+	String category;
+	String subCategory;
 	Integer price;
-	public String getArea() {
-		return area;
-	}
-	public void setArea(String area) {
-		this.area = area;
-	}
+	
 	public Integer getPrice() {
 		return price;
 	}
 	public void setPrice(Integer price) {
 		this.price = price;
 	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getSubCategory() {
+		return subCategory;
+	}
+	public void setSubCategory(String subCategory) {
+		this.subCategory = subCategory;
+	}
 	@Override
 	public String toString() {
-		return "expertise [area=" + area + ", price=" + price + "]";
+		return "expertise [category=" + category + ", subCategory=" + subCategory + ", price=" + price + "]";
 	}
 }

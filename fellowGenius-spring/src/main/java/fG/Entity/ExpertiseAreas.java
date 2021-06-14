@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -18,8 +19,13 @@ public class ExpertiseAreas {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
-	@NotNull
-	String subject;
+	@OneToOne
+	@JoinColumn(name="category_id")
+	CategoryList category;
+	
+	@OneToOne
+	@JoinColumn(name="sub_category_id")
+	SubcategoryList subCategory;
 	
 	@NotNull
 	Integer price;
@@ -36,13 +42,7 @@ public class ExpertiseAreas {
 		this.id = id;
 	}
 
-	public String getSubject() {
-		return subject;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+	
 
 	public TutorProfileDetails getUserId() {
 		return userId;
@@ -60,12 +60,28 @@ public class ExpertiseAreas {
 		this.price = price;
 	}
 
-	@Override
-	public String toString() {
-		return "ExpertiseAreas [id=" + id + ", subject=" + subject + ", price=" + price + "]";
+	public CategoryList getCategory() {
+		return category;
 	}
 
-
+	public void setCategory(CategoryList category) {
+		this.category = category;
+	}
 
 	
+
+	public SubcategoryList getSubCategory() {
+		return subCategory;
+	}
+
+	public void setSubCategory(SubcategoryList subCategory) {
+		this.subCategory = subCategory;
+	}
+
+//	@Override
+//	public String toString() {
+//		return "ExpertiseAreas [id=" + id + ", category=" + category + ", subCategory=" + subCategory + ", price="
+//				+ price + ", userId=" + userId + "]";
+//	}
+
 }

@@ -137,7 +137,6 @@ public class userController {
 	@RequestMapping(value = "/fetchTutorList", produces = "application/JSON")
 	@ResponseBody
 	public List<TutorProfileDetailsModel> tutorList(String subject) {
-		System.out.println("in controller"+subject);
 		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList(subject);
 		return tutorProfileDetails;
 	}

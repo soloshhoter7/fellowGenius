@@ -16,14 +16,17 @@ import fG.Entity.TutorProfileDetails;
 public interface repositoryExpertiseAreas extends JpaRepository<ExpertiseAreas,Long> {
 		@Transactional
 	 	@Modifying 
-	    @Query(value = "DELETE FROM expertise_areas WHERE user_id = ?1 AND subject =?2",nativeQuery = true)
-	    int deleteSubject(int userId,String subject);
+	    @Query(value = "DELETE FROM expertise_areas WHERE user_id = ?1 AND sub_category_id =?2",nativeQuery = true)
+	    int deleteSubject(int userId,int subCategId);
 
 //		@Query(value = "SELECT * from expertise_areas WHERE subject = ?1", nativeQuery = true)
 //		ExpertiseAreas searchBySubject(String subject);
 		
-		@Query(value = "SELECT * from expertise_areas WHERE subject = ?1", nativeQuery = true)
-		List<ExpertiseAreas> searchBySubject(String subject);
+		@Query(value = "SELECT * from expertise_areas WHERE category_id = ?1", nativeQuery = true)
+		List<ExpertiseAreas> searchByCategoryId(Integer categId);
+		
+		@Query(value = "SELECT * from expertise_areas WHERE sub_category_id = ?1", nativeQuery = true)
+		List<ExpertiseAreas> searchBySubCategoryId(Integer subCategId);
 		
 		@Query(value = "SELECT * from expertise_areas WHERE subject = ?1", nativeQuery = true)
 		List<ExpertiseAreas> searchSubject(String subject);

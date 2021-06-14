@@ -1,11 +1,7 @@
 package fG.DAO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-
-import javax.security.auth.Subject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +9,13 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 
 import fG.Entity.BookingDetails;
+import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
+import fG.Entity.SubcategoryList;
 import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
@@ -28,11 +26,13 @@ import fG.Model.StudentLoginModel;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorVerificationModel;
 import fG.Repository.repositoryBooking;
+import fG.Repository.repositoryCategory;
 import fG.Repository.repositoryExpertiseAreas;
 import fG.Repository.repositoryLearningAreas;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
+import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
@@ -78,6 +78,12 @@ public class dao {
 	
 	@Autowired
 	repositoryBooking repBooking;
+	
+	@Autowired
+	repositorySubCategoryList repSubCategory;
+	
+	@Autowired
+	repositoryCategory repCategory;
 	
 	// for saving user profile
 		public boolean saveUserLogin(Users user) {
@@ -170,9 +176,8 @@ public class dao {
 	// for getting tutors list whose profile completed is 100% for finding tutors 
 	public List<TutorProfileDetails> getTutorList(String subject) {
 		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();
-		System.out.println(subject);
-		List<ExpertiseAreas> areas = repExpertiseAreas.searchBySubject(subject);
-		System.out.println(areas);
+		CategoryList categ = repCategory.findCategory(subject);
+		List<ExpertiseAreas> areas = repExpertiseAreas.searchByCategoryId(categ.getCategoryId());
 		if(areas!=null) {
 			for(ExpertiseAreas results:areas) {
 				if(!tutors.contains(results.getUserId())) {
@@ -355,9 +360,12 @@ public class dao {
 		if(role.equals("Learner")) {
 			repLearingAreas.deleteSubject(id, subject);
 		}else if(role.equals("Expert")) {
-			System.out.println("called expert");
-			System.out.println(id+":"+subject+":"+role);
-			System.out.println(repExpertiseAreas.deleteSubject(id, subject));
+			Integer subCategId;
+			SubcategoryList sc = repSubCategory.findSubCategoryByName(subject);
+			if(sc!=null) {
+				subCategId=sc.getSubCategoryId();
+				System.out.println(repExpertiseAreas.deleteSubject(id, subCategId));
+			}
 		}
 	}
 
@@ -382,7 +390,11 @@ public class dao {
 			
 			// got all tutors for required subject
 			for(String subject: subjects) {
-				subjectWiseFilters.addAll(repExpertiseAreas.searchBySubject(subject));		
+				SubcategoryList subCateg = repSubCategory.findSubCategoryByName(subject);
+				if(subCateg!=null) {
+					List<ExpertiseAreas> tutors = repExpertiseAreas.searchBySubCategoryId(subCateg.getSubCategoryId());
+					subjectWiseFilters.addAll(tutors);		
+				}	
 			}
 			
 			for(String priceRange: price) {
@@ -391,8 +403,6 @@ public class dao {
 				for(ExpertiseAreas subjectWiseFilt: subjectWiseFilters) {
 					Long id = subjectWiseFilt.getId();
 					if(!priceWiseTutors.contains(subjectWiseFilt.getUserId())) {
-						System.out.println("NULL AE");
-//						System.out.println(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id));
 						if(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id)!=null) {
 							priceWiseTutors.add(repExpertiseAreas.searchByPrice(lowerValue, higherValue, id).getUserId());
 						}
@@ -420,8 +430,13 @@ public class dao {
 			List<TutorProfileDetails> subjectWiseTutors = new  ArrayList<TutorProfileDetails>();
 			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
 			
-			for(int i=0; i<subjects.length;i++) {
-				subjectWiseFilters.addAll(repExpertiseAreas.searchSubject(subjects[i]));	
+			
+			for(String subject: subjects) {
+				SubcategoryList subCateg = repSubCategory.findSubCategoryByName(subject);
+				if(subCateg!=null) {
+					List<ExpertiseAreas> tutors = repExpertiseAreas.searchBySubCategoryId(subCateg.getSubCategoryId());
+					subjectWiseFilters.addAll(tutors);		
+				}	
 			}
 			
 			for(ExpertiseAreas subjectWiseFilt: subjectWiseFilters) {
