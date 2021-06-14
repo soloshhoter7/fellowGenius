@@ -1,0 +1,295 @@
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+    .header .navbar {
+        left: -8px;
+        top: 2px;
+        position: absolute;
+    }
+    .header .navbar .navbar-collapse {
+        height: calc(100vh - 4.5em);
+        width: calc(100vh);
+        padding: 0 15px;
+        background-color: #ffffff;
+        position: fixed;
+        left: 0px;
+        top: 60px;
+        z-index: 9994;
+    }
+    .hide {
+        display: inline-block !important;
+    }
+    .showin {
+        display: none !important;
+    }
+    .header .logo {
+        left: 40%;
+        position: absolute;
+    }
+    .search-bg-left {
+        display: none;
+    }
+    .search-container {
+        background: transparent !important;
+        background-color: #f7e4f9 !important;
+    }
+    .advertise-container {
+        height: 200px !important;
+    }
+    .login-container {
+        width: 100% !important;
+        margin-top: 0px !important;
+    }
+    .login-container .login-header {
+        flex-direction: column;
+    }
+    .login-container .close {
+        top: -150px !important;
+        right: -150px !important;
+    }
+    .login-container .login-parameter-container {
+        height: calc(100vh - 200px);
+    }
+    .login-container .login-instead {
+        margin-top: 60px !important;
+    }
+    .login-container .button-container .btn-primary {
+        width: 100% !important;
+        margin-top: 10px;
+    }
+    .signup-container {
+        width: 100% !important;
+        margin-top: 0px !important;
+        background: transparent !important;
+    }
+    .signup-container .signup-header {
+        flex-direction: column;
+    }
+    .signup-container .close {
+        top: 10px !important;
+        right: 10px !important;
+    }
+    .signup-container .logo {
+        display: inline-block !important;
+    }
+    .signup-container .signup-header .signup-container .signup-header .hide {
+        display: inline-block !important;
+    }
+    .signup-parameter-container {
+        width: 98% !important;
+    }
+    .signup-parameter-container .logo-mobile {
+        display: none !important;
+    }
+    .signup-container .signup-parameter-container .form-group-container {
+        margin-left: -10px;
+    }
+    .signup-container .signup-parameter-container .form-group {
+        width: 98% !important;
+    }
+    .bg-signup {
+        background: transparent !important;
+    }
+    .search-result-container {}
+    .search-result-container .filter-container {
+        flex: 1 !important;
+        width: 100% !important;
+    }
+    .search-result-container .filter-container .filter-category {
+        display: inline-block;
+        float: left;
+    }
+    .search-result-container .filter-container .filter-category .filter-category-list li {
+        background-color: #e30084;
+        padding: 5px;
+        margin: 5px;
+        width: 150px;
+        border-radius: 4px;
+        border: 1px solid #e30084;
+        color: #ffffff;
+    }
+    .search-result-container .filter-container .filter-category .filter-category-list li .filters-label {
+        color: #ffffff;
+    }
+    .no-recordsfound {
+        width: 300px !important;
+        height: 255px;
+    }
+    .no-recordsfound img,
+    .information-container {
+        display: block !important;
+        float: left !important;
+        width: 100% !important;
+    }
+    .work-in-progress {
+        width: 300px!important;
+        height: 240px !important;
+        margin-top: 80px!important;
+    }
+    .work-in-progress img,
+    .information-container {
+        display: block !important;
+        float: left !important;
+        width: 100% !important;
+    }
+    .how-it-works-container {
+        height: auto !important;
+    }
+    .how-it-works-container .separtor-how-it-works {
+        display: none;
+    }
+    .how-it-works-container .process .process__item {
+        width: 100% !important;
+        display: block;
+        float: left;
+    }
+    .dashboard-container {
+        padding: 5px !important;
+        width: 97% !important;
+    }
+    .dashboard-container .widget {
+        width: 100% !important;
+        margin-left: 5px !important;
+    }
+    .dashboard-container .pending-reviews-list .widget-information .list-panel {
+        display: block;
+        float: left;
+        width: 100%;
+        height: 150px;
+    }
+    .dashboard-container .pending-reviews-list .widget-information .list-panel .button-container {
+        right: 40px;
+        position: absolute;
+        top: 80px;
+    }
+    .primary-container .content-container table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    .primary-container .content-container table tr {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .primary-container .content-container table td {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .primary-container .content-container table td img {
+        width: 100%;
+    }
+    .primary-container .content-container table td::before {
+        /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+        content: attr(data-label);
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-right: 10px;
+        display: block;
+        float: left;
+        width: 100%;
+    }
+    .overlay {
+        width: 100%;
+        height: 100vh;
+        background-color: black;
+        z-index: 1;
+        position: absolute;
+        opacity: 0.2;
+    }
+    /*
+    body .sidenav {
+        max-height: 100vh;
+    }*/
+    .sidenav .profile-thumbnail {
+        left: 120px !important;
+    }
+    .closeButton {
+        display: block !important;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 30px !important;
+        color: #ffffff !important;
+    }
+    .expert-profile-container {
+        width: 90% !important;
+    }
+    .expert-profile-container .expert-profile-header .list-thumbnail {
+        width: 50px !important;
+        height: 50px !important;
+        top: 2px !important;
+    }
+    .expert-profile-container .expert-profile-header .basic-information {
+        top: 60px !important;
+        left: 5px !important;
+        width: 100% !important;
+    }
+    .expert-profile-container .expert-profile-header .contact-information {
+        top: 2px !important;
+    }
+    .expert-profile-header .price-stamp {
+        background: transparent !important;
+        overflow: hidden;
+        background-size: contain;
+        left: 50%;
+        width: 200px;
+        height: 120px;
+        position: absolute;
+    }
+    .expert-profile-header .price-stamp .price {
+        transform-origin: 0 0;
+        transform: rotate(0deg) !important;
+        display: inline-block;
+        top: 57px;
+        position: relative;
+        color: #ffffff;
+        left: 50px;
+        font-size: 16px;
+        font-weight: 700;
+    }
+    .expert-profile-container .expert-profile-description {
+        margin-left: 0px !important;
+        margin-top: 30px !important;
+    }
+    .mat-dialog-container {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+    }
+    .bg-thankyou-container {
+        background-position: top left !important;
+    }
+    .bg-thankyou-container .thankyou-container {
+        width: 300px !important;
+        left: 20px !important;
+        top: 350px !important;
+        position: absolute;
+    }
+    .main-content .header {
+        height: 120px !important;
+        margin-bottom: 10px;
+    }
+    .main-content .header .search-box-container {
+        width: 100%;
+        left: 1px;
+        top: 75px;
+    }
+    .main-content .header .search-box-container .input-group .searchButton {
+        right: 30px !important;
+    }
+    .header .dropdown-icon-container {
+        width: auto !important;
+    }
+    .main-content .header .dropdown-icon-container .dropdown {
+        position: absolute;
+        left: -192px;
+        top: 55px;
+    }
+}
