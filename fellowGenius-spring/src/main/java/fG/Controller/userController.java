@@ -28,7 +28,8 @@ import fG.Service.UserService;
 
 @RestController
 //@CrossOrigin(origins = "https://fellowgenius.com")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://ng-fellowgenius.azurewebsites.net")
 @RequestMapping("/fellowGenius")
 public class userController {
 

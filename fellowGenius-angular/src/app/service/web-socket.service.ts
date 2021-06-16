@@ -29,7 +29,8 @@ export class WebSocketService {
 	connectToUserWebSocket(userId) {
 		// let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
 		// let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
-		let socket = new SockJS('http://localhost:5000/fellowGenius');
+		let socket = new SockJS('https://fellowgenius-spring-dev.azurewebsites.net/fellowGenius');
+		// let socket = new SockJS('http://localhost:5000/fellowGenius');
 
 		this.ws = Stomp.over(socket);
 		let that = this;
