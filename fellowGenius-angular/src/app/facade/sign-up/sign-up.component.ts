@@ -245,6 +245,7 @@ export class SignUpComponent implements OnInit {
         });
       },
       (error) => {
+        console.log(error);
         console.log('google pop up closed by the user');
       }
     );
