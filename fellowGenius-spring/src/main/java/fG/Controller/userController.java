@@ -177,7 +177,7 @@ public class userController {
 	@RequestMapping(value="/helloKarma")
 	@ResponseBody
 	public String helloKarma() {
-		return "Hello world ! the server is up and running";
+		return "Hello world ! the server is up and running and now tested";
 	}
 	
 	@PreAuthorize("hasAuthority('Learner')")
