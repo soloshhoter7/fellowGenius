@@ -628,7 +628,7 @@ public class UserService implements UserDetailsService {
 	// for sending verification email
 	public AuthenticationResponse verifyEmail(String email) {
 		String to = email;
-		String from = "fellowGenius.tech@gmail.com";
+		String from = "soloshooter5631@gmail.com";
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -638,7 +638,7 @@ public class UserService implements UserDetailsService {
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fellowG12091505.");
+				return new PasswordAuthentication("soloshooter5631@gmail.com", "143mpd&Me");
 			}
 
 		});
