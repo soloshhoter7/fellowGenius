@@ -98,8 +98,7 @@ public class MeetingService {
 
 	// send notification to tutor upon booking request
 	public void sendNotificationTutor(Integer id, BookingDetails booking) {
-		String from = "soloshooter5631@gmail.com";
-
+		String from = "fellowgenius.tech@gmail.com";
 		Properties props = new Properties();
 	    props.setProperty("mail.transport.protocol", "smtp");     
 	    props.setProperty("mail.host", "smtp.gmail.com");  
@@ -112,8 +111,9 @@ public class MeetingService {
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("soloshooter5631@gmail.com", "143mpd&Me");
+				return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fellowG12091505.");
 			}
+
 		});
 
 		try {
