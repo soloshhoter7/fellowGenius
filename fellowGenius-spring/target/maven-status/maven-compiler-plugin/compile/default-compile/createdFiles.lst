@@ -14,7 +14,6 @@ fG\Controller\WebSocketController.class
 fG\Entity\StudentLogin.class
 fG\Controller\userController.class
 fG\Model\SocialLoginModel.class
-fG\Service\UserService$3.class
 fG\Repository\repositorySocialLogin.class
 fG\Service\IdGenerator.class
 fG\Model\expertise.class

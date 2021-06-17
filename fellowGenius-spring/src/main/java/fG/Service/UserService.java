@@ -692,6 +692,7 @@ public class UserService implements UserDetailsService {
 //	}
 
 	public AuthenticationResponse verifyEmail(String email) {
+		System.out.println("trying to send the mail;==========================================");
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(email);
 		mail.setSubject("Testing Mail API");
