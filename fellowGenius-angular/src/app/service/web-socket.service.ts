@@ -8,6 +8,7 @@ import { ChatService } from './chat.service';
 import * as SockJS from 'sockjs-client';
 import { NotificationService } from './notification.service';
 import { TutorDashboardComponent } from '../home/dashboard/tutor-dashboard.component';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,11 +27,10 @@ export class WebSocketService {
 		private zone: NgZone,
 	) {}
 	loginType;
+	backendUrl = environment.BACKEND_URL;
 	connectToUserWebSocket(userId) {
-		// let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
-		// let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
-		let socket = new SockJS('https://fellowgenius-spring-dev.azurewebsites.net/fellowGenius');
-		// let socket = new SockJS('http://localhost:5000/fellowGenius');
+
+		let socket = new SockJS(this.backendUrl+'/fellowGenius');
 
 		this.ws = Stomp.over(socket);
 		let that = this;

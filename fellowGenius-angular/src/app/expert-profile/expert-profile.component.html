@@ -1,13 +1,20 @@
 <app-nav-bar></app-nav-bar>
 <div class="content-container" style="background-color: black">
-  <div class="breadcrumb-container">
+  <!-- <div class="breadcrumb-container">
     <ol class="breadcrumb" style="font-size: 15px">
       <li><a routerLink="../facade">Home</a></li>
       <li><a routerLink="../searchResults">Search Results</a></li>
       <li class="active">Profile</li>
     </ol>
-  </div>
+  </div> -->
   <div class="expert-profile-container-connect">
+    <div class="breadcrumb-container" style="width: max-content;">
+      <ol class="breadcrumb" style="font-size: 15px">
+        <li><a routerLink="../facade">Home</a></li>
+        <li><a routerLink="../searchResults">Search Results</a></li>
+        <li class="active">Profile</li>
+      </ol>
+    </div>
     <div
       class="connect-button-container"
       *ngIf="loginService.getLoginType() != 'Expert'"

@@ -100,7 +100,7 @@
             ngModel
             class="form-control"
             required
-            #fullName
+            #fullName="ngModel"
             maxlength="50"
             autofocus
           />
@@ -122,7 +122,7 @@
             class="form-control"
             required
             email
-            #email
+            #email="ngModel"
             maxlength="64"
             pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
           />
@@ -148,12 +148,13 @@
             [pattern]="passwordPattern"
             minlength="8"
             maxlength="20"
-            #password
+            #password="ngModel"
           />
 
-          <span class="help-block" *ngIf="!password.valid && password.touched"
-            >password field must be minimum of 8 characters with atleast one
-            lowercase, uppercase, number and a special character</span
+          <span class="help-block" *ngIf="password.invalid && (password.dirty||password.touched)"
+            >Your password must be a minimum of 8 characters long. Your PW must
+            contain at least one uppercase letter (A-Z), one lowercase (a-z),
+            one number (0-9), and one special character (@, #,&, %).</span
           >
         </div>
 
@@ -169,7 +170,7 @@
             name="contact"
             required
             [pattern]="mobNumberPattern"
-            #contact
+            #contact="ngModel"
           />
 
           <span *ngIf="!contact.valid && contact.touched" class="help-block"

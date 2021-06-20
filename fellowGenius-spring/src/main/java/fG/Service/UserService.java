@@ -114,7 +114,8 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
-
+	@Autowired
+	MailService mailService;
 
 	public String validateUser(String email, String password) {
 		Users userLogin = repUsers.emailExist(email);
@@ -631,87 +632,17 @@ public class UserService implements UserDetailsService {
 
 	// for sending verification email
 	public AuthenticationResponse verifyEmail(String email) {
-		String to = email;
-		String from = "soloshooter5631@gmail.com";
-
-		Properties props = new Properties();
-	    props.setProperty("mail.transport.protocol", "smtp");     
-	    props.setProperty("mail.host", "smtp.gmail.com");  
-	    props.put("mail.smtp.auth", "true");  
-	    props.put("mail.smtp.port", "465");  
-	    props.put("mail.debug", "true");  
-	    props.put("mail.smtp.socketFactory.port", "465");  
-	    props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");  
-	    props.put("mail.smtp.socketFactory.fallback", "false");  
-
-		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("soloshooter5631@gmail.com", "czdq124c6");
-			}
-
-		});
 
 		int m = (int) Math.pow(10, 5);
 		String otp = String.valueOf((m + new Random().nextInt(9 * m)));
-
-		try {
-			MimeMessage message = new MimeMessage(session);
-
-			message.setFrom(new InternetAddress(from));
-
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-			message.setSubject("Welcome to FellowGenius");
-
-//			message.setContent(
-//					"<html> <head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/>"
-//							+ " <style>.Box{box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);width: 100%;height: auto;text-align: center;padding: "
-//							+ "20px;margin-top: 10px;}.logo{color: #241084;font-weight: 500;line-height: 2rem;font-size: xx-large;}</style> "
-//							+ "</head><body> <div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-3\">"
-//							+ "</div><div class=\"col-sm-6\"> <div class=\"Box\"> <div class=\"box-header\"> <h1 class=\"logo\">fellowGenius</h1> "
-//							+ "</div><div class=\"box-body\"> <h2>Welcome to fellow Genius</h2> "
-//							+ "<p>Please Verify your account by entering the One-time-password Provided below :</p><h2 style=\"padding: 20px;"
-//							+ "background-color: #e0e0e0;width: max-content;margin:auto\">" + otp
-//							+ "</h2> </div></div></div>" + "<div class=\"com-sm-3\"></div></div></div></body></html>",
-//					"text/html");
-			message.setContent("<html><head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0 8px 16px 0 #90a4ae; width: 100%; height: auto; text-align: center; padding: 20px; margin-top: 10px; background: url(https://fellowgenius.com/search_right_bg.7af30faa440a7e6ab2bb.svg) no-repeat; background-size: contain; border: 1px solid #7d0f7d; border-radius: 8px; width: 650px; margin: 0 auto; background-position: left top;}.logo{background: url(https://fellowgenius.com/logo.2dbc598173218fe92921.svg) no-repeat; background-size: contain; height: 100px; display: block; float: right; width: 100px;}tr{padding: 10px;}td{padding: 5px; margin-right: 5px;}</style></head>"
-					+ "<body> <div class=\"Box\"> <div class=\"box-header\"> <span class=\"logo\"></span> <span style=\"margin-bottom: 20px;color:#892687;width:100%;text-align: center;font-size:16px;font-weight:bold;text-transform: uppercase;\">"
-					+ " Welcome to fellowgenius </span> </div><div style=\"padding:20px;width: 350px; margin: 0 auto;\"> <p>Please Verify your account by entering the One-time-password Provided below :</p>"
-					+ "<h2 style=\"padding: 20px;background-color: #e0e0e0;width: max-content;margin:auto\">"+otp+"</h2> </div>"
-					+ "<p style=\"margin-top: 30px; font-size: 10px; text-align: center; width: 100%;\">This is an auto-generated message please don't reply back.</p></div><div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-2\"></div><div class=\"col-sm-7\"> </div><div class=\"com-sm-3\"></div></div></div></body></html>","text/html");
-			Transport.send(message);
-
-			System.out.println("Sent message successfully....");
-
-		} catch (MessagingException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		mailService.sendVerificationEmail(email, otp);
 		String otpFinal = encoder.encode(otp);
 		System.out.println(otpFinal);
 		return new AuthenticationResponse(otpFinal);
 
 	}
 
-//	public AuthenticationResponse verifyEmail(String email) {
-//		System.out.println("trying to send the mail;==========================================");
-//		SimpleMailMessage mail = new SimpleMailMessage();
-//		mail.setTo(email);
-//		mail.setSubject("Testing Mail API");
-//		int m = (int) Math.pow(10, 5);
-//		String otp = String.valueOf((m + new Random().nextInt(9 * m)));
-//		mail.setText("Hurray ! You have done that dude..."+otp);
-//
-//		/*
-//		 * This send() contains an Object of SimpleMailMessage as an Parameter
-//		 */
-//		
-//		javaMailSender.send(mail);
-//		String otpFinal = encoder.encode(otp);
-//		System.out.println(otpFinal);
-//		return new AuthenticationResponse(otpFinal);
-//
-//	}
+
 	// fetch if the tutor is available ?
 	public boolean getTutorIsAvailable(String bookingId) {
 		if (dao.getTutorAvailabilitySchedule(Integer.valueOf(bookingId)).getIsAvailable().equals("yes")) {

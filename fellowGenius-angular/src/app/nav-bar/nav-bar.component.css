@@ -10,3 +10,23 @@
     left: -65px;
     transform: translate3d(-5px, 57px, 0px);
 }
+.tier1Links{
+    padding-left: 1vw !important;
+    cursor: pointer !important;
+    color: #3f023f !important;
+    font-weight: bolder !important;
+}
+/* .desktop-nav{
+    display: block;
+} */
+.mobile-domains-nav{
+    display: none;
+}
+@media only screen and (max-width: 550px) {
+    .desktop-domains-nav{
+        display: none;
+    }
+    .mobile-domains-nav{
+        display: block;
+    }
+  }

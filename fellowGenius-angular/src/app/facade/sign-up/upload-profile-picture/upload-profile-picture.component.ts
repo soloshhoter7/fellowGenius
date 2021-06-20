@@ -48,4 +48,7 @@ export class UploadProfilePictureComponent implements OnInit {
   onUpload() {
     this.dialogRef.close(this.imageDestination);
   }
+  closeDialog(){
+    this.dialogRef.close(null);
+  }
 }

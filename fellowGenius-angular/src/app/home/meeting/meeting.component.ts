@@ -45,6 +45,7 @@ import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { HttpService } from 'src/app/service/http.service';
 import { CookieService } from 'ngx-cookie-service';
 import * as jwt_decode from 'jwt-decode';
+import { environment } from 'src/environments/environment';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -136,6 +137,7 @@ export class MeetingComponent implements OnInit {
     verticalPosition: 'top',
   };
   fileType: string;
+  backendURL=environment.BACKEND_URL;
 
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -587,7 +589,6 @@ export class MeetingComponent implements OnInit {
           currY: currentPos.y,
         };
         // this.pushCoordinates(coordinates);
-        // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
       });
   }
@@ -673,12 +674,8 @@ export class MeetingComponent implements OnInit {
   }
 
   connectToMeetingWebSocket(bookingId) {
-    // let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
-    // let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
-    let socket = new SockJS(' https://fellowgenius-spring-dev.azurewebsites.net/fellowGenius');
-   
-    // let socket = new SockJS('http://localhost:5000/fellowGenius');
-    // let socket = new SockJS('http://localhost:8080/fellowGenius');
+
+    let socket = new SockJS(this.backendURL+'/fellowGenius');
     this.ws = Stomp.over(socket);
     let that = this;
     this.ws.connect(
@@ -779,12 +776,15 @@ export class MeetingComponent implements OnInit {
     });
     this.ws.send('/sendData/' + this.meeting.roomName, {}, data);
   }
+
   initiateWhiteBoardForStudent() {
     this.sendCoordinates('initiateWhiteBoard', null, null, null, null, null);
   }
+
   closeWhiteBoardForStudent() {
     this.sendCoordinates('closeWhiteBoard', null, null, null, null, null);
   }
+
   //--------------------------------------------- chat functions--------------------------------------------------
   sendChatMessage() {
     var senderId: number;

@@ -1,470 +1,447 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { filtersApplied } from '../model/filtersApplied';
 import { tutorProfileDetails } from '../model/tutorProfileDetails';
 import { FiltersDialogComponent } from '../search-results/filters-dialog/filters-dialog.component';
-import { HttpService } from '../service/http.service';
-import { LoginDetailsService } from '../service/login-details.service';
 import { ProfileService } from '../service/profile.service';
+import {
+  Component,
+  OnInit,
+  Pipe,
+  PipeTransform,
+  ViewChild,
+  ElementRef,
+  Input,
+  Sanitizer,
+  ViewChildren,
+  HostListener,
+} from '@angular/core';
+import {
+  DomSanitizer,
+  SafeHtml,
+  SafeUrl,
+  SafeStyle,
+} from '@angular/platform-browser';
+import * as Stomp from 'stompjs';
+import { fromEvent } from 'rxjs';
+import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+import {
+  NgxAgoraService,
+  Stream,
+  AgoraClient,
+  ClientEvent,
+  StreamEvent,
+  LocalStreamStats,
+  RemoteStreamStats,
+  StreamStats,
+} from 'ngx-agora';
+import * as SockJS from 'sockjs-client';
+import { timer, Subscription } from 'rxjs';
+import { MeetingService } from 'src/app/service/meeting.service';
+import { meetingDetails } from 'src/app/model/meetingDetails';
+import { Router } from '@angular/router';
+import { bookingDetails } from 'src/app/model/bookingDetails';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MessageModel } from 'src/app/model/message';
+import { WebSocketService } from 'src/app/service/web-socket.service';
+import { DataSource } from '@angular/cdk/collections';
+import { LocationStrategy } from '@angular/common';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+import { HttpService } from 'src/app/service/http.service';
+import { CookieService } from 'ngx-cookie-service';
+import * as jwt_decode from 'jwt-decode';
+import { environment } from 'src/environments/environment';
+const numbers = timer(3000, 1000);
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.css'],
 })
 export class TestComponent implements OnInit {
-  searchResults: tutorProfileDetails[] = [];
-  filteredArray: tutorProfileDetails[] = [];
-  allFiltersApplied: filtersApplied = new filtersApplied();
-  subjects: string[];
-  // arrayToShow: tutorProfileDetails[];
-
-  subjectFiltersApplied = [];
-  priceFiltersApplied = [];
-  ratingFilterApplied = [];
-  deletionElementFinder = [];
-  elementsToBeDeleted = [];
-
-  callSearchBySubject: boolean;
-  callSearchByPrice: boolean;
-  findFromSearchResult: boolean;
-  findFromFilterSearch: boolean;
-
-  screenHeight: number;
-  screenWidth: number;
-  showMobileFilterView: boolean;
-  showMobileFilterButton: boolean = false;
-
   constructor(
+    private ngxAgoraService: NgxAgoraService,
+    private meetingService: MeetingService,
     private router: Router,
-    private httpService: HttpService,
+    private snackbar: MatSnackBar,
+    private sanitizer: DomSanitizer,
+    private locationStrategy: LocationStrategy,
     private loginService: LoginDetailsService,
-    private profileService: ProfileService,
-    private matDialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private httpService: HttpService,
+    private cookieService: CookieService
   ) {
-    this.getScreenSize();
+    this.uid = Math.floor(Math.random() * 100);
+    this.sid = 76;
   }
+  //   ---------------------
+ 
+  private cx: CanvasRenderingContext2D;
+  newMessageNotification: boolean = false;
+  meetingChat: MessageModel[] = [];
+  greetings: string[] = [];
+  showConversation: boolean = false;
+  chatOpen: boolean = false;
+  myClass: string = 'hideBlock';
+  myScreenShareClass: string = 'hideBlock';
+  ws: any;
+  name: string;
+  disabled: boolean;
+  uploadedProfilePicture: File = null;
+  undoStack: object[] = [];
+  redoStack: object[] = [];
+  list: object[] = [];
+  //   ------------------------
+  expandedScreen: boolean = false;
+  expandEnabled: boolean = true;
+  remoteJoined: boolean = false;
+  meeting = new meetingDetails();
+  localCallId = 'agora_local';
+  screenCallId = 'agora_screen';
+  remoteCalls: string[] = [];
+  screenRemoteCalls: string[] = [];
+  localStreams: string[] = [];
+  remoteVideoMute = false;
+  muteHostVideoStatus = 'mute host video';
+  hostVideo = true;
+  muteHostAudioStatus = 'mute host mic';
+  hostScreenShareStatus = false;
+  timelimit = 0;
+  timeLeft = this.timelimit;
+  openWhiteBoardStatus: boolean = false;
+  bookingDetails: bookingDetails;
+  subscription: Subscription;
+  message = new MessageModel();
+  fileMessage = new MessageModel();
+  messageText: string;
+  messageToAdd = new MessageModel();
+  senderName: string;
+  fileUploadedBox = false;
+  fileSizeExceeded = false;
+  fileName = '';
+  fileSize = '';
+  uploadedFile: File;
+  private client: AgoraClient;
+  private screenClient: AgoraClient;
+  private localStream: Stream;
+  private screenStream: Stream;
+  private uid: number;
+  private sid: number;
+  senderId;
+  screenHeight;
+  screenWidth;
+  canvasEl: HTMLCanvasElement;
+  canvasScreenShareEl: HTMLCanvasElement;
+  config: MatSnackBarConfig = {
+    duration: 7000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+  };
+  fileType: string;
+  backendURL=environment.BACKEND_URL;
 
-  @HostListener('window:resize', ['$event'])
-  getScreenSize(event?) {
-    this.screenHeight = window.innerHeight;
-    this.screenWidth = window.innerWidth;
-    if (this.screenWidth <= 500) {
-      this.showMobileFilterButton = true;
-      this.showMobileFilterView = true;
-    } else {
-      this.showMobileFilterButton = false;
-      this.showMobileFilterView = false;
-    }
-  }
-
+  micTriggered=false;
+  clientVideoOn:boolean;
+  clientMicOn:boolean;
   ngOnInit(): void {
-    if (window.screen.width <= 500) {
-      this.showMobileFilterButton = true;
-      this.showMobileFilterView = true;
-    } else {
-      this.showMobileFilterButton = false;
-      this.showMobileFilterView = false;
-    }
-
-    // this.fetchTutorList();
-    this.callSearchBySubject = false;
-    this.callSearchByPrice = false;
-    this.findFromSearchResult = false;
-    this.findFromFilterSearch = false;
-
-    // this.searchResults = [
-    //   {
-    //     tid: 1234,
-    //     areaOfExpertise: [],
-    //     currentOrganisation: 'Google',
-    //     description:
-    //       'I have an experience of 10 years aksjh a hj hdjkh jkj ahd ajkh adkah da djkajs d ak jk j sdlks k kl kls kk k',
-    //     educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
-    //     fullName: 'Ajay Verma',
-    //     institute: 'Panipat Institute of Engineering and Technology',
-    //     lessonCompleted: 0,
-    //     linkedInProfile: 'Ajay.linkedin',
-    //     previousOrganisations: ['PeopleStrong Pvt. Ltd'],
-    //     price1: '400',
-    //     price2: '400',
-    //     price3: '400',
-    //     professionalSkills: 'Angular, JAVA',
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 90,
-    //     reviewCount: 10,
-    //     speciality: 'Angular, JAVA',
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 3578,
-    //     areaOfExpertise: [],
-    //     currentOrganisation: 'Google',
-    //     description: 'I have an experience of 10 years',
-    //     educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
-    //     fullName: 'Shubham Verma',
-    //     institute: 'Panipat Institute of Engineering and Technology',
-    //     lessonCompleted: 0,
-    //     linkedInProfile: 'AJay.linkedin',
-    //     previousOrganisations: ['PeopleStrong Pvt. Ltd'],
-    //     price1: '800',
-    //     price2: '400',
-    //     price3: '400',
-    //     professionalSkills: 'Angular, JAVA',
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 70,
-    //     reviewCount: 10,
-    //     speciality: 'Angular, JAVA',
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 3572,
-    //     areaOfExpertise: [],
-    //     currentOrganisation: 'Google',
-    //     description: 'I have an experience of 10 years',
-    //     educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
-    //     fullName: 'Muskan Verma',
-    //     institute: 'Panipat Institute of Engineering and Technology',
-    //     lessonCompleted: 0,
-    //     linkedInProfile: 'Muskan.linkedin',
-    //     previousOrganisations: ['PeopleStrong Pvt. Ltd'],
-    //     price1: '500',
-    //     price2: '400',
-    //     price3: '400',
-    //     professionalSkills: 'Angular, JAVA',
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 50,
-    //     reviewCount: 10,
-    //     speciality: 'Angular, JAVA',
-    //     yearsOfExperience: 10,
-    //   },
-    //   {
-    //     tid: 8754,
-    //     areaOfExpertise: [],
-    //     currentOrganisation: 'Google',
-    //     description: 'I have an experience of 10 years',
-    //     educationalQualifications: ['Btech(CSE)', 'HTML', 'CSS'],
-    //     fullName: 'Abhinav Tyagi',
-    //     institute: 'Panipat Institute of Engineering and Technology',
-    //     lessonCompleted: 0,
-    //     linkedInProfile: 'Abhinav.linkedin',
-    //     previousOrganisations: ['PeopleStrong Pvt. Ltd'],
-    //     price1: '200',
-    //     price2: '400',
-    //     price3: '400',
-    //     professionalSkills: 'Angular, JAVA',
-    //     profileCompleted: 100,
-    //     profilePictureUrl: null,
-    //     rating: 20,
-    //     reviewCount: 10,
-    //     speciality: 'Angular, JAVA',
-    //     yearsOfExperience: 10,
-    //   },
-    // ];
-
-    // this.fetchTutorList();
-
-    this.filteredArray = this.searchResults;
-  }
-
-  // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
-  onSignUp() {
-    this.router.navigate(['signUp']);
-  }
-
-  showFilters() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.data = {
-      subjectFiltersApplied: this.subjectFiltersApplied,
-      priceFiltersApplied: this.priceFiltersApplied,
-      ratingFiltersApplied: this.ratingFilterApplied,
-      allFiltersApplied: this.allFiltersApplied,
-    };
-    // this.showMobileFilterView = !this.showMobileFilterView;
-    // this.matDialog.open(FiltersDialogComponent);
-    const dialogRef = this.matDialog.open(FiltersDialogComponent, dialogConfig);
-
-    // dialogRef.afterClosed().subscribe((data) => {
-    //   console.log('Dialog output:', data);
-    //   if (data.operation == 'apply') {
-    //     console.log('applied');
-    //     if (data.subjectFiltersApplied) {
-    //       for (let subject of data.subjectFiltersApplied) {
-    //         if (!this.subjectFiltersApplied.includes(subject)) {
-    //           this.subjectFiltersApplied.push(subject);
-    //         }
-    //       }
-    //     }
-
-    //     if (data.priceFiltersApplied) {
-    //       for (let price of data.priceFiltersApplied) {
-    //         if (!this.priceFiltersApplied.includes(price)) {
-    //           this.priceFiltersApplied.push(price);
-    //         }
-    //       }
-    //     }
-
-    //     if (data.ratingFilterApplied) {
-    //       for (let rating of data.ratingFiltersApplied) {
-    //         if (!this.ratingFilterApplied.includes(rating)) {
-    //           this.ratingFilterApplied.push(rating);
-    //         }
-    //       }
-    //     }
-
-    //     this.allFiltersApplied = data.allFiltersApplied;
-    //     this.httpService
-    //       .applyFilters(this.allFiltersApplied)
-    //       .subscribe((res) => {
-    //         console.log(res);
-    //         this.filteredArray = [];
-    //         this.filteredArray = res;
-    //       });
-    //   }
-    // });
-  }
-  toLoginPage() {
-    this.router.navigate(['login']);
-  }
-
-  viewProfile(profile: tutorProfileDetails) {
-    this.profileService.setProfile(profile);
-    this.router.navigate(['viewTutors'], {
-      queryParams: { page: profile.tid },
+    this.client = this.ngxAgoraService.createClient({
+      mode: 'rtc',
+      codec: 'h264',
     });
-  }
-
-  // openDialogProfile() {
-  // 	this.matDialog.open(TutorProfileComponent, {
-  // 		height: '90vh',
-  // 		width: '70vw'
-  // 	});
-  // }
-  fetchTutorList() {
-    this.httpService.getTutorList('Mathematics').subscribe((req) => {
-      this.searchResults = req;
+    this.assignClientHandlers();
+    this.localStream = this.ngxAgoraService.createStream({
+      streamID: this.uid,
+      audio: true,
+      video: true,
+      screen: false,
     });
+    this.assignLocalStreamHandlers();
+    // this.initLocalStream();
+    this.initLocalStream(() =>
+      this.join(
+        (uid) => this.publish(),
+        (error) => console.error(error)
+      )
+    );
   }
-
-  subjectContains(subject) {
-    // var subject = $event.target.value;
-    return this.subjectFiltersApplied.includes(subject);
-  }
-
-  priceContains(price) {
-    return this.priceFiltersApplied.includes(price);
-  }
-  ratingContains(rating) {
-    return this.ratingFilterApplied.includes(rating);
-  }
-  deleteSubject(subject) {
-    if (this.subjectFiltersApplied.includes(subject)) {
-      this.subjectFiltersApplied.splice(
-        this.subjectFiltersApplied.indexOf(subject),
-        1
-      );
-      this.allFiltersApplied.subjects.splice(
-        this.allFiltersApplied.subjects.indexOf(subject),
-        1
-      );
-      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-        this.filteredArray = [];
-        this.filteredArray = res;
-      });
-    }
-  }
-
-  deletePrice(price) {
-    if (this.priceFiltersApplied.includes(price)) {
-      this.priceFiltersApplied.splice(
-        this.priceFiltersApplied.indexOf(price),
-        1
-      );
-      this.allFiltersApplied.price.splice(
-        this.priceFiltersApplied.indexOf(price),
-        1
-      );
-      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-        this.filteredArray = [];
-        this.filteredArray = res;
-      });
-    }
-  }
-  deleteRating(rating) {
-    if (this.ratingFilterApplied.includes(rating)) {
-      this.ratingFilterApplied.splice(
-        this.ratingFilterApplied.indexOf(rating),
-        1
-      );
-      this.allFiltersApplied.ratings.splice(
-        this.allFiltersApplied.ratings.indexOf(rating * 20),
-        1
-      );
-      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-        this.filteredArray = [];
-        this.filteredArray = res;
-      });
-    }
-  }
-  searchBySubject($event) {
-    var subject = $event.target.value;
-    if (this.subjectFiltersApplied.length == 0) {
-      this.subjectFiltersApplied.push(subject);
-      this.allFiltersApplied.subjects.push(subject);
-      this.allFiltersApplied.show = true;
-    } else {
-      if (this.checkFiltersApplied(this.subjectFiltersApplied, subject)) {
-        this.subjectFiltersApplied.splice(
-          this.subjectFiltersApplied.indexOf(subject),
-          1
-        );
-        this.allFiltersApplied.subjects.splice(
-          this.allFiltersApplied.subjects.indexOf(subject),
-          1
-        );
-        if (this.allFiltersApplied.subjects.length == 0) {
-          this.allFiltersApplied.show = false;
+    
+    
+    //---------------------------------------------- client Handlers -------------------------------------------------------------
+    // normal client handler
+    private assignClientHandlers(): void {
+      this.client.on(ClientEvent.LocalStreamPublished, (evt) => {});
+  
+      this.client.on(ClientEvent.Error, (error) => {
+        if (error.reason === 'DYNAMIC_KEY_TIMEOUT') {
+          this.client.renewChannelKey('', () => (renewError) =>
+            console.error('Renew channel key failed: ', renewError)
+          );
         }
-      } else {
-        this.subjectFiltersApplied.push(subject);
-        this.allFiltersApplied.subjects.push(subject);
-        this.allFiltersApplied.show = true;
-      }
-    }
-    // this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-    //   this.filteredArray = [];
-    //   this.filteredArray = res;
-    //   // console.log(res.toString().length == undefined);
-    // });
-  }
-
-  searchByPrice($event) {
-    var price = $event.target.value;
-    if (this.priceFiltersApplied.length == 0) {
-      this.priceFiltersApplied.push(price);
-      this.allFiltersApplied.price.push(price);
-      this.allFiltersApplied.show = true;
-    } else {
-      if (this.checkFiltersApplied(this.priceFiltersApplied, price)) {
-        this.priceFiltersApplied.splice(
-          this.priceFiltersApplied.indexOf(price),
-          1
-        );
-        this.allFiltersApplied.price.splice(
-          this.allFiltersApplied.price.indexOf(price),
-          1
-        );
-        if (this.allFiltersApplied.price.length == 0) {
-          this.allFiltersApplied.show = false;
+      });
+  
+      this.client.on(ClientEvent.RemoteStreamAdded, (evt) => {
+        const stream = evt.stream as Stream;
+        var id = stream.getId();
+  
+        if (!this.localStreams.includes(id.toString()) && id != 76) {
+          this.client.subscribe(
+            stream,
+            { audio: true, video: true },
+            (err) => {}
+          );
+        } else if (
+          this.meetingService.getMeeting().role == 'student' &&
+          id == 76
+        ) {
+          this.client.subscribe(
+            stream,
+            { audio: true, video: true },
+            (err) => {}
+          );
         }
-      } else {
-        this.priceFiltersApplied.push(price);
-        this.allFiltersApplied.price.push(price);
-        this.allFiltersApplied.show = true;
-      }
-    }
-    // this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-    //   this.filteredArray = [];
-    //   this.filteredArray = res;
-    // });
-  }
-
-  searchByRatings($event) {
-    var ratings = $event.target.value;
-    if (this.ratingFilterApplied.length == 0) {
-      this.ratingFilterApplied.push(ratings);
-      this.allFiltersApplied.ratings.push(ratings * 20);
-      this.allFiltersApplied.show = true;
-    } else {
-      if (this.checkFiltersApplied(this.ratingFilterApplied, ratings)) {
-        this.ratingFilterApplied.splice(
-          this.ratingFilterApplied.indexOf(ratings),
-          1
-        );
-        this.allFiltersApplied.ratings.splice(
-          this.allFiltersApplied.ratings.indexOf(ratings * 20),
-          1
-        );
-        if (this.allFiltersApplied.ratings.length == 0) {
-          this.allFiltersApplied.show = false;
-        }
-      } else {
-        this.ratingFilterApplied.push(ratings);
-        this.allFiltersApplied.ratings.push(ratings * 20);
-        this.allFiltersApplied.show = true;
-      }
-    }
-    // this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-    //   this.filteredArray = [];
-    //   this.filteredArray = res;
-    // });
-  }
-
-  removeOrNot(areaOfExpertise, subjectFiltersApplied, eventTarget) {
-    var flag = 0;
-    for (var i = 0; i < areaOfExpertise.length; i++) {
-      for (var j = 0; j < subjectFiltersApplied.length; j++) {
-        if (subjectFiltersApplied[j].localeCompare(eventTarget) == 0) {
-          continue;
+      });
+  
+      this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
+        const stream = evt.stream as Stream;
+        const id = this.getRemoteId(stream);
+        const idt = stream.getId();
+        if (idt == 76) {
+          this.screenRemoteCalls.push(id);
+          setTimeout(() => stream.play(id), 1000);
         } else {
-          if (
-            areaOfExpertise[i].area.localeCompare(subjectFiltersApplied[j]) == 0
-          ) {
-            flag = 1;
-            break;
+          if (!this.remoteCalls.length) {
+            this.remoteCalls.push(id);
+            setTimeout(() => stream.play(id), 1000);
+            this.limitStream();
           }
         }
+      });
+  
+      this.client.on(ClientEvent.RemoteStreamRemoved, (evt) => {
+        const stream = evt.stream as Stream;
+        const id = this.getRemoteId(stream);
+        const idt = stream.getId();
+        if (idt != 76) {
+          if (stream) {
+            stream.stop();
+            this.remoteCalls = [];
+            this.endCall();
+          }
+        } else if (idt == 76) {
+          stream.stop();
+          stream.close();
+        }
+      });
+      this.client.on(ClientEvent.RemoveVideoMuted, (evt) => {
+        this.remoteVideoMute = true;
+      });
+      this.client.on(ClientEvent.RemoteVideoUnmuted, (evt) => {
+        this.remoteVideoMute = false;
+      });
+      this.client.on(ClientEvent.PeerLeave, (evt) => {
+        const stream = evt.stream as Stream;
+  
+        if (stream) {
+          stream.stop();
+          this.endCall();
+          this.remoteCalls = this.remoteCalls.filter(
+            (call) => call !== `${this.getRemoteId(stream)}`
+          );
+        }
+      });
+    }
+    // screen client Handlers
+    private assignScreenClientHandlers(): void {
+      this.screenClient.on(ClientEvent.LocalStreamPublished, (evt) => {});
+    }
+    private getRemoteId(stream: Stream): string {
+      return `agora_remote-${stream.getId()}`;
+    }
+    //----------------------------------------------------------------------------------------------------------
+    //--------------------------------------stream Handlers----------------------------------------------------
+    private assignLocalStreamHandlers(): void {
+      this.localStream.on(StreamEvent.MediaAccessAllowed, () => {});
+  
+      // The user has denied access to the camera and mic.
+      this.localStream.on(StreamEvent.MediaAccessDenied, () => {});
+    }
+    //------------------------------------------------------------------------------------------------------------
+    //------------------------------init functions for streams ---------------------------------------------------
+    private initLocalStream(onSuccess?: () => any): void {
+      this.localStream.init(
+        () => {
+          this.localStream.play(this.localCallId);
+          
+          if (onSuccess) {
+            onSuccess();
+          }
+        },
+        (err) => console.error('getUserMedia failed', err)
+      );
+    }
+  
+    private initScreenStream(onSuccess?: () => any): void {
+      this.screenStream.init(
+        () => {
+          this.screenStream.play(this.screenCallId);
+          if (onSuccess) {
+            onSuccess();
+          }
+        },
+        (err) => console.error('getUserMedia failed', err)
+      );
+    }
+    //-----------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------join and publish functions----------------------------------------------
+  
+    join(
+      onSuccess?: (uid: number | string) => void,
+      onFailure?: (error: Error) => void
+    ): void {
+      this.client.join(
+        null,
+        this.meetingService.getMeeting().roomName,
+        this.uid,
+        onSuccess,
+        onFailure
+      );
+    }
+  
+    publish(): void {
+      this.client.publish(this.localStream, (err) => {});
+    }
+  
+    screenJoin(
+      onSuccess?: (sid: number | string) => void,
+      onFailure?: (error: Error) => void
+    ): void {
+      this.localStreams.push(this.sid.toString());
+      this.screenClient.join(
+        null,
+        this.meetingService.getMeeting().roomName,
+        this.sid,
+        onSuccess,
+        onFailure
+      );
+    }
+  
+    screenPublish(): void {
+      this.screenClient.publish(this.screenStream, (err) => {});
+    }
+    // ------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------- control button functions --------------------------------------------
+    stopStream() {
+      if (confirm('Are you sure you want to cancel !')) {
+        this.endCall();
       }
     }
-    if (flag == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  checkFiltersApplied(array, selectedValue) {
-    if (array.includes(selectedValue)) {
-      return true;
-    }
-  }
-
-  checkDuplicacyOfObjectInArray(array, object) {
-    if (
-      array.filter((e) => JSON.stringify(e) === JSON.stringify(object)).length >
-      0
-    ) {
-      return true;
-    }
-  }
-
-  clearAllFilters() {
-    window.location.reload();
-  }
-
-  sort($event) {
-    if (
-      this.allFiltersApplied.price.length == 0 &&
-      this.allFiltersApplied.ratings.length == 0 &&
-      this.allFiltersApplied.subjects.length == 0
-    ) {
-      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
-        this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
-      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
-        this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
-      }
-    } else {
-      if ($event.target.value.localeCompare('sortLowToHigh') == 0) {
-        this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
-      } else if ($event.target.value.localeCompare('sortHighToLow') == 0) {
-        this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
+  
+    muteVideo() {
+      if (this.muteHostVideoStatus == 'mute host video') {
+        // this.localStream.muteVideo();
+        this.localStream.stop();
+        this.localStream.close();
+        this.muteHostVideoStatus = 'unmute host video';
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.backgroundColor = '#d93025';
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.borderColor = '#d93025';
+      } else if (this.muteHostVideoStatus == 'unmute host video') {
+        this.assignLocalStreamHandlers();
+        this.initLocalStream(() =>
+          this.join(
+            (uid) => this.publish(),
+            (error) => console.error(error)
+          )
+        );
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.backgroundColor = '';
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.borderColor = '';
+        this.muteHostVideoStatus = 'mute host video';
       }
     }
-  }
+  
+    muteAudio() {
+      this.micTriggered=true;
+      
+      if (this.muteHostAudioStatus == 'mute host mic') {
+        this.localStream.muteAudio();
+        (document.querySelector('.pre-meeting-mic') as HTMLElement).style.backgroundColor = '#d93025';
+        (document.querySelector('.pre-meeting-mic') as HTMLElement).style.borderColor = '#d93025';
+        this.muteHostAudioStatus = 'unmute host mic';
+
+      } else {
+        this.localStream.unmuteAudio();
+        (document.querySelector('.pre-meeting-mic') as HTMLElement).style.backgroundColor = '';
+        (document.querySelector('.pre-meeting-mic') as HTMLElement).style.borderColor = '';
+        this.muteHostAudioStatus = 'mute host mic';
+      }
+      setTimeout(()=>{
+        this.micTriggered=false;
+      },4000);
+    } 
+    shareScreen() {
+      if (this.meetingService.getMeeting().role == 'host') {
+        this.screenClient = this.ngxAgoraService.createClient({
+          mode: 'rtc',
+          codec: 'h264',
+        });
+        this.assignScreenClientHandlers();
+        this.screenStream = this.ngxAgoraService.createStream({
+          streamID: this.uid,
+          audio: false,
+          video: false,
+          screen: true,
+        });
+        this.initScreenStream(() =>
+          this.screenJoin(
+            (sid) => this.screenPublish(),
+            (error) => console.error(error)
+          )
+        );
+      }
+    }
+    endCall() {
+      if (this.meeting.role == 'host') {
+        if (this.screenStream != null) {
+          this.screenStream.stop();
+          this.screenClient.leave();
+          this.screenStream.close();
+        }
+      }
+      this.client.unpublish(this.localStream, (err) => {});
+      this.client.leave();
+      this.localStream.stop();
+      this.localStream.close();
+  
+      if (this.meeting.role == 'host') {
+        this.router.navigate(['home/tutorDashboard']);
+      } else if (this.meeting.role == 'student') {
+        this.router.navigate(['home/studentDashboard']);
+      }
+      // this.router.navigate([ 'home' ]);
+    }
+    limitStream() {
+      this.remoteJoined = true;
+      var before10Minutes = this.timelimit - 10 * 60;
+      this.subscription = numbers.subscribe((x) => {
+        this.timeLeft = this.timelimit - x;
+        if (x == before10Minutes) {
+          if (this.router.url === '/meeting') {
+            this.snackbar.open(
+              '10 Minutes Left ! Hurry up',
+              'close',
+              this.config
+            );
+          }
+        }
+        if (x == this.timelimit) {
+          this.httpService
+            .updateBookingStatus(this.bookingDetails.bid, 'Successful')
+            .subscribe((res) => {
+              this.localStream.stop();
+              this.subscription.unsubscribe();
+              this.endCall();
+            });
+        }
+      });
+    }
 }

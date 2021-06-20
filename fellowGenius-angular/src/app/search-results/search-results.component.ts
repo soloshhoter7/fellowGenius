@@ -68,8 +68,11 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedSubject = params['subject'];
+      this.filteredArray = this.searchResults;
+      this.fetchTutorList();
     });
     this.getSubCategories();
     if (window.screen.width <= 500) {
@@ -176,9 +179,15 @@ export class SearchResultsComponent implements OnInit {
     //   },
     // ];
 
-    this.fetchTutorList();
-
-    this.filteredArray = this.searchResults;
+    
+  }
+  fetchTutorList() {
+  
+    this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
+      this.searchResults=[];
+      this.filteredArray=[];
+      this.searchResults = req;
+    });
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
@@ -189,7 +198,6 @@ export class SearchResultsComponent implements OnInit {
     if(this.selectedSubject!=null){
       this.httpService.getSubCategories(this.selectedSubject).subscribe((res)=>{
         this.subCategories=res;
-        console.log(this.subCategories);
       });
   }
     
@@ -295,13 +303,7 @@ export class SearchResultsComponent implements OnInit {
   // 		width: '70vw'
   // 	});
   // }
-  fetchTutorList() {
-    this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
-    
-      this.searchResults = req;
-    });
-  }
-
+ 
   subjectContains(subject) {
     // var subject = $event.target.value;
     return this.subjectFiltersApplied.includes(subject);

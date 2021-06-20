@@ -1,29 +1,163 @@
-.starButton {
-  background: white;
-  border: 0.2px solid gray;
-  height: 13px;
+@-webkit-keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
 }
 
-.starButton:focus {
-  background-color: gray;
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
 }
 
-.hideBlock {
-  display: none;
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut;
 }
 
-@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
-  .hideBlock {
+.local {
+  width: 100%;
+  height: 100%
+}
+.pre-meeting-local{
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  border-radius: 5px;
+  background-color: #202124;
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+  overflow: hidden;
+}
+.pre-meeting-local .pre-meeting-mic-banner{
+    width: max-content;
+    margin: auto;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 25px;
+    display: flex;
+    background-color: rgb(32,33,36,0.7);
+    
+}
+.pre-meeting-local .mic-popup{
+  position: absolute;
+  top: 12px;
+  width: 100%;
+  color: white;
+  animation-delay: 2s;
+  -webkit-animation-duration: 3s;animation-duration: 3s;
+    -webkit-animation-fill-mode: both;animation-fill-mode: both;
+}
+.pre-meeting-local .pre-meeting-control-buttons{
+  outline: none;
+  width: 65px;
+  height: 62px;
+  border: 2px solid white;
+  color: white;
+  background: none;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.pre-meeting-local .shadow-top{
+  position: absolute;
+  top: -7px;
+  height: 80px;
+  width: 100%;
+  background-image:-webkit-linear-gradient(top,rgba(0,0,0,0.7) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
+}
+
+.pre-meeting-local .shadow-bottom{
+  position: absolute;
+  bottom: -7px;
+  height: 80px;
+  width: 100%;
+  background-image:-webkit-linear-gradient(bottom,rgba(0,0,0,0.7) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
+}
+.pre-meeting-local .pre-meeting-control-buttons:hover{
+  background: rgb(255,255,255,0.4);
+}
+.pre-meeting-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+ .pre-meeting-join-button{
+    font-size: large;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 25px;
+}
+.meeting-header{
+  height: 100px;
+  background: #ffffff;
+  padding: 5px;
+  width: 100%;
+  display: block;
+  float: left;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+.meeting-header .logo {
+  width: 100px;
+  height: 8vh;
+  float: left;
+}
+.meeting-header .account-info-block{
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.meeting-header .account-info-block .profile-picture{
+  height: 50px;
+  width:50px;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (min-device-height: 501px) and (-webkit-min-device-pixel-ratio: 2) {
+  .pre-meeting-local .pre-meeting-control-buttons{
+    width: 50px;
+    height: 50px;
+    margin-right: 2vw;
+  }
+  /* .local {
+    position: fixed;
+    width: 20vw;
+    height: 17vh;
+    top: 1rem !important;
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 10;
+    left: unset;
+    right: 1rem;
+  }
+  
+  .local .nameText {
     display: none;
   }
-  .search-result-container .search-cards-container .search-result-card {
-    margin-top: 5rem;
-    margin-left: -10px !important;
-  }
-  button {
-    position: relative;
-    margin-right: 50vw;
-    margin-bottom: 10px;
-    left: 2vw;
-  }
+  
+  [id^="video"] {
+    object-fit: inherit !important;
+  } */
 }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
+  
+    /* .local {
+      position: fixed;
+      width: 20vw;
+      height: 17vh;
+      top: 1rem !important;
+      border-radius: 5px;
+      overflow: hidden;
+      z-index: 10;
+      left: unset;
+      right: 1rem;
+    }
+    .local .nameText {
+      display: none;
+    }
+    [id^="video"] {
+      object-fit: inherit !important;
+    } */
+  }
+

@@ -296,13 +296,17 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       dialogConfig
     );
     dialogRef.afterClosed().subscribe((data) => {
-      var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
+      if(data==null){
+        this.isLoading3=false;
+      }else{
+        var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
       var image: File = new File([blob], this.uploadedProfilePicture.name, {
         type: this.uploadedProfilePicture.type,
         lastModified: Date.now(),
       });
       this.uploadedProfilePicture = image;
-      this.uploadProfilePicture();
+      this.uploadProfilePicture(); 
+      }
     });
   }
   b64toBlob(dataURI, fileType) {
