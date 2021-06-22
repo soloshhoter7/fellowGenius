@@ -24,8 +24,8 @@ public class MailService {
 	@Autowired
 	dao userDao;
 	
-	String senderEmail="fellowgenius.tech@gmail.com";
-	String senderPassword="fellowG12091505.";
+	String senderEmail="soloshooter5631@gmail.com";
+	String senderPassword="czdq124c6";
 	
 	static Properties props;
 	static Session session;
