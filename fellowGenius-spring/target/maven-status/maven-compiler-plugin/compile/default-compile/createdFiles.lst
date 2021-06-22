@@ -19,6 +19,7 @@ fG\Service\IdGenerator.class
 fG\Model\expertise.class
 fG\Entity\ExpertiseAreas.class
 fG\Entity\StudentProfile.class
+fG\Service\MailService$1.class
 fG\DAO\dao.class
 fG\Configuration\JwtRequestFilter.class
 fG\Repository\repositoryTutorVerification.class
@@ -37,6 +38,7 @@ fG\Entity\TutorLogin.class
 fG\Model\TutorProfileModel.class
 fG\Repository\repositoryNotification.class
 fG\Service\MeetingService.class
+fG\Service\MailService.class
 fG\Repository\repositoryStudentLogin.class
 fG\Configuration\SecurityConfigurer.class
 fG\Repository\repositoryTutorProfile.class
@@ -67,5 +69,4 @@ fG\Service\UserService$1.class
 fG\Model\StudentProfileModel.class
 fG\Service\ScheduleService.class
 fG\Model\AuthenticationRequest.class
-fG\Service\MeetingService$1.class
 fG\Repository\repositoryLearningAreas.class
