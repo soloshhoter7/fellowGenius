@@ -18,8 +18,8 @@ export const environment = {
     measurementId: 'G-ZDRYSC5RL4',
   },
   //razorpay payment client
-  RAZORPAY_KEY_ID: 'rzp_test_B1W7ile7wVdDl1',
-  // RAZORPAY_KEY_ID: 'rzp_live_MhUQ4PE6mDs80d'
+  // RAZORPAY_KEY_ID: 'rzp_test_B1W7ile7wVdDl1',
+  RAZORPAY_KEY_ID: 'rzp_live_MhUQ4PE6mDs80d',
   
   //backendUrl
   BACKEND_URL: 'http://localhost:8080'

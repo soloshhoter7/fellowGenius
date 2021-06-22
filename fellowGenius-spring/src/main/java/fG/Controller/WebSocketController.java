@@ -16,9 +16,9 @@ import com.google.gson.JsonParser;
 import fG.Service.MeetingService; 
 
 @Controller
-//@CrossOrigin(origins = "https://ng-fellowgenius.azurewebsites.net")
+@CrossOrigin(origins = "https://ng-fellowgenius.azurewebsites.net")
 //@CrossOrigin(origins = "https://fellowgenius.com")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 
 public class WebSocketController {
 	@Autowired
