@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fG.Entity.TutorProfileDetails;
+import fG.Model.AppInfoModel;
 import fG.Model.Category;
 import fG.Model.FiltersApplied;
 import fG.Model.NotificationModel;
@@ -22,20 +23,24 @@ import fG.Model.StudentProfileModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
+import fG.Model.UserActivityAnalytics;
 import fG.Model.registrationModel;
 import fG.Model.updatePasswordModel;
 import fG.Service.UserService;
 
 @RestController
-@CrossOrigin(origins = "https://ng-fellowgenius.azurewebsites.net")
-//@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
-
+//@CrossOrigin(origins = "${crossOrigin}")
+@CrossOrigin(origins = "https://fellowgenius.com")
 @RequestMapping("/fellowGenius")
 public class userController {
 
 	@Autowired
 	UserService service;
+	
+	@RequestMapping(value="/fetchUserDataAnalytics")
+	public UserActivityAnalytics fetchUserData() {
+		return service.fetchUserDataAnalytics();
+	}
      
 	@RequestMapping(value = "/registerUser")
 	public boolean saveUserProfile(@RequestBody registrationModel registrationModel) {
@@ -250,4 +255,10 @@ public class userController {
 	public List<NotificationModel> fetchNotifications(String userId){
 		return service.fetchNotifications(userId);
 	}
+	
+	@RequestMapping(value="/getEarningsAppInfo",method=RequestMethod.GET)
+	public List<AppInfoModel> getEarningAppInfo(){
+		return service.getEarningAppInfo();
+	}
+	
 }

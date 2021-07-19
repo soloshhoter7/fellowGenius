@@ -16,10 +16,8 @@ import com.google.gson.JsonParser;
 import fG.Service.MeetingService; 
 
 @Controller
-@CrossOrigin(origins = "https://ng-fellowgenius.azurewebsites.net")
-//@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
-
+//@CrossOrigin(origins = "${crossOrigin}")
+@CrossOrigin(origins = "https://fellowgenius.com")
 public class WebSocketController {
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;

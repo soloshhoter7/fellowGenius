@@ -25,7 +25,7 @@ export class SearchResultsComponent implements OnInit {
   subjects: string[];
   selectedSubject;
   // arrayToShow: tutorProfileDetails[];
-
+  isLoading:boolean =true;
   subjectFiltersApplied = [];
   priceFiltersApplied = [];
   ratingFilterApplied = [];
@@ -71,10 +71,11 @@ export class SearchResultsComponent implements OnInit {
     
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedSubject = params['subject'];
-      this.filteredArray = this.searchResults;
+      // this.filteredArray = this.searchResults;
       this.fetchTutorList();
+      this.getSubCategories();
     });
-    this.getSubCategories();
+    
     if (window.screen.width <= 500) {
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
@@ -187,6 +188,7 @@ export class SearchResultsComponent implements OnInit {
       this.searchResults=[];
       this.filteredArray=[];
       this.searchResults = req;
+      this.isLoading=false;
     });
   }
 

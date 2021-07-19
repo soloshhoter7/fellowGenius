@@ -38,9 +38,10 @@
   </div>
   <div
     *ngIf="isLoading"
-    style="width: max-content; margin: auto; padding-top: 20vh"
+    style="width: max-content; margin: auto; padding-top: 20vh;text-align: center;"
   >
     <app-loading></app-loading>
+    <p style="margin:1rem;font-size: large;">Saving your schedule..</p>
   </div>
   <div class="Box" style="width: 95%; margin: auto; padding: 0" [class.hide]="isLoading">
     <ejs-schedule

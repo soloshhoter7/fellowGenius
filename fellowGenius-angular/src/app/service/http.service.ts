@@ -19,6 +19,8 @@ import { filtersApplied } from '../model/filtersApplied';
 import { Category } from '../model/category';
 import { NotificationModel } from '../model/notification';
 import { environment } from 'src/environments/environment';
+import { AppInfo } from '../model/AppInfo';
+import { UserActivityAnalytics } from '../model/userActivityAnalytics';
 @Injectable({
   providedIn: 'root',
 })
@@ -560,7 +562,15 @@ export class HttpService {
       }
     })
   }
+
+  getEarningAppInfo():Observable<AppInfo[]>{
+    return this.http.get<AppInfo[]>(this.backendUrl+'/fellowGenius/getEarningsAppInfo');
+  }
   randomApi():Observable<Object>{
     return this.http.get<Object>(this.backendUrl+'/fellowGenius/randomapi');
+  }
+
+  fetchUserAnalytics():Observable<UserActivityAnalytics>{
+    return this.http.get<UserActivityAnalytics>(this.backendUrl+'/fellowGenius/fetchUserDataAnalytics');
   }
 }

@@ -73,6 +73,9 @@ textarea:focus {
     float: left;
     padding-right: 10px;
     padding-left: 10px;
+    position: fixed;
+    top: 0;
+    z-index: 100;
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 }
 
@@ -372,7 +375,7 @@ textarea:focus {
 
 .bg-thankyou-container {
     width: 550px;
-    height: 420px;
+    height: 390px;
     background: url(assets/images/thankyou_bg.svg) no-repeat;
     background-position: bottom left;
     padding-right: 0px !important;
@@ -555,6 +558,7 @@ textarea:focus {
     justify-content: space-around;
     width: 100%;
     height: 120px;
+    margin-top: 60px;
 }
 
 .advertise-container .advertisement {
@@ -850,6 +854,7 @@ textarea:focus {
 }
 
 .search-result-container .search-cards-container .search-result-card .result-card-content .result-card-tutorsfor .tutor-sub {
+    max-height: 43px;
     background-color: #e30084;
     color: #fff;
     padding: 5px;

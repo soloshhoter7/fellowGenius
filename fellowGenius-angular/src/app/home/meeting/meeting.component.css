@@ -1,23 +1,146 @@
+/* ----- pre-meeting-css ------------------ */
+
+@-webkit-keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut;
+}
+
+.pre-meeting-local .local {
+  position:unset;
+  border-radius: 10px;
+  overflow: none;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  margin:0;
+}
+.pre-meeting-local{
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  border-radius: 10px;
+  background-color: #202124;
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+  overflow: hidden;
+}
+.pre-meeting-local .pre-meeting-mic-banner{
+    width: max-content;
+    margin: auto;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 25px;
+    display: flex;
+    background-color: rgb(32,33,36,0.7);
+    
+}
+.pre-meeting-local .mic-popup{
+  position: absolute;
+  top: 12px;
+  width: 100%;
+  color: white;
+  animation-delay: 2s;
+  -webkit-animation-duration: 3s;animation-duration: 3s;
+    -webkit-animation-fill-mode: both;animation-fill-mode: both;
+}
+.pre-meeting-local .pre-meeting-control-buttons{
+  outline: none;
+  width: 65px;
+  height: 62px;
+  border: 2px solid white;
+  color: white;
+  background: none;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.pre-meeting-local .shadow-top{
+  position: absolute;
+  top: -7px;
+  height: 80px;
+  width: 100%;
+  background-image:-webkit-linear-gradient(top,rgba(0,0,0,0.7) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
+}
+
+.pre-meeting-local .shadow-bottom{
+  position: absolute;
+  bottom: -7px;
+  height: 80px;
+  width: 100%;
+  background-image:-webkit-linear-gradient(bottom,rgba(0,0,0,0.7) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
+}
+.pre-meeting-local .pre-meeting-control-buttons:hover{
+  background: rgb(255,255,255,0.4);
+}
+.pre-meeting-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+ .pre-meeting-join-button{
+    font-size: large;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 25px;
+}
+.meeting-header{
+  height: 100px;
+  background: #ffffff;
+  padding: 5px;
+  width: 100%;
+  display: block;
+  float: left;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+.meeting-header .logo {
+  width: 100px;
+  height: 8vh;
+  float: left;
+}
+.meeting-header .account-info-block{
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.meeting-header .account-info-block .profile-picture{
+  height: 50px;
+  width:50px;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+}
+
+/* ------------------------------------------------------------------ */
+
 .local {
-  position: fixed;
-  left: 1rem;
-  bottom: 1rem;
+  position: relative;
   width: 20vw;
   height: 20vh;
   border-radius: 5px;
   overflow: hidden;
   z-index: 10;
+  margin: 15px;
 }
 
 .remote {
-  position: fixed;
-  left: 1rem;
-  bottom: 14rem;
+  position: relative;
   width: 20vw;
   height: 20vh;
   border-radius: 5px;
   overflow: hidden;
   z-index: 10;
+  margin: 15px;
 }
 
 .screen {
@@ -76,11 +199,28 @@ button {
 .bg-image {
   /* The image used */
   /* background-color: #337ab8; */
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
   background-color: rgb(125, 15, 125);
   text-align: center;
-  z-index: 11;
 }
-
+.local-video-play{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+.remote-video-play{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
 .blurred-icons {
   /* color: #337ab8; */
   color: white;
@@ -152,6 +292,7 @@ button {
   padding-left: 7px;
   padding-right: 7px;
   font-weight: 300;
+  display: flex;
 }
 
 .expand-button {
@@ -177,8 +318,9 @@ button {
   top: 0;
   left: 0;
   z-index: 1;
-  margin-top: 5px;
-  margin-left: 5px;
+  margin-top: 70px;
+  margin-left: 10px;
+  width: 50px;
 }
 
 .canvas-body {
@@ -491,6 +633,7 @@ img {
   color: white;
   border-radius: 5px;
   font-size: 1.35rem;
+  z-index: 100;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (min-device-height: 501px) and (-webkit-min-device-pixel-ratio: 2) {
@@ -528,7 +671,7 @@ img {
     color: white;
     position: absolute;
     bottom: 0;
-    z-index: 1;
+    z-index: 15;
     font-size: xx-small;
     right: 0px;
     background-color: rgb(0, 0, 0, 0.5);

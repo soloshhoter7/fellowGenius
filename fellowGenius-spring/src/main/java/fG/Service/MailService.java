@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import fG.DAO.dao;
@@ -24,8 +25,10 @@ public class MailService {
 	@Autowired
 	dao userDao;
 	
-	String senderEmail="soloshooter5631@gmail.com";
-	String senderPassword="czdq124c6";
+	@Value("${senderEmail}")
+	String senderEmail;
+	@Value("${senderPassword}")
+	String senderPassword;
 	
 	static Properties props;
 	static Session session;
@@ -36,7 +39,6 @@ public class MailService {
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", 587);
-		System.out.println("props =>"+props);
 		//for dev version and deployment
 		
 //	    props.setProperty("mail.transport.protocol", "smtp");     

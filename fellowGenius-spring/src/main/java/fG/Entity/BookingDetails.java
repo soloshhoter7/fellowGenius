@@ -1,9 +1,17 @@
 package fG.Entity;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 
 @Entity
@@ -34,6 +42,11 @@ public class BookingDetails {
 	  Integer amount;
 	  String tutorProfilePictureUrl;
 	  
+	  @CreationTimestamp
+		@CreatedDate
+		@Temporal(TemporalType.TIMESTAMP)
+		@Column(name="created_date")
+		Date createdDate;
 	public String getTutorProfilePictureUrl() {
 		return tutorProfilePictureUrl;
 	}

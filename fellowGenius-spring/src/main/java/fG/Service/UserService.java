@@ -19,8 +19,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import fG.DAO.MeetingDao;
 import fG.DAO.dao;
+import fG.Entity.AppInfo;
 import fG.Entity.BookingDetails;
 import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
@@ -44,7 +43,9 @@ import fG.Entity.SubcategoryList;
 import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
+import fG.Entity.UserActivity;
 import fG.Entity.Users;
+import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
 import fG.Model.Category;
 import fG.Model.NotificationModel;
@@ -56,8 +57,11 @@ import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
+import fG.Model.UserActivityAnalytics;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
+import fG.Repository.repositoryAppInfo;
+import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryCategory;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositorySocialLogin;
@@ -67,6 +71,7 @@ import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
+import fG.Repository.repositoryUserActivity;
 import fG.Repository.repositoryUsers;
 
 @Service
@@ -112,28 +117,51 @@ public class UserService implements UserDetailsService {
 	repositoryStudentProfile repStudentProfile;
 	
 	@Autowired
+	repositoryAppInfo repAppInfo;
+	
+	@Autowired
+	repositoryUserActivity repUserActivity;
+	
+	@Autowired
+	repositoryBooking repBooking;
+	
+	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
 	@Autowired
 	MailService mailService;
-
+	
+	
 	public String validateUser(String email, String password) {
 		Users userLogin = repUsers.emailExist(email);
+		Date lastLogin = new Date();
+		userLogin.setLastLogin(lastLogin);
+		UserActivity userActivity = new UserActivity();
+	
 		if (userLogin != null) {
+			userActivity.setUserId(userLogin);
+			userActivity.setType("login");
 			if (encoder.matches(password, userLogin.getPassword())) {
+				repUsers.save(userLogin);
+				repUserActivity.save(userActivity);
 				return String.valueOf(userLogin.getUserId());
 			} 
 			if(encoder.matches(password, userLogin.getSocialId())) {
+				repUsers.save(userLogin);
+				repUserActivity.save(userActivity);
 				System.out.println("social id exists and matches");
 				return String.valueOf(userLogin.getUserId());
 			}else {
 				System.out.println("n/a called");
 				if(encoder.matches("N/A", userLogin.getSocialId())) {
+					repUsers.save(userLogin);
+					repUserActivity.save(userActivity);
 					return String.valueOf(userLogin.getUserId());
 				}else {
 					return null;
 				}
 			}
+			
 		} else {
 			return null;
 		}
@@ -153,6 +181,8 @@ public class UserService implements UserDetailsService {
 
 	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
+		UserActivity userActivity = new UserActivity();
+		userActivity.setType("signup");
 		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
 			return false;
 		}
@@ -173,7 +203,8 @@ public class UserService implements UserDetailsService {
 					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
 				}
 				dao.saveUserLogin(user);
-
+				userActivity.setUserId(user);
+				repUserActivity.save(userActivity);
 				return true;
 			} else {
 				return false;
@@ -214,6 +245,8 @@ public class UserService implements UserDetailsService {
 				tutSchedule.setFullName(tutorProfile.getFullName());
 				tutSchedule.setIsAvailable("yes");
 				dao.saveTutorAvailbilitySchedule(tutSchedule);
+				userActivity.setUserId(user);
+				repUserActivity.save(userActivity);
 				return true;
 			} else {
 				return false;
@@ -369,16 +402,17 @@ public class UserService implements UserDetailsService {
 		}
 
 //		tutProfileDetails.setAreaOfExpertise(areas);
+//		System.out.println(tutProfileDetails);
 		dao.updateTutorProfile(tutProfileDetails);
-		Integer profileCompleted = dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
-		// updating profile completed percentage
-		if (profileCompleted < 50) {
-			dao.updateProfileCompleted(50, tutorModel.getTid());
-		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() == null) {
-			dao.updateProfileCompleted(50, tutorModel.getTid());
-		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() != null) {
-			dao.updateProfileCompleted(100, tutorModel.getTid());
-		}
+//		Integer profileCompleted = dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
+//		// updating profile completed percentage
+//		if (profileCompleted < 50) {
+//			dao.updateProfileCompleted(50, tutorModel.getTid());
+//		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() == null) {
+//			dao.updateProfileCompleted(50, tutorModel.getTid());
+//		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() != null) {
+//			dao.updateProfileCompleted(100, tutorModel.getTid());
+//		}
 	}
 
 	// saving registration details of tutor
@@ -886,4 +920,47 @@ public class UserService implements UserDetailsService {
 		return notifList;
 	}
 
+
+	public List<AppInfoModel> getEarningAppInfo() {
+		List<AppInfoModel> appInfoList= new ArrayList<AppInfoModel>();
+		List<AppInfo> appInfo = repAppInfo.typeExist("Earnings");
+		if(appInfo!=null) {
+			for(AppInfo ai:appInfo) {
+				AppInfoModel aInfo = new AppInfoModel();
+				aInfo.setKey(ai.getKeyName());
+				aInfo.setValue(ai.getValue());
+				appInfoList.add(aInfo);
+			}
+		}
+		return appInfoList;
+	}
+
+
+	public UserActivityAnalytics fetchUserDataAnalytics() {
+		UserActivityAnalytics userAnalytics= new UserActivityAnalytics();
+		long userCount = repUsers.count();
+		userAnalytics.setUsersCount((int)userCount);
+		List<UserActivity> users = repUserActivity.findLast1WeekLogins();
+		userAnalytics.setWeeklyLoginCount(users.size());
+		users= repUserActivity.findTodayLogins();
+		userAnalytics.setDailyLoginCount(users.size());
+		users = repUserActivity.findLast1MonthLogins();
+		userAnalytics.setMonthlyLoginCount(users.size());
+		
+		users=repUserActivity.findTodaySignUp();
+		userAnalytics.setDailySignUpCount(users.size());
+		users=repUserActivity.findLast1WeekSignUp();
+		userAnalytics.setWeeklySignUpCount(users.size());
+		users=repUserActivity.findLast1MonthSignUp();
+		userAnalytics.setMonthlySignUpCount(users.size());
+		
+		List<BookingDetails> bookings = repBooking.findTodayMeetings();
+		userAnalytics.setDailyMeetingsSetup(bookings.size());
+		bookings=repBooking.findLast1WeekMeetings();
+		userAnalytics.setWeeklyMeetingSetup(bookings.size());
+		bookings = repBooking.findLast1MonthMeetings();
+		userAnalytics.setMonthlyMeetingSetup(bookings.size());
+		return userAnalytics;
+	}
+	 
 }

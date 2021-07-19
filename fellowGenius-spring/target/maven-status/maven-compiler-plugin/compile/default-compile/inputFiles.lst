@@ -1,8 +1,11 @@
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\UserActivityAnalytics.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\ExpertiseAreas.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\ScheduleService.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\AppInfo.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\registrationModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryBooking.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\DAO\dao.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryAppInfo.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\FellowGeniusApplication.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\FiltersApplied.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\UserService.java
@@ -40,12 +43,15 @@ D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\BookingDetails.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryTutorAvailabilitySchedule.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\TutorProfileDetails.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\AppService.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\UserActivity.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\SocialLogin.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryTutorVerification.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryCategory.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\TutorAvailabilityScheduleModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\TutorProfile.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\SocialLoginModel.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryUserActivity.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Configuration\JwtRequestFilter.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\DAO\MeetingDao.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\MeetingService.java
@@ -62,6 +68,7 @@ D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryTutorLogin.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\TutorLogin.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryStudentLogin.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\AppInfoModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryUsers.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\IdGenerator.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryLearningAreasCount.java

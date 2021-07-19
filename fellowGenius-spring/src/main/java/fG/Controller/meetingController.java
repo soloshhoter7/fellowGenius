@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +23,8 @@ import fG.Service.MeetingService;
 import fG.Service.UserService;
 
 @RestController
-@CrossOrigin(origins = "https://ng-fellowgenius.azurewebsites.net")
-//@CrossOrigin(origins = "https://fellowgenius.com")
-//@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "${crossOrigin}")
+@CrossOrigin(origins = "https://fellowgenius.com")
 
 @RequestMapping("/fellowGenius/meeting")
 public class meetingController {

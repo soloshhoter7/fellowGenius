@@ -1,4 +1,6 @@
+import { ElementRef, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-terms-and-conditions',
@@ -7,9 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TermsAndConditionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private activatedRoute:ActivatedRoute) { }
 
+  @ViewChild('termsAndConditions') termsAndConditionPos: ElementRef;
+  @ViewChild('contactUs') contactUsPos: ElementRef;
+  @ViewChild('privacyPolicy') privacyPolicyPos: ElementRef;
+
+  selectedSection;
   ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.selectedSection = params['section'];
+    });
+    console.log(this.selectedSection)
+    if(this.selectedSection&&this.selectedSection!='privacyPolicy'){
+      document.getElementById(this.selectedSection).scrollIntoView();
+    }else{
+      document.body.scrollTop=0;
+      document.documentElement.scrollTop = 0;
+    }
+    
   }
+
 
 }

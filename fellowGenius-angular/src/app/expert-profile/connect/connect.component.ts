@@ -183,8 +183,6 @@ export class ConnectComponent implements OnInit {
       this.startSlots=[];
       this.endSlots=[];
       this.startSlotsCopy=[];
-      console.log(this.endSlots);
-      console.log(this.startSlots);
       for(let time of this.ScheduleTime){
         if(time.date == this.selectedDate.date){
           this.startSlots.push(time);
@@ -202,9 +200,6 @@ export class ConnectComponent implements OnInit {
       this.startTimeValue = 0;
       this.endTimeValue = 0;
       this.startSlots.pop();
-      console.log(this.startSlots);
-      console.log(this.endSlots);
-      console.log(this.startSlotsCopy)
     }
   }
   initPay(): void {
@@ -409,10 +404,6 @@ export class ConnectComponent implements OnInit {
               this.endTimeString = this.et.eh + ':' + this.et.em;
             }
             this.errorMessage = '';
-            console.log("eventt");
-            console.log(this.ScheduleTime);
-            console.log(this.clickedIndex);
-            console.log(event.date); 
             //case 1 or case 4 or case 5
             if (
               this.tempArray.clickIndex1 != null &&

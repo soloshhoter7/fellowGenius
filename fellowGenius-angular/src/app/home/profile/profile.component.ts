@@ -33,6 +33,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Category } from 'src/app/model/category';
 import { ThrowStmt } from '@angular/compiler';
+import { AppInfo } from 'src/app/model/AppInfo';
 
 @Component({
   selector: 'app-profile',
@@ -89,10 +90,18 @@ export class ProfileComponent implements OnInit {
   selectedValue;
   categories:Category[] = [];
   subCategories:Category[] = [];
+  appInfo:AppInfo[]=[];
   selectedCategory;
   selectedSubCategory;
+  GSTValue;
+  commission;
+  actualEarning;
+  invalidPicture:boolean = false;
+  pictureInfo:boolean = true;
   ngOnInit() {
     this.getAllCategories();
+    this.getEarningAppInfo();
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -139,7 +148,28 @@ export class ProfileComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
-  
+
+  getEarningAppInfo(){
+    console.log('getting app info')
+    this.httpService.getEarningAppInfo().subscribe((res)=>{
+      this.appInfo=res;
+    });
+  }
+  onPercentChange(percent: number) {
+    console.log('here',percent);
+    let gstMultiplier = 1+(parseFloat(this.appInfo[1].value)/100);
+    let commissionMultiplier = 1+(parseFloat(this.appInfo[0].value)/100);
+    // console.log(gstMultiplier,this.appInfo[0].value)
+    this.GSTValue=Math.abs(this.round((percent/(gstMultiplier))-percent));
+    this.commission=Math.abs(this.round(((percent/gstMultiplier)/commissionMultiplier)-(percent/gstMultiplier)));
+    this.actualEarning = Math.abs(this.round(percent-this.GSTValue-this.commission));
+    // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
+    // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
+  }
+  round(num) {
+    var m = Number((Math.abs(num) * 100).toPrecision(15));
+    return Math.round(m) / 100 * Math.sign(num);
+}
   fillOptions(){
 this.httpService.getAllSubCategories().subscribe((res)=>{
         this.subCategories = res;
@@ -167,36 +197,69 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.httpService.getAllSubCategories().subscribe((res)=>{
         this.subCategories = res;
       })
-     console.log(this.categories);
     });
   }
   
+  calculateProfileCompleted(){
+    let completeFields:number=0;
+    let totalFields:number=13;
+    if(this.tutorProfile.fullName!=null)completeFields+=1;
+    if(this.tutorProfile.dateOfBirth!=null)completeFields+=1;
+    if(this.tutorProfile.contact!=null)completeFields+=1;
+    if(this.tutorProfileDetails.currentOrganisation!=null)completeFields+=1;
+    if(this.expertises.length>0)completeFields+=1;
+    if(this.tutorProfileDetails.previousOrganisations.length>0)completeFields+=1;
+    if(this.tutorProfileDetails.institute!=null)completeFields+=1;
+    if(this.tutorProfileDetails.educationalQualifications.length>0)completeFields+=1;
+    if(this.tutorProfileDetails.professionalSkills!=null)completeFields+=1;
+    if(this.tutorProfileDetails.yearsOfExperience!=null)completeFields+=1;
+    if(this.tutorProfileDetails.description!=null)completeFields+=1;
+    if(this.tutorProfileDetails.speciality!=null)completeFields+=1;
+    if(this.tutorProfileDetails.linkedInProfile!=null)completeFields+=1;
+    console.log('completed fields =>'+completeFields+'/'+totalFields);
+    console.log(this.round(completeFields/totalFields)*100);
+    return this.round(completeFields/totalFields)*100
+  }
   saveExpertBasicProfile(form: any) {
     this.userId = this.cookieService.get('userId');
-    if (this.userId) {
+    if (this.userId && this.expertises.length > 0) {
       this.tutorProfile.tid = this.userId;
       this.tutorProfile.contact = form.value.contact;
       this.tutorProfile.dateOfBirth = form.value.dob;
       this.tutorProfile.fullName = form.value.fullName;
       this.tutorProfile.bookingId = this.tutorService.getTutorDetials().bookingId;
       this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+
       this.tutorProfileDetails.tid = this.userId;
       this.tutorProfileDetails.educationalQualifications = this.educationQualifications;
-      this.tutorProfileDetails.professionalSkills =
-        form.value.professionalSkills;
+      this.tutorProfileDetails.professionalSkills = form.value.professionalSkills;
       this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
       this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
       this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId
+      this.tutorProfileDetails.institute = form.value.Institute;
+      this.tutorProfileDetails.areaOfExpertise = this.expertises;
+      this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+      this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
+      this.tutorProfileDetails.currentOrganisation = form.value.currentOrganisation;
+      this.tutorProfileDetails.previousOrganisations = this.previousOraganisations;
+      this.tutorProfileDetails.description = form.value.description;
+      this.tutorProfileDetails.speciality = form.value.speciality;
+      this.tutorProfileDetails.bookingId = this.tutorService.getTutorProfileDetails().bookingId;
+
+      console.log(this.tutorProfile);
+      console.log(this.tutorProfileDetails);
+      this.calculateProfileCompleted();
       this.httpService
         .updateTutorProfile(this.tutorProfile)
         .subscribe((res) => {
           this.tutorService.setTutorDetails(this.tutorProfile);
+          this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
           this.httpService
             .updateTutorProfileDetails(this.tutorProfileDetails)
             .subscribe(() => {
-              if (this.tutorProfileDetails.profileCompleted < 50) {
-                this.tutorProfileDetails.profileCompleted = 50;
-              }
+              // if (this.tutorProfileDetails.profileCompleted < 40) {
+                // this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
+              // }
               this.tutorService.setTutorProfileDetails(
                 this.tutorProfileDetails
               );
@@ -205,9 +268,12 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
                 'close',
                 this.config
               );
-              this.advancedProfileToggle();
+              // this.advancedProfileToggle();
+              this.router.navigate(['/home/tutorDashboard']);
             });
         });
+    }else {
+      this.errorText = 'Enter atleast one area of Expertise !';
     }
   }
 
@@ -229,7 +295,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
         if (this.tutorProfileDetails.profileCompleted == 50) {
           this.tutorProfileDetails.profileCompleted = 100;
         }
-        console.log('informations saved',this.tutorProfileDetails);
         this.httpService
           .updateTutorProfileDetails(this.tutorProfileDetails)
           .subscribe((res) => {
@@ -269,7 +334,15 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
 
     // this.profilePictureDisabled = true;
     this.uploadedProfilePicture = <File>event.target.files[0];
-    const reader = new FileReader();
+    const fileSize = Math.round((this.uploadedProfilePicture.size / 1024));
+    const fileType = this.uploadedProfilePicture.type;
+
+    if(fileSize>3072||!fileType.includes('image')){
+      this.invalidPicture=true;
+      this.isLoading3=false;
+    }else{
+      this.invalidPicture=false;
+      const reader = new FileReader();
     var imageSrc;
     // var Image: File = evt.target.files[0];
 
@@ -281,6 +354,8 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
         this.openDialog(imageSrc);
       };
     }
+    }
+    
     // this.uploadProfilePicture();
   }
   openDialog(imageSrc) {
@@ -369,6 +444,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
           fileRef.getDownloadURL().subscribe((url) => {
             this.profilePicUploadStatus = true;
             this.isLoading3 = false;
+            this.pictureInfo=false;
             this.profilePictureUrl = url;
             this.snackBar.open(
               'Image Uploaded successfully',
@@ -394,7 +470,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
   findSubCategory(sc){
     let category;
    if(sc){
-     console.log("selected subcategory",this.selectedSubCategory);
      for(let i =0;i<this.subCategories.length;i++){
       if(this.subCategories[i].subCategory == sc){
         return this.subCategories[i].category;

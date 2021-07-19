@@ -13,24 +13,6 @@
           >
             <b>PROFILE</b>
           </p>
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              [class.active]="basic"
-              (click)="basicProfileToggle()"
-            >
-              Basic
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              [class.active]="!basic"
-              (click)="advancedProfileToggle()"
-            >
-              Advanced
-            </button>
-          </div>
         </div>
         <div [class.hideBlock]="!basic">
           <img
@@ -56,7 +38,7 @@
             <input
               #profilePicture
               hidden="true"
-              type="file"
+              type="file" accept=".jpg,.png,.jpeg"
               onclick="this.value=null"
               (change)="profilePictureChange($event)"
               required
@@ -84,6 +66,12 @@
                 <app-loader></app-loader>
               </span>
             </button>
+            <div style="margin: 5px;margin-left: 0; font-size: 12px; font-weight: 600;color: red;" *ngIf="invalidPicture">
+              Please upload a valid Image !
+            </div>
+            <div style="margin: 10px;margin-left: 0; font-size: 12px; font-weight: 600;color: red;" *ngIf="pictureInfo">
+              Supported file upload formats(.jpg, .png, .jpeg) upto size limit of 3MB *
+            </div>
           </div>
         </div>
       </div>
@@ -116,34 +104,6 @@
         </button>
       </div>
 
-      <div
-        class="col-md-3"
-        style="text-align: end; margin: 20px"
-        [class.hideBlock]="basic"
-      >
-        <button
-          class="btn"
-          style="margin-right: 2vw; text-decoration: underline; width: auto"
-          (click)="cancelForm()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn"
-          style="
-            padding: 1vh 2vw;
-            background-color: purple;
-            color: white;
-            width: auto;
-            font-size: small;
-          "
-          (click)="advancedProfile.ngSubmit.emit()"
-          [disabled]="!advancedProfile.valid"
-        >
-          Save
-        </button>
-      </div>
     </div>
     <div style="padding-bottom: 10px; font-size: 12px; font-weight: 600">
       The fields marked with * are mandatory
@@ -151,12 +111,12 @@
     <div style="color: red; padding-bottom: 10px; font-size: 15px">
       {{ profileError }}
     </div>
-    <div class="row" [class.hideBlock]="!basic">
-      <div class="col-md-6 leftBox">
-        <form
+    <form
           (ngSubmit)="saveExpertBasicProfile(basicProfile)"
           #basicProfile="ngForm"
         >
+    <div class="row">
+      <div class="col-md-5 leftBox">
           <div class="form-group">
             <label for="fullName">Full Name<sup>*</sup></label>
             <input
@@ -222,32 +182,220 @@
               >Invalid contact</span
             >
           </div>
-
           <div class="form-group">
-            <label for="professionalSkills">Professional Skills</label>
+            <label for="currentOrganisation">Current Organisation<sup>*</sup></label>
             <input
               type="text"
-              id="professionalSkills"
-              class="form-control input-fields"
+              id="currentOrganisation"
+              name="currentOrganisation"
               ngModel
-              [ngModel]="tutorProfileDetails.professionalSkills"
-              name="professionalSkills"
-              #professionalSkills="ngModel"
+              required
+              [ngModel]="tutorProfileDetails.currentOrganisation"
+              class="form-control input-fields"
+              #currentOrganisation="ngModel"
+              maxlength="50"
             />
             <span
-              *ngIf="!professionalSkills.valid && professionalSkills.touched"
               class="help-block"
-              >Invalid professional skills</span
+              *ngIf="
+                !currentOrganisation.valid && currentOrganisation.touched
+              "
+              >Invalid current organisation</span
             >
           </div>
-        </form>
+
+          <div class="form-group">
+            <label for="expertise">Previous Organisation</label>
+            <div>
+              <input
+                type="search"
+                name="search"
+                style="display: inline; width: 80%; margin-right: 5px"
+                class="form-control input-fields"
+                [(ngModel)]="inputOrganisation"
+                placeholder="Enter organisation name"
+              />
+              <div style="width: max-content; display: inline">
+                <button
+                  [disabled]="!inputOrganisation"
+                  type="button"
+                  class="btn btn-success btn-circle btn-sm"
+                  (click)="addOrganisation()"
+                  style="font-size: inherit; display: inline"
+                >
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            <div
+              *ngIf="duplicatePreviousOrganisation"
+              style="color: red; margin-top: 10px"
+            >
+              Organisation already exists !
+            </div>
+            <div
+              style="margin: 10px; margin-left: 0"
+              *ngFor="
+                let organisation of previousOraganisations;
+                let i = index
+              "
+            >
+              <div class="tags">{{ organisation }}</div>
+              <button
+                type="button"
+                class="btn btn-danger btn-circle btn-sm"
+                style="display: inline"
+                (click)="deleteOrganisation(i)"
+                style="font-size: inherit"
+              >
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+         
+        
       </div>
       <!-- Educational Qualifications -->
       <div class="col-md-5">
         <div class="form-group">
+          <label for="expertise" style="width: 100%"
+            >Area of Expertise<sup>*</sup></label
+          >
+
+          <div style="position: relative">
+            <div
+              style="
+                width: 80%;
+                display: inline-block;
+                background: white;
+                padding: 10px;
+                box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
+              "
+            >
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              
+              <label for="chooseCategory">Choose Domain</label>
+              <select
+                class="form-control"
+                id="chooseCategory"
+                name="categoryName"
+                [(ngModel)]="selectedCategory"
+                ngModel
+              >
+                <option *ngFor="let categ of categories" [value]="categ.category">
+                  {{ categ.category }}
+                </option>
+              </select>
+            </div>
+      
+            <div class="form-group">
+              <label for="subCategoryInput">Choose Topic</label>
+              <select
+                class="form-control"
+                id="chooseSubCategory"
+                name="subCategoryName"
+                [(ngModel)]="selectedSubCategory"
+                [disabled]="!selectedCategory"
+                ngModel
+              >
+                <option *ngFor="let sc of filterSCfromCateg()" [value]="sc.subCategory">
+                  {{ sc.subCategory }}
+                </option>
+              </select>
+            </div>
+
+              <div class="form-group" style="margin-bottom: 0">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="price"
+                  placeholder="Enter price per hour"
+                  [(ngModel)]="priceForExpertise"
+                  #expertisePrice="ngModel"
+                  (ngModelChange)="onPercentChange($event)"
+                />
+              </div>
+              <p style="margin:10px" *ngIf="expertisePrice.dirty&&priceForExpertise">
+                Actual Earning per hour : {{actualEarning}}<br>
+                GST charges : {{GSTValue}} | fellowgenius commission:{{commission}} </p>
+            </div>
+            <div
+              style="
+                width: max-content;
+                display: inline;
+                margin-left: 5px;
+                position: absolute;
+                top: 40px;
+              "
+            >
+              <button
+                [disabled]="!selectedCategory || !selectedSubCategory || !priceForExpertise"
+                type="button"
+                class="btn btn-success btn-circle btn-sm"
+                (click)="saveExpertise()"
+                style="font-size: inherit; display: inline"
+              >
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div
+            style="margin: 10px; margin-left: 0"
+            *ngFor="let expertise of expertises; let i = index"
+          >
+            <div class="tags">
+              {{ expertise.category }} : {{expertise.subCategory}} &nbsp; - &nbsp; ₹
+              {{ expertise.price }}/hr
+            </div>
+            <button
+              type="button"
+              class="btn btn-danger btn-circle btn-sm"
+              style="display: inline"
+              (click)="deleteExpertise(i)"
+              style="font-size: inherit"
+            >
+              <i class="fas fa-minus"></i>
+            </button>
+          </div>
+          <div
+            *ngIf="duplicateExpertiseArea"
+            style="color: red; margin-top: 10px"
+          >
+            Expertise already exists !
+          </div>
+          <p class="errorMessage">{{ errorText }}</p>
+        </div>
+
+      
+      </div>
+      </div>
+    
+      <br><br>
+          <div class="row" >
+            <div class="col-md-5 leftBox">
+              <div class="form-group">
+                <label for="Institute">Institute</label>
+                <input
+                  type="text"
+                  id="Institute"
+                  name="Institute"
+                  ngModel
+                  class="form-control input-fields"
+                  [ngModel]="tutorProfileDetails.institute"
+                  #Institute="ngModel"
+                  maxlength="50"
+                  autofocus
+                />
+                <span
+                  class="help-block"
+                  *ngIf="!Institute.valid && Institute.touched"
+                  >Invalid Institute</span
+                >
+              </div>
+
+                <div class="form-group">
           <label>Educational Qualifications & Certifications</label>
           <div>
-            <form>
               <input
                 type="search"
                 name="search"
@@ -273,7 +421,6 @@
               >
                 Educational Qualification already exists !
               </div>
-            </form>
           </div>
           <div
             style="margin: 10px; margin-left: 0"
@@ -291,263 +438,46 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
-    <div>
-      <!-- <div
-        *ngIf="
-          tutorService.getTutorProfileDetails().profileCompleted < 50 && !basic
-        "
-        style="text-align: center"
-      >
-        <h3>Complete basic profile first !</h3>
-      </div> -->
-      <div
-        [class.hideBlock]="
-          tutorService.getTutorProfileDetails().profileCompleted < 50 && !basic
-        "
-      >
-        <form
-          (ngSubmit)="saveExpertAdvancedProfile(advancedProfile)"
-          #advancedProfile="ngForm"
-        >
-          <div class="row" [class.hideBlock]="basic">
-            <div class="col-md-5 leftBox">
-              <div class="form-group">
-                <label for="Institute">Institute<sup>*</sup></label>
-                <input
-                  type="text"
-                  id="Institute"
-                  name="Institute"
-                  ngModel
-                  class="form-control input-fields"
-                  [ngModel]="tutorProfileDetails.institute"
-                  required
-                  #Institute="ngModel"
-                  maxlength="50"
-                  autofocus
-                />
-                <span
-                  class="help-block"
-                  *ngIf="!Institute.valid && Institute.touched"
-                  >Invalid Institute</span
-                >
-              </div>
+        <div class="form-group">
+          <label for="professionalSkills">Professional Skills</label>
+          <input
+            type="text"
+            id="professionalSkills"
+            class="form-control input-fields"
+            ngModel
+            [ngModel]="tutorProfileDetails.professionalSkills"
+            name="professionalSkills"
+            #professionalSkills="ngModel"
+          />
+          <span
+            *ngIf="!professionalSkills.valid && professionalSkills.touched"
+            class="help-block"
+            >Invalid professional skills</span
+          >
+        </div>
 
-              <!-- <div class="form-group">
-                <label for="expertise" style="width: 100%"
-                  >Area of Expertise<sup>*</sup></label
-                >
-
-                <div style="position: relative">
-                  <div
-                    style="
-                      width: 80%;
-                      display: inline-block;
-                      background: white;
-                      padding: 10px;
-                      box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-                    "
-                  >
-                    <div class="form-group">
-                      <input
-                        type="search"
-                        name="search"
-                        class="form-control input-fields"
-                        placeholder="Search by Subjects"
-                        [formControl]="myControl"
-                        [matAutocomplete]="auto"
-                        [(ngModel)]="selectedExpertise"
-                      />
-                      <mat-autocomplete
-                        #auto="matAutocomplete"
-                        autoActiveFirstOption
-                      >
-                        <mat-option
-                          *ngFor="let option of filteredOptions | async"
-                          [value]="option"
-                        >
-                          {{ option }}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0">
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="price"
-                        placeholder="Enter price per hour"
-                        [(ngModel)]="priceForExpertise"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    style="
-                      width: max-content;
-                      display: inline;
-                      margin-left: 5px;
-                      position: absolute;
-                      top: 40px;
-                    "
-                  >
-                    <button
-                      [disabled]="!selectedExpertise || !priceForExpertise"
-                      type="button"
-                      class="btn btn-success btn-circle btn-sm"
-                      (click)="saveExpertise()"
-                      style="font-size: inherit; display: inline"
-                    >
-                      <i class="fas fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div
-                  style="margin: 10px; margin-left: 0"
-                  *ngFor="let expertise of expertises; let i = index"
-                >
-                  <div class="tags">
-                    {{ expertise.subCategory }} : {{ expertise.category }}&nbsp; - &nbsp; ₹
-                    {{ expertise.price }}/hr
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-circle btn-sm"
-                    style="display: inline"
-                    (click)="deleteExpertise(i)"
-                    style="font-size: inherit"
-                  >
-                    <i class="fas fa-minus"></i>
-                  </button>
-                </div>
-                <div
-                  *ngIf="duplicateExpertiseArea"
-                  style="color: red; margin-top: 10px"
-                >
-                  Expertise already exists !
-                </div>
-                <p class="errorMessage">{{ errorText }}</p>
-              </div> -->
-
-
-
-
-              <!-- ------------------ one with domains and subdomains ---------------- -->
-
-
-
-
-              <div class="form-group">
-                <label for="expertise" style="width: 100%"
-                  >Area of Expertise<sup>*</sup></label
-                >
-
-                <div style="position: relative">
-                  <div
-                    style="
-                      width: 80%;
-                      display: inline-block;
-                      background: white;
-                      padding: 10px;
-                      box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-                    "
-                  >
-                  <div class="form-group" style="margin-bottom: 0.5rem;">
-                    <label for="chooseCategory">Choose Domain</label>
-                    <select
-                      class="form-control"
-                      id="chooseCategory"
-                      name="categoryName"
-                      [(ngModel)]="selectedCategory"
-                      ngModel
-                    >
-                      <option *ngFor="let categ of categories" [value]="categ.category">
-                        {{ categ.category }}
-                      </option>
-                    </select>
-                  </div>
+        <div class="form-group">
+          <label for="yearsOfExperience">Years of Experience</label>
+          <input
+            type="number"
+            id="yearsOfExperience"
+            name="yearsOfExperience"
+            ngModel
+            [ngModel]="tutorProfileDetails.yearsOfExperience"
+            class="form-control input-fields"
+            #yearsOfExperience="ngModel"
+          />
+          <span
+            class="help-block"
+            *ngIf="!yearsOfExperience.valid && yearsOfExperience.touched"
+            >Invalid years of experience</span
+          >
+        </div>
+            </div>
             
-                  <div class="form-group">
-                    <label for="subCategoryInput">Choose Topic</label>
-                    <select
-                      class="form-control"
-                      id="chooseSubCategory"
-                      name="subCategoryName"
-                      [(ngModel)]="selectedSubCategory"
-                      [disabled]="!selectedCategory"
-                      ngModel
-                    >
-                      <option *ngFor="let sc of filterSCfromCateg()" [value]="sc.subCategory">
-                        {{ sc.subCategory }}
-                      </option>
-                    </select>
-                  </div>
-
-                    <div class="form-group" style="margin-bottom: 0">
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="price"
-                        placeholder="Enter price per hour"
-                        [(ngModel)]="priceForExpertise"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    style="
-                      width: max-content;
-                      display: inline;
-                      margin-left: 5px;
-                      position: absolute;
-                      top: 40px;
-                    "
-                  >
-                    <button
-                      [disabled]="!selectedCategory || !selectedSubCategory || !priceForExpertise"
-                      type="button"
-                      class="btn btn-success btn-circle btn-sm"
-                      (click)="saveExpertise()"
-                      style="font-size: inherit; display: inline"
-                    >
-                      <i class="fas fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div
-                  style="margin: 10px; margin-left: 0"
-                  *ngFor="let expertise of expertises; let i = index"
-                >
-                  <div class="tags">
-                    {{ expertise.category }} : {{expertise.subCategory}} &nbsp; - &nbsp; ₹
-                    {{ expertise.price }}/hr
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-circle btn-sm"
-                    style="display: inline"
-                    (click)="deleteExpertise(i)"
-                    style="font-size: inherit"
-                  >
-                    <i class="fas fa-minus"></i>
-                  </button>
-                </div>
-                <div
-                  *ngIf="duplicateExpertiseArea"
-                  style="color: red; margin-top: 10px"
-                >
-                  Expertise already exists !
-                </div>
-                <p class="errorMessage">{{ errorText }}</p>
-              </div>
-
-              
-
-
-              <!-- --------------------- ----------------------------------- -->
-
-
+            <div class="col-md-5">
               <div class="form-group">
-                <label for="description">Description<sup>*</sup></label>
+                <label for="description">Description</label>
                 <textarea
                   style="padding-top: 10px"
                   class="form-control"
@@ -558,15 +488,15 @@
                   [ngModel]="tutorProfileDetails.description"
                   placeholder="Enter your Description text"
                   #tutorProfileDescription
-                  required
+                
                 ></textarea>
                 <span class="setLength"
                   >{{ tutorProfileDescription.value.length }}/250</span
                 >
               </div>
-              <!-- ............................ -->
+              
               <div class="form-group">
-                <label for="speciality">Speciality<sup>*</sup></label>
+                <label for="speciality">Speciality</label>
                 <textarea
                   class="form-control"
                   id="speciality"
@@ -576,100 +506,11 @@
                   [ngModel]="tutorProfileDetails.speciality"
                   placeholder="Enter your Speciality text"
                   #tutorProfileSpeciality
-                  required
+                  
                 ></textarea>
                 <span class="setLength"
                   >{{ tutorProfileSpeciality.value.length }}/250</span
                 >
-              </div>
-            </div>
-            <!-- Learning Areas -->
-            <div class="col-md-5">
-              <div class="form-group">
-                <label for="yearsOfExperience">Years of Experience</label>
-                <input
-                  type="number"
-                  id="yearsOfExperience"
-                  name="yearsOfExperience"
-                  ngModel
-                  [ngModel]="tutorProfileDetails.yearsOfExperience"
-                  class="form-control input-fields"
-                  #yearsOfExperience="ngModel"
-                />
-                <span
-                  class="help-block"
-                  *ngIf="!yearsOfExperience.valid && yearsOfExperience.touched"
-                  >Invalid years of experience</span
-                >
-              </div>
-              <div class="form-group">
-                <label for="currentOrganisation">Current Organisation</label>
-                <input
-                  type="text"
-                  id="currentOrganisation"
-                  name="currentOrganisation"
-                  ngModel
-                  [ngModel]="tutorProfileDetails.currentOrganisation"
-                  class="form-control input-fields"
-                  #currentOrganisation="ngModel"
-                  maxlength="50"
-                />
-                <span
-                  class="help-block"
-                  *ngIf="
-                    !currentOrganisation.valid && currentOrganisation.touched
-                  "
-                  >Invalid current organisation</span
-                >
-              </div>
-
-              <div class="form-group">
-                <label for="expertise">Previous Organisation</label>
-                <div>
-                  <input
-                    type="search"
-                    name="search"
-                    style="display: inline; width: 80%; margin-right: 5px"
-                    class="form-control input-fields"
-                    [(ngModel)]="inputOrganisation"
-                    placeholder="Enter organisation name"
-                  />
-                  <div style="width: max-content; display: inline">
-                    <button
-                      [disabled]="!inputOrganisation"
-                      type="button"
-                      class="btn btn-success btn-circle btn-sm"
-                      (click)="addOrganisation()"
-                      style="font-size: inherit; display: inline"
-                    >
-                      <i class="fas fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div
-                  *ngIf="duplicatePreviousOrganisation"
-                  style="color: red; margin-top: 10px"
-                >
-                  Organisation already exists !
-                </div>
-                <div
-                  style="margin: 10px; margin-left: 0"
-                  *ngFor="
-                    let organisation of previousOraganisations;
-                    let i = index
-                  "
-                >
-                  <div class="tags">{{ organisation }}</div>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-circle btn-sm"
-                    style="display: inline"
-                    (click)="deleteOrganisation(i)"
-                    style="font-size: inherit"
-                  >
-                    <i class="fas fa-minus"></i>
-                  </button>
-                </div>
               </div>
 
               <div class="form-group">
@@ -691,8 +532,39 @@
               </div>
             </div>
           </div>
+          
         </form>
-      </div>
+        <div
+          
+          style="text-align: end; margin: 20px;width: 81%;"
+          
+        >
+          <button
+            class="btn"
+            style="margin-right: 2vw; text-decoration: underline; width: auto"
+            (click)="cancelForm()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn"
+            style="
+              padding: 1vh 2vw;
+              background-color: purple;
+              color: white;
+              width: auto;
+              font-size: small;
+            "
+            (click)="basicProfile.ngSubmit.emit()"
+            [disabled]="!basicProfile.valid"
+          >
+            Save
+          </button>
+        </div>
+
+    <!-- </div> -->
+    <div>
     </div>
   </div>
 </body>

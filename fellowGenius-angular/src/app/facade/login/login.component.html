@@ -1,9 +1,10 @@
 <body>
   <div
     *ngIf="isLoading"
-    style="width: max-content; margin: auto; padding-top: 35vh"
+    style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
   >
     <app-loading></app-loading>
+    <p style="margin:1rem;font-size: large;">Signing in..</p>
   </div>
 
   <div class="login-container" [class]="hideContainer">

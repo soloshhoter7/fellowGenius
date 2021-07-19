@@ -79,7 +79,10 @@ import { TimeConverter} from './pipes/timeConverter';
 import { AboutUsComponent } from './facade/about-us/about-us.component';
 import { FaqComponent } from './facade/faq/faq.component';
 import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
-import { CategoriesComponent } from './admin-panel/categories/categories.component';
+import { CategoriesComponent } from './admin-portal/categories/categories.component';
+import { ContactUsInfoComponent } from './facade/sign-up/contact-us-info/contact-us-info.component';
+import { AnalyticsComponent } from './admin-portal/analytics/analytics.component';
+import { AdminPortalComponent } from './admin-portal/admin-portal.component';
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -109,7 +112,15 @@ export const appRoutes: Routes = [
   { path: 'meeting', component: MeetingComponent },
   { path: 'test', component: TestComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },
+  { path: 'admin', component:AdminPortalComponent,
+    children:[
+      { path: 'categories',component:CategoriesComponent},
+      { path: 'analytics',component:AnalyticsComponent}
+    ]
+  },
   { path: 'admin/categories', component:CategoriesComponent},
+  { path: 'termsAndConditions', component:TermsAndConditionsComponent},
+  { path: 'contactUs',component:ContactUsInfoComponent},
   { path: '', redirectTo: '/facade', pathMatch: 'full' },
 ];
 
@@ -160,6 +171,9 @@ export const appRoutes: Routes = [
     FaqComponent,
     HowItWorksComponent,
     CategoriesComponent,
+    ContactUsInfoComponent,
+    AnalyticsComponent,
+    AdminPortalComponent,
   ],
   imports: [
     NoopAnimationsModule,

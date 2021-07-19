@@ -1,0 +1,67 @@
+@font-face
+{font-family:Wingdings;
+panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+{font-family:"Cambria Math";
+panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+{font-family:Calibri;
+panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+{font-family:"Quattrocento Sans";
+panose-1:0 0 0 0 0 0 0 0 0 0;}
+/* Style Definitions */
+.sub-heading{
+    color: #e30084;
+}
+.heading{
+    color: #892687 ;
+}
+.logo {
+    width: 100px;
+    height: 8vh;
+    float: right;
+  }
+ 
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+{margin-top:0in;
+margin-right:0in;
+margin-bottom:8.0pt;
+margin-left:0in;
+line-height:107%;
+font-size:11.0pt;
+font-family:"Calibri",sans-serif;}
+p.MsoCommentText, li.MsoCommentText, div.MsoCommentText
+{mso-style-link:"Comment Text Char";
+margin-top:0in;
+margin-right:0in;
+margin-bottom:8.0pt;
+margin-left:0in;
+font-size:10.0pt;
+font-family:"Calibri",sans-serif;}
+span.CommentTextChar
+{mso-style-name:"Comment Text Char";
+mso-style-link:"Comment Text";}
+span.msoIns
+{mso-style-name:"";
+text-decoration:underline;
+color:teal;}
+span.msoDel
+{mso-style-name:"";
+text-decoration:line-through;
+color:red;}
+.MsoChpDefault
+{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+{margin-bottom:8.0pt;
+line-height:107%;}
+@page WordSection1
+{size:595.3pt 841.9pt;
+margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+{page:WordSection1;}
+/* List Definitions */
+ol
+{margin-bottom:0in;}
+ul
+{margin-bottom:0in;}

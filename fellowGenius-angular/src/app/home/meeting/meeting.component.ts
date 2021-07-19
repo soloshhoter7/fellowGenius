@@ -45,6 +45,8 @@ import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { HttpService } from 'src/app/service/http.service';
 import { CookieService } from 'ngx-cookie-service';
 import * as jwt_decode from 'jwt-decode';
+import { StudentService } from 'src/app/service/student.service';
+import { TutorService } from 'src/app/service/tutor.service';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -61,11 +63,13 @@ export class MeetingComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private locationStrategy: LocationStrategy,
     private loginService: LoginDetailsService,
+    private studentService:StudentService,
+    private tutorService:TutorService,
     private httpService: HttpService,
     private cookieService: CookieService
   ) {
     this.uid = Math.floor(Math.random() * 100);
-    this.sid = 76;
+    this.sid = 174;
   }
   //   ---------------------
   @ViewChild('canvas') public canvas: ElementRef;
@@ -96,6 +100,7 @@ export class MeetingComponent implements OnInit {
   meeting = new meetingDetails();
   localCallId = 'agora_local';
   screenCallId = 'agora_screen';
+  localScreenCallId ='agora_screen_local'
   remoteCalls: string[] = [];
   screenRemoteCalls: string[] = [];
   localStreams: string[] = [];
@@ -123,6 +128,9 @@ export class MeetingComponent implements OnInit {
   private screenClient: AgoraClient;
   private localStream: Stream;
   private screenStream: Stream;
+  private preLocalStream:Stream;
+  private blankStream:Stream;
+  private micStream:Stream;
   private uid: number;
   private sid: number;
   senderId;
@@ -136,13 +144,38 @@ export class MeetingComponent implements OnInit {
     verticalPosition: 'top',
   };
   fileType: string;
-
+  meetingState='pre-meeting';
+  micTriggered:boolean=false;
+  localVideoOn:boolean=true;
+  localMicOn:boolean=true;
+  isPreMeeting=true;
+  isInMeeting=false;
+  localCallId1 = 'agora_local_1';
+  localCallId2 = 'agora_local_2'
+  peerOnline=false;
+  userName;
+  peerName;
+  profilePictureUrl;
+  userEmail;
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
   }
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    console.log('back button pressed')
+    if(this.meetingState=='pre-meeting'){
+      this.preLocalStream.stop();
+      this.preLocalStream.close();
+      if (this.meeting.role == 'host') {
+        this.router.navigate(['home/tutorDashboard']);
+      } else if (this.meeting.role == 'student') {
+        this.router.navigate(['home/studentDashboard']);
+      }
+    }
+  }
   ngAfterViewInit() {
     this.canvasEl = this.canvas.nativeElement;
     this.cx = this.canvasEl.getContext('2d');
@@ -162,7 +195,6 @@ export class MeetingComponent implements OnInit {
     if (this.meetingService.getMeeting().roomId == null) {
       this.handleRefresh();
     }
-    this.preventBackButton();
     this.width = (window.screen.width / 100) * 97;
     this.height = (window.screen.height / 100) * 80;
     this.screenWidth = window.screen.width;
@@ -172,6 +204,21 @@ export class MeetingComponent implements OnInit {
     this.senderName = this.meeting.userName;
     this.senderId = this.meeting.userId;
     this.bookingDetails = this.meetingService.getBooking();
+    this.userName=this.meeting.userName;
+    
+    if(this.loginService.getLoginType()=='Learner'){
+      this.profilePictureUrl=this.studentService.getStudentProfileDetails().profilePictureUrl;
+      this.userEmail=this.studentService.getStudentProfileDetails().email;
+    }else if(this.loginService.getLoginType()=='Expert'){
+      this.profilePictureUrl=this.tutorService.getTutorDetials().profilePictureUrl;
+      this.userEmail=this.tutorService.getTutorDetials().email;
+    }
+
+    if(this.meeting.role=='host'){
+      this.peerName=this.bookingDetails.studentName;
+    }else{
+      this.peerName=this.bookingDetails.tutorName;
+    }
     this.timelimit = this.calculateRemainingTime() * 60;
     this.shortName();
     //---------------------------------------------- normal camera stream ----------------------------------
@@ -180,22 +227,156 @@ export class MeetingComponent implements OnInit {
       codec: 'h264',
     });
     this.assignClientHandlers();
-    this.localStream = this.ngxAgoraService.createStream({
-      streamID: this.uid,
+    
+    this.preLocalStream=this.ngxAgoraService.createStream({
+      streamID: this.uid+3,
       audio: true,
       video: true,
       screen: false,
     });
-    this.assignLocalStreamHandlers();
+    
+    this.blankStream= this.ngxAgoraService.createStream({
+      streamID:this.uid+7,
+      audio:false,
+      video:false,
+      screen:false
+    })
+    this.assignLocalStreamHandlers(this.preLocalStream);
     // this.initLocalStream();
-    this.initLocalStream(() =>
-      this.join(
-        (uid) => this.publish(),
-        (error) => console.error(error)
-      )
-    );
+    this.initPreMeetingLocalStream(() =>{});
   }
 
+  preMeetingJoin(){
+    this.uid = this.meeting.userId;
+    this.meetingState='in-meeting';
+    this.isPreMeeting=false;
+    this.isInMeeting=true;
+    this.preLocalStream.stop();
+    this.preLocalStream.close();
+    this.preventBackButton();
+    this.initialiseInMeeting();
+  }
+  startLocalStream(){
+      this.localStream = this.ngxAgoraService.createStream({
+        streamID: this.uid,
+        audio: true,
+        video: true,
+        screen: false,
+      });
+      this.assignLocalStreamHandlers(this.localStream);
+      let localStreamId:string = this.localStream.getId().toString();
+      this.initLocalStream(()=>{
+        if(!this.localMicOn){
+          this.localStream.muteAudio();
+        }
+        this.publish(this.localStream);
+        this.localStreams.push(localStreamId);
+      });
+    // else{
+    //   this.localStream.stop();
+    //   this.localStream.close();
+    // }
+  }
+
+  startMicStream(){
+    this.localStream = this.ngxAgoraService.createStream({
+      streamID: this.uid,
+      audio: true,
+      video: false,
+      screen: false,
+    });
+    this.assignLocalStreamHandlers(this.localStream);
+    let localStreamId:string = this.localStream.getId().toString();
+    this.initLocalStream(()=>{
+        this.localStreams.push(localStreamId);
+        if(!this.localMicOn){
+          this.localStream.muteAudio();
+        }
+      this.publish(this.localStream);
+    });
+  }
+  initialiseInMeeting(){
+    this.join(()=>{
+      // case 1 mic on video on
+      if(this.localVideoOn&&this.localMicOn){
+        this.startLocalStream();
+      }
+      //case 2 mic on video off
+      else if(this.localMicOn&&!this.localVideoOn){
+        this.startMicStream();
+      }
+      //case 3 mic off video on
+      else if(!this.localMicOn&&this.localVideoOn){
+        this.startLocalStream();
+        this.localStream.unmuteAudio();
+      }
+      //case 4 mic off video off
+      else{
+        this.startMicStream();
+      }
+    });
+  }
+  removeLocalStream(){
+    this.unPublish(this.localStream);
+    this.localStreams = this.localStreams.filter(e => e !== this.localStream.getId().toString());
+    this.localStream.muteVideo();
+    this.localStream.stop();
+    this.localStream.close();
+  }
+  muteVideo() {
+    if (this.muteHostVideoStatus == 'mute host video') {
+      this.localVideoOn=false;
+      this.removeLocalStream();
+      this.startMicStream();
+      if(!this.localMicOn){
+        this.localStream.muteAudio();
+      }
+      this.muteHostVideoStatus = 'unmute host video';
+    } else if (this.muteHostVideoStatus == 'unmute host video') {
+      this.localVideoOn=true;
+      
+      let localStreamId:string = this.localStream.getId().toString();
+      if (!this.localStreams.includes(localStreamId)){
+        this.startLocalStream();
+      }else{
+        this.removeLocalStream();
+        this.startLocalStream();
+      } 
+      this.muteHostVideoStatus = 'mute host video';
+    }
+  }
+
+  muteAudio() {
+    if (this.muteHostAudioStatus == 'mute host mic') {
+      this.localMicOn=false;
+      this.localStream.muteAudio();
+      this.muteHostAudioStatus = 'unmute host mic';
+    } else {
+      this.localMicOn=true;
+      this.localStream.unmuteAudio();
+      this.muteHostAudioStatus = 'mute host mic';
+    }
+  }
+
+  unPublish(stream:Stream): void {
+    this.client.unpublish(stream, (err) => {});
+  }
+  
+  closeLocalVideo(stream:Stream){
+    stream.stop();
+    stream.close();   
+  }
+  private initPreMeetingLocalStream(onSuccess?: () => any): void {
+    this.preLocalStream.init(
+      () => {
+        this.preLocalStream.play(this.localCallId1);
+        if (onSuccess) {
+          onSuccess();
+        }
+      },
+      (err) => console.error('getUserMedia failed', err)
+    );
+  }
   handleRefresh() {
     if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
       this.router.navigate(['home/studentDashboard']);
@@ -224,7 +405,7 @@ export class MeetingComponent implements OnInit {
   }
 
   shareScreen() {
-    if (this.meetingService.getMeeting().role == 'host') {
+    // if (this.meetingService.getMeeting().role == 'host') {
       this.screenClient = this.ngxAgoraService.createClient({
         mode: 'rtc',
         codec: 'h264',
@@ -236,13 +417,12 @@ export class MeetingComponent implements OnInit {
         video: false,
         screen: true,
       });
-      this.initScreenStream(() =>
+      this.initScreenStream(() =>{
         this.screenJoin(
           (sid) => this.screenPublish(),
           (error) => console.error(error)
         )
-      );
-    }
+      });
   }
   endCall() {
     if (this.meeting.role == 'host') {
@@ -254,9 +434,10 @@ export class MeetingComponent implements OnInit {
     }
     this.client.unpublish(this.localStream, (err) => {});
     this.client.leave();
-    this.localStream.stop();
-    this.localStream.close();
-
+    if(this.localStream){
+      this.localStream.stop();
+      this.localStream.close();
+    }
     if (this.meeting.role == 'host') {
       this.router.navigate(['home/tutorDashboard']);
     } else if (this.meeting.role == 'student') {
@@ -305,30 +486,21 @@ export class MeetingComponent implements OnInit {
     this.client.on(ClientEvent.RemoteStreamAdded, (evt) => {
       const stream = evt.stream as Stream;
       var id = stream.getId();
-
-      if (!this.localStreams.includes(id.toString()) && id != 76) {
+      if (!this.localStreams.includes(id.toString())) {
+        // if(id==174)
         this.client.subscribe(
           stream,
           { audio: true, video: true },
           (err) => {}
         );
-      } else if (
-        this.meetingService.getMeeting().role == 'student' &&
-        id == 76
-      ) {
-        this.client.subscribe(
-          stream,
-          { audio: true, video: true },
-          (err) => {}
-        );
-      }
+      } 
     });
 
     this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
       const stream = evt.stream as Stream;
       const id = this.getRemoteId(stream);
       const idt = stream.getId();
-      if (idt == 76) {
+      if (idt == 174) {
         this.screenRemoteCalls.push(id);
         setTimeout(() => stream.play(id), 1000);
       } else {
@@ -344,13 +516,15 @@ export class MeetingComponent implements OnInit {
       const stream = evt.stream as Stream;
       const id = this.getRemoteId(stream);
       const idt = stream.getId();
-      if (idt != 76) {
+      if (idt != 174) {
         if (stream) {
           stream.stop();
           this.remoteCalls = [];
-          this.endCall();
+          // this.endCall();
+          
         }
-      } else if (idt == 76) {
+      } else if (idt == 174) {
+        this.screenRemoteCalls=[];
         stream.stop();
         stream.close();
       }
@@ -362,16 +536,24 @@ export class MeetingComponent implements OnInit {
       this.remoteVideoMute = false;
     });
     this.client.on(ClientEvent.PeerLeave, (evt) => {
+      // this.peerOnline=false;
       const stream = evt.stream as Stream;
-
       if (stream) {
         stream.stop();
-        this.endCall();
+        this.peerOnline=false;
+        // this.endCall();
         this.remoteCalls = this.remoteCalls.filter(
           (call) => call !== `${this.getRemoteId(stream)}`
         );
+      }else{
+        this.peerOnline=false;
       }
+      // this.endCall();
     });
+
+    this.client.on(ClientEvent.PeerOnline,(evt)=>{
+      this.peerOnline=true;
+    })
   }
   // screen client Handlers
   private assignScreenClientHandlers(): void {
@@ -382,11 +564,17 @@ export class MeetingComponent implements OnInit {
   }
   //----------------------------------------------------------------------------------------------------------
   //--------------------------------------stream Handlers----------------------------------------------------
-  private assignLocalStreamHandlers(): void {
-    this.localStream.on(StreamEvent.MediaAccessAllowed, () => {});
+  // private assignLocalStreamHandlers(): void {
+  //   this.localStream.on(StreamEvent.MediaAccessAllowed, () => {});
+
+  //   // The user has denied access to the camera and mic.
+  //   this.localStream.on(StreamEvent.MediaAccessDenied, () => {});
+  // }
+  private assignLocalStreamHandlers(stream:Stream): void {
+    stream.on(StreamEvent.MediaAccessAllowed, () => {});
 
     // The user has denied access to the camera and mic.
-    this.localStream.on(StreamEvent.MediaAccessDenied, () => {});
+    stream.on(StreamEvent.MediaAccessDenied, () => {});
   }
   //------------------------------------------------------------------------------------------------------------
   //------------------------------init functions for streams ---------------------------------------------------
@@ -402,10 +590,22 @@ export class MeetingComponent implements OnInit {
     );
   }
 
+  private initMicStream(onSuccess?: () => any): void {
+    this.micStream.init(
+      () => {
+        this.micStream.play(this.localCallId1);
+        if (onSuccess) {
+          onSuccess();
+        }
+      },
+      (err) => console.error('getUserMedia failed', err)
+    );
+  }
+
   private initScreenStream(onSuccess?: () => any): void {
     this.screenStream.init(
       () => {
-        this.screenStream.play(this.screenCallId);
+        this.screenStream.play(this.localScreenCallId);
         if (onSuccess) {
           onSuccess();
         }
@@ -423,15 +623,18 @@ export class MeetingComponent implements OnInit {
     this.client.join(
       null,
       this.meetingService.getMeeting().roomName,
-      this.uid,
+      this.meeting.userId,
       onSuccess,
       onFailure
     );
   }
 
-  publish(): void {
-    this.client.publish(this.localStream, (err) => {});
+  publish(stream:Stream): void {
+    this.client.publish(stream, (err) => {});
   }
+  // publish(): void {
+  //   this.client.publish(this.localStream, (err) => {});
+  // }
 
   screenJoin(
     onSuccess?: (sid: number | string) => void,
@@ -457,26 +660,72 @@ export class MeetingComponent implements OnInit {
       this.endCall();
     }
   }
-
-  muteVideo() {
+  preMeetingMuteVideo() {
     if (this.muteHostVideoStatus == 'mute host video') {
-      this.localStream.muteVideo();
+      this.localVideoOn=false;
+      if(this.meetingState=='pre-meeting'){
+        this.preLocalStream.stop();
+        this.closeLocalVideo(this.preLocalStream);
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.backgroundColor = '#d93025';
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.borderColor = '#d93025';
+      }
       this.muteHostVideoStatus = 'unmute host video';
     } else if (this.muteHostVideoStatus == 'unmute host video') {
-      this.localStream.unmuteVideo();
+      this.localVideoOn=true;
+      if(this.meetingState=='pre-meeting'){
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.backgroundColor = '';
+        (document.querySelector('.pre-meeting-video') as HTMLElement).style.borderColor = '';
+        this.assignLocalStreamHandlers(this.preLocalStream);
+        this.initPreMeetingLocalStream(() =>{
+          if(this.meetingState=='pre-meeting'){}
+        });
+      }
       this.muteHostVideoStatus = 'mute host video';
     }
   }
 
-  muteAudio() {
+  preMeetingMuteAudio() {
+    this.micTriggered=true;
     if (this.muteHostAudioStatus == 'mute host mic') {
-      this.localStream.muteAudio();
+      this.localMicOn=false;
       this.muteHostAudioStatus = 'unmute host mic';
+      if(this.meetingState=='pre-meeting'){
+      (document.querySelector('.pre-meeting-mic') as HTMLElement).style.backgroundColor = '#d93025';
+      (document.querySelector('.pre-meeting-mic') as HTMLElement).style.borderColor = '#d93025';
+      }
     } else {
-      this.localStream.unmuteAudio();
+      this.localMicOn=true;
       this.muteHostAudioStatus = 'mute host mic';
+      if(this.meetingState=='pre-meeting'){
+      (document.querySelector('.pre-meeting-mic') as HTMLElement).style.backgroundColor = '';
+      (document.querySelector('.pre-meeting-mic') as HTMLElement).style.borderColor = '';
+      }   
     }
-  }
+    if(this.meetingState=='pre-meeting'){
+    setTimeout(()=>{
+      this.micTriggered=false;
+    },4000);
+    }
+  } 
+  // muteVideo() {
+  //   if (this.muteHostVideoStatus == 'mute host video') {
+  //     this.localStream.muteVideo();
+  //     this.muteHostVideoStatus = 'unmute host video';
+  //   } else if (this.muteHostVideoStatus == 'unmute host video') {
+  //     this.localStream.unmuteVideo();
+  //     this.muteHostVideoStatus = 'mute host video';
+  //   }
+  // }
+
+  // muteAudio() {
+  //   if (this.muteHostAudioStatus == 'mute host mic') {
+  //     this.localStream.muteAudio();
+  //     this.muteHostAudioStatus = 'unmute host mic';
+  //   } else {
+  //     this.localStream.unmuteAudio();
+  //     this.muteHostAudioStatus = 'mute host mic';
+  //   }
+  // }
 
   screenShare() {
     if (this.hostScreenShareStatus == false) {
@@ -489,6 +738,7 @@ export class MeetingComponent implements OnInit {
       this.screenClient.unpublish(this.screenStream, (err) => {});
       this.screenClient.leave();
       this.screenStream.close();
+      this.localStreams=[];
     }
   }
   expandScreen() {

@@ -10,9 +10,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import fG.Entity.BookingDetails;
+import fG.Entity.UserActivity;
 
 @Repository
 public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>{
+	
+	@Query(value = "SELECT * FROM booking_details WHERE created_date > now() - interval 1 week", nativeQuery = true)   
+	List<BookingDetails> findLast1WeekMeetings();
+	
+	@Query(value = "SELECT * FROM booking_details WHERE created_date > now() - interval 24 hour", nativeQuery = true)   
+	List<BookingDetails> findTodayMeetings();
+	
+	@Query(value = "SELECT * FROM booking_details WHERE created_date > now() - interval 1 month", nativeQuery = true)   
+	List<BookingDetails> findLast1MonthMeetings();
+	
 	@Query(value = "SELECT * FROM booking_details WHERE bid=?1",nativeQuery=true)
 	BookingDetails bidExists(Integer bid);
 	

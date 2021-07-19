@@ -167,6 +167,12 @@ export class FacadeComponent implements OnInit {
       });
     }
   }
+  toTermsPage(evt:any) {
+    console.log(evt);
+      this.router.navigate(['termsAndConditions'], {
+        queryParams: { section: evt },
+      });
+  }
   onSignUp() {
     this.router.navigate(['signUp']);
   }

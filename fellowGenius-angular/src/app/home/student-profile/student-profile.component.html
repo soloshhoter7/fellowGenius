@@ -7,7 +7,7 @@
     >
       <div class="container">
         <div class="row" style="padding-top: 2vh">
-          <div class="col-md-3">
+          <div class="col-md-6">
             <p style="color: #e3165b; font-size: x-large"><b>PROFILE</b></p>
             <img
               style="
@@ -54,9 +54,15 @@
                   <app-loader></app-loader>
                 </span>
               </button>
+              <div style="margin: 5px;margin-left: 0; font-size: 12px; font-weight: 600;color: red;" *ngIf="invalidPicture">
+                Please upload a valid Image !
+              </div>
+              <div style="margin: 10px;margin-left: 0; font-size: 12px; font-weight: 600;color: red;" *ngIf="pictureInfo">
+                Supported file upload formats(.jpg, .png, .jpeg) upto size limit of 3MB *
+              </div>
             </div>
           </div>
-          <div class="offset-md-6 col-md-3" style="text-align: end">
+          <div class="col-md-3" style="text-align: end;margin: 20px;">
             <button
               class="btn"
               style="margin-right: 2vw; text-decoration: underline"

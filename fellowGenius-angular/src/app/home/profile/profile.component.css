@@ -1,6 +1,7 @@
 body {
-  height: 100vh;
+  height: 100%;
   background-color: #f9fafc;
+  padding-bottom: 20px;
 }
 
 .outer-box {

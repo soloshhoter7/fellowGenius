@@ -260,6 +260,18 @@
       </div>
     </div>
     <div class="search-cards-container columnto">
+      <div
+      *ngIf="isLoading"
+    style="
+      text-align: center;
+      margin-top: 8vh;
+      margin-left: auto;
+      margin-right: auto;
+    "
+  >
+    <app-loading></app-loading>
+    <p style="margin:1rem;font-size: large;">Loading Experts..</p>
+  </div>
       <!-- <div *ngIf="searchResults.length == 0" style="
           width: max-content;
           margin: auto;
@@ -340,10 +352,10 @@
                 </div>
               </div>
 
-              <div
+              <!-- <div
                 class="result-card-descirption"
                 [innerHTML]="result.description | shorten"
-              ></div>
+              ></div> -->
 
               <div class="result-card-tutorsfor">
                 <b> Tutors For</b>
@@ -368,6 +380,7 @@
 
         <!-- <div *ngIf="allFiltersApplied.length != 0"> -->
         <div>
+          
           <li class="search-result-card" *ngFor="let result of filteredArray">
             <div
               class="result-profile-pic"
@@ -428,12 +441,12 @@
                 </div>
               </div>
 
-              <div
+              <!-- <div
                 class="result-card-descirption"
                 [innerHTML]="result.description | shorten"
               >
-                <!-- Exterior University - politics, Exterior University - politics [bachelors] -->
-              </div>
+                
+              </div> -->
 
               <div class="result-card-tutorsfor">
                 <b> Tutors For</b>
@@ -473,8 +486,8 @@
 
         <div
           *ngIf="
-            (searchResults.length == 0 && filteredArray.length == 0) ||
-            (checkFilters() && filteredArray.length == 0)
+            ((searchResults.length == 0 && filteredArray.length == 0) ||
+            (checkFilters() && filteredArray.length == 0)) && !isLoading
           "
           class="no-recordsfound"
         >

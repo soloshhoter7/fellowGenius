@@ -191,19 +191,21 @@
     <div class="footer-inner">
       <section class="footer-item">
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a routerLink="/about-us">About us</a></li>
-          <li><a href="#">Terms and Conditions</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a class="nav-link" (click)="toTermsPage('termsAndConditions')">Terms and Conditions</a></li>
+          <li><a class="nav-link" (click)="toTermsPage('privacyPolicy')">Privacy Policy</a></li>
+          <li><a class="nav-link" routerLink="/contactUs">Contact Us</a></li>
+          <li><a class="nav-link" (click)="toTermsPage('refundsAndCancellations')">Refunds and Cancellations</a></li>
+        </ul>
+      </section>
+      <section class="footer-item">
+        <ul>
+          <li><a href="#" class="nav-link">Home</a></li>
+          <li><a routerLink="/about-us" class="nav-link">About us</a></li>
+       
         </ul>
       </section>
 
-      <!-- <section class="footer-item">
-        <ul>
-     
-        </ul>
-      </section> -->
+      
       <div class="copyright-container">
         <span>&#169; copyright 2020</span>
       </div>

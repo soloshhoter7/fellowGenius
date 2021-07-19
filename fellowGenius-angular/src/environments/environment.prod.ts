@@ -18,5 +18,6 @@ export const environment = {
   RAZORPAY_KEY_ID: 'rzp_live_MhUQ4PE6mDs80d',
 
   //backend url for production build
-  BACKEND_URL: 'https://fellowgenius-spring-dev.azurewebsites.net'
+  BACKEND_URL:  
+  'https://backend.fellowgenius.com'
 };

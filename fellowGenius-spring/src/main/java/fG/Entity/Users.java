@@ -1,10 +1,19 @@
 package fG.Entity;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 @Entity
-public class Users {
+public class Users implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@Column(name="userId",length=50)
 	Integer userId;
 	
@@ -17,7 +26,21 @@ public class Users {
 	String socialId;
 	
 	String role;
-
+	
+//	@CreationTimestamp
+//	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="last_login")
+	Date lastLogin;
+	
+	
+	@CreationTimestamp
+	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="signup_date")
+	Date createdDate;
+//	String lastLogin;
+	
 	public Integer getUserId() {
 		return userId;
 	}
@@ -58,14 +81,28 @@ public class Users {
 	public void setSocialId(String socialId) {
 		this.socialId = socialId;
 	}
+	
+	
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", email=" + email + ", password=" + password + ", socialId=" + socialId
-				+ ", role=" + role + "]";
+				+ ", role=" + role + ", lastLogin=" + lastLogin + ", createdDate=" + createdDate + "]";
 	}
-
-	
-
 	
 }
