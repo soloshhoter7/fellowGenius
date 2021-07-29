@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AppRoutingModule } from './app-routing.module';
+import { appRoutes, AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { NgxAgoraModule } from 'ngx-agora';
@@ -83,46 +83,9 @@ import { CategoriesComponent } from './admin-portal/categories/categories.compon
 import { ContactUsInfoComponent } from './facade/sign-up/contact-us-info/contact-us-info.component';
 import { AnalyticsComponent } from './admin-portal/analytics/analytics.component';
 import { AdminPortalComponent } from './admin-portal/admin-portal.component';
-export const appRoutes: Routes = [
-  {
-    path: 'home',
-    component: HomeComponent,
-    children: [
-      { path: 'profile', component: ProfileComponent },
-      { path: 'studentDashboard', component: StudentDashboardComponent },
-      { path: 'tutorDashboard', component: TutorDashboardComponent },
-      { path: 'studentProfile', component: StudentProfileComponent },
-      { path: 'bookings', component: BookingsComponent },
-      { path: 'studentBookings', component: StudentBookingComponent },
-      { path: 'tutorSchedule', component: tutorScheduleComponent },
-      { path: 'sessionNotes', component: SessionNotesComponent },
-      { path: 'recordings', component: RecordingsComponent },
-      { path: 'knowledgeBase', component: KnowledgeBaseComponent },
-      { path: 'experts', component: ExpertsComponent },
-    ],
-  },
-  { path: 'facade', component: FacadeComponent },
-  { path:'how-it-works', component:HowItWorksComponent},
-  { path:'faq', component:FaqComponent},
-  { path:'about-us',component:AboutUsComponent},
-  { path: 'searchResults', component: SearchResultsComponent },
-  { path: 'viewTutors', component: ExpertProfileComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'signUp', component: SignUpComponent },
-  { path: 'meeting', component: MeetingComponent },
-  { path: 'test', component: TestComponent },
-  { path: 'resetPassword', component: ResetPasswordComponent },
-  { path: 'admin', component:AdminPortalComponent,
-    children:[
-      { path: 'categories',component:CategoriesComponent},
-      { path: 'analytics',component:AnalyticsComponent}
-    ]
-  },
-  { path: 'admin/categories', component:CategoriesComponent},
-  { path: 'termsAndConditions', component:TermsAndConditionsComponent},
-  { path: 'contactUs',component:ContactUsInfoComponent},
-  { path: '', redirectTo: '/facade', pathMatch: 'full' },
-];
+import { DeleteMeetingComponent } from './delete-meeting/delete-meeting.component';
+import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meeting.component';
+
 
 @NgModule({
   declarations: [
@@ -174,6 +137,8 @@ export const appRoutes: Routes = [
     ContactUsInfoComponent,
     AnalyticsComponent,
     AdminPortalComponent,
+    DeleteMeetingComponent,
+    RescheduleMeetingComponent,
   ],
   imports: [
     NoopAnimationsModule,
@@ -182,7 +147,7 @@ export const appRoutes: Routes = [
     BrowserModule,
     AppRoutingModule,
     NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
-    RouterModule.forRoot(appRoutes, { useHash: true }),
+    
     FormsModule,
     MatDialogModule,
     HttpClientModule,
@@ -202,6 +167,7 @@ export const appRoutes: Routes = [
     CarouselModule,
     MatInputModule,
     GoogleChartsModule,
+    RouterModule.forRoot(appRoutes,{useHash:true}),
   ],
   entryComponents: [WelcomeComponent],
   providers: [

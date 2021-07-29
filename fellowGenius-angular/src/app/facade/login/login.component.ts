@@ -31,6 +31,7 @@ import { registrationModel } from 'src/app/model/registration';
 import * as jwt_decode from 'jwt-decode';
 import { WebSocketService } from 'src/app/service/web-socket.service';
 import { AuthService } from 'src/app/service/auth.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 declare const FB: any;
 @Component({
   selector: 'app-login',
@@ -85,7 +86,7 @@ export class LoginComponent implements OnInit {
     this.googleSDK();
   }
   toFacade() {
-    this.router.navigate(['facade']);
+    this.router.navigate(['']);
   }
 
   onLogin(form: NgForm) {
@@ -114,14 +115,14 @@ export class LoginComponent implements OnInit {
     });
   }
   toSignUp() {
-    this.router.navigate(['signUp']);
+    this.router.navigate(['sign-up']);
   }
   toHome() {
     this.router.navigate(['home']);
   }
   // ------------------------------------------------------------------------------------------------------------------
   toResetPassword() {
-    this.router.navigate(['resetPassword']);
+    this.router.navigate(['reset-password']);
   }
   openThankYouPage() {
     const dialogConfig = new MatDialogConfig();
@@ -129,6 +130,8 @@ export class LoginComponent implements OnInit {
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
       this.role = data;
+      this.registrationModel.role=data.role;
+      this.registrationModel.password=data.password;
       this.authService.saveSocialLogin(this.registrationModel);
       this.authService.getAuthStatusListener().subscribe((res)=>{
         if(res==true){
@@ -163,6 +166,10 @@ export class LoginComponent implements OnInit {
         this.socialLogin.fullName = profile.getName();
         this.socialLogin.email = profile.getEmail();
         this.socialService.setSocialDetails(this.socialLogin);
+        this.registrationModel.fullName = this.socialLogin.fullName;
+        this.registrationModel.email = this.socialLogin.email;
+        // this.registrationModel.password = this.socialLogin.id;
+        this.registrationModel.socialId = this.socialLogin.id;
         this.zone.run(() => {
           setTimeout(() => {
             this.isLoading = false;
@@ -178,18 +185,21 @@ export class LoginComponent implements OnInit {
         this.httpService
         .checkUser(this.socialLogin.email)
         .subscribe((res) => {
+          
           if (!res) {
             this.zone.run(() => {
+              
               this.openThankYouPage();
             });
           } else {
             this.isLoading = false;
             this.hideContainer = '';
-            this.snackBar.open(
-              'registration not successful ! email already exists !',
-              'close',
-              this.config
-            );
+            // console.log('registration not successful')
+            // this.snackBar.open(
+            //   'registration not successful ! email already exists !',
+            //   'close',
+            //   this.config
+            // );
           }
         });
       }else if(res==true){
@@ -233,5 +243,7 @@ export class LoginComponent implements OnInit {
     })(document, 'script', 'google-jssdk');
   }
 
-  
+  openForgotPassword(){
+    
+  }
 }

@@ -1,5 +1,6 @@
 package fG.Entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,13 +12,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 
 
 @Entity
-public class BookingDetails {
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.AUTO)
+public class BookingDetails implements Serializable{
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(generator = "id_seq")
+	@GenericGenerator(
+			name = "id_seq", 
+			strategy = "fG.Service.IdGenerator")
 	  Integer bid;
 	  Integer endTimeHour;
 	  Integer endTimeMinute;
@@ -41,6 +47,7 @@ public class BookingDetails {
 	  String razorpay_signature;
 	  Integer amount;
 	  String tutorProfilePictureUrl;
+	  String isRescheduled="false";
 	  
 	  @CreationTimestamp
 		@CreatedDate
@@ -186,6 +193,13 @@ public class BookingDetails {
 	}
 	public void setAmount(Integer amount) {
 		this.amount = amount;
+	}
+	
+	public String getIsRescheduled() {
+		return isRescheduled;
+	}
+	public void setIsRescheduled(String isRescheduled) {
+		this.isRescheduled = isRescheduled;
 	}
 	@Override
 	public String toString() {

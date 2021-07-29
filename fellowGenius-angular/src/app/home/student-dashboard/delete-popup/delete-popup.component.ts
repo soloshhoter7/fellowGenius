@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MeetingService } from 'src/app/service/meeting.service';
 import { bookingDetails } from 'src/app/model/bookingDetails';
 import { HttpService } from 'src/app/service/http.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material/snack-bar';
 
@@ -17,7 +17,9 @@ export class DeletePopupComponent implements OnInit {
 		private httpService: HttpService,
 		private dialog: MatDialog,
 		private router: Router,
-		private snackBar: MatSnackBar
+		private snackBar: MatSnackBar,
+		private dialogRef: MatDialogRef<DeletePopupComponent>,
+    	@Inject(MAT_DIALOG_DATA) data
 	) {}
 
 	cancelBooking = new bookingDetails();
@@ -34,24 +36,17 @@ export class DeletePopupComponent implements OnInit {
 	}
 
 	close() {
-		this.dialog.closeAll();
+		let dialogData = {
+			cancelled:false
+		}
+		this.dialogRef.close(dialogData);
 	}
 
 	deleteBooking() {
-		this.httpService.deleteMyBooking(this.cancelBooking.bid).subscribe((response) => {
-			if (response) {
-				this.pendingRequests.splice(this.pendingRequests.indexOf(this.cancelBooking), 1);
-				if (this.pendingRequests.length == 0) {
-					this.meetingService.refreshBookingList('delete');
-					// this.emptyBookingList=true;
-				}
-				this.snackBar.open('Booking has been cancelled !', 'close', this.config);
-			} else {
-				this.snackBar.open('Booking has already been accepted !', 'close', this.config);
-			}
-		});
-
-		this.dialog.closeAll();
-		this.router.navigate([ 'home/studentDashboard' ]);
+		let dialogData = {
+			cancelled:true
+		}
+		this.dialogRef.close(dialogData);
+		this.router.navigate([ 'home/student-dashboard' ]);
 	}
 }

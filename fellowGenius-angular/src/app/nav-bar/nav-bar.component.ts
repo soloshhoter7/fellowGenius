@@ -45,7 +45,7 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['']);
   }
   onSignUp() {
-    this.router.navigate(['signUp']);
+    this.router.navigate(['sign-up']);
   }
 
   toLoginPage() {
@@ -53,15 +53,15 @@ export class NavBarComponent implements OnInit {
   }
   toDashboard() {
     if (this.loginService.getLoginType() == 'Learner') {
-      this.router.navigate(['home/studentDashboard']);
+      this.router.navigate(['home/student-dashboard']);
     } else if (this.loginService.getLoginType() == 'Expert') {
-      this.router.navigate(['home/tutorDashboard']);
+      this.router.navigate(['home/tutor-dashboard']);
     }
   }
   displaySelectedSubjects(category) {
     console.log(category)
     if (category!=null) {
-      this.router.navigate(['searchResults'], {
+      this.router.navigate(['search-results'], {
         queryParams: { subject: category },
       });
     }

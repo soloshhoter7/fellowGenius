@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fG.Entity.BookingDetails;
+import fG.Entity.RefundBookings;
 import fG.Entity.TutorProfileDetails;
 import fG.Repository.repositoryBooking;
+import fG.Repository.repositoryRefundBookings;
 import fG.Repository.repositoryTutorProfileDetails;
 
 @Component
@@ -18,6 +20,9 @@ public class MeetingDao {
 
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
+	
+	@Autowired 
+	repositoryRefundBookings repRefundBookings;
 	
 	// for saving booking in database
 	public boolean saveBooking(BookingDetails booking) {
@@ -80,15 +85,21 @@ public class MeetingDao {
 
 	// for deleting the booking if it is not accepted by the teacher
 	public boolean deleteMyBooking(Integer bookingId) {
-		System.out.println(bookingId);
 		if(repBooking.deleteMyBooking(bookingId)==1) {
+			initiateRefund(bookingId);
 			return true;
 		}else {
 			return false;
 		}
 		
 	}
-
+	public void initiateRefund(Integer bookingId) {
+		RefundBookings ref =new RefundBookings();
+		ref.setBid(repBooking.bidExists(bookingId));
+		ref.setRefundStatus("pending");
+		repRefundBookings.save(ref);
+	}
+	
 	public List<BookingDetails> fetchPendingReviewsList(Integer studentId) {
 		return repBooking.fetchPendingReviewsList(studentId);
 		

@@ -125,23 +125,23 @@ export class FacadeComponent implements OnInit {
   sendData(){
     // this.webSocketService.sendMessageToMeeting('724402542');
     this.httpService.randomApi().subscribe((res)=>{
-      console.log(res);
+
     })
   }
   getAllCategories(){
-    console.log('///fetching all categories');
+   
     
     this.httpService.getAllCategories().subscribe((res)=>{
       let categories:Category[] = res;
-      console.log(categories);
+  
       if(categories.length>0){
-        console.log('inside if');
+       
         for(var i=0;i<categories.length;i++){
-          console.log(categories[i].category);
+       
           this.options.push(categories[i].category);
         }
       }
-     console.log(this.options);
+     
       // if(categories.length>0){
       //   // categories.forEach(function (value){
       //   //   this.categories.push(value.category);
@@ -162,19 +162,19 @@ export class FacadeComponent implements OnInit {
 
   displaySelectedSubjects() {
     if (this.selectedSubject) {
-      this.router.navigate(['searchResults'], {
+      this.router.navigate(['search-results'], {
         queryParams: { subject: this.selectedSubject },
       });
     }
   }
   toTermsPage(evt:any) {
-    console.log(evt);
-      this.router.navigate(['termsAndConditions'], {
+  
+      this.router.navigate(['terms-and-conditions'], {
         queryParams: { section: evt },
       });
   }
   onSignUp() {
-    this.router.navigate(['signUp']);
+    this.router.navigate(['sign-up']);
   }
 
   toLoginPage() {

@@ -20,7 +20,7 @@ export class TermsAndConditionsComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedSection = params['section'];
     });
-    console.log(this.selectedSection)
+   
     if(this.selectedSection&&this.selectedSection!='privacyPolicy'){
       document.getElementById(this.selectedSection).scrollIntoView();
     }else{

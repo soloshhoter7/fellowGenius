@@ -97,7 +97,7 @@ export class AuthService {
   }
 
   toFacade() {
-    this.router.navigate(['facade']);
+    this.router.navigate(['']);
   }
 
   getAuthStatusListener(){
@@ -107,51 +107,54 @@ export class AuthService {
     return this.isAuthenticated;
   }
   autoAuthUser(){
+    console.log('called')
     this.userId = this.cookieService.get('userId');
-    if (JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
-      this.loginType = 'Learner';
-      this.loginDetailsService.setTrType('login');
-      this.loginDetailsService.setLoginType(this.loginType);
-      this.httpService.getStudentDetails(this.userId).subscribe((res) => {
-        this.studentProfile = res;
-        this.studentService.setStudentProfileDetails(this.studentProfile);
-        this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
-          this.studentService.setStudentBookings(res);
-          this.isAuthenticated=true;
-          this.webSocketService.connectToUserWebSocket(this.userId);
-          this.notificationService.fetchNotification();
-          // this.router.navigate([ 'home/studentDashboard' ]);
-        });
-      });
-    } else if (
-      JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Expert'
-    ) {
-      this.loginType = 'Expert';
-      this.loginDetailsService.setTrType('login');
-      this.loginDetailsService.setLoginType(this.loginType);
-
-      this.httpService.getTutorDetails(this.userId).subscribe((res) => {
-        this.tutorProfile = res;
-        this.tutorService.setTutorDetails(this.tutorProfile);
-        this.httpService
-          .getTutorProfileDetails(this.userId)
-          .subscribe((res) => {
-            this.tutorProfileDetails = res;
-            this.tutorService.setTutorProfileDetails(res);
-            this.httpService.getScheduleData(this.tutorProfileDetails.bookingId).subscribe((res) => {
-              this.tutorService.setPersonalAvailabilitySchedule(res);
-              this.isAuthenticated=true;
-              this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
-              this.notificationService.fetchNotification();
-            });
+    if(JwtDecode(this.cookieService.get('token'))['sub']==this.userId){
+      if (JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
+        this.loginType = 'Learner';
+        this.loginDetailsService.setTrType('login');
+        this.loginDetailsService.setLoginType(this.loginType);
+        this.httpService.getStudentDetails(this.userId).subscribe((res) => {
+          this.studentProfile = res;
+          this.studentService.setStudentProfileDetails(this.studentProfile);
+          this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
+            this.studentService.setStudentBookings(res);
+            this.isAuthenticated=true;
+            this.webSocketService.connectToUserWebSocket(this.userId);
+            this.notificationService.fetchNotification();
+            // this.router.navigate([ 'home/student-dashboard' ]);
           });
-      });
+        });
+      } else if (
+        JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Expert'
+      ) {
+        this.loginType = 'Expert';
+        this.loginDetailsService.setTrType('login');
+        this.loginDetailsService.setLoginType(this.loginType);
+  
+        this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+          this.tutorProfile = res;
+          this.tutorService.setTutorDetails(this.tutorProfile);
+          this.httpService
+            .getTutorProfileDetails(this.userId)
+            .subscribe((res) => {
+              this.tutorProfileDetails = res;
+              this.tutorService.setTutorProfileDetails(res);
+              this.httpService.getScheduleData(this.tutorProfileDetails.bookingId).subscribe((res) => {
+                this.tutorService.setPersonalAvailabilitySchedule(res);
+                this.isAuthenticated=true;
+                this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                this.notificationService.fetchNotification();
+              });
+            });
+        });
+      }
     }
+    
   }
   onLogin(loginModel:loginModel) {
-    console.log(loginModel);
     this.httpService.checkLogin(loginModel).subscribe((res) => {
-      console.log('login result->',res);
+      
       if (res['response'] != 'false') {
         this.cookieService.set('token', res['response']);
         this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
@@ -223,7 +226,7 @@ export class AuthService {
               this.loginModel.email = registrationModel.email;
               this.loginModel.password = registrationModel.password;
               // for logging in once registration is done
-              console.log('login model in auth=>',this.loginModel)
+             
               this.httpService.checkLogin(this.loginModel).subscribe((res) => {
                 this.cookieService.set('token', res['response']);
                 this.cookieService.set(
@@ -288,11 +291,6 @@ export class AuthService {
           });
   }
   saveSocialLogin(registrationModel) {
-    // registrationModel.fullName = this.socialLogin.fullName;
-    // registrationModel.email = this.socialLogin.email;
-    // registrationModel.password = this.socialLogin.id;
-    // registrationModel.role = this.role;
-    console.log(registrationModel);
     this.httpService.registerUser(registrationModel).subscribe((res) => {
       if (res == true) {
         this.loginModel.email = registrationModel.email;

@@ -24,7 +24,7 @@ public class BookingDetailsModel {
   String razorpay_order_id;
   String razorpay_signature;
   String tutorProfilePictureUrl;
-  
+  String isRescheduled;
   
 public String getTutorProfilePictureUrl() {
 	return tutorProfilePictureUrl;
@@ -167,6 +167,14 @@ public Integer getAmount() {
 public void setAmount(Integer amount) {
 	this.amount = amount;
 }
+
+public String getIsRescheduled() {
+	return isRescheduled;
+}
+public void setIsRescheduled(String isRescheduled) {
+	this.isRescheduled = isRescheduled;
+}
+
 @Override
 public String toString() {
 	return "BookingDetailsModel [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute

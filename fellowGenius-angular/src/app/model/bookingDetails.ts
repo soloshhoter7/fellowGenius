@@ -26,4 +26,5 @@ export class bookingDetails {
   public razorpay_payment_id;
   public razorpay_order_id;
   public razorpay_signature;
+  public isRescheduled;
 }

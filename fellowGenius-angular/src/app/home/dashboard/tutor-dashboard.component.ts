@@ -11,6 +11,7 @@ import { stringify } from 'querystring';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { LocationStrategy } from '@angular/common';
 import { WebSocketService } from 'src/app/service/web-socket.service';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 // import { ConsoleReporter } from 'jasmine';
 L10n.load({
   'en-US': {
@@ -26,6 +27,7 @@ L10n.load({
 })
 export class TutorDashboardComponent implements OnInit {
   public now: Date = new Date();
+  isRescheduleLoading: boolean;
   constructor(
     public httpService: HttpService,
     public tutorService: TutorService,
@@ -33,7 +35,8 @@ export class TutorDashboardComponent implements OnInit {
     public router: Router,
     public loginService: LoginDetailsService,
     private locationStrategy: LocationStrategy,
-    private webSocketService:WebSocketService
+    private webSocketService:WebSocketService,
+    private snackBar: MatSnackBar
   ) {
     setInterval(() => {
       this.now = new Date();
@@ -108,6 +111,11 @@ export class TutorDashboardComponent implements OnInit {
   condition;
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   recentReviewsList: bookingDetails[] = [];
+  config: MatSnackBarConfig = {
+    duration: 2000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+  };
   ngOnInit(): void {
     this.preventBackButton();
     if (window.innerWidth <= 800) {
@@ -131,7 +139,6 @@ export class TutorDashboardComponent implements OnInit {
   initialisePendingRequests(){
     this.tutorService.fetchTutorPendingBookings();
     this.tutorService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
-      console.log(booking);
       this.bookingList = booking;
 
       if (this.bookingList.length == 0) {
@@ -162,7 +169,7 @@ export class TutorDashboardComponent implements OnInit {
     }, 1000);
   }
   openSchedulePage() {
-    this.router.navigate(['home/tutorSchedule']);
+    this.router.navigate(['home/tutor-schedule']);
   }
   fetchExpertRecentReviews() {
     this.httpService
@@ -176,34 +183,49 @@ export class TutorDashboardComponent implements OnInit {
   acceptBooking(booking: bookingDetails) {
     this.isLoading = true;
     booking.approvalStatus = 'Accepted';
-
-    this.httpService
-      .updateBookingStatus(booking.bid, booking.approvalStatus)
-      .subscribe((res) => {
-        if (res == true) {
-          this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
-          if (this.bookingList.length == 0) {
-            this.bookingRequestMessage = 'No booking requests pending.';
-            this.pendingRequestsCount = 0;
-            this.takeAction = false;
+    let status:string;
+    
+    this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
+      // let response=res;
+      status = res.status;
+      if(status=='Pending'){
+        this.httpService
+        .updateBookingStatus(booking.bid, booking.approvalStatus)
+        .subscribe((res) => {
+          if (res == true) {
+            this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
+            if (this.bookingList.length == 0) {
+              this.bookingRequestMessage = 'No booking requests pending.';
+              this.pendingRequestsCount = 0;
+              this.takeAction = false;
+            }
+            let data = JSON.stringify({
+              entityType: "1",
+              entityTypeId:"12",
+              actorId:booking.tutorId,
+              notifierId:booking.studentId,
+              pictureUrl:booking.tutorProfilePictureUrl,
+              readStatus:false
+            });
+            this.webSocketService.sendAppointmentNotfication(data,(booking.studentId).toString());
+            this.before10MinutesTime(booking);
+            this.enableJoinNow(booking);
+            this.timeLeft(booking);
+            this.meetingList.push(booking);
+            this.approvedMeetingsMessage = '';
+            this.isLoading = false;
           }
-          let data = JSON.stringify({
-            entityType: "1",
-            entityTypeId:"12",
-            actorId:booking.tutorId,
-            notifierId:booking.studentId,
-            pictureUrl:booking.tutorProfilePictureUrl,
-            readStatus:false
-          });
-          this.webSocketService.sendAppointmentNotfication(data,(booking.studentId).toString());
-          this.before10MinutesTime(booking);
-          this.enableJoinNow(booking);
-          this.timeLeft(booking);
-          this.meetingList.push(booking);
-          this.approvedMeetingsMessage = '';
-          this.isLoading = false;
-        }
-      });
+        });
+      }else{
+        this.snackBar.open(
+          'Meeting has already been cancelled !',
+          'close',
+          this.config
+        );
+        this.initialisePendingRequests();
+      }
+    })
+    
   }
 
   //for denying bookings
@@ -224,6 +246,30 @@ export class TutorDashboardComponent implements OnInit {
       });
   }
 
+  requestToReschedule(booking){
+    this.isRescheduleLoading=true;
+    this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
+      if(res.status=='Pending'){
+        this.httpService.requestToReschedule(booking.bid).subscribe((res)=>{
+          if(res){
+            this.snackBar.open(
+              'Request for reschedule successful',
+              'close',
+              this.config
+            );
+            this.isRescheduleLoading=false;
+            this.initialisePendingRequests();
+          }else{
+            this.snackBar.open(
+              'Reschedule time limit exceeded !',
+              'close',
+              this.config
+            );
+          }
+        })
+      }
+    });
+  }
   // for fetching pending tutor booking requests
   // fetchTutorPendingBookings() {
   //   if (this.loginService.getLoginType() == 'Expert') {

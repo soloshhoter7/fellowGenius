@@ -114,7 +114,7 @@ export class HomeComponent implements OnInit {
           this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
         }
         this.calculateStudentProfilePercentage();
-        this.router.navigate(['home/studentDashboard']);
+        this.router.navigate(['home/student-dashboard']);
         if (this.loginService.getTrType() == 'signUp') {
           this.dialog.open(WelcomeComponent, {
             width: 'auto',
@@ -146,7 +146,7 @@ export class HomeComponent implements OnInit {
           this.checked = false;
         }
         // this.dashboardUrl = '/home/tutorDashboard';
-        this.router.navigate(['home/tutorDashboard']);
+        this.router.navigate(['home/tutor-dashboard']);
         if (this.loginService.getTrType() == 'signUp') {
           this.dialog.open(WelcomeComponent, {
             width: 'auto',
@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit {
       }
       this.initialiseNotifications();
     } else {
-      this.router.navigate(['facade']);
+      this.router.navigate(['']);
     }
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -169,7 +169,6 @@ export class HomeComponent implements OnInit {
     this.notificationService.fetchNotification();
     this.notificationService.notificationsChanged.subscribe((notifs:NotificationModel[])=>{
       this.notifications=notifs;
-      console.log(this.notifications);
     })
   }
   // initialiseStudentPendingRequest(){
@@ -313,7 +312,7 @@ export class HomeComponent implements OnInit {
   }
   openProfile() {
     if (this.loginType == 'Learner') {
-      this.router.navigate(['home/studentProfile']);
+      this.router.navigate(['home/student-profile']);
     } else if (this.loginType == 'Expert') {
       this.router.navigate(['home/profile']);
     }
@@ -330,7 +329,7 @@ export class HomeComponent implements OnInit {
   displaySelectedSubjects() {
     if (this.selectedSubject) {
       this.loginService.setLoginType(this.loginType);
-      this.router.navigate(['searchResults'], {
+      this.router.navigate(['search-results'], {
         queryParams: { subject: this.selectedSubject },
       });
     }
@@ -353,14 +352,12 @@ export class HomeComponent implements OnInit {
        
         this.calculateStudentProfilePercentage();
         this.studentService.setStudentProfileDetails(this.studentProfile);
-        console.log(this.studentServce.getStudentProfileDetails().profilePictureUrl)
         if (this.studentServce.getStudentProfileDetails().profilePictureUrl == null) {
-          console.log(this.profilePictureUrl)
           this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
         }
         this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
           this.studentService.setStudentBookings(res);
-          // this.router.navigate([ 'home/studentDashboard' ]);
+          // this.router.navigate([ 'home/student-dashboard' ]);
         });
         this.initialiseNotifications();
       });

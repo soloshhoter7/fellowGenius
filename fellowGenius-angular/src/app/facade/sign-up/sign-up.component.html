@@ -12,13 +12,13 @@
     <p style="margin:1rem;font-size: large;">Signing you up..</p>
   </div>
   <div class="signup-container" [class]="!isLoading ? '' : 'hideBlock'">
-    <span
+    <!-- <span
       class="material-icons close"
       (click)="toFacadePage()"
       style="cursor: pointer"
     >
       close
-    </span>
+    </span> -->
 
     <div class="signup-header">
       <div class="header-container">
@@ -182,8 +182,9 @@
             href="javascript:;"
             class="forgot-password"
             style="color: #007bff"
+            *ngIf="!verifyEmail"
           >
-            Login Instead
+            Already have an account?
           </a>
           <button class="btn btn-primary" type="submit" [disabled]="!t.valid">
             Next

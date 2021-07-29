@@ -39,7 +39,6 @@ export class NotificationService {
         count++;
       }
     });
-    console.log(count);
     this.increaseNotificationCount(count); 
     this.notificationsChanged.next(this.notificationList.slice());
   }
@@ -52,7 +51,6 @@ export class NotificationService {
     }
     if(this.userId){
       this.httpService.fetchNotifications(this.userId).subscribe((res)=>{
-        console.log('notifications:',res);
         this.setNotification(res);
       });
     }

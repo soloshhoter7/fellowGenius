@@ -126,11 +126,11 @@ export class LoginDialogComponent implements OnInit {
   //to call reset password
   toResetPassword() {
     this.dialogRef.closeAll();
-    this.router.navigate(['resetPassword']);
+    this.router.navigate(['reset-password']);
   }
 
   openConnectPage() {
-      console.log(this.loginService.getLoginType());
+   
       if (this.loginService.getLoginType() != null && this.loginService.getLoginType()=='Learner') {
         this.dialogRef.open(ConnectComponent, {
           height: 'auto',
@@ -166,6 +166,7 @@ export class LoginDialogComponent implements OnInit {
         'close',
         this.config
         );
+        console.log('here')
         this.dialogRef.closeAll();
         this.openConnectPage();
       }
@@ -197,10 +198,9 @@ export class LoginDialogComponent implements OnInit {
   }
   //google login
   prepareLoginButton() {
-    console.log('called')
+  
     if (this.auth2 == null) {
       location.reload();
-      console.log('auth 2 null')
     }
     this.auth2.attachClickHandler(
       this.googleLogIn.nativeElement,
@@ -217,7 +217,6 @@ export class LoginDialogComponent implements OnInit {
           this.hideContainer = 'hideBlock';
           this.loginModel.email = this.socialLogin.email;
           this.loginModel.password = this.socialLogin.id;
-          console.log(this.loginModel);
           this.authService.onLogin(this.loginModel);
           
           this.authService.getAuthStatusListener().subscribe((res)=>{
@@ -247,6 +246,7 @@ export class LoginDialogComponent implements OnInit {
               'close',
               this.config
               );
+              console.log('here');
               this.dialogRef.closeAll();
               this.openConnectPage();
             }
@@ -307,6 +307,7 @@ export class LoginDialogComponent implements OnInit {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
         this.authService.onSignUp(this.registrationModel);
         this.authService.getAuthStatusListener().subscribe((res)=>{
+          console.log('got the result !',res);
           if(res==false){
             this.snackBar.open(
               'registration not successful ! email already exists !',
@@ -316,6 +317,7 @@ export class LoginDialogComponent implements OnInit {
             this.incorrectLoginDetails = true;
             this.dialogRef.closeAll();
           }else if(res==true){
+            console.log('res is true');
             this.isLoading = false;
           this.snackBar.open(
           'Logged in successfully',
@@ -323,6 +325,7 @@ export class LoginDialogComponent implements OnInit {
           this.config
           );
           this.dialogRef.closeAll();
+          console.log('oppenining connect page')
           this.openConnectPage();
           }
         });

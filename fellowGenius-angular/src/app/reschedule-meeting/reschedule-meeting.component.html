@@ -1,0 +1,152 @@
+<div
+  *ngIf="isLoading"
+  style="
+    text-align: center;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto;
+  "
+>
+  <app-loading></app-loading>
+</div>
+<div class="signup-container" [class]="!isLoading ? '' : 'hideBlock'">
+  <span
+    class="material-icons close"
+    (click)="toLoginPage()"
+    style="cursor: pointer"
+  >
+    close
+  </span>
+
+  <div class="signup-header">
+    <div class="header-container" style="margin-bottom:10px">
+      <span class="header-primary">Reschedule</span><br />
+
+      <span class="header-container-secondary">Your Meeting</span>
+    </div>
+    <div class="logo hide"></div>
+    <div class="info-class"></div>
+  </div>
+    <div class="signup-parameter-container">
+        <div *ngIf="!isRescheduled">
+            <div style="padding: 40px" *ngIf="!isTutorAvailable">
+                <div style="text-align: center">
+                  <h1>Expert is not available right now</h1>
+                  <h2>Check Back Later</h2>
+                </div>
+              </div>
+              <div *ngIf="isTutorAvailable">
+                <div class="connect-container">
+                  <div class="connect-header">
+                    <!-- <div style="float: right">
+                      <button class="closeIconButton" title="close" (click)="closeNav()">
+                        <img
+                          src="../../../../assets/icons/close.svg"
+                          style="height: 15px"
+                        />
+                      </button>
+                    </div> -->
+                    <div style="margin-bottom: 15px">
+                      <h5 style="margin: 0; color: #7d0f7d">Reschedule your meeting by choosing the suitable time.</h5>
+                    </div>
+                  </div>
+          
+                  <div class="connect-body">
+                    <div>
+                      <label style="margin-bottom: 10px">Choose Time<sup>*</sup></label>
+                      <p
+                        style="
+                          font-weight: 500;
+                          margin-top: 5px;
+                          color: #892687;
+                          display: inline;
+                          margin-left: 10px;
+                        "
+                      ></p>
+                      <div class="errorMessage">{{ errorMessage }}</div>
+                    </div>
+                    <div>
+                      <div class="row" style="width: 510px">
+                        <div class="col-sm-6">
+                          <div>
+                            <mat-form-field appearance="fill">
+                              <mat-label>Choose Date</mat-label>
+                              <mat-select
+                                [(value)]="selectedDate"
+                                (selectionChange)="dateChange()"
+                              >
+                                <mat-option
+                                  *ngFor="let todayDate of scheduleDates; let z = index"
+                                  [value]="todayDate"
+                                >
+                                  {{ fullDate[z] | date: "fullDate" }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div *ngIf="noSchedule">
+                            <span style="font-size: large"> No available schedules</span>
+                          </div>
+                          <div *ngIf="!noSchedule">
+                            <mat-form-field appearance="fill" style="width: 95px">
+                              <mat-label>Start</mat-label>
+                              <mat-select
+                                [(value)]="startTimeValue"
+                                (selectionChange)="startSlotChange()"
+                              >
+                                <mat-option
+                                  *ngFor="let time of startSlots; let i = index"
+                                  [value]="i"
+                                >
+                                  <span *ngIf="selectedDate.date == time.date"
+                                    >{{ time.hours | timeConverter }}:{{
+                                      time.minutes | zero
+                                    }}
+                                    {{ time.hours | timeMedian }}</span
+                                  >
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="connect-footer">
+                    <div style="float: right">
+                      <button
+                        class="btn btn-primary"
+                        (click)="onBooking()"
+                      >
+                        Reschedule
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div *ngIf="isRescheduled">
+            <div *ngIf="rescheduledStatus" style="text-align: center">
+                <img
+                  src="../../assets/images/check.svg"
+                  style="width: 100px; height: 100px; margin: 20px"
+                  alt=""
+                />
+                <h5>Your meeting has been rescheduled successfully !</h5>
+              </div>
+              <div *ngIf="!rescheduledStatus" style="text-align: center">
+                  <img
+                    src="../../assets/images/close.png"
+                    style="width: 100px; height: 100px; margin: 20px"
+                    alt=""
+                  />
+                  <h5>Oops !</h5>
+                <h5>{{errorText}}</h5>
+              </div>
+        </div>
+    </div>
+    
+    
+  </div>

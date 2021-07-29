@@ -46,11 +46,14 @@
               type="button"
               class="btn btn-primary"
               (click)="acceptBooking(element)"
+              [disabled]="element.isRescheduled=='requested'"
             >
               <i class="fa fa-spinner fa-spin" *ngIf="isLoading"></i> Accept
             </button>
-            <button type="button" class="btn btn-secondary" disabled>
-              Re-Schedule
+            <button type="button" class="btn btn-secondary" (click)="requestToReschedule(element)" *ngIf="element.isRescheduled!='true'" [disabled]="element.isRescheduled=='requested'">
+              <i class="fa fa-spinner fa-spin" *ngIf="isRescheduleLoading" style="margin-right: 3px;"></i>
+              <span *ngIf="element.isRescheduled=='requested'">Requested to Re-Schedule</span>
+              <span *ngIf="element.isRescheduled=='false'">Request to Re-Schedule</span>
             </button>
             <!-- <button type="button" class="btn btn-tertiary">Reject</button> -->
           </div>
@@ -100,7 +103,7 @@
             </div>
           </div>
           <div class="widget-footer">
-            <a href="javascript:;" routerLink="tutorSchedule">view more</a>
+            <a href="javascript:;" routerLink="tutor-schedule">view more</a>
           </div>
         </div>
       </div>

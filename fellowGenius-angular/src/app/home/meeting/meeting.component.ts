@@ -47,6 +47,7 @@ import { CookieService } from 'ngx-cookie-service';
 import * as jwt_decode from 'jwt-decode';
 import { StudentService } from 'src/app/service/student.service';
 import { TutorService } from 'src/app/service/tutor.service';
+import { environment } from 'src/environments/environment';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -156,6 +157,7 @@ export class MeetingComponent implements OnInit {
   userName;
   peerName;
   profilePictureUrl;
+  backendUrl = environment.BACKEND_URL;
   userEmail;
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -165,14 +167,13 @@ export class MeetingComponent implements OnInit {
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-    console.log('back button pressed')
     if(this.meetingState=='pre-meeting'){
       this.preLocalStream.stop();
       this.preLocalStream.close();
       if (this.meeting.role == 'host') {
-        this.router.navigate(['home/tutorDashboard']);
+        this.router.navigate(['home/tutor-dashboard']);
       } else if (this.meeting.role == 'student') {
-        this.router.navigate(['home/studentDashboard']);
+        this.router.navigate(['home/student-dashboard']);
       }
     }
   }
@@ -263,6 +264,7 @@ export class MeetingComponent implements OnInit {
         video: true,
         screen: false,
       });
+      this.localStream.setVideoProfile('720p_2')
       this.assignLocalStreamHandlers(this.localStream);
       let localStreamId:string = this.localStream.getId().toString();
       this.initLocalStream(()=>{
@@ -285,6 +287,7 @@ export class MeetingComponent implements OnInit {
       video: false,
       screen: false,
     });
+    this.localStream.setVideoProfile('720p_2')
     this.assignLocalStreamHandlers(this.localStream);
     let localStreamId:string = this.localStream.getId().toString();
     this.initLocalStream(()=>{
@@ -379,11 +382,11 @@ export class MeetingComponent implements OnInit {
   }
   handleRefresh() {
     if (jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
-      this.router.navigate(['home/studentDashboard']);
+      this.router.navigate(['home/student-dashboard']);
     } else if (
       jwt_decode(this.cookieService.get('token'))['ROLE'] == 'Expert'
     ) {
-      this.router.navigate(['home/tutorDashboard']);
+      this.router.navigate(['home/tutor-dashboard']);
     }
   }
   calculateRemainingTime() {
@@ -439,15 +442,18 @@ export class MeetingComponent implements OnInit {
       this.localStream.close();
     }
     if (this.meeting.role == 'host') {
-      this.router.navigate(['home/tutorDashboard']);
+      this.router.navigate(['home/tutor-dashboard']);
     } else if (this.meeting.role == 'student') {
-      this.router.navigate(['home/studentDashboard']);
+      this.router.navigate(['home/student-dashboard']);
     }
     // this.router.navigate([ 'home' ]);
   }
   limitStream() {
     this.remoteJoined = true;
     var before10Minutes = this.timelimit - 10 * 60;
+    if(this.subscription!=null){
+      this.subscription.unsubscribe();
+    }
     this.subscription = numbers.subscribe((x) => {
       this.timeLeft = this.timelimit - x;
       if (x == before10Minutes) {
@@ -925,7 +931,7 @@ export class MeetingComponent implements OnInit {
   connectToMeetingWebSocket(bookingId) {
     // let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
     // let socket = new SockJS('https://backend.fellowgenius.com/fellowGenius');
-    let socket = new SockJS(' https://fellowgenius-spring-dev.azurewebsites.net/fellowGenius');
+    let socket = new SockJS(this.backendUrl+'/fellowGenius');
    
     // let socket = new SockJS('http://localhost:5000/fellowGenius');
     // let socket = new SockJS('http://localhost:8080/fellowGenius');

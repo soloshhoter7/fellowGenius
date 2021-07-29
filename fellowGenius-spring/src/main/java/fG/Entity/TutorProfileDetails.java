@@ -47,6 +47,7 @@ public class TutorProfileDetails {
 	Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
+	Integer rescheduleRequests=0;
 	public Integer getTid() {
 		return tid;
 	}
@@ -175,6 +176,13 @@ public class TutorProfileDetails {
 	}
 	public void setBookingId(Integer bookingId) {
 		this.bookingId = bookingId;
+	}
+	
+	public Integer getRescheduleRequests() {
+		return rescheduleRequests;
+	}
+	public void setRescheduleRequests(Integer rescheduleRequests) {
+		this.rescheduleRequests = rescheduleRequests;
 	}
 	@Override
 	public String toString() {

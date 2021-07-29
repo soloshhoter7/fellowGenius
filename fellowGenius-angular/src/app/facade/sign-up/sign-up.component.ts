@@ -97,11 +97,11 @@ export class SignUpComponent implements OnInit {
   }
 
   toSignUpPage() {
-    this.router.navigate(['signUp']);
+    this.router.navigate(['sign-up']);
   }
 
   toFacadePage() {
-    this.router.navigate(['facade']);
+    this.router.navigate(['']);
   }
   toHome() {
     this.router.navigate(['home']);
@@ -110,18 +110,12 @@ export class SignUpComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
-    // console.log('dialog maine khola hai')
     dialogRef.afterClosed().subscribe((data) => {
-      // console.log('hereeeee');
-      // console.log('data=>',data);
       this.role = data.role;
       this.registrationModel.role=data.role;
       this.registrationModel.password = data.password;
-      console.log(this.registrationModel);
       this.authService.saveSocialLogin(this.registrationModel);
       this.authService.getAuthStatusListener().subscribe((res)=>{
-        console.log('auth listener result!')
-        console.log(res);
         if(res==true){
           if(this.loginService.getLoginType()=='Learner'){
             this.toFacadePage();
@@ -183,7 +177,6 @@ export class SignUpComponent implements OnInit {
         });
     } else {
       if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-        console.log('registration model in sign up',this.registrationModel);
         this.authService.onSignUp(this.registrationModel);
         
         this.authService.getAuthStatusListener().subscribe((res)=>{
@@ -230,7 +223,7 @@ export class SignUpComponent implements OnInit {
         this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
           if (!res) {
             this.zone.run(() => {
-              console.log('opening thank you page');
+             
               this.openThankYouPage();
             });
           } else {

@@ -52,6 +52,6 @@ export class DeletePopupComponent implements OnInit {
 		});
 
 		this.dialog.closeAll();
-		this.router.navigate([ 'home/studentDashboard' ]);
+		this.router.navigate([ 'home/student-dashboard' ]);
 	}
 }

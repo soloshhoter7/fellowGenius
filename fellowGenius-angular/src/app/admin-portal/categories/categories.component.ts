@@ -22,10 +22,10 @@ export class CategoriesComponent implements OnInit {
   categories:Category[]=[];
   subCategories:Category[] =[];
   addCategory(form:NgForm){
-    console.log(form.value);
+   
     let categ = new Category();
     categ.category = form.value.categoryName;
-    console.log(categ);
+    
     this.httpService.addNewCategory(categ).subscribe((res)=>{
       if(res==true){
         this.categories.push(categ);
@@ -57,9 +57,9 @@ export class CategoriesComponent implements OnInit {
       }
       this.httpService.getAllSubCategories().subscribe((res)=>{
         this.subCategories = res;
-        console.log(this.subCategories);
+    
       })
-     console.log(this.categories);
+     
     });
   }
   

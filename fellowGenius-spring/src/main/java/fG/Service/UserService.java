@@ -63,6 +63,7 @@ import fG.Model.registrationModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryCategory;
+import fG.Repository.repositoryExpertiseAreas;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
@@ -126,6 +127,9 @@ public class UserService implements UserDetailsService {
 	repositoryBooking repBooking;
 	
 	@Autowired
+	repositoryExpertiseAreas repExpertiseAreas;
+	
+	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
 	@Autowired
@@ -135,12 +139,12 @@ public class UserService implements UserDetailsService {
 	public String validateUser(String email, String password) {
 		Users userLogin = repUsers.emailExist(email);
 		Date lastLogin = new Date();
-		userLogin.setLastLogin(lastLogin);
 		UserActivity userActivity = new UserActivity();
 	
 		if (userLogin != null) {
 			userActivity.setUserId(userLogin);
 			userActivity.setType("login");
+			userLogin.setLastLogin(lastLogin);
 			if (encoder.matches(password, userLogin.getPassword())) {
 				repUsers.save(userLogin);
 				repUserActivity.save(userActivity);
@@ -186,6 +190,7 @@ public class UserService implements UserDetailsService {
 		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
 			return false;
 		}
+		System.out.println(registrationModel);
 		if (registrationModel.getRole().equals("Learner")) {
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());
@@ -236,7 +241,7 @@ public class UserService implements UserDetailsService {
 				tutProfileDetails.setLessonCompleted(0);
 				tutProfileDetails.setRating(100);
 				tutProfileDetails.setReviewCount(0);
-				tutProfileDetails.setPrice1("400");
+//				tutProfileDetails.setPrice1("400");
 				tutProfileDetails.setBookingId(tutorProfile.getBookingId());
 				dao.saveTutorID(tutProfileDetails);
 				// creating tutor schedule tuple
@@ -343,6 +348,7 @@ public class UserService implements UserDetailsService {
 	// saving updating details of tutor
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
+		System.out.println("here =>> "+tutorModel);
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 		TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
 		tutProfileDetails.setTid(tutorModel.getTid());
@@ -368,12 +374,12 @@ public class UserService implements UserDetailsService {
 		// for setting the expertise areas
 		Integer minPrice = Integer.MAX_VALUE;
 		Integer maxPrice = 0;
-		if (tutorProfileDetailsLoaded.getPrice1() != "400") {
-			if (tutorProfileDetailsLoaded.getPrice2() != null && tutorProfileDetailsLoaded.getPrice1() != null) {
-				minPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice2());
-				maxPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice1());
-			}
-		}
+//		if (tutorProfileDetailsLoaded.getPrice1() != "400") {
+//			if (tutorProfileDetailsLoaded.getPrice2() != null && tutorProfileDetailsLoaded.getPrice1() != null) {
+//				minPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice2());
+//				maxPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice1());
+//			}
+//		}
 
 		for (expertise area : tutorModel.getAreaOfExpertise()) {
 			ExpertiseAreas subject = new ExpertiseAreas();
@@ -386,24 +392,29 @@ public class UserService implements UserDetailsService {
 				if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
 						.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst().isPresent()) {
 					tutProfileDetails.getAreaOfExpertise().add(subject);
-					if (area.getPrice() > maxPrice) {
-						maxPrice = area.getPrice();
-					}
-					if (area.getPrice() < minPrice) {
-						minPrice = area.getPrice();
-					}
+				
 				}
 				
 			}
 		}
-		if (maxPrice != 0 && minPrice != Integer.MAX_VALUE) {
-			tutProfileDetails.setPrice1(minPrice.toString());
-			tutProfileDetails.setPrice2(maxPrice.toString());
-		}
+		
+		
+		
+		
 
 //		tutProfileDetails.setAreaOfExpertise(areas);
 //		System.out.println(tutProfileDetails);
 		dao.updateTutorProfile(tutProfileDetails);
+		
+		//to update the price of all the expertise of a user to the price1
+		List<ExpertiseAreas> exp = repExpertiseAreas.searchExpertiseAreasByUserId(tutProfileDetails.getTid());
+		
+		if(exp!=null) {
+			for(ExpertiseAreas e:exp) {
+				e.setPrice(Integer.valueOf(tutProfileDetails.getPrice1()));
+				dao.updateExpertiseArea(e);
+			}
+		}
 //		Integer profileCompleted = dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
 //		// updating profile completed percentage
 //		if (profileCompleted < 50) {
@@ -733,58 +744,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean sendResetLink(String email) {
-		Users user = repUsers.emailExist(email);
-		if (user != null) {
-			String token = user.getUserId().toString();
-			String directUrl = "https://fellowgenius.com/#/resetPassword?token="+token;
-			System.out.println(directUrl);
-			String to = email;
-			String from = "fellowGenius.tech@gmail.com";
-
-			Properties props = new Properties();
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.port", 587);
-
-			Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("fellowgenius.tech@gmail.com", "fellowG12091505.");
-				}
-
-			});
-
-			try {
-				MimeMessage message = new MimeMessage(session);
-
-				message.setFrom(new InternetAddress(from));
-
-				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-				message.setSubject("Reset your password");
-
-//				message.setContent(
-//						"<html> <head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0px 0px 5px rgb(199, 203, 217, 0.7);width: 100%;height: auto;text-align: center;padding: 20px;margin-top: 10px;}.logo{color: #241084;font-weight: 500;line-height: 2rem;font-size: xx-large;}</style> </head><body> <div class=\"container-fluid\"> <div class=\"row\">"
-//						+ " <div class=\"col-sm-3\"></div><div class=\"col-sm-6\"> <div class=\"Box\"> <div class=\"box-header\"> <h1 class=\"logo\">fellowGenius</h1> </div><div class=\"box-body\">"
-//						+ " <h2>Reset your password</h2> <p>Please click on the link mentioned below to verify and reset your password</p>"
-//						+ "<a href=\""+directUrl+"\" class=\"btn btn-primary\">Reset Link</a> "
-//						+ "</div></div></div><div class=\"com-sm-3\"></div></div></div></body></html>",
-//						"text/html");
-                message.setContent("<html><head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0 8px 16px 0 #90a4ae; width: 100%; height: auto; text-align: center; padding: 20px; margin-top: 10px; background: url(https://fellowgenius.com/search_right_bg.7af30faa440a7e6ab2bb.svg) no-repeat; background-size: contain; border: 1px solid #7d0f7d; border-radius: 8px; width: 650px; margin: 0 auto; background-position: left top;}.logo{background: url(https://fellowgenius.com/logo.2dbc598173218fe92921.svg) no-repeat; background-size: contain; height: 100px; display: block; float: right; width: 100px;}tr{padding: 10px;}td{padding: 5px; margin-right: 5px;}</style></head><body> <div class=\"Box\"> <div class=\"box-header\"> <span class=\"logo\"></span> <span style=\"margin-bottom: 20px;color:#892687;width:100%;text-align: center;font-size:16px;font-weight:bold;text-transform: uppercase;\">Reset your password !</span> </div>"
-                		+ "<div style=\"padding:20px;width: 350px; margin: 0 auto;\"> <p>Please click on the link mentioned below to verify and reset your password</p>"
-                		+ "<a href=\""+directUrl+"\" class=\"btn btn-primary\">Reset Link</a> "
-                		+ "</div><p style=\"margin-top: 30px; font-size: 10px; text-align: center; width: 100%;\">This is an auto-generated message please don't reply back.</p></div><div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-2\"></div><div class=\"col-sm-7\"> </div><div class=\"com-sm-3\"></div></div></div></body></html>","text/html");
-				Transport.send(message);
-
-			} catch (MessagingException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
+		return mailService.sendResetMail(email);
 	}
 
 	public boolean updatePassword(String userId, String password) {

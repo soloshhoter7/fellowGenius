@@ -43,6 +43,7 @@ import { AppInfo } from 'src/app/model/AppInfo';
 export class ProfileComponent implements OnInit {
   addExpertise = new expertise();
   profileError: string;
+  pricePerHourError: boolean=false;
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -150,13 +151,11 @@ export class ProfileComponent implements OnInit {
   }
 
   getEarningAppInfo(){
-    console.log('getting app info')
     this.httpService.getEarningAppInfo().subscribe((res)=>{
       this.appInfo=res;
     });
   }
   onPercentChange(percent: number) {
-    console.log('here',percent);
     let gstMultiplier = 1+(parseFloat(this.appInfo[1].value)/100);
     let commissionMultiplier = 1+(parseFloat(this.appInfo[0].value)/100);
     // console.log(gstMultiplier,this.appInfo[0].value)
@@ -216,8 +215,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     if(this.tutorProfileDetails.description!=null)completeFields+=1;
     if(this.tutorProfileDetails.speciality!=null)completeFields+=1;
     if(this.tutorProfileDetails.linkedInProfile!=null)completeFields+=1;
-    console.log('completed fields =>'+completeFields+'/'+totalFields);
-    console.log(this.round(completeFields/totalFields)*100);
     return this.round(completeFields/totalFields)*100
   }
   saveExpertBasicProfile(form: any) {
@@ -245,9 +242,8 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.tutorProfileDetails.description = form.value.description;
       this.tutorProfileDetails.speciality = form.value.speciality;
       this.tutorProfileDetails.bookingId = this.tutorService.getTutorProfileDetails().bookingId;
-
-      console.log(this.tutorProfile);
-      console.log(this.tutorProfileDetails);
+      console.log(this.tutorProfileDetails)
+      
       this.calculateProfileCompleted();
       this.httpService
         .updateTutorProfile(this.tutorProfile)
@@ -269,7 +265,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
                 this.config
               );
               // this.advancedProfileToggle();
-              this.router.navigate(['/home/tutorDashboard']);
+              this.router.navigate(['/home/tutor-dashboard']);
             });
         });
     }else {
@@ -304,7 +300,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
               'close',
               this.config
             );
-            this.router.navigate(['/home/tutorDashboard']);
+            this.router.navigate(['/home/tutor-dashboard']);
           });
       } else {
         this.errorText = 'Enter atleast one area of Expertise !';
@@ -508,7 +504,8 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
       this.addExpertise.category = this.selectedCategory;
       this.addExpertise.subCategory = this.selectedSubCategory;
-      this.addExpertise.price = this.priceForExpertise;
+      if(this.tutorProfileDetails.price1!=null){
+        this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
       this.expertises.push(this.addExpertise);
       this.selectedCategory = '';
       this.selectedSubCategory = '';
@@ -517,6 +514,10 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       if (this.duplicateExpertiseArea == true) {
         this.duplicateExpertiseArea = false;
       }
+      }else{
+        this.pricePerHourError=true;
+      }
+      
     } else {
       this.duplicateExpertiseArea = true;
       this.selectedExpertise = '';

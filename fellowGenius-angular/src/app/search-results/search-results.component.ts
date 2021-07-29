@@ -194,7 +194,7 @@ export class SearchResultsComponent implements OnInit {
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
   onSignUp() {
-    this.router.navigate(['signUp']);
+    this.router.navigate(['sign-up']);
   }
   getSubCategories(){
     if(this.selectedSubject!=null){
@@ -294,7 +294,7 @@ export class SearchResultsComponent implements OnInit {
 
   viewProfile(profile: tutorProfileDetails) {
     this.profileService.setProfile(profile);
-    this.router.navigate(['viewTutors'], {
+    this.router.navigate(['view-tutors'], {
       queryParams: { page: profile.bookingId },
     });
   }

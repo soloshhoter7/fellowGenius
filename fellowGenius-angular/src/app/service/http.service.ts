@@ -262,7 +262,16 @@ export class HttpService {
       }
     );
   }
-
+  
+  fetchBookingStatus(bid:number):Observable<Object>{
+    return this.http.get(this.backendUrl+'/fellowGenius/meeting/fetchBookingStatus',
+    {
+      params:{
+        bid:bid.toString()
+      },
+    },
+    );
+  }
   getTutorProfileDetails(tid: number): Observable<tutorProfileDetails> {
     return this.http.get<tutorProfileDetails>(
       this.backendUrl+'/fellowGenius/getTutorProfileDetails',
@@ -318,6 +327,50 @@ export class HttpService {
     );
   }
 
+  //delete My Booking
+  deleteBookingFromUrl(token,bid: number):Observable<Object> {
+    return this.http.get<Object>(
+      this.backendUrl+'/fellowGenius/meeting/deleteBookingFromUrl',
+      {
+        params: {
+          token:token,
+          bid: bid.toString(),
+        },
+      }
+    );
+  }
+
+  //delete My Booking
+  canRescheduleBooking(token,bid: number):Observable<Object> {
+    return this.http.get<Object>(
+      this.backendUrl+'/fellowGenius/meeting/rescheduleMyBooking',
+      {
+        params: {
+          token:token,
+          bid: bid.toString(),
+        },
+      }
+    );
+  }
+
+   //delete My Booking
+   rescheduleBooking(booking:bookingDetails):Observable<Object> {
+    return this.http.post(
+      this.backendUrl+'/fellowGenius/meeting/updateRescheduledBooking',
+      booking
+    );
+  }
+
+  requestToReschedule(bid:number):Observable<Object>{
+    return this.http.get<Object>(
+      this.backendUrl+'/fellowGenius/meeting/requestToReschedule',
+      {
+        params: {
+          bid: bid.toString(),
+        },
+      }
+    );
+  }
   //for fetching  approved meetings student
   fetchApprovedMeetings(sid: number) {
     return this.http.get<bookingDetails[]>(
@@ -493,6 +546,8 @@ export class HttpService {
       }
     );
   }
+
+
 
   subtractArea(userId, role, subject): Observable<Object> {
     return this.http.get(

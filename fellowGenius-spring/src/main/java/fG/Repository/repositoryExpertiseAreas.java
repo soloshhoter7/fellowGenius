@@ -41,5 +41,9 @@ public interface repositoryExpertiseAreas extends JpaRepository<ExpertiseAreas,L
 
 		@Query(value = "SELECT user_id from expertise_areas WHERE subject = ?1", nativeQuery = true)
 		TutorProfileDetails searchBySubjectTutors(String subject);
+		
+		@Query(value = "SELECT * from expertise_areas WHERE user_id = ?1", nativeQuery = true)
+		List<ExpertiseAreas> searchExpertiseAreasByUserId(int userId);
+
 
 }

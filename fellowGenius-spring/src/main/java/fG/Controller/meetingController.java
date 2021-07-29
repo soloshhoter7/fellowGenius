@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,18 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fG.Configuration.JwtUtil;
 import fG.Entity.BookingDetails;
 import fG.Entity.ScheduleData;
 import fG.Model.AuthenticationResponse;
 import fG.Model.BookingDetailsModel;
+import fG.Model.BookingStatus;
+import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Service.MeetingService;
 import fG.Service.UserService;
 
 @RestController
-//@CrossOrigin(origins = "${crossOrigin}")
-@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "${crossOrigin}")
+//@CrossOrigin(origins = "https://fellowgenius.com")
 
 @RequestMapping("/fellowGenius/meeting")
 public class meetingController {
@@ -34,6 +36,9 @@ public class meetingController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	// for saving booking
 	@PreAuthorize("hasAuthority('Learner')")
@@ -46,11 +51,58 @@ public class meetingController {
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value= "/deleteMyBooking")
 	@ResponseBody
-	public boolean deleteMyBooking(String bid){
+	public ResponseModel deleteMyBooking(String bid) throws ParseException{
 		Integer bookingId = Integer.valueOf(bid);
 		return meetingService.deleteMyBooking(bookingId);
 	}
-	// for finding tutor pending Bookings
+	
+	
+	@RequestMapping(value= "/deleteBookingFromUrl")
+	@ResponseBody
+	public ResponseModel deleteBookingFromUrl(String token,String bid) throws ParseException{
+		System.out.println(token+"    "+bid);
+		Integer bookingId = Integer.valueOf(bid);
+		String userId = null;
+		if(token!=null) {
+			System.out.println("entered here");
+			userId =  jwtUtil.extractUsername(token);
+			return meetingService.deleteBookingFromUrl(userId,bookingId);
+		}else {
+			return null;
+		}	
+	}
+	
+	@PreAuthorize("hasAuthority('Expert')")
+	@RequestMapping(value= "/requestToReschedule")
+	@ResponseBody
+	public boolean requestToReschedule(String bid) throws ParseException{
+		Integer bookingId = Integer.valueOf(bid);
+		return meetingService.requestToReschedule(bookingId);
+		
+	}
+	
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value= "/rescheduleMyBooking")
+	@ResponseBody
+	public ResponseModel rescheduleMyBooking(String token,String bid) throws ParseException{
+		Integer bookingId = Integer.valueOf(bid);
+		String userId = null;
+		if(token!=null) {
+			userId =  jwtUtil.extractUsername(token);
+			return meetingService.canRescheduleMyBooking(userId,bookingId);
+		}else {
+			return null;
+		}	
+	}
+	
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value= "/updateRescheduledBooking")
+	@ResponseBody
+	public ResponseModel updateRescheduledBooking(@RequestBody BookingDetailsModel booking) throws ParseException{
+		return meetingService.updateRescheduledBooking(booking);
+	}
+	
+	// for finding tutor pending Bookingss
 	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/findTutorBookings", produces = { "application/json" })
 	@ResponseBody
@@ -64,7 +116,18 @@ public class meetingController {
 	public boolean updateBookingStatus(String bid, String approvalStatus) {
 		return meetingService.updateBookingStatus(bid, approvalStatus);
 	}
-
+	
+	// for getting booking status of booking
+//	@PreAuthorize("hasAuthority('Expert')")
+		@RequestMapping(value = "/fetchBookingStatus", produces = { "application/json" })
+		@ResponseBody
+		public BookingStatus fetchBookingStatus(String bid ) {
+		
+			BookingStatus bk=new BookingStatus();
+			bk.setStatus(meetingService.fetchBookingStatus(bid));
+			return bk;
+		}
+	
 	// find student pending bookings
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/findStudentBookings")
@@ -202,4 +265,10 @@ public class meetingController {
 	public List<BookingDetailsModel> fetchExpertRecentReviews(String tid){
 		return meetingService.fetchExpertRecentReviews(Integer.valueOf(tid));
 	}
+	
+//	@RequestMapping(value="/hitit")
+//	@ResponseBody
+//	public void hit(){
+//		meetingService.calculateRemainingTimeToCancel();
+//	}
 }

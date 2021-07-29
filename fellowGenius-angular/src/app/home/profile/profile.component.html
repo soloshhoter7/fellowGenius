@@ -257,6 +257,22 @@
       </div>
       <!-- Educational Qualifications -->
       <div class="col-md-5">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="chooseCategory">Price per hour<sup>*</sup></label>
+          <input
+            type="number"
+            class="form-control"
+            name="price"
+            placeholder="Enter price per hour"
+            [(ngModel)]="tutorProfileDetails.price1"
+            #expertisePrice="ngModel"
+            (ngModelChange)="onPercentChange($event)"
+          />
+          <p style="margin:10px" *ngIf="expertisePrice.dirty&&tutorProfileDetails.price1">
+            Actual Earning per hour : {{actualEarning}}<br>
+            GST charges : {{GSTValue}} | Platform fees :{{commission}} </p>
+        </div>
+        
         <div class="form-group">
           <label for="expertise" style="width: 100%"
             >Area of Expertise<sup>*</sup></label
@@ -304,20 +320,7 @@
               </select>
             </div>
 
-              <div class="form-group" style="margin-bottom: 0">
-                <input
-                  type="number"
-                  class="form-control"
-                  name="price"
-                  placeholder="Enter price per hour"
-                  [(ngModel)]="priceForExpertise"
-                  #expertisePrice="ngModel"
-                  (ngModelChange)="onPercentChange($event)"
-                />
-              </div>
-              <p style="margin:10px" *ngIf="expertisePrice.dirty&&priceForExpertise">
-                Actual Earning per hour : {{actualEarning}}<br>
-                GST charges : {{GSTValue}} | fellowgenius commission:{{commission}} </p>
+            
             </div>
             <div
               style="
@@ -329,7 +332,7 @@
               "
             >
               <button
-                [disabled]="!selectedCategory || !selectedSubCategory || !priceForExpertise"
+                [disabled]="!selectedCategory || !selectedSubCategory "
                 type="button"
                 class="btn btn-success btn-circle btn-sm"
                 (click)="saveExpertise()"
@@ -344,8 +347,7 @@
             *ngFor="let expertise of expertises; let i = index"
           >
             <div class="tags">
-              {{ expertise.category }} : {{expertise.subCategory}} &nbsp; - &nbsp; ₹
-              {{ expertise.price }}/hr
+              {{ expertise.category }} : {{expertise.subCategory}} 
             </div>
             <button
               type="button"
@@ -362,6 +364,12 @@
             style="color: red; margin-top: 10px"
           >
             Expertise already exists !
+          </div>
+          <div
+            *ngIf="pricePerHourError"
+            style="color: red; margin-top: 10px"
+          >
+            Please enter your price per hour first !
           </div>
           <p class="errorMessage">{{ errorText }}</p>
         </div>

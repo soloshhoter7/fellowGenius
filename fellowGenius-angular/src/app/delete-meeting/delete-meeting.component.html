@@ -1,0 +1,64 @@
+<div
+  *ngIf="isLoading"
+  style="
+    text-align: center;
+    margin-top: 20%;
+    margin-left: auto;
+    margin-right: auto;
+  "
+>
+  <app-loading></app-loading>
+</div>
+<div class="signup-container" [class]="!isLoading ? '' : 'hideBlock'">
+  <span
+    class="material-icons close"
+    (click)="toLoginPage()"
+    style="cursor: pointer"
+  >
+    close
+  </span>
+
+  <div class="signup-header">
+    <div class="header-container" style="margin-bottom:10px">
+      <span class="header-primary">Cancel</span><br />
+
+      <span class="header-container-secondary">Your Meeting</span>
+    </div>
+    <div class="logo hide"></div>
+    <div class="info-class"></div>
+  </div>
+    <div class="signup-parameter-container">
+        <div *ngIf="!isDeleted">
+            <div>
+            <p style="font-size: larger;">Are you sure you want to cancel the booking ?</p>
+            </div>
+            <div>
+                <button class="btn btn-secondary" (click)="close()" style="margin-right: 10px;">No</button>
+                <button class="btn btn-primary" (click)="deleteBooking()">Yes</button>
+            </div>
+        </div>
+        <div *ngIf="isDeleted">
+            <div *ngIf="cancelledStatus" style="text-align: center">
+                <img
+                  src="../../assets/images/check.svg"
+                  style="width: 100px; height: 100px; margin: 20px"
+                  alt=""
+                />
+                <h5>Your meeting has been cancelled successfully !</h5>
+                <h5>Refund corresponding to Meeting has been processed !</h5>
+              </div>
+              <div *ngIf="!cancelledStatus" style="text-align: center">
+                  <img
+                    src="../../assets/images/close.png"
+                    style="width: 100px; height: 100px; margin: 20px"
+                    alt=""
+                  />
+                  <h5>Oops !</h5>
+                <h5>{{errorText}}</h5>
+              </div>
+        </div>
+    </div>
+    
+    
+  </div>
+

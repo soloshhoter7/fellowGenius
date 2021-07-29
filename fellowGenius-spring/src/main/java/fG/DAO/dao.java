@@ -172,7 +172,10 @@ public class dao {
 	public void updateTutorProfile(TutorProfileDetails tutor) {
 		repTutorProfileDetails.save(tutor);
 	}
-
+	
+	public void updateExpertiseArea(ExpertiseAreas exp) {
+		repExpertiseAreas.save(exp);
+	}
 	// for getting tutors list whose profile completed is 100% for finding tutors 
 	public List<TutorProfileDetails> getTutorList(String subject) {
 		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();

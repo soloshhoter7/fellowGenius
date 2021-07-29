@@ -277,7 +277,7 @@ export class ConnectComponent implements OnInit {
             this.config
           );
           this.dialogRef.closeAll();
-          this.router.navigate(['home/studentDashboard'])
+          this.router.navigate(['home/student-dashboard'])
         }
       });
     }

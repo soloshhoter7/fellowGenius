@@ -6,16 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.TimeZone;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -27,12 +18,14 @@ import fG.DAO.MeetingDao;
 import fG.DAO.dao;
 import fG.Entity.BookingDetails;
 import fG.Entity.Notification;
-import fG.Entity.StudentProfile;
-import fG.Entity.TutorProfile;
+import fG.Entity.TutorProfileDetails;
 import fG.Model.BookingDetailsModel;
+import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
+import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryNotification;
+import fG.Repository.repositoryTutorProfileDetails;
 
 @Service
 public class MeetingService {
@@ -46,8 +39,14 @@ public class MeetingService {
 	dao userDao;
 	
 	@Autowired
+	repositoryTutorProfileDetails repTutorProfileDetails;
+	
+	@Autowired
 	ScheduleService scheduleService;
 
+	@Autowired
+	UserService userService;
+	
 	@Autowired
 	repositoryBooking repBooking;
 	
@@ -56,6 +55,9 @@ public class MeetingService {
 	
 	@Autowired
 	MailService mailService;
+	
+	@Autowired
+	repositoryAppInfo repAppInfo;
 	
 	public void saveNotification(JsonObject msg) {
 		Notification notification = new Notification(
@@ -204,11 +206,40 @@ public class MeetingService {
 	}
 
 	// for deleting the booking if it is not accepted by the teacher
-	public boolean deleteMyBooking(Integer bookingId) {
-		return meetingDao.deleteMyBooking(bookingId);
-		
+	public ResponseModel deleteMyBooking(Integer bookingId) throws ParseException {
+		Integer remainingTime = calculateRemainingTimeToCancel(repBooking.bidExists(bookingId));
+		Integer limitTime = Integer.valueOf(repAppInfo.keyExist("refund_time").getValue());
+		if(remainingTime>=limitTime) {
+			if(meetingDao.deleteMyBooking(bookingId)) {
+				return new ResponseModel("booking deleted successfully");
+			}else {
+				return new ResponseModel("booking can't be deleted");
+			}
+		}else {
+			return new ResponseModel("delete time has been exceeded");
+		}		
 	}
 	
+	public Integer calculateRemainingTimeToCancel(BookingDetails bk) throws ParseException {
+		Integer timeRemaining=0;
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+		//todayDate string
+		 Date todayTime = new Date();
+		 System.out.println("date ===>"+bk.getDateOfMeeting());
+		 Date meetingTime = formatter.parse(bk.getDateOfMeeting());
+		 meetingTime.setHours(bk.getStartTimeHour());
+		 meetingTime.setMinutes(bk.getStartTimeMinute());
+		 System.out.println(todayTime);
+		 System.out.println(meetingTime);
+		 
+		 long difference_In_Time = meetingTime.getTime()-todayTime.getTime();
+		 long difference_In_Minutes =(difference_In_Time/(1000*60));
+		 System.out.println(difference_In_Minutes);
+		return (int) difference_In_Minutes;
+	}
 	// to check if the booking is Valid
 	public boolean isBookingValid(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date) {
 		ArrayList<BookingDetails> tutorBookings = (ArrayList<BookingDetails>) meetingDao.fetchApprovedListTutor(tid);
@@ -316,5 +347,88 @@ public class MeetingService {
 			}
 		}
 		return bookings;
+	}
+	public String fetchBookingStatus(String bid) {
+		BookingDetails booking = repBooking.bidExists(Integer.valueOf(bid));
+		return booking.getApprovalStatus();
+	}
+	
+	public ResponseModel canRescheduleMyBooking(String userId, Integer bookingId) throws ParseException {
+		BookingDetails bk = repBooking.bidExists(bookingId);
+		
+		if(bk!=null&&bk.getStudentId().equals(Integer.valueOf(userId))) {
+			if(bk.getIsRescheduled().equals("true")) {
+				return new ResponseModel("already rescheduled");
+			}else {
+				if(calculateRemainingTimeToCancel(bk)>=Integer.valueOf(repAppInfo.keyExist("reschedule_time").getValue())) {
+					return new ResponseModel("rescheduling possible");	
+				}else {
+					return new ResponseModel("rescheduling time limit exceeded");
+				}
+			}
+			
+		}else {
+			return new ResponseModel("invalid user");
+		}	
+	}
+	public ResponseModel updateRescheduledBooking(BookingDetailsModel booking) {
+		BookingDetails bk = repBooking.bidExists(booking.getBid());
+		bk.setStartTimeHour(booking.getStartTimeHour());
+		bk.setStartTimeMinute(booking.getStartTimeMinute());
+		bk.setDateOfMeeting(booking.getDateOfMeeting());
+		Integer duration = bk.getDuration();
+		Integer hoursToBeAdded = duration/60;
+		Integer minutesToBeAdded = duration%60;
+		Integer endTimeHour = bk.getStartTimeHour()+hoursToBeAdded;
+		Integer endTimeMinute = bk.getStartTimeMinute()+minutesToBeAdded;
+		if(endTimeMinute/60>0) {
+			endTimeHour+=(endTimeMinute/60);
+			endTimeMinute=endTimeMinute%60;
+		}
+		if(endTimeHour<=23&&endTimeMinute<60) {
+			bk.setEndTimeHour(endTimeHour);
+			bk.setEndTimeMinute(endTimeMinute);
+			bk.setIsRescheduled("true");
+			if(isBookingValid(bk.getStartTimeHour(), bk.getStartTimeMinute(), bk.getEndTimeHour(), bk.getEndTimeMinute(), bk.getTutorId(), bk.getDateOfMeeting())) {
+				repBooking.save(bk);
+				return new ResponseModel("rescheduled successfully");
+			}else {
+				return new ResponseModel("expert busy");
+			}
+			
+		}else {
+			return new ResponseModel("rescheduling unsuccessful");
+		}
+		
+		
+	}
+	public boolean requestToReschedule(Integer bookingId) throws ParseException {
+		BookingDetails bk = repBooking.bidExists(bookingId);
+		Integer rmt = calculateRemainingTimeToCancel(bk);
+		if(rmt>=Integer.valueOf(repAppInfo.keyExist("reschedule_time").getValue())) {
+			TutorProfileDetails tut = repTutorProfileDetails.bookingIdExist(bk.getTutorId());
+			tut.setRescheduleRequests(tut.getRescheduleRequests()+1);
+			mailService.sendRequestToReschedule(bk);
+			bk.setIsRescheduled("requested");
+			repBooking.save(bk);
+			repTutorProfileDetails.save(tut);
+			return true;
+		}else {
+			return false;
+		}
+	}
+	public ResponseModel deleteBookingFromUrl(String userId, Integer bookingId) throws ParseException {
+		System.out.println("in service");
+		BookingDetails bk = repBooking.bidExists(bookingId);
+		System.out.println(bk);
+		System.out.println(userId);
+		if(bk!=null&&bk.getStudentId().equals(Integer.valueOf(userId))) {
+			System.out.println("user matched and booking fetched!");
+			return deleteMyBooking(bookingId);
+		}else {
+			System.out.println("user not matched!");
+			return null;
+		}
+		
 	}
 }

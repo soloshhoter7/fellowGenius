@@ -50,6 +50,14 @@ public class AppService {
 			appInfo.setValue("fg@czdq124c6");
 			appInfo.setType("login");
 			repAppInfo.save(appInfo);
+			appInfo.setKeyName("refund_time");
+			appInfo.setValue("120");
+			appInfo.setType("Meeting");
+			repAppInfo.save(appInfo);
+			appInfo.setKeyName("reschedule_time");
+			appInfo.setValue("120");
+			appInfo.setType("Meeting");
+			repAppInfo.save(appInfo);
 				
 		}	
 	}

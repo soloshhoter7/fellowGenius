@@ -42,11 +42,9 @@ export class WebSocketService {
 			  alert('Error ' + message.body);
 			});
 			that.ws.subscribe('/user/Notifications/' +userId, (message) => {
-				console.log(message);
 				// var res = JSON.parse(message.body);
 
 				if(message.body=="updateNotification"){
-					console.log('message matched');
 					if(this.loginType&&this.loginType=='Expert'&&this.tutorService.getTutorDetials().tid!=null){
 						// this.notificationService.increaseNotificationCount(1);
 						// location.reload();

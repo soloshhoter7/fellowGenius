@@ -7,13 +7,14 @@ import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
 import { meetingDetails } from 'src/app/model/meetingDetails';
 import { MeetingService } from 'src/app/service/meeting.service';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ProfileService } from 'src/app/service/profile.service';
 import { DeletePopupComponent } from './delete-popup/delete-popup.component';
 //import { StarRatingComponent } from 'ng-starrating';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { LocationStrategy } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
+import { C } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -94,11 +95,9 @@ export class StudentDashboardComponent implements OnInit {
     }
   }
   toBookingsPage() {
-    this.router.navigate(['home/studentBookings']);
+    this.router.navigate(['home/student-bookings']);
   }
-  cancelReview() {
-    console.log('canceledReviews');
-  }
+  
   preventBackButton() {
     history.pushState(null, null, location.href);
     this.locationStrategy.onPopState(() => {
@@ -168,7 +167,6 @@ export class StudentDashboardComponent implements OnInit {
   initialiseStudentPendingRequest(){
     this.studentService.fetchStudentPendingBookings();
     this.pendingRequestsCount=0
-    console.log("pending reques =>",this.pendingRequestsCount);
     this.studentService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
       this.bookingList=booking;
       if (this.bookingList.length == 0) {
@@ -177,7 +175,6 @@ export class StudentDashboardComponent implements OnInit {
       } else {
         this.pendingRequestsCount = this.bookingList.length;
       }
-      console.log("pending reques =>",this.pendingRequestsCount)
     })
   }
 
@@ -214,7 +211,6 @@ export class StudentDashboardComponent implements OnInit {
   fetchPendingReviewsList() {
     this.httpService.fetchPendingReviewsList(this.sid).subscribe((res) => {
       this.pendingReviewList = res;
-      console.log("pending requests ->",this.pendingRequestsCount);
     });
   }
 
@@ -271,7 +267,6 @@ export class StudentDashboardComponent implements OnInit {
       // var aDateTime = new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0);
       // console.log(aDateTime);
 
-      console.log(aDate + "/" + aMonth + "/" + aYear + "..." + aHour + ":" + aMinute);
       var bYear = b.dateOfMeeting.split("/")[2];
       var bMonth = b.dateOfMeeting.split("/")[1]-1;
       var bDate = b.dateOfMeeting.split("/")[0];
@@ -501,16 +496,39 @@ export class StudentDashboardComponent implements OnInit {
 
   //delete pending request
   deleteBooking(myBooking: bookingDetails) {
-    this.meetingService.setDeleteBooking(myBooking);
-    this.dialog.open(DeletePopupComponent, {
+    // this.meetingService.setDeleteBooking(myBooking);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose=true;
+    const dialogRef = this.dialog.open(DeletePopupComponent, {
       width: '400px',
       height: '150px',
     });
-    this.dialog.afterAllClosed.subscribe(() => {
-      if (this.bookingList.length == 0) {
-        this.emptyBookingList = true;
+    dialogRef.afterClosed().subscribe((data)=>{
+      if(data.cancelled == true){
+        this.httpService.fetchBookingStatus(myBooking.bid).subscribe((res:any)=>{
+          console.log(res.status);
+          if(res.status=='Pending'){
+        this.httpService.deleteMyBooking(myBooking.bid).subscribe((response:any) => {
+        if(response.response=='booking deleted successfully'){
+        	this.initialiseStudentPendingRequest();
+			  	this.snackBar.open('Booking has been cancelled !', 'close', this.config);
+        }else if(response.response=="booking can't be deleted"){
+          this.snackBar.open("Booking can't be deleted !", 'close', this.config);
+        }else if(response.response=="delete time has been exceeded"){
+          this.snackBar.open('Cancelling time has been exceeded !', 'close', this.config);
+        }
+          // if (response) {
+			
+			// } else {
+			// 	this.snackBar.open('Booking has already been accepted !', 'close', this.config);
+			// }
+		});
+          }else{
+            this.snackBar.open('Booking has already been accepted !', 'close', this.config);
+          }
+        })
       }
-    });
+    })
   }
   
 }

@@ -29,8 +29,8 @@ import fG.Model.updatePasswordModel;
 import fG.Service.UserService;
 
 @RestController
-//@CrossOrigin(origins = "${crossOrigin}")
-@CrossOrigin(origins = "https://fellowgenius.com")
+@CrossOrigin(origins = "${crossOrigin}")
+//@CrossOrigin(origins = "https://fellowgenius.com")
 @RequestMapping("/fellowGenius")
 public class userController {
 
@@ -147,7 +147,7 @@ public class userController {
 		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList(subject);
 		return tutorProfileDetails;
 	}
-  
+	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
 	@RequestMapping(value="/fetchTutorProfileDetails",produces = "application/JSON")
 	@ResponseBody
 	public TutorProfileDetailsModel fetchTutorProfileDetails(String tid) {

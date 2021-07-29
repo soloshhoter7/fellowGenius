@@ -20,9 +20,9 @@
         <div class="list-panel" *ngFor="let element of bookingList">
           <div
             class="list-thumbnail"
-            style="
-              background-image: url('../../../assets/images/default-user-image.png');
-            "
+            [ngStyle]="{
+              'background-image': 'url(' + element.tutorProfilePictureUrl + ')'
+            }"
           ></div>
           <div class="list-information">
             <span class="name">{{ element.tutorName }}</span>
@@ -39,7 +39,8 @@
             >
           </div>
           <div class="button-container">
-            <span class="btn btn-primary">{{ element.approvalStatus }}</span>
+            <span class="btn btn-primary" *ngIf="element.isRescheduled=='requested'">Reschedule requested! check email !</span>
+            <span class="btn btn-primary" *ngIf="element.isRescheduled!='requested'">{{ element.approvalStatus }}</span>
             <button
               type="button"
               class="btn btn-primary"

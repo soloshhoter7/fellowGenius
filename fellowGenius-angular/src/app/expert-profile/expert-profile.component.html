@@ -11,7 +11,7 @@
     <div class="breadcrumb-container" style="width: max-content;">
       <ol class="breadcrumb" style="font-size: 15px">
         <li><a routerLink="../facade">Home</a></li>
-        <li><a routerLink="../searchResults">Search Results</a></li>
+        <li><a routerLink="../search-results">Search Results</a></li>
         <li class="active">Profile</li>
       </ol>
     </div>
@@ -52,8 +52,7 @@
           <span
             class="price"
             *ngIf="teacherProfile.price1 != teacherProfile.price2"
-            >₹ {{ teacherProfile.price1 }} -
-            {{ teacherProfile.price2 }}/hr</span
+            >₹ {{ teacherProfile.price1 }} /hr</span
           >
           <span
             class="price"

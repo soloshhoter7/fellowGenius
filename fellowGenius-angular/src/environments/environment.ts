@@ -22,7 +22,8 @@ export const environment = {
   // RAZORPAY_KEY_ID: 'rzp_live_MhUQ4PE6mDs80d',
   
   //backendUrl
-  BACKEND_URL: 'http://localhost:8080'
+  BACKEND_URL: 'http://localhost:8080',
+  FRONTEND_PREFIX:'http://localhost:4200/#/'
 };
 
 /*

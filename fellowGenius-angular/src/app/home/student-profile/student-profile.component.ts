@@ -163,7 +163,7 @@ export class StudentProfileComponent implements OnInit {
                 'close',
                 this.config
               );
-              this.router.navigate(['/home/studentDashboard']);
+              this.router.navigate(['/home/student-dashboard']);
              
             })
          
