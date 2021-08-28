@@ -40,6 +40,7 @@ public class BookingDetails implements Serializable{
 	  String tutorName;
 	  Integer bookingCase;
 	  String Subject;
+	  String domain;
 	  Integer rating;
 	  String reviewText;
 	  String razorpay_payment_id;
@@ -201,6 +202,13 @@ public class BookingDetails implements Serializable{
 	public void setIsRescheduled(String isRescheduled) {
 		this.isRescheduled = isRescheduled;
 	}
+	
+	public String getDomain() {
+		return domain;
+	}
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 	@Override
 	public String toString() {
 		return "BookingDetails [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute
@@ -208,11 +216,12 @@ public class BookingDetails implements Serializable{
 				+ ", startTimeMinute=" + startTimeMinute + ", description=" + description + ", studentId=" + studentId
 				+ ", tutorId=" + tutorId + ", meetingId=" + meetingId + ", approvalStatus=" + approvalStatus
 				+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
-				+ ", Subject=" + Subject + ", rating=" + rating + ", reviewText=" + reviewText
+				+ ", Subject=" + Subject + ", domain=" + domain + ", rating=" + rating + ", reviewText=" + reviewText
 				+ ", razorpay_payment_id=" + razorpay_payment_id + ", razorpay_order_id=" + razorpay_order_id
 				+ ", razorpay_signature=" + razorpay_signature + ", amount=" + amount + ", tutorProfilePictureUrl="
-				+ tutorProfilePictureUrl + "]";
+				+ tutorProfilePictureUrl + ", isRescheduled=" + isRescheduled + ", createdDate=" + createdDate + "]";
 	}
+
 
 	
   

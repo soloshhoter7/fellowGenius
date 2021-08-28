@@ -41,7 +41,7 @@ export class StudentDashboardComponent implements OnInit {
   pendingReviews: tutorProfileDetails[] = [];
   public now: Date = new Date();
   noTutorMessage = '';
-
+  upcomingMeetingsCount;
   constructor(
     public httpService: HttpService,
     public studentService: StudentService,
@@ -83,12 +83,13 @@ export class StudentDashboardComponent implements OnInit {
     this.sid = this.studentService.getStudentProfileDetails().sid;
     if (this.sid) {
       this.fetchPendingReviewsList();
+      this.initialiseUpcomingMeetings();
       // this.fetchTutorList();
       // this.findStudentPendingBookings();
-      this.initialiseStudentPendingRequest();
+      // this.initialiseStudentPendingRequest();
       // this.fetchApprovedMeetings();
-      this.intialiseStudentApprovedBookings();
-      this.initialiseLiveMeetingList();
+      // this.intialiseStudentApprovedBookings();
+      // this.initialiseLiveMeetingList();
       // this.fetchLiveMeetings();
     } else {
       this.handleRefresh();
@@ -152,18 +153,36 @@ export class StudentDashboardComponent implements OnInit {
   handleRefresh() {
     setTimeout(() => {
       this.sid = this.studentService.getStudentProfileDetails().sid;
-      // this.fetchPendingReviewsList();
+      this.fetchPendingReviewsList();
       // this.fetchTutorList();
       // this.findStudentPendingBookings();
-      this.initialiseStudentPendingRequest();
+      this.initialiseUpcomingMeetings();
+      // this.initialiseStudentPendingRequest();
       // this.fetchApprovedMeetings();
-      this.intialiseStudentApprovedBookings();
+      // this.intialiseStudentApprovedBookings();
       // this.fetchLiveMeetings();
-      this.initialiseLiveMeetingList();
+      // this.initialiseLiveMeetingList();
       // this.fetchTopTutors();
     }, 1000);
   }
-
+  initialiseUpcomingMeetings(){
+    this.studentService.fetchUpcomingMeetings();
+    this.upcomingMeetingsCount=0;
+    this.studentService.upcomingMeetingsChanged.subscribe((booking:bookingDetails[])=>{
+      this.bookingList=booking;
+      console.log(this.bookingList);
+      this.sortMeetings(this.bookingList);
+      for (let booking of this.bookingList) {
+        this.timeLeft(booking);
+        if (this.bookingList.length == 0) {
+          this.emptyBookingList = true;
+        }
+      }
+      for (let booking of this.bookingList) {
+        this.eliminateLiveMeetings(booking, this.bookingList);
+      }
+    })
+  }
   initialiseStudentPendingRequest(){
     this.studentService.fetchStudentPendingBookings();
     this.pendingRequestsCount=0

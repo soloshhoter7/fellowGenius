@@ -14,7 +14,7 @@ import { TutorService } from 'src/app/service/tutor.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { TermsAndConditionsComponent } from '../sign-up/terms-and-conditions/terms-and-conditions.component';
+import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 import { StudentLoginModel } from 'src/app/model/studentLoginModel';
 import { CookieService } from 'ngx-cookie-service';
 // import * as jwt_decode from "jwt-decode";
@@ -46,7 +46,7 @@ export class SignUpComponent implements OnInit {
     private cookieService: CookieService,
     private socialService: SocialService,
     private zone: NgZone,
-    private authService:AuthService
+    private authService: AuthService
   ) {}
   // --- parent child relationships ------------
   @ViewChild('loginRef', { static: true })
@@ -78,6 +78,9 @@ export class SignUpComponent implements OnInit {
   userId;
   auth2: any;
   role;
+  prev_route;
+  expert_userId;
+  expert_domain;
   // --------------- models ---------------------------------
   registrationModel = new registrationModel();
   loginModel = new loginModel();
@@ -93,9 +96,36 @@ export class SignUpComponent implements OnInit {
   };
   //--------------------------------------------------------
   ngOnInit() {
+     this.prev_route = this.cookieService.get("prev");
+    this.expert_userId = this.cookieService.get("expert_userId");
+    this.expert_domain = this.cookieService.get("expert_domain");
     this.googleSDK();
+    this.seePassword();
   }
+  goToPreviousUrl(){
 
+    if(this.prev_route!=''){
+      this.router.navigate(['view-tutors'], {
+        queryParams: { page:this.expert_userId,subject:this.expert_domain },
+      });
+    }
+  }
+  otpChange() {
+    console.log('input changes');
+  }
+  seePassword() {
+    $('.toggle-password').each(function (index) {
+      $(this).on('click', function () {
+        $(this).toggleClass('fa-eye fa-eye-slash');
+        var input = $($(this).attr('toggle'));
+        if (input.attr('type') == 'password') {
+          input.attr('type', 'text');
+        } else {
+          input.attr('type', 'password');
+        }
+      });
+    });
+  }
   toSignUpPage() {
     this.router.navigate(['sign-up']);
   }
@@ -112,18 +142,22 @@ export class SignUpComponent implements OnInit {
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
       this.role = data.role;
-      this.registrationModel.role=data.role;
+      this.registrationModel.role = 'Learner';
       this.registrationModel.password = data.password;
       this.authService.saveSocialLogin(this.registrationModel);
-      this.authService.getAuthStatusListener().subscribe((res)=>{
-        if(res==true){
-          if(this.loginService.getLoginType()=='Learner'){
-            this.toFacadePage();
-          }else if(this.loginService.getLoginType()=='Expert'){
+      this.authService.getAuthStatusListener().subscribe((res) => {
+        if (res == true) {
+          if (this.loginService.getLoginType() == 'Learner') {
+            if(this.prev_route!=''){
+              this.goToPreviousUrl();
+            }else{
+              this.toFacadePage();
+            }
+          } else if (this.loginService.getLoginType() == 'Expert') {
             this.toHome();
           }
         }
-      })
+      });
     });
   }
   openTermsAndConditions() {
@@ -132,7 +166,34 @@ export class SignUpComponent implements OnInit {
       height: 'auto',
     });
   }
-
+  appendOtp(form: NgForm) {
+    console.log(form);
+    let otp: string = '';
+    // if (
+    //   !form.value.otp_1digit ||
+    //   !form.value.otp_2digit ||
+    //   !form.value.otp_3digit ||
+    //   !form.value.otp_4digit ||
+    //   !form.value.otp_5digit ||
+    //   !form.value.otp_6digit
+    // ) {
+    //   return null;
+    // }
+    let otp_1digit = form.value.otp_1digit;
+    let otp_2digit = form.value.otp_2digit;
+    let otp_3digit = form.value.otp_3digit;
+    let otp_4digit = form.value.otp_4digit;
+    let otp_5digit = form.value.otp_5digit;
+    let otp_6digit = form.value.otp_6digit;
+    otp += otp_1digit.toString();
+    otp += otp_2digit.toString();
+    otp += otp_3digit.toString();
+    otp += otp_4digit.toString();
+    otp += otp_5digit.toString();
+    otp += otp_6digit.toString();
+    console.log(otp);
+    return otp;
+  }
   onSignUp(form: NgForm) {
     if (this.verifyEmail == false) {
       this.isLoading = true;
@@ -140,7 +201,7 @@ export class SignUpComponent implements OnInit {
       this.registrationModel.email = form.value.email;
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
-      this.registrationModel.role = form.value.role;
+      this.registrationModel.role = 'Learner';
       this.httpClient
         .checkUser(this.registrationModel.email)
         .subscribe((res) => {
@@ -176,34 +237,48 @@ export class SignUpComponent implements OnInit {
           }
         });
     } else {
-      if (bcrypt.compareSync(form.value.otp, this.verificationOtp)) {
-        this.authService.onSignUp(this.registrationModel);
-        
-        this.authService.getAuthStatusListener().subscribe((res)=>{
-          if(res==false){
-            this.snackBar.open(
-              'registration not successful ! email already exists !',
-              'close',
-              this.config
-            );
-            this.incorrectLoginDetails = true;
-            this.dialogRef.closeAll();
-          }else if(res==true){
-            if(this.loginService.getLoginType()=='Learner'){
-              this.toFacadePage();
-            }else if(this.loginService.getLoginType()=='Expert'){
-              this.toHome();
-            }
-          }
-        })
-      } else {
+      console.log('in otp region')
+      let otp: string = this.appendOtp(form);
+      console.log(otp);
+      if (otp == null) {
         this.wrongOtp = true;
+      } else {
+        console.log(otp,this.verificationOtp);
+        if (bcrypt.compareSync(otp, this.verificationOtp)) {
+          console.log('otp matched !')
+          this.authService.onSignUp(this.registrationModel);
+
+          this.authService.getAuthStatusListener().subscribe((res) => {
+            if (res == false) {
+              this.snackBar.open(
+                'registration not successful ! email already exists !',
+                'close',
+                this.config
+              );
+              this.incorrectLoginDetails = true;
+              this.dialogRef.closeAll();
+            } else if (res == true) {
+              if (this.loginService.getLoginType() == 'Learner') {
+                if(this.prev_route!=''){
+                  this.goToPreviousUrl();
+                }else{
+                  this.toFacadePage();
+                }
+              } else if (this.loginService.getLoginType() == 'Expert') {
+                this.toHome();
+              }
+            }
+          });
+        } else {
+          this.wrongOtp = true;
+        }
       }
     }
   }
 
   //google login
   prepareLoginButton() {
+    console.log('called');
     if (this.auth2 == null) {
       location.reload();
     }
@@ -223,7 +298,7 @@ export class SignUpComponent implements OnInit {
         this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
           if (!res) {
             this.zone.run(() => {
-             
+
               this.openThankYouPage();
             });
           } else {
@@ -244,7 +319,6 @@ export class SignUpComponent implements OnInit {
     );
   }
 
-  
   googleSDK() {
     window['googleSDKLoaded'] = () => {
       window['gapi'].load('auth2', () => {

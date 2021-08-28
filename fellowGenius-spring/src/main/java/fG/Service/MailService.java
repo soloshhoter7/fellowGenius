@@ -144,11 +144,14 @@ public class MailService {
 
 	}
 	
+	String generateTokenForMail(String id,String role) {
+		return jwtUtil.generateToken(id,role);
+	}
 	void sendRequestToReschedule(BookingDetails booking) {
 		InitiateMailService();
 		try {
 			MimeMessage message = new MimeMessage(session);
-				final String token = jwtUtil.generateToken(booking.getStudentId().toString(),"Learner");
+				final String token = generateTokenForMail(booking.getStudentId().toString(),"Learner");
 				String cancelUrl = rootUrl+"cancel-booking?token="+token+"&bid="+booking.getBid();
 				String rescheduleUrl = rootUrl+"reschedule-booking?token="+token+"&bid="+booking.getBid()+"&tid="+booking.getTutorId();
 				StudentProfile stuProfile = userDao.getStudentProfile(booking.getStudentId());
@@ -171,7 +174,39 @@ public class MailService {
 			throw new RuntimeException(e);
 		}
 	}
-	
+	boolean sendVerifiedMail(String email) {
+		InitiateMailService();
+		Users user = repUsers.emailExist(email);
+		if (user != null) {
+			String token = generateTokenForMail(user.getUserId().toString(), "Expert");
+			String directUrl = rootUrl+"sign-up-expert?token="+token;
+			System.out.println(directUrl);
+			String to = email;
+
+			try {
+				MimeMessage message = new MimeMessage(session);
+
+				message.setFrom(new InternetAddress(senderEmail));
+
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+				message.setSubject("Profile verified ! fellowgenius");
+
+                message.setContent("<html><head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0 8px 16px 0 #90a4ae; width: 100%; height: auto; text-align: center; padding: 20px; margin-top: 10px; background: url(https://fellowgenius.com/search_right_bg.7af30faa440a7e6ab2bb.svg) no-repeat; background-size: contain; border: 1px solid #7d0f7d; border-radius: 8px; width: 650px; margin: 0 auto; background-position: left top;}.logo{background: url(https://fellowgenius.com/logo.2dbc598173218fe92921.svg) no-repeat; background-size: contain; height: 100px; display: block; float: right; width: 100px;}tr{padding: 10px;}td{padding: 5px; margin-right: 5px;}</style></head><body> <div class=\"Box\"> <div class=\"box-header\"> <span class=\"logo\"></span> <span style=\"margin-bottom: 20px;color:#892687;width:100%;text-align: center;font-size:16px;font-weight:bold;text-transform: uppercase;\">Profile Verified !</span> </div>"
+                		+ "<div style=\"padding:20px;width: 350px; margin: 0 auto;\"> <p>Congratulations your registration for expert has been verified !</p><div>Please click on the link mentioned below to choose your password</div>"
+                		+ "<a href=\""+directUrl+"\" class=\"btn btn-primary\">Choose password</a> "
+                		+ "</div><p style=\"margin-top: 30px; font-size: 10px; text-align: center; width: 100%;\">This is an auto-generated message please don't reply back.</p></div><div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-2\"></div><div class=\"col-sm-7\"> </div><div class=\"com-sm-3\"></div></div></div></body></html>","text/html");
+				Transport.send(message);
+
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
 	boolean sendResetMail(String email) {
 		InitiateMailService();
 		Users user = repUsers.emailExist(email);

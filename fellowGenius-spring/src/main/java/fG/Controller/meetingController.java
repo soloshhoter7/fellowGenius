@@ -18,6 +18,7 @@ import fG.Entity.ScheduleData;
 import fG.Model.AuthenticationResponse;
 import fG.Model.BookingDetailsModel;
 import fG.Model.BookingStatus;
+import fG.Model.EarningDataModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
@@ -137,7 +138,21 @@ public class meetingController {
 		List<?> bookingDetails = meetingService.findStudentBookings(sid);
 		return bookingDetails;
 	}
-
+	
+//	@PreAuthorize("hasAuthority('Expert')")
+//	@RequestMapping(value = "/fetchEarningDataTutor")
+//	@ResponseBody
+//	public EarningDataModel fetchEarningData(String tutorId) throws ParseException {
+//		Integer tid = Integer.valueOf(tutorId);
+//		return meetingService.fetchEarningData(tid);
+//	}
+	@PreAuthorize("hasAuthority('Expert')")
+	@RequestMapping(value = "/fetchEarningDataExpert")
+	@ResponseBody
+	public EarningDataModel fetchEarningData(String tid) throws ParseException {
+		 return meetingService.fetchEarningData(tid);
+	}
+	
 	// for fetching approved bookings list
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/fetchApprovedList")
@@ -168,6 +183,7 @@ public class meetingController {
 		return bookingDetails;
 	}
 
+	
 	// for fetching live meetings for student
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/fetchLiveMeetingListStudent")

@@ -13,37 +13,25 @@
  
 </body> -->
 
-<body style="background-color: #f9fafc;height: 100vh;">
-  <div
-    style="width: 95%; margin: auto; padding-top: 80px; padding-bottom: 15px"
-  >
-    <div class="btn-group" role="group">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        [class.btnActive]="calendarView == 'Availability'"
-        (click)="switchCalendarView()"
-      >
-        Availability
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        [class.btnActive]="calendarView == 'Meeting'"
-        (click)="switchCalendarView()"
-      >
-        Meetings
-      </button>
-    </div>
-  </div>
-  <div
+
+  <div class="page-content dashboard__Panel">
+    <div
     *ngIf="isLoading"
-    style="width: max-content; margin: auto; padding-top: 20vh;text-align: center;"
+    style="
+      width: max-content;
+      margin: auto;
+      padding-top: 20vh;
+      text-align: center;
+    "
   >
     <app-loading></app-loading>
-    <p style="margin:1rem;font-size: large;">Saving your schedule..</p>
+    <p style="margin: 1rem; font-size: large">Saving your schedule..</p>
   </div>
-  <div class="Box" style="width: 95%; margin: auto; padding: 0" [class.hide]="isLoading">
+  <div
+    class="Box"
+    style="width: 95%; margin: auto; padding: 0"
+    [class.hideBlock]="isLoading"
+  >
     <ejs-schedule
       #scheduleObj
       width="100%"
@@ -54,4 +42,7 @@
       (actionBegin)="onActionBegin($event)"
     ></ejs-schedule>
   </div>
-</body>
+  </div>
+      
+    
+

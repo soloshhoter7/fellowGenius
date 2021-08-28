@@ -25,6 +25,7 @@ public class BookingDetailsModel {
   String razorpay_signature;
   String tutorProfilePictureUrl;
   String isRescheduled;
+  String domain;
   
 public String getTutorProfilePictureUrl() {
 	return tutorProfilePictureUrl;
@@ -175,6 +176,12 @@ public void setIsRescheduled(String isRescheduled) {
 	this.isRescheduled = isRescheduled;
 }
 
+public String getDomain() {
+	return domain;
+}
+public void setDomain(String domain) {
+	this.domain = domain;
+}
 @Override
 public String toString() {
 	return "BookingDetailsModel [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute

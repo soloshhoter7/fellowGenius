@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { AdminPortalComponent } from './admin-portal/admin-portal.component';
 import { AnalyticsComponent } from './admin-portal/analytics/analytics.component';
 import { CategoriesComponent } from './admin-portal/categories/categories.component';
@@ -10,9 +10,9 @@ import { FacadeComponent } from './facade/facade.component';
 import { FaqComponent } from './facade/faq/faq.component';
 import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
 import { LoginComponent } from './facade/login/login.component';
-import { ContactUsInfoComponent } from './facade/sign-up/contact-us-info/contact-us-info.component';
+import { ContactUsInfoComponent } from './facade/contact-us-info/contact-us-info.component';
 import { SignUpComponent } from './facade/sign-up/sign-up.component';
-import { TermsAndConditionsComponent } from './facade/sign-up/terms-and-conditions/terms-and-conditions.component';
+
 import { BookingsComponent } from './home/bookings/bookings.component';
 import { TutorDashboardComponent } from './home/dashboard/tutor-dashboard.component';
 import { ExpertsComponent } from './home/experts/experts.component';
@@ -30,8 +30,21 @@ import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meet
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { TestComponent } from './test/test.component';
-
+import { BlogsComponent } from './facade/blogs/blogs.component';
+import { ResourceVideosComponent } from './facade/resource-videos/resource-videos.component';
+import { ResourceEventsComponent } from './facade/resource-events/resource-events.component';
+import { PrivacyPolicyComponent } from './facade/privacy-policy/privacy-policy.component';
+import { TermsAndConditionsComponent } from './facade/terms-and-conditions/terms-and-conditions.component';
+import { RefundPolicyComponent } from './facade/refund-policy/refund-policy.component';
+import { SignUpExpertComponent } from './facade/sign-up/sign-up-expert/sign-up-expert.component';
+import { VerifyExpertsComponent } from './admin-portal/verify-experts/verify-experts.component';
+import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
+import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
 // const routes:Routes=[];
+export const routerOptions:ExtraOptions={
+  anchorScrolling:'enabled',
+  useHash:true
+}
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -48,16 +61,17 @@ export const appRoutes: Routes = [
       { path: 'recordings', component: RecordingsComponent },
       { path: 'knowledge-base', component: KnowledgeBaseComponent },
       { path: 'experts', component: ExpertsComponent },
+      { path: 'sessions-learner',component:LearnerSessionsComponent},
+      { path: 'sessions-expert', component:ExpertSessionsComponent}
     ],
   },
   { path: '', component: FacadeComponent },
   { path:'how-it-works', component:HowItWorksComponent},
-  { path:'faq', component:FaqComponent},
-  { path:'about-us',component:AboutUsComponent},
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'view-tutors', component: ExpertProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
+  { path: 'sign-up-expert',component:SignUpExpertComponent},
   { path: 'meeting', component: MeetingComponent },
   { path: 'test', component: TestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
@@ -66,16 +80,24 @@ export const appRoutes: Routes = [
   { path: 'admin', component:AdminPortalComponent,
     children:[
       { path: 'categories',component:CategoriesComponent},
-      { path: 'analytics',component:AnalyticsComponent}
+      { path: 'analytics',component:AnalyticsComponent},
+      { path: 'verify-expert',component:VerifyExpertsComponent}
     ]
   },
-  { path: 'terms-and-conditions', component:TermsAndConditionsComponent},
+  { path:'faq', component:FaqComponent},
+  { path:'about-us',component:AboutUsComponent},
   { path: 'contact-us',component:ContactUsInfoComponent},
+  { path: 'privacy-policy',component:PrivacyPolicyComponent},
+  { path: 'terms-and-conditions',component:TermsAndConditionsComponent},
+  { path: 'refund-policy', component:RefundPolicyComponent},
+  { path: 'blogs', component:BlogsComponent},
+  { path : 'resource-videos',component:ResourceVideosComponent},
+  { path : 'resource-events',component:ResourceEventsComponent}
   // { path: '', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [RouterModule.forRoot(appRoutes,routerOptions)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

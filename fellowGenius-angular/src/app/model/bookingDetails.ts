@@ -23,8 +23,9 @@ export class bookingDetails {
   public reviewText: string;
   public amount: number;
   public tutorProfilePictureUrl: string;
-  public razorpay_payment_id;
-  public razorpay_order_id;
-  public razorpay_signature;
+   razorpay_payment_id;
+   razorpay_order_id;
+   razorpay_signature;
   public isRescheduled;
+  public domain;
 }

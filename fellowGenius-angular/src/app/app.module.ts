@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { appRoutes, AppRoutingModule } from './app-routing.module';
+import { appRoutes, AppRoutingModule, routerOptions } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { NgxAgoraModule } from 'ngx-agora';
@@ -49,7 +49,7 @@ import { StudentBookingComponent } from './home/student-booking/student-booking.
 import { zeroDigit } from '../app/pipes/zeroDigit.pipe';
 import { LoadingComponent } from './facade/sign-up/LoadingSpinner/loading/loading.component';
 import { DeletePopupComponent } from './home/student-dashboard/delete-popup/delete-popup.component';
-import { TermsAndConditionsComponent } from './facade/sign-up/terms-and-conditions/terms-and-conditions.component';
+
 import { UploadProfilePictureComponent } from './facade/sign-up/upload-profile-picture/upload-profile-picture.component';
 import { LoaderComponent } from './home/loader/loader.component';
 import { BasicAuthHttpInterceptorService } from './service/basic-auth-http-interceptor.service';
@@ -80,11 +80,25 @@ import { AboutUsComponent } from './facade/about-us/about-us.component';
 import { FaqComponent } from './facade/faq/faq.component';
 import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
 import { CategoriesComponent } from './admin-portal/categories/categories.component';
-import { ContactUsInfoComponent } from './facade/sign-up/contact-us-info/contact-us-info.component';
+import { ContactUsInfoComponent } from './facade/contact-us-info/contact-us-info.component';
 import { AnalyticsComponent } from './admin-portal/analytics/analytics.component';
 import { AdminPortalComponent } from './admin-portal/admin-portal.component';
 import { DeleteMeetingComponent } from './delete-meeting/delete-meeting.component';
 import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meeting.component';
+import { FooterComponent } from './footer/footer.component';
+import { PrivacyPolicyComponent } from './facade/privacy-policy/privacy-policy.component';
+import { BlogsComponent } from './facade/blogs/blogs.component';
+import { ResourceVideosComponent } from './facade/resource-videos/resource-videos.component';
+import { ResourceEventsComponent } from './facade/resource-events/resource-events.component';
+import { NgxPageScrollModule } from 'ngx-page-scroll';
+import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
+import { TermsAndConditionsComponent } from './facade/terms-and-conditions/terms-and-conditions.component';
+import { RefundPolicyComponent } from './facade/refund-policy/refund-policy.component';
+import { SignUpExpertComponent } from './facade/sign-up/sign-up-expert/sign-up-expert.component';
+import { VerifyExpertsComponent } from './admin-portal/verify-experts/verify-experts.component';
+import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
+import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
+
 
 
 @NgModule({
@@ -112,7 +126,6 @@ import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meet
 
     LoadingComponent,
     DeletePopupComponent,
-    TermsAndConditionsComponent,
     UploadProfilePictureComponent,
     LoaderComponent,
     TestComponent,
@@ -139,6 +152,17 @@ import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meet
     AdminPortalComponent,
     DeleteMeetingComponent,
     RescheduleMeetingComponent,
+    FooterComponent,
+    PrivacyPolicyComponent,
+    BlogsComponent,
+    ResourceVideosComponent,
+    ResourceEventsComponent,
+    TermsAndConditionsComponent,
+    RefundPolicyComponent,
+    SignUpExpertComponent,
+    VerifyExpertsComponent,
+    LearnerSessionsComponent,
+    ExpertSessionsComponent,
   ],
   imports: [
     NoopAnimationsModule,
@@ -147,7 +171,8 @@ import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meet
     BrowserModule,
     AppRoutingModule,
     NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),
-    
+    NgxPageScrollModule,
+    NgxPageScrollCoreModule,
     FormsModule,
     MatDialogModule,
     HttpClientModule,
@@ -167,7 +192,7 @@ import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meet
     CarouselModule,
     MatInputModule,
     GoogleChartsModule,
-    RouterModule.forRoot(appRoutes,{useHash:true}),
+    RouterModule.forRoot(appRoutes,routerOptions),
   ],
   entryComponents: [WelcomeComponent],
   providers: [

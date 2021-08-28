@@ -1,139 +1,94 @@
-<body>
-  <div
-    *ngIf="isLoading"
-    style="
-      text-align: center;
-      margin-top: 27%;
-      z-index: 5;
-      height: 40vh;
-      width: 50vw;
-    "
-  >
-    <app-loading></app-loading>
-    <p style="margin:1rem;font-size: large;">Booking Meeting..</p>
+<div
+class="book__meeting"
+*ngIf="isLoading"
+style="
+  text-align: center;
+"
+>
+<app-loading></app-loading>
+<p style="margin:1rem;font-size: large;">Booking Meeting..</p>
+</div>
+<div *ngIf="!isLoading">
+  <div class="book__meeting" *ngIf="!signedIn">
+    <div style="text-align: center;">
+    <h4 style="font-weight: 400;">
+      Please Sign in to book a meeting !
+    </h4>
+    <button class="btn" style="float: unset;margin-top: 10px;width: 50%;" routerLink="/login">Sign In</button>
+    <div class=" access_footer" style="margin-top:10px">
+      <p>Don't have an account yet? <a href="javascript:;" style="color: #8DC63F;" routerLink="/sign-up">Create an account</a></p>         
+    <!-- <div style="width: 100%;">
+      <button class="btn">Sign In</button>
+    </div> -->
+    
+    </div>
   </div>
-  <span
-    class="material-icons close"
-    (click)="closeNav()"
-    style="cursor: pointer"
-    *ngIf="!isLoading"
-  >
-    close
-  </span>
-  <div *ngIf="!isLoading">
-    <div style="padding: 40px" *ngIf="!isTutorAvailable">
+  </div>
+  <div *ngIf="signedIn">
+    <div class="book__meeting" *ngIf="!isTutorAvailable">
       <div style="text-align: center">
-        <h1>Expert is not available right now</h1>
-        <h2>Check Back Later</h2>
+      <h4 style="font-weight: 400;">
+        Expert is not available right now.<br>
+        Check Back Later.
+      </h4>
+       
       </div>
     </div>
-    <div *ngIf="isTutorAvailable">
-      <div class="connect-container">
-        <div class="connect-header">
-          <!-- <div style="float: right">
-            <button class="closeIconButton" title="close" (click)="closeNav()">
-              <img
-                src="../../../../assets/icons/close.svg"
-                style="height: 15px"
-              />
-            </button>
-          </div> -->
-          <div style="margin-bottom: 15px">
-            <h1 style="margin: 0; color: #7d0f7d">Book Meeting</h1>
-          </div>
-        </div>
-
-        <div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="form-group">
-                <label for="subject" style="margin-bottom: 10px"
-                  >Choose Subject<sup>*</sup></label
+    
+    <div class="book__meeting" *ngIf="isTutorAvailable">
+      <h4>Book Meeting</h4>
+      <p>
+        Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin lorem quis.
+      </p>
+      <form>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group" style="margin-bottom:0;">
+              <mat-form-field appearance="fill" style="display: unset;">
+                <mat-label>Choose Subject</mat-label>
+                <mat-select
+                  [(value)]="bookingDetails.subject"
+                  name="subject"
                 >
-
-                <select
-                  class="form-control"
-                  [(ngModel)]="bookingDetails.subject"
-                >
-                  <option
-                    *ngFor="let subject of areaOfExpertises"
-                    [value]="subject.subCategory"
+                  <mat-option
+                  *ngFor="let subject of areaOfExpertises"
+                  [value]="subject.subCategory"
                   >
-                    {{ subject.subCategory }}
-                  </option>
-                </select>
-              </div>
+                  {{ subject.subCategory }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="form-group">
-                <label for="description" style="margin-bottom: 10px"
-                  >Description</label
+          <div class="col-12">
+            <mat-form-field appearance="fill" style="display: unset;">
+              <mat-label>Choose Date</mat-label>
+              <mat-select
+                [(value)]="selectedDate"
+                (selectionChange)="dateChange()"
+                name="date"
+              >
+                <mat-option
+                  *ngFor="let todayDate of scheduleDates; let z = index"
+                  [value]="todayDate"
                 >
-                <textarea
-                  style="padding-top: 5px"
-                  class="form-control"
-                  id="description"
-                  rows="2"
-                  name="description"
-                  [(ngModel)]="bookingDetails.description"
-                  maxlength="100"
-                  #desc
-                  ngModel
-                  placeholder="Enter description"
-                  required
-                ></textarea>
-
-                <span style="float: right" class="setLength"
-                  >{{ desc.value.length }}/100</span
-                >
-              </div>
-            </div>
+                  {{ fullDate[z] | date: "fullDate" }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
-        </div>
-
-        <div class="connect-body">
-          <hr />
-          <div>
-            <label style="margin-bottom: 10px">Choose Time<sup>*</sup></label>
-            <p
-              style="
-                font-weight: 500;
-                margin-top: 5px;
-                color: #892687;
-                display: inline;
-                margin-left: 10px;
-              "
-            ></p>
-            <div class="errorMessage">{{ errorMessage }}</div>
-          </div>
-          <div>
-            <div class="row" style="width: 510px">
-              <div class="col-sm-6">
-                <div>
-                  <mat-form-field appearance="fill">
-                    <mat-label>Choose Date</mat-label>
-                    <mat-select
-                      [(value)]="selectedDate"
-                      (selectionChange)="dateChange()"
-                    >
-                      <mat-option
-                        *ngFor="let todayDate of scheduleDates; let z = index"
-                        [value]="todayDate"
-                      >
-                        {{ fullDate[z] | date: "fullDate" }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
+          <div class="col-12">
+            <!-- <div *ngIf="noSchedule">
+              <span> No available schedules</span>
+            </div> -->
+            <div class="form-group">
+              <div *ngIf="noSchedule">
+                <span style="font-size: larger"> No available schedules</span>
               </div>
-              <div class="col-sm-6">
-                <div *ngIf="noSchedule">
-                  <span style="font-size: large"> No available schedules</span>
-                </div>
-                <div *ngIf="!noSchedule">
-                  <mat-form-field appearance="fill" style="width: 95px">
+              <div *ngIf="!noSchedule">
+                <label>Choose Time</label>
+                <div class="start_time">
+                  <mat-form-field appearance="fill" style="width: 100%;">
                     <mat-label>Start</mat-label>
                     <mat-select
                       [(value)]="startTimeValue"
@@ -144,30 +99,24 @@
                         [value]="i"
                       >
                         <span *ngIf="selectedDate.date == time.date"
-                          >{{ time.hours | timeConverter }}:{{
-                            time.minutes | zero
-                          }}
-                          {{ time.hours | timeMedian }}</span
+                          >{{ time.hours | timeConverter }}:{{ time.minutes | zero
+                          }} {{ time.hours | timeMedian }}</span
                         >
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-
-                  <span style="font-size: 25px; margin: 5px"
-                    >&nbsp;-&nbsp;</span
-                  >
-                  <mat-form-field appearance="fill" style="width: 95px">
+                </div>
+                <div class="end_time">
+                  <mat-form-field appearance="fill" style="width: 100%;">
                     <mat-label>End</mat-label>
-                    <mat-select [(value)]="endTimeValue">
+                    <mat-select [(value)]="endTimeValue" (selectionChange)="endSlotChange()">
                       <mat-option
                         *ngFor="let time of endSlots; let i = index"
                         [value]="i"
                       >
                         <span *ngIf="selectedDate.date == time.date"
-                          >{{ time.hours | timeConverter }}:{{
-                            time.minutes | zero
-                          }}
-                          {{ time.hours | timeMedian }}</span
+                          >{{ time.hours | timeConverter }}:{{ time.minutes | zero
+                          }} {{ time.hours | timeMedian }}</span
                         >
                       </mat-option>
                     </mat-select>
@@ -176,61 +125,34 @@
               </div>
             </div>
           </div>
-          <!-- <div style="height: 40vh; max-height: 40vh; overflow-y: scroll">
-                                <div class="container">
-                                    <div class="row" style="max-width: 910px">
-                                        <div *ngFor="let todayDate of scheduleDates; let z = index" class="dayColumn">
-                                            <div style="margin-bottom: 20px; font-size: 15px">
-                                                {{ fullDate[z] | date: "fullDate" }}
-                                            </div>
-                                            <div *ngIf="todayDate.hasElements">
-                                                <div *ngFor="let time of ScheduleTime; let i = index">
-                                                    <div *ngIf="todayDate.date == time.date">
-                                                        <div class="timeSlots" [ngStyle]="
-                            startSelect >= 0 &&
-                            endSelect > 0 &&
-                            i > startSelect &&
-                            i < endSelect
-                              ? {
-                                  'background-color': 'rgb(227, 0, 132)',
-                                  color: 'white'
-                                }
-                              : {}
-                          " [ngClass]="{
-                            startClass:
-                              time.hours == st.sh &&
-                              time.minutes == st.sm &&
-                              startDate == time.date,
-                            endClass:
-                              time.hours == et.eh &&
-                              time.minutes == et.em &&
-                              startDate == time.date
-                          }" (click)="timeSelector(time, i)">
-                                                            {{ time.hours }}:{{ time.minutes | zero }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="!todayDate.hasElements" style="margin-top: 10px; margin-bottom: 10px">
-                                                No Available Schedules
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
-        </div>
-        <div class="connect-footer">
-          <div style="float: right">
+          <!-- <div class="col-12">
+                        <div class="form-group">
+                          <label>Attachment</label>
+                          <div class="file_Upload">
+                            <input type="file" id="real-file" hidden="hidden" />
+                            <button type="button" id="custom-button">
+                              <img
+                                src="../../assets/images/file-upload.svg"
+                                alt="#"
+                              />
+                            </button>
+                            <span id="custom-text">No file selected</span>
+                          </div>
+                        </div>
+                      </div> -->
+          <div class="col-12">
             <button
-              class="btn btn-primary"
+              class="buton proceed_btn"
               (click)="onBooking()"
               [disabled]="!bookingDetails.subject"
             >
-              Submit
+              Proceed to Payment (₹{{payableAmount}})
             </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
-  </div>
-</body>
+</div>
+
+</div>
+

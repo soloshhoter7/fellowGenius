@@ -1,6 +1,7 @@
 package fG.Controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +14,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import fG.Configuration.JwtUtil;
+import fG.Entity.PendingTutorProfileDetails;
 import fG.Entity.TutorProfileDetails;
 import fG.Model.AppInfoModel;
 import fG.Model.Category;
 import fG.Model.FiltersApplied;
 import fG.Model.NotificationModel;
+import fG.Model.ResponseModel;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorProfileDetailsModel;
@@ -36,12 +43,41 @@ public class userController {
 
 	@Autowired
 	UserService service;
+
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	
 	@RequestMapping(value="/fetchUserDataAnalytics")
 	public UserActivityAnalytics fetchUserData() {
 		return service.fetchUserDataAnalytics();
 	}
      
+	@RequestMapping(value="/fetchPendingExperts")
+	public List<PendingTutorProfileDetails> fetchPendingExperts(){
+		return service.fetchPendingExperts();
+	}
+	
+	@RequestMapping(value= "/expertChoosePassword")
+	@ResponseBody
+	public ResponseModel expertChoosePassword(@RequestBody String body) throws ParseException{
+		JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
+		System.out.println(jsonObject.get("token").getAsString());
+		String token =jsonObject.get("token").getAsString();
+		String password=jsonObject.get("password").getAsString();
+		if(token!=null) {
+			String userId =  jwtUtil.extractUsername(token);
+			return service.expertChoosePassword(userId,password);
+		}else {
+			return null;
+		}
+	}
+	// for getting student details after login
+
+		@RequestMapping(value = "/verifyExpert", produces = { "application/json" })
+		public void verifyExpert(String id) throws IOException {
+			service.verifyExpert(id);
+		}
 	@RequestMapping(value = "/registerUser")
 	public boolean saveUserProfile(@RequestBody registrationModel registrationModel) {
 		System.out.println(registrationModel);
@@ -113,7 +149,15 @@ public class userController {
 		service.updateTutorProfileDetails(tutorDetailsModel);
 
 	}
+	
 
+	@RequestMapping(value = "/registerExpert", produces = "application/JSON")
+	public boolean registerExpert(@RequestBody TutorProfileDetailsModel tutorDetailsModel)
+			throws IOException, IllegalArgumentException, IllegalAccessException {
+		return service.savePendingTutor(tutorDetailsModel);
+
+	}
+	
 	// for editing basic info of tutor
 	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/editTutorBasicInfo")

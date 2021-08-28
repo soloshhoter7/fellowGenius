@@ -1,33 +1,7 @@
-.starButton {
-  background: white;
-  border: 0.2px solid gray;
-  height: 13px;
-}
-
-.starButton:focus {
-  background-color: gray;
-}
-
-.hideBlock {
-  display: none;
-}
-
-@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {
-  .hideBlock {
-    display: none;
-  }
-  .search-result-container .search-cards-container .search-result-card {
-    margin-top: 1rem;
-    margin-left: -10px !important;
-  }
-  button {
-    position: relative;
-    margin-right: 50vw;
-    margin-bottom: 10px;
-    left: 2vw;
-  }
-}
-
-.marginZero {
-  margin: zero;
+.nav-link{
+    color: #bebcbc;
+    background: white;
+    display: flex;
+    border-radius: 10px;
+    margin-right: 10px;
 }

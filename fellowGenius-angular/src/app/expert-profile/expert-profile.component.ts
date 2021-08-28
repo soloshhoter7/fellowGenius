@@ -11,12 +11,14 @@ import { HttpService } from 'src/app/service/http.service';
 import { ScheduleTime } from '../model/ScheduleTime';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RoutesRecognized } from '@angular/router';
 import { scheduleData } from 'src/app/model/scheduleData';
 import { LoginDetailsService } from '../service/login-details.service';
 import { ConnectComponent } from './connect/connect.component';
 import { LoginComponent } from '../facade/login/login.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { filter, pairwise } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-expert-profile',
   templateUrl: './expert-profile.component.html',
@@ -85,6 +87,8 @@ export class ExpertProfileComponent implements OnInit {
   clickedIndex2: number;
   userId;
   profilePictureUrl = '../../assets/images/default-user-image.png';
+  previousUrl
+  selectedDomain;
   constructor(
     public profileService: ProfileService,
     public meetingSevice: MeetingService,
@@ -93,13 +97,29 @@ export class ExpertProfileComponent implements OnInit {
     public snackBar: MatSnackBar,
     public router: Router,
     public dialogRef: MatDialog,
+    private cookieService:CookieService,
     public activatedRoute: ActivatedRoute,
     public loginService: LoginDetailsService,
     public dialog: MatDialog
-  ) {}
+  ) {
+    
+    // this.router.events
+    // .pipe(filter((evt: any) => evt instanceof RoutesRecognized), pairwise())
+    // .subscribe((events: RoutesRecognized[]) => {
+    //   console.log('previous url', events[0].urlAfterRedirects);
+    //   console.log('current url', events[1].urlAfterRedirects);
+    // });
+  }
   ngOnInit(): void {
+    window.scroll(0,0);
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['page'];
+      this.selectedDomain = params['subject'];
+      if(this.loginService.getLoginType()!='Learner'){
+        this.cookieService.set("prev","view-tutors");
+        this.cookieService.set("expert_userId",this.userId);
+        this.cookieService.set("expert_domain",this.selectedDomain);
+      }
       this.httpService
         .fetchBookingTutorProfileDetails(this.userId)
         .subscribe((res) => {
@@ -113,6 +133,14 @@ export class ExpertProfileComponent implements OnInit {
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
   }
+  toDomainPage(){
+    if (this.selectedDomain) {
+      this.router.navigate(['search-results'], {
+        queryParams: { subject: this.selectedDomain },
+      });
+    }
+  }
+ 
   openConnectPage() {
     if (this.loginService.getLoginType() != null) {
       this.dialog.open(ConnectComponent, {

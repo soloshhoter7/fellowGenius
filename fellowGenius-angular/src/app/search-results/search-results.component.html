@@ -1,508 +1,315 @@
 <app-nav-bar></app-nav-bar>
-<app-advertisement-banner></app-advertisement-banner>
-<div class="content-container">
-  <div class="row" style="margin: 0">
-    <div class="col">
-      <div class="breadcrumb-container">
-        <ol class="breadcrumb">
-          <li><a href="#">Home</a></li>
-
-          <li class="active" [innerHtml]="selectedSubject"></li>
-        </ol>
-      </div>
-    </div>
-  </div>
-
-  <div class="fliter-tag-container">
-    <div class="row" style="margin: 0; width: 100%">
-      <div class="col-md-8">
-        <div class="filters-content">
-          <ul class="nav nav-pills">
-            <li class="nav-item" *ngFor="let filters of subjectFiltersApplied">
-              <a class="nav-link">
-                <span [innerHTML]="filters"></span>
-                <span class="material-icons" (click)="deleteSubject(filters)">
-                  close
-                </span></a
-              >
-            </li>
-            <li class="nav-item" *ngFor="let filters of priceFiltersApplied">
-              <a class="nav-link">
-                <span [innerHTML]="filters"></span>
-                <span class="material-icons" (click)="deletePrice(filters)">
-                  close
-                </span></a
-              >
-            </li>
-            <li class="nav-item" *ngFor="let filters of ratingFilterApplied">
-              <a class="nav-link">
-                <span>{{ filters }}&nbsp; & up</span>
-                <span class="material-icons" (click)="deleteRating(filters)">
-                  close
-                </span></a
-              >
-            </li>
-          </ul>
-        </div>
-        <!-- <button *ngIf="showMobileFilterButton" class="btn btn-primary" type="button" style="margin: 10px; z-index: 5" (click)="showFilters()">
-          Filter
-        </button> -->
-      </div>
-      <div class="col-md-4" style="float: right">
-        <div class="sort-by-container" style="width: 100%">
-          <span
-            ><a href="javascript:;" (click)="clearAllFilters()"
-              >Clear filters</a
-            ></span
+<body>
+  <div class="page-content">
+    <section class="wi_full py_5 full_expert_sec">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="page-breadcrumb">
+              <ul class="breadcrumb">
+                <li>
+                  <a href="#"
+                    ><img src="../../assets/images/breadcrumb-home.svg" alt="#"
+                  /></a>
+                </li>
+                <li class="active" [innerHtml]="selectedSubject"></li>
+              </ul>
+            </div>
+            <div class="expert_filter">
+              <div class="row">
+                <div class="col-12 col-md-9 col-lg-7 exprt_sel_fltr">
+                  <div class="filter_sel">
+                    <select
+                      id="subjectFilter"
+                      class="select2 form-control"
+                      (change)="searchBySubject($event)"
+                    >
+                      <option selected value="defaultSubject" disabled>Topic Options</option>
+                      <option *ngFor="let sc of subCategories">
+                        {{ sc.subCategory }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="filter_sel price_filter">
+                    <select
+                    id="priceFilter"
+                      class="select2 form-control"
+                      (change)="searchByPrice($event)"
+                    >
+                      <option selected value="defaultPrice" disabled>Price</option>
+                      <option value="100-199">100-199</option>
+                      <option value="200-399">200-399</option>
+                      <option value="400-699">400-699</option>
+                      <option value="700-999">700-999</option>
+                      <option value="1000-1499">1000-1499</option>
+                      <option value="1500-10000">1500-10000</option>
+                    </select>
+                  </div>
+                  <div class="filter_sel">
+                    <select
+                    id="ratingFilter"
+                      class="select2 form-control"
+                      (change)="searchByRatings($event)"
+                    >
+                      <option selected value="defaultRating" disabled>Average Reviews</option>
+                      <option value="1">1 & up</option>
+                      <option value="2">2 & up</option>
+                      <option value="3">3 & up</option>
+                      <option value="4">4 & up</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3 col-lg-4 ml-auto">
+                  <div class="serach_field">
+                    <input
+                      type="search"
+                      class="form-control expert_srch"
+                      placeholder="Search"
+                    />
+                  </div>
+                </div>
+                <div class="col-12" style="margin-top: 10px;">
+                  <ul class="nav nav-pills">
+                    <li class="nav-item" *ngFor="let filters of subjectFiltersApplied">
+                      <a class="nav-link">
+                        <span [innerHTML]="filters"></span>
+                        <span class="material-icons" style="cursor: pointer;" (click)="deleteSubject(filters)">
+                          close
+                        </span></a
+                      >
+                    </li>
+                    <li class="nav-item" *ngFor="let filters of priceFiltersApplied">
+                      <a class="nav-link">
+                        <span [innerHTML]="filters"></span>
+                        <span class="material-icons" style="cursor: pointer;" (click)="deletePrice(filters)">
+                          close
+                        </span></a
+                      >
+                    </li>
+                    <li class="nav-item" *ngFor="let filters of ratingFilterApplied">
+                      <a class="nav-link">
+                        <span>{{ filters }}&nbsp; & up</span>
+                        <span class="material-icons"  style="cursor: pointer;" (click)="deleteRating(filters)">
+                          close
+                        </span></a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-12 availbale_expert">
+                  <div class="total_expert">{{expertsCount}} Experts Available</div>
+                  <div class="sort_by_exprt">
+                    Sort by
+                    <div class="pice_select">
+                      <select class="select2" id="sortExpert">
+                        <option value="priceLowToHigh">Price: Low to High</option>
+                        <option value="priceHighToLow">Price: High to Low</option>
+                        <option value="ratingLowToHigh">Rating: Low to High</option>
+                        <option value="ratingHighToLow">Rating: High to Low</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div><div
+              *ngIf="isLoading"
+            style="
+              text-align: center;
+              margin-top: 8vh;
+              margin-left: auto;
+              margin-right: auto;
+            "
           >
-          <span style="margin-left: 15px">Sort By</span
-          ><select (change)="sort($event)">
-            <option selected disabled>Sort</option>
-            <option value="priceLowToHigh">Price: Low to High</option>
-            <option value="priceHighToLow">Price: High to Low</option>
-            <option value="ratingLowToHigh">Rating: Low to High</option>
-            <option value="ratingHighToLow">Rating: High to Low</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="search-result-container rowto">
-    <div class="filter-container columnto" [hidden]="showMobileFilterView">
-      <div class="filter-category">
-        <span *ngIf="!showMobileFilterView" class="filter-category-header"
-          >Subjects</span
-        >
-        <ul class="filter-category-list">
-          <li *ngFor="let sc of subCategories">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                [value]="sc.subCategory"
-                [checked]="subjectContains(sc.subCategory)"
-                (change)="searchBySubject($event)"
-              />{{ sc.subCategory }}
-              <span class="filter-num">(123)</span>
-            </label>
-          </li>
-          <!-- <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="Physics"
-                [checked]="subjectContains('Physics')"
-                (change)="searchBySubject($event)"
-              />Physics
-              <span class="filter-num">(123)</span>
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="Chemistry"
-                [checked]="subjectContains('Chemistry')"
-                (change)="searchBySubject($event)"
-              />Chemistry
-              <span class="filter-num">(123)</span>
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="Mathematics"
-                [checked]="subjectContains('Mathematics')"
-                (change)="searchBySubject($event)"
-              />Mathematics
-              <span class="filter-num">(123)</span>
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="Science"
-                [checked]="subjectContains('Science')"
-                (change)="searchBySubject($event)"
-              />Science
-              <span class="filter-num">(123)</span>
-            </label>
-          </li> -->
-        </ul>
-      </div>
-      <div class="filter-category">
-        <span class="filter-category-header" *ngIf="!showMobileFilterView"
-          >Price</span
-        >
-        <ul class="filter-category-list">
-          <li style="width: 50%">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="100-199"
-                [checked]="priceContains('100-199')"
-                (change)="searchByPrice($event)"
-              />100-199
-            </label>
-          </li>
-          <li style="width: 50%">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="200-399"
-                [checked]="priceContains('200-399')"
-                (change)="searchByPrice($event)"
-              />200-399
-            </label>
-          </li>
-          <li style="width: 50%">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="400-699"
-                [checked]="priceContains('400-699')"
-                (change)="searchByPrice($event)"
-              />400-699
-            </label>
-          </li>
-          <li style="width: 50%">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="700-999"
-                [checked]="priceContains('700-999')"
-                (change)="searchByPrice($event)"
-              />700-999
-            </label>
-          </li>
-          <li style="width: 50%">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="1000-1499"
-                [checked]="priceContains('1000-1499')"
-                (change)="searchByPrice($event)"
-              />1000-1499
-            </label>
-          </li>
-          <li style="width: 50%">
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="1500-10000"
-                [checked]="priceContains('1500-10000')"
-                (change)="searchByPrice($event)"
-              />1500+
-            </label>
-          </li>
-        </ul>
-      </div>
-      <div class="filter-category">
-        <span class="filter-category-header">Avg. Reviews</span>
-        <ul class="filter-category-list">
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="4"
-                [checked]="ratingContains('4')"
-                (change)="searchByRatings($event)"
-              />4 & up
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="3"
-                [checked]="ratingContains('3')"
-                (change)="searchByRatings($event)"
-              />3 & up
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="2"
-                [checked]="ratingContains('2')"
-                (change)="searchByRatings($event)"
-              />2 & up
-            </label>
-          </li>
-          <li>
-            <label class="filters-label">
-              <input
-                type="checkbox"
-                class="filter-input"
-                value="1"
-                [checked]="ratingContains('1')"
-                (change)="searchByRatings($event)"
-              />1 & up
-            </label>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="search-cards-container columnto">
-      <div
-      *ngIf="isLoading"
-    style="
-      text-align: center;
-      margin-top: 8vh;
-      margin-left: auto;
-      margin-right: auto;
-    "
-  >
-    <app-loading></app-loading>
-    <p style="margin:1rem;font-size: large;">Loading Experts..</p>
-  </div>
-      <!-- <div *ngIf="searchResults.length == 0" style="
-          width: max-content;
-          margin: auto;
-          padding: 10px;
-          padding-top: 20px;
-          max-width: 100vw;
-          text-align: center;
-        ">
-                    <h1 style="font-size: 5vh">We're Sorry !</h1>
-                    <h2 style="font-size: 3vh">
-                        We can't seem to find any previous experts
-                    </h2>
-                </div> -->
-      <ul class="rowto">
-        <!-- <div *ngIf="allFiltersApplied.length == 0"> -->
-        <!-- ....................................................... -->
-        <div
-          *ngIf="
-            allFiltersApplied.price.length == 0 &&
-            allFiltersApplied.ratings.length == 0 &&
-            allFiltersApplied.subjects.length == 0
-          "
-        >
-          <li class="search-result-card" *ngFor="let result of searchResults">
+            <app-loading></app-loading>
+            <p style="margin:1rem;font-size: larger;">Loading Experts..</p>
+          </div></div>
             <div
-              class="result-profile-pic"
-              [ngStyle]="{
-                'background-image': 'url(' + result.profilePictureUrl + ')'
-              }"
-              default="../../assets/images/default-user-image.png"
-            ></div>
-            <div class="result-card-header">
-              <span class="result-card-name" [innerHTML]="result.fullName">
-              </span>
-              <span
-                class="result-card-specalizaiton"
-                [innerHTML]="result.institute"
-              >
-              </span>
-              <div class="stars-outer">
-                <div class="stars-inner" [style.width.%]="result.rating"></div>
-              </div>
-            </div>
-
-            <div class="result-card-content">
-              <div class="numbers-container">
-                <div class="fee_per_attribute">
-                  ₹<span
-                    class="number"
-                    style="display: contents; color: #7d0f7d"
-                    [innerHTML]="result.price1"
-                  ></span>
-                  <span class="info">per hour</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <a
-                    class="number"
-                    [innerHTML]="result.reviewCount"
-                    href="javascript:;"
-                    (click)="viewProfile(result)"
-                  ></a>
-                  <a
-                    class="info"
-                    href="javascript:;"
-                    style="color: black"
-                    (click)="viewProfile(result)"
-                    >REVIEWS</a
-                  >
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <span
-                    class="number"
-                    [innerHTML]="result.lessonCompleted"
-                  ></span>
-                  <span class="info">Sessions</span>
-                </div>
-              </div>
-
-              <!-- <div
-                class="result-card-descirption"
-                [innerHTML]="result.description | shorten"
-              ></div> -->
-
-              <div class="result-card-tutorsfor">
-                <b> Tutors For</b>
-                <div class="tutor-sub">
-                  <span *ngFor="let skills of result.areaOfExpertise"
-                    >{{ skills.subCategory }}, &nbsp;</span
-                  >
-                </div>
-              </div>
-
-              <button
-                type="button"
-                class="btn btn-primary"
-                (click)="viewProfile(result)"
-              >
-                View Profile
-              </button>
-            </div>
-          </li>
-        </div>
-        <!-- ....................................................... -->
-
-        <!-- <div *ngIf="allFiltersApplied.length != 0"> -->
-        <div>
-          
-          <li class="search-result-card" *ngFor="let result of filteredArray">
-            <div
-              class="result-profile-pic"
-              [ngStyle]="{
-                'background-image': 'url(' + result.profilePictureUrl + ')'
-              }"
-            ></div>
-            <div class="result-card-header">
-              <span class="result-card-name" [innerHTML]="result.fullName">
-                <!-- Alex Chemoricle -->
-              </span>
-              <span
-                class="result-card-specalizaiton"
-                [innerHTML]="result.institute"
-              >
-                <!-- Exterior University - politics [bachelors] -->
-              </span>
-              <div class="stars-outer">
-                <div class="stars-inner" [style.width.%]="result.rating"></div>
-                <!-- <div class="stars-inner" style="width: 90%;"></div> -->
-              </div>
-            </div>
-
-            <div class="result-card-content">
-              <div class="numbers-container">
-                <div class="fee_per_attribute">
-                  <!-- ₹<span class="number" style="display: contents; color: #7d0f7d" [innerHTML]="result.price1"></span> -->
-                  ₹<span
-                    class="number"
-                    style="display: contents; color: #7d0f7d"
-                    [innerHTML]="result.price1"
-                  ></span>
-                  <span class="info">per hour</span>
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <a
-                    class="number"
-                    [innerHTML]="result.reviewCount"
-                    href="javascript:;"
-                    (click)="viewProfile(result)"
-                  ></a>
-                  <a
-                    class="info"
-                    href="javascript:;"
-                    style="color: black"
-                    (click)="viewProfile(result)"
-                    >REVIEWS</a
-                  >
-                </div>
-                <div class="separtor"></div>
-                <div>
-                  <span
-                    class="number"
-                    [innerHTML]="result.lessonCompleted"
-                  ></span>
-                  <span class="info">Sessions</span>
-                </div>
-              </div>
-
-              <!-- <div
-                class="result-card-descirption"
-                [innerHTML]="result.description | shorten"
-              >
-                
-              </div> -->
-
-              <div class="result-card-tutorsfor">
-                <b> Tutors For</b>
-                <div class="tutor-sub">
-                  <span *ngFor="let skills of result.areaOfExpertise"
-                    >{{ skills.subCategory }}, &nbsp;</span
-                  >
-                </div>
-              </div>
-
-              <button
-                type="button"
-                class="btn btn-primary"
-                (click)="viewProfile(result)"
-              >
-                View Profile
-              </button>
-            </div>
-          </li>
-        </div>
-
-        <!-- <div
-          *ngIf="
-            checkFilters() &&
-            filteredArray.length == 0
-          "
-          class="no-recordsfound"
-        >
-          <img src="/assets/images/norecordsfound.svg" />
-          <div class="information-container">
-            <span class="noinforheader">We're Sorry</span>
-                                                <span>
-              We can't seem to find any experts that match your search</span
+              *ngIf="
+                allFiltersApplied.price.length == 0 &&
+                allFiltersApplied.ratings.length == 0 &&
+                allFiltersApplied.subjects.length == 0
+              "
             >
+              <div class="expert__available">
+                <div class="expert__item" *ngFor="let result of searchResults">
+                  <div class="expert__img">
+                    <img
+                      [src]="result.profilePictureUrl"
+                      
+                      alt="#"
+                    />
+                  </div>
+                  <div class="expert__txt">
+                    <h6>
+                      {{result.fullName}}<span class="expert__rtng" 
+                        ><i class="fa fa-star" aria-hidden="true"></i> {{result.rating/20}}</span
+                      >
+                    </h6>
+                    <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                    <!-- <p>NPD<span>Marketing</span></p> -->
+                    <p>
+                      <span>{{createExpertString(result)|shorten}}</span></p>
+                    <ul>
+                      <li>
+                        <span class="review_cnt"
+                          ><img
+                            src="../../assets/images/review_icon.svg"
+                            alt="#"
+                          />{{result.reviewCount}} REVIEWS</span
+                        >
+                      </li>
+                      <li>
+                        <span class="review_session"
+                          ><img
+                            src="../../assets/images/session_icon.svg"
+                            alt="#"
+                          />{{result.lessonCompleted}} SESSIONS</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="expert__price">₹{{result.price1}}<span>Per Hour</span></div>
+                  <div class="expert__Btn">
+                    <a href="javascript:;" class="button exprt_btn connect_btn" (click)="viewProfile(result)">Connect</a>
+                    <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                  </div>
+                </div>
+
+                <div class="Page_nav" *ngIf="searchResults.length>16">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                      <a
+                        class="page-link"
+                        href="#"
+                        tabindex="-1"
+                        aria-disabled="true"
+                        ><i class="fas fa-angle-left"></i
+                      ></a>
+                    </li>
+                    <li class="page-item active">
+                      <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#"
+                        ><i class="fas fa-angle-right"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                allFiltersApplied.price.length != 0 ||
+                allFiltersApplied.ratings.length != 0 ||
+                allFiltersApplied.subjects.length != 0
+              "
+            >
+              <div class="expert__available">
+                <div class="expert__item" *ngFor="let result of filteredArray">
+                  <div class="expert__img">
+                    <img
+                      [src]="result.profilePictureUrl"
+                      
+                      alt="#"
+                    />
+                  </div>
+                  <div class="expert__txt">
+                    <h6>
+                      {{result.fullName}}<span class="expert__rtng" 
+                        ><i class="fa fa-star" aria-hidden="true"></i> {{result.rating/20}}</span
+                      >
+                    </h6>
+                    <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                    <!-- <p>NPD<span>Marketing</span></p> -->
+                    <p >
+                      <span *ngFor="let skills of result.areaOfExpertise">{{ skills.subCategory }},</span></p>
+                    <ul>
+                      <li>
+                        <span class="review_cnt"
+                          ><img
+                            src="../../assets/images/review_icon.svg"
+                            alt="#"
+                          />{{result.reviewCount}} REVIEWS</span
+                        >
+                      </li>
+                      <li>
+                        <span class="review_session"
+                          ><img
+                            src="../../assets/images/session_icon.svg"
+                            alt="#"
+                          />{{result.lessonCompleted}} SESSIONS</span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="expert__price">₹{{result.price1}}<span>Per Hour</span></div>
+                  <div class="expert__Btn">
+                    <a href="javascript:;" class="button exprt_btn connect_btn" (click)="viewProfile(result)">Connect</a>
+                    <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                  </div>
+                </div>
+
+                <div class="Page_nav" *ngIf="filteredArray.length>16">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                      <a
+                        class="page-link"
+                        href="#"
+                        tabindex="-1"
+                        aria-disabled="true"
+                        ><i class="fas fa-angle-left"></i
+                      ></a>
+                    </li>
+                    <li class="page-item active">
+                      <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#"
+                        ><i class="fas fa-angle-right"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div
+            *ngIf="
+              ((searchResults.length == 0 && filteredArray.length == 0) ||
+              (checkFilters() && filteredArray.length == 0)) && !isLoading
+            "
+           
+          >
+          <div class="row">
+            <div class="col-12 col-lg-8 mx-auto">
+              <div class="nodata_wrapper">
+                <img src="../../assets/images/No-data-clip.png" alt="#" class="nodata_thumbnail" />
+                <div class="nodata__desc">
+                  <h2>Sorry no expert match your selected criteria</h2>
+                  <p>Please relax your preferences</p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div> -->
-
-        <div
-          *ngIf="
-            ((searchResults.length == 0 && filteredArray.length == 0) ||
-            (checkFilters() && filteredArray.length == 0)) && !isLoading
-          "
-          class="no-recordsfound"
-        >
-          <img src="/assets/images/norecordsfound.svg" />
-          <div class="information-container">
-            <span class="noinforheader">We're Sorry</span>
-            <span>
-              We can't seem to find any experts that match your search</span
-            >
+          </div>
           </div>
         </div>
-      </ul>
-      <!-- <div *ngIf="filterSearch.length == 0 && allFiltersApplied.length!=0">
-        NO TEACHERS FOUND
-      </div> -->
-    </div>
+      </div>
+    </section>
   </div>
-</div>
+  <app-footer></app-footer>
+</body>

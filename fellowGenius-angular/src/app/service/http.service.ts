@@ -146,6 +146,7 @@ export class HttpService {
     return this.http.post(this.backendUrl+'/authenticate', {
       email: loginModel.email,
       password: loginModel.password,
+      method:loginModel.method
     });
   }
 
@@ -189,7 +190,25 @@ export class HttpService {
       }
     );
   }
+  fetchPendingExperts():Observable<tutorProfileDetails[]>{
+    return this.http.get<tutorProfileDetails[]>(
+      this.backendUrl+'/fellowGenius/fetchPendingExperts'
+    );
+  }
+  verifyExpert(id){
+    return this.http.get(this.backendUrl+'/fellowGenius/verifyExpert',{
+      params:{
+        id:id
+      }
+    })
+  }
   //for updating tutor profile details after completing tutor profile details form
+  registerExpert(tutorProfileDetails: tutorProfileDetails):Observable<Object> {
+    return this.http.post<Object>(
+      this.backendUrl+'/fellowGenius/registerExpert',
+      tutorProfileDetails
+    );
+  }
   updateTutorProfileDetails(tutorProfileDetails: tutorProfileDetails) {
     return this.http.post(
       this.backendUrl+'/fellowGenius/updateTutor',
@@ -262,7 +281,17 @@ export class HttpService {
       }
     );
   }
-  
+  fetchEarningData(tid:number):Observable<Object>{
+    console.log(tid);
+    return this.http.get<Object>(
+      this.backendUrl+'/fellowGenius/meeting/fetchEarningDataExpert',
+      {
+        params: {
+          tid: tid.toString()
+        },
+      }
+    );
+  }
   fetchBookingStatus(bid:number):Observable<Object>{
     return this.http.get(this.backendUrl+'/fellowGenius/meeting/fetchBookingStatus',
     {
@@ -349,6 +378,15 @@ export class HttpService {
           token:token,
           bid: bid.toString(),
         },
+      }
+    );
+  }
+choosePassword(token,password):Observable<Object> {
+    return this.http.post<Object>(
+      this.backendUrl+'/fellowGenius/expertChoosePassword',
+      {
+        "token":token,
+        "password":password
       }
     );
   }

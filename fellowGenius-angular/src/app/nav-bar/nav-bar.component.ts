@@ -33,14 +33,27 @@ export class NavBarComponent implements OnInit {
      'Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
    ]
   ngOnInit(): void {
+    this.stickyNavBar()
     this.loginType = this.loginService.getLoginType();
+    console.log(this.loginType);
     if (this.loginType == 'Learner') {
       this.studentProfile = this.studentService.getStudentProfileDetails();
     } else if (this.loginType == 'Expert') {
       this.tutorProfile = this.tutorService.getTutorDetials();
     }
   }
-
+  stickyNavBar(){
+  
+    $(window).scroll(function() {
+      var y = $(window).scrollTop();
+      if (y > 0) {
+          $(".navbar").addClass('sticky');
+      } 
+      else {
+          $(".navbar").removeClass('sticky');
+      }
+  });
+  }
   toFacade() {
     this.router.navigate(['']);
   }
@@ -48,6 +61,9 @@ export class NavBarComponent implements OnInit {
     this.router.navigate(['sign-up']);
   }
 
+  toSignUpExpert(){
+    this.router.navigate(['sign-up-expert'])
+  }
   toLoginPage() {
     this.router.navigate(['login']);
   }

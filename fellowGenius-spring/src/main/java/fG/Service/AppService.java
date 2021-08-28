@@ -110,6 +110,9 @@ public class AppService {
 		subCategories.put("Content", "Translation");
 		subCategories.put("Content", "Short form Content");
 		subCategories.put("Content", "Video Storyboard and Concept");
+		subCategories.put("Project Management", "Agile Project Management");
+		subCategories.put("Project Management", "Change Management");
+		subCategories.put("Project Management", "Resource Management");
 		subCategories.put("Sales", "Video Script");
 		subCategories.put("Sales", "Key Account Management");
 		subCategories.put("Sales", "Pre-sales");

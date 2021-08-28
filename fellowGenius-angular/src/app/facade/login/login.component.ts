@@ -5,7 +5,7 @@ import {
   ViewChild,
   NgZone,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
 import { StudentLoginModel } from 'src/app/model/studentLoginModel';
 import { NgForm } from '@angular/forms';
 import { tutorLoginModel } from 'src/app/model/tutorLoginModel';
@@ -23,15 +23,17 @@ import { CookieService } from 'ngx-cookie-service';
 import * as JwtDecode from 'jwt-decode';
 import { loginModel } from 'src/app/model/login';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
-import { TermsAndConditionsComponent } from '../sign-up/terms-and-conditions/terms-and-conditions.component';
+import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { registrationModel } from 'src/app/model/registration';
 import * as jwt_decode from 'jwt-decode';
+import * as bcrypt from 'bcryptjs';
 import { WebSocketService } from 'src/app/service/web-socket.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { filter, pairwise } from 'rxjs/operators';
 declare const FB: any;
 @Component({
   selector: 'app-login',
@@ -39,16 +41,20 @@ declare const FB: any;
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  previousUrl;
   constructor(
     private router: Router,
     public loginDetailsService: LoginDetailsService,
     private httpService: HttpService,
     private snackBar: MatSnackBar,
     private socialService: SocialService,
+    private cookieService:CookieService,
     private zone: NgZone,
     private dialogRef: MatDialog,
     private authService:AuthService
-  ) {}
+  ) {
+   
+  }
 
   @ViewChild('googleSignUp', { static: true })
   googleSignUp: ElementRef;
@@ -74,6 +80,10 @@ export class LoginComponent implements OnInit {
   maxDate: string;
   minDate: string;
   role;
+  prev_route;
+  expert_userId;
+  expert_domain;
+
   // --------------- models ---------------------------------
   registrationModel = new registrationModel();
   //---------------- configurations ----------------------
@@ -83,12 +93,26 @@ export class LoginComponent implements OnInit {
     verticalPosition: 'top',
   };
   ngOnInit(): void {
+    this.prev_route = this.cookieService.get("prev");
+    this.expert_userId = this.cookieService.get("expert_userId");
+    this.expert_domain = this.cookieService.get("expert_domain");
+    // this.goToPreviousUrl();
     this.googleSDK();
   }
   toFacade() {
     this.router.navigate(['']);
   }
-
+  goToPreviousUrl(){
+    console.log(this.prev_route);
+    if(this.prev_route!=''){
+      this.cookieService.delete("prev");
+      this.cookieService.delete("expert_userId")
+      this.cookieService.delete("expert_domain")
+      this.router.navigate(['view-tutors'], {
+        queryParams: { page:this.expert_userId,subject:this.expert_domain },
+      });
+    }
+  }
   onLogin(form: NgForm) {
     setTimeout(() => {
       this.isLoading = false;
@@ -98,6 +122,8 @@ export class LoginComponent implements OnInit {
     this.hideContainer = 'hideBlock';
     this.loginModel.email = form.value.email;
     this.loginModel.password = form.value.password;
+    this.loginModel.method= bcrypt.hashSync("manual", 1);
+    console.log(this.loginModel);
     this.authService.onLogin(this.loginModel);
     this.authService.getAuthStatusListener().subscribe((res)=>{
       if(res==false){
@@ -107,7 +133,13 @@ export class LoginComponent implements OnInit {
         this.incorrectLoginDetails = true;
       }else if(res==true){
         if(this.loginDetailsService.getLoginType()=='Learner'){
-          this.toFacade();
+          console.log("prev route",this.prev_route)
+          if(this.prev_route!=''){
+            this.goToPreviousUrl();
+          }else{
+            this.toFacade();
+          }
+
         }else if(this.loginDetailsService.getLoginType()=='Expert'){
           this.toHome();
         }
@@ -136,7 +168,11 @@ export class LoginComponent implements OnInit {
       this.authService.getAuthStatusListener().subscribe((res)=>{
         if(res==true){
           if(this.loginDetailsService.getLoginType()=='Learner'){
-            this.toFacade();
+            if(this.prev_route!=''){
+              this.goToPreviousUrl();
+            }else{
+              this.toFacade();
+            }
           }else if(this.loginDetailsService.getLoginType()=='Expert'){
             this.toHome();
           }
@@ -179,6 +215,8 @@ export class LoginComponent implements OnInit {
           this.hideContainer = 'hideBlock';
           this.loginModel.email = this.socialLogin.email;
           this.loginModel.password = this.socialLogin.id;
+          this.loginModel.method= bcrypt.hashSync("social", 1);
+          console.log(this.loginModel);
           this.authService.onLogin(this.loginModel);
           this.authService.getAuthStatusListener().subscribe((res)=>{
       if(res==false){
@@ -204,7 +242,11 @@ export class LoginComponent implements OnInit {
         });
       }else if(res==true){
         if(this.loginDetailsService.getLoginType()=='Learner'){
-          this.toFacade();
+          if(this.prev_route!=''){
+            this.goToPreviousUrl();
+          }else{
+            this.toFacade();
+          }
         }else if(this.loginDetailsService.getLoginType()=='Expert'){
           this.toHome();
         }  

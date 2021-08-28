@@ -1,5 +1,6 @@
 package fG.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -70,9 +71,14 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT approval_status='Pending' && NOT (rating = 0 OR rating = -1)", nativeQuery=true)
 	List<BookingDetails> fetchExpertRecentReviews(Integer tutorId);
 
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 && NOT (approval_status='Pending' OR approval_status='cancelled') && created_date BETWEEN ?2 and ?3", nativeQuery=true)
+	List<BookingDetails> fetchExpertMeetingsBetweenTwoDates(Integer tid,LocalDateTime start,LocalDateTime end);
+	
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE booking_details SET rating=?2, review_text=?3 WHERE meeting_id=?1", nativeQuery = true)
 	void saveTutorRatings(String meetingId, Integer rating, String reviewText);
+	
+	
 }
 

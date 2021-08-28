@@ -1,0 +1,915 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, startWith } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { AppInfo } from 'src/app/model/AppInfo';
+import { Category } from 'src/app/model/category';
+import { tutorProfile } from 'src/app/model/tutorProfile';
+import * as bcrypt from 'bcryptjs';
+import {
+  expertise,
+  tutorProfileDetails,
+} from 'src/app/model/tutorProfileDetails';
+import { HttpService } from 'src/app/service/http.service';
+import { TutorService } from 'src/app/service/tutor.service';
+import { togglePassword, initiateSelect2 } from '../../../../assets/js/custom';
+import { UploadProfilePictureComponent } from '../upload-profile-picture/upload-profile-picture.component';
+import { NgZone } from '@angular/core';
+import { loginModel } from 'src/app/model/login';
+import { AuthService } from 'src/app/service/auth.service';
+import { LoginDetailsService } from 'src/app/service/login-details.service';
+declare let $: any;
+declare const window: any;
+@Component({
+  selector: 'app-sign-up-expert',
+  templateUrl: './sign-up-expert.component.html',
+  styleUrls: ['./sign-up-expert.component.css'],
+})
+export class SignUpExpertComponent implements OnInit {
+  choosePassword;
+  newPassword;
+  loginEmail;
+  loginModel=new loginModel();
+  invalidOrganisationDetails: boolean;
+  emptyProfilePicture;
+  emptyEducationDetails=false;
+  registeredExpert=false;
+  isLoading=false;
+  verificationOtp: any;
+  wrongOtp: boolean;
+  ngAfterViewInit() {
+    togglePassword();
+    initiateSelect2();
+  }
+  emailValid = false;
+  addExpertise = new expertise();
+  profileError: string;
+  pricePerHourError: boolean = false;
+  constructor(
+    public cookieService: CookieService,
+    public tutorService: TutorService,
+    public httpService: HttpService,
+    public firebaseStorage: AngularFireStorage,
+    public snackBar: MatSnackBar,
+    private matDialog: MatDialog,
+    private router: Router,
+    private ngZone: NgZone,
+    private activatedRoute: ActivatedRoute,
+    private authService:AuthService,
+    private loginDetailsService:LoginDetailsService
+  ) {
+    this.fillOptions();
+  }
+  invalidCompletionDate = false;
+  basic = true;
+  myControl = new FormControl();
+  errorText: string;
+  isLoading3: boolean = false;
+  profilePicUploadStatus: boolean;
+  duplicateExpertiseArea;
+  duplicatePreviousOrganisation;
+  duplicateEducationArea;
+  verifyEmail=false;
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  @ViewChild('basicProfile') basicProfile: FormGroupDirective;
+  config: MatSnackBarConfig = {
+    duration: 2000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+  };
+  options: string[] = [];
+  //data fields
+  selectedExpertise;
+  expertises: expertise[] = [];
+  educationQualifications: string[] = [];
+  previousOraganisations: string[] = [];
+  prevArrangedOrganisations: any = [];
+  filteredOptions: Observable<string[]>;
+  inputOrganisation;
+  inputDesignation;
+  currentDesignation;
+  inputEducation;
+  inputCompletionDate;
+  inputInstitute;
+  tutorProfile = new tutorProfile();
+  tutorProfileDetails = new tutorProfileDetails();
+  userId;
+  profilePictureUrl = '../assets/images/dummy-profile.svg';
+  uploadedProfilePicture: File = null;
+  priceForExpertise;
+  selectedValue;
+  categories: Category[] = [];
+  subCategories: Category[] = [];
+  filteredSubCategories: Category[] = [];
+  appInfo: AppInfo[] = [];
+  selectedCategory;
+  selectedCategoryCount = 1;
+  selectedSubCategory;
+  isSelectedSubCategory;
+  GSTValue;
+  commission;
+  actualEarning;
+  invalidPicture: boolean = false;
+  pictureInfo: boolean = true;
+  invalidEducationDetails = false;
+  jwtToken;
+  invalidChoosePassword;
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.jwtToken = params['token'];
+      if(this.jwtToken){
+        this.choosePassword=true;
+      }else{
+        this.choosePassword=false;
+      }
+      // this.httpService
+      //   .fetchTutorProfileDetails(this.userId)
+      //   .subscribe((res) => {
+      //     this.teacherProfile = res;
+
+      //   });
+    });
+  
+    window['angularComponentReference'] = {
+      component: this,
+      zone: this.ngZone,
+      loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
+    };
+    this.getAllCategories();
+    this.getEarningAppInfo();
+    $('.select2').select2({});
+    $('.select2').on('change', function () {
+      this.selectedCategory = $(this).val();
+
+      window.angularComponentReference.zone.run(() => {
+        window.angularComponentReference.loadAngularFunction($(this).val());
+      });
+      // this.filteredSubCategories = [];
+      // this.filteredSubCategories = this.subCategories.filter(x=>x.category==this.selectedCategory)
+    });
+
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+  }
+
+  public _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+  saveNewPassword(){
+    this.isLoading=true;
+    console.log(this.newPassword);
+    console.log(this.jwtToken);
+    this.httpService.choosePassword(this.jwtToken,this.newPassword).subscribe((res:any)=>{
+      console.log(res);
+      if(res.response=='password not changed'||res==null){
+        this.isLoading=false;
+        console.log('password not changed !');
+        this.invalidChoosePassword=true;
+      }else{
+        this.loginEmail=res.response;
+        this.loginModel.email = this.loginEmail;
+        this.loginModel.password = this.newPassword;
+        this.loginModel.method= bcrypt.hashSync("manual", 1);
+        console.log(this.loginModel);
+        this.authService.onLogin(this.loginModel);
+        this.authService.getAuthStatusListener().subscribe((res)=>{
+          if(res==false){
+            console.log('login not successful!');
+            this.isLoading = false;
+            this.invalidChoosePassword=true;
+          }else if(res==true){
+            if(this.loginDetailsService.getLoginType()=='Learner'){
+              this.toFacade();
+            }else if(this.loginDetailsService.getLoginType()=='Expert'){
+              this.toHome();
+            }
+          }
+        });
+      }
+     
+    })
+  }
+  toFacade(){
+    this.router.navigate(['']);
+  }
+  toHome() {
+    this.router.navigate(['home']);
+  }
+  appendOtp(form: NgForm) {
+  
+    let otp: string = '';
+    let otp_1digit = form.value.otp_1digit;
+    let otp_2digit = form.value.otp_2digit;
+    let otp_3digit = form.value.otp_3digit;
+    let otp_4digit = form.value.otp_4digit;
+    let otp_5digit = form.value.otp_5digit;
+    let otp_6digit = form.value.otp_6digit;
+    otp += otp_1digit.toString();
+    otp += otp_2digit.toString();
+    otp += otp_3digit.toString();
+    otp += otp_4digit.toString();
+    otp += otp_5digit.toString();
+    otp += otp_6digit.toString();
+ 
+    return otp;
+  }
+  verifyEmailOtp(form){
+
+    this.isLoading=true;
+      let otp: string = this.appendOtp(form);
+   
+      if (otp == null) {
+        this.isLoading=false;
+        this.wrongOtp = true;
+      } else {
+
+        if (bcrypt.compareSync(otp, this.verificationOtp)) {
+        
+
+          this.httpService
+                .registerExpert(this.tutorProfileDetails)
+                .subscribe((res) => {
+                  this.isLoading=false;
+                  if(res==true){
+                    this.registeredExpert=true;
+                    this.verifyEmail=false;
+                  }else{
+                    this.isLoading=false;
+                    this.registeredExpert=false;
+                    this.verifyEmail=false;
+                    this.snackBar.open(
+                      'Expert already Registered !',
+                      'close',
+                      this.config
+                    );
+                  }
+                });
+        } else {
+          this.isLoading=false;
+          this.wrongOtp = true;
+        }
+      }
+  }
+  getEarningAppInfo() {
+    this.httpService.getEarningAppInfo().subscribe((res) => {
+      this.appInfo = res;
+    });
+  }
+  onPercentChange(percent: number) {
+    let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
+    let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;
+
+    this.GSTValue = Math.abs(this.round(percent / gstMultiplier - percent));
+    this.commission = Math.abs(
+      this.round(
+        percent / gstMultiplier / commissionMultiplier - percent / gstMultiplier
+      )
+    );
+    this.actualEarning = Math.abs(
+      this.round(percent - this.GSTValue - this.commission)
+    );
+    // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
+    // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
+  }
+  round(num) {
+    var m = Number((Math.abs(num) * 100).toPrecision(15));
+    return (Math.round(m) / 100) * Math.sign(num);
+  }
+  fillOptions() {
+    this.httpService.getAllSubCategories().subscribe((res) => {
+      this.subCategories = res;
+      if (this.subCategories.length > 0) {
+        for (var i = 0; i < this.subCategories.length; i++) {
+          this.options.push(this.subCategories[i].subCategory);
+        }
+      }
+    });
+  }
+  checkDomainInList(val) {
+    for (let categ of this.categories) {
+      if (categ.category == val) {
+        return true;
+      }
+    }
+    return false;
+  }
+  filterSCfromCateg(val) {
+
+    if (!this.selectedCategory || this.checkDomainInList(val)) {
+      this.selectedCategory = val;
+
+      this.filteredSubCategories = [];
+      this.filteredSubCategories = this.subCategories.filter(
+        (x) => x.category == this.selectedCategory
+      );
+
+      this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+      if (this.selectedCategoryCount > 1) {
+        this.isSelectedSubCategory = true;
+      } else {
+        this.isSelectedSubCategory = false;
+      }
+      this.selectedCategoryCount++;
+    } else {
+      this.selectedSubCategory = val;
+      this.isSelectedSubCategory = true;
+    }
+  }
+  getAllCategories() {
+    this.httpService.getAllCategories().subscribe((res) => {
+      let categories: Category[] = res;
+      if (categories.length > 0) {
+        for (var i = 0; i < categories.length; i++) {
+          let categ = new Category();
+          categ.category = categories[i].category;
+          this.categories.push(categ);
+          // this.selectedValue=this.categories[0].category;
+        }
+      }
+      this.httpService.getAllSubCategories().subscribe((res) => {
+        this.subCategories = res;
+        // this.selectedCategory=this.categories[0].category;
+
+      });
+    });
+  }
+
+  calculateProfileCompleted() {
+    let completeFields: number = 0;
+    let totalFields: number = 13;
+    if (this.tutorProfile.fullName != null) completeFields += 1;
+    if (this.tutorProfile.dateOfBirth != null) completeFields += 1;
+    if (this.tutorProfile.contact != null) completeFields += 1;
+    if (this.tutorProfileDetails.currentOrganisation != null)
+      completeFields += 1;
+    if (this.expertises.length > 0) completeFields += 1;
+    if (this.tutorProfileDetails.previousOrganisations.length > 0)
+      completeFields += 1;
+    if (this.tutorProfileDetails.institute != null) completeFields += 1;
+    if (this.tutorProfileDetails.educationalQualifications.length > 0)
+      completeFields += 1;
+    if (this.tutorProfileDetails.professionalSkills != null)
+      completeFields += 1;
+    if (this.tutorProfileDetails.yearsOfExperience != null) completeFields += 1;
+    if (this.tutorProfileDetails.description != null) completeFields += 1;
+    if (this.tutorProfileDetails.speciality != null) completeFields += 1;
+    if (this.tutorProfileDetails.linkedInProfile != null) completeFields += 1;
+    return this.round(completeFields / totalFields) * 100;
+  }
+  getInstitute() {
+    return this.educationQualifications[0].split(':')[0];
+  }
+  saveExpertBasicProfile(form: any) {
+
+    if (this.expertises.length > 0) {
+      if (this.errorText) {
+        this.errorText = '';
+      }
+      if(this.educationQualifications.length>0){
+        if(this.emptyEducationDetails==true)this.emptyEducationDetails=false;
+        if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
+          
+          // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
+          this.isLoading=true;
+
+          this.tutorProfileDetails.contact = form.value.contact;
+          this.tutorProfileDetails.dateOfBirth = form.value.dob;  
+          this.tutorProfileDetails.email=form.value.email;
+          this.tutorProfileDetails.educationalQualifications =
+            this.educationQualifications;
+          this.tutorProfileDetails.professionalSkills =
+            form.value.professionalSkills;
+          this.tutorProfileDetails.fullName = form.value.fullName;
+          this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+          this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
+          this.tutorProfileDetails.institute = this.getInstitute();
+          this.tutorProfileDetails.areaOfExpertise = this.expertises;
+          this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+          this.tutorProfileDetails.yearsOfExperience =
+            form.value.yearsOfExperience;
+          this.tutorProfileDetails.currentOrganisation =
+            form.value.currentOrganisation;
+          this.tutorProfileDetails.currentDesignation =
+            form.value.currentDesignation;
+          this.tutorProfileDetails.previousOrganisations =
+            this.previousOraganisations;
+          this.tutorProfileDetails.description = form.value.description;
+          this.tutorProfileDetails.speciality = form.value.speciality;
+          this.tutorProfileDetails.upiID = form.value.upiID;
+
+
+          this.httpService
+          .verifyEmail(this.tutorProfileDetails.email)
+          .subscribe((res) => {
+            this.verificationOtp = res['response'];
+            this.isLoading=false;
+            this.verifyEmail=true;
+          });
+        } else {
+          this.emptyProfilePicture = true;
+          let el = document.getElementById('photoBox');
+          el.scrollIntoView();
+        }
+      }else{
+        this.emptyEducationDetails=true;
+        let el =document.getElementById('educationBox');
+        el.scrollIntoView();
+      }
+      
+    } else {
+      this.errorText = 'Enter atleast one area of Expertise !';
+      let el = document.getElementById('domainBox');
+      el.scrollIntoView();
+    }
+  }
+
+  saveExpertAdvancedProfile(form: any) {
+    if (this.tutorProfileDetails.profileCompleted >= 50) {
+      this.userId = this.cookieService.get('userId');
+      if (this.userId && this.expertises.length > 0) {
+        this.tutorProfileDetails.institute = form.value.Institute;
+        this.tutorProfileDetails.areaOfExpertise = this.expertises;
+        this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+        this.tutorProfileDetails.yearsOfExperience =
+          form.value.yearsOfExperience;
+        this.tutorProfileDetails.currentOrganisation =
+          form.value.currentOrganisation;
+        this.tutorProfileDetails.previousOrganisations =
+          this.previousOraganisations;
+        this.tutorProfileDetails.description = form.value.description;
+        this.tutorProfileDetails.speciality = form.value.speciality;
+        this.tutorProfileDetails.bookingId =
+          this.tutorService.getTutorProfileDetails().bookingId;
+        if (this.tutorProfileDetails.profileCompleted == 50) {
+          this.tutorProfileDetails.profileCompleted = 100;
+        }
+        this.httpService
+          .updateTutorProfileDetails(this.tutorProfileDetails)
+          .subscribe((res) => {
+            this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+            this.snackBar.open(
+              'Information saved Successfully !',
+              'close',
+              this.config
+            );
+            this.router.navigate(['/home/tutor-dashboard']);
+          });
+      } else {
+        this.errorText = 'Enter atleast one area of Expertise !';
+      }
+    } else {
+    }
+  }
+
+  cancelForm() {
+    location.reload();
+  }
+  duplicacyCheck(fields: any, item: string) {
+    const arr = item.split(':');
+
+    for (let i = 0; i < fields.length; i++) {
+
+      const brr = fields[i].split(':');
+      if (arr[0] == brr[0]) {
+
+        return true;
+      }
+    }
+    return false;
+  }
+  organisationDuplicacyCheck(fields: any, item: string) {
+    const arr = item.split('&');
+
+    for (let i = 0; i < fields.length; i++) {
+
+      const brr = fields[i].split('&');
+      if (arr[0] == brr[0]) {
+
+        return true;
+      }
+    }
+    return false;
+  }
+  expertiseDuplicacyCheck(category, subcategory) {
+    for (let expertise of this.expertises) {
+      if (
+        expertise.category == category &&
+        expertise.subCategory == subcategory
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+  profilePictureChange(event) {
+    // this.profilePictureDisabled = true;
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    this.isLoading3 = true;
+
+    // this.profilePictureDisabled = true;
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    const fileSize = Math.round(this.uploadedProfilePicture.size / 1024);
+    const fileType = this.uploadedProfilePicture.type;
+
+    if (fileSize > 3072 || !fileType.includes('image')) {
+      this.invalidPicture = true;
+      this.isLoading3 = false;
+    } else {
+      this.invalidPicture = false;
+      const reader = new FileReader();
+      var imageSrc;
+      // var Image: File = evt.target.files[0];
+
+      if (event.target.files && event.target.files.length) {
+        this.uploadedProfilePicture = event.target.files[0];
+        reader.readAsDataURL(this.uploadedProfilePicture);
+        reader.onload = () => {
+          imageSrc = reader.result as string;
+          this.openDialog(imageSrc);
+        };
+      }
+    }
+
+    // this.uploadProfilePicture();
+  }
+  openDialog(imageSrc) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      image: this.uploadedProfilePicture,
+      imageSrc: imageSrc,
+    };
+    // this.dialog.open(UploadProfilePictureComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(
+      UploadProfilePictureComponent,
+      dialogConfig
+    );
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data == null) {
+        this.isLoading3 = false;
+      } else {
+        var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
+        var image: File = new File([blob], this.uploadedProfilePicture.name, {
+          type: this.uploadedProfilePicture.type,
+          lastModified: Date.now(),
+        });
+        this.uploadedProfilePicture = image;
+        this.uploadProfilePicture();
+      }
+    });
+  }
+  b64toBlob(dataURI, fileType) {
+    var byteString = atob(dataURI.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: fileType });
+  }
+  profilePictureChangeCompleted(event) {
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    var filePath = `tutor_profile_picture/${
+      this.uploadedProfilePicture
+    }_${new Date().getTime()}`;
+    const fileRef = this.firebaseStorage.ref(filePath);
+    this.firebaseStorage
+      .upload(filePath, this.uploadedProfilePicture)
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            var tutorProfileDetails: tutorProfileDetails =
+              this.tutorService.getTutorProfileDetails();
+            this.profilePictureUrl = url;
+            tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+            this.httpService
+              .editTutorProfileDetails(tutorProfileDetails)
+              .subscribe((res) => {
+                var tutProfile: tutorProfile =
+                  this.tutorService.getTutorDetials();
+                tutProfile.profilePictureUrl = this.profilePictureUrl;
+                this.httpService
+                  .editBasicProfile(tutProfile)
+                  .subscribe((res) => {
+                    this.tutorProfile.profilePictureUrl =
+                      this.profilePictureUrl;
+                    this.snackBar.open(
+                      'Image Uploaded successfully',
+                      'close',
+                      this.config
+                    );
+                  });
+              });
+          });
+        })
+      )
+      .subscribe();
+  }
+  //for uploading profile picture
+  uploadProfilePicture() {
+    var filePath = `tutor_profile_picture/${
+      this.uploadedProfilePicture
+    }_${new Date().getTime()}`;
+    const fileRef = this.firebaseStorage.ref(filePath);
+    this.firebaseStorage
+      .upload(filePath, this.uploadedProfilePicture)
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            this.profilePicUploadStatus = true;
+            this.isLoading3 = false;
+            this.pictureInfo = false;
+            if(this.emptyProfilePicture==true)this.emptyProfilePicture=false;
+            this.profilePictureUrl = url;
+            this.snackBar.open(
+              'Image Uploaded successfully',
+              'close',
+              this.config
+            );
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  basicProfileToggle() {
+    this.basic = true;
+  }
+  advancedProfileToggle() {
+    if (this.tutorService.tutorProfileDetails.profileCompleted < 50) {
+      this.profileError = 'Complete basic profile first !';
+    } else {
+      this.basic = false;
+    }
+  }
+  findSubCategory(sc) {
+    let category;
+    if (sc) {
+      for (let i = 0; i < this.subCategories.length; i++) {
+        if (this.subCategories[i].subCategory == sc) {
+          return this.subCategories[i].category;
+        }
+      }
+    } else {
+      return null;
+    }
+  }
+  // saveExpertise() {
+  //   this.addExpertise = new expertise();
+  //   this.selectedSubCategory = this.selectedExpertise;
+  //   this.selectedCategory = this.findSubCategory(this.selectedSubCategory);
+  //   console.log(this.selectedCategory);
+  //   if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
+  //     this.addExpertise.category = this.selectedCategory;
+  //     this.addExpertise.subCategory = this.selectedSubCategory;
+  //     this.addExpertise.price = this.priceForExpertise;
+  //     this.expertises.push(this.addExpertise);
+  //     this.selectedExpertise = '';
+  //     this.priceForExpertise = '';
+
+  //     if (this.duplicateExpertiseArea == true) {
+  //       this.duplicateExpertiseArea = false;
+  //     }
+  //   } else {
+  //     this.duplicateExpertiseArea = true;
+  //     this.selectedExpertise = '';
+  //     this.priceForExpertise = '';
+  //   }
+  // }
+
+  // save expertise for multiple domains
+  saveExpertise() {
+
+    if (this.tutorProfileDetails.price1) {
+      this.pricePerHourError = false;
+    }
+    this.addExpertise = new expertise();
+
+    if (this.selectedSubCategory) {
+      this.errorText = '';
+      if (
+        !this.expertiseDuplicacyCheck(
+          this.selectedCategory,
+          this.selectedSubCategory
+        )
+      ) {
+
+        this.addExpertise.category = this.selectedCategory;
+        this.addExpertise.subCategory = this.selectedSubCategory;
+
+        if (this.tutorProfileDetails.price1 != null) {
+          this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+          this.expertises.push(this.addExpertise);
+          $('.select2').val('').trigger('change');
+          this.expertises.reverse();
+          this.selectedCategory = '';
+          this.selectedSubCategory = '';
+          this.priceForExpertise = '';
+          if (this.duplicateExpertiseArea == true) {
+            this.duplicateExpertiseArea = false;
+          }
+        } else {
+          this.pricePerHourError = true;
+        }
+
+      } else {
+        this.duplicateExpertiseArea = true;
+        this.selectedExpertise = '';
+        this.selectedSubCategory = '';
+        this.priceForExpertise = '';
+      }
+    } else {
+      this.errorText = 'Please add Topic !';
+    }
+  }
+  onDomainChange(value) {
+    console.log('selected');
+    console.log(value);
+  }
+  onTopicChange(value) {
+    console.log('selected');
+    console.log(value);
+  }
+  deleteExpertise(index: any) {
+    var area = this.expertises[index];
+    if (confirm('Are you sure you want to delete ?')) {
+      this.expertises.splice(index, 1);
+    }
+  }
+
+  addOrganisation() {
+    if (this.inputOrganisation && this.inputDesignation) {
+      if (this.invalidOrganisationDetails == true) {
+        this.invalidOrganisationDetails = false;
+      }
+      if (
+        !this.organisationDuplicacyCheck(
+          this.previousOraganisations,
+          this.inputOrganisation
+        )
+      ) {
+        let org = {
+          organisation: this.inputOrganisation,
+          designation: this.inputDesignation,
+        };
+        this.previousOraganisations.push(
+          this.inputOrganisation + '&' + this.inputDesignation
+        );
+        this.prevArrangedOrganisations.push(org);
+        this.inputOrganisation = '';
+        this.inputDesignation = '';
+        if (this.duplicatePreviousOrganisation == true) {
+          this.duplicatePreviousOrganisation = false;
+        }
+      } else {
+        this.inputOrganisation = '';
+        this.inputDesignation = '';
+        this.duplicatePreviousOrganisation = true;
+      }
+    } else {
+      this.invalidOrganisationDetails = true;
+    }
+  }
+
+  deleteOrganisation(index: any) {
+    let organisation = this.prevArrangedOrganisations[index].organisation;
+    let designation = this.prevArrangedOrganisations[index].designation;
+    let orgDes: string = organisation + '&' + designation;
+    this.prevArrangedOrganisations.splice(index, 1);
+    this.previousOraganisations.splice(
+      this.previousOraganisations.indexOf(orgDes, 0),
+      1
+    );
+  }
+  checkValidCompletionDate(val) {
+    var dateOfBirth = val;
+    var studentDOB = dateOfBirth.split('-');
+    var dobYear = parseInt(studentDOB[0]);
+    var maxYear = new Date().getFullYear();
+    var minYear = new Date().getFullYear() - 60;
+
+    if (dobYear <= maxYear && dobYear >= minYear) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  addEducation() {
+    if (
+      this.inputEducation &&
+      this.inputCompletionDate &&
+      this.inputInstitute
+    ) {
+      if (this.checkValidCompletionDate(this.inputCompletionDate)) {
+        if (this.invalidEducationDetails == true) {
+          this.invalidEducationDetails = false;
+        }
+        if (this.invalidCompletionDate == true) {
+          this.invalidCompletionDate = false;
+        }
+        if(this.emptyEducationDetails==true)this.emptyEducationDetails=false;
+        if (
+          !this.duplicacyCheck(
+            this.educationQualifications,
+            this.inputInstitute +
+              ' : ' +
+              this.inputEducation +
+              ' : ' +
+              this.inputCompletionDate
+          )
+        ) {
+          this.educationQualifications.push(
+            this.inputInstitute +
+              ' : ' +
+              this.inputEducation +
+              ' : ' +
+              this.inputCompletionDate
+          );
+          this.inputEducation = '';
+          this.inputCompletionDate = '';
+          this.inputInstitute = '';
+          if (this.duplicateEducationArea == true) {
+            this.duplicateEducationArea = false;
+          }
+        } else {
+          this.inputEducation = '';
+          this.inputCompletionDate = '';
+          this.inputInstitute = '';
+          this.duplicateEducationArea = true;
+        }
+      } else {
+        this.invalidCompletionDate = true;
+      }
+    } else {
+      console.log('called');
+      this.invalidEducationDetails = true;
+    }
+  }
+  deleteEducation(index: any) {
+    this.educationQualifications.splice(index, 1);
+  }
+
+  // public loadScript() {
+  //     var isFound = false;
+  //     var scripts = document.getElementsByTagName("script")
+  //     for (var i = 0; i < scripts.length; ++i) {
+  //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes("loader")) {
+  //             isFound = true;
+  //         }
+  //     }
+
+  //     if (!isFound) {
+  //         var dynamicScripts = ["https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js","https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js",
+  //         "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"];
+
+  //         for (var i = 0; i < dynamicScripts.length; i++) {
+  //             let node = document.createElement('script');
+  //             node.src = dynamicScripts [i];
+  //             node.type = 'text/javascript';
+  //             node.async = false;
+  //             node.charset = 'utf-8';
+  //             document.getElementsByTagName('head')[0].appendChild(node);
+  //         }
+
+  //     }
+  // }
+  // loadCSS(url) {
+  //   // Create link
+  //   let link:any = document.createElement('link');
+  //   link.href = url;
+  //   link.rel = 'stylesheet';
+  //   link.type = 'text/css';
+
+  //   let head = document.getElementsByTagName('head')[0];
+  //   let links = head.getElementsByTagName('link');
+  //   let style = head.getElementsByTagName('style')[0];
+
+  //   // Check if the same style sheet has been loaded already.
+  //   let isLoaded = false;
+  //   for (var i = 0; i < links.length; i++) {
+  //     var node = links[i];
+  //     if (node.href.indexOf(link.href) > -1) {
+  //       isLoaded = true;
+  //     }
+  //   }
+  //   if (isLoaded) return;
+  //   head.insertBefore(link, style);
+  // }
+}

@@ -1,118 +1,63 @@
-<div class="header">
-  <div class="logo" (click)="toFacade()"></div>
-  <div
-    class="header-buttons-container"
-    *ngIf="loginService.getLoginType() == null"
-  >
-    <button
-      type="button showin"
-      class="btn btn-secondary showin"
-      (click)="onSignUp()"
-    >
-      Sign Up
-    </button>
-    <button type="button" class="btn btn-primary" (click)="toLoginPage()">
-      Login
-    </button>
-  </div>
-  <div
-    class="header-buttons-container"
-    *ngIf="loginService.getLoginType() != null"
-  >
-    <div class="nav-item dropdown">
-      <a
-        class="nav-link dropdown-toggle"
-        data-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-haspopup="true"
-        aria-expanded="false"
-        ><span class="fa fa-user-circle"></span
-      ></a>
-      <div class="dropdown-menu">
-        <a
-          class="dropdown-item"
-          *ngIf="loginService.getLoginType() == 'Learner'"
-          >Hi {{ studentService.getStudentProfileDetails().fullName }}</a
-        >
-        <a class="dropdown-item" *ngIf="loginService.getLoginType() == 'Expert'"
-          >Hi {{ tutorService.getTutorDetials().fullName }}</a
-        >
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="javascript:;" (click)="toDashboard()"
-          >Dashboard</a
-        >
-        <a class="dropdown-item" href="javascript:;" (click)="onSignOut()"
-          >Signout</a
-        >
-      </div>
-    </div>
-  </div>
-  <nav class="navbar navbar-expand-lg navbar-light desktop-domains-nav" style="float: left;margin-left: 6vw;">
-    <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarNavAltMarkup"
-    aria-controls="navbarNavAltMarkup"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-  Domains 
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <ul class="navbar-nav">
-      <li class="nav-item" *ngFor="let option of selectedOptions">
-        <a
-        class="nav-link tier1Links"
-        style="margin-right: 1vw;"
-        (click)="displaySelectedSubjects(option)"
-        >{{ option }}</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a 
-        class="nav-link dropdown-toggle tier1Links"  
-        href="#" 
-        id="navbarDropdownMenuLink" 
-        data-toggle="dropdown" 
-        aria-haspopup="true" 
-        aria-expanded="false">
-          More
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item nav-link tier1Links" style="margin-right: 1vw;" *ngFor="let option of moreOptions" (click)="displaySelectedSubjects(option)">{{option}}</a>
-        </div>
-      </li>
-      <!-- <div> -->
-      
-      <!-- </div> -->
-      </ul>
-  </div>  
-  </nav>
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarNavAlt"
-      aria-controls="navbarNavAlt"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAlt">
-      <a class="nav-item nav-link active" href="#">Home</a>
-          <a class="nav-item nav-link active" routerLink="/how-it-works"
-            >How it works</a
-          >
-          <a class="nav-item nav-link active" routerLink="/faq">FAQ</a>
-          <a class="nav-item nav-link hide" routerLink="/sign-up">Sign Up</a>
-          <div class="mobile-domains-nav">
-            <a class="dropdown-item nav-link tier1Links" *ngFor="let option of allOptions" (click)="displaySelectedSubjects(option)">{{option}}</a>
+<body>
+  <header class="header">
+    <nav class="navbar navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"
+          ><img src="../../assets/images/fellow genius logo.svg" alt="logo"
+        /></a>
+        <ul class="nav navbar-nav">
+          <div *ngIf="loginService.getLoginType() == null" style="display: flex;">
+            <a (click)="toSignUpExpert()"  class="expert_btn hdr_btn">
+              <span class="btn_icon"><img src="../../assets/images/expert-icon.svg" alt="#"></span>
+              <span class="btn_txt">Register as Expert</span>
+            </a>
+            <a href="javascript:;" (click)="toLoginPage()" class="login_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Login">
+              <img src="../../assets/images/header-icon-1.svg" alt="#">
+              <small>Login</small>
+            </a>
+            <a href="javascript:;" (click)="onSignUp()" class="register_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up">
+              <img src="../../assets/images/header-icon-2.svg" alt="#">
+              <small>Sign Up</small>
+            </a>
           </div>
-    </div>
-  </nav>
-</div>
+          
+          <div *ngIf="loginService.getLoginType() != null">
+            <div>
+              <a
+                class="dropdown-toggle user_profile"
+                data-toggle="dropdown"
+                href="#"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                ><i class="fas fa-user-circle"></i
+              ></a>
+              <ul class="dropdown-menu" aria-labelledby="settingDropdown">
+                <li>
+                  <a class="dropdown-item" *ngIf="loginService.getLoginType() == 'Learner'"
+                    ><i style="margin-right: 5px;" class="far fa-user-circle"></i>{{ studentService.getStudentProfileDetails().fullName }} </a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" *ngIf="loginService.getLoginType() == 'Expert'"
+                    ><i class="far fa-user-circle"></i>{{ tutorService.getTutorDetials().fullName }} </a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="javascript:;" (click)="toDashboard()"
+                    ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" (click)="onSignOut()"
+                    ><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </nav>
+  </header>   
+</body>

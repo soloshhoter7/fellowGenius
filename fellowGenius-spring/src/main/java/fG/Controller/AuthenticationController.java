@@ -34,8 +34,8 @@ public class AuthenticationController {
 		
 		@RequestMapping(value ="/authenticate",method = RequestMethod.POST)
 		public ResponseEntity<?> authentication(@RequestBody AuthenticationRequest authenticationRequest){
-			String password =  encoder.encode(authenticationRequest.getPassword());
-	        final String userId = userDetailsService.validateUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+
+	        final String userId = userDetailsService.validateUser(authenticationRequest.getEmail(), authenticationRequest.getPassword(),authenticationRequest.getMethod());
 	        
 	        if(userId!=null) {
 	        	final String role = userDetailsService.fetchUserRole(userId);

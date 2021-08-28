@@ -62,15 +62,7 @@ const numbers = timer(3000, 1000);
 })
 export class TestComponent implements OnInit {
   constructor(
-    private ngxAgoraService: NgxAgoraService,
-    private meetingService: MeetingService,
-    private router: Router,
-    private snackbar: MatSnackBar,
-    private sanitizer: DomSanitizer,
-    private locationStrategy: LocationStrategy,
-    private loginService: LoginDetailsService,
-    private httpService: HttpService,
-    private cookieService: CookieService
+
   ) {
    
   }

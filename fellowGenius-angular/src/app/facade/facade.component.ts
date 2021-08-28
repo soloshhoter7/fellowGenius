@@ -11,7 +11,9 @@ import { map, startWith } from 'rxjs/operators';
 import { HttpService } from '../service/http.service';
 import { Category } from '../model/category';
 import { WebSocketService } from '../service/web-socket.service';
-
+import * as $ from 'jquery';
+import {initiate} from '../../assets/js/custom';
+declare const owlCarousel: any;
 @Component({
   selector: 'app-facade',
   templateUrl: './facade.component.html',
@@ -25,7 +27,10 @@ export class FacadeComponent implements OnInit {
     private httpService:HttpService,
     private webSocketService:WebSocketService
     
-  ) {}
+  ) {
+    
+  }
+  
   switchView: boolean = false;
   showContainer: boolean = false;
   reviewsView = true;
@@ -40,53 +45,81 @@ export class FacadeComponent implements OnInit {
   selectedSubject;
   // options settings for owl carousel;
   customOptions: OwlOptions = {
-    loop: true,
-    autoplay: true,
-    center: true,
-    dots: true,
-    autoHeight: true,
-    autoWidth: true,
-    responsive: {
-      0: {
+    autoWidth:false,
+        stagePadding: 0,
+        autoplayTimeout: 9000, // time for slides changes
+        smartSpeed: 1000, // duration of change of 1 slide
         items: 1,
-      },
-      300: {
-        items: 1,
-      },
-      600: {
-        items: 2,
-      },
-      800: {
-        items: 3,
-      },
-      1000: {
-        items: 3,
-      },
-      1300: {
-        items: 4,
-      },
-    },
+        loop: true,
+        //slideBy:'page',
+        autoplay: true,
+        margin: 0,
+        dots: true,
+        
+        touchDrag: false,
+        mouseDrag: false,
+        nav: false
   };
+  expertOptions:OwlOptions={
+    autoWidth:false,
+        stagePadding: 0,
+        autoplayTimeout: 9000, // time for slides changes
+        smartSpeed: 1000, // duration of change of 1 slide
+        items: 3,
+        // singleItem:true,
+        loop: false,
+        //slideBy:'page',
+        autoplay: false,
+        margin: 10,
+        dots: false,
+        touchDrag: false,
+        mouseDrag: false,
+        nav: true,
+        // navText: ["<img src='../../assets/images/slider-left-arrow.svg'>","<img src=''../../assets/images/slider-right-arrow.svg'>"],
+        navText:["<img src='../../assets/images/slider-left-arrow.svg'>","<img src='../../assets/images/slider-right-arrow.svg'>"],
+        responsive:{
+            0:{ // breakpoint from 0 up - small smartphones
+                items:1
+            },
+            480:{  // breakpoint from 480 up - smartphones // landscape
+                items:1
+            },
+            768:{ // breakpoint from 768 up - tablets
+                items:2,
+                loop:false
+            },
+            992:{ // breakpoint from 992 up - desktop
+                items:3,
+                loop:false
+            },
+            1199:{ // breakpoint from 1199 up - desktop
+                items:4,
+                loop:false
+            }
+        }
+  }
   //arrray for carousel
   slidesStore = [
     {
       id: 1,
-      imageUrl: '../../assets/images/suyashKejriwal.jpg',
+      imageUrl: '../../assets/images/expert-2.png',
       name: 'Suyash Kejriwal',
       specialisation: 'PIET - B.tech[CSE]',
+      domain:'Finance',
       studentsCount: 50,
       sessionsCount: 98,
       rating: 85,
       review:
-        'Fellowgenius is a standalone peer to peer online classes platform. its beautiful user interface make Experts and learner feel at home. it is a great platform to promote online educators.',
+        'Its beautiful user interface make Experts and learner feel at home.',
     },
     {
       id: 2,
       imageUrl: '../../assets/images/vaibhav.jpeg',
       name: 'Vaibhav Vishal Jha',
+      domain:'Tools',
       specialisation: 'PIET - B.tech[CSE]',
       review:
-        'As a teaching expert, it was an awesome experience being a part of this wonderful platform. The layout is very clean anyone would appreciate its simplicity',
+        'As an expert, it was an awesome experience being part of this platform. ',
       studentsCount: 30,
       sessionsCount: 46,
       rating: 90,
@@ -95,16 +128,57 @@ export class FacadeComponent implements OnInit {
       id: 3,
       imageUrl: '../../assets/images/ajayVerma.jpg',
       name: 'Ajay Verma',
+      domain:'Marketing',
       specialisation: 'PIET - B.tech[CSE]',
       review:
-        'I really loved the experience of teaching here, not only the quality of the platform but also the ease to understand its functionality. Most of the features are self explanatory here, Good job guyz',
+        'I loved the experience of teaching and the quality functionality.',
       studentsCount: 21,
       sessionsCount: 53,
       rating: 100,
     },
+    {
+      id: 4,
+      imageUrl: '../../assets/images/amanGarg.jpg',
+      name: 'Aman garg',
+      domain:'Marketing',
+      specialisation: 'PIET - B.tech[CSE]',
+      review:
+        'I loved the experience of teaching here and the quality functionality.',
+      studentsCount: 21,
+      sessionsCount: 53,
+      rating: 100,
+    },
+    {
+      id: 5,
+      imageUrl: '../../assets/images/expert-4.png',
+      name: 'Himanshu Goyal',
+      domain:'Sales',
+      specialisation: 'PIET - B.tech[CSE]',
+      review:
+        'I really loved the experience of teaching here and the quality functionality.',
+      studentsCount: 21,
+      sessionsCount: 53,
+      rating: 100,
+    },
+    
+    {
+      id: 6,
+      imageUrl: '../../assets/images/expert-3.png',
+      name: 'Vir chauhan',
+      domain:'Tools',
+      specialisation: 'PIET - B.tech[CSE]',
+      review:
+        'I really loved the experience of teaching here and the quality functionality.',
+      studentsCount: 21,
+      sessionsCount: 53,
+      rating: 100,
+    }
   ];
-
+  ngAfterViewInit(){
+    initiate();
+  }
   ngOnInit(): void {
+    
     // this.breakpointObserver
     //   .observe(["(min-width: 800px)"])
     //   .subscribe((state: BreakpointState) => {
@@ -117,11 +191,14 @@ export class FacadeComponent implements OnInit {
     //     }
     //   });
     // this.getAllCategories();
+    // this.stickyNavBar();
+    // this.initialiseCarousel();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );
   }
+  
   sendData(){
     // this.webSocketService.sendMessageToMeeting('724402542');
     this.httpService.randomApi().subscribe((res)=>{
@@ -164,6 +241,14 @@ export class FacadeComponent implements OnInit {
     if (this.selectedSubject) {
       this.router.navigate(['search-results'], {
         queryParams: { subject: this.selectedSubject },
+      });
+    }
+  }
+  displayFromTiles(category) {
+    console.log(category)
+    if (category!=null) {
+      this.router.navigate(['search-results'], {
+        queryParams: { subject: category },
       });
     }
   }

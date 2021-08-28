@@ -1,93 +1,51 @@
-<body>
-  <div
-    *ngIf="isLoading"
-    style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
-  >
-    <app-loading></app-loading>
-    <p style="margin:1rem;font-size: large;">Signing in..</p>
-  </div>
+<div
+*ngIf="isLoading"
+style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
+>
+<app-loading></app-loading>
+<p style="margin:1rem;font-size: large;">Signing in..</p>
+</div>
 
-  <div class="login-container" [class]="hideContainer">
-    <div class="login-header">
-      <div class="header-container">
-        <span>Login</span>
-        <span class="info-class"
-          >Login with your registered email & password. Or login with your
-          Google account.
-        </span>
+<div class="access_page wi_full" [class]="hideContainer">
+  <div class="container">
+    <div class="page_wrapper">
+      <div class="access_icon_box">
+        <img src="../../../assets/images/login-clip.svg" alt="#" class="graphic_style">
       </div>
-      <div class="logo"></div>
-      <span
-        class="material-icons close"
-        (click)="toFacade()"
-        style="cursor: pointer"
-      >
-        close
-      </span>
-    </div>
-    <!-- <p style="color: red;" *ngIf="incorrectLoginDetails">{{ errorText }}</p> -->
-    <div class="login-parameter-container">
-      <p style="color: red" *ngIf="incorrectLoginDetails">{{ errorText }}</p>
-      <form (ngSubmit)="onLogin(l)" #l="ngForm">
-        <div class="form-group">
-          <label class="form-control-placeholder" for="email"
-            >Email Address</label
-          >
-          <input
-            type="email"
-            id="email"
-            class="form-control"
-            ngModel
-            name="email"
-            required
-            email
-            #email="ngModel"
-            maxlength="64"
-          />
+      <div class="access_field_box">
+        <div class="access_header">
+          <a href="" class="accs_logo"><img src="../../../assets/images/fellow genius logo.svg" alt="#"></a>
         </div>
-        <div class="form-group">
-          <label class="form-control-placeholder" for="password"
-            >Password</label
-          >
-          <input
-            type="password"
-            id="password"
-            class="form-control"
-            name="password"
-            ngModel
-            [type]="hide ? 'password' : 'text'"
-            required
-            #password="ngModel"
-            maxlength="40"
-          />
-        </div>
-        <div class="form-group button-container">
-          <a
-            href="javascript:;"
-            (click)="toResetPassword()"
-            class="forgot-password"
-          >
-            Forgot-Password
-          </a>
-          <button class="btn btn-primary" type="submit" [disabled]="!l.valid">
-            Sign in
-          </button>
-        </div>
-      </form>
-      <div class="login-instead">
-        <span>Or</span>
-
-        <button
-          class="btn btn-secondary"
-          (click)="prepareLoginButton()"
-          #googleSignUp
-        >
-          <i class="fa fa-google social-icons" style="margin-right: 5px"></i>
-          <p style="display: inline; font-size: larger">Login Using Google</p>
-        </button>
-        <span> New to FellowGenius? </span>
-        <a routerLink="/sign-up" class="forgot-password">Sign up</a>
+              <div class="access_data">
+                  <div class="content_wrapper">
+                      <h2>Log in</h2>
+                      <div class="tagline"></div>
+                      <div class="error_message" *ngIf="incorrectLoginDetails">
+                        <div class="msg_wrap">
+                          <img src="../../../assets/images/required-error.svg" alt="#" class="erro_icon">
+                          <span><strong>Error</strong>{{errorText}}</span>
+                        </div>
+                      </div>
+                      <form (ngSubmit)="onLogin(l)" #l="ngForm">
+                          <div class="form-group">
+                              <label class="">E-Mail</label>
+                              <input type="email" id="email" ngModel name="email" required email #email="ngModel" maxlength="64" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label class="">Password</label>
+                              <input type="password" id="password"  class="form-control" name="password" ngModel [type]="hide ? 'password' : 'text'" required #password="ngModel" maxLength="40">
+                              <a routerLink="/reset-password" class="frgt_pwd" (click)="toResetPassword()">Forgot Password ?</a>
+                          </div>
+                          <button type="submit" [disabled]="!l.valid" class="button form_Btn">Login</button>
+                          <div class="sepratr_login">Easy login with</div>
+                          <button type="button" class="button google_Btn" (click)="prepareLoginButton()" #googleSignUp><i class="fab fa-google"></i>Google</button>
+                      </form>
+                  </div>
+              </div>
+        <div class="access_footer">
+                  <p>Don't have an account yet? <a href="javascript:;" routerLink="/sign-up">Create an account</a></p>         
+              </div>
       </div>
     </div>
   </div>
-</body>
+</div> 

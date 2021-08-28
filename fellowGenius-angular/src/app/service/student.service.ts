@@ -15,59 +15,72 @@ export class StudentService {
   studentBookings: scheduleData[];
   editVariable: string;
   profileCompleted;
-  private bookingList:bookingDetails[]=[];
-  private approvedList:bookingDetails[]=[];
-  private liveMeetingList:bookingDetails[]=[];
-
+  private bookingList: bookingDetails[] = [];
+  private approvedList: bookingDetails[] = [];
+  private liveMeetingList: bookingDetails[] = [];
+  private upcomingMeetingList: bookingDetails[] = [];
   approvedBookingsChanged = new Subject<bookingDetails[]>();
-  bookingsChanged= new Subject<bookingDetails[]>();
+  bookingsChanged = new Subject<bookingDetails[]>();
   liveMeetingsChanged = new Subject<bookingDetails[]>();
-
+  upcomingMeetingsChanged = new Subject<bookingDetails[]>();
   constructor(
-    private httpService:HttpService,
-    private loginService:LoginDetailsService
-    ){
+    private httpService: HttpService,
+    private loginService: LoginDetailsService
+  ) {}
 
+  setUpcomingBookings(booking: bookingDetails[]) {
+    this.upcomingMeetingList = this.upcomingMeetingList.concat(booking);
+    this.upcomingMeetingsChanged.next(this.upcomingMeetingList.slice());
   }
-  setPendingBookings(booking:bookingDetails[]){
-    this.bookingList=booking;
+  getUpcomingMeetings() {
+    return this.upcomingMeetingList.slice();
+  }
+
+  setPendingBookings(booking: bookingDetails[]) {
+    this.bookingList = booking;
     this.bookingsChanged.next(this.bookingList.slice());
   }
-  getPendingBookings(){
+  getPendingBookings() {
     return this.bookingList.slice();
   }
-  setApprovedBookings(booking:bookingDetails[]){
-    this.approvedList=booking;
+
+  setApprovedBookings(booking: bookingDetails[]) {
+    this.approvedList = booking;
     this.approvedBookingsChanged.next(this.approvedList.slice());
   }
-  getApprovedBookings(){
+  getApprovedBookings() {
     return this.approvedList.slice();
   }
-  setLiveBookings(booking:bookingDetails[]){
-    this.liveMeetingList=booking;
+
+  setLiveBookings(booking: bookingDetails[]) {
+    this.liveMeetingList = booking;
     this.liveMeetingsChanged.next(this.liveMeetingList.slice());
   }
-  getLiveBookings(){
+  getLiveBookings() {
     return this.liveMeetingList.slice();
   }
+
   setProfileCompleted(profileCompleted: number) {
     this.profileCompleted = profileCompleted;
   }
   getProfileCompleted() {
     return this.profileCompleted;
   }
+
   setEditFuntion(editFunction: string) {
     this.editVariable = editFunction;
   }
   getEditFunction() {
     return this.editVariable;
   }
+
   setStudentProfileDetails(studentProfile: StudentProfileModel) {
     this.studentProfile = studentProfile;
   }
   getStudentProfileDetails() {
     return this.studentProfile;
   }
+
   setStudentBookings(schedule: scheduleData[]) {
     this.studentBookings = schedule;
     this.manipulateMeetingSchedule();
@@ -75,6 +88,7 @@ export class StudentService {
   getStudentBookings() {
     return this.studentBookings;
   }
+
   manipulateMeetingSchedule() {
     for (let schedule of this.studentBookings) {
       var startDate: Date = new Date(schedule.StartTime.toString());
@@ -86,29 +100,62 @@ export class StudentService {
   }
   //for fetching student pending bookings
   fetchStudentPendingBookings() {
-    if(this.loginService.getLoginType()=='Learner'){
-      if(this.studentProfile.sid){
-        this.httpService.findStudentBookings(this.studentProfile.sid).subscribe((res) => {
-          this.setPendingBookings(res);
-        });
+    if (this.loginService.getLoginType() == 'Learner') {
+      if (this.studentProfile.sid) {
+        this.httpService
+          .findStudentBookings(this.studentProfile.sid)
+          .subscribe((res) => {
+            this.setPendingBookings(res);
+          });
       }
     }
   }
   //for fetching student approved bookings
   fetchApprovedStudentMeetings() {
-    if(this.loginService.getLoginType()=='Learner'&&this.studentProfile.sid){
-      this.httpService.fetchApprovedMeetings(this.studentProfile.sid).subscribe((res) => {
-        this.setApprovedBookings(res);
-      });
+    if (
+      this.loginService.getLoginType() == 'Learner' &&
+      this.studentProfile.sid
+    ) {
+      this.httpService
+        .fetchApprovedMeetings(this.studentProfile.sid)
+        .subscribe((res) => {
+          this.setApprovedBookings(res);
+        });
     }
   }
-  //for fetching student live meetings 
+  //for fetching student live meetings
   fetchLiveMeetings() {
-    if(this.loginService.getLoginType()=='Learner'&&this.studentProfile.sid){
-    this.httpService.fetchLiveMeetingsStudent(this.studentProfile.sid).subscribe((res) => {
-     this.setLiveBookings(res);
-    });
+    if (
+      this.loginService.getLoginType() == 'Learner' &&
+      this.studentProfile.sid
+    ) {
+      this.httpService
+        .fetchLiveMeetingsStudent(this.studentProfile.sid)
+        .subscribe((res) => {
+          this.setLiveBookings(res);
+        });
     }
   }
-
+  fetchUpcomingMeetings() {
+    if (this.loginService.getLoginType() == 'Learner') {
+      if (this.studentProfile.sid) {
+        this.upcomingMeetingList=[];
+        this.httpService
+          .findStudentBookings(this.studentProfile.sid)
+          .subscribe((res) => {
+            this.setUpcomingBookings(res);
+          });
+          this.httpService
+        .fetchApprovedMeetings(this.studentProfile.sid)
+        .subscribe((res) => {
+          this.setUpcomingBookings(res);
+        });
+        this.httpService
+        .fetchLiveMeetingsStudent(this.studentProfile.sid)
+        .subscribe((res) => {
+          this.setUpcomingBookings(res);
+        });
+      }
+    }
+  }
 }

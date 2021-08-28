@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { SocialService } from './social.service';
 import { Subject } from 'rxjs';
 import { NotificationService } from './notification.service';
+import * as bcrypt from 'bcryptjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -154,7 +155,7 @@ export class AuthService {
   }
   onLogin(loginModel:loginModel) {
     this.httpService.checkLogin(loginModel).subscribe((res) => {
-      
+      console.log(res);
       if (res['response'] != 'false') {
         this.cookieService.set('token', res['response']);
         this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
@@ -225,6 +226,7 @@ export class AuthService {
             if (res == true) {
               this.loginModel.email = registrationModel.email;
               this.loginModel.password = registrationModel.password;
+              this.loginModel.method= bcrypt.hashSync("manual", 1);
               // for logging in once registration is done
              
               this.httpService.checkLogin(this.loginModel).subscribe((res) => {
@@ -291,12 +293,16 @@ export class AuthService {
           });
   }
   saveSocialLogin(registrationModel) {
+    console.log(registrationModel);
     this.httpService.registerUser(registrationModel).subscribe((res) => {
       if (res == true) {
+        console.log(res);
         this.loginModel.email = registrationModel.email;
-        this.loginModel.password = registrationModel.password;
+        this.loginModel.password = registrationModel.socialId;
+        this.loginModel.method= bcrypt.hashSync("social", 1);
         // for logging in once registration is done
         this.httpService.checkLogin(this.loginModel).subscribe((res) => {
+          console.log(res);
           this.cookieService.set('token', res['response']);
           this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
           this.userId = this.cookieService.get('userId');
@@ -342,7 +348,8 @@ export class AuthService {
             });
           }
         });
-      }{
+      }else{
+        console.log(res);
         this.isAuthenticated=false;
         this.authStatusListener.next(false);
       }

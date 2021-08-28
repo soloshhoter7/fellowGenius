@@ -7,6 +7,9 @@ public class TutorProfileDetailsModel {
 	Integer tid;
 	Integer bookingId;
 	String fullName;
+	String email;
+	String contact;
+	String dateOfBirth;
 	String institute;
 	ArrayList<String> educationalQualifications;
 	String price1;
@@ -20,11 +23,14 @@ public class TutorProfileDetailsModel {
 	String  profilePictureUrl;
 	String professionalSkills;
 	String currentOrganisation;
+	String currentDesignation;
 	ArrayList<String> previousOrganisations = new ArrayList<>();
 	ArrayList<expertise> areaOfExpertise = new ArrayList<expertise>();;
 	Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
+	
+	String upiID;
 	public Integer getTid() {
 		return tid;
 	}
@@ -152,6 +158,39 @@ public class TutorProfileDetailsModel {
 	}
 	public void setBookingId(Integer bookingId) {
 		this.bookingId = bookingId;
+	}
+	
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+	public String getCurrentDesignation() {
+		return currentDesignation;
+	}
+	public void setCurrentDesignation(String currentDesignation) {
+		this.currentDesignation = currentDesignation;
+	}
+
+	public String getUpiID() {
+		return upiID;
+	}
+	public void setUpiID(String upiID) {
+		this.upiID = upiID;
 	}
 	@Override
 	public String toString() {

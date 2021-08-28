@@ -1,0 +1,306 @@
+@media only screen and (min-width: 1400px){
+    .expert__description .description__tabs ul.nav.nav-tabs li.nav-item{
+        min-width: 200px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    header .navbar .navbar-nav .hdr_btn.login_btn:hover img, header .navbar .navbar-nav .hdr_btn.login_btn small,
+    header .navbar .navbar-nav .hdr_btn.register_btn:hover img, header .navbar .navbar-nav .hdr_btn.register_btn small{
+        display: none;
+    }
+    header .navbar .navbar-nav .hdr_btn.login_btn:hover small, header .navbar .navbar-nav .hdr_btn.login_btn img,
+    header .navbar .navbar-nav .hdr_btn.register_btn:hover small, header .navbar .navbar-nav .hdr_btn.register_btn img{
+        display: inline;
+    }
+}
+
+@media only screen and (max-width: 1199px){
+    .full_expert_sec .exprt_sel_fltr .filter_sel{
+        min-width: 180px;
+    }
+    .full_expert_sec .exprt_sel_fltr .filter_sel.price_filter {
+        min-width: 100px;
+    }
+    .full_expert_sec .exprt_sel_fltr .filter_sel+.filter_sel {
+        margin-left: 10px;
+    }
+}
+
+
+@media only screen and (max-width: 991px){
+    body{
+        font-size: 16px;
+    }
+    h1 {
+        font-size: 45px;
+    }
+    h2{
+        font-size: 35px;
+    }
+    h3{
+        font-size: 28px;
+    }
+    h4{
+        font-size: 22px;
+    }
+    .button, button, .btn{
+        padding: 13px 20px 10px;
+    }
+    .banner_sec .banner_image {
+        text-align: center;
+        margin-top: 2em;
+    }
+    .help_sec .content_box:before{
+        display: none;
+    }
+    .consultaion_sec .consultaion_list .list_item {
+        width: calc(100% / 3 - 16px);
+    }
+    .help_sec .content_box{
+        padding-right: 0;
+    }
+    .banner_sec, .contact_banner, .faq_banner{
+        height: auto;
+        border-bottom-right-radius: 50px;
+    }
+    .banner_sec .banner_image, .contact_banner .banner_image, .faq_banner .banner_image{
+        height: auto;
+    }
+    ul.MenusNav_Style li a.Link_Styled{
+        font-size: 14px;
+    }
+    .expert__available .expert__item{
+        padding: 10px;
+        width: calc(100% / 3 - 30px);
+    }
+    .book__meeting{
+        margin-top: 2em;
+    }
+
+}
+
+
+@media only screen and (max-width: 767px){
+    header .navbar .navbar-nav .expert_btn.hdr_btn span.btn_txt, header .navbar .navbar-nav .hdr_btn.register_btn small, 
+    header .navbar .navbar-nav .hdr_btn.login_btn small {
+        display: none;
+    }
+    header .navbar .navbar-nav .expert_btn.hdr_btn {
+        width: 40px !important;
+        padding: 0 !important;
+    }
+    header .navbar .navbar-nav .hdr_btn, header .navbar .navbar-nav .expert_btn.hdr_btn span.btn_icon {
+        width: 40px;
+        height: 40px;
+        left: 0;
+    }
+    header .navbar .navbar-nav .hdr_btn img {
+        width: 20px;
+    }
+    header .navbar .navbar-nav .user_profile{
+        width: 60px;
+        height: 40px;
+    }
+    header .navbar .navbar-nav .user_profile > .fa-user-circle{
+        font-size: 40px;
+    }
+    .help_list ul li {
+        width: calc(100% - 30px);
+    }
+    .help_list ul li .list_wrapper{
+        padding-left: 90px;
+        position: relative;
+    }
+    .help_list ul li .list_wrapper .help_icon {
+        width: 70px;
+        height: 70px;
+        position: absolute;
+        left: 0;
+        top: 10px;
+    }
+    .help_list ul li .list_wrapper .help_icon img {
+        width: 40px;
+    }
+    section.how_works_sec {
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+    .video_box{
+        height: 350px;
+    }
+    .hw_video_sec {
+        margin-top: -175px;
+    }
+    .how_works_steps{
+        margin-top: 230px;
+    }
+    .how_works_steps .list_item .img_box{
+        height: 200px;
+        padding-right: 0;
+    }
+    .consultaion_sec .consultaion_list .list_item {
+        width: calc(100% / 2 - 16px);
+    }
+    .banner_sec{
+        border-bottom-right-radius: 50px;
+    }
+    footer, .how_works_steps{
+        border-top-right-radius: 50px;
+    }
+    .expert-carousel .owl-nav button{
+        width: 40px;
+        height: 40px;
+    }
+    .expert-carousel .owl-nav button img{
+        top: -1px;
+    }
+    .expert_sec .carousel_sec{
+        padding: 0 40px;
+    }
+    .help_list ul{
+        width: 100%;
+        margin-left: 0;
+    }
+    ul.MenusNav_Style {
+        padding-right: 0;
+    }
+    .expert__available .expert__item {
+        width: calc(100% / 2 - 30px);
+    }
+    .full_expert_sec .expert_filter .serach_field {
+        margin-top: 1em;
+    }
+    .access_page:before, .access_page .page_wrapper .access_icon_box{
+        display: none;
+    }
+    .access_page .page_wrapper .access_field_box{
+        width: 100%;
+    }
+    .access_page .page_wrapper .access_field_box .access_header{
+        text-align: center; 
+    }
+    .access_page .page_wrapper .access_field_box .access_header a.accs_logo{
+        float: none;
+    }
+    .access_page .page_wrapper .access_field_box .access_data{
+        padding: 20px 0;
+    }
+}
+
+
+@media only screen and (max-width: 575px){
+    h1 {
+        font-size: 40px;
+    }
+    h2{
+        font-size: 30px;
+    }
+    h3{
+        font-size: 24px;
+    }
+    h4{
+        font-size: 20px;
+    }
+    body {
+        font-size: 14px;
+    }
+    header .navbar .navbar-nav .setting_menu, header .navbar .navbar-nav .hdr_btn{
+        margin-left: 5px;
+    }
+    .video_box {
+        height: 250px;
+    }
+    .video_box button.video_btn{
+        width: 50px;
+        height: 50px;
+    }
+    .how_works_steps {
+        margin-top: 150px;
+    }
+    .hw_video_sec {
+        margin-top: -115px;
+    }
+    .video_box > img{
+        border-radius: 25px;
+    }
+    .how_works_steps .list_item .img_box, .how_works_steps .list_item:nth-child(even) .img_box{
+        width: 100%;
+        padding-left: 0;
+    }
+    .how_works_steps .list_item .img_box img{
+        object-position: center;
+    }
+    .how_works_steps .list_item .content_box {
+        width: 100%;
+        margin-top: 1.5em;
+    }  
+    .how_works_steps .list_item .content_box .item_count{
+        margin-bottom: 5px;
+    }
+    section.privacy_sec, .full_expert_sec, .expert_detail_sec {
+        padding-top: 130px;
+    }
+    .full_expert_sec .exprt_sel_fltr .filter_sel+.filter_sel {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .full_expert_sec .exprt_sel_fltr{
+        flex-wrap: wrap;
+    }
+    .full_expert_sec .exprt_sel_fltr .filter_sel.price_filter, .full_expert_sec .exprt_sel_fltr .filter_sel {
+        min-width: 100%;
+    }
+    .full_expert_sec .expert_filter {
+        margin-top: 1em;
+    }
+    .expert__profile .profile__desc .price_rate {
+        font-size: 20px;
+    }
+    .expert__profile .profile__desc .price_rate span{
+        padding-left: 5px;
+    }
+    .expert__profile .profile__desc .profile_rating ul li span.review_cnt, .expert__profile .profile__desc .profile_rating ul li span.review_session {
+        font-size: 9px;
+    }
+    .expert__profile .profile__desc .profile_rating ul li span.review_fld{
+        font-size: 10px;
+    }
+    .expert__profile .profile__desc .profile_rating ul li span.review_cnt img, .expert__profile .profile__desc .profile_rating ul li span.review_session img {
+        width: 20px;
+        padding-right: 2px;
+    }
+    .expert__profile .profile__desc .profile_rating ul li+li {
+        padding-left: 10px;
+    }
+    .access_page .page_wrapper .access_field_box .access_footer p span{
+        display: block;
+    }
+    .full_expert_sec .availbale_expert{
+        flex-wrap: wrap;
+    }
+    .full_expert_sec .availbale_expert .total_expert, .full_expert_sec .availbale_expert .sort_by_exprt{
+        margin-bottom: 0;
+    }
+}
+
+@media only screen and (max-width: 481px){
+    .consultaion_sec .consultaion_list .list_item {
+        width: calc(100% - 16px);
+    }
+    header .navbar .navbar-brand {
+        max-width: 80px;
+    }
+    header .navbar.sticky .navbar-brand {
+        max-width: 70px;
+    }
+    .expert__available .expert__item .expert__img {
+        height: 250px;
+    }
+    .expert__available .expert__item {
+        width: calc(100% - 30px);
+    }
+    .expert__description .description__tabs ul.nav.nav-tabs li.nav-item{
+        width: 100%;
+    }
+}

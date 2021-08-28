@@ -22,6 +22,7 @@ import { tutorProfileDetails } from '../app/model/tutorProfileDetails';
 import { map, startWith } from 'rxjs/operators';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AuthService } from './service/auth.service';
+import { test1 } from 'src/assets/js/demo';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -56,6 +57,7 @@ export class AppComponent implements OnInit {
   myControl = new FormControl();
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   ngOnInit() {
+    
     if (this.authService.isTokenValid()) {
       this.loginType = this.loginService.getLoginType();
       if (this.loginType) {

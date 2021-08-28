@@ -14,7 +14,7 @@ import { TutorService } from 'src/app/service/tutor.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { TermsAndConditionsComponent } from '../../facade/sign-up/terms-and-conditions/terms-and-conditions.component';
+import { TermsAndConditionsComponent } from '../../facade/terms-and-conditions/terms-and-conditions.component';
 import { StudentLoginModel } from 'src/app/model/studentLoginModel';
 import { CookieService } from 'ngx-cookie-service';
 // import * as jwt_decode from "jwt-decode";

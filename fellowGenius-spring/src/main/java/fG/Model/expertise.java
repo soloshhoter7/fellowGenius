@@ -1,6 +1,9 @@
 package fG.Model;
 
-public class expertise {
+import java.io.Serializable;
+
+public class expertise implements Serializable {
+	 private static final long serialVersionUID = 1L;
 	String category;
 	String subCategory;
 	Integer price;

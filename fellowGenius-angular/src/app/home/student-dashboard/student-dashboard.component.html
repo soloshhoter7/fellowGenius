@@ -1,259 +1,189 @@
-<body>
-  <div class="dashboard-container">
-    <div class="pending-reviews-panel">
-      <span class="number">{{ pendingRequestsCount | zero }}</span
-      ><span class="text-content">PENDING REQUESTS</span>
-      <a
-        class="takeActionLink"
-        (click)="viewPendingRequests()"
-        *ngIf="pendingRequestsCount != 0"
-        >View</a
-      >
-    </div>
-    <div
-      class="widget pending-reviews-list"
-      *ngIf="viewPending&&pendingRequestsCount!=0"
-      style="min-height: 0; max-height: 250px"
-    >
-      <div class="widget-header">Pending Requests</div>
-      <div class="widget-information pending-requests">
-        <div class="list-panel" *ngFor="let element of bookingList">
-          <div
-            class="list-thumbnail"
-            [ngStyle]="{
-              'background-image': 'url(' + element.tutorProfilePictureUrl + ')'
-            }"
-          ></div>
-          <div class="list-information">
-            <span class="name">{{ element.tutorName }}</span>
-            <span class="subject">{{ element.subject }}</span>
-          </div>
-          <div class="date-time-panel">
-            <span>{{ element.dateOfMeeting }}</span>
-            <span>
-              {{ element.startTimeHour }}:{{ element.startTimeMinute | zero }} -
-              {{ element.endTimeHour }}:{{ element.endTimeMinute | zero }} ({{
-                element.duration
-              }}
-              minutes)</span
-            >
-          </div>
-          <div class="button-container">
-            <span class="btn btn-primary" *ngIf="element.isRescheduled=='requested'">Reschedule requested! check email !</span>
-            <span class="btn btn-primary" *ngIf="element.isRescheduled!='requested'">{{ element.approvalStatus }}</span>
-            <button
-              type="button"
-              class="btn btn-primary"
-              *ngIf="element.approvalStatus == 'Pending'"
-              (click)="deleteBooking(element)"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="widget">
-      <div class="widget-header">Upcoming Classes</div>
-      <div style="padding: 10px">
-        <span *ngIf="liveMeetingList.length == 0 && approvedList.length == 0"
-          >No upcoming classes</span
-        >
-      </div>
-      <div *ngIf="liveMeetingList != null">
-        <div *ngFor="let element of liveMeetingList">
-          <!-- <div class="widget-timings">
-            <span style="color: red">● &nbsp;</span>Live Now
-          </div> -->
-          <div class="widget-information">
-            <div class="widget-time">
-              <span style="color: red">● &nbsp;Live Now</span>
-            </div>
-            <div class="subject-thumbnail"></div>
-            <div class="subject-description">
-              <span>{{ element.tutorName }}</span>
-              <span
-                >{{ element.startTimeHour }}:{{
-                  element.startTimeMinute | zero
-                }}
-                - {{ element.endTimeHour }}:{{
-                  element.endTimeMinute | zero
-                }}
-                ({{ element.duration }} minutes)</span
-              >
+<div class="page-content dashboard__Panel">
+  <div class="wrapper">
+      <div class="dashboard_page">
+          <div class="meet__Tabs">
+              <ul class="nav nav-tabs" role="tablist">
+                  <li><a href="#previous_meetings" role="tab" data-toggle="tab">Previous Meetings</a></li>
+                  <li><a href="#upcoming_meetings" role="tab" data-toggle="tab" class="active">Upcoming Meetings</a></li>
+              </ul>
+              <div class="tab-content">
+                  <div role="tabpanel" class="tab-pane" id="previous_meetings">
+                      <div class="pending__meeting white__bg">
+                          <h3>Previous Fellow Genius Sessions</h3>
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th class="fld_name">NAME</th>
+                                          <th class="fld_domain">DOMAIN</th>
+                                          <th class="fld_topic">Topic</th>
+                                          <th class="fld_dTme">DATE & TIME</th>
+                                          <th class="fld_action">&nbsp;</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
+                                          <td class="fld_domain">Marketing</td>
+                                          <td class="fld_topic">NPD</td>
+                                          <td class="fld_dTme">31.07.2021 at 09:00 am</td>
+                                          <td class="fld_action">
+                                              <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__previousSess">
+                                                  <i class="fas fa-angle-right"></i>
+                                              </button>
+                                              <div class="td_btn"><a href="" class="table_btn connect_btn">Connect Again</a></div>
+                                          </td>
+                                      </tr>
 
-              <span>{{ element.description }}</span>
-              <button
-                type="button"
-                class="btn btn-primary"
-                (click)="onJoin(element)"
-              >
-                Join
-              </button>
-            </div>
-          </div>
-          <div class="widget-footer">
-            <a (click)="toBookingsPage()">view more</a>
-          </div>
-        </div>
-      </div>
-
-      <div *ngFor="let element of approvedList">
-        <!-- <div class="widget-time" *ngIf="element.timeLeft != null">
-            Live in:{{ element.timeLeft }}
-        </div> -->
-        <div class="widget-information">
-          <div class="widget-time">
-            <span style="color: red" *ngIf="element.timeLeft == null"
-              >● &nbsp;About to start<i
-                class="fas fa-redo"
-                (click)="refreshPage()"
-                style="margin-left: 5px; color: black; cursor: pointer"
-              ></i
-            ></span>
-          </div>
-          <div class="widget-time" *ngIf="element.timeLeft != null">
-            Live in:{{ element.timeLeft }}
-          </div>
-          <div class="subject-thumbnail"></div>
-          <div class="subject-description">
-            <span>{{ element.tutorName }}</span>
-            <span>{{ element.dateOfMeeting }}</span>
-            <span
-              >{{ element.startTimeHour }}:{{
-                element.startTimeMinute | zero
-              }}
-              - {{ element.endTimeHour }}:{{ element.endTimeMinute | zero }} ({{
-                element.duration
-              }}
-              minutes)</span
-            >
-
-            <span>{{ element.description }}</span>
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="onJoin(element)"
-              [disabled]="!element.isLive"
-            >
-              Join
-            </button>
-          </div>
-        </div>
-        <div class="widget-footer">
-          <a href="javascript:;" (click)="toBookingsPage()">view more</a>
-        </div>
-      </div>
-    </div>
-    <div class="widget">
-      <div class="widget-header">Skills in Demand</div>
-      <div class="widget-timings">
-        <div class="btn-group" role="group" aria-label="Basic example">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            [class.active]="type == 'PieChart'"
-            (click)="toggleSkillsInDemand('PieChart')"
-          >
-            <span class="fa fa-chart-pie"></span>
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            [class.active]="type == 'Table'"
-            (click)="toggleSkillsInDemand('Table')"
-          >
-            <span class="fa fa-list"></span>
-          </button>
-        </div>
-      </div>
-      <div style="margin-top: 20px">
-        <google-chart
-          #chart
-          [type]="type"
-          [data]="data"
-          [options]="options"
-          [width]="studentChartWidth"
-          [height]="studentChartHeight"
-        >
-        </google-chart>
-      </div>
-    </div>
-
-    <div class="widget pending-reviews">
-      <div class="widget-header">Pending Reviews</div>
-      <div class="widget-information">
-        <div style="padding: 10px" *ngIf="pendingReviewList.length == 0">
-          <span>No Pending reviews</span>
-        </div>
-        <div class="list-panel" *ngFor="let list of pendingReviewList">
-          <div
-            class="list-thumbnail"
-            [ngStyle]="{
-              'background-image': 'url(' + list.tutorProfilePictureUrl + ')'
-            }"
-          ></div>
-          <div class="list-information">
-            <span class="name" [innerHTML]="list.tutorName"></span>
-            <span class="subject" [innerHTML]="list.subject"></span>
-          </div>
-          <div class="review-nav">
-            <div class="stars-container">
-              <div class="star-widget" style="cursor: pointer">
-                <input
-                  type="radio"
-                  name="rate"
-                  id="rate-5"
-                  (click)="saveRating(list, '100')"
-                />
-                <label for="rate-5" class="fas fa-star"></label>
-                <input
-                  type="radio"
-                  name="rate"
-                  id="rate-4"
-                  (click)="saveRating(list, '80')"
-                />
-                <label for="rate-4" class="fas fa-star"></label>
-                <input
-                  type="radio"
-                  name="rate"
-                  id="rate-3"
-                  (click)="saveRating(list, '60')"
-                />
-                <label for="rate-3" class="fas fa-star"></label>
-                <input
-                  type="radio"
-                  name="rate"
-                  id="rate-2"
-                  (click)="saveRating(list, '40')"
-                />
-                <label for="rate-2" class="fas fa-star"></label>
-                <input
-                  type="radio"
-                  name="rate"
-                  id="rate-1"
-                  (click)="saveRating(list, '20')"
-                />
-                <label for="rate-1" class="fas fa-star"></label>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <!-- <div class="btn_block">
+                              <a href="" class="button know_more">Know More</a>
+                          </div> -->
+                      </div>
+                  </div>
+                  <div role="tabpanel" class="tab-pane active" id="upcoming_meetings">
+                    <div class="upcoming__meeting white__bg">
+                      <h3>Upcoming Fellow Genius Sessions</h3>
+                      <div class="table-responsive" style="min-height: 0; max-height: 250px">
+                        <table class="table" *ngIf="bookingList.length!=0">
+                                  <thead>
+                                      <tr>
+                                          <th class="fld_name">NAME</th>
+                                          <th class="fld_domain">DOMAIN</th>
+                                          <th class="fld_topic">Topic</th>
+                                          <th class="fld_dTme">DATE & TIME</th>
+                                          <th class="fld_status">STATUS</th>
+                                          <!-- <th class="fld_attch">ATTACHMENT</th> -->
+                                          <th class="fld_action">&nbsp;</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr *ngFor="let element of bookingList">
+                                          <td class="fld_name"><div class="nme_style"><span><img [src]="element.tutorProfilePictureUrl" alt="#"></span>{{element.tutorName}}</div></td>
+                                          <td class="fld_domain">{{element.domain}}</td>
+                                          <td class="fld_topic">{{element.subject}}</td>
+                                          <td class="fld_dTme">{{ element.dateOfMeeting }} at  {{ element.startTimeHour }}:{{ element.startTimeMinute | zero }} -
+                                            {{ element.endTimeHour }}:{{ element.endTimeMinute | zero }} ({{
+                                              element.duration
+                                            }}
+                                            minutes)</td>
+                                            <td class="fld_status">{{element.approvalStatus}}</td>
+                                          <!-- <td class="fld_attch">Lorem.png</td> -->
+                                          <td class="fld_action" *ngIf="element.approvalStatus=='Pending'">
+                                              <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingSess">
+                                                  <i class="fas fa-angle-right"></i>
+                                              </button>
+                                              <div class="td_btn">
+                                                  <a href="javascript:;" class="delete_btn" *ngIf="element.approvalStatus == 'Pending'"
+                                                  (click)="deleteBooking(element)"><img src="../../../assets/images/delete-meeting.svg"></a>
+                                                  <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
+                                              </div>
+                                          </td>
+                                          <td class="fld_action" *ngIf="element.approvalStatus=='Accepted'">
+                                            <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
+                                                <i class="fas fa-angle-right"></i>
+                                            </button>
+                                            <div class="td_btn">
+                                                <button class="table_btn green_btn join_btn" [disabled]="!element.isLive" (click)="onJoin(element)">Join</button>
+                                            </div>
+                                        </td>
+                                        <td class="fld_action" *ngIf="element.approvalStatus=='live'">
+                                            <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
+                                                <i class="fas fa-angle-right"></i>
+                                            </button>
+                                            <div class="td_btn">
+                                                <button class="table_btn green_btn join_btn" (click)="onJoin(element)" >Join</button>
+                                            </div>
+                                        </td>
+                                      </tr>
+                                      
+                                  </tbody>
+                              </table>
+                              <p *ngIf="bookingList.length==0">No upcoming meetings</p>
+                      </div>
+                    </div>
+                  </div>
               </div>
-              <!-- <div style="font-size: larger">
-                <i
-                  class="fas fa-times review-icons"
-                  (click)="cancelReview()"
-                ></i>
-                <i class="fas fa-check review-icons" *ngIf="false"></i>
-                <i class="fas fa-edit review-icons" *ngIf="false"></i>
-              </div> -->
-            </div>
           </div>
-          <!-- <button class="btn btn-warning" (click)="giveFeedback(list)">
-            Feedback
-          </button> -->
-        </div>
       </div>
-      <!-- <div class="widget-footer" *ngIf="pendingReviews.length > 3">
-        <a href="">view more</a>
-      </div> -->
-    </div>
   </div>
-</body>
+</div>
+
+<div class="modal fade detail_modal" id="Popup__upcomingSess">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 bg-transparent">
+          <div class="modal-body p-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              <div class="detail_wrapper">
+                  <h1>Upcoming Session Details</h1>
+                  <div class="Detail__Content">
+                      <div class="detail__list">
+                          <div class="Dtl__label">NAME</div>
+                          <div class="Dtl__txt">John Doe</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">DOMAIN</div>
+                          <div class="Dtl__txt">Marketing</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">Topic</div>
+                          <div class="Dtl__txt">NPD</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">DATE & TIME</div>
+                          <div class="Dtl__txt">31.07.2021 at 09:00 am</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">ATTACHMENT</div>
+                          <div class="Dtl__txt">Lorem.png</div>
+                      </div>
+                      <div class="detail__list">
+                          <a href="" class="delete_btn"><img src="../../../assets/images/delete-meeting.svg"></a>
+                          <a href="" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade detail_modal" id="Popup__previousSess">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 bg-transparent">
+          <div class="modal-body p-0">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              <div class="detail_wrapper">
+                  <h1>Previous Session Details</h1>
+                  <div class="Detail__Content">
+                      <div class="detail__list">
+                          <div class="Dtl__label">NAME</div>
+                          <div class="Dtl__txt">John Doe</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">DOMAIN</div>
+                          <div class="Dtl__txt">Marketing</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">Topic</div>
+                          <div class="Dtl__txt">NPD</div>
+                      </div>
+                      <div class="detail__list">
+                          <div class="Dtl__label">DATE & TIME</div>
+                          <div class="Dtl__txt">31.07.2021 at 09:00 am</div>
+                      </div>
+                      <div class="detail__list">
+                          <a href="" class="Dtl__Btn connect_btn">Connect Again</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

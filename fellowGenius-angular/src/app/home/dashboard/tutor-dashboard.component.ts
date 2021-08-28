@@ -47,14 +47,16 @@ export class TutorDashboardComponent implements OnInit {
     var screenHeight = window.innerHeight;
     var screenWidth = window.innerWidth;
     if (screenWidth <= 800) {
-      this.tutorChartWidth = '320';
-    } else {
-      this.tutorChartWidth = '380';
+      this.tutorChartWidth = '250';
+      this.tutorChartHeight = '150';
+    }else{
+      this.tutorChartWidth = '750';
+      this.tutorChartHeight = '300';
     }
   }
 
-  tutorChartWidth = '380';
-  tutorChartHeight = '180';
+  tutorChartWidth = '750';
+  tutorChartHeight = '300';
   // ----------------------skills in demand ------------------------------
   skillsChartType = 'PieChart';
   // skillsChartType = 'Table';
@@ -74,19 +76,13 @@ export class TutorDashboardComponent implements OnInit {
   // --------------------------Earnings Tracker --------------------------
   earningTrackerType = 'ComboChart';
   earningPeriod = 'Week';
-  earningTrackerData = [
-    ['June', 150, 150],
-    ['July', 200, 200],
-    ['August', 300, 300],
-    ['September', 250, 250],
-  ];
+  earningTrackerDataMonthly:any = [];
+  earningTrackerDataWeekly:any = [];
+  earningTrackerDataYearly:any = [];
   // earningTrackerColumnNames = ["Earnings", "Average"];
   earningTrackerOptions = {
-    hAxis: {
-      title: 'Months',
-    },
     vAxis: {
-      title: 'Earning (USD $)',
+      title: 'Earnings (Rupees ₹)',
     },
     seriesType: 'bars',
     series: { 1: { type: 'line' } },
@@ -116,11 +112,14 @@ export class TutorDashboardComponent implements OnInit {
     horizontalPosition: 'center',
     verticalPosition: 'top',
   };
+  earningData;
   ngOnInit(): void {
     this.preventBackButton();
     if (window.innerWidth <= 800) {
-      this.tutorChartWidth = '320';
+      this.tutorChartWidth = '250';
+      this.tutorChartHeight = '150';
     }
+    
     this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
     if (
       this.loginService.getLoginType() == 'Expert' &&
@@ -131,11 +130,32 @@ export class TutorDashboardComponent implements OnInit {
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
       this.fetchExpertRecentReviews();
+      this.initialiseEarningData();
     } else {
       this.handleRefresh();
     }
   }
+  initialiseEarningData(){
+    // let data=['Spere',200,200];
+    // this.earningTrackerDataMonthly.push(data);
+    this.httpService.fetchEarningData(this.tutorProfileDetails.bookingId).subscribe((res)=>{
+      this.earningData=res;
+      console.log(this.earningData);
 
+      for(let bk of this.earningData.weeklyData){
+        let d=[bk.keyName,parseInt(bk.valueName),parseInt(bk.valueName)];
+        this.earningTrackerDataWeekly.push(d);
+      }
+      for(let bk of this.earningData.monthlyData){
+        let d=[bk.keyName,parseInt(bk.valueName),parseInt(bk.valueName)];
+        this.earningTrackerDataMonthly.push(d);
+      }
+      for(let bk of this.earningData.yearlyData){
+        let d=[bk.keyName,parseInt(bk.valueName),parseInt(bk.valueName)];
+        this.earningTrackerDataYearly.push(d);
+      }
+    })
+  }
   initialisePendingRequests(){
     this.tutorService.fetchTutorPendingBookings();
     this.tutorService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
@@ -166,6 +186,7 @@ export class TutorDashboardComponent implements OnInit {
       this.fetchTutorApprovedMeetings();
       this.fetchTutorLiveMeetings();
       this.fetchExpertRecentReviews();
+      this.initialiseEarningData();
     }, 1000);
   }
   openSchedulePage() {
@@ -184,48 +205,56 @@ export class TutorDashboardComponent implements OnInit {
     this.isLoading = true;
     booking.approvalStatus = 'Accepted';
     let status:string;
-    
-    this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
-      // let response=res;
-      status = res.status;
-      if(status=='Pending'){
-        this.httpService
-        .updateBookingStatus(booking.bid, booking.approvalStatus)
-        .subscribe((res) => {
-          if (res == true) {
-            this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
-            if (this.bookingList.length == 0) {
-              this.bookingRequestMessage = 'No booking requests pending.';
-              this.pendingRequestsCount = 0;
-              this.takeAction = false;
+    if(booking.isRescheduled!='requested'){
+      this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
+        // let response=res;
+        status = res.status;
+        if(status=='Pending'){
+          this.httpService
+          .updateBookingStatus(booking.bid, booking.approvalStatus)
+          .subscribe((res) => {
+            if (res == true) {
+              this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
+              if (this.bookingList.length == 0) {
+                this.bookingRequestMessage = 'No booking requests pending.';
+                this.pendingRequestsCount = 0;
+                this.takeAction = false;
+              }
+              let data = JSON.stringify({
+                entityType: "1",
+                entityTypeId:"12",
+                actorId:booking.tutorId,
+                notifierId:booking.studentId,
+                pictureUrl:booking.tutorProfilePictureUrl,
+                readStatus:false
+              });
+              this.webSocketService.sendAppointmentNotfication(data,(booking.studentId).toString());
+              this.before10MinutesTime(booking);
+              this.enableJoinNow(booking);
+              this.timeLeft(booking);
+              this.meetingList.push(booking);
+              this.approvedMeetingsMessage = '';
+              this.isLoading = false;
             }
-            let data = JSON.stringify({
-              entityType: "1",
-              entityTypeId:"12",
-              actorId:booking.tutorId,
-              notifierId:booking.studentId,
-              pictureUrl:booking.tutorProfilePictureUrl,
-              readStatus:false
-            });
-            this.webSocketService.sendAppointmentNotfication(data,(booking.studentId).toString());
-            this.before10MinutesTime(booking);
-            this.enableJoinNow(booking);
-            this.timeLeft(booking);
-            this.meetingList.push(booking);
-            this.approvedMeetingsMessage = '';
-            this.isLoading = false;
-          }
-        });
-      }else{
-        this.snackBar.open(
-          'Meeting has already been cancelled !',
-          'close',
-          this.config
-        );
-        this.initialisePendingRequests();
-      }
-    })
-    
+          });
+        }else{
+          this.snackBar.open(
+            'Meeting has already been cancelled !',
+            'close',
+            this.config
+          );
+          this.initialisePendingRequests();
+        }
+      })
+      
+    }else{
+      this.snackBar.open(
+        "Can't accept meeting after requested to reschedule",
+        'close',
+        this.config
+      );
+    }
+   
   }
 
   //for denying bookings

@@ -47,7 +47,11 @@ public class TutorProfileDetails {
 	Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
+	String upiId;
+	boolean verified;
 	Integer rescheduleRequests=0;
+	String currentDesignation;
+	Integer earning=0;
 	public Integer getTid() {
 		return tid;
 	}
@@ -183,6 +187,32 @@ public class TutorProfileDetails {
 	}
 	public void setRescheduleRequests(Integer rescheduleRequests) {
 		this.rescheduleRequests = rescheduleRequests;
+	}
+	
+	public String getUpiId() {
+		return upiId;
+	}
+	public void setUpiId(String upiId) {
+		this.upiId = upiId;
+	}
+	public boolean isVerified() {
+		return verified;
+	}
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+	public String getCurrentDesignation() {
+		return currentDesignation;
+	}
+	public void setCurrentDesignation(String currentDesignation) {
+		this.currentDesignation = currentDesignation;
+	} 
+	
+	public Integer getEarning() {
+		return earning;
+	}
+	public void setEarning(Integer earning) {
+		this.earning = earning;
 	}
 	@Override
 	public String toString() {

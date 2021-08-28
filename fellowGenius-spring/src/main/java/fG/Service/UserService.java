@@ -7,16 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +26,7 @@ import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
 import fG.Entity.LearningAreas;
 import fG.Entity.Notification;
+import fG.Entity.PendingTutorProfileDetails;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -49,6 +41,7 @@ import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
 import fG.Model.Category;
 import fG.Model.NotificationModel;
+import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
 import fG.Model.StudentLoginModel;
@@ -65,6 +58,7 @@ import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryCategory;
 import fG.Repository.repositoryExpertiseAreas;
 import fG.Repository.repositoryNotification;
+import fG.Repository.repositoryPendingTutorProfileDetails;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
@@ -130,43 +124,99 @@ public class UserService implements UserDetailsService {
 	repositoryExpertiseAreas repExpertiseAreas;
 	
 	@Autowired
+	repositoryPendingTutorProfileDetails repPendingTutorProfileDetails;
+	
+	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
 	@Autowired
 	MailService mailService;
 	
+	public boolean savePendingTutor(TutorProfileDetailsModel tutorModel)
+			throws IllegalArgumentException, IllegalAccessException {
+		PendingTutorProfileDetails ptLoaded = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
+		if(ptLoaded==null) {
+			//saving pt to generate id
+			PendingTutorProfileDetails pt = new PendingTutorProfileDetails();
+			pt.setEmail(tutorModel.getEmail());
+			repPendingTutorProfileDetails.save(pt);
+			//fetching pt with email to get id
+			PendingTutorProfileDetails tutProfileDetails = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
+
+			//personal info
+			tutProfileDetails.setFullName(tutorModel.getFullName());
+			tutProfileDetails.setEmail(tutorModel.getEmail());
+			tutProfileDetails.setContact(tutorModel.getContact());
+			tutProfileDetails.setDateOfBirth(tutorModel.getDateOfBirth());
+			tutProfileDetails.setUpiId(tutorModel.getUpiID());
+			tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
+			//education
+			tutProfileDetails.setInstitute(tutorModel.getInstitute());
+			tutProfileDetails.setEducationalQualifications(tutorModel.getEducationalQualifications());
+			//description and speciality
+			tutProfileDetails.setDescription(tutorModel.getDescription());
+			tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
+			//work experience
+			tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
+			tutProfileDetails.setCurrentOrganisation(tutorModel.getCurrentOrganisation());
+			tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
+			tutProfileDetails.setPreviousOrganisations(tutorModel.getPreviousOrganisations());
+			//photo
+			tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+			//domain
+			tutProfileDetails.setPrice1(tutorModel.getPrice1());
+			tutProfileDetails.setPrice2(tutorModel.getPrice2());
+			tutProfileDetails.setPrice3(tutorModel.getPrice3());
+			tutProfileDetails.setAreaOfExpertise(tutorModel.getAreaOfExpertise());
+			
+			
+			repPendingTutorProfileDetails.save(tutProfileDetails);
+			return true;
+		}else {
+			return false;
+		}
+		
+
+	}
 	
-	public String validateUser(String email, String password) {
+	public String validateUser(String email, String password,String method) {
+		System.out.println(email+" : "+password+" : "+method);
 		Users userLogin = repUsers.emailExist(email);
 		Date lastLogin = new Date();
 		UserActivity userActivity = new UserActivity();
-	
-		if (userLogin != null) {
-			userActivity.setUserId(userLogin);
-			userActivity.setType("login");
-			userLogin.setLastLogin(lastLogin);
-			if (encoder.matches(password, userLogin.getPassword())) {
-				repUsers.save(userLogin);
-				repUserActivity.save(userActivity);
-				return String.valueOf(userLogin.getUserId());
-			} 
-			if(encoder.matches(password, userLogin.getSocialId())) {
-				repUsers.save(userLogin);
-				repUserActivity.save(userActivity);
-				System.out.println("social id exists and matches");
-				return String.valueOf(userLogin.getUserId());
-			}else {
-				System.out.println("n/a called");
-				if(encoder.matches("N/A", userLogin.getSocialId())) {
+		if(userLogin!=null) {
+			if(encoder.matches("social",method)) {
+				System.out.println("entered social");
+				userActivity.setUserId(userLogin);
+				userActivity.setType("login");
+				userLogin.setLastLogin(lastLogin);
+				
+				if(encoder.matches(password, userLogin.getSocialId())||encoder.matches("N/A", userLogin.getSocialId())) {
+					
+					repUsers.save(userLogin);
+					repUserActivity.save(userActivity);
+					System.out.println("social id exists and matches");
+					return String.valueOf(userLogin.getUserId());
+				}else {
+					return null;
+				}
+			}else if(encoder.matches("manual",method)) {
+				System.out.println("entered manual");
+				userActivity.setUserId(userLogin);
+				userActivity.setType("login");
+				userLogin.setLastLogin(lastLogin);
+				if (encoder.matches(password, userLogin.getPassword())) {
+					System.out.println("password matches!");
 					repUsers.save(userLogin);
 					repUserActivity.save(userActivity);
 					return String.valueOf(userLogin.getUserId());
 				}else {
 					return null;
 				}
+			}else {
+				return null;
 			}
-			
-		} else {
+		}else {
 			return null;
 		}
 	}
@@ -183,6 +233,112 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+	public boolean verifyExpert(String id) {
+		PendingTutorProfileDetails pt = repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
+		TutorProfile tutorProfile = new TutorProfile();
+		tutorProfile.setContact(pt.getContact());
+		tutorProfile.setEmail(pt.getEmail());
+		tutorProfile.setFullName(pt.getFullName());
+		tutorProfile.setBookingId(genUserBookingId());
+		tutorProfile.setDateOfBirth(pt.getDateOfBirth());
+		tutorProfile.setProfilePictureUrl(pt.getProfilePictureUrl());
+		UserActivity userActivity = new UserActivity();
+		userActivity.setType("signup");
+		if (dao.saveTutorProfile(tutorProfile)) {
+
+			Users user = new Users();
+			user.setEmail(pt.getEmail());
+			user.setPassword(encoder.encode("N/A"));
+			user.setUserId(tutorProfile.getTid());
+			user.setSocialId(encoder.encode("N/A"));
+			user.setRole("Expert");
+			dao.saveUserLogin(user);
+			// creating tutor profile details tuple
+			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			tutProfileDetails.setTid(tutorProfile.getTid());
+			tutProfileDetails.setFullName(pt.getFullName());
+			tutProfileDetails.setProfileCompleted(12);
+			tutProfileDetails.setLessonCompleted(0);
+			tutProfileDetails.setRating(100);
+			tutProfileDetails.setReviewCount(0);
+//			tutProfileDetails.setPrice1("400");
+			tutProfileDetails.setBookingId(tutorProfile.getBookingId());
+			dao.saveTutorID(tutProfileDetails);
+			// creating tutor schedule tuple
+			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+			tutSchedule.setTid(tutorProfile.getBookingId());
+			tutSchedule.setFullName(tutorProfile.getFullName());
+			tutSchedule.setIsAvailable("yes");
+			dao.saveTutorAvailbilitySchedule(tutSchedule);
+			userActivity.setUserId(user);
+			repUserActivity.save(userActivity);
+			
+			
+			tutProfileDetails.setTid(tutorProfile.getTid());
+			tutProfileDetails.setBookingId(tutorProfile.getBookingId());
+			//personal info
+			tutProfileDetails.setFullName(pt.getFullName());
+			tutProfileDetails.setUpiId(pt.getUpiId());
+			tutProfileDetails.setLinkedInProfile(pt.getLinkedInProfile());
+			//education
+			tutProfileDetails.setInstitute(pt.getInstitute());
+			tutProfileDetails.setEducationalQualifications(pt.getEducationalQualifications());
+			//description and speciality
+			tutProfileDetails.setDescription(pt.getDescription());
+			tutProfileDetails.setSpeciality(pt.getSpeciality());
+			//work experience
+			tutProfileDetails.setYearsOfExperience(pt.getYearsOfExperience());
+			tutProfileDetails.setCurrentOrganisation(pt.getCurrentOrganisation());
+			tutProfileDetails.setCurrentDesignation(pt.getCurrentDesignation());
+			tutProfileDetails.setPreviousOrganisations(pt.getPreviousOrganisations());
+			//photo
+			tutProfileDetails.setProfilePictureUrl(pt.getProfilePictureUrl());
+			//domain
+			tutProfileDetails.setPrice1(pt.getPrice1());
+						
+//			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorProfile.getTid());
+			// for setting the expertise areas
+			Integer minPrice = Integer.MAX_VALUE;
+			Integer maxPrice = 0;
+
+			for (expertise area : pt.getAreaOfExpertise()) {
+				ExpertiseAreas subject = new ExpertiseAreas();
+				SubcategoryList subCateg = repSubcategory.findSubCategoryByName(area.getSubCategory());
+				if(subCateg!=null) {
+					subject.setUserId(tutProfileDetails);
+					subject.setSubCategory(subCateg);
+					subject.setCategory(subCateg.getCategory());
+					subject.setPrice(area.getPrice());
+					if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
+							.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst().isPresent()) {
+						tutProfileDetails.getAreaOfExpertise().add(subject);
+					
+					}
+					
+				}
+			}
+
+//			tutProfileDetails.setAreaOfExpertise(areas);
+//			System.out.println(tutProfileDetails);
+			dao.updateTutorProfile(tutProfileDetails);
+			
+			//to update the price of all the expertise of a user to the price1
+			List<ExpertiseAreas> exp = repExpertiseAreas.searchExpertiseAreasByUserId(tutProfileDetails.getTid());
+			
+			if(exp!=null) {
+				for(ExpertiseAreas e:exp) {
+					e.setPrice(Integer.valueOf(tutProfileDetails.getPrice1()));
+					dao.updateExpertiseArea(e);
+				}
+			}
+			repPendingTutorProfileDetails.deleteById(pt.getId());
+			mailService.sendVerifiedMail(tutorProfile.getEmail());
+			return true;
+		} else {
+			return false;
+		}
+	}
 	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
 		UserActivity userActivity = new UserActivity();
@@ -922,5 +1078,30 @@ public class UserService implements UserDetailsService {
 		userAnalytics.setMonthlyMeetingSetup(bookings.size());
 		return userAnalytics;
 	}
+
+	public List<PendingTutorProfileDetails> fetchPendingExperts() {
+		// TODO Auto-generated method stub
+		return repPendingTutorProfileDetails.findAll();
+	}
+
+	public ResponseModel expertChoosePassword(String userId,String password) {
+		
+		System.out.println(userId);
+		Users user = repUsers.idExists(Integer.valueOf(userId));
+		if(user!=null) {
+			String newPassword = encoder.encode(password);
+			if(encoder.matches("N/A",user.getPassword())){
+				repUsers.updatePassword(Integer.valueOf(userId),newPassword);
+				return new ResponseModel(user.getEmail());	
+			}else {
+				return new ResponseModel("password not changed");
+			}
+			
+		}else {
+			return new ResponseModel("password not changed");	
+		}
+	}
+
+
 	 
 }

@@ -69,7 +69,7 @@ export class StudentProfileComponent implements OnInit {
       map((value) => this._filter(value))
     );
     this.index = 1;
-    this.openNav();
+    // this.openNav();
     // this.disableSub = true;
     this.studentProfile = this.studentService.getStudentProfileDetails();
     if (this.studentProfile.profilePictureUrl != null) {
@@ -124,24 +124,16 @@ export class StudentProfileComponent implements OnInit {
     }
   }
 
-  navAction(index) {
-    if (index % 2 == 1) {
-      this.index = index + 1;
-      this.closeNav();
-    } else {
-      this.index = index + 1;
-      this.openNav();
-    }
-  }
-  openNav() {
-    document.getElementById('sidenav').style.width = '230px';
-    document.getElementById('mainContent').style.marginLeft = '230px';
-  }
-
-  closeNav() {
-    document.getElementById('sidenav').style.width = '0';
-    document.getElementById('mainContent').style.marginLeft = '0';
-  }
+  // navAction(index) {
+  //   if (index % 2 == 1) {
+  //     this.index = index + 1;
+  //     this.closeNav();
+  //   } else {
+  //     this.index = index + 1;
+  //     this.openNav();
+  //   }
+  // }
+  
 
   saveStudentProfile(form: NgForm) {
 

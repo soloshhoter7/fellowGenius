@@ -26,6 +26,7 @@ import { AppComponent } from '../app.component';
 import { LocationStrategy } from '@angular/common';
 import { NotificationService } from '../service/notification.service';
 import { NotificationModel } from '../model/notification';
+import { C } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-home',
@@ -55,6 +56,7 @@ export class HomeComponent implements OnInit {
     'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
    ];
   subject;
+  fullName;
   filteredOptions: Observable<string[]>;
   myControl = new FormControl();
   selectedSubject;
@@ -86,15 +88,15 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.preventBackButton();
     this.toggleNavigation = true;
-    this.breakpointObserver
-      .observe(['(min-width: 800px)'])
-      .subscribe((state: BreakpointState) => {
-        if (state.matches) {
-          this.openNav();
-        } else {
-          this.closeNav();
-        }
-      });
+    // this.breakpointObserver
+    //   .observe(['(min-width: 800px)'])
+    //   .subscribe((state: BreakpointState) => {
+    //     if (state.matches) {
+    //       this.openNav();
+    //     } else {
+    //       this.closeNav();
+    //     }
+    //   });
     // this.toggleNavigation = true;
     // if (this.screenWidth >= 450) {
     //   this.openNav();
@@ -103,7 +105,9 @@ export class HomeComponent implements OnInit {
     //   this.closeNav();
     // }
     if (this.isTokenValid()) {
+      console.log('heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
       this.loginType = this.loginService.getLoginType();
+      console.log(this.loginType)
       if (
         this.loginType &&
         this.loginType == 'Learner' &&
@@ -114,18 +118,22 @@ export class HomeComponent implements OnInit {
           this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
         }
         this.calculateStudentProfilePercentage();
+
+        this.fullName=this.studentProfile.fullName;
+        this.profilePictureUrl= this.studentProfile.profilePictureUrl;
         this.router.navigate(['home/student-dashboard']);
-        if (this.loginService.getTrType() == 'signUp') {
-          this.dialog.open(WelcomeComponent, {
-            width: 'auto',
-            height: 'auto',
-          });
-        }
+        // if (this.loginService.getTrType() == 'signUp') {
+        //   this.dialog.open(WelcomeComponent, {
+        //     width: 'auto',
+        //     height: 'auto',
+        //   });
+        // }
       } else if (
         this.loginType &&
         this.loginType == 'Expert' &&
         this.tutorService.getTutorDetials().fullName != null
       ) {
+        console.log('here')
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
         // if (this.tutorProfileDetails.profilePictureUrl != null) {
@@ -145,14 +153,17 @@ export class HomeComponent implements OnInit {
         } else {
           this.checked = false;
         }
+        this.profilePictureUrl= this.tutorService.getTutorDetials().profilePictureUrl
+        this.fullName=this.tutorProfile.fullName;
+        console.log(this.fullName)
         // this.dashboardUrl = '/home/tutorDashboard';
         this.router.navigate(['home/tutor-dashboard']);
-        if (this.loginService.getTrType() == 'signUp') {
-          this.dialog.open(WelcomeComponent, {
-            width: 'auto',
-            height: 'auto',
-          });
-        }
+        // if (this.loginService.getTrType() == 'signUp') {
+        //   this.dialog.open(WelcomeComponent, {
+        //     width: 'auto',
+        //     height: 'auto',
+        //   });
+        // }
       } else {
         this.handleRefresh();
       }
@@ -189,11 +200,7 @@ export class HomeComponent implements OnInit {
   getNotificationCount(){
     return this.notificationService.getNotificationCount();
   }
-  onNavigationClick() {
-    if (this.screenWidth <= 500) {
-      this.closeNav();
-    }
-  }
+  
   toFacade() {
     this.router.navigate(['']);
   }
@@ -357,6 +364,8 @@ export class HomeComponent implements OnInit {
         }
         this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
           this.studentService.setStudentBookings(res);
+          this.fullName=this.studentProfile.fullName;
+          this.profilePictureUrl= this.studentProfile.profilePictureUrl
           // this.router.navigate([ 'home/student-dashboard' ]);
         });
         this.initialiseNotifications();
@@ -374,12 +383,13 @@ export class HomeComponent implements OnInit {
         this.httpService
           .getTutorProfileDetails(this.userId)
           .subscribe((res) => {
+            console.log(res);
             this.tutorProfileDetails = res;
             // if (this.tutorProfileDetails.profilePictureUrl != null) {
             //   this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
             // }
         if(this.tutorService.getTutorDetials().profilePictureUrl == null){
-          this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl
+          this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl;
         }
             this.tutorService.setTutorProfileDetails(res);
             // this.subject = this.tutorProfileDetails.educationalQualifications[0];
@@ -394,6 +404,8 @@ export class HomeComponent implements OnInit {
                 this.checked = false;
               }
             });
+            this.fullName=this.tutorProfile.fullName
+            this.profilePictureUrl= this.tutorService.getTutorDetials().profilePictureUrl;
             this.initialiseNotifications();
           });
       });

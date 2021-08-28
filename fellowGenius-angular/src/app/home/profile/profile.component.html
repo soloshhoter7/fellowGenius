@@ -1,578 +1,284 @@
-<body>
-  <div class="container" style="margin-bottom: 50px">
-    <div class="row">
-      <div class="col-md-6">
-        <div style="margin: 10px">
-          <p
-            style="
-              color: #e3165b;
-              font-size: x-large;
-              margin-right: 40px;
-              display: inline;
-            "
-          >
-            <b>PROFILE</b>
-          </p>
-        </div>
-        <div [class.hideBlock]="!basic">
-          <img
-            style="
-              width: 130px;
-              height: 130px;
-              border-radius: 100%;
-              border: 1px solid black;
-            "
-            [src]="profilePictureUrl"
-          />
-          <!-- <input
-                #profilePicture
-                hidden="true"
-                type="file"
-                onclick="this.value=null"
-                (change)="profilePictureChange($event)"
-                required
-              />
-              <p style="text-align: center;
-              text-decoration: underline;margin-top: 5px;width: 140px;"><a href="#">Upload</a></p> -->
-          <div class="form-group">
-            <input
-              #profilePicture
-              hidden="true"
-              type="file" accept=".jpg,.png,.jpeg"
-              onclick="this.value=null"
-              (change)="profilePictureChange($event)"
-              required
-            />
-
-            <button
-              class="btn btn-primary"
-              (click)="profilePicture.click()"
-              style="
-                margin-top: 5px;
-                width: 140px;
-                position: relative;
-                height: 30px;
-              "
-            >
-              <span *ngIf="!isLoading3">Upload</span>
-              <div class="tickMark" *ngIf="profilePicUploadStatus">
-                <img class="tickMarkImg" src="../../../assets/icons/tick.png" />
-              </div>
-              <span
-                *ngIf="isLoading3"
-                class="loader"
-                style="text-align: center; z-index: 10"
-              >
-                <app-loader></app-loader>
-              </span>
-            </button>
-            <div style="margin: 5px;margin-left: 0; font-size: 12px; font-weight: 600;color: red;" *ngIf="invalidPicture">
-              Please upload a valid Image !
-            </div>
-            <div style="margin: 10px;margin-left: 0; font-size: 12px; font-weight: 600;color: red;" *ngIf="pictureInfo">
-              Supported file upload formats(.jpg, .png, .jpeg) upto size limit of 3MB *
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="col-md-3"
-        style="text-align: end; margin: 20px"
-        [class.hideBlock]="!basic"
-      >
-        <button
-          class="btn"
-          style="margin-right: 2vw; text-decoration: underline; width: auto"
-          (click)="cancelForm()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn"
-          style="
-            padding: 1vh 2vw;
-            background-color: purple;
-            color: white;
-            width: auto;
-            font-size: small;
-          "
-          (click)="basicProfile.ngSubmit.emit()"
-          [disabled]="!basicProfile.valid"
-        >
-          Save
-        </button>
-      </div>
-
-    </div>
-    <div style="padding-bottom: 10px; font-size: 12px; font-weight: 600">
-      The fields marked with * are mandatory
-    </div>
-    <div style="color: red; padding-bottom: 10px; font-size: 15px">
-      {{ profileError }}
-    </div>
-    <form
-          (ngSubmit)="saveExpertBasicProfile(basicProfile)"
-          #basicProfile="ngForm"
-        >
-    <div class="row">
-      <div class="col-md-5 leftBox">
-          <div class="form-group">
-            <label for="fullName">Full Name<sup>*</sup></label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              ngModel
-              class="form-control input-fields"
-              required
-              #fullName="ngModel"
-              maxlength="50"
-              [ngModel]="tutorProfile.fullName"
-              autofocus
-            />
-
-            <span class="help-block" *ngIf="!fullName.valid && fullName.touched"
-              >Invalid Name</span
-            >
-          </div>
-
-          <!-- <div class="form-group">
-                  <label  for="email">Email Address</label>
-                  <input type="email" id="email" name="email" ngModel [ngModel]="tutorProfile.email" class="form-control input-fields" required disabled #email="ngModel" maxlength="64" pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
-                  />
-                  <span *ngIf="(!email.valid && email.touched) || emailValid" class="help-block">Invalid email</span>
-                    </div> -->
-
-          <div class="form-group">
-            <label for="dob">Date of Birth<sup>*</sup></label>
-            <input
-              type="date"
-              id="dob"
-              name="dob"
-              ngModel
-              class="form-control input-fields"
-              [ngModel]="tutorProfile.dateOfBirth"
-              dobValidator
-              required
-              #dob="ngModel"
-            />
-            <span
-              *ngIf="dob.errors?.invalidDob && dob.touched"
-              class="help-block"
-              >Invalid dob</span
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="contact">Mobile Number<sup>*</sup></label>
-            <input
-              type="text"
-              id="contact"
-              class="form-control input-fields"
-              ngModel
-              name="contact"
-              [ngModel]="tutorProfile.contact"
-              required
-              [pattern]="mobNumberPattern"
-              #contact="ngModel"
-            />
-
-            <span *ngIf="!contact.valid && contact.touched" class="help-block"
-              >Invalid contact</span
-            >
-          </div>
-          <div class="form-group">
-            <label for="currentOrganisation">Current Organisation<sup>*</sup></label>
-            <input
-              type="text"
-              id="currentOrganisation"
-              name="currentOrganisation"
-              ngModel
-              required
-              [ngModel]="tutorProfileDetails.currentOrganisation"
-              class="form-control input-fields"
-              #currentOrganisation="ngModel"
-              maxlength="50"
-            />
-            <span
-              class="help-block"
-              *ngIf="
-                !currentOrganisation.valid && currentOrganisation.touched
-              "
-              >Invalid current organisation</span
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="expertise">Previous Organisation</label>
-            <div>
-              <input
-                type="search"
-                name="search"
-                style="display: inline; width: 80%; margin-right: 5px"
-                class="form-control input-fields"
-                [(ngModel)]="inputOrganisation"
-                placeholder="Enter organisation name"
-              />
-              <div style="width: max-content; display: inline">
-                <button
-                  [disabled]="!inputOrganisation"
-                  type="button"
-                  class="btn btn-success btn-circle btn-sm"
-                  (click)="addOrganisation()"
-                  style="font-size: inherit; display: inline"
-                >
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-            </div>
-            <div
-              *ngIf="duplicatePreviousOrganisation"
-              style="color: red; margin-top: 10px"
-            >
-              Organisation already exists !
-            </div>
-            <div
-              style="margin: 10px; margin-left: 0"
-              *ngFor="
-                let organisation of previousOraganisations;
-                let i = index
-              "
-            >
-              <div class="tags">{{ organisation }}</div>
-              <button
-                type="button"
-                class="btn btn-danger btn-circle btn-sm"
-                style="display: inline"
-                (click)="deleteOrganisation(i)"
-                style="font-size: inherit"
-              >
-                <i class="fas fa-minus"></i>
-              </button>
-            </div>
-          </div>
-         
-        
-      </div>
-      <!-- Educational Qualifications -->
-      <div class="col-md-5">
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label for="chooseCategory">Price per hour<sup>*</sup></label>
-          <input
-            type="number"
-            class="form-control"
-            name="price"
-            placeholder="Enter price per hour"
-            [(ngModel)]="tutorProfileDetails.price1"
-            #expertisePrice="ngModel"
-            (ngModelChange)="onPercentChange($event)"
-          />
-          <p style="margin:10px" *ngIf="expertisePrice.dirty&&tutorProfileDetails.price1">
-            Actual Earning per hour : {{actualEarning}}<br>
-            GST charges : {{GSTValue}} | Platform fees :{{commission}} </p>
-        </div>
-        
-        <div class="form-group">
-          <label for="expertise" style="width: 100%"
-            >Area of Expertise<sup>*</sup></label
-          >
-
-          <div style="position: relative">
-            <div
-              style="
-                width: 80%;
-                display: inline-block;
-                background: white;
-                padding: 10px;
-                box-shadow: 0px 0px 4px rgb(199, 203, 217, 0.7);
-              "
-            >
-            <div class="form-group" style="margin-bottom: 0.5rem;">
-              
-              <label for="chooseCategory">Choose Domain</label>
-              <select
-                class="form-control"
-                id="chooseCategory"
-                name="categoryName"
-                [(ngModel)]="selectedCategory"
-                ngModel
-              >
-                <option *ngFor="let categ of categories" [value]="categ.category">
-                  {{ categ.category }}
-                </option>
-              </select>
-            </div>
-      
-            <div class="form-group">
-              <label for="subCategoryInput">Choose Topic</label>
-              <select
-                class="form-control"
-                id="chooseSubCategory"
-                name="subCategoryName"
-                [(ngModel)]="selectedSubCategory"
-                [disabled]="!selectedCategory"
-                ngModel
-              >
-                <option *ngFor="let sc of filterSCfromCateg()" [value]="sc.subCategory">
-                  {{ sc.subCategory }}
-                </option>
-              </select>
-            </div>
-
-            
-            </div>
-            <div
-              style="
-                width: max-content;
-                display: inline;
-                margin-left: 5px;
-                position: absolute;
-                top: 40px;
-              "
-            >
-              <button
-                [disabled]="!selectedCategory || !selectedSubCategory "
-                type="button"
-                class="btn btn-success btn-circle btn-sm"
-                (click)="saveExpertise()"
-                style="font-size: inherit; display: inline"
-              >
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-          </div>
-          <div
-            style="margin: 10px; margin-left: 0"
-            *ngFor="let expertise of expertises; let i = index"
-          >
-            <div class="tags">
-              {{ expertise.category }} : {{expertise.subCategory}} 
-            </div>
-            <button
-              type="button"
-              class="btn btn-danger btn-circle btn-sm"
-              style="display: inline"
-              (click)="deleteExpertise(i)"
-              style="font-size: inherit"
-            >
-              <i class="fas fa-minus"></i>
-            </button>
-          </div>
-          <div
-            *ngIf="duplicateExpertiseArea"
-            style="color: red; margin-top: 10px"
-          >
-            Expertise already exists !
-          </div>
-          <div
-            *ngIf="pricePerHourError"
-            style="color: red; margin-top: 10px"
-          >
-            Please enter your price per hour first !
-          </div>
-          <p class="errorMessage">{{ errorText }}</p>
-        </div>
-
-      
-      </div>
-      </div>
-    
-      <br><br>
-          <div class="row" >
-            <div class="col-md-5 leftBox">
-              <div class="form-group">
-                <label for="Institute">Institute</label>
-                <input
-                  type="text"
-                  id="Institute"
-                  name="Institute"
-                  ngModel
-                  class="form-control input-fields"
-                  [ngModel]="tutorProfileDetails.institute"
-                  #Institute="ngModel"
-                  maxlength="50"
-                  autofocus
-                />
-                <span
-                  class="help-block"
-                  *ngIf="!Institute.valid && Institute.touched"
-                  >Invalid Institute</span
-                >
-              </div>
-
-                <div class="form-group">
-          <label>Educational Qualifications & Certifications</label>
-          <div>
-              <input
-                type="search"
-                name="search"
-                style="display: inline; width: 80%; margin-right: 5px"
-                class="form-control input-fields"
-                [(ngModel)]="inputEducation"
-                placeholder="Enter Qualification "
-              />
-              <div style="width: max-content; display: inline">
-                <button
-                  [disabled]="!inputEducation"
-                  type="submit"
-                  class="btn btn-success btn-circle btn-sm"
-                  (click)="addEducation()"
-                  style="font-size: inherit; display: inline"
-                >
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-              <div
-                *ngIf="duplicateEducationArea"
-                style="color: red; margin-top: 10px"
-              >
-                Educational Qualification already exists !
-              </div>
-          </div>
-          <div
-            style="margin: 10px; margin-left: 0"
-            *ngFor="let education of educationQualifications; let i = index"
-          >
-            <div class="tags">{{ education }}</div>
-            <button
-              type="button"
-              class="btn btn-danger btn-circle btn-sm"
-              style="display: inline"
-              (click)="deleteEducation(i)"
-              style="font-size: inherit"
-            >
-              <i class="fas fa-minus"></i>
-            </button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="professionalSkills">Professional Skills</label>
-          <input
-            type="text"
-            id="professionalSkills"
-            class="form-control input-fields"
-            ngModel
-            [ngModel]="tutorProfileDetails.professionalSkills"
-            name="professionalSkills"
-            #professionalSkills="ngModel"
-          />
-          <span
-            *ngIf="!professionalSkills.valid && professionalSkills.touched"
-            class="help-block"
-            >Invalid professional skills</span
-          >
-        </div>
-
-        <div class="form-group">
-          <label for="yearsOfExperience">Years of Experience</label>
-          <input
-            type="number"
-            id="yearsOfExperience"
-            name="yearsOfExperience"
-            ngModel
-            [ngModel]="tutorProfileDetails.yearsOfExperience"
-            class="form-control input-fields"
-            #yearsOfExperience="ngModel"
-          />
-          <span
-            class="help-block"
-            *ngIf="!yearsOfExperience.valid && yearsOfExperience.touched"
-            >Invalid years of experience</span
-          >
-        </div>
-            </div>
-            
-            <div class="col-md-5">
-              <div class="form-group">
-                <label for="description">Description</label>
-                <textarea
-                  style="padding-top: 10px"
-                  class="form-control"
-                  id="description"
-                  rows="3"
-                  name="description"
-                  maxlength="250"
-                  [ngModel]="tutorProfileDetails.description"
-                  placeholder="Enter your Description text"
-                  #tutorProfileDescription
-                
-                ></textarea>
-                <span class="setLength"
-                  >{{ tutorProfileDescription.value.length }}/250</span
-                >
-              </div>
-              
-              <div class="form-group">
-                <label for="speciality">Speciality</label>
-                <textarea
-                  class="form-control"
-                  id="speciality"
-                  rows="3"
-                  name="speciality"
-                  maxlength="250"
-                  [ngModel]="tutorProfileDetails.speciality"
-                  placeholder="Enter your Speciality text"
-                  #tutorProfileSpeciality
-                  
-                ></textarea>
-                <span class="setLength"
-                  >{{ tutorProfileSpeciality.value.length }}/250</span
-                >
-              </div>
-
-              <div class="form-group">
-                <label for="linkedInProfile">LinkedIn Profile link</label>
-                <input
-                  type="text"
-                  id="linkedInProfile"
-                  name="linkedInProfile"
-                  ngModel
-                  [ngModel]="tutorProfileDetails.linkedInProfile"
-                  class="form-control input-fields"
-                  #linkedInProfile="ngModel"
-                />
-                <span
-                  class="help-block"
-                  *ngIf="!linkedInProfile.valid && linkedInProfile.touched"
-                  >Invalid Link</span
-                >
-              </div>
-            </div>
-          </div>
-          
-        </form>
-        <div
-          
-          style="text-align: end; margin: 20px;width: 81%;"
-          
-        >
-          <button
-            class="btn"
-            style="margin-right: 2vw; text-decoration: underline; width: auto"
-            (click)="cancelForm()"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            class="btn"
-            style="
-              padding: 1vh 2vw;
-              background-color: purple;
-              color: white;
-              width: auto;
-              font-size: small;
-            "
-            (click)="basicProfile.ngSubmit.emit()"
-            [disabled]="!basicProfile.valid"
-          >
-            Save
-          </button>
-        </div>
-
-    <!-- </div> -->
-    <div>
-    </div>
+<div class="page-content dashboard__Panel">
+  <div class="wrapper">
+      <div class="profile_page">
+        <div class="profile_tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="#Tab__1" role="tab" data-toggle="tab" class="active">Personal Info</a></li>
+        <li><a href="#Tab__2" role="tab" data-toggle="tab">Photo</a></li>
+        <li><a href="#Tab__3" role="tab" data-toggle="tab">Domain</a></li>
+        <li><a href="#Tab__4" role="tab" data-toggle="tab">Education</a></li>
+        <li><a href="#Tab__5" role="tab" data-toggle="tab">Work Experience</a></li>
+        <li><a href="#Tab__6" role="tab" data-toggle="tab">Change Password</a></li>
+    </ul>
   </div>
-</body>
+        <div class="profile__TabContent">
+          <form>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="Tab__1">
+            <div class="row">
+              <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">First Name</label>
+                                      <input type="text" class="form-control" placeholder="First Name">
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">Last Name</label>
+                                      <input type="text" class="form-control" placeholder="Last Name">
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">E-Mail</label>
+                                      <input type="text" class="form-control" placeholder="shivam92.goel@gmail.com">
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">Phone Number</label>
+                                      <input type="text" class="form-control" placeholder="73580 75350">
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">UPI ID</label>
+                                      <input type="text" class="form-control" placeholder="shivam92.goel@oksbi">
+                                  </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">LinkedIn Profile</label>
+                                      <input type="text" class="form-control" placeholder="shivam92.goel">
+                                  </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form__btn">
+                                  <button type="submit" class="button save__btn">Save</button>
+                                </div>
+                              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="Tab__2">
+            <div class="row">
+              <div class="col-12">
+                <div class="profile_upload form-group">
+                                      <div class="img__contain">
+                                          <img id="img__profile" src="../.././../assets/images/expert-profile-pic.png" alt="image" />
+                                      </div> 
+                                      <div class="input-group"> 
+                                          <div class="custom-file">
+                                              <input type="file" id="inputGroupProfile" class="imgInp custom-file-input">
+                                              <label class="custom-file-label" for="inputGroupProfile">Choose file</label>
+                                          </div>
+                                      </div>
+                                  </div>
+              </div>
+                              <div class="col-12">
+                                <div class="form__btn">
+                                  <button type="submit" class="button save__btn">Save</button>
+                                </div>
+                              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="Tab__3">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group Prc__Pr__Hr">
+                  <label class="">Choose Domain</label>
+                  <input type="text" class="form-control" name="price per hour" value="100">
+                  <div class="pph__detail">
+                    <div class="detail__list">
+                      <span class="green_txt">Actual Earning per hour</span>
+                      <span class="green_txt">₹ 75.33</span>
+                    </div>
+                    <div class="detail__list">
+                      <span class="">GST charges</span>
+                      <span class="">₹ 15.25</span>
+                    </div>
+                    <div class="detail__list">
+                      <span class="">Platform fees</span>
+                      <span class="">₹ 9.42</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field_repeater">
+                                  <div class="row">
+                                      <div class="col-12">
+                                          <h4>Domain 1</h4>
+                                      </div>
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Choose Domain</label>
+                                              <select class="select2 form-control">
+                                                 <option>Marketing</option>
+                                                 <option>Marketing</option>
+                                                 <option>Marketing</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Choose Topic</label>
+                                              <select class="select2 form-control">
+                                                 <option>NPD</option>
+                                                 <option>SEO</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="reptr___btn">
+                                  <a href="JavaScript:Void(0);" class="delet_RBtn">
+                                    <img src="../.././../assets/images/delete-repeater.svg" alt="delete">
+                                  </a>
+                              </div>
+              <div class="field_repeater">
+                                  <div class="row">
+                                      <div class="col-12">
+                                          <h4>Domain 2</h4>
+                                      </div>
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Choose Domain</label>
+                                              <select class="select2 form-control">
+                                                 <option>Marketing</option>
+                                                 <option>Marketing</option>
+                                                 <option>Marketing</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Choose Topic</label>
+                                              <select class="select2 form-control">
+                                                 <option>NPD</option>
+                                                 <option selected>SEO</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="reptr___btn">
+                                  <a href="JavaScript:Void(0);" class="add_RBtn">
+                                    <img src="../.././../assets/images/add-repeater.svg" alt="add">Add more
+                                  </a>
+                              </div>
+                              <div class="col-12">
+                                <div class="form__btn">
+                                  <button type="submit" class="button save__btn">Save</button>
+                                </div>
+                              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="Tab__4">
+            <div class="row">
+              <div class="field_repeater">
+                                  <div class="row">
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">University/ College</label>
+                                              <input type="text" class="form-control" placeholder="">
+                                          </div>
+                                      </div>
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Degree</label>
+                                              <input type="text" class="form-control" placeholder="">
+                                          </div>
+                                      </div>
+                                      <div class="col-12">
+                                          <div class="form-group">
+                                              <label class="">Completion Date</label>
+                                              <input type="text" class="datepicker form-control" placeholder="">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="reptr___btn">
+                                  <a href="JavaScript:Void(0);" class="add_RBtn"><img src="../.././../assets/images/add-repeater.svg" alt="add">Add more</a>
+                              </div>
+                              <div class="col-12">
+                                <div class="form__btn">
+                                  <button type="submit" class="button save__btn">Save</button>
+                                </div>
+                              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="Tab__5">
+            <div class="row">
+              <div class="col-12">
+                                  <div class="form-group">
+                                      <label class="">Total Years of Experience</label>
+                                      <input type="text" class="form-control" placeholder=" ">
+                                  </div>
+                              </div>
+                              <div class="col-12">
+                                  <h4>Organisation</h4>
+                              </div>
+                              <div class="field_repeater">
+                                  <div class="row">
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Current Organisation</label>
+                                              <input type="text" class="form-control" placeholder="">
+                                          </div>
+                                      </div>
+                                      <div class="col-12 col-md-6">
+                                          <div class="form-group">
+                                              <label class="">Title/Designation</label>
+                                              <input type="text" class="form-control" placeholder="">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div> 
+                              <div class="reptr___btn">
+                                  <a href="JavaScript:Void(0);" class="add_RBtn"><img src="../.././../assets/images/add-repeater.svg" alt="add">Add more</a>
+                              </div>
+                              <div class="col-12">
+                                <div class="form__btn">
+                                  <button type="submit" class="button save__btn">Save</button>
+                                </div>
+                              </div>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="Tab__6">
+            <div class="row">
+                            <div class="col-12">
+                                  <div class="form-group">
+                                      <label class="">Old Password</label>
+                                      <input id="old-password" type="text" class="form-control" name="password" value="">
+                                  </div>
+                              </div>
+              <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="">Password</label>
+                                    <div class="password_wrap">
+                                        <input id="p-password" type="password" class="form-control" name="password" value="">
+                                        <span toggle="#p-password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                  <div class="form-group">
+                                      <label class="">Confirm Password</label>
+                                      <div class="password_wrap">
+                                          <input id="confirm-password" type="password" class="form-control" name="password" value="">
+                                          <span toggle="#confirm-password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form__btn">
+                                  <button type="submit" class="button save__btn">Save</button>
+                                </div>
+                              </div>
+                          </div>
+          </div>
+        </div>	
+    </form>
+  </div>
+      </div>
+  </div>
+</div>

@@ -21,14 +21,30 @@
             "aot": true,
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css",
-              "./node_modules/@syncfusion/ej2-material-theme/styles/material.css",
-              "./node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
-              "./node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css"
+              
+              "node_modules/select2/dist/css/select2.min.css", 
+              "node_modules/select2/dist/js/select2.min.js",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+          
+              "./src/styles.css",
+              "./src/assets/css/mediaqueries.css",
+              "src/assets/css/owl.theme.default.min.css",
+
+              "node_modules/cropperjs/dist/cropper.min.css",
+              "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@syncfusion/ej2-material-theme/styles/material.css",
+              "node_modules/material-icons/iconfont/material-icons.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css"
             ],
-            "scripts": ["./node_modules/bootstrap/dist/js/bootstrap.min.js"]
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/popper.min.js",
+              "src/assets/js/bootstrap.bundle.min.js",
+              
+              "node_modules/cropperjs/dist/cropper.min.js",
+              "src/assets/js/owl.carousel.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -5,8 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ShortenLength implements PipeTransform{
     transform(description: any){
-        if(description.length > 100){
-            return description.substr(0,100)+' ...';
+        if(description.length > 50){
+            return description.substr(0,50)+' ...';
         }
         return description;
     }

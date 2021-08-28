@@ -1,397 +1,140 @@
-<body>
-  <div id="sidenav" class="sidenav">
-    <span
-      class="material-icons close closeButton"
-      (click)="closeNav()"
-      style="cursor: pointer"
-    >
-      close
-    </span>
 
-    <div class="profile-section-sidenav" [class.hideBlock]="!toggleNavigation">
-      <div
-        *ngIf="loginType == 'Expert'"
-        (click)="openProfile(); onNavigationClick()"
-        class="profile-thumbnail"
-        style="cursor: pointer"
-        [ngStyle]="{
-          'background-image':
-            'url(' + tutorService.getTutorDetials().profilePictureUrl + ')'
-        }"
-      ></div>
-      <div
-        *ngIf="loginType == 'Learner'"
-        (click)="openProfile(); onNavigationClick()"
-        class="profile-thumbnail"
-        style="cursor: pointer"
-        [ngStyle]="{
-          'background-image':
-            'url(' +
-            studentServce.getStudentProfileDetails().profilePictureUrl +
-            ')'
-        }"
-      >
-        <!-- <img src="../../assets/images/default-user-image.png" alt=""> -->
+
+<header class="dashboard__Header">
+  <div class="page__title">
+    <h1>
+      Hello, <strong>{{ fullName }}</strong>
+    </h1>
+    <!--<div class="page-breadcrumb">
+          <ul class="breadcrumb">
+              <li><a href="#"><img src="images/breadcrumb-home.svg" alt="#"></a></li>
+              <li class="active">Availability Schedule</li>
+          </ul>
+      </div> -->
+  </div>
+  <div class="page_btns">
+    <div>
+        <a
+          class="setng_btn hdr_btns"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          ><img [src]="profilePictureUrl" /></a>
+        <ul class="dropdown-menu" aria-labelledby="settingDropdown">
+          <li>
+            <a class="dropdown-item"
+              ><i style="margin-right: 5px;" class="far fa-user-circle"></i>{{ fullName }} </a
+            >
+          </li>
+         
+          <li>
+            <a class="dropdown-item" href="#" (click)="onSignOut()"
+              ><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a
+            >
+          </li>
+        </ul>
       </div>
-      <div class="profile-secondaryinformaiton">
-        <span
-          *ngIf="loginType == 'Learner'"
-          (click)="openProfile(); onNavigationClick()"
-          class="profile-varient"
-          style="cursor: pointer"
-          >{{ studentProfile.fullName }}</span
-        >
-        <span
-          *ngIf="loginType == 'Expert'"
-          (click)="openProfile(); onNavigationClick()"
-          class="profile-varient"
-          style="cursor: pointer"
-          >{{ tutorProfile.fullName }}</span
-        >
-        <span class="profile-varient" *ngIf="subject != null"></span>
-        <span
-          *ngIf="
-            tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
-          "
-          class="progressbar-container"
-        >
-          <div class="progress-Bar">
-            <div class="outer-progressBar">
-              <div
-                class="inner-progressBar"
-                [style.width.%]="tutorProfileDetails.profileCompleted"
-              ></div>
-            </div>
-          </div>
-        </span>
+  </div>
+</header>
 
-        <span
-          *ngIf="
-            loginType == 'Learner' &&
-            studentProfileCompleted &&
-            studentProfileCompleted != 100
-          "
-          class="progressbar-container"
-        >
-          <div class="progress-Bar">
-            <div class="outer-progressBar">
-              <div
-                class="inner-progressBar"
-                [style.width.%]="studentProfileCompleted"
-              ></div>
-            </div>
-          </div>
-        </span>
-        <div
-          *ngIf="
-            tutorProfileDetails.profileCompleted != 100 && loginType == 'Expert'
-          "
-          class="progressbar-information"
-        >
-          <span
-            >Your profile is
-            <label>{{ 100 - tutorProfileDetails.profileCompleted }}% </label>
-            incomplete.</span
-          >
-          <span class="hyperlink-cont"
-            >Get a head start by
-            <a href="javascript:;" (click)="openProfile(); onNavigationClick()"
-              >completing it now</a
-            ></span
-          >
-        </div>
-
-        <div
-          *ngIf="
-            loginType == 'Learner' &&
-            studentProfileCompleted &&
-            studentProfileCompleted != 100
-          "
-          class="progressbar-information"
-        >
-          <span class="hyperlink-cont">
-            You have
-            <label>{{ 100 - studentProfileCompleted }}% </label>
-            left. Please get a head start by
-            <a href="javascript:;" (click)="openProfile(); onNavigationClick()"
-              >completing your profile</a
-            ></span
-          >
-        </div>
-
-        <span
-          *ngIf="
-            loginType == 'Expert' && tutorProfileDetails.profileCompleted == 100
-          "
-        >
-          <p style="display: inline; margin: 5px">Available?</p>
-          <label class="switch">
-            <input
-              type="checkbox"
-              [checked]="checked"
-              (click)="toggleAvailability()"
-            />
-            <span class="slider round"></span>
-          </label>
-        </span>
-      </div>
+<div class="side-menu">
+  <nav class="fixed_menu">
+    <div class="web_logo">
+      <a href="" class="logo_img"
+        ><img src="../../assets/images/fellow genius logo.svg"
+      /></a>
     </div>
-
-    <ul class="navbar-nav" [class.hideBlock]="!toggleNavigation">
-      <!-- <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Expert'"
-      >
-        <a routerLink="/home/profile">Profile</a>
-      </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Learner'"
-      >
-        <a routerLink="/home/studentProfile">Profile</a>
-      </li> -->
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Learner'"
-      >
+    <ul class="nav_menu nav_list">
+      <li class="list-item" class="" *ngIf="loginType == 'Expert'">
         <a
-          class="nav-link"
-          routerLink="/home/student-dashboard"
-          (click)="onNavigationClick()"
-          >Dashboard</a
-        >
-      </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Expert'"
-      >
-        <a
-          class="nav-link"
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
           routerLink="/home/tutor-dashboard"
-          (click)="onNavigationClick()"
-          >Dashboard</a
+          [routerLinkActiveOptions]="{ exact: true }"
         >
+          <img src="../../assets/images/dashboard-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Dashboard</span>
+        </a>
       </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Learner'"
-      >
+      <li class="list-item" *ngIf="loginType == 'Expert'">
         <a
-          class="nav-link"
-          routerLink="/home/experts"
-          (click)="onNavigationClick()"
-          >Experts</a
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
+          routerLink="/home/sessions-expert"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
+          <img src="../../assets/images/session-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Sessions</span>
+        </a>
       </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Expert'"
-      >
+      <li class="list-item" *ngIf="loginType == 'Expert'">
         <a
-          class="nav-link"
-          routerLink="tutor-schedule"
-          (click)="onNavigationClick()"
-          >Schedule</a
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
+          routerLink="/home/tutor-schedule"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
+          <img
+            src="../../assets/images/availability-schedule-icon.svg"
+            class="mnu_icn"
+          />
+          <span class="menu_txt">Availability Schedule</span>
+        </a>
       </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Expert'"
-      >
+      <li class="list-item" *ngIf="loginType == 'Expert'">
         <a
-          class="nav-link"
-          routerLink="recordings"
-          (click)="onNavigationClick()"
-          >Recordings</a
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
+          routerLink="/home/profile"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
+          <img src="../../assets/images/profile-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Profile</span>
+        </a>
       </li>
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Expert'"
-      >
+      <li class="list-item menu_item active" *ngIf="loginType == 'Learner'">
         <a
-          class="nav-link"
-          routerLink="knowledge-base"
-          (click)="onNavigationClick()"
-          >Knowledge Base</a
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
+          routerLink="/home/student-dashboard"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
+          <img src="../../assets/images/dashboard-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Dashboard</span>
+        </a>
       </li>
-      <!-- 
-      <li class="nav-item">
-        <a style="cursor: pointer" (click)="onSignOut()">Sign Out</a>
-      </li> -->
-      <!-- 
-      <li class="nav-item" *ngIf="loginType == 'Expert'">
+      <li class="list-item" *ngIf="loginType == 'Learner'">
         <a
-          class="nav-link"
-          routerLink="bookings"
+          href="javascript:;"
+          class="menu_item"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
-          >Bookings</a
+          routerLink="/home/sessions-learner"
         >
-      </li> -->
-
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Learner'"
-      >
-        <a
-          class="nav-link"
-          routerLink="student-bookings"
-          (click)="onNavigationClick()"
-          >Bookings</a
-        >
+          <img src="../../assets/images/session-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Sessions</span>
+        </a>
       </li>
-      <li
-        class="nav-item"
-        routerLinkActive="nav-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        *ngIf="loginType == 'Learner'"
-      >
+      <li class="list-item" *ngIf="loginType == 'Learner'">
         <a
-          class="nav-link"
-          routerLink="session-notes"
-          (click)="onNavigationClick()"
-          >Session Notes</a
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLink="/home/student-profile"
         >
+          <img src="../../assets/images/profile-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Profile</span>
+        </a>
       </li>
     </ul>
-  </div>
-  <div id="mainContent" class="main-content" style="position: relative">
-    <div [class]="overlay"></div>
-    <div
-      class="header"
-      id="headerContent"
-      style="position: unset;"
-      [class.expertNavHeight]="loginType == 'Expert'"
-    >
-      <!-- <span class="fa fa-bars hum-burger" (click)="navAction(index)"></span> -->
-      <span class="fa fa-bars hum-burger" (click)="toggleNav()"></span>
-      <div class="logo" (click)="toFacade()"></div>
-      <div class="search-box-container" *ngIf="loginType == 'Learner'">
-        <div class="input-group">
-          <form>
-            <button class="searchButton" (click)="displaySelectedSubjects()">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </button>
-            <input
-              type="search"
-              name="search"
-              placeholder="Find Tutor by Subjects"
-              [formControl]="myControl"
-              [matAutocomplete]="auto"
-              [(ngModel)]="selectedSubject"
-            />
-            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
-              <mat-option
-                *ngFor="let option of filteredOptions | async"
-                [value]="option"
-              >
-                {{ option }}
-              </mat-option>
-            </mat-autocomplete>
-          </form>
-
-          <!-- <span class="input-group-btn">
-        <button class="btn btn-default" type="button">
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        </button>
-      </span>
-       -->
-        </div>
-        <!-- /input-group -->
-      </div>
-      <div class="dropdown-icon-container">
-        <span
-          class="fa fa-sign-out-alt"
-          style="cursor: pointer"
-          (click)="onSignOut()"
-        ></span>
-        <span
-          class="fa fa-bell"
-          style="cursor: pointer; margin-right: 20px; position: relative"
-          (click)="displayNotifications()"
-          ><span class="notificationNum" *ngIf="getNotificationCount() != 0">{{
-            getNotificationCount()
-          }}</span></span
-        >
-        <div class="box" *ngIf="showNotifications">
-          <h3>Notifications</h3>
-          <p *ngIf="notifications.length == 0">No new notifications !</p>
-          <div class="notify_item" *ngFor="let n of notifications">
-            <div class="notify_img">
-              <img
-                style="border-radius: 50%; width: 40px; height: 40px"
-                [src]="n.pictureUrl"
-                alt="img"
-              />
-            </div>
-
-            <div class="notify_ingo">
-              <p>{{ n.message }}</p>
-              <span class="notify_time">{{ n.timestamp | date: "short" }}</span>
-            </div>
-            <div class="notify_read">
-              <span *ngIf="n.readStatus == false">•</span>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="dropdown">
-          <button
-            class="btn btn-primary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            {{ loginType }}
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a
-              class="dropdown-item"
-              href="javascript:;"
-              *ngIf="loginType == 'Learner'"
-              >Expert</a
-            >
-            <a
-              class="dropdown-item"
-              href="javascript:;"
-              *ngIf="loginType == 'Expert'"
-              >Learner</a
-            >
-          </div>
-        </div> -->
-      </div>
-    </div>
-   
-      <router-outlet></router-outlet>
-   
-    
-  </div>
-</body>
+  </nav>
+</div>
+<router-outlet></router-outlet>
