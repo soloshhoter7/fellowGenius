@@ -13,11 +13,18 @@
   </div>
 
   <div [class]="!isLoading ? '' : 'hideBlock'">
-    <div class="access_page wi_full" [class]="choosePassword ? '' : 'hideBlock'">
+    <div
+      class="access_page wi_full"
+      [class]="choosePassword ? '' : 'hideBlock'"
+    >
       <div class="container">
         <div class="page_wrapper">
           <div class="access_icon_box">
-            <img src="../../../assets/images/login-clip.svg" alt="#" class="graphic_style" />
+            <img
+              src="../../../assets/images/login-clip.svg"
+              alt="#"
+              class="graphic_style"
+            />
           </div>
           <div class="access_field_box">
             <div class="access_header">
@@ -25,18 +32,24 @@
                 ><img src="../../../assets/images/arrow-grey.svg" alt="#"
               /></a>
               <a href="" class="accs_logo"
-                ><img src="../../../assets/images/fellow genius logo.svg" alt="#"
+                ><img
+                  src="../../../assets/images/fellow genius logo.svg"
+                  alt="#"
               /></a>
             </div>
             <div class="access_data">
               <div class="content_wrapper">
-                
                 <h2>Choose Password</h2>
                 <div class="tagline">Please enter your new password</div>
                 <div class="error_message" *ngIf="invalidChoosePassword">
                   <div class="msg_wrap">
-                    <img src="../../../assets/images/required-error.svg" alt="#" class="erro_icon">
-                    <span><strong>Error</strong>Password could not be set
+                    <img
+                      src="../../../assets/images/required-error.svg"
+                      alt="#"
+                      class="erro_icon"
+                    />
+                    <span
+                      ><strong>Error</strong>Password could not be set
                     </span>
                   </div>
                 </div>
@@ -52,9 +65,9 @@
                         class="form-control"
                         placeholder="Enter your new password"
                         [pattern]="passwordPattern"
-                          minlength="8"
-                          maxlength="20"
-                          #password="ngModel"
+                        minlength="8"
+                        maxlength="20"
+                        #password="ngModel"
                       />
                       <span
                         toggle="#password-new"
@@ -65,21 +78,25 @@
                       <span
                         class="help-block"
                         *ngIf="
-                          password.invalid && (password.dirty || password.touched)
+                          password.invalid &&
+                          (password.dirty || password.touched)
                         "
-                        style="
-                          color: grey;
-                          font-size: smaller;
-                          margin-bottom: 10px;
-                        "
-                        >Your password must be a minimum of 8 characters long.
-                        Your PW must contain at least one uppercase letter (A-Z),
-                        one lowercase (a-z), one number (0-9), and one special
-                        character (@, #,&, %).</span
+                        style="color: grey; font-size: smaller"
+                        >Your password must be a minimum of 8 characters long
+                        and should contain atleast<br />
+                        One uppercase letter (A-Z)<br />
+                        One lowercase letter (a-z)<br />
+                        One number (0-9)<br />
+                        One special character (@, #,&, %)</span
                       >
                     </div>
                   </div>
-                  <button type="button" class="button form_Btn" (click)="saveNewPassword()" [disabled]=!newPassword>
+                  <button
+                    type="button"
+                    class="button form_Btn"
+                    (click)="saveNewPassword()"
+                    [disabled]="!newPassword"
+                  >
                     Save new Password
                   </button>
                 </form>
@@ -253,11 +270,27 @@
             <div class="access_field_box">
               <div class="access_header">
                 <h1>Sign up <strong>as an Expert</strong></h1>
+
                 <a href="" class="accs_logo"
                   ><img src="../assets/images/fellow genius logo.svg" alt="#"
                 /></a>
               </div>
               <div class="access_data">
+                <div>
+                  <a
+                    href="#"
+                    class="register_btn hdr_btn"
+                    data-bs-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Sign Up"
+                  >
+                    <img
+                      src="../../assets/images/breadcrumb-home.svg"
+                      alt="#"
+                      style="width: 50px"
+                    />
+                  </a>
+                </div>
                 <form
                   (ngSubmit)="saveExpertBasicProfile(basicProfile)"
                   #basicProfile="ngForm"
@@ -307,6 +340,16 @@
                             class="help-block"
                             >Invalid date of birth</span
                           >
+                          <!-- <input
+                            matInput
+                            [matDatepicker]="picker"
+                            class="form-control"
+                          />
+                          <div><mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker></div> -->
                         </div>
                       </div>
 
@@ -385,7 +428,7 @@
                           <input
                             type="text"
                             class="form-control"
-                            placeholder="Enter UPI id"
+                            placeholder="Enter UPI ID"
                             name="upiID"
                             id="upiID"
                             maxlength="30"
@@ -400,13 +443,8 @@
                           <div>
                             <span
                               class="help-block"
-                              style="
-                                color: grey;
-                                font-size: smaller;
-
-                                margin: 10px;
-                              "
-                              >UPI id is necessary for processing your
+                              style="color: grey; font-size: smaller"
+                              >UPI ID is necessary for processing your
                               payments</span
                             >
                           </div>
@@ -469,6 +507,16 @@
                             #expertisePrice="ngModel"
                             (ngModelChange)="onPercentChange($event)"
                           />
+                          <div>
+                            <span
+                              class="help-block"
+                              style="color: grey; font-size: smaller"
+                              >The price you enter here is inclusive of GST @18%
+                              and FellowGenius platform fee. The per session
+                              amount payable will be reflected in the expert
+                              profile upon confirmation</span
+                            >
+                          </div>
                           <span
                             class="help-block"
                             *ngIf="
@@ -476,7 +524,7 @@
                             "
                             >Invalid Price per hour !</span
                           >
-                          <div
+                          <!-- <div
                             class="pph__detail"
                             *ngIf="
                               expertisePrice.dirty && tutorProfileDetails.price1
@@ -498,7 +546,7 @@
                               <span class="">Platform fees</span>
                               <span class="">₹ {{ commission }}</span>
                             </div>
-                          </div>
+                          </div> -->
                           <div
                             *ngIf="pricePerHourError"
                             style="color: red; margin-top: 10px"
@@ -507,7 +555,6 @@
                           </div>
                         </div>
                       </div>
-
                       <div class="field_repeater">
                         <div class="row">
                           <div class="col-12">
@@ -531,9 +578,10 @@
                                 id="chooseCategory"
                                 name="categoryName"
                                 (change)="onDomainChange($event.target.value)"
-                                placeholder="Choose Domain"
+                                data-placeholder="Choose Domain"
                                 ngModel
                               >
+                                <option value=""></option>
                                 <option
                                   *ngFor="let categ of categories"
                                   [value]="categ.category"
@@ -546,14 +594,16 @@
                           <div class="col-12 col-md-6">
                             <div class="form-group">
                               <label class="">Choose Topic*</label>
+
                               <select
                                 class="select2 form-control"
                                 id="chooseSubCategory"
                                 name="subCategoryName"
-                                placeholder="Choose Topic"
+                                data-placeholder="Choose Topic"
                                 (change)="onTopicChange($event.target.value)"
                                 ngModel
                               >
+                                <option value=""></option>
                                 <option
                                   *ngFor="let sc of filteredSubCategories"
                                   [value]="sc.subCategory"
@@ -816,11 +866,10 @@
                   <div class="fields_box">
                     <div class="row">
                       <div class="col-12">
-                        <h2>Description & Speciality</h2>
+                        <h2>About</h2>
                       </div>
                       <div class="col-12 col-md-6">
                         <div class="form-group">
-                          <label for="description">Description</label>
                           <textarea
                             style="padding-top: 10px"
                             class="form-control"
@@ -829,31 +878,13 @@
                             name="description"
                             maxlength="250"
                             [ngModel]="tutorProfileDetails.description"
-                            placeholder="Enter your Description text"
+                            placeholder="Provide more information about your credentials"
                             #tutorProfileDescription
                           ></textarea>
                           <span class="setLength"
                             >{{
                               tutorProfileDescription.value.length
                             }}/250</span
-                          >
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-6">
-                        <div class="form-group">
-                          <label for="speciality">Speciality</label>
-                          <textarea
-                            class="form-control"
-                            id="speciality"
-                            rows="3"
-                            name="speciality"
-                            maxlength="250"
-                            [ngModel]="tutorProfileDetails.speciality"
-                            placeholder="Enter your Speciality text"
-                            #tutorProfileSpeciality
-                          ></textarea>
-                          <span class="setLength"
-                            >{{ tutorProfileSpeciality.value.length }}/250</span
                           >
                         </div>
                       </div>
@@ -901,21 +932,24 @@
                       </div>
                       <div class="field_repeater">
                         <div class="row">
+                          <div class="col-12" style="margin-top: 15px">
+                            <h4>Add Education</h4>
+                          </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <label class="">University/ College*</label>
+                              <label class="">University / College*</label>
                               <input
                                 type="text"
                                 class="form-control"
                                 name="institute"
                                 [(ngModel)]="inputInstitute"
-                                placeholder="Enter University/College"
+                                placeholder="Enter University / College"
                               />
                             </div>
                           </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <label class="">Degree*</label>
+                              <label class="">Degree and speciality*</label>
                               <input
                                 type="text"
                                 class="form-control"
@@ -928,14 +962,44 @@
                           <div class="col-12">
                             <div class="form-group">
                               <label class="">Completion Date*</label>
-                              <input
+                              <!-- <input
                                 type="date"
                                 class="form-control"
                                 name="completionDate"
                                 [(ngModel)]="inputCompletionDate"
                                 placeholder="Enter Completion Date"
                                 #completionDate="ngModel"
-                              />
+                              /> -->
+                              <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
+
+                              <mat-form-field
+                                appearance="fill"
+                                style="width: inherit"
+                              >
+                                <mat-label>Month and Year</mat-label>
+                                <input
+                                  matInput
+                                  [min]="minDate"
+                                  [max]="maxDate"
+                                  [matDatepicker]="dp"
+                                  [formControl]="inputCompletionDate"
+                                />
+                                <mat-datepicker-toggle
+                                  matSuffix
+                                  [for]="dp"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker
+                                  #dp
+                                  startView="multi-year"
+                                  (yearSelected)="chosenYearHandler($event)"
+                                  (monthSelected)="
+                                    chosenMonthHandler($event, dp)
+                                  "
+                                  panelClass="example-month-picker"
+                                >
+                                </mat-datepicker>
+                              </mat-form-field>
+
                               <span
                                 class="help-block"
                                 *ngIf="invalidCompletionDate"
@@ -973,7 +1037,7 @@
                   <div class="fields_box" id="photoBox">
                     <div class="row">
                       <div class="col-12">
-                        <h2>Photo</h2>
+                        <h2>Photo<sup style="font-size: x-large">*</sup></h2>
                       </div>
                       <div class="col-12">
                         <div class="profile_upload">
@@ -1075,13 +1139,14 @@
                             "
                             *ngIf="pictureInfo"
                           >
-                            Supported file upload formats(.jpg, .png, .jpeg)
-                            upto size limit of 3MB *
+                            Max file size upto 3 MB in .jpg, .png or .jpeg
+                            formats only
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+
                   <div
                     style="
                       margin: 10px;
@@ -1090,13 +1155,32 @@
                       color: red;
                     "
                   >
-                    Make sure all the required fields(marked with *) are filled
-                    !
+                    All the fields marked * are mandatory
+                  </div>
+                  <div>
+                    <span class="help-block" style="color: grey"
+                      >By submitting, you acknowledge that you have read and
+                      agreed to our
+                      <a
+                        routerLink="/terms-and-conditions"
+                        target="_blank"
+                        style="color: #8dc63f; cursor: pointer"
+                        >Terms and Conditions</a
+                      >
+                      and
+                      <a
+                        routerLink="/privacy-policy"
+                        target="_blank"
+                        style="color: #8dc63f; cursor: pointer"
+                        >Privacy Policy</a
+                      ></span
+                    >
                   </div>
                   <div class="signup_btnexp">
                     <button
                       type="submit"
                       class="button form_Btn"
+                      style="margin-top: 10px"
                       [disabled]="!basicProfile.valid"
                     >
                       Sign up as an Expert!

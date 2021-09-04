@@ -178,9 +178,12 @@ public class dao {
 	}
 	// for getting tutors list whose profile completed is 100% for finding tutors 
 	public List<TutorProfileDetails> getTutorList(String subject) {
+		System.out.println("subject : "+subject);
 		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();
 		CategoryList categ = repCategory.findCategory(subject);
+		System.out.println("categ : "+categ);
 		List<ExpertiseAreas> areas = repExpertiseAreas.searchByCategoryId(categ.getCategoryId());
+		System.out.println(areas);
 		if(areas!=null) {
 			for(ExpertiseAreas results:areas) {
 				if(!tutors.contains(results.getUserId())) {

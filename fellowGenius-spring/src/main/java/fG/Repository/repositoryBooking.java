@@ -28,6 +28,9 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value = "SELECT * FROM booking_details WHERE bid=?1",nativeQuery=true)
 	BookingDetails bidExists(Integer bid);
 	
+	@Query(value = "SELECT * FROM booking_details WHERE meeting_id=?1",nativeQuery=true)
+	BookingDetails meetingIdExists(String id);
+	
 	@Query(value = "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='Pending'", nativeQuery = true)   
 	List<BookingDetails> bookingExist(String tutorId);
 	
@@ -67,6 +70,12 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT (approval_status='Pending' OR approval_status='Accepted') && rating = 0", nativeQuery=true)
 	List<BookingDetails> fetchPendingReviewsList(Integer studentId);
+	
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT (approval_status='Pending' OR approval_status='Accepted')", nativeQuery=true)
+	List<BookingDetails> fetchCompletedBookingStudent(Integer studentId);
+	
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT (approval_status='Pending' OR approval_status='Accepted')", nativeQuery=true)
+	List<BookingDetails> fetchCompletedBookingExpert(Integer tid);
 	
 	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT approval_status='Pending' && NOT (rating = 0 OR rating = -1)", nativeQuery=true)
 	List<BookingDetails> fetchExpertRecentReviews(Integer tutorId);

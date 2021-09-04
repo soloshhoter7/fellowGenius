@@ -32,9 +32,7 @@
                     <h4>{{ teacherProfile.fullName }}</h4>
                     <!-- <p>NPD<span>Marketing</span></p> -->
                     <p>
-                      <span
-                        *ngFor="let skills of teacherProfile.areaOfExpertise"
-                        >{{ skills.subCategory }},</span
+                      <span>{{createExpertString(teacherProfile)|shorten}}</span
                       >
                     </p>
                   </div>

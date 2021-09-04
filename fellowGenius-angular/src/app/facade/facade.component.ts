@@ -38,7 +38,7 @@ export class FacadeComponent implements OnInit {
   lastName='sharma'
   myControl = new FormControl();
   options: string[] = [
-   'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
+   'Sales and Business Development','Marketing','HR','Operations and SCM','Strategy and Industry Expertise','Programming and Technology','New and Emerging technology','Software Tools','Personal Development and Others'
   ];
   filteredOptions: Observable<string[]>;
 

@@ -155,7 +155,7 @@
         margin-top: -175px;
     }
     .how_works_steps{
-        margin-top: 230px;
+        margin-top: 50px;
     }
     .how_works_steps .list_item .img_box{
         height: 200px;
@@ -261,7 +261,7 @@
         font-size: 14px;
     }
     .py_5 {
-	    padding-top: 1.5em;
+	    /* padding-top: 1.5em; */
 	    padding-bottom: 1.5em;
 	}
     header .navbar .navbar-brand {
@@ -293,7 +293,7 @@
         height: 50px;
     }
     .how_works_steps {
-        margin-top: 150px;
+        margin-top: 50px;
     }
     .hw_video_sec {
         margin-top: -115px;
@@ -424,7 +424,7 @@
 	    height: 30px;
 	}
 	.access_page .page_wrapper .access_field_box {
-	    padding: 160px 0 60px 0;
+	    padding: 16px 0 60px 0;
 	}
 	.access_page .page_wrapper .access_field_box .access_header{
 		padding-right: 0;

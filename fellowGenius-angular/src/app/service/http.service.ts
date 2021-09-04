@@ -112,6 +112,44 @@ export class HttpService {
       }
     );
   }
+  fetchBookingDetailsWithMeetingId(meetingId): Observable<bookingDetails> {
+    return this.http.get<bookingDetails>(
+      this.backendUrl+'/fellowGenius/meeting/fetchBookingDetailsWithId',
+      {
+        params: {
+          meetingId: meetingId,
+        },
+      }
+    );
+  }
+  meetingMemberJoined(
+    meetingId: any,
+    userId: number
+  ): Observable<Object> {
+    return this.http.get(
+      this.backendUrl+'/fellowGenius/meeting/meetingMemberJoined',
+      {
+        params: {
+          meetingId: meetingId,
+          userId:userId.toString()
+        },
+      }
+    );
+  }
+  meetingMemberLeft(
+    meetingId: any,
+    userId: number
+  ): Observable<Object> {
+    return this.http.get(
+      this.backendUrl+'/fellowGenius/meeting/meetingMemberLeft',
+      {
+        params: {
+          meetingId: meetingId,
+          userId:userId.toString()
+        },
+      }
+    );
+  }
 
   // for saving student profile details
   registerUser(registrationModel: registrationModel): Observable<Object> {
@@ -291,6 +329,27 @@ export class HttpService {
         },
       }
     );
+  }
+  fetchLearnerCompletedMeetings(sid:number){
+    return this.http.get<bookingDetails[]>(
+      this.backendUrl+'/fellowGenius/meeting/findStudentCompletedBookings',
+      {
+        params:{
+          sid:sid.toString()
+        }
+      }
+    )
+  }
+ 
+  fetchExpertCompletedMeetings(tid:number){
+    return this.http.get<bookingDetails[]>(
+      this.backendUrl+'./fellowGenius/meeting/findTutorCompletedBookings',
+      {
+        params:{
+          tid:tid.toString()
+        }
+      }
+    )
   }
   fetchBookingStatus(bid:number):Observable<Object>{
     return this.http.get(this.backendUrl+'/fellowGenius/meeting/fetchBookingStatus',

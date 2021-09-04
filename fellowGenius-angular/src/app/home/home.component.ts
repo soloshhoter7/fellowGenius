@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit {
     public router: Router,
     public meetingService: MeetingService,
     public studentServce: StudentService,
-    private loginService: LoginDetailsService,
+    public loginService: LoginDetailsService,
     public tutorService: TutorService,
     private dialog: MatDialog,
     private httpService: HttpService,
@@ -88,6 +88,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.preventBackButton();
     this.toggleNavigation = true;
+    if(this.cookieService.get('prev')){
+      this.cookieService.delete("prev");
+    }
     // this.breakpointObserver
     //   .observe(['(min-width: 800px)'])
     //   .subscribe((state: BreakpointState) => {
@@ -169,7 +172,8 @@ export class HomeComponent implements OnInit {
       }
       this.initialiseNotifications();
     } else {
-      this.router.navigate(['']);
+      this.router.navigate(['login']);
+      this.cookieService.set("prev","home");
     }
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),

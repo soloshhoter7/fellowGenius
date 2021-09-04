@@ -1,17 +1,32 @@
-<div class="container">
-    <h2>
-        Verify experts
-    </h2>
-    <div>
-        <h4 *ngIf="pendingExperts.length==0">No pending experts.</h4>
-    </div>
-    <div *ngIf="pendingExperts.length>0" style="width: 50%;">
-        <div *ngFor="let expert of pendingExperts;let i=index;">
-            <div style="display: inline-block;">
-                {{expert.fullName}} : {{expert.email}}
-            </div>
-            <button class="btn" style="float: right;" (click)="verifyExpert(expert,i)">Verify</button>
+<div class="page-content dashboard__Panel">
+  <div class="wrapper">
+    <div class="container">
+      <h2>Verify experts</h2>
+      <div *ngIf="isLoading" style="text-align: center">
+        <app-loading></app-loading>
+        <p style="margin: 1rem; font-size: large">Verifying expert..</p>
+      </div>
+      <div *ngIf="!isLoading">
+        <div>
+          <h4 *ngIf="pendingExperts.length == 0">No pending experts.</h4>
         </div>
-        
+        <div class="row">
+
+        </div>
+        <div *ngIf="pendingExperts.length > 0" >
+          <div class="row" style="background: white;border-radius: 10px;padding: 10px;width: 60%;margin-bottom: 20px;" *ngFor="let expert of pendingExperts; let i = index">
+            <div class="col-md-8"><div style="display: inline-block">
+              {{ expert.fullName }} : {{ expert.email }}
+            </div></div>
+            <div class="col-md-4">   <button class="btn"
+              (click)="verifyExpert(expert, i)"
+            >
+              Verify
+            </button></div>
+         
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

@@ -3,14 +3,14 @@
 	<app-nav-bar></app-nav-bar>
 <div class="page-content">
 	<section class="wi_full py_5 banner_sec">
-		<div class="container navbar-padding" >
+		<div class="container" >
 			<div class="row align-items-center">
 				<div class="col-12 col-lg-7">
-					<div class="banner_content">
-						<h1>On Demand Consulting Platform</h1>
-						<p> Interact with experts from your domain in just a click !!</p>
+					<div class="banner_content bannerPaddingBottom">
+						<h1>On Demand Consulting</h1>
+						<p> Interact with experts of your choice in just a click !!</p>
 						<form (ngSubmit)="displaySelectedSubjects()"> 
-							<div class="serach_field">
+							<div class="serach_field" style="position: relative;">
 								<input type="search" class="form-control domain_srch" placeholder="Search by Domain" [formControl]="myControl"
 								[matAutocomplete]="auto"
 								[(ngModel)]="selectedSubject" />
@@ -39,7 +39,7 @@
 			<div class="row align-items-center">
 				<div class="col-12 col-lg-5">
 					<div class="content_box">
-						<h2>How Fellow Genius can help</h2>
+						<h2>Why Fellow Genius</h2>
 					</div>
 				</div>
 				<div class="col-12 col-lg-7">
@@ -50,7 +50,7 @@
 									<div class="help_icon"><img src="../../assets/images/curated-experts.svg" alt="#"></div>
 									<div class="help_text">
 										<h5>Curated Set of Experts</h5>
-										<p> Connect with professionals with years of hands-on experience to optimize your workplace efficiency.</p>
+										<p> Connect with professionals with years of hands-on experience</p>
 									</div> 
 								</div>
 							</li>
@@ -59,7 +59,7 @@
 									<div class="help_icon"><img src="../../assets/images/innovative-consulting.svg" alt="#"></div>
 									<div class="help_text">
 										<h5>Innovative Consulting</h5>
-										<p>One-stop consulting platform for working professionals and individuals.</p>
+										<p>One-stop consulting platform for working professionals and individuals</p>
 									</div> 
 								</div>
 							</li>
@@ -68,11 +68,16 @@
 									<div class="help_icon"><img src="../../assets/images/personal-learning.svg" alt="#"></div>
 									<div class="help_text">
 										<h5>Personalised Learning </h5>
-										<p> Live video interaction with the expert from your chosen domain.</p>
+										<p> Live video interaction with the expert from your chosen domain</p>
 									</div> 
 								</div>
 							</li>
 						</ul>
+					</div>
+				</div>
+				<div class="col-12" style="display: flex;justify-content: center;">
+					<div class="btn_block" style="width:unset;" >
+						<a href="javascript:;" (click)="onSignUp()" class="button signUp_btn">Sign Up</a>
 					</div>
 				</div>
 			</div>
@@ -80,14 +85,11 @@
 	</section>
 	<section class="wi_full py_5 how_works_sec">
 		<div class="container">
+			
 			<div class="row align-items-center">
 				<div class="col-12 col-lg-7 mx-auto">
 					<div class="sec_title">
 						<h2>How it Works?</h2>
-						<p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum.</p>
-						<div class="btn_block">
-							<a href="javascript:;" (click)="onSignUp()" class="button signUp_btn">Sign Up</a>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -123,7 +125,7 @@
 								</div>
 								<div class="content_box">
 									<div class="item_count">01</div>
-									<h3>Sign up and Complete Profile</h3>
+									<h3>Sign up and Complete Your Profile</h3>
 								</div>
 							</div>
 							<div class="list_item">
@@ -132,7 +134,7 @@
 								</div>
 								<div class="content_box">
 									<div class="item_count">02</div>
-									<h3>Select your Domain and Topic of Interest</h3>
+									<h3>Select the Domain and Topic of Interest</h3>
 								</div>
 							</div>
 							<div class="list_item">
@@ -141,7 +143,7 @@
 								</div>
 								<div class="content_box">
 									<div class="item_count">03</div>
-									<h3>Choose Expert and Book a Meeting as per the available time slot</h3>
+									<h3>Choose an Expert and Book a Meeting as per availablility</h3>
 								</div>
 							</div>
 							<div class="list_item">
@@ -159,7 +161,7 @@
 								</div>
 								<div class="content_box">
 									<div class="item_count">05</div>
-									<h3>Get Confirmation from expert</h3>
+									<h3>Get Confirmation from Expert</h3>
 								</div>
 							</div>
 							<div class="list_item">
@@ -168,7 +170,7 @@
 								</div>
 								<div class="content_box">
 									<div class="item_count">06</div>
-									<h3>Attend session</h3>
+									<h3>Attend Session</h3>
 								</div>
 							</div>
 						</div>
@@ -186,10 +188,22 @@
 							<h2>Key Consultation Areas</h2>
 						</div>
 						<div class="consultaion_list">
-							<div class="list_item" (click)="displayFromTiles('Tools')">
+							<div class="list_item" (click)="displayFromTiles('Software Tools')">
 								<div class="data_wrap" >
 									<span class="list_icon"><img src="../../assets/images/tools.svg" alt="#"></span>
-									<span class="list_txt">Tools</span>
+									<span class="list_txt">Software Tools</span>
+								</div>
+							</div>
+							<div class="list_item" (click)="displayFromTiles('New and Emerging technology')">
+								<div class="data_wrap" >
+									<span class="list_icon"><img src="../../assets/images/tools.svg" alt="#"></span>
+									<span class="list_txt">New and Emerging technology</span>
+								</div>
+							</div>
+							<div class="list_item" (click)="displayFromTiles('Programming and Technology')">
+								<div class="data_wrap" >
+									<span class="list_icon"><img src="../../assets/images/IT-support.svg" alt="#"></span>
+									<span class="list_txt">Programming and Technology</span>
 								</div>
 							</div>
 							<div class="list_item" (click)="displayFromTiles('Marketing')">
@@ -198,28 +212,23 @@
 									<span class="list_txt">Marketing</span>
 								</div>
 							</div>
-							<div class="list_item" (click)="displayFromTiles('Content')">
+							<div class="list_item" (click)="displayFromTiles('Operations and SCM')">
 								<div class="data_wrap">
 									<span class="list_icon"><img src="../../assets/images/content.svg" alt="#"></span>
-									<span class="list_txt">Content</span>
+									<span class="list_txt">Operations and SCM</span>
 								</div>
 							</div>
-							<div class="list_item" (click)="displayFromTiles('Sales')">
+							<div class="list_item" (click)="displayFromTiles('Sales and Business Development')">
 								<div class="data_wrap">
 									<span class="list_icon"><img src="../../assets/images/sales.svg" alt="#"></span>
-									<span class="list_txt">Sales</span>
+									<span class="list_txt">Sales and Business Development</span>
 								</div>
 							</div>
-							<div class="list_item" (click)="displayFromTiles('E-comm')">
-								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/E-comm.svg" alt="#"></span>
-									<span class="list_txt">E-comm</span>
-								</div>
-							</div>
-							<div class="list_item" (click)="displayFromTiles('Strategy')">
+							
+							<div class="list_item" (click)="displayFromTiles('Strategy and Industry Expertise')">
 								<div class="data_wrap">
 									<span class="list_icon"><img src="../../assets/images/strategy.svg" alt="#"></span>
-									<span class="list_txt">Strategy</span>
+									<span class="list_txt">Strategy and Industry Expertise</span>
 								</div>
 							</div>
 							<div class="list_item" (click)="displayFromTiles('Finance')">
@@ -234,16 +243,10 @@
 									<span class="list_txt">HR</span>
 								</div>
 							</div>
-							<div class="list_item" (click)="displayFromTiles('Operations')">
+							<div class="list_item" (click)="displayFromTiles('Personal Development and Others')">
 								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/opeartion.svg" alt="#"></span>
-									<span class="list_txt">Operations</span>
-								</div>
-							</div>
-							<div class="list_item" (click)="displayFromTiles('IT Support')">
-								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/IT-support.svg" alt="#"></span>
-									<span class="list_txt">IT Support</span>
+									<span class="list_icon"><img src="../../assets/images/E-comm.svg" alt="#"></span>
+									<span class="list_txt">Personal Development and Others</span>
 								</div>
 							</div>
 						</div>
@@ -254,7 +257,7 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="sec_title">
-							<h2>Meet our Experts</h2>
+							<h2>Meet our Expert</h2>
 						</div>
 						<div class="carousel_sec">
 							<div class="expert-carousel owl-carousel owl-theme">

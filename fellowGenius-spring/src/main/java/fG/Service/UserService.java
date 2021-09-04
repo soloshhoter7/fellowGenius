@@ -467,6 +467,10 @@ public class UserService implements UserDetailsService {
 		stuProfileModel.setFullName(stuProfile.getFullName());
 		stuProfileModel.setProfilePictureUrl(stuProfile.getProfilePictureUrl());
 		stuProfileModel.setLinkedInProfile(stuProfile.getLinkedInProfile());
+		stuProfileModel.setCurrentOrganisation(stuProfile.getCurrentOrganisation());
+		stuProfileModel.setCurrentDesignation(stuProfile.getCurrentDesignation());
+		stuProfileModel.setYearsOfExperience(stuProfile.getYearsOfExperience());
+		stuProfileModel.setHighestQualification(stuProfile.getHighestQualification());
 		for (LearningAreas area : stuProfile.getLearningAreas()) {
 			stuProfileModel.getLearningAreas().add(area.getSubject());
 		}
@@ -485,7 +489,11 @@ public class UserService implements UserDetailsService {
 		studentProfile.setSid(studentModel.getSid());
 		studentProfile.setProfilePictureUrl(studentModel.getProfilePictureUrl());
 		studentProfile.setLinkedInProfile(studentModel.getLinkedInProfile());
-
+		studentProfile.setYearsOfExperience(studentModel.getYearsOfExperience());
+		studentProfile.setCurrentDesignation(studentModel.getCurrentDesignation());
+		studentProfile.setCurrentOrganisation(studentModel.getCurrentOrganisation());
+		studentProfile.setHighestQualification(studentModel.getHighestQualification());
+		
 		for (String area : studentModel.getLearningAreas()) {
 			LearningAreas subject = new LearningAreas();
 			subject.setUserId(studentProfile);
@@ -527,6 +535,9 @@ public class UserService implements UserDetailsService {
 		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
 		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
 		tutProfileDetails.setBookingId(tutorModel.getBookingId());
+		tutProfileDetails.setUpiId(tutorModel.getUpiID());
+		tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
+		tutProfileDetails.setEarning(tutorProfileDetailsLoaded.getEarning());
 		// for setting the expertise areas
 		Integer minPrice = Integer.MAX_VALUE;
 		Integer maxPrice = 0;
@@ -718,6 +729,8 @@ public class UserService implements UserDetailsService {
 		tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
 		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
 		tutorProfileDetailsModel.setBookingId(tutProfileDetails.getBookingId());
+		tutorProfileDetailsModel.setUpiID(tutProfileDetails.getUpiId());
+		tutorProfileDetailsModel.setCurrentDesignation(tutProfileDetails.getCurrentDesignation());
 		for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
 			expertise exp = new expertise();
 			exp.setCategory(area.getCategory().getCategoryName());
@@ -725,6 +738,7 @@ public class UserService implements UserDetailsService {
 			exp.setPrice(area.getPrice());
 			tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
 		}
+		System.out.println(tutorProfileDetailsModel);
 		return tutorProfileDetailsModel;
 	}
 	
@@ -1080,8 +1094,19 @@ public class UserService implements UserDetailsService {
 	}
 
 	public List<PendingTutorProfileDetails> fetchPendingExperts() {
-		// TODO Auto-generated method stub
-		return repPendingTutorProfileDetails.findAll();
+		List<PendingTutorProfileDetails> result = new ArrayList<PendingTutorProfileDetails>();
+		List<PendingTutorProfileDetails> pendingTutors =  repPendingTutorProfileDetails.findAll();
+		List<PendingTutorProfileDetails> toBeDeleted = new ArrayList<PendingTutorProfileDetails>();
+		if(pendingTutors!=null) {
+			for(PendingTutorProfileDetails tut:pendingTutors) {
+				if(repUsers.emailExist(tut.getEmail())==null) {
+					result.add(tut);
+				}else {
+					repPendingTutorProfileDetails.delete(tut);
+				}
+			}
+		}
+		return result;
 	}
 
 	public ResponseModel expertChoosePassword(String userId,String password) {

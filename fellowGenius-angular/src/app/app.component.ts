@@ -58,18 +58,22 @@ export class AppComponent implements OnInit {
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   ngOnInit() {
     
-    if (this.authService.isTokenValid()) {
-      this.loginType = this.loginService.getLoginType();
-      if (this.loginType) {
-        this.authService.autoAuthUser();
-      } else {
-        this.handleRefresh();
-      }
-    }
+    // if (this.authService.isTokenValid()) {
+    //   this.loginType = this.loginService.getLoginType();
+    //   if (this.loginType) {
+    //     this.authService.autoAuthUser();
+    //   } else {
+    //     this.handleRefresh();
+    //   }
+    // }else{
+    //   this.auh
+    // }
+    this.authService.autoAuthUser();
   }
 
  
   public handleRefresh() {
+    console.log('called handle refresh in app component ts')
     this.authService.autoAuthUser();
   }
 }

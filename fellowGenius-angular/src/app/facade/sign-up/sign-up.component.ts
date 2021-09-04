@@ -96,20 +96,40 @@ export class SignUpComponent implements OnInit {
   };
   //--------------------------------------------------------
   ngOnInit() {
-     this.prev_route = this.cookieService.get("prev");
-    this.expert_userId = this.cookieService.get("expert_userId");
-    this.expert_domain = this.cookieService.get("expert_domain");
+    this.prev_route = this.cookieService.get('prev');
+    this.expert_userId = this.cookieService.get('expert_userId');
+    this.expert_domain = this.cookieService.get('expert_domain');
     this.googleSDK();
     this.seePassword();
   }
-  goToPreviousUrl(){
-
-    if(this.prev_route!=''){
-      this.router.navigate(['view-tutors'], {
-        queryParams: { page:this.expert_userId,subject:this.expert_domain },
-      });
+  goToPreviousUrl() {
+    if (this.prev_route != '') {
+      this.snackBar.open(
+        'You have successfully signed up',
+        'close',
+        this.config
+      );
+      console.log(this.prev_route);
+      if (this.prev_route == 'view-tutors') {
+        this.cookieService.delete('prev');
+        this.cookieService.delete('expert_userId');
+        this.cookieService.delete('expert_domain');
+        this.router.navigate(['view-tutors'], {
+          queryParams: {
+            page: this.expert_userId,
+            subject: this.expert_domain,
+          },
+        });
+      } else if (this.prev_route == 'home') {
+        this.cookieService.delete('prev');
+        this.router.navigate(['home']);
+      } else {
+        this.cookieService.delete('prev');
+        this.router.navigate([this.prev_route]);
+      }
     }
   }
+
   otpChange() {
     console.log('input changes');
   }
@@ -136,6 +156,13 @@ export class SignUpComponent implements OnInit {
   toHome() {
     this.router.navigate(['home']);
   }
+  openNewTab(val){
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['terms-and-conditions'])
+    );
+    // console.log(url);
+    window.open(url,'_blank')
+  }
   openThankYouPage() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -148,9 +175,14 @@ export class SignUpComponent implements OnInit {
       this.authService.getAuthStatusListener().subscribe((res) => {
         if (res == true) {
           if (this.loginService.getLoginType() == 'Learner') {
-            if(this.prev_route!=''){
+            if (this.prev_route != '') {
               this.goToPreviousUrl();
-            }else{
+            } else {
+              this.snackBar.open(
+                'You have successfully Signed up',
+                'close',
+                this.config
+              );
               this.toFacadePage();
             }
           } else if (this.loginService.getLoginType() == 'Expert') {
@@ -237,15 +269,15 @@ export class SignUpComponent implements OnInit {
           }
         });
     } else {
-      console.log('in otp region')
+      console.log('in otp region');
       let otp: string = this.appendOtp(form);
       console.log(otp);
       if (otp == null) {
         this.wrongOtp = true;
       } else {
-        console.log(otp,this.verificationOtp);
+        console.log(otp, this.verificationOtp);
         if (bcrypt.compareSync(otp, this.verificationOtp)) {
-          console.log('otp matched !')
+          console.log('otp matched !');
           this.authService.onSignUp(this.registrationModel);
 
           this.authService.getAuthStatusListener().subscribe((res) => {
@@ -259,9 +291,14 @@ export class SignUpComponent implements OnInit {
               this.dialogRef.closeAll();
             } else if (res == true) {
               if (this.loginService.getLoginType() == 'Learner') {
-                if(this.prev_route!=''){
+                if (this.prev_route != '') {
                   this.goToPreviousUrl();
-                }else{
+                } else {
+                  this.snackBar.open(
+                    'You have successfully signed up',
+                    'close',
+                    this.config
+                  );
                   this.toFacadePage();
                 }
               } else if (this.loginService.getLoginType() == 'Expert') {
@@ -298,7 +335,6 @@ export class SignUpComponent implements OnInit {
         this.httpClient.checkUser(this.socialLogin.email).subscribe((res) => {
           if (!res) {
             this.zone.run(() => {
-
               this.openThankYouPage();
             });
           } else {

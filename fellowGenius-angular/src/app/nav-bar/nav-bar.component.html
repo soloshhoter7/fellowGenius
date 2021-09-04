@@ -6,6 +6,12 @@
           ><img src="../../assets/images/fellow genius logo.svg" alt="logo"
         /></a>
         <ul class="nav navbar-nav">
+         
+       
+          <a href="#" class="register_btn hdr_btn" style="margin-right: 10px;" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up" >
+            <img src="../../assets/images/breadcrumb-home.svg" alt="#" style="width: auto;" >
+            <small>Home</small>
+          </a>
           <div *ngIf="loginService.getLoginType() == null" style="display: flex;">
             <a (click)="toSignUpExpert()"  class="expert_btn hdr_btn">
               <span class="btn_icon"><img src="../../assets/images/expert-icon.svg" alt="#"></span>
@@ -19,9 +25,10 @@
               <img src="../../assets/images/header-icon-2.svg" alt="#">
               <small>Sign Up</small>
             </a>
+            
           </div>
           
-          <div *ngIf="loginService.getLoginType() != null">
+          <div *ngIf="loginService.getLoginType() != null" style="margin-left: 20px;">
             <div>
               <a
                 class="dropdown-toggle user_profile"
@@ -40,7 +47,7 @@
                 </li>
                 <li>
                   <a class="dropdown-item" *ngIf="loginService.getLoginType() == 'Expert'"
-                    ><i class="far fa-user-circle"></i>{{ tutorService.getTutorDetials().fullName }} </a
+                    ><i class="far fa-user-circle"></i> {{ tutorService.getTutorDetials().fullName }} </a
                   >
                 </li>
                 <li>
@@ -56,6 +63,7 @@
               </ul>
             </div>
           </div>
+          
         </ul>
       </div>
     </nav>

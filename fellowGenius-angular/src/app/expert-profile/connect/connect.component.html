@@ -1,67 +1,62 @@
-<div
-class="book__meeting"
-*ngIf="isLoading"
-style="
-  text-align: center;
-"
->
-<app-loading></app-loading>
-<p style="margin:1rem;font-size: large;">Booking Meeting..</p>
+<div class="book__meeting" *ngIf="isLoading" style="text-align: center">
+  <app-loading></app-loading>
+  <p style="margin: 1rem; font-size: large">Booking Meeting..</p>
 </div>
 <div *ngIf="!isLoading">
   <div class="book__meeting" *ngIf="!signedIn">
-    <div style="text-align: center;">
-    <h4 style="font-weight: 400;">
-      Please Sign in to book a meeting !
-    </h4>
-    <button class="btn" style="float: unset;margin-top: 10px;width: 50%;" routerLink="/login">Sign In</button>
-    <div class=" access_footer" style="margin-top:10px">
-      <p>Don't have an account yet? <a href="javascript:;" style="color: #8DC63F;" routerLink="/sign-up">Create an account</a></p>         
-    <!-- <div style="width: 100%;">
+    <div style="text-align: center">
+      <h4 style="font-weight: 400">Please Sign in to book a meeting !</h4>
+      <button
+        class="btn"
+        style="float: unset; margin-top: 10px; width: 50%"
+        routerLink="/login"
+      >
+        Sign In
+      </button>
+      <div class="access_footer" style="margin-top: 10px">
+        <p>
+          Don't have an account yet?
+          <a href="javascript:;" style="color: #8dc63f" routerLink="/sign-up"
+            >Create an account</a
+          >
+        </p>
+        <!-- <div style="width: 100%;">
       <button class="btn">Sign In</button>
     </div> -->
-    
+      </div>
     </div>
-  </div>
   </div>
   <div *ngIf="signedIn">
     <div class="book__meeting" *ngIf="!isTutorAvailable">
       <div style="text-align: center">
-      <h4 style="font-weight: 400;">
-        Expert is not available right now.<br>
-        Check Back Later.
-      </h4>
-       
+        <h4 style="font-weight: 400">
+          Expert is not available right now.<br />
+          Check Back Later.
+        </h4>
       </div>
     </div>
-    
+
     <div class="book__meeting" *ngIf="isTutorAvailable">
-      <h4>Book Meeting</h4>
-      <p>
-        Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin lorem quis.
-      </p>
+      <h4>Book a Meeting</h4>
       <form>
         <div class="row">
           <div class="col-12">
-            <div class="form-group" style="margin-bottom:0;">
-              <mat-form-field appearance="fill" style="display: unset;">
-                <mat-label>Choose Subject</mat-label>
-                <mat-select
-                  [(value)]="bookingDetails.subject"
-                  name="subject"
-                >
+            <div class="form-group" style="margin-bottom: 0">
+              <mat-form-field appearance="fill" style="display: unset">
+                <mat-label>Choose Topic</mat-label>
+                <mat-select [(value)]="bookingDetails.subject" name="subject">
                   <mat-option
-                  *ngFor="let subject of areaOfExpertises"
-                  [value]="subject.subCategory"
+                    *ngFor="let subject of areaOfExpertises"
+                    [value]="subject.subCategory"
                   >
-                  {{ subject.subCategory }}
+                    {{ subject.subCategory }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
           <div class="col-12">
-            <mat-form-field appearance="fill" style="display: unset;">
+            <mat-form-field appearance="fill" style="display: unset">
               <mat-label>Choose Date</mat-label>
               <mat-select
                 [(value)]="selectedDate"
@@ -88,7 +83,7 @@ style="
               <div *ngIf="!noSchedule">
                 <label>Choose Time</label>
                 <div class="start_time">
-                  <mat-form-field appearance="fill" style="width: 100%;">
+                  <mat-form-field appearance="fill" style="width: 100%">
                     <mat-label>Start</mat-label>
                     <mat-select
                       [(value)]="startTimeValue"
@@ -99,24 +94,31 @@ style="
                         [value]="i"
                       >
                         <span *ngIf="selectedDate.date == time.date"
-                          >{{ time.hours | timeConverter }}:{{ time.minutes | zero
-                          }} {{ time.hours | timeMedian }}</span
+                          >{{ time.hours | timeConverter }}:{{
+                            time.minutes | zero
+                          }}
+                          {{ time.hours | timeMedian }}</span
                         >
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="end_time">
-                  <mat-form-field appearance="fill" style="width: 100%;">
+                  <mat-form-field appearance="fill" style="width: 100%">
                     <mat-label>End</mat-label>
-                    <mat-select [(value)]="endTimeValue" (selectionChange)="endSlotChange()">
+                    <mat-select
+                      [(value)]="endTimeValue"
+                      (selectionChange)="endSlotChange()"
+                    >
                       <mat-option
                         *ngFor="let time of endSlots; let i = index"
                         [value]="i"
                       >
                         <span *ngIf="selectedDate.date == time.date"
-                          >{{ time.hours | timeConverter }}:{{ time.minutes | zero
-                          }} {{ time.hours | timeMedian }}</span
+                          >{{ time.hours | timeConverter }}:{{
+                            time.minutes | zero
+                          }}
+                          {{ time.hours | timeMedian }}</span
                         >
                       </mat-option>
                     </mat-select>
@@ -142,17 +144,16 @@ style="
                       </div> -->
           <div class="col-12">
             <button
-              class="buton proceed_btn"
+              style="width: 100%"
+              class="button proceed_btn"
               (click)="onBooking()"
               [disabled]="!bookingDetails.subject"
             >
-              Proceed to Payment (₹{{payableAmount}})
+              Proceed to Payment (₹{{ payableAmount }})
             </button>
           </div>
         </div>
       </form>
     </div>
+  </div>
 </div>
-
-</div>
-

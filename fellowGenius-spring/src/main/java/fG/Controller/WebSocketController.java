@@ -17,7 +17,7 @@ import fG.Service.MeetingService;
 
 @Controller
 @CrossOrigin(origins = "${crossOrigin}")
-//@CrossOrigin(origins = "https://fellowgenius.com")
+//@CrossOrigin(origins = {"https://fellowgenius.com","https://www.fellowgenius.com"})
 public class WebSocketController {
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;

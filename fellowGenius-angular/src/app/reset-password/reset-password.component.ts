@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
+import { togglePassword, initiateSelect2 } from '../../assets/js/custom';
 import { HttpService } from '../service/http.service';
 import { LoginDetailsService } from '../service/login-details.service';
 import { MeetingService } from '../service/meeting.service';
@@ -26,19 +27,22 @@ export class ResetPasswordComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     public loginService: LoginDetailsService,
     public dialog: MatDialog
-  ) {}
+  ) {
+    togglePassword();
+  }
   showEmail: boolean;
   showPassword: boolean;
   userId;
   code;
   isLoading: boolean;
   incorrectEmail: boolean;
-  passwordError;
+  passwordError='';
   linkSent = false;
   mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   ngOnInit(): void {
+    // this.seePassword();
     this.activatedRoute.queryParams.subscribe((params) => {
       this.code = params['token'];
       if (this.code == null) {
@@ -46,12 +50,26 @@ export class ResetPasswordComponent implements OnInit {
       } else {
         this.showPassword = true;
       }
+  
       // this.httpService
       //   .fetchTutorProfileDetails(this.userId)
       //   .subscribe((res) => {
       //     this.teacherProfile = res;
 
       //   });
+    });
+  }
+  seePassword() {
+    $('.toggle-password').each(function (index) {
+      $(this).on('click', function () {
+        $(this).toggleClass('fa-eye fa-eye-slash');
+        var input = $($(this).attr('toggle'));
+        if (input.attr('type') == 'password') {
+          input.attr('type', 'text');
+        } else {
+          input.attr('type', 'password');
+        }
+      });
     });
   }
   toLoginPage() {

@@ -1,0 +1,16 @@
+.btn{
+    min-width: 120px;
+    float: left;
+    width: auto;
+    min-height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 12px 20px;
+    font-weight: 500;
+    transition: .2s all;
+    border: none;
+    color: #fff ;
+    background: #8DC63F;
+}

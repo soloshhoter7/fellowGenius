@@ -7,4 +7,9 @@ export class StudentProfileModel {
 	public dateOfBirth: string;
 	public profilePictureUrl: string;
 	public learningAreas: string[] = [];
+	public highestQualification:string;
+	public yearsOfExperience:number;
+	public currentOrganisation:string;
+	public currentDesignation:string;
+
 }

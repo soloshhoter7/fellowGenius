@@ -34,7 +34,7 @@ img{
 	display: flex;
 	margin-top: 1.5em;
 }
-.button, button, .btn{
+/* .button, button, .btn{
     min-width: 120px;
     float: left;
     width: auto;
@@ -49,7 +49,7 @@ img{
     border: none;
     color: #fff !important;
     background: #8DC63F;
-}
+} */
 .owl-carousel button{
 	min-width: auto;
 }

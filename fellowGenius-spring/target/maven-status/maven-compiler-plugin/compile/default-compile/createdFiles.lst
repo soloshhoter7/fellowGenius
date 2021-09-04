@@ -24,7 +24,6 @@ fG\DAO\dao.class
 fG\Configuration\JwtRequestFilter.class
 fG\Repository\repositoryTutorVerification.class
 fG\Service\UserService.class
-fG\Service\UserService$2.class
 fG\Entity\TutorVerification.class
 fG\Entity\LearningAreas.class
 fG\Entity\CategoryList.class

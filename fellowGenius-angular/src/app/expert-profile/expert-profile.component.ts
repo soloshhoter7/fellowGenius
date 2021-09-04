@@ -89,6 +89,7 @@ export class ExpertProfileComponent implements OnInit {
   profilePictureUrl = '../../assets/images/default-user-image.png';
   previousUrl
   selectedDomain;
+  selectedSubject: any;
   constructor(
     public profileService: ProfileService,
     public meetingSevice: MeetingService,
@@ -140,7 +141,22 @@ export class ExpertProfileComponent implements OnInit {
       });
     }
   }
- 
+  createExpertString(result:any){
+    let filteredArray =  result.areaOfExpertise.filter(
+      (x) => x.category == this.selectedDomain
+    );
+    let expertise:string='';
+    for(let i=0;i<filteredArray.length;i++){
+      if(filteredArray[i].category==this.selectedDomain){
+        expertise+=filteredArray[i].subCategory;
+        if(i!=filteredArray.length-1){
+          expertise+=',';
+        }
+      }
+      
+    }
+    return expertise;
+  }
   openConnectPage() {
     if (this.loginService.getLoginType() != null) {
       this.dialog.open(ConnectComponent, {

@@ -62,6 +62,7 @@ export class StudentProfileComponent implements OnInit {
   };
   invalidPicture:boolean = false;
   pictureInfo:boolean = true;
+  emptyProfilePicture
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -143,6 +144,10 @@ export class StudentProfileComponent implements OnInit {
     this.studentProfile.linkedInProfile = form.value.linkedInProfile;
     this.studentProfile.learningAreas = this.learningAreas;
     this.studentProfile.profilePictureUrl = this.profilePictureUrl;
+    this.studentProfile.yearsOfExperience = form.value.yearsOfExperience;
+    this.studentProfile.highestQualification = form.value.highestQualification;
+    this.studentProfile.currentOrganisation = form.value.currentOrganisation;
+    this.studentProfile.currentDesignation = form.value.currentDesignation;
     if (this.learningAreasDuplicacyCheck(this.learningAreas)) {
       this.httpService
         .updateStudentProfile(this.studentProfile)
@@ -155,7 +160,7 @@ export class StudentProfileComponent implements OnInit {
                 'close',
                 this.config
               );
-              this.router.navigate(['/home/student-dashboard']);
+              // this.router.navigate(['/home/student-dashboard']);
              
             })
          

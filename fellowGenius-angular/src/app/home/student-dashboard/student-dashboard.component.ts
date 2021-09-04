@@ -25,11 +25,12 @@ export class StudentDashboardComponent implements OnInit {
   selected = 0;
   hovered = 0;
   readonly = false;
-  viewPending=true;
+  viewPending = true;
   pendingRequestsCount = 0;
   joinMeeting = new meetingDetails();
   sid: number;
   bookingList: bookingDetails[] = [];
+  previousMeetings: bookingDetails[] = [];
   approvedList: bookingDetails[] = [];
   liveMeetingList: bookingDetails[] = [];
   filterSearch: tutorProfileDetails[];
@@ -38,10 +39,13 @@ export class StudentDashboardComponent implements OnInit {
   emptyBookingList: boolean = false;
   emptyApprovedList: boolean = false;
   emptyLiveList: boolean = false;
+  emptyPreviousMeetings: boolean = false;
   pendingReviews: tutorProfileDetails[] = [];
   public now: Date = new Date();
   noTutorMessage = '';
   upcomingMeetingsCount;
+  selectedCompletedMeeting = new bookingDetails();
+  selectedUpcomingMeeting = new bookingDetails();
   constructor(
     public httpService: HttpService,
     public studentService: StudentService,
@@ -64,17 +68,6 @@ export class StudentDashboardComponent implements OnInit {
     verticalPosition: 'top',
   };
 
-  @HostListener('window:resize', ['$event'])
-  getScreenSize(event?) {
-    var screenWidth = window.innerWidth;
-    if (screenWidth <= 800) {
-      // console.log("called");
-      this.studentChartWidth = '320';
-    } else {
-      this.studentChartWidth = '380';
-    }
-  }
-
   ngOnInit(): void {
     this.preventBackButton();
     if (window.innerWidth <= 800) {
@@ -84,6 +77,7 @@ export class StudentDashboardComponent implements OnInit {
     if (this.sid) {
       this.fetchPendingReviewsList();
       this.initialiseUpcomingMeetings();
+      this.intialiseCompletedMeetings();
       // this.fetchTutorList();
       // this.findStudentPendingBookings();
       // this.initialiseStudentPendingRequest();
@@ -98,7 +92,13 @@ export class StudentDashboardComponent implements OnInit {
   toBookingsPage() {
     this.router.navigate(['home/student-bookings']);
   }
-  
+
+  setSelectedUpcomingMeeting(booking: bookingDetails) {
+    this.selectedUpcomingMeeting = booking;
+  }
+  setSelectedCompletedMeeting(booking: bookingDetails) {
+    this.selectedCompletedMeeting = booking;
+  }
   preventBackButton() {
     history.pushState(null, null, location.href);
     this.locationStrategy.onPopState(() => {
@@ -157,6 +157,7 @@ export class StudentDashboardComponent implements OnInit {
       // this.fetchTutorList();
       // this.findStudentPendingBookings();
       this.initialiseUpcomingMeetings();
+      this.intialiseCompletedMeetings();
       // this.initialiseStudentPendingRequest();
       // this.fetchApprovedMeetings();
       // this.intialiseStudentApprovedBookings();
@@ -165,66 +166,94 @@ export class StudentDashboardComponent implements OnInit {
       // this.fetchTopTutors();
     }, 1000);
   }
-  initialiseUpcomingMeetings(){
+  connectAgain(id, domain) {
+    if (this.selectedCompletedMeeting) {
+      document.getElementById('closePopUpButton').click();
+    }
+    this.router.navigate(['view-tutors'], {
+      queryParams: { page: id, subject: domain },
+    });
+  }
+  initialiseUpcomingMeetings() {
     this.studentService.fetchUpcomingMeetings();
-    this.upcomingMeetingsCount=0;
-    this.studentService.upcomingMeetingsChanged.subscribe((booking:bookingDetails[])=>{
-      this.bookingList=booking;
-      console.log(this.bookingList);
-      this.sortMeetings(this.bookingList);
-      for (let booking of this.bookingList) {
-        this.timeLeft(booking);
-        if (this.bookingList.length == 0) {
-          this.emptyBookingList = true;
+    this.upcomingMeetingsCount = 0;
+    this.studentService.upcomingMeetingsChanged.subscribe(
+      (booking: bookingDetails[]) => {
+        this.bookingList = booking;
+        this.sortMeetings(this.bookingList);
+        for (let booking of this.bookingList) {
+          this.timeLeft(booking);
+          if (this.bookingList.length == 0) {
+            this.emptyBookingList = true;
+          }
+        }
+        for (let booking of this.bookingList) {
+          this.eliminateLiveMeetings(booking, this.bookingList);
         }
       }
-      for (let booking of this.bookingList) {
-        this.eliminateLiveMeetings(booking, this.bookingList);
-      }
-    })
+    );
   }
-  initialiseStudentPendingRequest(){
-    this.studentService.fetchStudentPendingBookings();
-    this.pendingRequestsCount=0
-    this.studentService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
-      this.bookingList=booking;
-      if (this.bookingList.length == 0) {
-        this.emptyBookingList = true;
-        this.pendingRequestsCount = 0;
-      } else {
-        this.pendingRequestsCount = this.bookingList.length;
+  intialiseCompletedMeetings() {
+    this.studentService.fetchCompletedMeetings();
+    this.studentService.completedMeetingsChanged.subscribe(
+      (booking: bookingDetails[]) => {
+        this.previousMeetings = booking;
+        if (this.bookingList.length != 0) {
+          this.sortMeetings(this.previousMeetings);
+        } else {
+          this.emptyPreviousMeetings = true;
+        }
       }
-    })
+    );
+  }
+  initialiseStudentPendingRequest() {
+    this.studentService.fetchStudentPendingBookings();
+    this.pendingRequestsCount = 0;
+    this.studentService.bookingsChanged.subscribe(
+      (booking: bookingDetails[]) => {
+        this.bookingList = booking;
+        if (this.bookingList.length == 0) {
+          this.emptyBookingList = true;
+          this.pendingRequestsCount = 0;
+        } else {
+          this.pendingRequestsCount = this.bookingList.length;
+        }
+      }
+    );
   }
 
-  intialiseStudentApprovedBookings(){
+  intialiseStudentApprovedBookings() {
     this.studentService.fetchApprovedStudentMeetings();
-    this.studentService.approvedBookingsChanged.subscribe((booking:bookingDetails[])=>{
-      this.approvedList=booking;
-      this.sortMeetings(this.approvedList);
-      
-      if (this.approvedList.length == 0) {
-        this.emptyApprovedList = true;
-      }
-      for (let booking of this.approvedList) {
-        this.timeLeft(booking);
+    this.studentService.approvedBookingsChanged.subscribe(
+      (booking: bookingDetails[]) => {
+        this.approvedList = booking;
+        this.sortMeetings(this.approvedList);
+
         if (this.approvedList.length == 0) {
           this.emptyApprovedList = true;
         }
+        for (let booking of this.approvedList) {
+          this.timeLeft(booking);
+          if (this.approvedList.length == 0) {
+            this.emptyApprovedList = true;
+          }
+        }
       }
-    })
+    );
   }
-  initialiseLiveMeetingList(){
+  initialiseLiveMeetingList() {
     this.studentService.fetchLiveMeetings();
-    this.studentService.liveMeetingsChanged.subscribe((booking:bookingDetails[])=>{
-      this.liveMeetingList = booking;
-      if (this.liveMeetingList.length == 0) {
-        this.emptyLiveList = true;
+    this.studentService.liveMeetingsChanged.subscribe(
+      (booking: bookingDetails[]) => {
+        this.liveMeetingList = booking;
+        if (this.liveMeetingList.length == 0) {
+          this.emptyLiveList = true;
+        }
+        for (let booking of this.liveMeetingList) {
+          this.eliminateLiveMeetings(booking, this.liveMeetingList);
+        }
       }
-      for (let booking of this.liveMeetingList) {
-        this.eliminateLiveMeetings(booking, this.liveMeetingList);
-      }
-    })
+    );
   }
   // for fetching pending review list
   fetchPendingReviewsList() {
@@ -242,66 +271,27 @@ export class StudentDashboardComponent implements OnInit {
       .giveFeedback(meetingId, rating, review, tid)
       .subscribe((res) => {});
   }
-  // for fetching student pending bookings
-  // findStudentPendingBookings() {
-  //   this.httpService.findStudentBookings(this.sid).subscribe((res) => {
-  //     this.bookingList = res;
-  //     this.meetingService.studentPendingRequests(this.bookingList);
-  //     if (this.bookingList.length == 0) {
-  //       this.emptyBookingList = true;
-  //       this.pendingRequestsCount = 0;
-  //     } else {
-  //       this.pendingRequestsCount = this.bookingList.length;
-  //     }
-  //   });
-  // }
-
-  //for fetching student approved meetings
-  // fetchApprovedMeetings() {
-  //   this.httpService.fetchApprovedMeetings(this.sid).subscribe((res) => {
-  //     this.approvedList = res;
-  //     this.sortMeetings(this.approvedList);
-      
-  //     if (this.approvedList.length == 0) {
-  //       this.emptyApprovedList = true;
-  //     }
-  //     for (let booking of this.approvedList) {
-  //       this.timeLeft(booking);
-  //       if (this.approvedList.length == 0) {
-  //         this.emptyApprovedList = true;
-  //       }
-  //     }
-  //   });
-  // }
 
   sortMeetings(meetingList) {
     meetingList.sort(function (a, b) {
       // Turn your strings into dates, and then subtract them
       // to get a value that is either negative, positive, or zero.
-      var aYear = a.dateOfMeeting.split("/")[2];
-      var aMonth = a.dateOfMeeting.split("/")[1]-1;
-      var aDate = a.dateOfMeeting.split("/")[0];
+      var aYear = a.dateOfMeeting.split('/')[2];
+      var aMonth = a.dateOfMeeting.split('/')[1] - 1;
+      var aDate = a.dateOfMeeting.split('/')[0];
       var aHour = a.startTimeHour;
       var aMinute = a.startTimeMinute;
-      // var aDateTime = new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0);
-      // console.log(aDateTime);
 
-      var bYear = b.dateOfMeeting.split("/")[2];
-      var bMonth = b.dateOfMeeting.split("/")[1]-1;
-      var bDate = b.dateOfMeeting.split("/")[0];
+      var bYear = b.dateOfMeeting.split('/')[2];
+      var bMonth = b.dateOfMeeting.split('/')[1] - 1;
+      var bDate = b.dateOfMeeting.split('/')[0];
       var bHour = b.startTimeHour;
       var bMinute = b.startTimeMinute;
-      // var bDateTime = new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0);
-      // console.log(bDateTime);
-
-      // console.log(bDate + "/" + bMonth + "/" + bYear + "...." + bHour + ":" + bMinute);
-      // console.log("this is a");
-      // console.log(a);
-      // console.log("this is b");
-      // console.log(b);
-      // return b.dateOfMeeting - a.dateOfMeeting;
-      return new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0).valueOf() - new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0).valueOf();
-
+ 
+      return (
+        new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0).valueOf() -
+        new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0).valueOf()
+      );
     });
   }
   //for fetching student live meetings
@@ -390,7 +380,7 @@ export class StudentDashboardComponent implements OnInit {
         } else if (differenceMinutes <= 0) {
           booking.timeLeft = null;
           if (Math.abs(differenceMinutes) > bookingDuration) {
-            this.approvedList.splice(this.approvedList.indexOf(booking), 1);
+            this.bookingList.splice(this.bookingList.indexOf(booking), 1);
 
             this.httpService
               .updateBookingStatus(booking.bid, 'completed unattended')
@@ -503,6 +493,9 @@ export class StudentDashboardComponent implements OnInit {
   //   });
   // }
   onJoin(booking: bookingDetails) {
+    if (this.selectedCompletedMeeting) {
+      document.getElementById('closePopUpButton').click();
+    }
     this.joinMeeting.role = 'student';
     this.joinMeeting.roomId = 123;
     this.joinMeeting.roomName = booking.meetingId;
@@ -510,44 +503,63 @@ export class StudentDashboardComponent implements OnInit {
     this.joinMeeting.userId = booking.studentId;
     this.meetingService.setMeeting(this.joinMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(['meeting']);
+    this.router.navigate(['meeting', booking.meetingId]);
   }
 
   //delete pending request
   deleteBooking(myBooking: bookingDetails) {
     // this.meetingService.setDeleteBooking(myBooking);
+    if (this.selectedCompletedMeeting) {
+      document.getElementById('closePopUpButton').click();
+    }
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose=true;
+    dialogConfig.disableClose = true;
     const dialogRef = this.dialog.open(DeletePopupComponent, {
       width: '400px',
       height: '150px',
     });
-    dialogRef.afterClosed().subscribe((data)=>{
-      if(data.cancelled == true){
-        this.httpService.fetchBookingStatus(myBooking.bid).subscribe((res:any)=>{
-          console.log(res.status);
-          if(res.status=='Pending'){
-        this.httpService.deleteMyBooking(myBooking.bid).subscribe((response:any) => {
-        if(response.response=='booking deleted successfully'){
-        	this.initialiseStudentPendingRequest();
-			  	this.snackBar.open('Booking has been cancelled !', 'close', this.config);
-        }else if(response.response=="booking can't be deleted"){
-          this.snackBar.open("Booking can't be deleted !", 'close', this.config);
-        }else if(response.response=="delete time has been exceeded"){
-          this.snackBar.open('Cancelling time has been exceeded !', 'close', this.config);
-        }
-          // if (response) {
-			
-			// } else {
-			// 	this.snackBar.open('Booking has already been accepted !', 'close', this.config);
-			// }
-		});
-          }else{
-            this.snackBar.open('Booking has already been accepted !', 'close', this.config);
-          }
-        })
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data.cancelled == true) {
+        this.httpService
+          .fetchBookingStatus(myBooking.bid)
+          .subscribe((res: any) => {
+            console.log(res.status);
+            if (res.status == 'Pending') {
+              this.httpService
+                .deleteMyBooking(myBooking.bid)
+                .subscribe((response: any) => {
+                  if (response.response == 'booking deleted successfully') {
+                    this.initialiseUpcomingMeetings();
+                    this.snackBar.open(
+                      'Booking has been cancelled !',
+                      'close',
+                      this.config
+                    );
+                  } else if (response.response == "booking can't be deleted") {
+                    this.snackBar.open(
+                      "Booking can't be deleted !",
+                      'close',
+                      this.config
+                    );
+                  } else if (
+                    response.response == 'delete time has been exceeded'
+                  ) {
+                    this.snackBar.open(
+                      'Cancelling time has been exceeded !',
+                      'close',
+                      this.config
+                    );
+                  }
+                });
+            } else {
+              this.snackBar.open(
+                'Booking has already been accepted !',
+                'close',
+                this.config
+              );
+            }
+          });
       }
-    })
+    });
   }
-  
 }

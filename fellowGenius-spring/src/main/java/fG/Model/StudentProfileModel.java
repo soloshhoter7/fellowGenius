@@ -13,7 +13,10 @@ public class StudentProfileModel {
 	String gradeLevel;
 	String linkedInProfile;
 	ArrayList<String> learningAreas = new ArrayList<String>();
-
+	Integer yearsOfExperience;
+	String currentOrganisation;
+	String currentDesignation;
+	String highestQualification;
 	
 
 	public String getLinkedInProfile() {
@@ -77,12 +80,39 @@ public class StudentProfileModel {
 	public void setProfilePictureUrl(String profilePictureUrl) {
 		this.profilePictureUrl = profilePictureUrl;
 	}
+	
+	public Integer getYearsOfExperience() {
+		return yearsOfExperience;
+	}
+	public void setYearsOfExperience(Integer yearsOfExperience) {
+		this.yearsOfExperience = yearsOfExperience;
+	}
+	public String getCurrentOrganisation() {
+		return currentOrganisation;
+	}
+	public void setCurrentOrganisation(String currentOrganisation) {
+		this.currentOrganisation = currentOrganisation;
+	}
+	public String getCurrentDesignation() {
+		return currentDesignation;
+	}
+	public void setCurrentDesignation(String currentDesignation) {
+		this.currentDesignation = currentDesignation;
+	}
+	public String getHighestQualification() {
+		return highestQualification;
+	}
+	public void setHighestQualification(String highestQualification) {
+		this.highestQualification = highestQualification;
+	}
 	@Override
 	public String toString() {
 		return "StudentProfileModel [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
 				+ dateOfBirth + ", contact=" + contact + ", password=" + password + ", profilePictureUrl="
 				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + ", linkedInProfile=" + linkedInProfile
-				+ ", learningAreas=" + learningAreas + "]";
+				+ ", learningAreas=" + learningAreas + ", yearsOfExperience=" + yearsOfExperience
+				+ ", currentOrganisation=" + currentOrganisation + ", currentDesignation=" + currentDesignation
+				+ ", highestQualification=" + highestQualification + "]";
 	}
-
+	
 }

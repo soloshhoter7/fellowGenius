@@ -98,6 +98,9 @@ import { SignUpExpertComponent } from './facade/sign-up/sign-up-expert/sign-up-e
 import { VerifyExpertsComponent } from './admin-portal/verify-experts/verify-experts.component';
 import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
 import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import {MatNativeDateModule} from '@angular/material/core';
 
 
 
@@ -192,6 +195,8 @@ import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.
     CarouselModule,
     MatInputModule,
     GoogleChartsModule,
+    MatDatepickerModule,
+    MatNativeDateModule, MatMomentDateModule,
     RouterModule.forRoot(appRoutes,routerOptions),
   ],
   entryComponents: [WelcomeComponent],

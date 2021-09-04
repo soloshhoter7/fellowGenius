@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ElementRef, ViewChild } from '@angular/core';
 import {
@@ -34,16 +34,60 @@ import { CookieService } from 'ngx-cookie-service';
 import { Category } from 'src/app/model/category';
 import { ThrowStmt } from '@angular/compiler';
 import { AppInfo } from 'src/app/model/AppInfo';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatDatepicker} from '@angular/material/datepicker';
+// import * as moment from 'moment';
+import * as _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+import {default as _rollupMoment, Moment} from 'moment';
+// const moment = _rollupMoment || _moment;
+const moment = _rollupMoment || _moment;
+// See the Moment.js docs for the meaning of these formats:
+// https://momentjs.com/docs/#/displaying/format/
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+declare let $: any;
+declare const window: any;
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
+  providers: [
+    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+    // application's root module. We provide it at the component level here, due to limitations of
+    // our example generation script.
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class ProfileComponent implements OnInit {
   addExpertise = new expertise();
   profileError: string;
   pricePerHourError: boolean=false;
+  invalidOrganisationDetails: boolean;
+  inputDesignation: string;
+  inputInstitute: any;
+  invalidEducationDetails: boolean;
+  invalidCompletionDate: boolean;
+  emptyEducationDetails: boolean;
+  minDate;
+  maxDate;
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -51,8 +95,12 @@ export class ProfileComponent implements OnInit {
     public firebaseStorage: AngularFireStorage,
     public snackBar: MatSnackBar,
     public matDialog: MatDialog,
-    private router:Router
+    private router:Router,
+    private ngZone:NgZone
   ) {
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 50, 0, 1);
+    this.maxDate = new Date(currentYear + 2, 11, 31);
     this.fillOptions();   
   }
 
@@ -82,6 +130,7 @@ export class ProfileComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   inputOrganisation;
   inputEducation;
+  inputCompletionDate = new FormControl(moment())
   tutorProfile = new tutorProfile();
   tutorProfileDetails = new tutorProfileDetails();
   userId;
@@ -91,18 +140,39 @@ export class ProfileComponent implements OnInit {
   selectedValue;
   categories:Category[] = [];
   subCategories:Category[] = [];
+  filteredSubCategories: Category[] = [];
   appInfo:AppInfo[]=[];
   selectedCategory;
   selectedSubCategory;
+
+  selectedCategoryCount = 1;
+
+  isSelectedSubCategory;
   GSTValue;
   commission;
   actualEarning;
   invalidPicture:boolean = false;
   pictureInfo:boolean = true;
+  emptyProfilePicture;
+  prevArrangedOrganisations: any = [];
   ngOnInit() {
+    window['angularComponentReference'] = {
+      component: this,
+      zone: this.ngZone,
+      loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
+    };
     this.getAllCategories();
-    this.getEarningAppInfo();
+   
+    $('.select2').select2({});
+    $('.select2').on('change', function () {
+      this.selectedCategory = $(this).val();
 
+      window.angularComponentReference.zone.run(() => {
+        window.angularComponentReference.loadAngularFunction($(this).val());
+      });
+      // this.filteredSubCategories = [];
+      // this.filteredSubCategories = this.subCategories.filter(x=>x.category==this.selectedCategory)
+    });
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -122,7 +192,9 @@ export class ProfileComponent implements OnInit {
       if (this.tutorProfileDetails.profilePictureUrl != null) {
         this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
       }
+      this.getEarningAppInfo();
     } else {
+      
       setTimeout(() => {
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
@@ -138,6 +210,7 @@ export class ProfileComponent implements OnInit {
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
         }
+        this.getEarningAppInfo();
       }, 1000);
     }
   }
@@ -149,21 +222,48 @@ export class ProfileComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
+  chosenYearHandler(normalizedYear: Moment) {
+    const ctrlValue = this.inputCompletionDate.value;
+    ctrlValue.year(normalizedYear.year());
+    this.inputCompletionDate.setValue(ctrlValue);
+  }
 
+  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.inputCompletionDate.value;
+    ctrlValue.month(normalizedMonth.month());
+    this.inputCompletionDate.setValue(ctrlValue);
+    datepicker.close();
+  }
   getEarningAppInfo(){
     this.httpService.getEarningAppInfo().subscribe((res)=>{
       this.appInfo=res;
+      console.log(this.appInfo);
+      if(this.tutorProfileDetails.price1!=null&&this.appInfo[0]!=null&&this.appInfo[1]!=null){
+        console.log('here')
+        this.onPercentChange(parseInt(this.tutorProfileDetails.price1));
+      }
     });
   }
+  onDomainChange(value) {
+    console.log('selected');
+    console.log(value);
+  }
+  onTopicChange(value) {
+    console.log('selected');
+    console.log(value);
+  }
   onPercentChange(percent: number) {
-    let gstMultiplier = 1+(parseFloat(this.appInfo[1].value)/100);
-    let commissionMultiplier = 1+(parseFloat(this.appInfo[0].value)/100);
-    // console.log(gstMultiplier,this.appInfo[0].value)
-    this.GSTValue=Math.abs(this.round((percent/(gstMultiplier))-percent));
-    this.commission=Math.abs(this.round(((percent/gstMultiplier)/commissionMultiplier)-(percent/gstMultiplier)));
-    this.actualEarning = Math.abs(this.round(percent-this.GSTValue-this.commission));
-    // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
-    // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
+    if(this.appInfo[0]!=null&&this.appInfo[1]!=null){
+      let gstMultiplier = 1+(parseFloat(this.appInfo[1].value)/100);
+      let commissionMultiplier = 1+(parseFloat(this.appInfo[0].value)/100);
+      // console.log(gstMultiplier,this.appInfo[0].value)
+      this.GSTValue=Math.abs(this.round((percent/(gstMultiplier))-percent));
+      this.commission=Math.abs(this.round(((percent/gstMultiplier)/commissionMultiplier)-(percent/gstMultiplier)));
+      this.actualEarning = Math.abs(this.round(percent-this.GSTValue-this.commission));
+      // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
+      // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
+    }
+
   }
   round(num) {
     var m = Number((Math.abs(num) * 100).toPrecision(15));
@@ -179,8 +279,35 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
         }
       })
   }
-  filterSCfromCateg(){
-    return this.subCategories.filter(x=>x.category==this.selectedCategory)
+  checkDomainInList(val) {
+    for (let categ of this.categories) {
+      if (categ.category == val) {
+        return true;
+      }
+    }
+    return false;
+  }
+  filterSCfromCateg(val) {
+
+    if (!this.selectedCategory || this.checkDomainInList(val)) {
+      this.selectedCategory = val;
+
+      this.filteredSubCategories = [];
+      this.filteredSubCategories = this.subCategories.filter(
+        (x) => x.category == this.selectedCategory
+      );
+
+      this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+      if (this.selectedCategoryCount > 1) {
+        this.isSelectedSubCategory = true;
+      } else {
+        this.isSelectedSubCategory = false;
+      }
+      this.selectedCategoryCount++;
+    } else {
+      this.selectedSubCategory = val;
+      this.isSelectedSubCategory = true;
+    }
   }
   getAllCategories(){
     this.httpService.getAllCategories().subscribe((res)=>{
@@ -217,6 +344,9 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     if(this.tutorProfileDetails.linkedInProfile!=null)completeFields+=1;
     return this.round(completeFields/totalFields)*100
   }
+  getInstitute() {
+    return this.educationQualifications[0].split(':')[0];
+  }
   saveExpertBasicProfile(form: any) {
     this.userId = this.cookieService.get('userId');
     if (this.userId && this.expertises.length > 0) {
@@ -233,7 +363,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
       this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
       this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId
-      this.tutorProfileDetails.institute = form.value.Institute;
+    
       this.tutorProfileDetails.areaOfExpertise = this.expertises;
       this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
       this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
@@ -242,8 +372,14 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.tutorProfileDetails.description = form.value.description;
       this.tutorProfileDetails.speciality = form.value.speciality;
       this.tutorProfileDetails.bookingId = this.tutorService.getTutorProfileDetails().bookingId;
+      this.tutorProfileDetails.institute = this.getInstitute();
+      this.tutorProfileDetails.currentDesignation =
+        form.value.currentDesignation;
+        this.tutorProfileDetails.upiID = form.value.upiID;
       console.log(this.tutorProfileDetails)
-      
+
+
+
       this.calculateProfileCompleted();
       this.httpService
         .updateTutorProfile(this.tutorProfile)
@@ -265,7 +401,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
                 this.config
               );
               // this.advancedProfileToggle();
-              this.router.navigate(['/home/tutor-dashboard']);
+              // this.router.navigate(['/home/tutor-dashboard']);
             });
         });
     }else {
@@ -312,12 +448,39 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
   cancelForm() {
     location.reload();
   }
-  duplicacyCheck(fields: Object[], item: string) {
-    return fields.includes(item);
+  duplicacyCheck(fields: any, item: string) {
+    const arr = item.split(':');
+
+    for (let i = 0; i < fields.length; i++) {
+
+      const brr = fields[i].split(':');
+      if (arr[0] == brr[0]) {
+
+        return true;
+      }
+    }
+    return false;
   }
-  expertiseDuplicacyCheck(category,subcategory) {
+  organisationDuplicacyCheck(fields: any, item: string) {
+    const arr = item.split('&');
+
+    for (let i = 0; i < fields.length; i++) {
+
+      const brr = fields[i].split('&');
+      if (arr[0] == brr[0]) {
+        console.log(arr[0],brr[0]);
+        console.log('Matched !!');
+        return true;
+      }
+    }
+    return false;
+  }
+  expertiseDuplicacyCheck(category, subcategory) {
     for (let expertise of this.expertises) {
-      if (expertise.category == category && expertise.subCategory == subcategory) {
+      if (
+        expertise.category == category &&
+        expertise.subCategory == subcategory
+      ) {
         return true;
       }
     }
@@ -500,29 +663,47 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
 
   // save expertise for multiple domains 
   saveExpertise() {
-    this.addExpertise = new expertise();
-    if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
-      this.addExpertise.category = this.selectedCategory;
-      this.addExpertise.subCategory = this.selectedSubCategory;
-      if(this.tutorProfileDetails.price1!=null){
-        this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
-      this.expertises.push(this.addExpertise);
-      this.selectedCategory = '';
-      this.selectedSubCategory = '';
-      this.priceForExpertise = '';
 
-      if (this.duplicateExpertiseArea == true) {
-        this.duplicateExpertiseArea = false;
+    if (this.tutorProfileDetails.price1) {
+      this.pricePerHourError = false;
+    }
+    this.addExpertise = new expertise();
+
+    if (this.selectedSubCategory) {
+      this.errorText = '';
+      if (
+        !this.expertiseDuplicacyCheck(
+          this.selectedCategory,
+          this.selectedSubCategory
+        )
+      ) {
+
+        this.addExpertise.category = this.selectedCategory;
+        this.addExpertise.subCategory = this.selectedSubCategory;
+
+        if (this.tutorProfileDetails.price1 != null) {
+          this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+          this.expertises.push(this.addExpertise);
+          $('.select2').val('').trigger('change');
+          this.expertises.reverse();
+          this.selectedCategory = '';
+          this.selectedSubCategory = '';
+          this.priceForExpertise = '';
+          if (this.duplicateExpertiseArea == true) {
+            this.duplicateExpertiseArea = false;
+          }
+        } else {
+          this.pricePerHourError = true;
+        }
+
+      } else {
+        this.duplicateExpertiseArea = true;
+        this.selectedExpertise = '';
+        this.selectedSubCategory = '';
+        this.priceForExpertise = '';
       }
-      }else{
-        this.pricePerHourError=true;
-      }
-      
     } else {
-      this.duplicateExpertiseArea = true;
-      this.selectedExpertise = '';
-      this.selectedSubCategory = '';
-      this.priceForExpertise = '';
+      this.errorText = 'Please add Topic !';
     }
   }
 
@@ -537,36 +718,103 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
   }
 
   addOrganisation() {
-    if (
-      !this.duplicacyCheck(this.previousOraganisations, this.inputOrganisation)
-    ) {
-      this.previousOraganisations.push(this.inputOrganisation);
-      this.inputOrganisation = '';
-      if (this.duplicatePreviousOrganisation == true) {
-        this.duplicatePreviousOrganisation = false;
+    if (this.inputOrganisation && this.inputDesignation) {
+      if (this.invalidOrganisationDetails == true) {
+        this.invalidOrganisationDetails = false;
+      }
+      if (
+        !this.organisationDuplicacyCheck(
+          this.previousOraganisations,
+          this.inputOrganisation
+        )
+      ) {
+        let org = {
+          organisation: this.inputOrganisation,
+          designation: this.inputDesignation,
+        };
+        this.previousOraganisations.push(
+          this.inputDesignation+ '@'+this.inputOrganisation  
+        );
+        this.prevArrangedOrganisations.push(org);
+        this.inputOrganisation = '';
+        this.inputDesignation = '';
+        if (this.duplicatePreviousOrganisation == true) {
+          this.duplicatePreviousOrganisation = false;
+        }
+      } else {
+        this.inputOrganisation = '';
+        this.inputDesignation = '';
+        this.duplicatePreviousOrganisation = true;
       }
     } else {
-      this.inputOrganisation = '';
-      this.duplicatePreviousOrganisation = true;
+      this.invalidOrganisationDetails = true;
     }
   }
+ 
 
   deleteOrganisation(index: any) {
-    this.previousOraganisations.splice(index, 1);
+    let organisation = this.prevArrangedOrganisations[index].organisation;
+    let designation = this.prevArrangedOrganisations[index].designation;
+    let orgDes: string = organisation + '&' + designation;
+    this.prevArrangedOrganisations.splice(index, 1);
+    this.previousOraganisations.splice(
+      this.previousOraganisations.indexOf(orgDes, 0),
+      1
+    );
   }
 
+  getMonthYearString(val){
+    let momentVariable = moment(val.value._d,'YYYY-MM-DD');
+    return momentVariable.format('MMMM YYYY');
+  }
   addEducation() {
     if (
-      !this.duplicacyCheck(this.educationQualifications, this.inputEducation)
+      this.inputEducation &&
+      this.inputCompletionDate &&
+      this.inputInstitute
     ) {
-      this.educationQualifications.push(this.inputEducation);
-      this.inputEducation = '';
-      if (this.duplicateEducationArea == true) {
-        this.duplicateEducationArea = false;
-      }
+        let dateString = this.getMonthYearString(this.inputCompletionDate);
+        if (this.invalidEducationDetails == true) {
+          this.invalidEducationDetails = false;
+        }
+        if (this.invalidCompletionDate == true) {
+          this.invalidCompletionDate = false;
+        }
+        if(this.emptyEducationDetails==true)this.emptyEducationDetails=false;
+        if (
+          !this.duplicacyCheck(
+            this.educationQualifications,
+            this.inputInstitute +
+              ' : ' +
+              this.inputEducation +
+              ' : ' +
+              dateString
+          )
+        ) {
+          
+          this.educationQualifications.push(
+            this.inputInstitute +
+              ' : ' +
+              this.inputEducation +
+              ' : ' +
+              dateString
+          );
+          this.inputEducation = '';
+          this.inputCompletionDate = new FormControl(moment());
+          this.inputInstitute = '';
+          if (this.duplicateEducationArea == true) {
+            this.duplicateEducationArea = false;
+          }
+        } else {
+          this.inputEducation = '';
+          this.inputCompletionDate =new FormControl(moment());;
+          this.inputInstitute = '';
+          this.duplicateEducationArea = true;
+        }
+      
     } else {
-      this.inputEducation = '';
-      this.duplicateEducationArea = true;
+      console.log('called');
+      this.invalidEducationDetails = true;
     }
   }
   deleteEducation(index: any) {

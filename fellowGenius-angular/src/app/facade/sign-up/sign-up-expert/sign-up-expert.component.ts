@@ -24,12 +24,48 @@ import { NgZone } from '@angular/core';
 import { loginModel } from 'src/app/model/login';
 import { AuthService } from 'src/app/service/auth.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatDatepicker} from '@angular/material/datepicker';
+
+// import * as moment from 'moment';
+import * as _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+import {default as _rollupMoment, Moment} from 'moment';
+// const moment = _rollupMoment || _moment;
+const moment = _rollupMoment || _moment;
+// See the Moment.js docs for the meaning of these formats:
+// https://momentjs.com/docs/#/displaying/format/
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 declare let $: any;
 declare const window: any;
 @Component({
   selector: 'app-sign-up-expert',
   templateUrl: './sign-up-expert.component.html',
   styleUrls: ['./sign-up-expert.component.css'],
+  providers: [
+    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+    // application's root module. We provide it at the component level here, due to limitations of
+    // our example generation script.
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class SignUpExpertComponent implements OnInit {
   choosePassword;
@@ -51,6 +87,8 @@ export class SignUpExpertComponent implements OnInit {
   addExpertise = new expertise();
   profileError: string;
   pricePerHourError: boolean = false;
+  minDate;
+  maxDate;
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -64,6 +102,9 @@ export class SignUpExpertComponent implements OnInit {
     private authService:AuthService,
     private loginDetailsService:LoginDetailsService
   ) {
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 50, 0, 1);
+    this.maxDate = new Date(currentYear + 2, 11, 31);
     this.fillOptions();
   }
   invalidCompletionDate = false;
@@ -97,7 +138,7 @@ export class SignUpExpertComponent implements OnInit {
   inputDesignation;
   currentDesignation;
   inputEducation;
-  inputCompletionDate;
+  // inputCompletionDate;
   inputInstitute;
   tutorProfile = new tutorProfile();
   tutorProfileDetails = new tutorProfileDetails();
@@ -122,6 +163,7 @@ export class SignUpExpertComponent implements OnInit {
   invalidEducationDetails = false;
   jwtToken;
   invalidChoosePassword;
+  inputCompletionDate = new FormControl(moment())
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.jwtToken = params['token'];
@@ -138,6 +180,7 @@ export class SignUpExpertComponent implements OnInit {
       //   });
     });
   
+
     window['angularComponentReference'] = {
       component: this,
       zone: this.ngZone,
@@ -145,15 +188,18 @@ export class SignUpExpertComponent implements OnInit {
     };
     this.getAllCategories();
     this.getEarningAppInfo();
-    $('.select2').select2({});
+    $('.select2').select2({
+      placeholder: {
+        id: '-1', // the value of the option
+        text: 'Select an option'
+      }
+    });
+ 
     $('.select2').on('change', function () {
       this.selectedCategory = $(this).val();
-
       window.angularComponentReference.zone.run(() => {
         window.angularComponentReference.loadAngularFunction($(this).val());
       });
-      // this.filteredSubCategories = [];
-      // this.filteredSubCategories = this.subCategories.filter(x=>x.category==this.selectedCategory)
     });
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -168,6 +214,18 @@ export class SignUpExpertComponent implements OnInit {
     return this.options.filter((option) =>
       option.toLowerCase().includes(filterValue)
     );
+  }
+  chosenYearHandler(normalizedYear: Moment) {
+    const ctrlValue = this.inputCompletionDate.value;
+    ctrlValue.year(normalizedYear.year());
+    this.inputCompletionDate.setValue(ctrlValue);
+  }
+
+  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.inputCompletionDate.value;
+    ctrlValue.month(normalizedMonth.month());
+    this.inputCompletionDate.setValue(ctrlValue);
+    datepicker.close();
   }
   saveNewPassword(){
     this.isLoading=true;
@@ -411,14 +469,30 @@ export class SignUpExpertComponent implements OnInit {
           this.tutorProfileDetails.speciality = form.value.speciality;
           this.tutorProfileDetails.upiID = form.value.upiID;
 
-
           this.httpService
-          .verifyEmail(this.tutorProfileDetails.email)
+          .checkUser(this.tutorProfileDetails.email)
           .subscribe((res) => {
-            this.verificationOtp = res['response'];
-            this.isLoading=false;
-            this.verifyEmail=true;
+            if(res==true){
+              this.isLoading=false;
+              this.isLoading=false;
+                    this.registeredExpert=false;
+                    this.verifyEmail=false;
+                    this.snackBar.open(
+                      'Email already Registered !',
+                      'close',
+                      this.config
+                    );
+            }else{
+              this.httpService
+              .verifyEmail(this.tutorProfileDetails.email)
+              .subscribe((res) => {
+                this.verificationOtp = res['response'];
+                this.isLoading=false;
+                this.verifyEmail=true;
+              });
+            }
           });
+          
         } else {
           this.emptyProfilePicture = true;
           let el = document.getElementById('photoBox');
@@ -492,12 +566,12 @@ export class SignUpExpertComponent implements OnInit {
     return false;
   }
   organisationDuplicacyCheck(fields: any, item: string) {
-    const arr = item.split('&');
+    const arr = item.split('@');
 
     for (let i = 0; i < fields.length; i++) {
 
-      const brr = fields[i].split('&');
-      if (arr[0] == brr[0]) {
+      const brr = fields[i].split('@');
+      if (arr[1] == brr[1]) {
 
         return true;
       }
@@ -770,7 +844,7 @@ export class SignUpExpertComponent implements OnInit {
           designation: this.inputDesignation,
         };
         this.previousOraganisations.push(
-          this.inputOrganisation + '&' + this.inputDesignation
+          this.inputDesignation+ '@'+this.inputOrganisation  
         );
         this.prevArrangedOrganisations.push(org);
         this.inputOrganisation = '';
@@ -798,18 +872,10 @@ export class SignUpExpertComponent implements OnInit {
       1
     );
   }
-  checkValidCompletionDate(val) {
-    var dateOfBirth = val;
-    var studentDOB = dateOfBirth.split('-');
-    var dobYear = parseInt(studentDOB[0]);
-    var maxYear = new Date().getFullYear();
-    var minYear = new Date().getFullYear() - 60;
-
-    if (dobYear <= maxYear && dobYear >= minYear) {
-      return true;
-    } else {
-      return false;
-    }
+  
+  getMonthYearString(val){
+    let momentVariable = moment(val.value._d,'YYYY-MM-DD');
+    return momentVariable.format('MMMM YYYY');
   }
   addEducation() {
     if (
@@ -817,7 +883,7 @@ export class SignUpExpertComponent implements OnInit {
       this.inputCompletionDate &&
       this.inputInstitute
     ) {
-      if (this.checkValidCompletionDate(this.inputCompletionDate)) {
+        let dateString = this.getMonthYearString(this.inputCompletionDate);
         if (this.invalidEducationDetails == true) {
           this.invalidEducationDetails = false;
         }
@@ -832,31 +898,30 @@ export class SignUpExpertComponent implements OnInit {
               ' : ' +
               this.inputEducation +
               ' : ' +
-              this.inputCompletionDate
+              dateString
           )
         ) {
+          
           this.educationQualifications.push(
             this.inputInstitute +
               ' : ' +
               this.inputEducation +
               ' : ' +
-              this.inputCompletionDate
+              dateString
           );
           this.inputEducation = '';
-          this.inputCompletionDate = '';
+          this.inputCompletionDate = new FormControl(moment());
           this.inputInstitute = '';
           if (this.duplicateEducationArea == true) {
             this.duplicateEducationArea = false;
           }
         } else {
           this.inputEducation = '';
-          this.inputCompletionDate = '';
+          this.inputCompletionDate =new FormControl(moment());;
           this.inputInstitute = '';
           this.duplicateEducationArea = true;
         }
-      } else {
-        this.invalidCompletionDate = true;
-      }
+      
     } else {
       console.log('called');
       this.invalidEducationDetails = true;

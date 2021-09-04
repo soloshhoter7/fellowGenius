@@ -109,47 +109,58 @@ export class AuthService {
   }
   autoAuthUser(){
     console.log('called')
-    this.userId = this.cookieService.get('userId');
-    if(JwtDecode(this.cookieService.get('token'))['sub']==this.userId){
-      if (JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
-        this.loginType = 'Learner';
-        this.loginDetailsService.setTrType('login');
-        this.loginDetailsService.setLoginType(this.loginType);
-        this.httpService.getStudentDetails(this.userId).subscribe((res) => {
-          this.studentProfile = res;
-          this.studentService.setStudentProfileDetails(this.studentProfile);
-          this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
-            this.studentService.setStudentBookings(res);
-            this.isAuthenticated=true;
-            this.webSocketService.connectToUserWebSocket(this.userId);
-            this.notificationService.fetchNotification();
-            // this.router.navigate([ 'home/student-dashboard' ]);
-          });
-        });
-      } else if (
-        JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Expert'
-      ) {
-        this.loginType = 'Expert';
-        this.loginDetailsService.setTrType('login');
-        this.loginDetailsService.setLoginType(this.loginType);
-  
-        this.httpService.getTutorDetails(this.userId).subscribe((res) => {
-          this.tutorProfile = res;
-          this.tutorService.setTutorDetails(this.tutorProfile);
-          this.httpService
-            .getTutorProfileDetails(this.userId)
-            .subscribe((res) => {
-              this.tutorProfileDetails = res;
-              this.tutorService.setTutorProfileDetails(res);
-              this.httpService.getScheduleData(this.tutorProfileDetails.bookingId).subscribe((res) => {
-                this.tutorService.setPersonalAvailabilitySchedule(res);
-                this.isAuthenticated=true;
-                this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
-                this.notificationService.fetchNotification();
-              });
+    if(this.isTokenValid()){
+      this.userId = this.cookieService.get('userId');
+      if(JwtDecode(this.cookieService.get('token'))['sub']==this.userId){
+        if (JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
+          this.loginType = 'Learner';
+          this.loginDetailsService.setTrType('login');
+          this.loginDetailsService.setLoginType(this.loginType);
+          this.httpService.getStudentDetails(this.userId).subscribe((res) => {
+            this.studentProfile = res;
+            console.log(res);
+            console.log('learner o auth!')
+            console.log(this.studentProfile.profilePictureUrl);
+            this.studentService.setStudentProfileDetails(this.studentProfile);
+            this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
+              this.studentService.setStudentBookings(res);
+              this.isAuthenticated=true;
+              this.authStatusListener.next(true);
+              this.webSocketService.connectToUserWebSocket(this.userId);
+              this.notificationService.fetchNotification();
+              // this.router.navigate([ 'home/student-dashboard' ]);
             });
-        });
+          });
+        } else if (
+          JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Expert'
+        ) {
+          this.loginType = 'Expert';
+          this.loginDetailsService.setTrType('login');
+          this.loginDetailsService.setLoginType(this.loginType);
+    
+          this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+            this.tutorProfile = res;
+            this.tutorService.setTutorDetails(this.tutorProfile);
+            this.httpService
+              .getTutorProfileDetails(this.userId)
+              .subscribe((res) => {
+                this.tutorProfileDetails = res;
+                this.tutorService.setTutorProfileDetails(res);
+                this.httpService.getScheduleData(this.tutorProfileDetails.bookingId).subscribe((res) => {
+                  this.tutorService.setPersonalAvailabilitySchedule(res);
+                  this.isAuthenticated=true;
+                  this.authStatusListener.next(true);
+                  this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                  this.notificationService.fetchNotification();
+                });
+              });
+          });
+        }
       }
+    }else{
+      console.log('user is not authenticated :auth service')
+      this.isAuthenticated=false;
+      this.authStatusListener.next(false);
     }
     
   }

@@ -34,7 +34,10 @@ public class StudentProfile {
 	String contact;
 	String profilePictureUrl;
 	String linkedInProfile;
-
+	Integer yearsOfExperience;
+	String currentOrganisation;
+	String currentDesignation;
+	String highestQualification;
 
 	@OneToMany(cascade = CascadeType.ALL,
 			fetch = FetchType.LAZY,
@@ -98,11 +101,40 @@ public class StudentProfile {
 	public void setProfilePictureUrl(String profilePictureUrl) {
 		this.profilePictureUrl = profilePictureUrl;
 	}
+	
+	public Integer getYearsOfExperience() {
+		return yearsOfExperience;
+	}
+	public void setYearsOfExperience(Integer yearsOfExperience) {
+		this.yearsOfExperience = yearsOfExperience;
+	}
+	public String getCurrentOrganisation() {
+		return currentOrganisation;
+	}
+	public void setCurrentOrganisation(String currentOrganisation) {
+		this.currentOrganisation = currentOrganisation;
+	}
+	public String getCurrentDesignation() {
+		return currentDesignation;
+	}
+	public void setCurrentDesignation(String currentDesignation) {
+		this.currentDesignation = currentDesignation;
+	}
+	public String getHighestQualification() {
+		return highestQualification;
+	}
+	public void setHighestQualification(String highestQualification) {
+		this.highestQualification = highestQualification;
+	}
 	@Override
 	public String toString() {
 		return "StudentProfile [sid=" + sid + ", userBookingId=" + userBookingId + ", fullName=" + fullName + ", email="
 				+ email + ", dateOfBirth=" + dateOfBirth + ", contact=" + contact + ", profilePictureUrl="
-				+ profilePictureUrl + ", linkedInProfile=" + linkedInProfile + "]";
+				+ profilePictureUrl + ", linkedInProfile=" + linkedInProfile + ", yearsOfExperience="
+				+ yearsOfExperience + ", currentOrganisation=" + currentOrganisation + ", currentDesignation="
+				+ currentDesignation + ", highestQualification=" + highestQualification + ", learningAreas="
+				+ learningAreas + "]";
 	}
+	
 	
 }

@@ -38,7 +38,7 @@ img{
 	display: flex;
 	margin-top: 1.5em;
 }
-.button, button, .btn{
+.button,  .btn{
     min-width: 120px;
     float: left;
     width: auto;
@@ -393,7 +393,7 @@ header .navbar .navbar-nav .tooltip{
     display: inline-block;
     background-color: #F7F7F7;
     border-top-right-radius: 150px;
-    margin-top: 300px;
+    margin-top: 50px;
 }
 .hw_video_sec {
     margin-top: -250px;
@@ -2266,15 +2266,15 @@ form .Prc__Pr__Hr .pph__detail .detail__list span:last-child {
 	margin-top: .5em;
 }
 .dashboard__Panel .button, .dashboard__Panel button, .dashboard__Panel .btn{
-    min-width: 120px;
+    /* min-width: 120px; */
     float: left;
     width: auto;
-    min-height: 40px;
+    /* min-height: 40px; */
     border-radius: 10px;
     text-align: center;
     outline: none !important;
     box-shadow: none !important;
-    padding: 12px 20px;
+    /* padding: 12px 20px; */
     font-weight: 500;
     transition: .2s all;
     border: none;
@@ -2929,18 +2929,15 @@ header .page_btns a.hdr_btns.setng_btn img {
 
 .chat__page {
     width: 100%;
-    height: 100%;
     background: #fff;
     display: inline-block;
-    overflow: hidden;
+    padding-bottom: 15px;
 }
 .chat__video .chat__header {
     width: 100%;
-    height: 80px;
     display: flex;
     flex-wrap: wrap;
     padding-top: 15px;
-    display: none;
 }
 .chat__video .chat__header .chat__name {
     width: calc(100% - 100px);
@@ -2957,24 +2954,14 @@ header .page_btns a.hdr_btns.setng_btn img {
     padding-right: 15px;
 }
 .chat__video .chat__thumb {
-    /* height: calc(100% - 235px); */
-    height: 100%;
-}
-.chat__video .chat__thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: bottom right;
-    border-radius: 10px;
+    margin: 1em 0;
 }
 .chat__video .chat__buttons {
     width: 100%;
     display: inline-block;
-    background: transparent;
+    background: #F7F7F7;
     border-radius: 15px;
-    height: 60px;
-    position: absolute;
-    bottom: 20px;
+    padding: 15px;
 }
 .chat__video .chat__buttons ul {
     display: flex;
@@ -2982,11 +2969,11 @@ header .page_btns a.hdr_btns.setng_btn img {
     flex-wrap: wrap;
 }
 .chat__video .chat__buttons ul li {
-    width: 60px;
+    width: 70px;
     text-align: center;
 }
 .chat__video .chat__buttons ul li+li {
-    /* margin-left: 10px; */
+    margin-left: 10px;
 }
 .chat__video .chat__buttons ul a {
     width: 100%;
@@ -2995,27 +2982,26 @@ header .page_btns a.hdr_btns.setng_btn img {
     color: #B5B3B3;
 }
 .chat__video .chat__buttons ul a span {
-    display: none;
+    display: block;
 }
 .chat__video .chat__buttons ul a span.opt__icon {
     width: 50px;
     height: 50px;
     margin: 0 auto 10px;
     border-radius: 50%;
-    background-color: #8DC63F;
+    background-color: #fff;
     display: flex;
     justify-content: center;
 }
 .chat__video .chat__buttons ul a span.opt__icon img {
     width: 27px;
-    filter: brightness(0) invert(1);
 }
-/* .chat__video .chat__buttons ul a.active span.opt__icon {
+.chat__video .chat__buttons ul a.active span.opt__icon {
     background: #8DC63F;
-} 
+}
 .chat__video .chat__buttons ul a.active span.opt__icon img {
     filter: brightness(0) invert(1);
-} */
+}
 .chat__video .chat__buttons ul li a.cancel_btn span.opt__icon {
     background: #FF2D58;
 }
@@ -3045,21 +3031,21 @@ header .page_btns a.hdr_btns.setng_btn img {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    max-width: 1000px;
+    max-width: 900px;
     margin: 1.5em auto 0;
 }
 .chat__join .join__wrapper .chat__ready {
-    width: 70%;
+    width: 60%;
     padding: 15px;
     position: relative;
 }
 .chat__join .join__wrapper .join__btn {
-    width: 30%;
+    width: 40%;
     padding: 15px;
 }
 .chat__join .join__wrapper .chat__ready img.chat_thumb {
     width: 100%;
-    height: 500px;
+    height: 400px;
     object-fit: cover;
     border-radius: 20px;
 }
@@ -3073,7 +3059,7 @@ header .page_btns a.hdr_btns.setng_btn img {
     transform: translateX(-50%);
 }
 .chat__join .join__wrapper .chat__buttons ul li {
-    width: 60px;
+    width: 50px;
     text-align: center;
 }
 .chat__join .join__wrapper .chat__buttons ul li+li {
@@ -3086,8 +3072,8 @@ header .page_btns a.hdr_btns.setng_btn img {
     color: #B5B3B3;
 }
 .chat__join .join__wrapper .chat__buttons li a span.opt__icon {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     margin: 0 auto 10px;
     border-radius: 50%;
     background-color: #ec008c;
@@ -3095,7 +3081,7 @@ header .page_btns a.hdr_btns.setng_btn img {
     justify-content: center;
 }
 .chat__join .join__wrapper .chat__buttons li a span.opt__icon img {
-    width: 30px;
+    width: 27px;
     filter: brightness(0) invert(1);
 }
 .join__Modal .modal-header {
@@ -3109,25 +3095,19 @@ header .page_btns a.hdr_btns.setng_btn img {
 
 .chat__message {
     width: 100%;
-    height: calc(100% - 30px);
-    margin: 15px 0;
+    height: 100%;
     background-color: #F7F7F7;
     border-radius: 15px;
     position: relative;
-    display: none;
     padding-bottom: 80px;
-    transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -ms-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    -webkit-transition: all 0.5s ease;
 }
 .chat__message .chat__title {
     width: 100%;
-    height: 56px;
+    position: sticky;
+    top: 0;
+    left: 0;
     background-color: #F7F7F7;
-    padding: 15px;
-    border-radius: 15px;
+    padding: 15px 15px 25px;
 }
 .chat__message .chat__title h4 {
     margin-bottom: 0;
@@ -3135,69 +3115,27 @@ header .page_btns a.hdr_btns.setng_btn img {
     padding-right: 50px;
 }
 .chat__message .chat__title .close_btn {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     min-width: auto;
     min-height: auto;
     padding: 0;
     border-radius: 50%;
     position: absolute;
     right: 15px;
-    top: 13px;
+    top: 12px;
     background: #fff;
 }
 .chat__message .chat__wrapper {
     width: 100%;
-    height: calc(100% - 50px);
     padding: 15px;
-    overflow-y: auto;
-}
-.chat__message .chat__wrapper .chat__item+.chat__item {
-    margin-top: 10px;
+    display: inline-block;
 }
 .chat__message .chat__text {
     width: 100%;
-    height: 81px;
     position: absolute;
     bottom: 0;
     padding: 15px;
-}
-.chat__message .chat__wrapper .chat__item {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 60px;
-    position: relative;
-}
-.chat__message .chat__wrapper .chat__item+.chat__item{
-    margin-top: 15px;
-}
-.chat__message .chat__wrapper .chat__item .icon__box {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    border-radius: 50%;
-    position: absolute;
-    left: 0;
-}
-.chat__message .chat__wrapper .chat__item .chat__msg {
-    width: 100%;
-    background: #fff;
-    padding: 8px;
-    border-radius: 8px;
-    color: #B5B3B3;
-}
-.chat__message .chat__wrapper .chat__item .chat__msg span {
-    color: #000;
-    display: block;
-    font-size: 110%;
-    font-weight: 500;
-}
-.chat__message .chat__wrapper .chat__item .msg__time {
-    width: 100%;
-    margin-top: 5px;
-    color: #B5B3B3;
-    font-size: 90%;
 }
 .chat__message .chat__text .type_msg {
     width: 100%;
@@ -3209,7 +3147,7 @@ header .page_btns a.hdr_btns.setng_btn img {
     box-shadow: none !important;
     border-radius: 10px;
     border: none;
-    height: 50px;
+    height: 60px;
     font-size: inherit;
     color: #000;
     padding: 12px;
@@ -3220,15 +3158,14 @@ header .page_btns a.hdr_btns.setng_btn img {
 .chat__message .chat__text .type_msg button {
     min-width: auto;
     min-height: auto;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     padding: 0;
     background: #fff;
     position: absolute;
     right: 5px;
     top: 5px;
 }
-
 
 
 
@@ -4189,7 +4126,7 @@ span.select2.select2-container {
         height: 50px;
     }
     .how_works_steps {
-        margin-top: 150px;
+        margin-top: 50px;
     }
     .hw_video_sec {
         margin-top: -115px;
@@ -4461,9 +4398,9 @@ span.select2.select2-container {
 	    width: 30px;
 	    height: 30px;
 	}
-	.chat__video .chat__buttons{
+	/* .chat__video .chat__buttons{
 	    height: 40px;
-	}
+	} */
 	.chat__video .chat__header .chat__name h5{
 	    font-size: 16px;
 	}
@@ -4529,6 +4466,7 @@ span.select2.select2-container {
 .help-block {
 	color: red;
     margin: 10px;
+    margin-left: 0;
 }
 input.ng-invalid.ng-touched {
 	border: 1px solid red;

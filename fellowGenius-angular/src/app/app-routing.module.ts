@@ -41,10 +41,10 @@ import { VerifyExpertsComponent } from './admin-portal/verify-experts/verify-exp
 import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
 import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
 // const routes:Routes=[];
-export const routerOptions:ExtraOptions={
-  anchorScrolling:'enabled',
-  useHash:true
-}
+export const routerOptions: ExtraOptions = {
+  anchorScrolling: 'enabled',
+  useHash: true,
+};
 export const appRoutes: Routes = [
   {
     path: 'home',
@@ -61,43 +61,46 @@ export const appRoutes: Routes = [
       { path: 'recordings', component: RecordingsComponent },
       { path: 'knowledge-base', component: KnowledgeBaseComponent },
       { path: 'experts', component: ExpertsComponent },
-      { path: 'sessions-learner',component:LearnerSessionsComponent},
-      { path: 'sessions-expert', component:ExpertSessionsComponent}
+      { path: 'sessions-learner', component: LearnerSessionsComponent },
+      { path: 'sessions-expert', component: ExpertSessionsComponent },
     ],
   },
   { path: '', component: FacadeComponent },
-  { path:'how-it-works', component:HowItWorksComponent},
+  { path: 'how-it-works', component: HowItWorksComponent },
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'view-tutors', component: ExpertProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
-  { path: 'sign-up-expert',component:SignUpExpertComponent},
-  { path: 'meeting', component: MeetingComponent },
+  { path: 'sign-up-expert', component: SignUpExpertComponent },
+  { path: 'meeting/:id', component: MeetingComponent },
   { path: 'test', component: TestComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
-  { path: 'cancel-booking', component:DeleteMeetingComponent},
-  { path: 'reschedule-booking',component:RescheduleMeetingComponent},
-  { path: 'admin', component:AdminPortalComponent,
-    children:[
-      { path: 'categories',component:CategoriesComponent},
-      { path: 'analytics',component:AnalyticsComponent},
-      { path: 'verify-expert',component:VerifyExpertsComponent}
-    ]
+  { path: 'cancel-booking', component: DeleteMeetingComponent },
+  { path: 'reschedule-booking', component: RescheduleMeetingComponent },
+  {
+    path: 'admin',
+    component: AdminPortalComponent,
+    children: [
+      { path: '', redirectTo: 'verify-expert', pathMatch: 'full' },
+      { path: 'categories', component: CategoriesComponent },
+      { path: 'analytics', component: AnalyticsComponent },
+      { path: 'verify-expert', component: VerifyExpertsComponent },
+    ],
   },
-  { path:'faq', component:FaqComponent},
-  { path:'about-us',component:AboutUsComponent},
-  { path: 'contact-us',component:ContactUsInfoComponent},
-  { path: 'privacy-policy',component:PrivacyPolicyComponent},
-  { path: 'terms-and-conditions',component:TermsAndConditionsComponent},
-  { path: 'refund-policy', component:RefundPolicyComponent},
-  { path: 'blogs', component:BlogsComponent},
-  { path : 'resource-videos',component:ResourceVideosComponent},
-  { path : 'resource-events',component:ResourceEventsComponent}
+  { path: 'faq', component: FaqComponent },
+  { path: 'about-us', component: AboutUsComponent },
+  { path: 'contact-us', component: ContactUsInfoComponent },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'terms-and-conditions', component: TermsAndConditionsComponent },
+  { path: 'refund-policy', component: RefundPolicyComponent },
+  { path: 'blogs', component: BlogsComponent },
+  { path: 'resource-videos', component: ResourceVideosComponent },
+  { path: 'resource-events', component: ResourceEventsComponent },
   // { path: '', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes,routerOptions)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(appRoutes, routerOptions)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

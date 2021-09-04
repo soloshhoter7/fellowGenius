@@ -19,15 +19,23 @@ export class StudentService {
   private approvedList: bookingDetails[] = [];
   private liveMeetingList: bookingDetails[] = [];
   private upcomingMeetingList: bookingDetails[] = [];
+  private completedMeetings:bookingDetails[]=[];
   approvedBookingsChanged = new Subject<bookingDetails[]>();
   bookingsChanged = new Subject<bookingDetails[]>();
   liveMeetingsChanged = new Subject<bookingDetails[]>();
   upcomingMeetingsChanged = new Subject<bookingDetails[]>();
+  completedMeetingsChanged = new Subject<bookingDetails[]>();
   constructor(
     private httpService: HttpService,
     private loginService: LoginDetailsService
   ) {}
-
+  setCompletedMeetings(booking: bookingDetails[]) {
+    this.completedMeetings = booking;
+    this.completedMeetingsChanged.next(this.completedMeetings.slice());
+  }
+  getCompletedMeetings() {
+    return this.completedMeetings.slice();
+  }
   setUpcomingBookings(booking: bookingDetails[]) {
     this.upcomingMeetingList = this.upcomingMeetingList.concat(booking);
     this.upcomingMeetingsChanged.next(this.upcomingMeetingList.slice());
@@ -155,6 +163,15 @@ export class StudentService {
         .subscribe((res) => {
           this.setUpcomingBookings(res);
         });
+      }
+    }
+  }
+  fetchCompletedMeetings(){
+    if(this.loginService.getLoginType()=='Learner'){
+      if(this.studentProfile.sid){
+        this.httpService.fetchLearnerCompletedMeetings(this.studentProfile.sid).subscribe((res)=>{
+          this.setCompletedMeetings(res);
+        })
       }
     }
   }

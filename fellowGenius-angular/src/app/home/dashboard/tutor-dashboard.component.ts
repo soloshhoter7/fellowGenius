@@ -57,6 +57,7 @@ export class TutorDashboardComponent implements OnInit {
 
   tutorChartWidth = '750';
   tutorChartHeight = '300';
+  acceptingIndex;
   // ----------------------skills in demand ------------------------------
   skillsChartType = 'PieChart';
   // skillsChartType = 'Table';
@@ -113,6 +114,8 @@ export class TutorDashboardComponent implements OnInit {
     verticalPosition: 'top',
   };
   earningData;
+  selectedBooking= new bookingDetails();
+  selectedPendingRequest=new bookingDetails();
   ngOnInit(): void {
     this.preventBackButton();
     if (window.innerWidth <= 800) {
@@ -134,6 +137,14 @@ export class TutorDashboardComponent implements OnInit {
     } else {
       this.handleRefresh();
     }
+  }
+  setSelectedBooking(booking:bookingDetails){
+    console.log('selected upcoming booking : '+booking);
+    this.selectedBooking=booking;
+  }
+  setSelectedPendingBooking(booking:bookingDetails){
+    console.log('pending booking : '+booking);
+    this.selectedPendingRequest=booking;
   }
   initialiseEarningData(){
     // let data=['Spere',200,200];
@@ -160,7 +171,7 @@ export class TutorDashboardComponent implements OnInit {
     this.tutorService.fetchTutorPendingBookings();
     this.tutorService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
       this.bookingList = booking;
-
+      this.sortMeetings(this.bookingList)
       if (this.bookingList.length == 0) {
         this.bookingRequestMessage = 'No booking requests pending.';
         this.pendingRequestsCount = 0;
@@ -202,6 +213,8 @@ export class TutorDashboardComponent implements OnInit {
   // -------------------------------------------------------------------------- tutor functions--------------------------------------------
   // for accepting bookings
   acceptBooking(booking: bookingDetails) {
+    let index = this.bookingList.indexOf(booking);
+    this.acceptingIndex=index;
     this.isLoading = true;
     booking.approvalStatus = 'Accepted';
     let status:string;
@@ -235,6 +248,8 @@ export class TutorDashboardComponent implements OnInit {
               this.meetingList.push(booking);
               this.approvedMeetingsMessage = '';
               this.isLoading = false;
+              this.acceptingIndex=-1;
+              document.getElementById('closePendingRequestDialog').click();
             }
           });
         }else{
@@ -244,6 +259,7 @@ export class TutorDashboardComponent implements OnInit {
             this.config
           );
           this.initialisePendingRequests();
+          document.getElementById('closePendingRequestDialog').click();
         }
       })
       
@@ -253,6 +269,7 @@ export class TutorDashboardComponent implements OnInit {
         'close',
         this.config
       );
+      document.getElementById('closePendingRequestDialog').click();
     }
    
   }
@@ -612,6 +629,10 @@ export class TutorDashboardComponent implements OnInit {
 
   // when tutor initiates the meeting from upcoming meetings
   onHost(booking: bookingDetails) {
+    if(this.selectedBooking){
+      document.getElementById('closePopUpButton').click();
+    }
+    console.log('reached host')
     booking.approvalStatus = 'live';
     this.httpService
       .updateBookingStatus(booking.bid, booking.approvalStatus)
@@ -628,11 +649,16 @@ export class TutorDashboardComponent implements OnInit {
     this.hostMeeting.userId = booking.tutorId;
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(['meeting']);
+    this.router.navigate(['meeting',booking.meetingId]);
   }
 
   //on join function for live meetings
   onJoin(booking: bookingDetails) {
+    console.log('reached join')
+    if(this.selectedBooking){
+      document.getElementById('closePopUpButton').click();
+    }
+    console.log('reached join')
     this.hostMeeting.roomId = 123;
     this.hostMeeting.role = 'host';
     this.hostMeeting.roomName = booking.meetingId;
@@ -640,7 +666,7 @@ export class TutorDashboardComponent implements OnInit {
     this.hostMeeting.userId = booking.tutorId;
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(['meeting']);
+    this.router.navigate(['meeting',booking.meetingId]);
   }
   preventBackButton() {
     history.pushState(null, null, location.href);

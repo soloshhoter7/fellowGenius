@@ -1,189 +1,374 @@
 <div class="page-content dashboard__Panel">
   <div class="wrapper">
-      <div class="dashboard_page">
-          <div class="meet__Tabs">
-              <ul class="nav nav-tabs" role="tablist">
-                  <li><a href="#previous_meetings" role="tab" data-toggle="tab">Previous Meetings</a></li>
-                  <li><a href="#upcoming_meetings" role="tab" data-toggle="tab" class="active">Upcoming Meetings</a></li>
-              </ul>
-              <div class="tab-content">
-                  <div role="tabpanel" class="tab-pane" id="previous_meetings">
-                      <div class="pending__meeting white__bg">
-                          <h3>Previous Fellow Genius Sessions</h3>
-                          <div class="table-responsive">
-                              <table class="table">
-                                  <thead>
-                                      <tr>
-                                          <th class="fld_name">NAME</th>
-                                          <th class="fld_domain">DOMAIN</th>
-                                          <th class="fld_topic">Topic</th>
-                                          <th class="fld_dTme">DATE & TIME</th>
-                                          <th class="fld_action">&nbsp;</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                          <td class="fld_domain">Marketing</td>
-                                          <td class="fld_topic">NPD</td>
-                                          <td class="fld_dTme">31.07.2021 at 09:00 am</td>
-                                          <td class="fld_action">
-                                              <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__previousSess">
-                                                  <i class="fas fa-angle-right"></i>
-                                              </button>
-                                              <div class="td_btn"><a href="" class="table_btn connect_btn">Connect Again</a></div>
-                                          </td>
-                                      </tr>
-
-                                  </tbody>
-                              </table>
-                          </div>
-                          <!-- <div class="btn_block">
+    <div class="dashboard_page">
+      <div class="meet__Tabs">
+        <ul class="nav nav-tabs" role="tablist">
+          <li>
+            <a href="#previous_meetings" role="tab" data-toggle="tab"
+              >Previous Meetings</a
+            >
+          </li>
+          <li>
+            <a
+              href="#upcoming_meetings"
+              role="tab"
+              data-toggle="tab"
+              class="active"
+              >Upcoming Meetings</a
+            >
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane" id="previous_meetings">
+            <div class="pending__meeting white__bg">
+              <h3>Previous Fellow Genius Sessions</h3>
+              <div class="table-responsive">
+                <table class="table" *ngIf="previousMeetings.length != 0">
+                  <thead>
+                    <tr>
+                      <th class="fld_name">NAME</th>
+                      <th class="fld_domain">DOMAIN</th>
+                      <th class="fld_topic">Topic</th>
+                      <th class="fld_dTme">DATE & TIME</th>
+                      <th class="fld_status">STATUS</th>
+                      <th class="fld_action">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let element of previousMeetings">
+                      <td class="fld_name">
+                        <div class="nme_style">
+                          <span
+                            ><img
+                              [src]="element.tutorProfilePictureUrl"
+                              alt="#" /></span
+                          >{{ element.tutorName }}
+                        </div>
+                      </td>
+                      <td class="fld_domain">{{ element.domain }}</td>
+                      <td class="fld_topic">{{ element.subject }}</td>
+                      <td class="fld_dTme">
+                        {{ element.dateOfMeeting }} at
+                        {{ element.startTimeHour }}:{{
+                          element.startTimeMinute | zero
+                        }}
+                        - {{ element.endTimeHour }}:{{
+                          element.endTimeMinute | zero
+                        }}
+                        ({{ element.duration }} minutes)
+                      </td>
+                      <td class="fld_status">{{ element.approvalStatus }}</td>
+                      <td class="fld_action">
+                        <button
+                          class="Modal__BTn"
+                          (click)="setSelectedCompletedMeeting(element)"
+                          data-toggle="modal"
+                          data-target="#Popup__previousSess"
+                        >
+                          <i class="fas fa-angle-right"></i>
+                        </button>
+                        <div class="td_btn">
+                          <button
+                            class="table_btn connect_btn"
+                            (click)="
+                              connectAgain(element.tutorId, element.domain)
+                            "
+                          >
+                            Connect Again
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p *ngIf="previousMeetings.length == 0">No previous meetings</p>
+              </div>
+              <!-- <div class="btn_block">
                               <a href="" class="button know_more">Know More</a>
                           </div> -->
-                      </div>
-                  </div>
-                  <div role="tabpanel" class="tab-pane active" id="upcoming_meetings">
-                    <div class="upcoming__meeting white__bg">
-                      <h3>Upcoming Fellow Genius Sessions</h3>
-                      <div class="table-responsive" style="min-height: 0; max-height: 250px">
-                        <table class="table" *ngIf="bookingList.length!=0">
-                                  <thead>
-                                      <tr>
-                                          <th class="fld_name">NAME</th>
-                                          <th class="fld_domain">DOMAIN</th>
-                                          <th class="fld_topic">Topic</th>
-                                          <th class="fld_dTme">DATE & TIME</th>
-                                          <th class="fld_status">STATUS</th>
-                                          <!-- <th class="fld_attch">ATTACHMENT</th> -->
-                                          <th class="fld_action">&nbsp;</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr *ngFor="let element of bookingList">
-                                          <td class="fld_name"><div class="nme_style"><span><img [src]="element.tutorProfilePictureUrl" alt="#"></span>{{element.tutorName}}</div></td>
-                                          <td class="fld_domain">{{element.domain}}</td>
-                                          <td class="fld_topic">{{element.subject}}</td>
-                                          <td class="fld_dTme">{{ element.dateOfMeeting }} at  {{ element.startTimeHour }}:{{ element.startTimeMinute | zero }} -
-                                            {{ element.endTimeHour }}:{{ element.endTimeMinute | zero }} ({{
-                                              element.duration
-                                            }}
-                                            minutes)</td>
-                                            <td class="fld_status">{{element.approvalStatus}}</td>
-                                          <!-- <td class="fld_attch">Lorem.png</td> -->
-                                          <td class="fld_action" *ngIf="element.approvalStatus=='Pending'">
-                                              <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingSess">
-                                                  <i class="fas fa-angle-right"></i>
-                                              </button>
-                                              <div class="td_btn">
-                                                  <a href="javascript:;" class="delete_btn" *ngIf="element.approvalStatus == 'Pending'"
-                                                  (click)="deleteBooking(element)"><img src="../../../assets/images/delete-meeting.svg"></a>
-                                                  <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
-                                              </div>
-                                          </td>
-                                          <td class="fld_action" *ngIf="element.approvalStatus=='Accepted'">
-                                            <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
-                                                <i class="fas fa-angle-right"></i>
-                                            </button>
-                                            <div class="td_btn">
-                                                <button class="table_btn green_btn join_btn" [disabled]="!element.isLive" (click)="onJoin(element)">Join</button>
-                                            </div>
-                                        </td>
-                                        <td class="fld_action" *ngIf="element.approvalStatus=='live'">
-                                            <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
-                                                <i class="fas fa-angle-right"></i>
-                                            </button>
-                                            <div class="td_btn">
-                                                <button class="table_btn green_btn join_btn" (click)="onJoin(element)" >Join</button>
-                                            </div>
-                                        </td>
-                                      </tr>
-                                      
-                                  </tbody>
-                              </table>
-                              <p *ngIf="bookingList.length==0">No upcoming meetings</p>
-                      </div>
-                    </div>
-                  </div>
-              </div>
+            </div>
           </div>
+          <div role="tabpanel" class="tab-pane active" id="upcoming_meetings">
+            <div class="upcoming__meeting white__bg">
+              <h3>Upcoming Fellow Genius Sessions</h3>
+              <div
+                class="table-responsive"
+                style="min-height: 0; max-height: 250px"
+              >
+                <table class="table" *ngIf="bookingList.length != 0">
+                  <thead>
+                    <tr>
+                      <th class="fld_name">NAME</th>
+                      <th class="fld_domain">DOMAIN</th>
+                      <th class="fld_topic">Topic</th>
+                      <th class="fld_dTme">DATE & TIME</th>
+                      <th class="fld_status">STATUS</th>
+                      <!-- <th class="fld_attch">ATTACHMENT</th> -->
+                      <th class="fld_action">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let element of bookingList">
+                      <td class="fld_name">
+                        <div class="nme_style">
+                          <span
+                            ><img
+                              [src]="element.tutorProfilePictureUrl"
+                              alt="#" /></span
+                          >{{ element.tutorName }}
+                        </div>
+                      </td>
+                      <td class="fld_domain">{{ element.domain }}</td>
+                      <td class="fld_topic">{{ element.subject }}</td>
+                      <td class="fld_dTme">
+                        {{ element.dateOfMeeting }} at
+                        {{ element.startTimeHour }}:{{
+                          element.startTimeMinute | zero
+                        }}
+                        - {{ element.endTimeHour }}:{{
+                          element.endTimeMinute | zero
+                        }}
+                        ({{ element.duration }} minutes)
+                      </td>
+                      <td class="fld_status">{{ element.approvalStatus }}</td>
+                      <!-- <td class="fld_attch">Lorem.png</td> -->
+                      <td
+                        class="fld_action"
+                        *ngIf="element.approvalStatus == 'Pending'"
+                      >
+                        <button
+                          class="Modal__BTn"
+                          data-toggle="modal"
+                          (click)="setSelectedUpcomingMeeting(element)"
+                          data-target="#Popup__upcomingSess"
+                        >
+                          <i class="fas fa-angle-right"></i>
+                        </button>
+                        <div class="td_btn">
+                          <a
+                            href="javascript:;"
+                            class="delete_btn"
+                            *ngIf="element.approvalStatus == 'Pending'"
+                            (click)="deleteBooking(element)"
+                            ><img
+                              src="../../../assets/images/delete-meeting.svg"
+                          /></a>
+                          <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
+                        </div>
+                      </td>
+                      <td
+                        class="fld_action"
+                        *ngIf="element.approvalStatus == 'Accepted'"
+                      >
+                        <button
+                          class="Modal__BTn"
+                          data-toggle="modal"
+                          (click)="setSelectedUpcomingMeeting(element)"
+                          data-target="#Popup__upcomingSess"
+                        >
+                          <i class="fas fa-angle-right"></i>
+                        </button>
+                        <div class="td_btn">
+                          <button
+                            class="table_btn green_btn join_btn"
+                            [disabled]="!element.isLive"
+                            (click)="onJoin(element)"
+                          >
+                            Join
+                          </button>
+                        </div>
+                      </td>
+                      <td
+                        class="fld_action"
+                        *ngIf="element.approvalStatus == 'live'"
+                      >
+                        <button
+                          class="Modal__BTn"
+                          data-toggle="modal"
+                          (click)="setSelectedUpcomingMeeting(element)"
+                          data-target="#Popup__upcomingSess"
+                        >
+                          <i class="fas fa-angle-right"></i>
+                        </button>
+                        <div class="td_btn">
+                          <button
+                            class="table_btn green_btn join_btn"
+                            (click)="onJoin(element)"
+                          >
+                            Join
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p *ngIf="bookingList.length == 0">No upcoming meetings</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>
 
 <div class="modal fade detail_modal" id="Popup__upcomingSess">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content border-0 bg-transparent">
-          <div class="modal-body p-0">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="detail_wrapper">
-                  <h1>Upcoming Session Details</h1>
-                  <div class="Detail__Content">
-                      <div class="detail__list">
-                          <div class="Dtl__label">NAME</div>
-                          <div class="Dtl__txt">John Doe</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">DOMAIN</div>
-                          <div class="Dtl__txt">Marketing</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">Topic</div>
-                          <div class="Dtl__txt">NPD</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">DATE & TIME</div>
-                          <div class="Dtl__txt">31.07.2021 at 09:00 am</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">ATTACHMENT</div>
-                          <div class="Dtl__txt">Lorem.png</div>
-                      </div>
-                      <div class="detail__list">
-                          <a href="" class="delete_btn"><img src="../../../assets/images/delete-meeting.svg"></a>
-                          <a href="" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a>
-                      </div>
-                  </div>
+    <div class="modal-content border-0 bg-transparent">
+      <div class="modal-body p-0">
+        <button
+          type="button"
+          class="close"
+          id="closePopUpButton"
+          style="border: none; width: 30px; height: 30px"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="detail_wrapper">
+          <h1>Upcoming Session Details</h1>
+          <div class="Detail__Content">
+            <div class="detail__list">
+              <div class="Dtl__label">NAME</div>
+              <div class="Dtl__txt">
+                {{ selectedUpcomingMeeting.studentName }}
               </div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">DOMAIN</div>
+              <div class="Dtl__txt">{{ selectedUpcomingMeeting.domain }}</div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">Topic</div>
+              <div class="Dtl__txt">{{ selectedUpcomingMeeting.subject }}</div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">DATE & TIME</div>
+              <div class="Dtl__txt">
+                {{ selectedUpcomingMeeting.dateOfMeeting }} at
+                {{ selectedUpcomingMeeting.startTimeHour }}:{{
+                  selectedUpcomingMeeting.startTimeMinute | zero
+                }}
+                - {{ selectedUpcomingMeeting.endTimeHour }}:{{
+                  selectedUpcomingMeeting.endTimeMinute | zero
+                }}
+                ({{ selectedUpcomingMeeting.duration }} minutes)
+              </div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">STATUS</div>
+              <div class="Dtl__txt">
+                {{ selectedUpcomingMeeting.approvalStatus }}
+              </div>
+            </div>
+            <div class="detail__list">
+              <a
+                href="javascript:;"
+                class="delete_btn"
+                *ngIf="selectedUpcomingMeeting.approvalStatus == 'Pending'"
+                (click)="deleteBooking(selectedUpcomingMeeting)"
+                ><img src="../../../assets/images/delete-meeting.svg"
+              /></a>
+              <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
+
+              <div
+                class="td_btn"
+                *ngIf="selectedUpcomingMeeting.approvalStatus == 'Accepted'"
+              >
+                <button
+                  class="btn"
+                  [disabled]="!selectedUpcomingMeeting.isLive"
+                  (click)="onJoin(selectedUpcomingMeeting)"
+                >
+                  Join
+                </button>
+              </div>
+              <div
+                class="td_btn"
+                *ngIf="selectedUpcomingMeeting.approvalStatus == 'live'"
+              >
+                <button
+                  class="table_btn green_btn join_btn"
+                  (click)="onJoin(selectedUpcomingMeeting)"
+                >
+                  Join
+                </button>
+              </div>
+              <!-- <a href="" class="delete_btn"><img src="../../../assets/images/delete-meeting.svg"></a> -->
+            </div>
           </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>
 
 <div class="modal fade detail_modal" id="Popup__previousSess">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content border-0 bg-transparent">
-          <div class="modal-body p-0">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-              <div class="detail_wrapper">
-                  <h1>Previous Session Details</h1>
-                  <div class="Detail__Content">
-                      <div class="detail__list">
-                          <div class="Dtl__label">NAME</div>
-                          <div class="Dtl__txt">John Doe</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">DOMAIN</div>
-                          <div class="Dtl__txt">Marketing</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">Topic</div>
-                          <div class="Dtl__txt">NPD</div>
-                      </div>
-                      <div class="detail__list">
-                          <div class="Dtl__label">DATE & TIME</div>
-                          <div class="Dtl__txt">31.07.2021 at 09:00 am</div>
-                      </div>
-                      <div class="detail__list">
-                          <a href="" class="Dtl__Btn connect_btn">Connect Again</a>
-                      </div>
-                  </div>
+    <div class="modal-content border-0 bg-transparent">
+      <div class="modal-body p-0">
+        <button
+          type="button"
+          id="closePopUpButton"
+          style="border: none; width: 30px; height: 30px"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="detail_wrapper">
+          <h1>Previous Session Details</h1>
+          <div class="Detail__Content">
+            <div class="detail__list">
+              <div class="Dtl__label">NAME</div>
+              <div class="Dtl__txt">
+                {{ selectedCompletedMeeting.tutorName }}
               </div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">DOMAIN</div>
+              <div class="Dtl__txt">{{ selectedCompletedMeeting.domain }}</div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">Topic</div>
+              <div class="Dtl__txt">{{ selectedCompletedMeeting.subject }}</div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">DATE & TIME</div>
+              <div class="Dtl__txt">
+                {{ selectedCompletedMeeting.dateOfMeeting }} at
+                {{ selectedCompletedMeeting.startTimeHour }}:{{
+                  selectedCompletedMeeting.startTimeMinute | zero
+                }}
+                - {{ selectedCompletedMeeting.endTimeHour }}:{{
+                  selectedCompletedMeeting.endTimeMinute | zero
+                }}
+                ({{ selectedCompletedMeeting.duration }} minutes)
+              </div>
+            </div>
+            <div class="detail__list">
+              <div class="Dtl__label">Status</div>
+              <div class="Dtl__txt">
+                {{ selectedCompletedMeeting.approvalStatus }}
+              </div>
+            </div>
+            <div class="detail__list">
+              <a
+                class="Dtl__Btn connect_btn"
+                (click)="
+                  connectAgain(
+                    selectedCompletedMeeting.tutorId,
+                    selectedCompletedMeeting.domain
+                  )
+                "
+                >Connect Again</a
+              >
+            </div>
           </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>

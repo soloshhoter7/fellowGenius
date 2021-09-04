@@ -104,13 +104,19 @@ export class LoginComponent implements OnInit {
   }
   goToPreviousUrl(){
     console.log(this.prev_route);
-    if(this.prev_route!=''){
+    if(this.prev_route=='view-tutors'){
       this.cookieService.delete("prev");
       this.cookieService.delete("expert_userId")
       this.cookieService.delete("expert_domain")
       this.router.navigate(['view-tutors'], {
         queryParams: { page:this.expert_userId,subject:this.expert_domain },
       });
+    }else if(this.prev_route=='home'){
+      this.cookieService.delete("prev");
+      this.router.navigate(['home']);
+    }else {
+      this.cookieService.delete("prev");
+      this.router.navigate([this.prev_route]);
     }
   }
   onLogin(form: NgForm) {
@@ -141,7 +147,11 @@ export class LoginComponent implements OnInit {
           }
 
         }else if(this.loginDetailsService.getLoginType()=='Expert'){
-          this.toHome();
+          if(this.prev_route!='view-tutors'&&this.prev_route!=''){
+            this.goToPreviousUrl();
+          }else{
+            this.toHome();
+          }
         }
       }
     });
@@ -174,7 +184,11 @@ export class LoginComponent implements OnInit {
               this.toFacade();
             }
           }else if(this.loginDetailsService.getLoginType()=='Expert'){
-            this.toHome();
+            if(this.prev_route!='view-tutors'&&this.prev_route!=''){
+              this.goToPreviousUrl();
+            }else{
+              this.toHome();
+            }
           }
         }
       })
@@ -248,7 +262,11 @@ export class LoginComponent implements OnInit {
             this.toFacade();
           }
         }else if(this.loginDetailsService.getLoginType()=='Expert'){
-          this.toHome();
+          if(this.prev_route!='view-tutors'&&this.prev_route!=''){
+            this.goToPreviousUrl();
+          }else{
+            this.toHome();
+          }
         }  
       }
     });

@@ -13,65 +13,63 @@
                                 <h3>Upcoming Meetings</h3>
                             </div>
                             <div class="white__bg">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="fld_name">NAME</th>
-                                                <th class="fld_domain">DOMAIN</th>
-                                                <th class="fld_topic">Topic</th>
-                                                <th class="fld_dTme">DATE & TIME</th>
-                                                <th class="fld_action">&nbsp;</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                                <td class="fld_domain">Marketing</td>
-                                                <td class="fld_topic">NPD</td>
-                                                <td class="fld_dTme">31.07.2021 at 09:00 am</td>
-                                                <td class="fld_action">
-                                                    <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </button>
-                                                    <div class="td_btn">
-                                                        <a href="" class="delete_btn"><img src="../../../assets/images/delete-meeting.svg"></a>
-                                                        <a href="" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                                <td class="fld_domain">Marketing</td>
-                                                <td class="fld_topic">NPD</td>
-                                                <td class="fld_dTme">31.07.2021 at 09:00 am</td>
-                                                <td class="fld_action">
-                                                    <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </button>
-                                                    <div class="td_btn">
-                                                        <a href="" class="delete_btn"><img src="../../../assets/images/delete-meeting.svg"></a>
-                                                        <a href="" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                                <td class="fld_domain">Marketing</td>
-                                                <td class="fld_topic">NPD</td>
-                                                <td class="fld_dTme">31.07.2021 at 09:00 am</td>
-                                                <td class="fld_action">
-                                                    <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </button>
-                                                    <div class="td_btn">
-                                                        <a href="" class="table_btn green_btn join_btn">Join</a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <div class="table-responsive" style="min-height: 0; max-height: 250px">
+                                    <table class="table" *ngIf="bookingList.length!=0">
+                                              <thead>
+                                                  <tr>
+                                                      <th class="fld_name">NAME</th>
+                                                      <th class="fld_domain">DOMAIN</th>
+                                                      <th class="fld_topic">Topic</th>
+                                                      <th class="fld_dTme">DATE & TIME</th>
+                                                      <th class="fld_status">STATUS</th>
+                                                      <!-- <th class="fld_attch">ATTACHMENT</th> -->
+                                                      <th class="fld_action">&nbsp;</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                                  <tr *ngFor="let element of bookingList">
+                                                      <td class="fld_name"><div class="nme_style"><span><img [src]="element.tutorProfilePictureUrl" alt="#"></span>{{element.tutorName}}</div></td>
+                                                      <td class="fld_domain">{{element.domain}}</td>
+                                                      <td class="fld_topic">{{element.subject}}</td>
+                                                      <td class="fld_dTme">{{ element.dateOfMeeting }} at  {{ element.startTimeHour }}:{{ element.startTimeMinute | zero }} -
+                                                        {{ element.endTimeHour }}:{{ element.endTimeMinute | zero }} ({{
+                                                          element.duration
+                                                        }}
+                                                        minutes)</td>
+                                                        <td class="fld_status">{{element.approvalStatus}}</td>
+                                                      <!-- <td class="fld_attch">Lorem.png</td> -->
+                                                      <td class="fld_action" *ngIf="element.approvalStatus=='Pending'">
+                                                          <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingSess">
+                                                              <i class="fas fa-angle-right"></i>
+                                                          </button>
+                                                          <div class="td_btn">
+                                                              <a href="javascript:;" class="delete_btn" *ngIf="element.approvalStatus == 'Pending'"
+                                                              (click)="deleteBooking(element)"><img src="../../../assets/images/delete-meeting.svg"></a>
+                                                              <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
+                                                          </div>
+                                                      </td>
+                                                      <td class="fld_action" *ngIf="element.approvalStatus=='Accepted'">
+                                                        <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
+                                                            <i class="fas fa-angle-right"></i>
+                                                        </button>
+                                                        <div class="td_btn">
+                                                            <button class="table_btn green_btn join_btn" [disabled]="!element.isLive" (click)="onJoin(element)">Join</button>
+                                                        </div>
+                                                    </td>
+                                                    <td class="fld_action" *ngIf="element.approvalStatus=='live'">
+                                                        <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
+                                                            <i class="fas fa-angle-right"></i>
+                                                        </button>
+                                                        <div class="td_btn">
+                                                            <button class="table_btn green_btn join_btn" (click)="onJoin(element)" >Join</button>
+                                                        </div>
+                                                    </td>
+                                                  </tr>
+                                                  
+                                              </tbody>
+                                          </table>
+                                          <p *ngIf="bookingList.length==0">No upcoming meetings</p>
+                                  </div>
                             </div>
                         </div>
                     </div>
@@ -125,42 +123,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                                <td class="fld_domain">Marketing</td>
-                                                <td class="fld_topic">NPD</td>
-                                                <td class="fld_ratng"><div class="rating_div"><i class="fa fa-star"></i> <span>5</span></div></td>
-                                                <td class="fld_action">
-                                                    <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__compleMeeting">
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </button>
-                                                    <div class="td_btn"><a href="" class="table_btn connect_btn">Connect Again</a></div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                                <td class="fld_domain">Marketing</td>
-                                                <td class="fld_topic">NPD</td>
-                                                <td class="fld_ratng"><div class="rating_div"><i class="fa fa-star"></i> <span>5</span></div></td>
-                                                <td class="fld_action">
-                                                    <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__compleMeeting">
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </button>
-                                                    <div class="td_btn"><a href="" class="table_btn connect_btn">Connect Again</a></div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fld_name"><div class="nme_style"><span>J</span>John Doe</div></td>
-                                                <td class="fld_domain">Marketing</td>
-                                                <td class="fld_topic">NPD</td>
-                                                <td class="fld_ratng"><div class="rating_div"><i class="fa fa-star"></i> <span>5</span></div></td>
-                                                <td class="fld_action">
-                                                    <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__compleMeeting">
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </button>
-                                                    <div class="td_btn"><a href="" class="table_btn connect_btn">Connect Again</a></div>
-                                                </td>
-                                            </tr>
+                                            <tr *ngFor="let element of previousMeetings">
+                                                <td class="fld_name"><div class="nme_style"><span><img [src]="element.tutorProfilePictureUrl" alt="#"></span>{{element.tutorName}}</div></td>
+                                                <td class="fld_domain">{{element.domain}}</td>
+                                                <td class="fld_topic">{{element.subject}}</td>
+                                                <td class="fld_rating"><div class="rating_div"><i class="fa fa-star"></i> <span>{{element.rating/20}}</span></div></td>
+                                                  <td class="fld_action">
+                                                      <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__previousSess">
+                                                          <i class="fas fa-angle-right"></i>
+                                                      </button>
+                                                      <div class="td_btn"><button class="table_btn connect_btn" (click)="connectAgain(element.tutorId,element.domain)" >Connect Again</button></div>
+                                                  </td>
+                                              </tr>
                                         </tbody>
                                     </table>
                                 </div>

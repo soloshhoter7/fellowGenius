@@ -1,0 +1,17 @@
+.dashboard__Panel button, button{
+    min-width: unset !important;
+    float: unset;
+    width: unset;
+    min-height: unset !important;
+    border-radius: unset;
+    text-align: unset;
+    outline: unset !important;
+    box-shadow: unset !important;
+    padding: unset !important;
+    font-weight: unset;
+    transition: unset;
+    border: unset;
+    color: unset;
+    background: unset;
+    border:none;
+  }

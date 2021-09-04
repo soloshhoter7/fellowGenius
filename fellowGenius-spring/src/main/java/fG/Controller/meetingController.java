@@ -27,7 +27,7 @@ import fG.Service.UserService;
 
 @RestController
 @CrossOrigin(origins = "${crossOrigin}")
-//@CrossOrigin(origins = "https://fellowgenius.com")
+//@CrossOrigin(origins = {"https://fellowgenius.com","https://www.fellowgenius.com"})
 
 @RequestMapping("/fellowGenius/meeting")
 public class meetingController {
@@ -111,6 +111,18 @@ public class meetingController {
 		return meetingService.findTutorBookings(tid);
 	}
 
+	@PreAuthorize("hasAuthority('Learner') or hasAuthority('TUTOR')")
+	@RequestMapping(value = "/findTutorCompletedBookings", produces = { "application/json" })
+	@ResponseBody
+	public List<?> findTutorCompletedBookings(String tid) throws ParseException {
+		return meetingService.findTutorCompletedBookings(tid);
+	}
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value = "/findStudentCompletedBookings", produces = { "application/json" })
+	@ResponseBody
+	public List<?> findStudentCompletedBookings(String sid) throws ParseException {
+		return meetingService.findStudentCompletedBookings(sid);
+	}
 	// for updating booking status of booking
 	@RequestMapping(value = "/updateBookingStatus", produces = { "application/json" })
 	@ResponseBody
@@ -282,6 +294,23 @@ public class meetingController {
 		return meetingService.fetchExpertRecentReviews(Integer.valueOf(tid));
 	}
 	
+	@RequestMapping(value="/fetchBookingDetailsWithId")
+	@ResponseBody
+	public BookingDetailsModel fetchBookingDetailsWithId(String meetingId){
+		return meetingService.fetchBookingDetailsWithId(meetingId);
+	}
+	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+	@RequestMapping(value="/meetingMemberJoined")
+	@ResponseBody
+	public void meetingMemberJoined(String meetingId,String userId) {
+		meetingService.meetingMemberJoined(meetingId,userId);
+	}
+	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+	@RequestMapping(value="/meetingMemberLeft")
+	@ResponseBody
+	public void meetingMemberLeft(String meetingId,String userId) {
+		meetingService.meetingMemberLeft(meetingId,userId);
+	}
 //	@RequestMapping(value="/hitit")
 //	@ResponseBody
 //	public void hit(){

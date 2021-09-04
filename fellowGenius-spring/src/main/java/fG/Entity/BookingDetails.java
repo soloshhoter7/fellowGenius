@@ -49,6 +49,10 @@ public class BookingDetails implements Serializable{
 	  Integer amount;
 	  String tutorProfilePictureUrl;
 	  String isRescheduled="false";
+	  Date expertJoinTime;
+	  Date learnerJoinTime;
+	  Date expertLeavingTime;
+	  Date learnerLeavingTime;
 	  
 	  @CreationTimestamp
 		@CreatedDate
@@ -208,6 +212,31 @@ public class BookingDetails implements Serializable{
 	}
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+	
+	public Date getExpertJoinTime() {
+		return expertJoinTime;
+	}
+	public void setExpertJoinTime(Date expertJoinTime) {
+		this.expertJoinTime = expertJoinTime;
+	}
+	public Date getLearnerJoinTime() {
+		return learnerJoinTime;
+	}
+	public void setLearnerJoinTime(Date learnerJoinTime) {
+		this.learnerJoinTime = learnerJoinTime;
+	}
+	public Date getExpertLeavingTime() {
+		return expertLeavingTime;
+	}
+	public void setExpertLeavingTime(Date expertLeavingTime) {
+		this.expertLeavingTime = expertLeavingTime;
+	}
+	public Date getLearnerLeavingTime() {
+		return learnerLeavingTime;
+	}
+	public void setLearnerLeavingTime(Date learnerLeavingTime) {
+		this.learnerLeavingTime = learnerLeavingTime;
 	}
 	@Override
 	public String toString() {

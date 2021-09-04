@@ -12,7 +12,7 @@
     <p style="margin: 1rem; font-size: large">Signing you up..</p>
   </div>
   <div class="access_page wi_full" [class]="!isLoading ? '' : 'hideBlock'">
-    <div class="container" [class]="!verifyEmail? '' : 'hideBlock'">
+    <div class="container" [class]="!verifyEmail ? '' : 'hideBlock'">
       <div class="page_wrapper">
         <div class="access_icon_box">
           <img
@@ -30,7 +30,7 @@
               ><img src="../../../assets/images/fellow genius logo.svg" alt="#"
             /></a>
           </div>
-          <div class="access_data">
+          <div class="access_data sign-up">
             <div class="content_wrapper">
               <h2>Create account</h2>
               <div class="tagline"></div>
@@ -163,18 +163,40 @@
                       style="
                         color: grey;
                         font-size: smaller;
-                        margin-bottom: 10px;
+                        margin-bottom: 20px;
                       "
-                      >Your password must be a minimum of 8 characters long.
-                      Your PW must contain at least one uppercase letter (A-Z),
-                      one lowercase (a-z), one number (0-9), and one special
-                      character (@, #,&, %).</span
+                      >Your password must be a minimum of 8 characters long and
+                      should contain atleast<br />
+                      One uppercase letter (A-Z)<br />
+                      One lowercase letter (a-z)<br />
+                      One number (0-9)<br />
+                      One special character (@, #,&, %)</span
                     >
                   </div>
+                </div>
+                <div>
+                  <span class="help-block" style="color: grey"
+                    >By submitting, you acknowledge that you have read and
+                    agreed to our
+                    <a
+                      routerLink='/terms-and-conditions'
+                      target="_blank"
+                      style="color: #8dc63f; cursor: pointer"
+                      >Terms and Conditions</a
+                    >
+                    and
+                    <a
+                    routerLink='/privacy-policy'
+                    target="_blank"
+                      style="color: #8dc63f; cursor: pointer"
+                      >Privacy Policy</a
+                    ></span
+                  >
                 </div>
                 <button
                   type="submit"
                   class="button form_Btn"
+                  style="margin-top: 10px"
                   [disabled]="!t.valid"
                 >
                   Sign up
@@ -193,45 +215,116 @@
           </div>
           <div class="access_footer">
             <p>
-              Already have an Account ? <a href="">Log in</a><span>or</span>Sign
-              up as an expert
+              Already have an Account ? <a routerLink="/login">Log in</a
+              ><span>or</span
+              ><a style="color: #8dc63f" routerLink="/sign-up-expert"
+                >sign up as expert</a
+              >
             </p>
           </div>
         </div>
       </div>
     </div>
-    <div class="container" [class]="verifyEmail? '' : 'hideBlock'">
+    <div class="container" [class]="verifyEmail ? '' : 'hideBlock'">
       <div class="page_wrapper">
-          <div class="access_icon_box">
-              <img src="../../../assets/images/email-verification-clip.svg" alt="#" class="graphic_style">
+        <div class="access_icon_box">
+          <img
+            src="../../../assets/images/email-verification-clip.svg"
+            alt="#"
+            class="graphic_style"
+          />
+        </div>
+        <div class="access_field_box">
+          <div class="access_header">
+            <a href="" class="accs_logo"
+              ><img src="../../../assets/images/fellow genius logo.svg" alt="#"
+            /></a>
           </div>
-          <div class="access_field_box">
-              <div class="access_header">
-                  <a href="" class="accs_logo"><img src="../../../assets/images/fellow genius logo.svg" alt="#"></a>
+          <div class="access_data">
+            <div class="content_wrapper">
+              <h2>Email Verification</h2>
+              <div class="tagline">
+                Enter the verification code sent to your email address
               </div>
-              <div class="access_data">
-                  <div class="content_wrapper">
-                      <h2>Email Verification</h2>
-                      <div class="tagline">Enter the verification code sent to your email address</div>
-                      <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
-                      <form (ngSubmit)="onSignUp(o)" #o="ngForm">
-                          <div class="eml_vrfctn form-group">
-                              <input type="number" id="otp_1digit" name="otp_1digit" ngModel maxlength=1 class="verfcn_box" placeholder="_" required>
-                              <input type="number" id="otp_2digit" name="otp_2digit" ngModel maxlength=1 class="verfcn_box" placeholder="_" required>
-                              <input type="number" id="otp_3digit" name="otp_3digit" ngModel maxlength=1 class="verfcn_box" placeholder="_" required>
-                              <input type="number" id="otp_4digit" name="otp_4digit" ngModel maxlength=1 class="verfcn_box" placeholder="_" required>
-                              <input type="number" id="otp_5digit" name="otp_5digit" ngModel maxlength=1 class="verfcn_box" placeholder="_" required>
-                              <input type="number" id="otp_6digit" name="otp_6digit" ngModel maxlength=1 class="verfcn_box" placeholder="_" required>
-                          </div>
-                          <button type="submit" class="button form_Btn" [disabled]="o.invalid">Verify Account</button>
-                      </form>
-                  </div>
-              </div>
-              <div class="access_footer">
-                  <p>Didn't receive code? <a href="">Resend</a> </p>
-              </div>
+              <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
+              <form (ngSubmit)="onSignUp(o)" #o="ngForm">
+                <div class="eml_vrfctn form-group">
+                  <input
+                    type="number"
+                    id="otp_1digit"
+                    name="otp_1digit"
+                    ngModel
+                    maxlength="1"
+                    class="verfcn_box"
+                    placeholder="_"
+                    required
+                  />
+                  <input
+                    type="number"
+                    id="otp_2digit"
+                    name="otp_2digit"
+                    ngModel
+                    maxlength="1"
+                    class="verfcn_box"
+                    placeholder="_"
+                    required
+                  />
+                  <input
+                    type="number"
+                    id="otp_3digit"
+                    name="otp_3digit"
+                    ngModel
+                    maxlength="1"
+                    class="verfcn_box"
+                    placeholder="_"
+                    required
+                  />
+                  <input
+                    type="number"
+                    id="otp_4digit"
+                    name="otp_4digit"
+                    ngModel
+                    maxlength="1"
+                    class="verfcn_box"
+                    placeholder="_"
+                    required
+                  />
+                  <input
+                    type="number"
+                    id="otp_5digit"
+                    name="otp_5digit"
+                    ngModel
+                    maxlength="1"
+                    class="verfcn_box"
+                    placeholder="_"
+                    required
+                  />
+                  <input
+                    type="number"
+                    id="otp_6digit"
+                    name="otp_6digit"
+                    ngModel
+                    maxlength="1"
+                    class="verfcn_box"
+                    placeholder="_"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="button form_Btn"
+                  [disabled]="o.invalid"
+                >
+                  Verify Account
+                </button>
+              </form>
+            </div>
           </div>
+          <div class="access_footer">
+            <p>Didn't receive code? <a href="">Resend</a></p>
+          </div>
+        </div>
       </div>
-  </div>
+    </div>
   </div>
 </body>

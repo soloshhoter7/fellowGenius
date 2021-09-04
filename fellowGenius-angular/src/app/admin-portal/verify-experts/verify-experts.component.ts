@@ -11,6 +11,7 @@ export class VerifyExpertsComponent implements OnInit {
 
   constructor(private httpService:HttpService) { }
   pendingExperts:tutorProfileDetails[]=[];
+  isLoading=false;
   ngOnInit(): void {
     this.fetchPendingExperts();
   }
@@ -21,12 +22,16 @@ export class VerifyExpertsComponent implements OnInit {
       console.log(this.pendingExperts);
     });
   }
+
   verifyExpert(el,index){
     console.log(el.id);
     console.log(index);
+    this.isLoading=true;
     this.httpService.verifyExpert(el.id).subscribe((res)=>{
       console.log('expert verified');
+      
       this.pendingExperts.splice(index,1);
+      this.isLoading=false;
     })
   }
 }

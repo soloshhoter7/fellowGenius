@@ -13,6 +13,11 @@
       </div> -->
   </div>
   <div class="page_btns">
+    <div *ngIf="loginService.getLoginType()=='Learner'">
+      <a href="#" class="register_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up">
+        <img src="../../assets/images/breadcrumb-home.svg" alt="#" style="width: 45px;" >
+      </a>
+    </div>
     <div>
         <a
           class="setng_btn hdr_btns"
@@ -59,7 +64,7 @@
           <span class="menu_txt">Dashboard</span>
         </a>
       </li>
-      <li class="list-item" *ngIf="loginType == 'Expert'">
+      <!-- <li class="list-item" *ngIf="loginType == 'Expert'">
         <a
           href="javascript:;"
           class="menu_item"
@@ -70,7 +75,7 @@
           <img src="../../assets/images/session-icon.svg" class="mnu_icn" />
           <span class="menu_txt">Sessions</span>
         </a>
-      </li>
+      </li> -->
       <li class="list-item" *ngIf="loginType == 'Expert'">
         <a
           href="javascript:;"
@@ -83,7 +88,7 @@
             src="../../assets/images/availability-schedule-icon.svg"
             class="mnu_icn"
           />
-          <span class="menu_txt">Availability Schedule</span>
+          <span class="menu_txt">Calendar</span>
         </a>
       </li>
       <li class="list-item" *ngIf="loginType == 'Expert'">
@@ -110,7 +115,7 @@
           <span class="menu_txt">Dashboard</span>
         </a>
       </li>
-      <li class="list-item" *ngIf="loginType == 'Learner'">
+      <!-- <li class="list-item" *ngIf="loginType == 'Learner'">
         <a
           href="javascript:;"
           class="menu_item"
@@ -121,7 +126,7 @@
           <img src="../../assets/images/session-icon.svg" class="mnu_icn" />
           <span class="menu_txt">Sessions</span>
         </a>
-      </li>
+      </li> -->
       <li class="list-item" *ngIf="loginType == 'Learner'">
         <a
           href="javascript:;"
