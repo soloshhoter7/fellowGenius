@@ -79,9 +79,9 @@ import { TimeConverter} from './pipes/timeConverter';
 import { AboutUsComponent } from './facade/about-us/about-us.component';
 import { FaqComponent } from './facade/faq/faq.component';
 import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
-import { CategoriesComponent } from './admin-portal/categories/categories.component';
+import { CategoriesComponent } from './admin-portal/admin-home/categories/categories.component';
 import { ContactUsInfoComponent } from './facade/contact-us-info/contact-us-info.component';
-import { AnalyticsComponent } from './admin-portal/analytics/analytics.component';
+import { AnalyticsComponent } from './admin-portal/admin-home/analytics/analytics.component';
 import { AdminPortalComponent } from './admin-portal/admin-portal.component';
 import { DeleteMeetingComponent } from './delete-meeting/delete-meeting.component';
 import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meeting.component';
@@ -95,13 +95,16 @@ import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
 import { TermsAndConditionsComponent } from './facade/terms-and-conditions/terms-and-conditions.component';
 import { RefundPolicyComponent } from './facade/refund-policy/refund-policy.component';
 import { SignUpExpertComponent } from './facade/sign-up/sign-up-expert/sign-up-expert.component';
-import { VerifyExpertsComponent } from './admin-portal/verify-experts/verify-experts.component';
+import { VerifyExpertsComponent } from './admin-portal/admin-home/verify-experts/verify-experts.component';
 import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
 import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import {MatNativeDateModule} from '@angular/material/core';
-
+import { RegisterDiaologComponent } from './facade/register-diaolog/register-diaolog.component';
+import { Angular2CsvModule } from 'angular2-csv';
+import { AdminLoginComponent } from './admin-portal/admin-login/admin-login.component';
+import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.component';
 
 
 @NgModule({
@@ -166,6 +169,9 @@ import {MatNativeDateModule} from '@angular/material/core';
     VerifyExpertsComponent,
     LearnerSessionsComponent,
     ExpertSessionsComponent,
+    RegisterDiaologComponent,
+    AdminLoginComponent,
+    AdminHomeComponent,
   ],
   imports: [
     NoopAnimationsModule,
@@ -198,6 +204,7 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule, MatMomentDateModule,
     RouterModule.forRoot(appRoutes,routerOptions),
+    Angular2CsvModule
   ],
   entryComponents: [WelcomeComponent],
   providers: [

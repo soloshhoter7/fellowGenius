@@ -50,7 +50,7 @@ public class MailService {
 	static Properties props;
 	static Session session;
 
-	void InitiateMailService() {
+	void InitiateMailService(String email) {
 		props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
@@ -72,16 +72,17 @@ public class MailService {
 				return new PasswordAuthentication(senderEmail, senderPassword);
 			}
 		});
-		if (session == null) {
-			System.out.println("SESSION IS NULL");
-		}
 	}
 
 	// For sending OTP verification email
 	void sendVerificationEmail(String email, String otp) {
-		InitiateMailService();
+		InitiateMailService("registration@fellowgenius.com");
+		String from ="registration@fellowgenius.com";
 		String to = email;
-
+		
+		if (session == null) {
+			System.out.println("SESSION IS NULL");
+		}
 		try {
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -103,7 +104,7 @@ public class MailService {
 					+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n"
 					+ "            </div>\r\n" + "        </div>\r\n" + "    </div>\r\n" + "\r\n" + "</body>\r\n"
 					+ "</html>";
-			helper.setFrom(senderEmail);
+			helper.setFrom(from);
 			helper.setTo(email);
 			helper.setSubject("Welcome to FellowGenius");
 			helper.setText(mailContent, true);
@@ -122,12 +123,18 @@ public class MailService {
 
 	// For sending notifications related to meeting
 	void sendNotificationTutor(Integer id, BookingDetails booking) {
-		InitiateMailService();
+		InitiateMailService("meetings@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
 		try {
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 //			String mailContent="<img src='cid:logoImage'/>";
-			helper.setFrom(senderEmail);
+			helper.setFrom(from);
 
 			if (booking.getApprovalStatus().equals("Pending")) {
 				TutorProfile tutProfile = userDao.fetchTutorProfileByBookingId(id);
@@ -289,7 +296,13 @@ public class MailService {
 	}
 
 	void sendRequestToReschedule(BookingDetails booking) {
-		InitiateMailService();
+		InitiateMailService("meetings@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
 		try {
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -303,7 +316,7 @@ public class MailService {
 					+ booking.getTutorId();
 			StudentProfile stuProfile = userDao.getStudentProfile(booking.getStudentId());
 			String to = stuProfile.getEmail();
-			helper.setFrom(senderEmail);
+			helper.setFrom(from);
 			helper.setTo(to);
 			helper.setSubject("FellowGenius Meeting Re-schedule Request");
 			String topic = booking.getSubject() + " : " + booking.getDomain();
@@ -356,7 +369,13 @@ public class MailService {
 	}
 
 	boolean sendVerifiedMail(String email) {
-		InitiateMailService();
+		InitiateMailService("registration@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
 		Users user = repUsers.emailExist(email);
 		TutorProfile tutor = repTutorProfile.idExist(user.getUserId());
 		if (user != null) {
@@ -385,7 +404,7 @@ public class MailService {
 						+ recipientName + "</p>\r\n"
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">We welcome you to the esteemed community of FellowGenius experts\r\n"
 						+ "                    </p>\r\n"
-						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Please take a few minutes to choose to your password in order to complete your profile and set your available timeslot. This will help the learners to discover you faster and connect easily</p>\r\n"
+						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Please take a few minutes to choose your password in order to complete your profile and set your available timeslot. This will help the learners to discover you faster and connect easily</p>\r\n"
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Use this link to start - <a href=\""
 						+ directUrl + "\">Choose password</a></p>\r\n"
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Meanwhile, you can check out these links <a href=\""
@@ -412,7 +431,13 @@ public class MailService {
 	}
 
 	boolean sendResetMail(String email) {
-		InitiateMailService();
+		InitiateMailService("support@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
 		Users user = repUsers.emailExist(email);
 		if (user != null) {
 			String token = user.getUserId().toString();
@@ -425,7 +450,7 @@ public class MailService {
 				MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 				
-				helper.setFrom(senderEmail);
+				helper.setFrom(from);
 				helper.setTo(to);
 				helper.setSubject("FellowGenius Password Reset");
 				String mailContent = "<html>\r\n" + "  <head> </head>\r\n" + "\r\n" + "  <body>\r\n" + "    <div\r\n"

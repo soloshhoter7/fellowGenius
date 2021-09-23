@@ -36,6 +36,7 @@
       #scheduleObj
       width="100%"
       height="560px"
+      (popupOpen)="onPopupOpen($event)"
       [views]="scheduleViews"
       [readonly]="calendarView == 'Meeting'"
       (eventRendered)="onEventRendered($event)"

@@ -576,6 +576,7 @@ export class MeetingComponent implements OnInit {
     });
     this.sid = this.userId+2;
     console.log(this.userId,this.sid);
+    this.assignScreenStreamHandlers(this.screenStream);
     let localScreenStreamId: string = this.screenStream.getId().toString();
     this.localScreenStreams.push(localScreenStreamId);
     this.initScreenStream(() => {
@@ -614,8 +615,10 @@ export class MeetingComponent implements OnInit {
     }
     this.subscription = numbers.subscribe((x) => {
       this.timeLeft = this.timelimit - x;
+      // console.log(x,this.timeLeft);
+      let meetingUrl:string = '/meeting/'+this.bookingDetails.meetingId;
       if (x == before10Minutes) {
-        if (this.router.url === '/meeting') {
+        if (this.router.url === meetingUrl) {
           this.snackbar.open(
             '10 Minutes Left ! Hurry up',
             'close',
@@ -623,7 +626,9 @@ export class MeetingComponent implements OnInit {
           );
         }
       }
-      if (x == this.timelimit) {
+      console.log(x,this.timeLeft);
+      console.log(this.bookingDetails)
+      if (this.timeLeft<=0) {
         this.httpService
           .updateBookingStatus(this.bookingDetails.bid, 'Successful')
           .subscribe((res) => {
@@ -809,6 +814,15 @@ export class MeetingComponent implements OnInit {
     // The user has denied access to the camera and mic.
     stream.on(StreamEvent.MediaAccessDenied, () => {});
   }
+  private assignScreenStreamHandlers(stream: Stream): void {
+    stream.on(StreamEvent.ScreenSharingStopped, () => {
+      console.log('screen streammm is stopppeeddddd !!!!');
+      this.screenShare();
+    });
+
+    // The user has denied access to the camera and mic.
+    stream.on(StreamEvent.MediaAccessDenied, () => {});
+  }
   //------------------------------------------------------------------------------------------------------------
   //------------------------------init functions for streams ---------------------------------------------------
   private initLocalStream(onSuccess?: () => any): void {
@@ -838,6 +852,7 @@ export class MeetingComponent implements OnInit {
     }
     );
   }
+
   //-----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------join and publish functions----------------------------------------------
 

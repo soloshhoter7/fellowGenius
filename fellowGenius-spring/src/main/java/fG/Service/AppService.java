@@ -63,6 +63,8 @@ public class AppService {
 	}
 	@PostConstruct
 	public void addCategoriesAndSubCategories(){
+		
+//	
 		if(repCategory.findAll().isEmpty()) {
 		System.out.println("saving categories and sub categories in user service");
 		List<String> categories = new ArrayList<String>();
@@ -72,10 +74,10 @@ public class AppService {
 		categories.add("HR");
 		categories.add("Operations and SCM");
 		categories.add("Strategy and Industry Expertise");
-		categories.add("Programming and technology");
-		categories.add("New and Emerging Technology");
+		categories.add("Programming and Technology");
+		categories.add("New and Emerging Technologies");
 		categories.add("Software Tools");
-		categories.add("Personal Development and Others");
+		categories.add("Personal Development");
 		Multimap<String,String> subCategories = ArrayListMultimap.create();
 		subCategories.put("Sales and Business Development", "Key Account Management");
 		subCategories.put("Sales and Business Development", "Channel Management");
@@ -134,10 +136,10 @@ public class AppService {
 		subCategories.put("Software Tools", "Graphics and Design");
 	
 		
-		subCategories.put("Personal Development and Others", "Career Counselling");
-		subCategories.put("Personal Development and Others", "Personal Finance");
-		subCategories.put("Personal Development and Others", "Interview Preparation");
-		subCategories.put("Personal Development and Others", "Wellness and Life Coaching");
+		subCategories.put("Personal Development", "Career Counselling");
+		subCategories.put("Personal Development", "Personal Finance");
+		subCategories.put("Personal Development", "Interview Preparation");
+		subCategories.put("Personal Development", "Wellness and Life Coaching");
 
 		
 		

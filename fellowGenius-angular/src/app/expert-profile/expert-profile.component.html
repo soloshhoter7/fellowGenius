@@ -73,45 +73,35 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <app-connect></app-connect>
-          </div>
-          <div class="col-12 col-lg-8">
             <div class="expert__description">
               <div class="description__tabs">
                 <ul class="nav nav-tabs" role="tablist">
-                  <li class="nav-item">
+                  <li class="nav-item" id="about_li">
                     <a
-                      class="nav-link active"
+                      class="nav-link"
+                      id="about_nav"
                       data-toggle="tab"
                       href="#TAb_1"
                       role="tab"
-                      >Description</a
+                      >About</a
                     >
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" id="education_li">
                     <a
                       class="nav-link"
                       data-toggle="tab"
+                      id="education_nav"
                       href="#TAb_2"
                       role="tab"
                       >Education</a
                     >
                   </li>
-                  <li class="nav-item">
+                  
+                  <li class="nav-item" id="work_li">
                     <a
                       class="nav-link"
                       data-toggle="tab"
-                      href="#TAb_3"
-                      role="tab"
-                      >Speciality</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      data-toggle="tab"
+                      id="work_nav"
                       href="#TAb_4"
                       role="tab"
                     >
@@ -123,8 +113,8 @@
               <div class="description__Content">
                 <!-- Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane active" id="TAb_1" role="tabpanel">
-                    <h3>Description</h3>
+                  <div class="tab-pane" id="TAb_1" role="tabpanel">
+                    <h3>About</h3>
                     <p>{{ teacherProfile.description }}</p>
                   </div>
                   <div class="tab-pane" id="TAb_2" role="tabpanel">
@@ -138,10 +128,7 @@
                       {{ ed }}
                     </p>
                   </div>
-                  <div class="tab-pane" id="TAb_3" role="tabpanel">
-                    <h3>Speciality</h3>
-                    <p>{{ teacherProfile.speciality }}</p>
-                  </div>
+              
                   <div class="tab-pane" id="TAb_4" role="tabpanel">
                     <h3>Professional Background</h3>
                     <div>
@@ -157,7 +144,7 @@
                         Current Designation :
                         {{ teacherProfile.currentDesignation }}
                       </p>
-                      <div *ngIf="teacherProfile.previousOrganisations">
+                      <div *ngIf="teacherProfile.previousOrganisations.length!=0">
                         <h4>Previous Organisations</h4>
                         <p
                           class="tuple"
@@ -174,6 +161,11 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <app-connect></app-connect>
+          </div>
+          <div class="col-12 col-lg-8">
             <div class="expert__review">
               <h2>Reviews</h2>
               <span *ngIf="reviewList.length == 0">No Reviews</span>

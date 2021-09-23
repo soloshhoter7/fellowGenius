@@ -53,7 +53,7 @@ public class BookingDetails implements Serializable{
 	  Date learnerJoinTime;
 	  Date expertLeavingTime;
 	  Date learnerLeavingTime;
-	  
+	  String expertCode;
 	  @CreationTimestamp
 		@CreatedDate
 		@Temporal(TemporalType.TIMESTAMP)
@@ -238,6 +238,22 @@ public class BookingDetails implements Serializable{
 	public void setLearnerLeavingTime(Date learnerLeavingTime) {
 		this.learnerLeavingTime = learnerLeavingTime;
 	}
+	
+	public String getExpertCode() {
+		return expertCode;
+	}
+	public void setExpertCode(String expertCode) {
+		this.expertCode = expertCode;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 	@Override
 	public String toString() {
 		return "BookingDetails [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute
@@ -248,10 +264,10 @@ public class BookingDetails implements Serializable{
 				+ ", Subject=" + Subject + ", domain=" + domain + ", rating=" + rating + ", reviewText=" + reviewText
 				+ ", razorpay_payment_id=" + razorpay_payment_id + ", razorpay_order_id=" + razorpay_order_id
 				+ ", razorpay_signature=" + razorpay_signature + ", amount=" + amount + ", tutorProfilePictureUrl="
-				+ tutorProfilePictureUrl + ", isRescheduled=" + isRescheduled + ", createdDate=" + createdDate + "]";
+				+ tutorProfilePictureUrl + ", isRescheduled=" + isRescheduled + ", expertJoinTime=" + expertJoinTime
+				+ ", learnerJoinTime=" + learnerJoinTime + ", expertLeavingTime=" + expertLeavingTime
+				+ ", learnerLeavingTime=" + learnerLeavingTime + ", expertCode=" + expertCode + ", createdDate="
+				+ createdDate + "]";
 	}
 
-
-	
-  
 }

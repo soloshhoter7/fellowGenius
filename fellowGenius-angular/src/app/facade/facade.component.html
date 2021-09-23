@@ -8,10 +8,10 @@
 				<div class="col-12 col-lg-7">
 					<div class="banner_content bannerPaddingBottom">
 						<h1>On Demand Consulting</h1>
-						<p> Interact with experts of your choice in just a click !!</p>
+						<p> Interact with experts of your choice in just a click</p>
 						<form (ngSubmit)="displaySelectedSubjects()"> 
 							<div class="serach_field" style="position: relative;">
-								<input type="search" class="form-control domain_srch" placeholder="Search by Domain" [formControl]="myControl"
+								<input type="search" class="form-control domain_srch" placeholder="Find Experts by Domain" [formControl]="myControl"
 								[matAutocomplete]="auto"
 								[(ngModel)]="selectedSubject" />
 								<mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
@@ -75,15 +75,17 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-12" style="display: flex;justify-content: center;">
-					<div class="btn_block" style="width:unset;" >
-						<a href="javascript:;" (click)="onSignUp()" class="button signUp_btn">Sign Up</a>
+				<div class="col-12" style="display: flex;justify-content: center;" *ngIf="!loginService.getLoginType()">
+					<div class="btn_block" style="    width: 25%;
+					font-size: xx-large;" >
+						<a href="#Signup__Popup" data-toggle="modal" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up"
+						class="button signUp_btn" style="width: 100%;">Sign Up</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
-	<section class="wi_full py_5 how_works_sec">
+	<section class="wi_full py_5 how_works_sec" *ngIf="!loginService.getLoginType()">
 		<div class="container">
 			
 			<div class="row align-items-center">
@@ -143,7 +145,7 @@
 								</div>
 								<div class="content_box">
 									<div class="item_count">03</div>
-									<h3>Choose an Expert and Book a Meeting as per availablility</h3>
+									<h3>Choose an Expert and Book a Meeting as per Availability</h3>
 								</div>
 							</div>
 							<div class="list_item">
@@ -188,47 +190,10 @@
 							<h2>Key Consultation Areas</h2>
 						</div>
 						<div class="consultaion_list">
-							<div class="list_item" (click)="displayFromTiles('Software Tools')">
-								<div class="data_wrap" >
-									<span class="list_icon"><img src="../../assets/images/tools.svg" alt="#"></span>
-									<span class="list_txt">Software Tools</span>
-								</div>
-							</div>
-							<div class="list_item" (click)="displayFromTiles('New and Emerging technology')">
-								<div class="data_wrap" >
-									<span class="list_icon"><img src="../../assets/images/tools.svg" alt="#"></span>
-									<span class="list_txt">New and Emerging technology</span>
-								</div>
-							</div>
-							<div class="list_item" (click)="displayFromTiles('Programming and Technology')">
-								<div class="data_wrap" >
-									<span class="list_icon"><img src="../../assets/images/IT-support.svg" alt="#"></span>
-									<span class="list_txt">Programming and Technology</span>
-								</div>
-							</div>
-							<div class="list_item" (click)="displayFromTiles('Marketing')">
-								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/marketing.svg" alt="#"></span>
-									<span class="list_txt">Marketing</span>
-								</div>
-							</div>
-							<div class="list_item" (click)="displayFromTiles('Operations and SCM')">
-								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/content.svg" alt="#"></span>
-									<span class="list_txt">Operations and SCM</span>
-								</div>
-							</div>
 							<div class="list_item" (click)="displayFromTiles('Sales and Business Development')">
 								<div class="data_wrap">
 									<span class="list_icon"><img src="../../assets/images/sales.svg" alt="#"></span>
 									<span class="list_txt">Sales and Business Development</span>
-								</div>
-							</div>
-							
-							<div class="list_item" (click)="displayFromTiles('Strategy and Industry Expertise')">
-								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/strategy.svg" alt="#"></span>
-									<span class="list_txt">Strategy and Industry Expertise</span>
 								</div>
 							</div>
 							<div class="list_item" (click)="displayFromTiles('Finance')">
@@ -237,18 +202,60 @@
 									<span class="list_txt">Finance</span>
 								</div>
 							</div>
-							<div class="list_item" (click)="displayFromTiles('HR')">
+							<div class="list_item" (click)="displayFromTiles('Marketing')">
 								<div class="data_wrap">
-									<span class="list_icon"><img src="../../assets/images/HR.svg" alt="#"></span>
-									<span class="list_txt">HR</span>
+									<span class="list_icon"><img src="../../assets/images/marketing.svg" alt="#"></span>
+									<span class="list_txt">Marketing</span>
+								</div>
+							</div>
+							<div class="list_item" (click)="displayFromTiles('Programming and Technology')">
+								<div class="data_wrap" >
+									<span class="list_icon"><img src="../../assets/images/IT-support.svg" alt="#"></span>
+									<span class="list_txt">Programming and Technology</span>
+								</div>
+							</div>
+							<div class="list_item" (click)="displayFromTiles('Software Tools')">
+								<div class="data_wrap" >
+									<span class="list_icon"><img src="../../assets/images/tools.svg" alt="#"></span>
+									<span class="list_txt">Software Tools</span>
 								</div>
 							</div>
 							<div class="list_item" (click)="displayFromTiles('Personal Development and Others')">
 								<div class="data_wrap">
 									<span class="list_icon"><img src="../../assets/images/E-comm.svg" alt="#"></span>
-									<span class="list_txt">Personal Development and Others</span>
+									<span class="list_txt">Personal Development</span>
 								</div>
 							</div>
+							<!-- <div class="list_item" (click)="displayFromTiles('New and Emerging technology')">
+								<div class="data_wrap" >
+									<span class="list_icon"><img src="../../assets/images/tools.svg" alt="#"></span>
+									<span class="list_txt">New and Emerging technology</span>
+								</div>
+							</div> -->
+							
+							
+							<!-- <div class="list_item" (click)="displayFromTiles('Operations and SCM')">
+								<div class="data_wrap">
+									<span class="list_icon"><img src="../../assets/images/content.svg" alt="#"></span>
+									<span class="list_txt">Operations and SCM</span>
+								</div>
+							</div> -->
+							
+							
+							<!-- <div class="list_item" (click)="displayFromTiles('Strategy and Industry Expertise')">
+								<div class="data_wrap">
+									<span class="list_icon"><img src="../../assets/images/strategy.svg" alt="#"></span>
+									<span class="list_txt">Strategy and Industry Expertise</span>
+								</div>
+							</div> -->
+							
+							<!-- <div class="list_item" (click)="displayFromTiles('HR')">
+								<div class="data_wrap">
+									<span class="list_icon"><img src="../../assets/images/HR.svg" alt="#"></span>
+									<span class="list_txt">HR</span>
+								</div>
+							</div> -->
+							
 						</div>
 					</div>
 				</div>
@@ -257,7 +264,7 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="sec_title">
-							<h2>Meet our Expert</h2>
+							<h2>Meet the Experts</h2>
 						</div>
 						<div class="carousel_sec">
 							<div class="expert-carousel owl-carousel owl-theme">
@@ -266,7 +273,7 @@
 										<img [src]="slide.imageUrl" alt="#">
 										<h5>{{slide.name}}</h5>
 										<small>{{slide.domain}}</small>
-										<p>{{slide.review}}</p>
+										
 									</div>
 								</div>
 							</div>
@@ -274,8 +281,10 @@
 					</div>
 				</div>
 			</div>
+			
 		</div>
 	</section>
+
 </div>
 
 <app-footer></app-footer>
@@ -309,5 +318,29 @@
 			 </div>
 		</div>
 	</div>
+</div>
+<div class="modal fade" id="Signup__Popup" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-body">
+                <button type="button" id="closePopUpButton" class="close" style="border: none;" data-dismiss="modal" aria-label="Close">
+                  <img src="../../assets/images/close-modal.svg" alt="#">
+                </button>
+                <div class="Signup_form_box">
+        <h2>Sign up as</h2>
+        <div class="signUP__btns">
+          <a href="javascript:;" (click)="signUpRouting('sign-up-expert')" class="sgn_ppup_btn Exprt__btn">
+            <span class="btn__Icon"><img src="../../assets/images/SExpert-Icon.svg"></span>
+            <span>Expert</span>
+          </a>
+          <a href="javascript:;" (click)="signUpRouting('sign-up')" class="sgn_ppup_btn lrnr__btn">
+            <span class="btn__Icon"><img src="../../assets/images/SLearner-icon.svg"></span>
+            <span>Learner</span>
+          </a>
+        </div>
+      </div>
+     </div>
+        </div>
+    </div>
 </div>
 </body>

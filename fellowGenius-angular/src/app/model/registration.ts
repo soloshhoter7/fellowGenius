@@ -5,4 +5,5 @@ export class registrationModel {
 	public password: string;
 	public role: string;
 	public socialId:string;
+	public expertCode:string;
 }

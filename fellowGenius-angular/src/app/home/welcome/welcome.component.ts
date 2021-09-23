@@ -30,7 +30,7 @@ export class WelcomeComponent implements OnInit {
   ) {
     this.login = true;
   }
-
+  expertCode;
   tutorProfile = new tutorProfile();
   tutorProfileDetails = new tutorProfileDetails();
   studentProfile = new StudentProfileModel();
@@ -41,6 +41,7 @@ export class WelcomeComponent implements OnInit {
   role = 'Learner';
   hide: boolean = true;
   password:string = ' ';
+  showExpertCode:boolean = false;
   data =  new AppData('');
     // ---------- patterns --------------------------------
     mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
@@ -72,11 +73,13 @@ export class WelcomeComponent implements OnInit {
     // this.role = form.value.role;
     console.log(this.role);
     console.log(this.data.name);
+    console.log(this.expertCode)
     if ((this.role == 'Learner' || this.role == 'Expert')&&(this.data.name!=null)) {
       
       let dialogData = {
         role:this.role,
-        password:this.data.name
+        password:this.data.name,
+        expertCode:this.expertCode
       };
       this.dialogRef.close(dialogData);
     }

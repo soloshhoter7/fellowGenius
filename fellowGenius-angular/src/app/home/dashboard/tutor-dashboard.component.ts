@@ -75,7 +75,7 @@ export class TutorDashboardComponent implements OnInit {
     this.skillsChartType = value;
   }
   // --------------------------Earnings Tracker --------------------------
-  earningTrackerType = 'ComboChart';
+  earningTrackerType = 'ColumnChart';
   earningPeriod = 'Week';
   earningTrackerDataMonthly:any = [];
   earningTrackerDataWeekly:any = [];
@@ -84,9 +84,8 @@ export class TutorDashboardComponent implements OnInit {
   earningTrackerOptions = {
     vAxis: {
       title: 'Earnings (Rupees ₹)',
+      minValue:1
     },
-    seriesType: 'bars',
-    series: { 1: { type: 'line' } },
   };
   toggleEarningPeriod(value) {
     this.earningPeriod = value;
@@ -154,15 +153,15 @@ export class TutorDashboardComponent implements OnInit {
       console.log(this.earningData);
 
       for(let bk of this.earningData.weeklyData){
-        let d=[bk.keyName,parseInt(bk.valueName),parseInt(bk.valueName)];
+        let d=[bk.keyName,parseInt(bk.valueName)];
         this.earningTrackerDataWeekly.push(d);
       }
       for(let bk of this.earningData.monthlyData){
-        let d=[bk.keyName,parseInt(bk.valueName),parseInt(bk.valueName)];
+        let d=[bk.keyName,parseInt(bk.valueName)];
         this.earningTrackerDataMonthly.push(d);
       }
       for(let bk of this.earningData.yearlyData){
-        let d=[bk.keyName,parseInt(bk.valueName),parseInt(bk.valueName)];
+        let d=[bk.keyName,parseInt(bk.valueName)];
         this.earningTrackerDataYearly.push(d);
       }
     })
@@ -295,7 +294,7 @@ export class TutorDashboardComponent implements OnInit {
   requestToReschedule(booking){
     this.isRescheduleLoading=true;
     this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
-      if(res.status=='Pending'){
+      if(res.status=='Pending'||res.status=='Accepted'){
         this.httpService.requestToReschedule(booking.bid).subscribe((res)=>{
           if(res){
             this.snackBar.open(
@@ -304,8 +303,10 @@ export class TutorDashboardComponent implements OnInit {
               this.config
             );
             this.isRescheduleLoading=false;
+            this.isLoading=false
             this.initialisePendingRequests();
           }else{
+            this.isRescheduleLoading=false
             this.snackBar.open(
               'Reschedule time limit exceeded !',
               'close',

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { AdminPortalComponent } from './admin-portal/admin-portal.component';
-import { AnalyticsComponent } from './admin-portal/analytics/analytics.component';
-import { CategoriesComponent } from './admin-portal/categories/categories.component';
+import { AnalyticsComponent } from './admin-portal/admin-home/analytics/analytics.component';
+import { CategoriesComponent } from './admin-portal/admin-home/categories/categories.component';
 import { DeleteMeetingComponent } from './delete-meeting/delete-meeting.component';
 import { ExpertProfileComponent } from './expert-profile/expert-profile.component';
 import { AboutUsComponent } from './facade/about-us/about-us.component';
@@ -37,9 +37,11 @@ import { PrivacyPolicyComponent } from './facade/privacy-policy/privacy-policy.c
 import { TermsAndConditionsComponent } from './facade/terms-and-conditions/terms-and-conditions.component';
 import { RefundPolicyComponent } from './facade/refund-policy/refund-policy.component';
 import { SignUpExpertComponent } from './facade/sign-up/sign-up-expert/sign-up-expert.component';
-import { VerifyExpertsComponent } from './admin-portal/verify-experts/verify-experts.component';
+import { VerifyExpertsComponent } from './admin-portal/admin-home/verify-experts/verify-experts.component';
 import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
 import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
+import { AdminLoginComponent } from './admin-portal/admin-login/admin-login.component';
+import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.component';
 // const routes:Routes=[];
 export const routerOptions: ExtraOptions = {
   anchorScrolling: 'enabled',
@@ -81,12 +83,20 @@ export const appRoutes: Routes = [
     path: 'admin',
     component: AdminPortalComponent,
     children: [
-      { path: '', redirectTo: 'verify-expert', pathMatch: 'full' },
-      { path: 'categories', component: CategoriesComponent },
-      { path: 'analytics', component: AnalyticsComponent },
-      { path: 'verify-expert', component: VerifyExpertsComponent },
+    
+      {
+        path: 'home',
+        component: AdminHomeComponent,
+        children: [
+          { path: '', redirectTo: 'verify-expert',pathMatch:'full' },
+          { path: 'categories', component: CategoriesComponent },
+          { path: 'analytics', component: AnalyticsComponent },
+          { path: 'verify-expert', component: VerifyExpertsComponent },
+        ],
+      },
     ],
   },
+  { path: 'admin-login', component: AdminLoginComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact-us', component: ContactUsInfoComponent },

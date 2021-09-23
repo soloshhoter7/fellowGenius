@@ -29,7 +29,7 @@ public class TutorProfileDetailsModel {
 	Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
-	
+	String gst;
 	String upiID;
 	public Integer getTid() {
 		return tid;
@@ -192,18 +192,27 @@ public class TutorProfileDetailsModel {
 	public void setUpiID(String upiID) {
 		this.upiID = upiID;
 	}
+	public String getGst() {
+		return gst;
+	}
+	public void setGst(String gst) {
+		this.gst = gst;
+	}
 	@Override
 	public String toString() {
 		return "TutorProfileDetailsModel [tid=" + tid + ", bookingId=" + bookingId + ", fullName=" + fullName
-				+ ", institute=" + institute + ", educationalQualifications=" + educationalQualifications + ", price1="
-				+ price1 + ", price2=" + price2 + ", price3=" + price3 + ", description=" + description
-				+ ", speciality=" + speciality + ", rating=" + rating + ", reviewCount=" + reviewCount
-				+ ", lessonCompleted=" + lessonCompleted + ", profilePictureUrl=" + profilePictureUrl
-				+ ", professionalSkills=" + professionalSkills + ", currentOrganisation=" + currentOrganisation
-				+ ", previousOrganisations=" + previousOrganisations + ", areaOfExpertise=" + areaOfExpertise
-				+ ", profileCompleted=" + profileCompleted + ", yearsOfExperience=" + yearsOfExperience
-				+ ", linkedInProfile=" + linkedInProfile + "]";
+				+ ", email=" + email + ", contact=" + contact + ", dateOfBirth=" + dateOfBirth + ", institute="
+				+ institute + ", educationalQualifications=" + educationalQualifications + ", price1=" + price1
+				+ ", price2=" + price2 + ", price3=" + price3 + ", description=" + description + ", speciality="
+				+ speciality + ", rating=" + rating + ", reviewCount=" + reviewCount + ", lessonCompleted="
+				+ lessonCompleted + ", profilePictureUrl=" + profilePictureUrl + ", professionalSkills="
+				+ professionalSkills + ", currentOrganisation=" + currentOrganisation + ", currentDesignation="
+				+ currentDesignation + ", previousOrganisations=" + previousOrganisations + ", areaOfExpertise="
+				+ areaOfExpertise + ", profileCompleted=" + profileCompleted + ", yearsOfExperience="
+				+ yearsOfExperience + ", linkedInProfile=" + linkedInProfile + ", gst=" + gst + ", upiID=" + upiID
+				+ "]";
 	}
+	
 	
 	
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { RegisterDiaologComponent } from '../facade/register-diaolog/register-diaolog.component';
 import { StudentProfileModel } from '../model/studentProfile';
 import { tutorProfile } from '../model/tutorProfile';
 import { LoginDetailsService } from '../service/login-details.service';
@@ -18,7 +20,8 @@ export class NavBarComponent implements OnInit {
     public loginService: LoginDetailsService,
     public cookieService: CookieService,
     public studentService: StudentService,
-    public tutorService: TutorService
+    public tutorService: TutorService,
+    private dialog:MatDialog
   ) {}
   loginType;
   studentProfile: StudentProfileModel;
@@ -53,6 +56,10 @@ export class NavBarComponent implements OnInit {
           $(".navbar").removeClass('sticky');
       }
   });
+  }
+  signUpRouting(val){
+    document.getElementById('closePopUpButton').click();
+    this.router.navigate([val])
   }
   toFacade() {
     this.router.navigate(['']);

@@ -157,7 +157,7 @@
                         </div>
                       </td>
                       <td
-                        class="fld_action"
+                        class="fld_action" style="display: flex;"
                         *ngIf="element.approvalStatus == 'Accepted'"
                       >
                         <button
@@ -168,10 +168,20 @@
                         >
                           <i class="fas fa-angle-right"></i>
                         </button>
+                        
                         <div class="td_btn">
+                          <a
+                          href="javascript:;"
+                          class="delete_btn"
+                          style="width: 45px;
+                          margin-right: 10px;"
+                          (click)="deleteBooking(element)"
+                          ><img
+                            src="../../../assets/images/delete-meeting.svg"
+                        /></a>
                           <button
                             class="table_btn green_btn join_btn"
-                            [disabled]="!element.isLive"
+                           
                             (click)="onJoin(element)"
                           >
                             Join
@@ -276,9 +286,16 @@
                 class="td_btn"
                 *ngIf="selectedUpcomingMeeting.approvalStatus == 'Accepted'"
               >
+              <a
+                href="javascript:;"
+                class="delete_btn"
+                style="width: 50px;
+                margin-left: 15px;"
+                (click)="deleteBooking(selectedUpcomingMeeting)"
+                ><img style="width: 50px;" src="../../../assets/images/delete-meeting.svg"
+              /></a>
                 <button
                   class="btn"
-                  [disabled]="!selectedUpcomingMeeting.isLive"
                   (click)="onJoin(selectedUpcomingMeeting)"
                 >
                   Join

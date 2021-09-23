@@ -30,6 +30,7 @@
     "agora-rtc-sdk": "^3.2.1",
     "angular-google-charts": "^1.1.6",
     "angular-sockjs": "^0.1.0",
+    "angular2-csv": "^0.2.9",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.1.0",
     "cropperjs": "^1.5.7",

@@ -34,14 +34,21 @@ import { CookieService } from 'ngx-cookie-service';
 import { Category } from 'src/app/model/category';
 import { ThrowStmt } from '@angular/compiler';
 import { AppInfo } from 'src/app/model/AppInfo';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MatDatepicker} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MatDatepicker } from '@angular/material/datepicker';
 // import * as moment from 'moment';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
-import {default as _rollupMoment, Moment} from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
 // const moment = _rollupMoment || _moment;
 const moment = _rollupMoment || _moment;
 // See the Moment.js docs for the meaning of these formats:
@@ -70,16 +77,16 @@ declare const window: any;
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
 export class ProfileComponent implements OnInit {
   addExpertise = new expertise();
   profileError: string;
-  pricePerHourError: boolean=false;
+  pricePerHourError: boolean = false;
   invalidOrganisationDetails: boolean;
   inputDesignation: string;
   inputInstitute: any;
@@ -95,13 +102,13 @@ export class ProfileComponent implements OnInit {
     public firebaseStorage: AngularFireStorage,
     public snackBar: MatSnackBar,
     public matDialog: MatDialog,
-    private router:Router,
-    private ngZone:NgZone
+    private router: Router,
+    private ngZone: NgZone
   ) {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 50, 0, 1);
     this.maxDate = new Date(currentYear + 2, 11, 31);
-    this.fillOptions();   
+    this.fillOptions();
   }
 
   basic = true;
@@ -112,7 +119,7 @@ export class ProfileComponent implements OnInit {
   duplicateExpertiseArea;
   duplicatePreviousOrganisation;
   duplicateEducationArea;
-  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
@@ -130,7 +137,7 @@ export class ProfileComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   inputOrganisation;
   inputEducation;
-  inputCompletionDate = new FormControl(moment())
+  inputCompletionDate = new FormControl(moment());
   tutorProfile = new tutorProfile();
   tutorProfileDetails = new tutorProfileDetails();
   userId;
@@ -138,10 +145,10 @@ export class ProfileComponent implements OnInit {
   uploadedProfilePicture: File = null;
   priceForExpertise;
   selectedValue;
-  categories:Category[] = [];
-  subCategories:Category[] = [];
+  categories: Category[] = [];
+  subCategories: Category[] = [];
   filteredSubCategories: Category[] = [];
-  appInfo:AppInfo[]=[];
+  appInfo: AppInfo[] = [];
   selectedCategory;
   selectedSubCategory;
 
@@ -151,8 +158,8 @@ export class ProfileComponent implements OnInit {
   GSTValue;
   commission;
   actualEarning;
-  invalidPicture:boolean = false;
-  pictureInfo:boolean = true;
+  invalidPicture: boolean = false;
+  pictureInfo: boolean = true;
   emptyProfilePicture;
   prevArrangedOrganisations: any = [];
   ngOnInit() {
@@ -162,7 +169,7 @@ export class ProfileComponent implements OnInit {
       loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
     };
     this.getAllCategories();
-   
+
     $('.select2').select2({});
     $('.select2').on('change', function () {
       this.selectedCategory = $(this).val();
@@ -181,31 +188,34 @@ export class ProfileComponent implements OnInit {
       this.tutorProfile = this.tutorService.getTutorDetials();
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
       if (this.tutorProfileDetails.educationalQualifications != null) {
-        this.educationQualifications = this.tutorProfileDetails.educationalQualifications;
+        this.educationQualifications =
+          this.tutorProfileDetails.educationalQualifications;
       }
       if (this.tutorProfileDetails.areaOfExpertise != null) {
         this.expertises = this.tutorProfileDetails.areaOfExpertise;
       }
       if (this.tutorProfileDetails.previousOrganisations != null) {
-        this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
+        this.previousOraganisations =
+          this.tutorProfileDetails.previousOrganisations;
       }
       if (this.tutorProfileDetails.profilePictureUrl != null) {
         this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
       }
       this.getEarningAppInfo();
     } else {
-      
       setTimeout(() => {
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
         if (this.tutorProfileDetails.educationalQualifications != null) {
-          this.educationQualifications = this.tutorProfileDetails.educationalQualifications;
+          this.educationQualifications =
+            this.tutorProfileDetails.educationalQualifications;
         }
         if (this.tutorProfileDetails.areaOfExpertise != null) {
           this.expertises = this.tutorProfileDetails.areaOfExpertise;
         }
         if (this.tutorProfileDetails.previousOrganisations != null) {
-          this.previousOraganisations = this.tutorProfileDetails.previousOrganisations;
+          this.previousOraganisations =
+            this.tutorProfileDetails.previousOrganisations;
         }
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
@@ -228,18 +238,25 @@ export class ProfileComponent implements OnInit {
     this.inputCompletionDate.setValue(ctrlValue);
   }
 
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+  chosenMonthHandler(
+    normalizedMonth: Moment,
+    datepicker: MatDatepicker<Moment>
+  ) {
     const ctrlValue = this.inputCompletionDate.value;
     ctrlValue.month(normalizedMonth.month());
     this.inputCompletionDate.setValue(ctrlValue);
     datepicker.close();
   }
-  getEarningAppInfo(){
-    this.httpService.getEarningAppInfo().subscribe((res)=>{
-      this.appInfo=res;
+  getEarningAppInfo() {
+    this.httpService.getEarningAppInfo().subscribe((res) => {
+      this.appInfo = res;
       console.log(this.appInfo);
-      if(this.tutorProfileDetails.price1!=null&&this.appInfo[0]!=null&&this.appInfo[1]!=null){
-        console.log('here')
+      if (
+        this.tutorProfileDetails.price1 != null &&
+        this.appInfo[0] != null &&
+        this.appInfo[1] != null
+      ) {
+        console.log('here');
         this.onPercentChange(parseInt(this.tutorProfileDetails.price1));
       }
     });
@@ -253,31 +270,37 @@ export class ProfileComponent implements OnInit {
     console.log(value);
   }
   onPercentChange(percent: number) {
-    if(this.appInfo[0]!=null&&this.appInfo[1]!=null){
-      let gstMultiplier = 1+(parseFloat(this.appInfo[1].value)/100);
-      let commissionMultiplier = 1+(parseFloat(this.appInfo[0].value)/100);
+    if (this.appInfo[0] != null && this.appInfo[1] != null) {
+      let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
+      let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;
       // console.log(gstMultiplier,this.appInfo[0].value)
-      this.GSTValue=Math.abs(this.round((percent/(gstMultiplier))-percent));
-      this.commission=Math.abs(this.round(((percent/gstMultiplier)/commissionMultiplier)-(percent/gstMultiplier)));
-      this.actualEarning = Math.abs(this.round(percent-this.GSTValue-this.commission));
+      this.GSTValue = Math.abs(this.round(percent / gstMultiplier - percent));
+      this.commission = Math.abs(
+        this.round(
+          percent / gstMultiplier / commissionMultiplier -
+            percent / gstMultiplier
+        )
+      );
+      this.actualEarning = Math.abs(
+        this.round(percent - this.GSTValue - this.commission)
+      );
       // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
       // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
     }
-
   }
   round(num) {
     var m = Number((Math.abs(num) * 100).toPrecision(15));
-    return Math.round(m) / 100 * Math.sign(num);
-}
-  fillOptions(){
-this.httpService.getAllSubCategories().subscribe((res)=>{
-        this.subCategories = res;
-        if(this.subCategories.length>0){
-          for(var i=0;i<this.subCategories.length;i++){
-            this.options.push(this.subCategories[i].subCategory);
-          }
+    return (Math.round(m) / 100) * Math.sign(num);
+  }
+  fillOptions() {
+    this.httpService.getAllSubCategories().subscribe((res) => {
+      this.subCategories = res;
+      if (this.subCategories.length > 0) {
+        for (var i = 0; i < this.subCategories.length; i++) {
+          this.options.push(this.subCategories[i].subCategory);
         }
-      })
+      }
+    });
   }
   checkDomainInList(val) {
     for (let categ of this.categories) {
@@ -288,7 +311,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     return false;
   }
   filterSCfromCateg(val) {
-
     if (!this.selectedCategory || this.checkDomainInList(val)) {
       this.selectedCategory = val;
 
@@ -309,40 +331,44 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.isSelectedSubCategory = true;
     }
   }
-  getAllCategories(){
-    this.httpService.getAllCategories().subscribe((res)=>{
-      let categories:Category[] = res;
-      if(categories.length>0){
-        for(var i=0;i<categories.length;i++){
-          let categ=new Category();
-          categ.category=categories[i].category
+  getAllCategories() {
+    this.httpService.getAllCategories().subscribe((res) => {
+      let categories: Category[] = res;
+      if (categories.length > 0) {
+        for (var i = 0; i < categories.length; i++) {
+          let categ = new Category();
+          categ.category = categories[i].category;
           this.categories.push(categ);
           // this.selectedValue=this.categories[0].category;
         }
       }
-      this.httpService.getAllSubCategories().subscribe((res)=>{
+      this.httpService.getAllSubCategories().subscribe((res) => {
         this.subCategories = res;
-      })
+      });
     });
   }
-  
-  calculateProfileCompleted(){
-    let completeFields:number=0;
-    let totalFields:number=13;
-    if(this.tutorProfile.fullName!=null)completeFields+=1;
-    if(this.tutorProfile.dateOfBirth!=null)completeFields+=1;
-    if(this.tutorProfile.contact!=null)completeFields+=1;
-    if(this.tutorProfileDetails.currentOrganisation!=null)completeFields+=1;
-    if(this.expertises.length>0)completeFields+=1;
-    if(this.tutorProfileDetails.previousOrganisations.length>0)completeFields+=1;
-    if(this.tutorProfileDetails.institute!=null)completeFields+=1;
-    if(this.tutorProfileDetails.educationalQualifications.length>0)completeFields+=1;
-    if(this.tutorProfileDetails.professionalSkills!=null)completeFields+=1;
-    if(this.tutorProfileDetails.yearsOfExperience!=null)completeFields+=1;
-    if(this.tutorProfileDetails.description!=null)completeFields+=1;
-    if(this.tutorProfileDetails.speciality!=null)completeFields+=1;
-    if(this.tutorProfileDetails.linkedInProfile!=null)completeFields+=1;
-    return this.round(completeFields/totalFields)*100
+
+  calculateProfileCompleted() {
+    let completeFields: number = 0;
+    let totalFields: number = 13;
+    if (this.tutorProfile.fullName != null) completeFields += 1;
+    if (this.tutorProfile.dateOfBirth != null) completeFields += 1;
+    if (this.tutorProfile.contact != null) completeFields += 1;
+    if (this.tutorProfileDetails.currentOrganisation != null)
+      completeFields += 1;
+    if (this.expertises.length > 0) completeFields += 1;
+    if (this.tutorProfileDetails.previousOrganisations.length > 0)
+      completeFields += 1;
+    if (this.tutorProfileDetails.institute != null) completeFields += 1;
+    if (this.tutorProfileDetails.educationalQualifications.length > 0)
+      completeFields += 1;
+    if (this.tutorProfileDetails.professionalSkills != null)
+      completeFields += 1;
+    if (this.tutorProfileDetails.yearsOfExperience != null) completeFields += 1;
+    if (this.tutorProfileDetails.description != null) completeFields += 1;
+    if (this.tutorProfileDetails.speciality != null) completeFields += 1;
+    if (this.tutorProfileDetails.linkedInProfile != null) completeFields += 1;
+    return this.round(completeFields / totalFields) * 100;
   }
   getInstitute() {
     return this.educationQualifications[0].split(':')[0];
@@ -354,43 +380,49 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.tutorProfile.contact = form.value.contact;
       this.tutorProfile.dateOfBirth = form.value.dob;
       this.tutorProfile.fullName = form.value.fullName;
-      this.tutorProfile.bookingId = this.tutorService.getTutorDetials().bookingId;
+      this.tutorProfile.bookingId =
+        this.tutorService.getTutorDetials().bookingId;
       this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
 
       this.tutorProfileDetails.tid = this.userId;
-      this.tutorProfileDetails.educationalQualifications = this.educationQualifications;
-      this.tutorProfileDetails.professionalSkills = form.value.professionalSkills;
+      this.tutorProfileDetails.educationalQualifications =
+        this.educationQualifications;
+      this.tutorProfileDetails.professionalSkills =
+        form.value.professionalSkills;
       this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
       this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
-      this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId
-    
+      this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
+
       this.tutorProfileDetails.areaOfExpertise = this.expertises;
       this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
       this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
-      this.tutorProfileDetails.currentOrganisation = form.value.currentOrganisation;
-      this.tutorProfileDetails.previousOrganisations = this.previousOraganisations;
+      this.tutorProfileDetails.currentOrganisation =
+        form.value.currentOrganisation;
+      this.tutorProfileDetails.previousOrganisations =
+        this.previousOraganisations;
       this.tutorProfileDetails.description = form.value.description;
       this.tutorProfileDetails.speciality = form.value.speciality;
-      this.tutorProfileDetails.bookingId = this.tutorService.getTutorProfileDetails().bookingId;
+      this.tutorProfileDetails.bookingId =
+        this.tutorService.getTutorProfileDetails().bookingId;
       this.tutorProfileDetails.institute = this.getInstitute();
       this.tutorProfileDetails.currentDesignation =
         form.value.currentDesignation;
-        this.tutorProfileDetails.upiID = form.value.upiID;
-      console.log(this.tutorProfileDetails)
-
-
+      this.tutorProfileDetails.upiID = form.value.upiID;
+      this.tutorProfileDetails.gst = form.value.gst;
+      console.log(this.tutorProfileDetails);
 
       this.calculateProfileCompleted();
       this.httpService
         .updateTutorProfile(this.tutorProfile)
         .subscribe((res) => {
           this.tutorService.setTutorDetails(this.tutorProfile);
-          this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
+          this.tutorProfileDetails.profileCompleted =
+            this.calculateProfileCompleted();
           this.httpService
             .updateTutorProfileDetails(this.tutorProfileDetails)
             .subscribe(() => {
               // if (this.tutorProfileDetails.profileCompleted < 40) {
-                // this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
+              // this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
               // }
               this.tutorService.setTutorProfileDetails(
                 this.tutorProfileDetails
@@ -404,7 +436,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
               // this.router.navigate(['/home/tutor-dashboard']);
             });
         });
-    }else {
+    } else {
       this.errorText = 'Enter atleast one area of Expertise !';
     }
   }
@@ -420,10 +452,12 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
           form.value.yearsOfExperience;
         this.tutorProfileDetails.currentOrganisation =
           form.value.currentOrganisation;
-        this.tutorProfileDetails.previousOrganisations = this.previousOraganisations;
+        this.tutorProfileDetails.previousOrganisations =
+          this.previousOraganisations;
         this.tutorProfileDetails.description = form.value.description;
         this.tutorProfileDetails.speciality = form.value.speciality;
-        this.tutorProfileDetails.bookingId = this.tutorService.getTutorProfileDetails().bookingId;
+        this.tutorProfileDetails.bookingId =
+          this.tutorService.getTutorProfileDetails().bookingId;
         if (this.tutorProfileDetails.profileCompleted == 50) {
           this.tutorProfileDetails.profileCompleted = 100;
         }
@@ -452,10 +486,8 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     const arr = item.split(':');
 
     for (let i = 0; i < fields.length; i++) {
-
       const brr = fields[i].split(':');
       if (arr[0] == brr[0]) {
-
         return true;
       }
     }
@@ -465,10 +497,9 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     const arr = item.split('&');
 
     for (let i = 0; i < fields.length; i++) {
-
       const brr = fields[i].split('&');
       if (arr[0] == brr[0]) {
-        console.log(arr[0],brr[0]);
+        console.log(arr[0], brr[0]);
         console.log('Matched !!');
         return true;
       }
@@ -493,28 +524,28 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
 
     // this.profilePictureDisabled = true;
     this.uploadedProfilePicture = <File>event.target.files[0];
-    const fileSize = Math.round((this.uploadedProfilePicture.size / 1024));
+    const fileSize = Math.round(this.uploadedProfilePicture.size / 1024);
     const fileType = this.uploadedProfilePicture.type;
 
-    if(fileSize>3072||!fileType.includes('image')){
-      this.invalidPicture=true;
-      this.isLoading3=false;
-    }else{
-      this.invalidPicture=false;
+    if (fileSize > 3072 || !fileType.includes('image')) {
+      this.invalidPicture = true;
+      this.isLoading3 = false;
+    } else {
+      this.invalidPicture = false;
       const reader = new FileReader();
-    var imageSrc;
-    // var Image: File = evt.target.files[0];
+      var imageSrc;
+      // var Image: File = evt.target.files[0];
 
-    if (event.target.files && event.target.files.length) {
-      this.uploadedProfilePicture = event.target.files[0];
-      reader.readAsDataURL(this.uploadedProfilePicture);
-      reader.onload = () => {
-        imageSrc = reader.result as string;
-        this.openDialog(imageSrc);
-      };
+      if (event.target.files && event.target.files.length) {
+        this.uploadedProfilePicture = event.target.files[0];
+        reader.readAsDataURL(this.uploadedProfilePicture);
+        reader.onload = () => {
+          imageSrc = reader.result as string;
+          this.openDialog(imageSrc);
+        };
+      }
     }
-    }
-    
+
     // this.uploadProfilePicture();
   }
   openDialog(imageSrc) {
@@ -530,16 +561,16 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       dialogConfig
     );
     dialogRef.afterClosed().subscribe((data) => {
-      if(data==null){
-        this.isLoading3=false;
-      }else{
+      if (data == null) {
+        this.isLoading3 = false;
+      } else {
         var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
-      var image: File = new File([blob], this.uploadedProfilePicture.name, {
-        type: this.uploadedProfilePicture.type,
-        lastModified: Date.now(),
-      });
-      this.uploadedProfilePicture = image;
-      this.uploadProfilePicture(); 
+        var image: File = new File([blob], this.uploadedProfilePicture.name, {
+          type: this.uploadedProfilePicture.type,
+          lastModified: Date.now(),
+        });
+        this.uploadedProfilePicture = image;
+        this.uploadProfilePicture();
       }
     });
   }
@@ -565,18 +596,21 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       .pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
-            var tutorProfileDetails: tutorProfileDetails = this.tutorService.getTutorProfileDetails();
+            var tutorProfileDetails: tutorProfileDetails =
+              this.tutorService.getTutorProfileDetails();
             this.profilePictureUrl = url;
             tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
             this.httpService
               .editTutorProfileDetails(tutorProfileDetails)
               .subscribe((res) => {
-                var tutProfile: tutorProfile = this.tutorService.getTutorDetials();
+                var tutProfile: tutorProfile =
+                  this.tutorService.getTutorDetials();
                 tutProfile.profilePictureUrl = this.profilePictureUrl;
                 this.httpService
                   .editBasicProfile(tutProfile)
                   .subscribe((res) => {
-                    this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+                    this.tutorProfile.profilePictureUrl =
+                      this.profilePictureUrl;
                     this.snackBar.open(
                       'Image Uploaded successfully',
                       'close',
@@ -603,7 +637,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
           fileRef.getDownloadURL().subscribe((url) => {
             this.profilePicUploadStatus = true;
             this.isLoading3 = false;
-            this.pictureInfo=false;
+            this.pictureInfo = false;
             this.profilePictureUrl = url;
             this.snackBar.open(
               'Image Uploaded successfully',
@@ -626,17 +660,17 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.basic = false;
     }
   }
-  findSubCategory(sc){
+  findSubCategory(sc) {
     let category;
-   if(sc){
-     for(let i =0;i<this.subCategories.length;i++){
-      if(this.subCategories[i].subCategory == sc){
-        return this.subCategories[i].category;
+    if (sc) {
+      for (let i = 0; i < this.subCategories.length; i++) {
+        if (this.subCategories[i].subCategory == sc) {
+          return this.subCategories[i].category;
+        }
       }
-     }
-   }else{
-     return null;
-   }
+    } else {
+      return null;
+    }
   }
   // saveExpertise() {
   //   this.addExpertise = new expertise();
@@ -661,9 +695,8 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
   //   }
   // }
 
-  // save expertise for multiple domains 
+  // save expertise for multiple domains
   saveExpertise() {
-
     if (this.tutorProfileDetails.price1) {
       this.pricePerHourError = false;
     }
@@ -677,7 +710,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
           this.selectedSubCategory
         )
       ) {
-
         this.addExpertise.category = this.selectedCategory;
         this.addExpertise.subCategory = this.selectedSubCategory;
 
@@ -695,7 +727,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
         } else {
           this.pricePerHourError = true;
         }
-
       } else {
         this.duplicateExpertiseArea = true;
         this.selectedExpertise = '';
@@ -733,7 +764,7 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
           designation: this.inputDesignation,
         };
         this.previousOraganisations.push(
-          this.inputDesignation+ '@'+this.inputOrganisation  
+          this.inputDesignation + ' @ ' + this.inputOrganisation
         );
         this.prevArrangedOrganisations.push(org);
         this.inputOrganisation = '';
@@ -750,7 +781,6 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.invalidOrganisationDetails = true;
     }
   }
- 
 
   deleteOrganisation(index: any) {
     let organisation = this.prevArrangedOrganisations[index].organisation;
@@ -763,8 +793,8 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
     );
   }
 
-  getMonthYearString(val){
-    let momentVariable = moment(val.value._d,'YYYY-MM-DD');
+  getMonthYearString(val) {
+    let momentVariable = moment(val.value._d, 'YYYY-MM-DD');
     return momentVariable.format('MMMM YYYY');
   }
   addEducation() {
@@ -773,45 +803,36 @@ this.httpService.getAllSubCategories().subscribe((res)=>{
       this.inputCompletionDate &&
       this.inputInstitute
     ) {
-        let dateString = this.getMonthYearString(this.inputCompletionDate);
-        if (this.invalidEducationDetails == true) {
-          this.invalidEducationDetails = false;
+      let dateString = this.getMonthYearString(this.inputCompletionDate);
+      if (this.invalidEducationDetails == true) {
+        this.invalidEducationDetails = false;
+      }
+      if (this.invalidCompletionDate == true) {
+        this.invalidCompletionDate = false;
+      }
+      if (this.emptyEducationDetails == true)
+        this.emptyEducationDetails = false;
+      if (
+        !this.duplicacyCheck(
+          this.educationQualifications,
+          this.inputInstitute + ' : ' + this.inputEducation + ' : ' + dateString
+        )
+      ) {
+        this.educationQualifications.push(
+          this.inputInstitute + ' : ' + this.inputEducation + ' : ' + dateString
+        );
+        this.inputEducation = '';
+        this.inputCompletionDate = new FormControl(moment());
+        this.inputInstitute = '';
+        if (this.duplicateEducationArea == true) {
+          this.duplicateEducationArea = false;
         }
-        if (this.invalidCompletionDate == true) {
-          this.invalidCompletionDate = false;
-        }
-        if(this.emptyEducationDetails==true)this.emptyEducationDetails=false;
-        if (
-          !this.duplicacyCheck(
-            this.educationQualifications,
-            this.inputInstitute +
-              ' : ' +
-              this.inputEducation +
-              ' : ' +
-              dateString
-          )
-        ) {
-          
-          this.educationQualifications.push(
-            this.inputInstitute +
-              ' : ' +
-              this.inputEducation +
-              ' : ' +
-              dateString
-          );
-          this.inputEducation = '';
-          this.inputCompletionDate = new FormControl(moment());
-          this.inputInstitute = '';
-          if (this.duplicateEducationArea == true) {
-            this.duplicateEducationArea = false;
-          }
-        } else {
-          this.inputEducation = '';
-          this.inputCompletionDate =new FormControl(moment());;
-          this.inputInstitute = '';
-          this.duplicateEducationArea = true;
-        }
-      
+      } else {
+        this.inputEducation = '';
+        this.inputCompletionDate = new FormControl(moment());
+        this.inputInstitute = '';
+        this.duplicateEducationArea = true;
+      }
     } else {
       console.log('called');
       this.invalidEducationDetails = true;

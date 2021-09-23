@@ -70,5 +70,18 @@ export class TestComponent implements OnInit {
   ngOnInit(): void {
    
   }
+  onDigitInput(event){
 
+    let element;
+    if (event.code !== 'Backspace')
+         element = event.srcElement.nextElementSibling;
+ 
+     if (event.code === 'Backspace')
+         element = event.srcElement.previousElementSibling;
+ 
+     if(element == null)
+         return;
+     else
+         element.focus();
+ }
 }

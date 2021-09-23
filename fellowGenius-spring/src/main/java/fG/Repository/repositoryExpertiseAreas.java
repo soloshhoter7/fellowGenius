@@ -36,8 +36,8 @@ public interface repositoryExpertiseAreas extends JpaRepository<ExpertiseAreas,L
 		ExpertiseAreas searchByPrice(Integer lowerValue, Integer higherValue, Long id);
 		
 		//Search By price without id
-		@Query(value = "SELECT * from expertise_areas WHERE price BETWEEN ?1 AND ?2", nativeQuery = true)
-		List<ExpertiseAreas> searchPrice(Integer lowerValue, Integer higherValue);
+		@Query(value = "SELECT * from expertise_areas WHERE price BETWEEN ?1 AND ?2 AND category_id=?3", nativeQuery = true)
+		List<ExpertiseAreas> searchPrice(Integer lowerValue, Integer higherValue, Integer categId);
 
 		@Query(value = "SELECT user_id from expertise_areas WHERE subject = ?1", nativeQuery = true)
 		TutorProfileDetails searchBySubjectTutors(String subject);

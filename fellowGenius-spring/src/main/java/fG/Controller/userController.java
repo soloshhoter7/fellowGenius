@@ -20,6 +20,7 @@ import com.google.gson.JsonParser;
 import fG.Configuration.JwtUtil;
 import fG.Entity.PendingTutorProfileDetails;
 import fG.Entity.TutorProfileDetails;
+import fG.Model.UserDataModel;
 import fG.Model.AppInfoModel;
 import fG.Model.Category;
 import fG.Model.FiltersApplied;
@@ -47,51 +48,51 @@ public class userController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
-	
-	@RequestMapping(value="/fetchUserDataAnalytics")
+	@RequestMapping(value = "/fetchUserDataAnalytics")
 	public UserActivityAnalytics fetchUserData() {
 		return service.fetchUserDataAnalytics();
 	}
-     
-	@RequestMapping(value="/fetchPendingExperts")
-	public List<PendingTutorProfileDetails> fetchPendingExperts(){
+
+	@RequestMapping(value = "/fetchPendingExperts")
+	public List<PendingTutorProfileDetails> fetchPendingExperts() {
 		return service.fetchPendingExperts();
 	}
-	
-	@RequestMapping(value= "/expertChoosePassword")
+
+	@RequestMapping(value = "/expertChoosePassword")
 	@ResponseBody
-	public ResponseModel expertChoosePassword(@RequestBody String body) throws ParseException{
+	public ResponseModel expertChoosePassword(@RequestBody String body) throws ParseException {
 		JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
 		System.out.println(jsonObject.get("token").getAsString());
-		String token =jsonObject.get("token").getAsString();
-		String password=jsonObject.get("password").getAsString();
-		if(token!=null) {
-			String userId =  jwtUtil.extractUsername(token);
-			return service.expertChoosePassword(userId,password);
-		}else {
+		String token = jsonObject.get("token").getAsString();
+		String password = jsonObject.get("password").getAsString();
+		if (token != null) {
+			String userId = jwtUtil.extractUsername(token);
+			return service.expertChoosePassword(userId, password);
+		} else {
 			return null;
 		}
 	}
 	// for getting student details after login
 
-		@RequestMapping(value = "/verifyExpert", produces = { "application/json" })
-		public void verifyExpert(String id) throws IOException {
-			service.verifyExpert(id);
-		}
+	@RequestMapping(value = "/verifyExpert", produces = { "application/json" })
+	public void verifyExpert(String id) throws IOException {
+		service.verifyExpert(id);
+	}
+
 	@RequestMapping(value = "/registerUser")
 	public boolean saveUserProfile(@RequestBody registrationModel registrationModel) {
 		System.out.println(registrationModel);
 		return service.saveUserProfile(registrationModel);
 	}
-	
-	//for updating student profile
+
+	// for updating student profile
 	@PreAuthorize("hasAuthority('Learner')")
-	@RequestMapping(value= "/updateStudentProfile")
+	@RequestMapping(value = "/updateStudentProfile")
 	public boolean updateStudentProfile(@RequestBody StudentProfileModel stuModel) throws IOException {
-		return service.updateStudentProfile(stuModel);		
-		
+		return service.updateStudentProfile(stuModel);
+
 	}
-	
+
 	// for getting student details after login
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/getStudentDetails", produces = { "application/json" })
@@ -113,15 +114,15 @@ public class userController {
 		return service.getTutorProfileDetails(Integer.valueOf(tid));
 	}
 
-	//fetch top tutor details
+	// fetch top tutor details
 	@PreAuthorize("hasAuthority('Learner')")
-	@RequestMapping(value="/fetchTopTutorList")
+	@RequestMapping(value = "/fetchTopTutorList")
 	@ResponseBody
 	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject) {
 		ArrayList<TutorProfileDetails> topTutors = service.fetchTopTutorList(subject);
 		return topTutors;
 	}
-	
+
 	// for saving tutor registration details
 //	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerTutor")
@@ -149,7 +150,6 @@ public class userController {
 		service.updateTutorProfileDetails(tutorDetailsModel);
 
 	}
-	
 
 	@RequestMapping(value = "/registerExpert", produces = "application/JSON")
 	public boolean registerExpert(@RequestBody TutorProfileDetailsModel tutorDetailsModel)
@@ -157,7 +157,12 @@ public class userController {
 		return service.savePendingTutor(tutorDetailsModel);
 
 	}
-	
+
+	@RequestMapping(value = "/updatePendingExpert", produces = "application/JSON")
+	public void updatePendingExpert(@RequestBody TutorProfileDetailsModel tutorDetailsModel) {
+		service.updatePendingTutor(tutorDetailsModel);
+	}
+
 	// for editing basic info of tutor
 	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/editTutorBasicInfo")
@@ -191,18 +196,20 @@ public class userController {
 		List<TutorProfileDetailsModel> tutorProfileDetails = service.getTutorList(subject);
 		return tutorProfileDetails;
 	}
+
 	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
-	@RequestMapping(value="/fetchTutorProfileDetails",produces = "application/JSON")
+	@RequestMapping(value = "/fetchTutorProfileDetails", produces = "application/JSON")
 	@ResponseBody
 	public TutorProfileDetailsModel fetchTutorProfileDetails(String tid) {
 		return service.getTutorProfileDetails(Integer.valueOf(tid));
 	}
-	
-	@RequestMapping(value="/fetchBookingTutorProfileDetails",produces = "application/JSON")
+
+	@RequestMapping(value = "/fetchBookingTutorProfileDetails", produces = "application/JSON")
 	@ResponseBody
 	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(String bookingId) {
 		return service.fetchBookingTutorProfileDetails(Integer.valueOf(bookingId));
 	}
+
 	// register social login
 //	@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerSocialLogin")
@@ -212,97 +219,110 @@ public class userController {
 
 	// to change tutor availability status
 	@PreAuthorize("hasAuthority('Expert')")
-	@RequestMapping(value="/changeAvailabilityStatus")
+	@RequestMapping(value = "/changeAvailabilityStatus")
 	@ResponseBody
 	public void changeAvailabilityStatus(String tid, String isAavailable) {
 		int tutorId = Integer.parseInt(tid);
 		service.changeAvailabilityStatus(tutorId, isAavailable);
 	}
+
 	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
-	@RequestMapping(value="/subtractArea")
+	@RequestMapping(value = "/subtractArea")
 	@ResponseBody
-	public void subtractAres(String userId,String subject,String role) {
+	public void subtractAres(String userId, String subject, String role) {
 		int id = Integer.parseInt(userId);
-		service.subtractArea(id,subject,role);
+		service.subtractArea(id, subject, role);
 	}
-	@RequestMapping(value="/helloKarma")
+
+	@RequestMapping(value = "/helloKarma")
 	@ResponseBody
 	public String helloKarma() {
 		return "Hello world ! the server is up and running and now tested";
 	}
-	
+
 	@PreAuthorize("hasAuthority('Learner')")
-	@RequestMapping(value="/fetchAllLinkedTutors")
+	@RequestMapping(value = "/fetchAllLinkedTutors")
 	@ResponseBody
 	public List<TutorProfileDetailsModel> fetchAllLinkedTutors(Integer userId) {
 		System.out.println(userId);
 		return service.fetchAllLinkedTutors(userId);
-	
+
 	}
-	
-	
-	@RequestMapping(value="/filtersApplied")
+
+	@RequestMapping(value = "/filtersApplied")
 	public List<TutorProfileDetailsModel> filtersApplied(@RequestBody FiltersApplied filtersApplied) {
-		return  service.filtersApplied(filtersApplied.subjects,filtersApplied.price,filtersApplied.ratings);
-			
+		return service.filtersApplied(filtersApplied.subjects, filtersApplied.price, filtersApplied.ratings,filtersApplied.getDomain());
+
 	}
-	
-	@RequestMapping(value="/userExists")
+
+	@RequestMapping(value = "/userExists")
 	@ResponseBody
 	public boolean checkUserExists(String email) {
 		return service.checkUserExists(email);
 	}
-	
-	@RequestMapping(value="/sendResetLink")
+
+	@RequestMapping(value = "/sendResetLink")
 	@ResponseBody
 	public boolean sendResetLink(String email) {
 		return service.sendResetLink(email);
 	}
-	
-	@RequestMapping(value="/updatePassword")
+
+	@RequestMapping(value = "/updatePassword")
 	@ResponseBody
 	public boolean updatePassword(@RequestBody updatePasswordModel data) {
 		System.out.println(data.getUserId());
-		return service.updatePassword(data.getUserId(),data.getPassword());
+		return service.updatePassword(data.getUserId(), data.getPassword());
 	}
-	
-	@RequestMapping(value="/addCategories",  method=RequestMethod.POST)
+
+	@RequestMapping(value = "/addCategories", method = RequestMethod.POST)
 	public boolean addNewCategory(@RequestBody Category category) {
 		return service.addNewCategory(category);
 	}
-	
-	@RequestMapping(value="/getAllCategories",method=RequestMethod.GET)
-	public List<Category> getAllCategories(){
+
+	@RequestMapping(value = "/getAllCategories", method = RequestMethod.GET)
+	public List<Category> getAllCategories() {
 //		System.out.println("hitted!");
 		return service.getAllCategories();
 	}
-	
-	@RequestMapping(value="/addSubCategories",method = RequestMethod.POST)
+
+	@RequestMapping(value = "/addSubCategories", method = RequestMethod.POST)
 	public boolean addNewSubCategories(@RequestBody Category category) {
 		System.out.println(category);
 		return service.addNewSubCategories(category);
 	}
-	
-	@RequestMapping(value="/getSubCategories",method = RequestMethod.GET)
-	public List<Category> getSubCategories(String category){
-		System.out.println("getSubcategory : "+category);
+
+	@RequestMapping(value = "/getSubCategories", method = RequestMethod.GET)
+	public List<Category> getSubCategories(String category) {
+		System.out.println("getSubcategory : " + category);
 		return service.getSubCategories(category);
 	}
-	
-	@RequestMapping(value="/getAllSubCategories",method=RequestMethod.GET)
-	public List<Category> getAllSubCategories(){
+
+	@RequestMapping(value = "/getAllSubCategories", method = RequestMethod.GET)
+	public List<Category> getAllSubCategories() {
 //		System.out.println("hitted!");
 		return service.getAllSubCategories();
 	}
-	
-	@RequestMapping(value="/fetchNotifications",method=RequestMethod.GET)
-	public List<NotificationModel> fetchNotifications(String userId){
+
+	@RequestMapping(value = "/updateAndAddExpertiseArea")
+	@ResponseBody
+	public boolean updateAndAddExpertiseArea(String category, String subCategory) {
+		System.out.println(category + " : " + subCategory);
+		return service.updateAndAddExpertiseArea(category, subCategory);
+	}
+
+	@RequestMapping(value = "/fetchNotifications", method = RequestMethod.GET)
+	public List<NotificationModel> fetchNotifications(String userId) {
 		return service.fetchNotifications(userId);
 	}
-	
-	@RequestMapping(value="/getEarningsAppInfo",method=RequestMethod.GET)
-	public List<AppInfoModel> getEarningAppInfo(){
+
+	@RequestMapping(value = "/getEarningsAppInfo", method = RequestMethod.GET)
+	public List<AppInfoModel> getEarningAppInfo() {
 		return service.getEarningAppInfo();
 	}
-	
+	@RequestMapping(value = "/fetchAllUsersData")
+	@ResponseBody
+	public List<UserDataModel> fetchAllUsersData() {
+		return service.fetchAllUserData();
+	}
+
 }

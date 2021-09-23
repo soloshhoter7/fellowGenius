@@ -110,6 +110,8 @@ export class ConnectComponent implements OnInit {
   paymentResponse: any = {};
   duration;
   selectedDomain;
+  showExpertCode:boolean=false;
+  expertCode:string;
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -123,7 +125,7 @@ export class ConnectComponent implements OnInit {
     private dialog: MatDialog,
     private zone: NgZone,
     private winRef: WindowRefService,
-    private webSocket: WebSocketService
+    private webSocket: WebSocketService,
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -365,6 +367,8 @@ export class ConnectComponent implements OnInit {
       this.teacherProfile.profilePictureUrl;
     this.bookingDetails.studentId =
       this.studentService.getStudentProfileDetails().sid;
+    console.log(this.expertCode)
+    this.bookingDetails.expertCode = this.expertCode;
     this.calculatePrice();
     this.findDomain(this.bookingDetails.subject);
     console.log(this.selectedDomain)

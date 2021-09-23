@@ -63,7 +63,7 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   config: MatSnackBarConfig = {
-    duration: 2000,
+    duration: 5000,
     horizontalPosition: 'center',
     verticalPosition: 'top',
   };
@@ -514,17 +514,14 @@ export class StudentDashboardComponent implements OnInit {
     }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    const dialogRef = this.dialog.open(DeletePopupComponent, {
-      width: '400px',
-      height: '150px',
-    });
+    const dialogRef = this.dialog.open(DeletePopupComponent);
     dialogRef.afterClosed().subscribe((data) => {
       if (data.cancelled == true) {
         this.httpService
           .fetchBookingStatus(myBooking.bid)
           .subscribe((res: any) => {
             console.log(res.status);
-            if (res.status == 'Pending') {
+            if (res.status == 'Pending'||res.status=='Accepted') {
               this.httpService
                 .deleteMyBooking(myBooking.bid)
                 .subscribe((response: any) => {
@@ -545,7 +542,7 @@ export class StudentDashboardComponent implements OnInit {
                     response.response == 'delete time has been exceeded'
                   ) {
                     this.snackBar.open(
-                      'Cancelling time has been exceeded !',
+                      'Meeting Cancellation time exceeded',
                       'close',
                       this.config
                     );

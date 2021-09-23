@@ -1,0 +1,50 @@
+body{
+    text-align: center;
+}
+.btn {
+    width: 250px;
+ 
+    padding: unset;
+    line-height: 1;
+    font-size: 16px;
+    padding: 10px;
+    /* justify-content: flex-start; */
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.expert-button{
+    background-color: #8DC63F;
+    color: #fff;
+    margin-bottom: 5px;
+}
+.learner-button{
+    background-color: #f6f6f6;
+    color: black;
+    margin-top: 5px;
+}
+ span.btn_icon {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    line-height: 38px;
+    background-color: #68AB0C;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+span.learner_btn_icon {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    line-height: 38px;
+    background-color: white;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+img{
+    width: 25px;
+    height: 25px;
+}

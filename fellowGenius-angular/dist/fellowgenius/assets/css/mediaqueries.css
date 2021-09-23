@@ -447,9 +447,9 @@
     .consultaion_sec .consultaion_list .list_item {
         width: calc(100% - 16px);
     }
-    .expert__available .expert__item .expert__img {
+    /* .expert__available .expert__item .expert__img {
         height: 250px;
-    }
+    } */
     .expert__available .expert__item {
         width: calc(100% - 30px);
     }

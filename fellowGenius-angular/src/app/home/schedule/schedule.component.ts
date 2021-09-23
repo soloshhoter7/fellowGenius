@@ -46,11 +46,15 @@ export class tutorScheduleComponent implements OnInit {
   }
   ngAfterViewInit() {
     if (this.tutorService.getPersonalAvailabilitySchedule()) {
-      this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+      this.scheduleObj.eventSettings.dataSource =
+        this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
       // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
-      this.tutorAvailabilitySchedule.fullName = this.tutorService.getTutorDetials().fullName;
-      this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().bookingId;
-      this.tutorAvailabilitySchedule.isAvailable = this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
+      this.tutorAvailabilitySchedule.fullName =
+        this.tutorService.getTutorDetials().fullName;
+      this.tutorAvailabilitySchedule.tid =
+        this.tutorService.getTutorDetials().bookingId;
+      this.tutorAvailabilitySchedule.isAvailable =
+        this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
       this.copySchedule();
       this.copyBookings();
     } else {
@@ -76,7 +80,7 @@ export class tutorScheduleComponent implements OnInit {
   bookingSchedule: scheduleData[] = [];
   combinedSchedule: scheduleData[] = [];
   userId;
-  isLoading=false;
+  isLoading = false;
   // public eventSettings: EventSettingsModel = {
   // 	// dataSource:
   // 	dataSource: this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule
@@ -87,35 +91,40 @@ export class tutorScheduleComponent implements OnInit {
       this.scheduleObj.eventSettings.dataSource = this.bookingSchedule;
     } else {
       this.calendarView = 'Availability';
-      this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+      this.scheduleObj.eventSettings.dataSource =
+        this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
     }
   }
   handleRefresh() {
     if (this.cookieService.get('userId')) {
       this.userId = this.cookieService.get('userId');
       var bookingId;
-      this.httpService.getTutorDetails(this.userId).subscribe((res)=>{
+      this.httpService.getTutorDetails(this.userId).subscribe((res) => {
         bookingId = res.bookingId;
         this.httpService
-        .getScheduleData(parseInt(bookingId))
-        .subscribe((res) => {
-          this.tutorService.setPersonalAvailabilitySchedule(res);
-          this.tutorAvailabilitySchedule.fullName = this.tutorService.getTutorDetials().fullName;
-          this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().bookingId;
-          this.tutorAvailabilitySchedule.isAvailable = this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
-          this.availabiltiySchedules = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
-          this.copySchedule();
-          this.copyBookings();
-          // setTimeout(() => {
-          // 	let scheduleObj = (document.querySelector('.e-schedule') as any).ej2_instances[0];
-          // 	scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
-          // }, 3000);
-          // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
-          this.scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
-          // this.scheduleObj.eventSettings.dataSource = this.combinedSchedule;
-        });
-      })
-      
+          .getScheduleData(parseInt(bookingId))
+          .subscribe((res) => {
+            this.tutorService.setPersonalAvailabilitySchedule(res);
+            this.tutorAvailabilitySchedule.fullName =
+              this.tutorService.getTutorDetials().fullName;
+            this.tutorAvailabilitySchedule.tid =
+              this.tutorService.getTutorDetials().bookingId;
+            this.tutorAvailabilitySchedule.isAvailable =
+              this.tutorService.getPersonalAvailabilitySchedule().isAvailable;
+            this.availabiltiySchedules =
+              this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+            this.copySchedule();
+            this.copyBookings();
+            // setTimeout(() => {
+            // 	let scheduleObj = (document.querySelector('.e-schedule') as any).ej2_instances[0];
+            // 	scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+            // }, 3000);
+            // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
+            this.scheduleObj.eventSettings.dataSource =
+              this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+            // this.scheduleObj.eventSettings.dataSource = this.combinedSchedule;
+          });
+      });
     }
   }
 
@@ -175,21 +184,33 @@ export class tutorScheduleComponent implements OnInit {
   // for adding events into calendar schedules
   addEvents(appointment: scheduleData) {
     this.availableSchedules.push(appointment);
-    this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
-    this.isLoading=true;
+    this.tutorAvailabilitySchedule.allAvailabilitySchedule =
+      this.availableSchedules;
+    this.isLoading = true;
     setTimeout(() => {
       //<<<---    using ()=> syntax
       if (this.userId != null) {
-        this.tutorAvailabilitySchedule.tid = this.tutorService.getTutorDetials().bookingId;
+        this.tutorAvailabilitySchedule.tid =
+          this.tutorService.getTutorDetials().bookingId;
       }
 
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
-          this.isLoading=false;
+          this.tutorService.personalAvailablitySchedule =
+            this.tutorAvailabilitySchedule;
+          this.isLoading = false;
         });
     }, 3000);
+  }
+  
+  onPopupOpen(args) {
+    if (args.type === 'Editor') {
+      args.element.querySelector('.e-start').ej2_instances[0].format =
+        'd/M/yy h:mm a';
+      args.element.querySelector('.e-end').ej2_instances[0].format =
+        'd/M/yy h:mm a';
+    }
   }
   // public onPopupOpen(args: PopupOpenEventArgs): void {
   //   if (args.type == 'Editor') {
@@ -228,14 +249,16 @@ export class tutorScheduleComponent implements OnInit {
     } else {
       this.availableSchedules[updateIndex] = newAppointment;
     }
-    this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
-    this.isLoading=true;
+    this.tutorAvailabilitySchedule.allAvailabilitySchedule =
+      this.availableSchedules;
+    this.isLoading = true;
     setTimeout(() => {
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
-          this.isLoading=false;
+          this.tutorService.personalAvailablitySchedule =
+            this.tutorAvailabilitySchedule;
+          this.isLoading = false;
         });
     }, 3000);
   }
@@ -245,28 +268,32 @@ export class tutorScheduleComponent implements OnInit {
       (obj) => obj.Id == appointment.Id
     );
     this.availableSchedules.splice(deleteIndex, 1);
-    this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
-    this.isLoading=true;
+    this.tutorAvailabilitySchedule.allAvailabilitySchedule =
+      this.availableSchedules;
+    this.isLoading = true;
     setTimeout(() => {
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
-          this.isLoading=false;
+          this.tutorService.personalAvailablitySchedule =
+            this.tutorAvailabilitySchedule;
+          this.isLoading = false;
         });
     }, 3000);
   }
   //for updating special case
   updateSpecialEvents() {
-    this.tutorAvailabilitySchedule.allAvailabilitySchedule = this.availableSchedules;
-    this.isLoading=true;
+    this.tutorAvailabilitySchedule.allAvailabilitySchedule =
+      this.availableSchedules;
+    this.isLoading = true;
     setTimeout(() => {
       //<<<---    using ()=> syntax
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule = this.tutorAvailabilitySchedule;
-          this.isLoading=false;
+          this.tutorService.personalAvailablitySchedule =
+            this.tutorAvailabilitySchedule;
+          this.isLoading = false;
         });
     }, 3000);
   }
@@ -285,7 +312,7 @@ export class tutorScheduleComponent implements OnInit {
     } else if (args.requestType === 'eventChange') {
       // when an event is changed
       schedule = args.changedRecords;
-      this.isLoading=!this.isLoading;
+      this.isLoading = !this.isLoading;
       setTimeout(() => {
         if (
           schedule[0].Guid != null &&
@@ -311,7 +338,6 @@ export class tutorScheduleComponent implements OnInit {
         } else {
           //normal updation
           this.updateEvents(this.copyAppointment(schedule[0]));
-
         }
       }, 3000);
     } else if (args.requestType === 'eventRemove') {

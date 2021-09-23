@@ -126,6 +126,15 @@ export class ExpertProfileComponent implements OnInit {
         .subscribe((res) => {
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
+          if(this.teacherProfile.description!=null&&this.teacherProfile.description!=''){
+            console.log('here')
+            this.makeTabActive("about_nav","TAb_1");
+          }else{
+            document.getElementById("about_li").style.display="none";
+            document.getElementById("education_li").classList.add("two-items");
+            document.getElementById("work_li").classList.add("two-items");
+            this.makeTabActive("education_nav","TAb_2");
+          }
           this.fetchExpertReviews();
         });
     });
@@ -133,6 +142,10 @@ export class ExpertProfileComponent implements OnInit {
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
+  }
+  makeTabActive(tabId,detailId){
+    document.getElementById(tabId).classList.add("active");
+    document.getElementById(detailId).classList.add("active") ;
   }
   toDomainPage(){
     if (this.selectedDomain) {

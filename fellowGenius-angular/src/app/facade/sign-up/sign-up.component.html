@@ -38,7 +38,7 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="form-group">
-                      <label class="">Full Name</label>
+                      <label class="">Full Name*</label>
                       <input
                         type="text"
                         id="fullName"
@@ -69,7 +69,7 @@
                   </div> -->
                   <div class="col-12">
                     <div class="form-group">
-                      <label class="">E-Mail</label>
+                      <label class="">E-Mail*</label>
                       <input
                         type="email"
                         id="email"
@@ -80,7 +80,7 @@
                         email
                         #email="ngModel"
                         maxlength="64"
-                        pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
+                        pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
                         placeholder="Enter Email"
                       />
                       <span
@@ -92,7 +92,7 @@
                   </div>
                   <div class="col-12">
                     <div class="form-group">
-                      <label class="">Phone Number</label>
+                      <label class="">Phone Number*</label>
                       <input
                         type="text"
                         id="contact"
@@ -113,7 +113,7 @@
                   </div>
                   <div class="col-12">
                     <div class="form-group">
-                      <label class="">Password</label>
+                      <label class="">Password*</label>
                       <div class="password_wrap">
                         <input
                           id="password-field"
@@ -154,7 +154,7 @@
                       </div>
                     </div>
                   </div> -->
-                  <div class="col-12" style="margin-bottom: 10px">
+                  <div class="col-12" style="margin-bottom: 10px;">
                     <span
                       class="help-block"
                       *ngIf="
@@ -163,7 +163,6 @@
                       style="
                         color: grey;
                         font-size: smaller;
-                        margin-bottom: 20px;
                       "
                       >Your password must be a minimum of 8 characters long and
                       should contain atleast<br />
@@ -172,6 +171,35 @@
                       One number (0-9)<br />
                       One special character (@, #,&, %)</span
                     >
+                  </div>
+                  <div class="col-12" style="margin-bottom:10px">
+                    <a
+                      href="javascript:;"
+                      (click)="showExpertCode=!showExpertCode"
+                      style="color: #8dc63f; cursor: pointer;margin-top: 10px;"
+                      >Have an Expert Code?</a
+                    >
+                  </div>
+                  <div class="col-12" *ngIf="showExpertCode">
+                    <div class="form-group">
+                      <label class="">Expert Code</label>
+                      <input
+                        type="text"
+                        id="expertCode"
+                        name="expertCode"
+                        ngModel
+                        class="form-control"
+                        required
+                        #expertCode="ngModel"
+                        maxlength="50"
+                        placeholder="Enter Expert Code"
+                      />
+                      <span
+                        class="help-block"
+                        *ngIf="!expertCode.valid && expertCode.touched"
+                        >Invalid Expert Code</span
+                      >
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -250,62 +278,74 @@
               <form (ngSubmit)="onSignUp(o)" #o="ngForm">
                 <div class="eml_vrfctn form-group">
                   <input
-                    type="number"
+                    type="text"
                     id="otp_1digit"
                     name="otp_1digit"
+                    #digit1
                     ngModel
                     maxlength="1"
                     class="verfcn_box"
+                    (keyup)="onDigitInput($event)"
                     placeholder="_"
                     required
                   />
                   <input
-                    type="number"
+                    type="text"
                     id="otp_2digit"
                     name="otp_2digit"
+                    #digit2
                     ngModel
                     maxlength="1"
                     class="verfcn_box"
+                    (keyup)="onDigitInput($event)"
                     placeholder="_"
                     required
                   />
                   <input
-                    type="number"
+                    type="text"
                     id="otp_3digit"
                     name="otp_3digit"
                     ngModel
+                    #digit3
                     maxlength="1"
                     class="verfcn_box"
+                    (keyup)="onDigitInput($event)"
                     placeholder="_"
                     required
                   />
                   <input
-                    type="number"
+                    type="text"
                     id="otp_4digit"
                     name="otp_4digit"
                     ngModel
                     maxlength="1"
+                    #digit4
                     class="verfcn_box"
+                    (keyup)="onDigitInput($event)"
                     placeholder="_"
                     required
                   />
                   <input
-                    type="number"
+                    type="text"
                     id="otp_5digit"
                     name="otp_5digit"
                     ngModel
                     maxlength="1"
+                    #digit5
                     class="verfcn_box"
+                    (keyup)="onDigitInput($event)"
                     placeholder="_"
                     required
                   />
                   <input
-                    type="number"
+                    type="text"
                     id="otp_6digit"
                     name="otp_6digit"
                     ngModel
                     maxlength="1"
+                    #digit6
                     class="verfcn_box"
+                    (keyup)="onDigitInput($event)"
                     placeholder="_"
                     required
                   />

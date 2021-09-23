@@ -46,4 +46,20 @@ public class AuthenticationController {
 	        	 return ResponseEntity.ok(new AuthenticationResponse("false"));
 	        }
 		}
+		
+		@RequestMapping(value ="/authenticateAdmin",method = RequestMethod.POST)
+		public ResponseEntity<?> authenticateAdmin(@RequestBody AuthenticationRequest authenticationRequest){
+
+	        final String userId = userDetailsService.validateAdmin(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+	        
+	        if(userId!=null) {
+	        	final String role = "Admin";
+	    		final String jwt = jwtTokenUtil.generateToken(userId,role);
+	    		System.out.println();
+	        	return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	        }else {
+	        	 return ResponseEntity.ok(new AuthenticationResponse("false"));
+	        }
+		}
+		
 }

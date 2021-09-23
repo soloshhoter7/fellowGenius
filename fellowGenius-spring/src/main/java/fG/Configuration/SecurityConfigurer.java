@@ -51,6 +51,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 //		.antMatchers("/authenticateStudent").permitAll()
 //		.antMatchers("/authenticateTutor").permitAll()
 		.antMatchers("/authenticate").permitAll()
+		.antMatchers("/authenticateAdmin").permitAll()
 //		.antMatchers("/fellowGenius/registerStudent").permitAll()
 //		.antMatchers("/fellowGenius/registerTutor").permitAll()
 		.antMatchers("/fellowGenius/registerUser").permitAll()

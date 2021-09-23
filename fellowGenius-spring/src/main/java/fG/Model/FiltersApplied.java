@@ -1,9 +1,12 @@
 package fG.Model;
 
+import java.util.Arrays;
+
 public class FiltersApplied{
 	public String[] subjects;
 	public String[] price;
 	public Integer[] ratings;
+	String domain;
 	public String[] getSubjects() {
 		return subjects;
 	}
@@ -33,12 +36,24 @@ public class FiltersApplied{
 		this.ratings = ratings;
 	}
 
+	
+	public String getDomain() {
+		return domain;
+	}
+
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
 
 	@Override
 	public String toString() {
-		return "FiltersAppliedModel [subjects=" + subjects + ", price=" + price + ", ratings=" + ratings + "]";
+		return "FiltersApplied [subjects=" + Arrays.toString(subjects) + ", price=" + Arrays.toString(price)
+				+ ", ratings=" + Arrays.toString(ratings) + ", domain=" + domain + "]";
 	}
-	
+
+
 	
 
 }

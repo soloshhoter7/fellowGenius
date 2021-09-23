@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoginDetailsService } from '../service/login-details.service';
 
 @Component({
   selector: 'app-admin-portal',
@@ -8,13 +9,16 @@ import { Router } from '@angular/router';
 })
 export class AdminPortalComponent implements OnInit {
 
-  constructor(private router:Router) { }
-  profilePictureUrl = '../../../assets/images/default-user-image.png';
+  constructor(private router:Router,private loginService:LoginDetailsService,private route: ActivatedRoute) { }
   ngOnInit(): void {
-    // this.router.navigate(['admin/verify-expert']);
-  }
-  onSignOut(){
-
+    if(this.loginService.getLoginType()!='Admin'){
+      console.log('user is not authenticated !')
+      this.router.navigate(['admin-login']);
+    }else{
+      this.router.navigate(['/admin/home'])
+      console.log('user is authenticated')
+      
+    }
   }
 
 }

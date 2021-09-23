@@ -1,0 +1,51 @@
+<div
+*ngIf="isLoading"
+style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
+>
+<app-loading></app-loading>
+<p style="margin:1rem;font-size: large;">Signing in..</p>
+</div>
+
+<div class="access_page wi_full" *ngIf="!isLoading">
+  <div class="container">
+    <div class="page_wrapper">
+      <div class="access_icon_box">
+        <img src="../../../assets/images/login-clip.svg" alt="#" class="graphic_style">
+      </div>
+      <div class="access_field_box">
+        <div class="access_header">
+          <a href="" class="accs_logo"><img src="../../../assets/images/fellow genius logo.svg" alt="#"></a>
+        </div>
+              <div class="access_data">
+                  <div class="content_wrapper">
+                      <h2>Log in as Admin</h2>
+                      <div class="tagline"></div>
+                      <div class="error_message" *ngIf="incorrectLoginDetails">
+                        <div class="msg_wrap">
+                          <img src="../../../assets/images/required-error.svg" alt="#" class="erro_icon">
+                          <span><strong>Error</strong>{{errorText}}</span>
+                        </div>
+                      </div>
+                      <form (ngSubmit)="onAdminLogin(l)" #l="ngForm">
+                          <div class="form-group">
+                              <label class="">Username</label>
+                              <input type="text" id="userName" ngModel name="userName" required #userName="ngModel" maxlength="64" class="form-control">  
+                          </div>
+                          <div class="form-group">
+                              <label class="">Password</label>
+                              <div class="password_wrap" >
+                                <input type="password" id="password"  class="form-control" name="password" ngModel required #password="ngModel" maxLength="40">
+                                <span
+                          toggle="#password-field"
+                          class="fa fa-fw fa-eye field-icon toggle-password"
+                        ></span>
+                              </div>
+                          </div>
+                          <button type="submit" [disabled]="!l.valid" class="button form_Btn">Login</button>
+                      </form>
+                  </div>
+              </div>
+      </div>
+    </div>
+  </div>
+</div> 

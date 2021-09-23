@@ -386,7 +386,7 @@ public class dao {
 		return tutorsList;
 	}
 
-	public List<TutorProfileDetails> filtersApplied(String[] subjects, String[] price, Integer[] ratings) {
+	public List<TutorProfileDetails> filtersApplied(String[] subjects, String[] price, Integer[] ratings,Integer categId) {
 		
 		//CASE 1
 		if(subjects.length>0 && price.length>0) {
@@ -477,7 +477,7 @@ public class dao {
 			for(String priceRange: price) {
 				Integer lowerValue = Integer.valueOf(priceRange.split("-")[0]);
 				Integer higherValue = Integer.valueOf(priceRange.split("-")[1]);
-				priceWiseFilters.addAll(repExpertiseAreas.searchPrice(lowerValue, higherValue));
+				priceWiseFilters.addAll(repExpertiseAreas.searchPrice(lowerValue, higherValue,categId));
 
 			}
 			

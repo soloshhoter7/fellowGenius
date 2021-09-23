@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { StudentLoginModel } from '../model/studentLoginModel';
 import { tutorLoginModel } from '../model/tutorLoginModel';
 import { tutorProfile } from '../model/tutorProfile';
-import { tutorProfileDetails } from '../model/tutorProfileDetails';
+import { expertise, tutorProfileDetails } from '../model/tutorProfileDetails';
 import { bookingDetails } from '../model/bookingDetails';
 import { TutorVerification } from '../model/tutorVerification';
 import { socialLogin } from '../model/socialModel';
@@ -21,6 +21,7 @@ import { NotificationModel } from '../model/notification';
 import { environment } from 'src/environments/environment';
 import { AppInfo } from '../model/AppInfo';
 import { UserActivityAnalytics } from '../model/userActivityAnalytics';
+import { UserData } from '../model/UserData';
 @Injectable({
   providedIn: 'root',
 })
@@ -187,6 +188,13 @@ export class HttpService {
       method:loginModel.method
     });
   }
+  validateAdmin(loginModel: loginModel): Observable<Object> {
+    return this.http.post(this.backendUrl+'/authenticateAdmin', {
+      email: loginModel.email,
+      password: loginModel.password,
+      method:loginModel.method
+    });
+  }
 
   // for	getting	student	details	after login
   getStudentDetails(userId): Observable<StudentProfileModel> {
@@ -240,10 +248,25 @@ export class HttpService {
       }
     })
   }
+
+  updateAndAddExpertiseArea(area:expertise):Observable<Object>{
+    return this.http.get<Object>(this.backendUrl+'/fellowGenius/updateAndAddExpertiseArea',{
+      params:{
+        category:area.category,
+        subCategory:area.subCategory
+      }
+    })
+  }
   //for updating tutor profile details after completing tutor profile details form
   registerExpert(tutorProfileDetails: tutorProfileDetails):Observable<Object> {
     return this.http.post<Object>(
       this.backendUrl+'/fellowGenius/registerExpert',
+      tutorProfileDetails
+    );
+  }
+  updatePendingExpert(tutorProfileDetails: tutorProfileDetails):Observable<Object> {
+    return this.http.post<Object>(
+      this.backendUrl+'/fellowGenius/updatePendingExpert',
       tutorProfileDetails
     );
   }
@@ -724,5 +747,8 @@ choosePassword(token,password):Observable<Object> {
 
   fetchUserAnalytics():Observable<UserActivityAnalytics>{
     return this.http.get<UserActivityAnalytics>(this.backendUrl+'/fellowGenius/fetchUserDataAnalytics');
+  }
+  fetchAllUserData():Observable<UserData>{
+    return this.http.get<UserData>(this.backendUrl+'/fellowGenius/fetchAllUsersData');
   }
 }

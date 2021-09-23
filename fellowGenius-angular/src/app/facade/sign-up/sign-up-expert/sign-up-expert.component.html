@@ -139,62 +139,74 @@
                   <form (ngSubmit)="verifyEmailOtp(o)" #o="ngForm">
                     <div class="eml_vrfctn form-group">
                       <input
-                        type="number"
+                        type="text"
                         id="otp_1digit"
                         name="otp_1digit"
+                        #digit1
                         ngModel
                         maxlength="1"
                         class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
                         placeholder="_"
                         required
                       />
                       <input
-                        type="number"
+                        type="text"
                         id="otp_2digit"
                         name="otp_2digit"
+                        #digit2
                         ngModel
                         maxlength="1"
                         class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
                         placeholder="_"
                         required
                       />
                       <input
-                        type="number"
+                        type="text"
                         id="otp_3digit"
                         name="otp_3digit"
                         ngModel
+                        #digit3
                         maxlength="1"
                         class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
                         placeholder="_"
                         required
                       />
                       <input
-                        type="number"
+                        type="text"
                         id="otp_4digit"
                         name="otp_4digit"
                         ngModel
                         maxlength="1"
+                        #digit4
                         class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
                         placeholder="_"
                         required
                       />
                       <input
-                        type="number"
+                        type="text"
                         id="otp_5digit"
                         name="otp_5digit"
                         ngModel
                         maxlength="1"
+                        #digit5
                         class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
                         placeholder="_"
                         required
                       />
                       <input
-                        type="number"
+                        type="text"
                         id="otp_6digit"
                         name="otp_6digit"
                         ngModel
                         maxlength="1"
+                        #digit6
                         class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
                         placeholder="_"
                         required
                       />
@@ -269,20 +281,13 @@
           <div class="page_wrapper">
             <div class="access_field_box">
               <div class="access_header">
-                <h1>Sign up <strong>as an Expert</strong></h1>
-
-                <a href="" class="accs_logo"
-                  ><img src="../assets/images/fellow genius logo.svg" alt="#"
-                /></a>
-              </div>
-              <div class="access_data">
-                <div>
+                <div style="display: flex; align-items: center">
                   <a
                     href="#"
                     class="register_btn hdr_btn"
                     data-bs-toggle="tooltip"
                     data-placement="bottom"
-                    title="Sign Up"
+                    title="Home"
                   >
                     <img
                       src="../../assets/images/breadcrumb-home.svg"
@@ -291,6 +296,13 @@
                     />
                   </a>
                 </div>
+                <h1>Sign up <strong>as an Expert</strong></h1>
+
+                <a href="" class="accs_logo"
+                  ><img src="../assets/images/fellow genius logo.svg" alt="#"
+                /></a>
+              </div>
+              <div class="access_data">
                 <form
                   (ngSubmit)="saveExpertBasicProfile(basicProfile)"
                   #basicProfile="ngForm"
@@ -366,7 +378,7 @@
                             email
                             #email="ngModel"
                             maxlength="64"
-                            pattern="[a-zA-Z0-9_.+-]{1,20}@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(gmail|piet|yahoo|hotmail|rediffmail|apple|microsoft)\.([a-z]{2,4})(\.[a-z]{2,4})?$"
+                            pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
                             placeholder="Enter Email"
                           />
                           <span
@@ -408,7 +420,7 @@
                             placeholder="LinkedIn Profile link"
                             name="linkedInProfile"
                             id="linkedInProfile"
-                            maxlength="40"
+                            maxlength="100"
                             ngModel
                             required
                             #linkedInProfile="ngModel"
@@ -448,6 +460,26 @@
                               payments</span
                             >
                           </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">GST Number</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter GST Number (if applicable)"
+                            name="gst"
+                            id="gst"
+                            maxlength="60"
+                            ngModel
+                            #gstNumber="ngModel"
+                          />
+                          <span
+                            class="help-block"
+                            *ngIf="!gstNumber.valid && gstNumber.touched"
+                            >Invalid GST Number</span
+                          >
                         </div>
                       </div>
                       <!-- <div class="col-12 col-md-6">
@@ -496,13 +528,14 @@
                       </div>
                       <div class="col-12">
                         <div class="form-group Prc__Pr__Hr">
-                          <label class="">Price per Hour*</label>
+                          <label class="">Price per Hour (INR)*</label>
                           <input
                             type="number"
                             class="form-control"
                             name="price"
                             required
-                            placeholder="Enter price per hour"
+                            pattern="^[1-9]\d*$"
+                            placeholder="Enter price per hour (INR) "
                             [(ngModel)]="tutorProfileDetails.price1"
                             #expertisePrice="ngModel"
                             (ngModelChange)="onPercentChange($event)"
@@ -516,7 +549,7 @@
                               amount payable will be reflected in the expert
                               profile upon confirmation</span
                             >
-                          </div>
+                          </div>                
                           <span
                             class="help-block"
                             *ngIf="
@@ -570,14 +603,13 @@
                           <p class="errorText" *ngIf="errorText">
                             {{ errorText }}
                           </p>
-                          <div class="col-12 col-md-6">
+                          <div class="col-12 col-md-6" id="categoryDropDown">
                             <div class="form-group">
                               <label class="">Choose Domain*</label>
                               <select
                                 class="select2 form-control"
                                 id="chooseCategory"
                                 name="categoryName"
-                                (change)="onDomainChange($event.target.value)"
                                 data-placeholder="Choose Domain"
                                 ngModel
                               >
@@ -588,10 +620,15 @@
                                 >
                                   {{ categ.category }}
                                 </option>
+                                <option value="Others">Others</option>
                               </select>
                             </div>
                           </div>
-                          <div class="col-12 col-md-6">
+                          <div
+                            class="col-12 col-md-6"
+                            id="subCategoryDropDown"
+                            [class.hideBlock]="showTextDomain"
+                          >
                             <div class="form-group">
                               <label class="">Choose Topic*</label>
 
@@ -600,7 +637,6 @@
                                 id="chooseSubCategory"
                                 name="subCategoryName"
                                 data-placeholder="Choose Topic"
-                                (change)="onTopicChange($event.target.value)"
                                 ngModel
                               >
                                 <option value=""></option>
@@ -610,7 +646,40 @@
                                 >
                                   {{ sc.subCategory }}
                                 </option>
+                                <option value="Others">Others</option>
                               </select>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 col-md-6" *ngIf="showTextDomain">
+                              <div class="form-group">
+                                <label class="">Enter Domain*</label>
+                                <input
+                                  type="text"
+                                  id="textDomain"
+                                  name="textDomain"
+                                  ngModel
+                                  class="form-control"
+                                  maxlength="64"
+                                  [(ngModel)]="textDomain"
+                                  placeholder="Enter Domain name"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6" *ngIf="showTextTopic">
+                              <div class="form-group">
+                                <label class="">Enter topic*</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Enter Topic name"
+                                  id="textTopic"
+                                  name="textTopic"
+                                  maxlength="64"
+                                  ngModel
+                                  [(ngModel)]="textTopic"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -626,6 +695,7 @@
                           />Add</a
                         >
                       </div>
+                      
                       <div *ngIf="expertises.length">
                         <div class="col-12">
                           <h4>Domains</h4>
@@ -668,6 +738,13 @@
                           </div>
                         </div>
                       </div>
+                      <div *ngIf="expertises.length==0">
+                        <span
+                          class="help-block"
+                          style="color: grey; font-size: smaller"
+                          ><span style="color: red;">*</span> Please select Others option to add a domain or topic not listed in the drop down menu</span
+                        >
+                      </div>
                     </div>
                   </div>
                   <div class="fields_box">
@@ -685,6 +762,7 @@
                             name="yearsOfExperience"
                             ngModel
                             required
+                            pattern="^[1-9]\d*$"
                             [ngModel]="tutorProfileDetails.yearsOfExperience"
                             class="form-control"
                             #yearsOfExperience="ngModel"
@@ -702,7 +780,8 @@
                       </div>
                       <div>
                         <div class="col-12">
-                          <h4>Organisation</h4>
+                          <h4 *ngIf="prevArrangedOrganisations.length==0">Organisation</h4>
+      
                         </div>
                         <div class="field_repeater">
                           <div class="row">
@@ -760,11 +839,12 @@
                           </div>
                         </div>
                       </div>
-
                       <div>
-                        <div class="col-12">
-                          <h4>Previous Organisations</h4>
-                        </div>
+
+                          <label style="font-weight: 600;"  *ngIf="prevArrangedOrganisations.length!=0">Previous Organisation</label>
+                        
+                        
+                        <!-- <h4 *ngIf="prevArrangedOrganisations.length!=0">Previous Organisations</h4> -->
                         <div
                           class="field_repeater"
                           *ngFor="
@@ -807,59 +887,71 @@
                           </div>
                         </div>
                       </div>
-
-                      <div>
-                        <div class="field_repeater">
-                          <div class="row">
-                            <div class="col-12 col-md-6">
-                              <div class="form-group">
-                                <label class="">Organisation</label>
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  name="prevOrganisation"
-                                  placeholder="Enter Organisation name"
-                                  [(ngModel)]="inputOrganisation"
-                                />
+                      <div class="reptr___btn" style="margin-top: 15px;" *ngIf="!showEditPreviousOrganisations">
+                        <a
+                          href="JavaScript:;"
+                          class="add_RBtn"
+                          (click)="togglePreviousOrganisationsView()"
+                          ><img
+                            src="../assets/images/add-repeater.svg"
+                            alt="add"
+                          />Add More</a
+                        >
+                      </div>
+                      <div *ngIf="showEditPreviousOrganisations">
+                        <div>
+                          <div class="field_repeater">
+                            <div class="row">
+                              <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                  <label class="">Previous Organisation</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    name="prevOrganisation"
+                                    placeholder="Enter Organisation name"
+                                    [(ngModel)]="inputOrganisation"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="duplicatePreviousOrganisation"
+                                  class="help-block"
+                                >
+                                  Organisation already exists !
+                                </div>
+                                <div
+                                  *ngIf="invalidOrganisationDetails"
+                                  class="help-block"
+                                >
+                                  One or more fields is empty !
+                                </div>
                               </div>
-                              <div
-                                *ngIf="duplicatePreviousOrganisation"
-                                class="help-block"
-                              >
-                                Organisation already exists !
-                              </div>
-                              <div
-                                *ngIf="invalidOrganisationDetails"
-                                class="help-block"
-                              >
-                                One or more fields is empty !
-                              </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                              <div class="form-group">
-                                <label class="">Title/Designation</label>
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  name="prevDesignation"
-                                  placeholder="Enter Title/Designation"
-                                  [(ngModel)]="inputDesignation"
-                                />
+                              <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                  <label class="">Title/Designation</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    name="prevDesignation"
+                                    placeholder="Enter Title/Designation"
+                                    [(ngModel)]="inputDesignation"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="reptr___btn">
-                        <a
-                          href="JavaScript:;"
-                          class="add_RBtn"
-                          (click)="addOrganisation()"
-                          ><img
-                            src="../assets/images/add-repeater.svg"
-                            alt="add"
-                          />Add</a
-                        >
+                        <div class="reptr___btn">
+                          <a
+                            href="JavaScript:;"
+                            class="add_RBtn"
+                            (click)="addOrganisation()"
+                            ><img
+                              src="../assets/images/add-repeater.svg"
+                              alt="add"
+                            />Add</a
+                          >
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -868,7 +960,7 @@
                       <div class="col-12">
                         <h2>About</h2>
                       </div>
-                      <div class="col-12 col-md-6">
+                      <div class="col-12">
                         <div class="form-group">
                           <textarea
                             style="padding-top: 10px"

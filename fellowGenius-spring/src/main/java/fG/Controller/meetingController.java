@@ -288,6 +288,7 @@ public class meetingController {
 		return meetingService.saveTutorRatings(meetingId, rating, reviewText, tutid);
 	}
 	
+	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value="/expertRecentReviews")
 	@ResponseBody
 	public List<BookingDetailsModel> fetchExpertRecentReviews(String tid){
@@ -302,13 +303,13 @@ public class meetingController {
 	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
 	@RequestMapping(value="/meetingMemberJoined")
 	@ResponseBody
-	public void meetingMemberJoined(String meetingId,String userId) {
+	public void meetingMemberJoined(String meetingId,String userId) throws ParseException {
 		meetingService.meetingMemberJoined(meetingId,userId);
 	}
 	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
 	@RequestMapping(value="/meetingMemberLeft")
 	@ResponseBody
-	public void meetingMemberLeft(String meetingId,String userId) {
+	public void meetingMemberLeft(String meetingId,String userId) throws ParseException {
 		meetingService.meetingMemberLeft(meetingId,userId);
 	}
 //	@RequestMapping(value="/hitit")

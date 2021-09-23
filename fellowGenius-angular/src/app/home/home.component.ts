@@ -27,6 +27,7 @@ import { LocationStrategy } from '@angular/common';
 import { NotificationService } from '../service/notification.service';
 import { NotificationModel } from '../model/notification';
 import { C } from '@angular/cdk/keycodes';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -75,7 +76,8 @@ export class HomeComponent implements OnInit {
     private cookieService: CookieService,
     private breakpointObserver: BreakpointObserver,
     private locationStrategy: LocationStrategy,
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private authService:AuthService
   ) {
     this.getScreenSize();
   }
@@ -91,22 +93,7 @@ export class HomeComponent implements OnInit {
     if(this.cookieService.get('prev')){
       this.cookieService.delete("prev");
     }
-    // this.breakpointObserver
-    //   .observe(['(min-width: 800px)'])
-    //   .subscribe((state: BreakpointState) => {
-    //     if (state.matches) {
-    //       this.openNav();
-    //     } else {
-    //       this.closeNav();
-    //     }
-    //   });
-    // this.toggleNavigation = true;
-    // if (this.screenWidth >= 450) {
-    //   this.openNav();
-    // } else {
-    //   this.toggleNavigation = false;
-    //   this.closeNav();
-    // }
+
     if (this.isTokenValid()) {
       console.log('heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
       this.loginType = this.loginService.getLoginType();
@@ -139,11 +126,7 @@ export class HomeComponent implements OnInit {
         console.log('here')
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-        // if (this.tutorProfileDetails.profilePictureUrl != null) {
-        //   this.profilePictureUrl = this.tutorService.getTutorDetials().profilePictureUrl;
-        // }else{
-        //   this.
-        // }
+    
 
         if(this.tutorService.getTutorDetials().profilePictureUrl == null){
           this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl
@@ -161,12 +144,11 @@ export class HomeComponent implements OnInit {
         console.log(this.fullName)
         // this.dashboardUrl = '/home/tutorDashboard';
         this.router.navigate(['home/tutor-dashboard']);
-        // if (this.loginService.getTrType() == 'signUp') {
-        //   this.dialog.open(WelcomeComponent, {
-        //     width: 'auto',
-        //     height: 'auto',
-        //   });
-        // }
+        console.log(this.loginService.getTrType());
+        if (this.loginService.getTrType() == 'sign-up') {
+          console.log('sigggnnn uppp')
+          this.router.navigate(['home/tutor-schedule']);
+        }
       } else {
         this.handleRefresh();
       }
@@ -186,18 +168,6 @@ export class HomeComponent implements OnInit {
       this.notifications=notifs;
     })
   }
-  // initialiseStudentPendingRequest(){
-  //   this.studentService.fetchStudentPendingBookings();
-  //   this.studentService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
-  //     this.bookingList=booking;
-  //     if (this.bookingList.length == 0) {
-  //       this.emptyBookingList = true;
-  //       this.pendingRequestsCount = 0;
-  //     } else {
-  //       this.pendingRequestsCount = this.bookingList.length;
-  //     }
-  //   })
-  // }
   displayNotifications(){
     this.showNotifications=!this.showNotifications;
   }
@@ -315,11 +285,7 @@ export class HomeComponent implements OnInit {
   }
 
   onSignOut() {
-    this.cookieService.delete('token');
-    this.cookieService.delete('userId');
-    this.loginService.setLoginType(null);
-    this.loginService.setTrType(null);
-    this.router.navigate(['']);
+    this.authService.onSignOut();
   }
   openProfile() {
     if (this.loginType == 'Learner') {

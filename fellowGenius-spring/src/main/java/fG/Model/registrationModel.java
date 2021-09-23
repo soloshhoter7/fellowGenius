@@ -8,6 +8,8 @@ public class registrationModel {
 	 String password;
 	 String role;
 	 String socialId;
+	 String expertCode;
+	 
 	public String getFullName() {
 		return fullName;
 	}
@@ -45,11 +47,19 @@ public class registrationModel {
 	public void setSocialId(String socialId) {
 		this.socialId = socialId;
 	}
+	
+	public String getExpertCode() {
+		return expertCode;
+	}
+	public void setExpertCode(String expertCode) {
+		this.expertCode = expertCode;
+	}
 	@Override
 	public String toString() {
 		return "registrationModel [fullName=" + fullName + ", email=" + email + ", contact=" + contact + ", password="
-				+ password + ", role=" + role + ", socialId=" + socialId + "]";
+				+ password + ", role=" + role + ", socialId=" + socialId + ", expertCode=" + expertCode + "]";
 	}
+	
 	
 	 
 }

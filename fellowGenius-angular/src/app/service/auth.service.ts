@@ -155,6 +155,13 @@ export class AuthService {
                 });
               });
           });
+        }else if(JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Admin'){
+          console.log('it is an admin')
+          this.loginType = 'Admin';
+          this.loginDetailsService.setTrType('login');
+          this.loginDetailsService.setLoginType(this.loginType);
+          this.isAuthenticated=true;
+          this.authStatusListener.next(true);
         }
       }
     }else{
@@ -229,7 +236,15 @@ export class AuthService {
       }
     });
   }
-
+  onSignOut(){
+    this.cookieService.delete('token');
+    this.cookieService.delete('userId');
+    this.loginDetailsService.setLoginType(null);
+    this.loginDetailsService.setTrType(null);
+    this.isAuthenticated=false;
+    this.authStatusListener.next(false);
+    this.router.navigate(['']);
+  }
   onSignUp(registrationModel){
     this.httpService
           .registerUser(registrationModel)
@@ -284,7 +299,7 @@ export class AuthService {
                                 this.tutorAvailabilitySchedule
                               );
                               this.loginDetailsService.setLoginType('Expert');
-                              this.loginDetailsService.setTrType('signUp');
+                              this.loginDetailsService.setTrType('sign-up');
                               this.isAuthenticated=true;
                               this.authStatusListener.next(true);
                               this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);

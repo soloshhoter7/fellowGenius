@@ -21,13 +21,20 @@ export class tutorProfileDetails {
   public currentDesignation:string;
   public previousOrganisations: string[] = [];
   public areaOfExpertise: expertise[] = [];
+  public pendingAreaOfExpertise:expertise[]=[];
   public profileCompleted: number;
   public yearsOfExperience: number;
   public linkedInProfile: string;
   public upiID:string;
+  public gst:string;
 }
 export class expertise {
   public category: string;
   public subCategory:string;
   public price: number;
+  public isApproved:boolean=false;
+  public isEditable:boolean=false;
+  public isChoosable:boolean=false
+  public isLoading:boolean=false;
+  public corrExpertiseId;
 }

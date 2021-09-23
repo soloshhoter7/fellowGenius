@@ -34,7 +34,9 @@ import { WebSocketService } from 'src/app/service/web-socket.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { filter, pairwise } from 'rxjs/operators';
+import { togglePassword, initiateSelect2 } from '../../../assets/js/custom';
 declare const FB: any;
+declare let $: any;
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -53,7 +55,7 @@ export class LoginComponent implements OnInit {
     private dialogRef: MatDialog,
     private authService:AuthService
   ) {
-   
+    togglePassword();
   }
 
   @ViewChild('googleSignUp', { static: true })
@@ -98,6 +100,20 @@ export class LoginComponent implements OnInit {
     this.expert_domain = this.cookieService.get("expert_domain");
     // this.goToPreviousUrl();
     this.googleSDK();
+    this.seePassword();
+  }
+  seePassword() {
+    $('.toggle-password').each(function (index) {
+      $(this).on('click', function () {
+        $(this).toggleClass('fa-eye fa-eye-slash');
+        var input = $($(this).attr('toggle'));
+        if (input.attr('type') == 'password') {
+          input.attr('type', 'text');
+        } else {
+          input.attr('type', 'password');
+        }
+      });
+    });
   }
   toFacade() {
     this.router.navigate(['']);

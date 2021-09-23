@@ -2,6 +2,7 @@ package fG.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,6 +77,7 @@ public class MeetingService {
 		BookingDetails booking = repBooking.meetingIdExists(meetingId);
 		if (booking != null) {
 			BookingDetailsModel bkModel = new BookingDetailsModel();
+			bkModel.setBid(booking.getBid());
 			bkModel.setDateOfMeeting(booking.getDateOfMeeting());
 			bkModel.setDescription(booking.getDescription());
 			bkModel.setDuration(booking.getDuration());
@@ -126,6 +128,7 @@ public class MeetingService {
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
 		booking.setRazorpay_payment_id(bookingModel.getRazorpay_payment_id());
 		booking.setRazorpay_signature(bookingModel.getRazorpay_signature());
+		booking.setExpertCode(bookingModel.getExpertCode());
 		String message = "New appointment request";
 		System.out.println("booking==>" + booking);
 //		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
@@ -420,6 +423,8 @@ public class MeetingService {
 
 	}
 
+
+
 	public EarningDataModel fetchEarningData(String tid) {
 		TutorProfileDetails exp = repTutorProfileDetails.bookingIdExist(Integer.valueOf(tid));
 		EarningDataModel result = new EarningDataModel();
@@ -431,11 +436,17 @@ public class MeetingService {
 			ArrayList<KeyValueModel> monthlyEarningData = new ArrayList<KeyValueModel>();
 			ArrayList<KeyValueModel> yearlyEarningData = new ArrayList<KeyValueModel>();
 			// for weekly Data
-			for (int i = 1; i <= 7; i++) {
+			
+			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Calcutta"));
+			System.out.println(calendar.getTime());
+			int dayCount = calendar.get(Calendar.DAY_OF_WEEK);
+			System.out.println(dayCount + ".............................");
+			
+			for (int i = 1; i <= dayCount; i++) {
 				Integer earning = 0;
 				KeyValueModel day = new KeyValueModel();
 				LocalDateTime then = now.minusDays(i);
-				day.setKeyName(now.minusDays(i - 1).getDayOfWeek().toString());
+				day.setKeyName(now.minusDays(i - 1).getDayOfWeek().toString().substring(0,3));
 				List<BookingDetails> bk = repBooking.fetchExpertMeetingsBetweenTwoDates(exp.getBookingId(), then,
 						now.minusDays(i - 1));
 				System.out.println(then + " : " + bk);
@@ -453,11 +464,16 @@ public class MeetingService {
 				weeklyEarningData.add(day);
 			}
 			// for monthly Data
-			for (int i = 1; i <= 6; i++) {
+			
+			
+			LocalDate today = LocalDate.now();
+			int monthNumber = today.getMonthValue();
+			
+			for (int i = 1; i <=monthNumber; i++) {
 				Integer earning = 0;
 				KeyValueModel month = new KeyValueModel();
 				LocalDateTime then = now.minusMonths(i);
-				month.setKeyName(now.minusMonths(i - 1).getMonth().toString());
+				month.setKeyName(now.minusMonths(i - 1).getMonth().toString().substring(0, 3));
 				List<BookingDetails> bk = repBooking.fetchExpertMeetingsBetweenTwoDates(exp.getBookingId(), then,
 						now.minusMonths(i - 1));
 				if (bk != null) {
@@ -492,7 +508,10 @@ public class MeetingService {
 					}
 				}
 				year.setValueName(earning.toString());
-				yearlyEarningData.add(year);
+				if(Integer.valueOf(year.getKeyName())>=2021) {
+					yearlyEarningData.add(year);	
+				}
+				
 			}
 
 			Collections.reverse(weeklyEarningData);
@@ -514,7 +533,7 @@ public class MeetingService {
 
 //		System.out.println(repBooking.fetchExpertMeetingsBetweenTwoDates(then,now));
 	}
-
+	
 	public List<?> findTutorCompletedBookings(String tid) {
 		return repBooking.fetchCompletedBookingExpert(Integer.valueOf(tid));
 	}
@@ -523,11 +542,14 @@ public class MeetingService {
 		return repBooking.fetchCompletedBookingStudent(Integer.valueOf(sid));
 	}
 
-	public void meetingMemberJoined(String meetingId, String userId) {
+	public void meetingMemberJoined(String meetingId, String userId) throws ParseException {
 		BookingDetails booking = repBooking.meetingIdExists(meetingId);
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+		String date = sdf.format(new Date());
 		// todayDate string
-		Date now = new Date();
+		Date now = sdf.parse(date);
 		if (booking != null) {
 			if (Integer.valueOf(userId).equals(booking.getStudentId())) {
 				if (booking.getLearnerJoinTime() == null) {
@@ -542,13 +564,15 @@ public class MeetingService {
 		}
 	}
 
-	public void meetingMemberLeft(String meetingId, String userId) {
+	public void meetingMemberLeft(String meetingId, String userId) throws ParseException {
 		// TODO Auto-generated method stub
 		BookingDetails booking = repBooking.meetingIdExists(meetingId);
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+		String date = sdf.format(new Date());
 		// todayDate string
-		Date now = new Date();
-
+		Date now = sdf.parse(date);
 		if (booking != null) {
 			if (Integer.valueOf(userId).equals(booking.getStudentId())&&booking.getLearnerJoinTime()!=null) {
 				booking.setLearnerLeavingTime(now);

@@ -54,27 +54,14 @@ export class SearchResultsComponent implements OnInit {
     private ngZone: NgZone,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.getScreenSize();
     this.allFiltersApplied = new filtersApplied();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  getScreenSize(event?) {
-    this.screenHeight = window.innerHeight;
-    this.screenWidth = window.innerWidth;
-    if (this.screenWidth <= 500) {
-      this.showMobileFilterButton = true;
-      this.showMobileFilterView = true;
-    } else {
-      this.showMobileFilterButton = false;
-      this.showMobileFilterView = false;
-    }
   }
 
   ngOnInit(): void {
     window.scroll(0,0);
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedSubject = params['subject'];
+      this.allFiltersApplied.domain=this.selectedSubject;
       // this.filteredArray = this.searchResults;
       this.fetchTutorList();
       this.getSubCategories();
@@ -440,6 +427,7 @@ export class SearchResultsComponent implements OnInit {
           this.allFiltersApplied.show = true;
         }
       }
+      console.log(this.allFiltersApplied)
       this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
         this.filteredArray = [];
         this.filteredArray = res;

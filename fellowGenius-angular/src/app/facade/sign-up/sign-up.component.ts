@@ -66,8 +66,9 @@ export class SignUpComponent implements OnInit {
   emailValid = false;
   hide: boolean = true;
   timeOut: boolean = true;
+  showExpertCode:boolean = false;
   // ---------- patterns --------------------------------
-  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,12}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
 
@@ -96,6 +97,7 @@ export class SignUpComponent implements OnInit {
   };
   //--------------------------------------------------------
   ngOnInit() {
+    window.scroll(0,0);
     this.prev_route = this.cookieService.get('prev');
     this.expert_userId = this.cookieService.get('expert_userId');
     this.expert_domain = this.cookieService.get('expert_domain');
@@ -133,6 +135,20 @@ export class SignUpComponent implements OnInit {
   otpChange() {
     console.log('input changes');
   }
+  onDigitInput(event){
+
+    let element;
+    if (event.code !== 'Backspace')
+         element = event.srcElement.nextElementSibling;
+ 
+     if (event.code === 'Backspace')
+         element = event.srcElement.previousElementSibling;
+ 
+     if(element == null)
+         return;
+     else
+         element.focus();
+ }
   seePassword() {
     $('.toggle-password').each(function (index) {
       $(this).on('click', function () {
@@ -171,6 +187,7 @@ export class SignUpComponent implements OnInit {
       this.role = data.role;
       this.registrationModel.role = 'Learner';
       this.registrationModel.password = data.password;
+      this.registrationModel.expertCode = data.expertCode;
       this.authService.saveSocialLogin(this.registrationModel);
       this.authService.getAuthStatusListener().subscribe((res) => {
         if (res == true) {
@@ -233,6 +250,7 @@ export class SignUpComponent implements OnInit {
       this.registrationModel.email = form.value.email;
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
+      this.registrationModel.expertCode = form.value.expertCode
       this.registrationModel.role = 'Learner';
       this.httpClient
         .checkUser(this.registrationModel.email)

@@ -48,6 +48,7 @@ public class TutorProfileDetails {
 	Integer yearsOfExperience;
 	String linkedInProfile;
 	String upiId;
+	String gst;
 	boolean verified;
 	Integer rescheduleRequests=0;
 	String currentDesignation;
@@ -213,6 +214,13 @@ public class TutorProfileDetails {
 	}
 	public void setEarning(Integer earning) {
 		this.earning = earning;
+	}
+	
+	public String getGst() {
+		return gst;
+	}
+	public void setGst(String gst) {
+		this.gst = gst;
 	}
 	@Override
 	public String toString() {

@@ -26,6 +26,7 @@ public class BookingDetailsModel {
   String tutorProfilePictureUrl;
   String isRescheduled;
   String domain;
+  String expertCode;
   
 public String getTutorProfilePictureUrl() {
 	return tutorProfilePictureUrl;
@@ -182,6 +183,13 @@ public String getDomain() {
 public void setDomain(String domain) {
 	this.domain = domain;
 }
+
+public String getExpertCode() {
+	return expertCode;
+}
+public void setExpertCode(String expertCode) {
+	this.expertCode = expertCode;
+}
 @Override
 public String toString() {
 	return "BookingDetailsModel [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute
@@ -191,9 +199,8 @@ public String toString() {
 			+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
 			+ ", subject=" + subject + ", amount=" + amount + ", rating=" + rating + ", reviewText=" + reviewText
 			+ ", razorpay_payment_id=" + razorpay_payment_id + ", razorpay_order_id=" + razorpay_order_id
-			+ ", razorpay_signature=" + razorpay_signature + ", tutorProfilePictureUrl=" + tutorProfilePictureUrl + "]";
+			+ ", razorpay_signature=" + razorpay_signature + ", tutorProfilePictureUrl=" + tutorProfilePictureUrl
+			+ ", isRescheduled=" + isRescheduled + ", domain=" + domain + ", expertCode=" + expertCode + "]";
 }
-
-
   	
 }

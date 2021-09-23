@@ -46,7 +46,7 @@ public class PendingTutorProfileDetails {
 	Integer yearsOfExperience;
 	String linkedInProfile;
 	String upiId;
-	
+	String gst;
 	public Integer getId() {
 		return id;
 	}
@@ -177,5 +177,24 @@ public class PendingTutorProfileDetails {
 		this.upiId = upiId;
 	}
 	
+	public String getGst() {
+		return gst;
+	}
+	public void setGst(String gst) {
+		this.gst = gst;
+	}
+	@Override
+	public String toString() {
+		return "PendingTutorProfileDetails [id=" + id + ", fullName=" + fullName + ", institute=" + institute
+				+ ", email=" + email + ", contact=" + contact + ", dateOfBirth=" + dateOfBirth
+				+ ", educationalQualifications=" + educationalQualifications + ", price1=" + price1 + ", price2="
+				+ price2 + ", price3=" + price3 + ", description=" + description + ", speciality=" + speciality
+				+ ", profilePictureUrl=" + profilePictureUrl + ", professionalSkills=" + professionalSkills
+				+ ", currentOrganisation=" + currentOrganisation + ", currentDesignation=" + currentDesignation
+				+ ", previousOrganisations=" + previousOrganisations + ", areaOfExpertise=" + areaOfExpertise
+				+ ", yearsOfExperience=" + yearsOfExperience + ", linkedInProfile=" + linkedInProfile + ", upiId="
+				+ upiId + ", gst=" + gst + "]";
+	}
+
 
 }

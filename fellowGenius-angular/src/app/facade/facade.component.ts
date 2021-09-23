@@ -13,6 +13,8 @@ import { Category } from '../model/category';
 import { WebSocketService } from '../service/web-socket.service';
 import * as $ from 'jquery';
 import {initiate} from '../../assets/js/custom';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { RegisterDiaologComponent } from './register-diaolog/register-diaolog.component';
 declare const owlCarousel: any;
 @Component({
   selector: 'app-facade',
@@ -22,10 +24,11 @@ declare const owlCarousel: any;
 export class FacadeComponent implements OnInit {
   constructor(
     private router: Router,
-    private loginDetailsService: LoginDetailsService,
+    public loginService: LoginDetailsService,
     public breakpointObserver: BreakpointObserver,
     private httpService:HttpService,
-    private webSocketService:WebSocketService
+    private webSocketService:WebSocketService,
+    private dialog:MatDialog
     
   ) {
     
@@ -38,7 +41,7 @@ export class FacadeComponent implements OnInit {
   lastName='sharma'
   myControl = new FormControl();
   options: string[] = [
-   'Sales and Business Development','Marketing','HR','Operations and SCM','Strategy and Industry Expertise','Programming and Technology','New and Emerging technology','Software Tools','Personal Development and Others'
+   'Sales and Business Development','Finance','Marketing','HR','Operations and SCM','Strategy and Industry Expertise','Programming and Technology','New and Emerging technologies','Software Tools','Personal Development','Immigration Consulting','Competitive Exam Preparation'
   ];
   filteredOptions: Observable<string[]>;
 
@@ -102,10 +105,10 @@ export class FacadeComponent implements OnInit {
   slidesStore = [
     {
       id: 1,
-      imageUrl: '../../assets/images/expert-2.png',
-      name: 'Suyash Kejriwal',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1630739477876?alt=media&token=a590b0bc-850b-462e-ad95-9b86fca93836',
+      name: 'Tejpal Singh Kang',
       specialisation: 'PIET - B.tech[CSE]',
-      domain:'Finance',
+      domain:'Key Account Management',
       studentsCount: 50,
       sessionsCount: 98,
       rating: 85,
@@ -114,9 +117,9 @@ export class FacadeComponent implements OnInit {
     },
     {
       id: 2,
-      imageUrl: '../../assets/images/vaibhav.jpeg',
-      name: 'Vaibhav Vishal Jha',
-      domain:'Tools',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1630788559940?alt=media&token=c88171bc-de02-43da-b3f7-cba3e2fe7197',
+      name: 'Vikas Dabas',
+      domain:'Product Management',
       specialisation: 'PIET - B.tech[CSE]',
       review:
         'As an expert, it was an awesome experience being part of this platform. ',
@@ -124,23 +127,12 @@ export class FacadeComponent implements OnInit {
       sessionsCount: 46,
       rating: 90,
     },
+   
     {
       id: 3,
-      imageUrl: '../../assets/images/ajayVerma.jpg',
-      name: 'Ajay Verma',
-      domain:'Marketing',
-      specialisation: 'PIET - B.tech[CSE]',
-      review:
-        'I loved the experience of teaching and the quality functionality.',
-      studentsCount: 21,
-      sessionsCount: 53,
-      rating: 100,
-    },
-    {
-      id: 4,
-      imageUrl: '../../assets/images/amanGarg.jpg',
-      name: 'Aman garg',
-      domain:'Marketing',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1631097989114?alt=media&token=ef49be5a-167a-471c-a09f-a140374268fd',
+      name: 'Paawan juneja',
+      domain:'Talent Acquisition',
       specialisation: 'PIET - B.tech[CSE]',
       review:
         'I loved the experience of teaching here and the quality functionality.',
@@ -149,26 +141,13 @@ export class FacadeComponent implements OnInit {
       rating: 100,
     },
     {
-      id: 5,
-      imageUrl: '../../assets/images/expert-4.png',
-      name: 'Himanshu Goyal',
-      domain:'Sales',
+      id: 4,
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1630865500585?alt=media&token=65088f67-2bdb-4273-8578-90b1f306d8fe',
+      name: 'Shubham Sharma',
+      domain:'Website Development',
       specialisation: 'PIET - B.tech[CSE]',
       review:
-        'I really loved the experience of teaching here and the quality functionality.',
-      studentsCount: 21,
-      sessionsCount: 53,
-      rating: 100,
-    },
-    
-    {
-      id: 6,
-      imageUrl: '../../assets/images/expert-3.png',
-      name: 'Vir chauhan',
-      domain:'Tools',
-      specialisation: 'PIET - B.tech[CSE]',
-      review:
-        'I really loved the experience of teaching here and the quality functionality.',
+        'I loved the experience of teaching here and the quality functionality.',
       studentsCount: 21,
       sessionsCount: 53,
       rating: 100,
@@ -176,45 +155,33 @@ export class FacadeComponent implements OnInit {
   ];
   ngAfterViewInit(){
     initiate();
+    this.getAllCategories();
   }
   ngOnInit(): void {
-    
-    // this.breakpointObserver
-    //   .observe(["(min-width: 800px)"])
-    //   .subscribe((state: BreakpointState) => {
-    //     if (state.matches) {
-    //       this.showContainer = true;
-    //       this.switchView = false;
-    //     } else {
-    //       this.showContainer = false;
-    //       this.switchView = true;
-    //     }
-    //   });
-    // this.getAllCategories();
-    // this.stickyNavBar();
-    // this.initialiseCarousel();
+  
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );
   }
-  
+  signUpRouting(val){
+    document.getElementById('closePopUpButton').click();
+    this.router.navigate([val])
+  }
   sendData(){
     // this.webSocketService.sendMessageToMeeting('724402542');
     this.httpService.randomApi().subscribe((res)=>{
 
     })
   }
-  getAllCategories(){
-   
-    
+
+  getAllCategories(){    
     this.httpService.getAllCategories().subscribe((res)=>{
       let categories:Category[] = res;
-  
+      
       if(categories.length>0){
-       
+       this.options=[];
         for(var i=0;i<categories.length;i++){
-       
           this.options.push(categories[i].category);
         }
       }

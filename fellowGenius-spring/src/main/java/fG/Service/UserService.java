@@ -36,6 +36,7 @@ import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.UserActivity;
+import fG.Model.UserDataModel;
 import fG.Entity.Users;
 import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
@@ -149,6 +150,7 @@ public class UserService implements UserDetailsService {
 			tutProfileDetails.setContact(tutorModel.getContact());
 			tutProfileDetails.setDateOfBirth(tutorModel.getDateOfBirth());
 			tutProfileDetails.setUpiId(tutorModel.getUpiID());
+			tutProfileDetails.setGst(tutorModel.getGst());
 			tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
 			//education
 			tutProfileDetails.setInstitute(tutorModel.getInstitute());
@@ -179,6 +181,39 @@ public class UserService implements UserDetailsService {
 
 	}
 	
+	public void updatePendingTutor(TutorProfileDetailsModel tutorModel) {
+		
+		//fetching pt with email to get id
+		PendingTutorProfileDetails tutProfileDetails = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
+
+		//personal info
+		tutProfileDetails.setFullName(tutorModel.getFullName());
+		tutProfileDetails.setEmail(tutorModel.getEmail());
+		tutProfileDetails.setContact(tutorModel.getContact());
+		tutProfileDetails.setDateOfBirth(tutorModel.getDateOfBirth());
+		tutProfileDetails.setUpiId(tutorModel.getUpiID());
+		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
+		//education
+		tutProfileDetails.setInstitute(tutorModel.getInstitute());
+		tutProfileDetails.setEducationalQualifications(tutorModel.getEducationalQualifications());
+		//description and speciality
+		tutProfileDetails.setDescription(tutorModel.getDescription());
+		tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
+		//work experience
+		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
+		tutProfileDetails.setCurrentOrganisation(tutorModel.getCurrentOrganisation());
+		tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
+		tutProfileDetails.setPreviousOrganisations(tutorModel.getPreviousOrganisations());
+		//photo
+		tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
+		//domain
+		tutProfileDetails.setPrice1(tutorModel.getPrice1());
+		tutProfileDetails.setPrice2(tutorModel.getPrice2());
+		tutProfileDetails.setPrice3(tutorModel.getPrice3());
+		tutProfileDetails.setAreaOfExpertise(tutorModel.getAreaOfExpertise());
+		System.out.println(tutProfileDetails);
+		repPendingTutorProfileDetails.save(tutProfileDetails);
+	}
 	public String validateUser(String email, String password,String method) {
 		System.out.println(email+" : "+password+" : "+method);
 		Users userLogin = repUsers.emailExist(email);
@@ -221,16 +256,32 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-
-	public User loadUserByUserId(String userId) {
-		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		Users user = repUsers.idExists(Integer.valueOf(userId));
-		if (user != null) {
-			authorities.add(new SimpleGrantedAuthority(user.getRole()));
-			return new User(userId, "", authorities);
-		} else {
+	public String validateAdmin(String email, String password) {
+		AppInfo adminEmail = repAppInfo.keyExist("admin_id");
+		AppInfo adminPassword = repAppInfo.keyExist("admin_password");
+		if(email.equals(adminEmail.getValue())&&password.equals(adminPassword.getValue())){
+			return adminEmail.getValue();
+		}else {
 			return null;
 		}
+		
+	}
+	
+	public User loadUserByUserId(String userId) {
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		if(!userId.equals(repAppInfo.keyExist("admin_id").getValue())){
+			Users user = repUsers.idExists(Integer.valueOf(userId));
+			if (user != null) {
+				authorities.add(new SimpleGrantedAuthority(user.getRole()));
+				return new User(userId, "", authorities);
+			} else {
+				return null;
+			}
+		}else {
+			authorities.add(new SimpleGrantedAuthority("Admin"));
+			return new User(userId, "", authorities);
+		}
+		
 	}
 
 	public boolean verifyExpert(String id) {
@@ -259,7 +310,7 @@ public class UserService implements UserDetailsService {
 			tutProfileDetails.setFullName(pt.getFullName());
 			tutProfileDetails.setProfileCompleted(12);
 			tutProfileDetails.setLessonCompleted(0);
-			tutProfileDetails.setRating(100);
+			tutProfileDetails.setRating(0);
 			tutProfileDetails.setReviewCount(0);
 //			tutProfileDetails.setPrice1("400");
 			tutProfileDetails.setBookingId(tutorProfile.getBookingId());
@@ -279,6 +330,7 @@ public class UserService implements UserDetailsService {
 			//personal info
 			tutProfileDetails.setFullName(pt.getFullName());
 			tutProfileDetails.setUpiId(pt.getUpiId());
+			tutProfileDetails.setGst(pt.getGst());
 			tutProfileDetails.setLinkedInProfile(pt.getLinkedInProfile());
 			//education
 			tutProfileDetails.setInstitute(pt.getInstitute());
@@ -352,14 +404,15 @@ public class UserService implements UserDetailsService {
 			studentProfile.setContact(registrationModel.getContact());
 			studentProfile.setEmail(registrationModel.getEmail());
 			studentProfile.setFullName(registrationModel.getFullName());
+			studentProfile.setExpertCode(registrationModel.getExpertCode());
 			if (dao.saveStudentProfile(studentProfile)) {
-
 				Users user = new Users();
 				user.setEmail(registrationModel.getEmail());
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
 				user.setUserId(studentProfile.getSid());
 				user.setRole("Learner");
 				user.setSocialId(encoder.encode("N/A"));
+				user.setExpertCode(registrationModel.getExpertCode());
 				if(registrationModel.getSocialId()!=null) {
 					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
 				}
@@ -395,7 +448,7 @@ public class UserService implements UserDetailsService {
 				tutProfileDetails.setFullName(registrationModel.getFullName());
 				tutProfileDetails.setProfileCompleted(12);
 				tutProfileDetails.setLessonCompleted(0);
-				tutProfileDetails.setRating(100);
+				tutProfileDetails.setRating(0);
 				tutProfileDetails.setReviewCount(0);
 //				tutProfileDetails.setPrice1("400");
 				tutProfileDetails.setBookingId(tutorProfile.getBookingId());
@@ -536,6 +589,7 @@ public class UserService implements UserDetailsService {
 		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
 		tutProfileDetails.setBookingId(tutorModel.getBookingId());
 		tutProfileDetails.setUpiId(tutorModel.getUpiID());
+		tutProfileDetails.setGst(tutorModel.getGst());
 		tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
 		tutProfileDetails.setEarning(tutorProfileDetailsLoaded.getEarning());
 		// for setting the expertise areas
@@ -730,6 +784,7 @@ public class UserService implements UserDetailsService {
 		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
 		tutorProfileDetailsModel.setBookingId(tutProfileDetails.getBookingId());
 		tutorProfileDetailsModel.setUpiID(tutProfileDetails.getUpiId());
+		tutorProfileDetailsModel.setGst(tutProfileDetails.getGst());
 		tutorProfileDetailsModel.setCurrentDesignation(tutProfileDetails.getCurrentDesignation());
 		for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
 			expertise exp = new expertise();
@@ -891,8 +946,9 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings) {
-		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings);
+	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings, String domain) {
+		CategoryList categ = repCategory.findCategory(domain);
+		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings,categ.getCategoryId());
 		if (tutors == null) {
 			return null;
 		} else {
@@ -1125,6 +1181,99 @@ public class UserService implements UserDetailsService {
 		}else {
 			return new ResponseModel("password not changed");	
 		}
+	}
+
+	public boolean updateAndAddExpertiseArea(String category, String subCategory) {
+		CategoryList categ = repCategory.findCategory(category);
+		if(categ==null) {
+			CategoryList c = new CategoryList();
+			c.setCategoryName(category);
+			repCategory.save(c);
+			CategoryList fetchedCategory = repCategory.findCategory(category);
+			SubcategoryList sc = new SubcategoryList();
+			sc.setCategory(fetchedCategory);
+			sc.setSubCategoryName(subCategory);
+			repSubcategory.save(sc);
+			return true;
+		}else{
+			SubcategoryList sc = new SubcategoryList();
+			sc.setCategory(categ);
+			sc.setSubCategoryName(subCategory);
+			repSubcategory.save(sc);
+			return true;
+		}
+	}
+	public String fetchUserName(Integer userId,String role) {
+		if(role.equals("Learner")) {
+			StudentProfile stu = repStudentProfile.idExist(userId);
+			return stu.getFullName();
+		}else if(role.equals("Expert")) {
+			TutorProfile exp = repTutorProfile.idExist(userId);
+			return exp.getFullName();
+		}else {
+			return "";
+		}
+	}
+	public String fetchExpertiseString(Integer userId) {
+		String expertise = "";
+		TutorProfileDetails tut = new TutorProfileDetails();
+		tut = repTutorProfileDetails.idExist(userId);
+		if(tut.getAreaOfExpertise()!=null) {
+			Integer count =0;
+			for(ExpertiseAreas expa:tut.getAreaOfExpertise()) {
+				count++;
+				expertise+=expa.getCategory().getCategoryName();
+				expertise+=" : ";
+				expertise+=expa.getSubCategory().getSubCategoryName();
+				if(!count.equals(tut.getAreaOfExpertise().size())) {
+					expertise+=" , ";
+				}
+			}
+		}
+		return expertise;
+	}
+	public List<String> fetchExpertiseList(Integer userId) {
+		List<String> expertise = new ArrayList<String>();
+		TutorProfileDetails tut = new TutorProfileDetails();
+		tut = repTutorProfileDetails.idExist(userId);
+		if(tut.getAreaOfExpertise()!=null) {
+			
+			for(ExpertiseAreas expa:tut.getAreaOfExpertise()) {
+			String expt ="";
+			expt+=expa.getCategory().getCategoryName();
+			expt+=" : ";
+			expt+=expa.getSubCategory().getSubCategoryName();
+			expertise.add(expt);
+			}
+		}
+		return expertise;
+	}
+	public List<UserDataModel> fetchAllUserData() {
+		List<Users> allUsers = repUsers.findAll();
+		List<UserDataModel> result = new ArrayList<UserDataModel>();
+		if(allUsers!=null){
+			for(Users u: allUsers) {
+				UserDataModel ud = new UserDataModel();
+				ud.setEmail(u.getEmail());
+				ud.setRole(u.getRole());
+				ud.setFullName(fetchUserName(u.getUserId(),u.getRole()));
+				ud.setUserId(u.getUserId().toString());
+				if(u.getRole().equals("Expert")) {
+					ud.setExpertises(fetchExpertiseString(u.getUserId()));
+				}
+				if(u.getRole().equals("Learner")) {
+					ud.setExpertCode(u.getExpertCode());
+				}
+				result.add(ud);
+			}
+		}
+		
+		return result;
+	}
+
+	public String validateAdmin(String email, String password, String method) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

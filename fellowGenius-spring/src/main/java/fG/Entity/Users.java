@@ -26,7 +26,7 @@ public class Users implements Serializable {
 	String socialId;
 	
 	String role;
-	
+	String expertCode;
 //	@CreationTimestamp
 //	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
@@ -98,11 +98,27 @@ public class Users implements Serializable {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+	
+	
+	public String getExpertCode() {
+		return expertCode;
+	}
+
+	public void setExpertCode(String expertCode) {
+		this.expertCode = expertCode;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", email=" + email + ", password=" + password + ", socialId=" + socialId
-				+ ", role=" + role + ", lastLogin=" + lastLogin + ", createdDate=" + createdDate + "]";
+				+ ", role=" + role + ", expertCode=" + expertCode + ", lastLogin=" + lastLogin + ", createdDate="
+				+ createdDate + "]";
 	}
+
+	
 	
 }

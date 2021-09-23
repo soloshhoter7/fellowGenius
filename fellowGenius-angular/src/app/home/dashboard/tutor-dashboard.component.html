@@ -37,9 +37,6 @@
                   <li>
                     <a href="#Tab__3" role="tab" data-toggle="tab">Year</a>
                   </li>
-                  <li>
-                    <a href="#Tab__4" role="tab" data-toggle="tab">All Time</a>
-                  </li>
                 </ul>
               </div>
               <!-- <div class="earning__filter">
@@ -129,7 +126,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let element of bookingList;let i=index;">
+                    <tr *ngFor="let element of bookingList; let i = index">
                       <td class="fld_name">
                         <div class="nme_style">
                           <span
@@ -162,22 +159,52 @@
                           <i class="fas fa-angle-right"></i>
                         </button>
                         <div class="td_btn">
-                          <a href="" class="reschedule_btn"
+                          <!-- <a href="javascript:;"  class="reschedule_btn"
                             ><img
                               src="../../../assets/images/reschedule-meeting.svg"
-                          /></a>
+                          /></a> -->
+                          <span
+                            *ngIf="element.isRescheduled == 'requested'"
+                            style="display: flex; align-items: center"
+                            >Requested to Re-Schedule</span
+                          >
+                          <button
+                            type="button"
+                            style="width: 45px"
+                            class="reschedule_btn"
+                            title="Re-schedule"
+                            (click)="requestToReschedule(element)"
+                            *ngIf="element.isRescheduled != 'requested'"
+                          >
+                            <i
+                              class="fa fa-spinner fa-spin"
+                              *ngIf="isRescheduleLoading"
+                              style="margin-right: 3px"
+                            ></i>
+                            <span
+                              *ngIf="
+                                element.isRescheduled == 'false' &&
+                                !isRescheduleLoading
+                              "
+                              ><img
+                                style="width: 45px"
+                                src="../../../assets/images/reschedule-meeting.svg"
+                            /></span>
+                          </button>
                           <a
                             href="javascript:;"
                             class="confirm_btn"
+                            style="width: 45px"
+                            title="Accept"
                             (click)="acceptBooking(element)"
                           >
                             <i
                               class="fa fa-spinner fa-spin"
-                              *ngIf="isLoading&&acceptingIndex==i"
+                              *ngIf="isLoading && acceptingIndex == i"
                               style="margin-top: 7px; font-size: large"
                             ></i
                             ><img
-                              *ngIf="acceptingIndex!=i"
+                              *ngIf="acceptingIndex != i"
                               src="../../../assets/images/confirm-meeting.svg"
                           /></a>
                         </div>
@@ -192,8 +219,14 @@
           <div role="tabpanel" class="tab-pane" id="upcoming_meetings">
             <div class="upcoming__meeting white__bg">
               <h3>Upcoming Meetings</h3>
-              <div class="table-responsive" *ngIf="liveMeetingList != null && meetingList != null">
-                <table class="table" *ngIf="liveMeetingList.length != 0 || meetingList.length != 0">
+              <div
+                class="table-responsive"
+                *ngIf="liveMeetingList != null && meetingList != null"
+              >
+                <table
+                  class="table"
+                  *ngIf="liveMeetingList.length != 0 || meetingList.length != 0"
+                >
                   <thead>
                     <tr>
                       <th class="fld_name">NAME</th>
@@ -341,7 +374,9 @@
             <div class="Detail__Content">
               <div class="detail__list">
                 <div class="Dtl__label">NAME</div>
-                <div class="Dtl__txt">{{ selectedPendingRequest.studentName }}</div>
+                <div class="Dtl__txt">
+                  {{ selectedPendingRequest.studentName }}
+                </div>
               </div>
               <div class="detail__list">
                 <div class="Dtl__label">DOMAIN</div>
@@ -369,27 +404,25 @@
                 <div class="Dtl__txt">
                   {{ selectedPendingRequest.approvalStatus }}
                 </div>
-        
               </div>
               <div class="detail__list">
                 <a href="" class="reschedule_btn"
-                ><img
-                  src="../../../assets/images/reschedule-meeting.svg"
-              /></a>
-              <a
-                href="javascript:;"
-                class="confirm_btn"
-                (click)="acceptBooking(selectedPendingRequest)"
-              >
-                <i
-                  class="fa fa-spinner fa-spin"
-                  *ngIf="isLoading"
-                  style="margin-top: 7px; font-size: large"
-                ></i
-                ><img
-                  *ngIf="!isLoading"
-                  src="../../../assets/images/confirm-meeting.svg"
-              /></a>
+                  ><img src="../../../assets/images/reschedule-meeting.svg"
+                /></a>
+                <a
+                  href="javascript:;"
+                  class="confirm_btn"
+                  (click)="acceptBooking(selectedPendingRequest)"
+                >
+                  <i
+                    class="fa fa-spinner fa-spin"
+                    *ngIf="isLoading"
+                    style="margin-top: 7px; font-size: large"
+                  ></i
+                  ><img
+                    *ngIf="!isLoading"
+                    src="../../../assets/images/confirm-meeting.svg"
+                /></a>
               </div>
             </div>
           </div>
@@ -458,17 +491,15 @@
                   href="javascript:;"
                   #closePopUp
                   class="table_btn join_btn"
-             
                   (click)="onJoin(selectedBooking)"
                   *ngIf="selectedBooking.approvalStatus == 'live'"
                 >
                   Join
                 </button>
                 <button
-                (click)="onHost(selectedBooking)"
+                  (click)="onHost(selectedBooking)"
                   [disabled]="!selectedBooking.isLive"
                   class="table_btn join_btn"
-                 
                   *ngIf="selectedBooking.approvalStatus != 'live'"
                 >
                   Join

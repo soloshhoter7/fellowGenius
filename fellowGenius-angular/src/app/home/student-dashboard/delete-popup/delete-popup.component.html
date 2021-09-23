@@ -1,7 +1,9 @@
 <div>
-    <div class="row">
-        <p>Are you sure you want to cancel the booking</p>
-    </div>
-    <div class="row"><button class="denial" (click)="close()">No</button>
-        <button class="btn btn-danger" (click)="deleteBooking()">Yes</button></div>
+  <div class="row" style="margin-bottom: 20px">
+    <p>Are you sure you want to cancel the booking ?</p>
+  </div>
+  <div class="row" style="float: right; margin-right: 1px">
+    <button class="btn denial" (click)="close()">No</button>
+    <button class="btn" (click)="deleteBooking()">Yes</button>
+  </div>
 </div>

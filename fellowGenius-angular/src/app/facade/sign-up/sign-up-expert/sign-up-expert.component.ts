@@ -24,15 +24,22 @@ import { NgZone } from '@angular/core';
 import { loginModel } from 'src/app/model/login';
 import { AuthService } from 'src/app/service/auth.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MatDatepicker} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 // import * as moment from 'moment';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
-import {default as _rollupMoment, Moment} from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
 // const moment = _rollupMoment || _moment;
 const moment = _rollupMoment || _moment;
 // See the Moment.js docs for the meaning of these formats:
@@ -61,22 +68,22 @@ declare const window: any;
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
 export class SignUpExpertComponent implements OnInit {
   choosePassword;
   newPassword;
   loginEmail;
-  loginModel=new loginModel();
+  loginModel = new loginModel();
   invalidOrganisationDetails: boolean;
   emptyProfilePicture;
-  emptyEducationDetails=false;
-  registeredExpert=false;
-  isLoading=false;
+  emptyEducationDetails = false;
+  registeredExpert = false;
+  isLoading = false;
   verificationOtp: any;
   wrongOtp: boolean;
   ngAfterViewInit() {
@@ -99,8 +106,8 @@ export class SignUpExpertComponent implements OnInit {
     private router: Router,
     private ngZone: NgZone,
     private activatedRoute: ActivatedRoute,
-    private authService:AuthService,
-    private loginDetailsService:LoginDetailsService
+    private authService: AuthService,
+    private loginDetailsService: LoginDetailsService
   ) {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 50, 0, 1);
@@ -116,8 +123,9 @@ export class SignUpExpertComponent implements OnInit {
   duplicateExpertiseArea;
   duplicatePreviousOrganisation;
   duplicateEducationArea;
-  verifyEmail=false;
-  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  verifyEmail = false;
+  // mobNumberPattern = '^((\\+91-?)|0)?[0-9]{14}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
@@ -163,14 +171,22 @@ export class SignUpExpertComponent implements OnInit {
   invalidEducationDetails = false;
   jwtToken;
   invalidChoosePassword;
-  inputCompletionDate = new FormControl(moment())
+  inputCompletionDate = new FormControl(moment());
+  textTopic = '';
+  textDomain = '';
+  showTextDomain: boolean = false;
+  showTextTopic: boolean = false;
+  otherDomainSelected: boolean = false;
+  otherTopicSelected: boolean = false;
+  showEditPreviousOrganisations:boolean = false;
   ngOnInit() {
+    window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
       this.jwtToken = params['token'];
-      if(this.jwtToken){
-        this.choosePassword=true;
-      }else{
-        this.choosePassword=false;
+      if (this.jwtToken) {
+        this.choosePassword = true;
+      } else {
+        this.choosePassword = false;
       }
       // this.httpService
       //   .fetchTutorProfileDetails(this.userId)
@@ -179,27 +195,58 @@ export class SignUpExpertComponent implements OnInit {
 
       //   });
     });
-  
 
+    let that = this;
     window['angularComponentReference'] = {
       component: this,
       zone: this.ngZone,
       loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
+      changeOtherDomain: () => this.selectOtherDomain(),
+      changeOtherTopic: () => this.selectOtherTopic(),
+      disableEditDomainView: () => this.disableEditDomainView(),
     };
     this.getAllCategories();
     this.getEarningAppInfo();
     $('.select2').select2({
       placeholder: {
         id: '-1', // the value of the option
-        text: 'Select an option'
+        text: 'Select an option',
+      },
+    });
+
+    $('.select2').on('change', function () {
+      let value = $(this).val();
+      if (value && value != 'Others') {
+        this.selectedCategory = $(this).val();
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.loadAngularFunction($(this).val());
+        });
       }
     });
- 
-    $('.select2').on('change', function () {
-      this.selectedCategory = $(this).val();
-      window.angularComponentReference.zone.run(() => {
-        window.angularComponentReference.loadAngularFunction($(this).val());
-      });
+
+    $('#chooseCategory').on('change', function () {
+      let value: string = $(this).val();
+      if (value == 'Others') {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.changeOtherDomain();
+        });
+      } else {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.disableEditDomainView();
+        });
+      }
+    });
+    $('#chooseSubCategory').on('change', function () {
+      let value = $(this).val();
+      if (value == 'Others') {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.changeOtherTopic();
+        });
+      } else {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.disableEditDomainView();
+        });
+      }
     });
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -215,60 +262,97 @@ export class SignUpExpertComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
+  togglePreviousOrganisationsView(){
+    this.showEditPreviousOrganisations=!this.showEditPreviousOrganisations;
+  }
+  selectOtherDomain() {
+    this.duplicateExpertiseArea=false;
+    this.showTextDomain = true;
+    this.showTextTopic = true;
+    this.otherDomainSelected = true;
+  }
+  selectOtherTopic() {
+    this.duplicateExpertiseArea=false;
+    console.log('selected other topic');
+    if (this.selectedCategory) {
+      this.showTextTopic = true;
+      this.otherTopicSelected = true;
+    } else {
+      this.errorText = 'Please choose a domain !';
+    }
+  }
+  disableEditDomainView() {
+    this.showTextDomain = false;
+    this.showTextTopic = false;
+    this.otherDomainSelected = false;
+    this.otherTopicSelected = false;
+    this.textDomain = '';
+    this.textTopic = '';
+  }
+  onDigitInput(event) {
+    let element;
+    if (event.code !== 'Backspace')
+      element = event.srcElement.nextElementSibling;
+
+    if (event.code === 'Backspace')
+      element = event.srcElement.previousElementSibling;
+
+    if (element == null) return;
+    else element.focus();
+  }
   chosenYearHandler(normalizedYear: Moment) {
     const ctrlValue = this.inputCompletionDate.value;
     ctrlValue.year(normalizedYear.year());
     this.inputCompletionDate.setValue(ctrlValue);
   }
 
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+  chosenMonthHandler(
+    normalizedMonth: Moment,
+    datepicker: MatDatepicker<Moment>
+  ) {
     const ctrlValue = this.inputCompletionDate.value;
     ctrlValue.month(normalizedMonth.month());
     this.inputCompletionDate.setValue(ctrlValue);
     datepicker.close();
   }
-  saveNewPassword(){
-    this.isLoading=true;
-    console.log(this.newPassword);
-    console.log(this.jwtToken);
-    this.httpService.choosePassword(this.jwtToken,this.newPassword).subscribe((res:any)=>{
-      console.log(res);
-      if(res.response=='password not changed'||res==null){
-        this.isLoading=false;
-        console.log('password not changed !');
-        this.invalidChoosePassword=true;
-      }else{
-        this.loginEmail=res.response;
-        this.loginModel.email = this.loginEmail;
-        this.loginModel.password = this.newPassword;
-        this.loginModel.method= bcrypt.hashSync("manual", 1);
-        console.log(this.loginModel);
-        this.authService.onLogin(this.loginModel);
-        this.authService.getAuthStatusListener().subscribe((res)=>{
-          if(res==false){
-            console.log('login not successful!');
-            this.isLoading = false;
-            this.invalidChoosePassword=true;
-          }else if(res==true){
-            if(this.loginDetailsService.getLoginType()=='Learner'){
-              this.toFacade();
-            }else if(this.loginDetailsService.getLoginType()=='Expert'){
-              this.toHome();
+  saveNewPassword() {
+    this.isLoading = true;
+    this.httpService
+      .choosePassword(this.jwtToken, this.newPassword)
+      .subscribe((res: any) => {
+        if (res.response == 'password not changed' || res == null) {
+          this.isLoading = false;
+          this.invalidChoosePassword = true;
+        } else {
+          this.loginEmail = res.response;
+          this.loginModel.email = this.loginEmail;
+          this.loginModel.password = this.newPassword;
+          this.loginModel.method = bcrypt.hashSync('manual', 1);
+          this.authService.onLogin(this.loginModel);
+          this.authService.getAuthStatusListener().subscribe((res) => {
+            if (res == false) {
+              this.isLoading = false;
+              this.invalidChoosePassword = true;
+            } else if (res == true) {
+              if (this.loginDetailsService.getLoginType() == 'Learner') {
+                this.loginDetailsService.setTrType('sign-up');
+                this.toFacade();
+              } else if (this.loginDetailsService.getLoginType() == 'Expert') {
+                this.loginDetailsService.setTrType('sign-up');
+                this.toHome();
+              }
             }
-          }
-        });
-      }
-     
-    })
+          });
+        }
+      });
   }
-  toFacade(){
+  toFacade() {
     this.router.navigate(['']);
   }
   toHome() {
     this.router.navigate(['home']);
   }
   appendOtp(form: NgForm) {
-  
     let otp: string = '';
     let otp_1digit = form.value.otp_1digit;
     let otp_2digit = form.value.otp_2digit;
@@ -282,45 +366,41 @@ export class SignUpExpertComponent implements OnInit {
     otp += otp_4digit.toString();
     otp += otp_5digit.toString();
     otp += otp_6digit.toString();
- 
+
     return otp;
   }
-  verifyEmailOtp(form){
+  verifyEmailOtp(form) {
+    this.isLoading = true;
+    let otp: string = this.appendOtp(form);
 
-    this.isLoading=true;
-      let otp: string = this.appendOtp(form);
-   
-      if (otp == null) {
-        this.isLoading=false;
-        this.wrongOtp = true;
+    if (otp == null) {
+      this.isLoading = false;
+      this.wrongOtp = true;
+    } else {
+      if (bcrypt.compareSync(otp, this.verificationOtp)) {
+        this.httpService
+          .registerExpert(this.tutorProfileDetails)
+          .subscribe((res) => {
+            this.isLoading = false;
+            if (res == true) {
+              this.registeredExpert = true;
+              this.verifyEmail = false;
+            } else {
+              this.isLoading = false;
+              this.registeredExpert = false;
+              this.verifyEmail = false;
+              this.snackBar.open(
+                'Expert already Registered !',
+                'close',
+                this.config
+              );
+            }
+          });
       } else {
-
-        if (bcrypt.compareSync(otp, this.verificationOtp)) {
-        
-
-          this.httpService
-                .registerExpert(this.tutorProfileDetails)
-                .subscribe((res) => {
-                  this.isLoading=false;
-                  if(res==true){
-                    this.registeredExpert=true;
-                    this.verifyEmail=false;
-                  }else{
-                    this.isLoading=false;
-                    this.registeredExpert=false;
-                    this.verifyEmail=false;
-                    this.snackBar.open(
-                      'Expert already Registered !',
-                      'close',
-                      this.config
-                    );
-                  }
-                });
-        } else {
-          this.isLoading=false;
-          this.wrongOtp = true;
-        }
+        this.isLoading = false;
+        this.wrongOtp = true;
       }
+    }
   }
   getEarningAppInfo() {
     this.httpService.getEarningAppInfo().subscribe((res) => {
@@ -366,25 +446,26 @@ export class SignUpExpertComponent implements OnInit {
     return false;
   }
   filterSCfromCateg(val) {
+    if (val != 'Others') {
+      if (!this.selectedCategory || this.checkDomainInList(val)) {
+        this.selectedCategory = val;
 
-    if (!this.selectedCategory || this.checkDomainInList(val)) {
-      this.selectedCategory = val;
+        this.filteredSubCategories = [];
+        this.filteredSubCategories = this.subCategories.filter(
+          (x) => x.category == this.selectedCategory
+        );
 
-      this.filteredSubCategories = [];
-      this.filteredSubCategories = this.subCategories.filter(
-        (x) => x.category == this.selectedCategory
-      );
-
-      this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
-      if (this.selectedCategoryCount > 1) {
-        this.isSelectedSubCategory = true;
+        this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+        if (this.selectedCategoryCount > 1) {
+          this.isSelectedSubCategory = true;
+        } else {
+          this.isSelectedSubCategory = false;
+        }
+        this.selectedCategoryCount++;
       } else {
-        this.isSelectedSubCategory = false;
+        this.selectedSubCategory = val;
+        this.isSelectedSubCategory = true;
       }
-      this.selectedCategoryCount++;
-    } else {
-      this.selectedSubCategory = val;
-      this.isSelectedSubCategory = true;
     }
   }
   getAllCategories() {
@@ -401,7 +482,6 @@ export class SignUpExpertComponent implements OnInit {
       this.httpService.getAllSubCategories().subscribe((res) => {
         this.subCategories = res;
         // this.selectedCategory=this.categories[0].category;
-
       });
     });
   }
@@ -432,21 +512,20 @@ export class SignUpExpertComponent implements OnInit {
     return this.educationQualifications[0].split(':')[0];
   }
   saveExpertBasicProfile(form: any) {
-
     if (this.expertises.length > 0) {
       if (this.errorText) {
         this.errorText = '';
       }
-      if(this.educationQualifications.length>0){
-        if(this.emptyEducationDetails==true)this.emptyEducationDetails=false;
+      if (this.educationQualifications.length > 0) {
+        if (this.emptyEducationDetails == true)
+          this.emptyEducationDetails = false;
         if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
-          
           // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
-          this.isLoading=true;
+          this.isLoading = true;
 
           this.tutorProfileDetails.contact = form.value.contact;
-          this.tutorProfileDetails.dateOfBirth = form.value.dob;  
-          this.tutorProfileDetails.email=form.value.email;
+          this.tutorProfileDetails.dateOfBirth = form.value.dob;
+          this.tutorProfileDetails.email = form.value.email;
           this.tutorProfileDetails.educationalQualifications =
             this.educationQualifications;
           this.tutorProfileDetails.professionalSkills =
@@ -468,42 +547,41 @@ export class SignUpExpertComponent implements OnInit {
           this.tutorProfileDetails.description = form.value.description;
           this.tutorProfileDetails.speciality = form.value.speciality;
           this.tutorProfileDetails.upiID = form.value.upiID;
-
+          this.tutorProfileDetails.gst=form.value.gst;
+          console.log(this.tutorProfileDetails);
           this.httpService
-          .checkUser(this.tutorProfileDetails.email)
-          .subscribe((res) => {
-            if(res==true){
-              this.isLoading=false;
-              this.isLoading=false;
-                    this.registeredExpert=false;
-                    this.verifyEmail=false;
-                    this.snackBar.open(
-                      'Email already Registered !',
-                      'close',
-                      this.config
-                    );
-            }else{
-              this.httpService
-              .verifyEmail(this.tutorProfileDetails.email)
-              .subscribe((res) => {
-                this.verificationOtp = res['response'];
-                this.isLoading=false;
-                this.verifyEmail=true;
-              });
-            }
-          });
-          
+            .checkUser(this.tutorProfileDetails.email)
+            .subscribe((res) => {
+              if (res == true) {
+                this.isLoading = false;
+                this.isLoading = false;
+                this.registeredExpert = false;
+                this.verifyEmail = false;
+                this.snackBar.open(
+                  'Email already Registered !',
+                  'close',
+                  this.config
+                );
+              } else {
+                this.httpService
+                  .verifyEmail(this.tutorProfileDetails.email)
+                  .subscribe((res) => {
+                    this.verificationOtp = res['response'];
+                    this.isLoading = false;
+                    this.verifyEmail = true;
+                  });
+              }
+            });
         } else {
           this.emptyProfilePicture = true;
           let el = document.getElementById('photoBox');
           el.scrollIntoView();
         }
-      }else{
-        this.emptyEducationDetails=true;
-        let el =document.getElementById('educationBox');
+      } else {
+        this.emptyEducationDetails = true;
+        let el = document.getElementById('educationBox');
         el.scrollIntoView();
       }
-      
     } else {
       this.errorText = 'Enter atleast one area of Expertise !';
       let el = document.getElementById('domainBox');
@@ -556,10 +634,8 @@ export class SignUpExpertComponent implements OnInit {
     const arr = item.split(':');
 
     for (let i = 0; i < fields.length; i++) {
-
       const brr = fields[i].split(':');
       if (arr[0] == brr[0]) {
-
         return true;
       }
     }
@@ -569,10 +645,8 @@ export class SignUpExpertComponent implements OnInit {
     const arr = item.split('@');
 
     for (let i = 0; i < fields.length; i++) {
-
       const brr = fields[i].split('@');
       if (arr[1] == brr[1]) {
-
         return true;
       }
     }
@@ -710,7 +784,8 @@ export class SignUpExpertComponent implements OnInit {
             this.profilePicUploadStatus = true;
             this.isLoading3 = false;
             this.pictureInfo = false;
-            if(this.emptyProfilePicture==true)this.emptyProfilePicture=false;
+            if (this.emptyProfilePicture == true)
+              this.emptyProfilePicture = false;
             this.profilePictureUrl = url;
             this.snackBar.open(
               'Image Uploaded successfully',
@@ -770,56 +845,135 @@ export class SignUpExpertComponent implements OnInit {
 
   // save expertise for multiple domains
   saveExpertise() {
-
     if (this.tutorProfileDetails.price1) {
       this.pricePerHourError = false;
     }
     this.addExpertise = new expertise();
+    if (!this.otherDomainSelected && !this.otherTopicSelected) {
+      if (this.selectedSubCategory) {
+        this.errorText = '';
+        if (
+          !this.expertiseDuplicacyCheck(
+            this.selectedCategory,
+            this.selectedSubCategory
+          )
+        ) {
+          this.addExpertise.category = this.selectedCategory;
+          this.addExpertise.subCategory = this.selectedSubCategory;
 
-    if (this.selectedSubCategory) {
-      this.errorText = '';
-      if (
-        !this.expertiseDuplicacyCheck(
-          this.selectedCategory,
-          this.selectedSubCategory
-        )
-      ) {
-
-        this.addExpertise.category = this.selectedCategory;
-        this.addExpertise.subCategory = this.selectedSubCategory;
-
-        if (this.tutorProfileDetails.price1 != null) {
-          this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
-          this.expertises.push(this.addExpertise);
-          $('.select2').val('').trigger('change');
-          this.expertises.reverse();
-          this.selectedCategory = '';
-          this.selectedSubCategory = '';
-          this.priceForExpertise = '';
-          if (this.duplicateExpertiseArea == true) {
-            this.duplicateExpertiseArea = false;
+          if (this.tutorProfileDetails.price1 != null) {
+            this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+            this.expertises.push(this.addExpertise);
+            $('.select2').val('').trigger('change');
+            this.expertises.reverse();
+            this.selectedCategory = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
+            if (this.duplicateExpertiseArea == true) {
+              this.duplicateExpertiseArea = false;
+            }
+          } else {
+            this.pricePerHourError = true;
           }
         } else {
-          this.pricePerHourError = true;
+          this.duplicateExpertiseArea = true;
+          this.selectedExpertise = '';
+          this.selectedSubCategory = '';
+          this.priceForExpertise = '';
         }
-
       } else {
-        this.duplicateExpertiseArea = true;
-        this.selectedExpertise = '';
-        this.selectedSubCategory = '';
-        this.priceForExpertise = '';
+        this.errorText = 'Please add Topic !';
       }
-    } else {
-      this.errorText = 'Please add Topic !';
+    } else if (this.otherDomainSelected == true) {
+      if (this.textDomain == '' && this.textTopic == '') {
+        this.errorText = 'Please enter domain and topic name !';
+      } else if (this.textDomain == '') {
+        this.errorText = 'Please enter domain name !';
+      } else if (this.textTopic == '') {
+        this.errorText = 'Please enter topic name !';
+      } else if (this.textTopic != '' && this.textDomain != '') {
+        this.errorText = '';
+        if (!this.expertiseDuplicacyCheck(this.textDomain, this.textTopic)) {
+          this.addExpertise.category = this.textDomain;
+          this.addExpertise.subCategory = this.textTopic;
+          if (this.tutorProfileDetails.price1 != null) {
+            this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+            this.expertises.push(this.addExpertise);
+            $('.select2').val('').trigger('change');
+            this.expertises.reverse();
+            this.textDomain = '';
+            this.textTopic = '';
+            this.selectedCategory = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
+            this.showTextDomain = false;
+            this.showTextTopic = false;
+            this.otherDomainSelected = false;
+            this.otherTopicSelected = false;
+            if (this.duplicateExpertiseArea == true) {
+              this.duplicateExpertiseArea = false;
+            }
+          } else {
+            this.pricePerHourError = true;
+          }
+        } else {
+          this.duplicateExpertiseArea = true;
+          this.textDomain = '';
+          this.textTopic = '';
+          this.priceForExpertise = '';
+        }
+      }
+    } else if (this.otherTopicSelected == true) {
+      if (this.tutorProfileDetails.price1 != null) {
+        if (this.selectedCategory) {
+          if (this.textTopic != '') {
+            console.log(this.selectedCategory + ':' + this.textTopic);
+
+            this.errorText = '';
+            if (
+              !this.expertiseDuplicacyCheck(
+                this.selectedCategory,
+                this.textTopic
+              )
+            ) {
+              this.addExpertise.category = this.selectedCategory;
+              this.addExpertise.subCategory = this.textTopic;
+
+              this.addExpertise.price = parseInt(
+                this.tutorProfileDetails.price1
+              );
+              this.expertises.push(this.addExpertise);
+              $('.select2').val('').trigger('change');
+              this.expertises.reverse();
+              this.textDomain = '';
+              this.textTopic = '';
+              this.selectedCategory = '';
+              this.selectedSubCategory = '';
+              this.priceForExpertise = '';
+              this.showTextDomain = false;
+              this.showTextTopic = false;
+              this.otherDomainSelected = false;
+              this.otherTopicSelected = false;
+              if (this.duplicateExpertiseArea == true) {
+                this.duplicateExpertiseArea = false;
+              }
+            } else {
+              this.duplicateExpertiseArea = true;
+              this.textDomain = '';
+              this.textTopic = '';
+              this.priceForExpertise = '';
+            }
+          } else {
+            this.errorText = 'Please enter a topic name !';
+          }
+          console.log('we have a selected category !');
+        } else {
+          this.errorText = 'Please choose a domain !';
+        }
+      } else {
+        this.pricePerHourError = true;
+      }
     }
-  }
-  onDomainChange(value) {
-    console.log('selected');
-    console.log(value);
-  }
-  onTopicChange(value) {
-    console.log('selected');
-    console.log(value);
   }
   deleteExpertise(index: any) {
     var area = this.expertises[index];
@@ -844,11 +998,12 @@ export class SignUpExpertComponent implements OnInit {
           designation: this.inputDesignation,
         };
         this.previousOraganisations.push(
-          this.inputDesignation+ '@'+this.inputOrganisation  
+          this.inputDesignation + ' @ ' + this.inputOrganisation
         );
         this.prevArrangedOrganisations.push(org);
         this.inputOrganisation = '';
         this.inputDesignation = '';
+        this.togglePreviousOrganisationsView();
         if (this.duplicatePreviousOrganisation == true) {
           this.duplicatePreviousOrganisation = false;
         }
@@ -872,9 +1027,9 @@ export class SignUpExpertComponent implements OnInit {
       1
     );
   }
-  
-  getMonthYearString(val){
-    let momentVariable = moment(val.value._d,'YYYY-MM-DD');
+
+  getMonthYearString(val) {
+    let momentVariable = moment(val.value._d, 'YYYY-MM-DD');
     return momentVariable.format('MMMM YYYY');
   }
   addEducation() {
@@ -883,47 +1038,37 @@ export class SignUpExpertComponent implements OnInit {
       this.inputCompletionDate &&
       this.inputInstitute
     ) {
-        let dateString = this.getMonthYearString(this.inputCompletionDate);
-        if (this.invalidEducationDetails == true) {
-          this.invalidEducationDetails = false;
+      let dateString = this.getMonthYearString(this.inputCompletionDate);
+      if (this.invalidEducationDetails == true) {
+        this.invalidEducationDetails = false;
+      }
+      if (this.invalidCompletionDate == true) {
+        this.invalidCompletionDate = false;
+      }
+      if (this.emptyEducationDetails == true)
+        this.emptyEducationDetails = false;
+      if (
+        !this.duplicacyCheck(
+          this.educationQualifications,
+          this.inputInstitute + ' : ' + this.inputEducation + ' : ' + dateString
+        )
+      ) {
+        this.educationQualifications.push(
+          this.inputInstitute + ' : ' + this.inputEducation + ' : ' + dateString
+        );
+        this.inputEducation = '';
+        this.inputCompletionDate = new FormControl(moment());
+        this.inputInstitute = '';
+        if (this.duplicateEducationArea == true) {
+          this.duplicateEducationArea = false;
         }
-        if (this.invalidCompletionDate == true) {
-          this.invalidCompletionDate = false;
-        }
-        if(this.emptyEducationDetails==true)this.emptyEducationDetails=false;
-        if (
-          !this.duplicacyCheck(
-            this.educationQualifications,
-            this.inputInstitute +
-              ' : ' +
-              this.inputEducation +
-              ' : ' +
-              dateString
-          )
-        ) {
-          
-          this.educationQualifications.push(
-            this.inputInstitute +
-              ' : ' +
-              this.inputEducation +
-              ' : ' +
-              dateString
-          );
-          this.inputEducation = '';
-          this.inputCompletionDate = new FormControl(moment());
-          this.inputInstitute = '';
-          if (this.duplicateEducationArea == true) {
-            this.duplicateEducationArea = false;
-          }
-        } else {
-          this.inputEducation = '';
-          this.inputCompletionDate =new FormControl(moment());;
-          this.inputInstitute = '';
-          this.duplicateEducationArea = true;
-        }
-      
+      } else {
+        this.inputEducation = '';
+        this.inputCompletionDate = new FormControl(moment());
+        this.inputInstitute = '';
+        this.duplicateEducationArea = true;
+      }
     } else {
-      console.log('called');
       this.invalidEducationDetails = true;
     }
   }

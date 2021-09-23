@@ -132,14 +132,16 @@
                   </div>
                   <div class="expert__txt">
                     <h6>
-                      {{result.fullName}}<span class="expert__rtng" 
-                        ><i class="fa fa-star" aria-hidden="true"></i> {{result.rating/20}}</span
-                      >
+                      {{result.fullName}}
+                      
                     </h6>
                     <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
                     <!-- <p>NPD<span>Marketing</span></p> -->
-                    <p>
-                      <span>{{createExpertString(result)|shorten}}</span></p>
+                    <div class="domain__rating">
+                      <p>
+                        <span>{{createExpertString(result)|shorten}}</span></p>
+                    </div>
+                    
                     <ul>
                       <li>
                         <span class="review_cnt"
@@ -159,7 +161,9 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="expert__price">₹{{result.price1}}<span>Per Hour</span></div>
+                  <div class="expert__price">₹{{result.price1}}<span>Per Hour</span><span class="expert__rtng" 
+                    ><i class="fa fa-star" aria-hidden="true"></i> {{result.rating/20}}</span
+                  ></div>
                   <div class="expert__Btn">
                     <a href="javascript:;" class="button exprt_btn connect_btn" (click)="viewProfile(result)">Connect</a>
                     <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
@@ -214,14 +218,16 @@
                   </div>
                   <div class="expert__txt">
                     <h6>
-                      {{result.fullName}}<span class="expert__rtng" 
-                        ><i class="fa fa-star" aria-hidden="true"></i> {{result.rating/20}}</span
-                      >
+                      {{result.fullName}}
+                      
                     </h6>
                     <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
                     <!-- <p>NPD<span>Marketing</span></p> -->
-                    <p >
-                      <span>{{createExpertString(result)|shorten}}</span></p>
+                    <div class="domain__rating">
+                      <p>
+                        <span>{{createExpertString(result)|shorten}}</span></p>
+                    </div>
+                    
                     <ul>
                       <li>
                         <span class="review_cnt"
@@ -241,7 +247,9 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="expert__price">₹{{result.price1}}<span>Per Hour</span></div>
+                  <div class="expert__price">₹{{result.price1}}<span>Per Hour</span><span class="expert__rtng" 
+                    ><i class="fa fa-star" aria-hidden="true"></i> {{result.rating/20}}</span
+                  ></div>
                   <div class="expert__Btn">
                     <a href="javascript:;" class="button exprt_btn connect_btn" (click)="viewProfile(result)">Connect</a>
                     <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
