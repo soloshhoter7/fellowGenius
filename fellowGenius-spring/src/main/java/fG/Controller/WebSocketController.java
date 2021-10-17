@@ -16,7 +16,7 @@ import com.google.gson.JsonParser;
 import fG.Service.MeetingService; 
 
 @Controller
-@CrossOrigin(origins = "${crossOrigin}")
+//@CrossOrigin(origins = "${crossOrigin}")
 //@CrossOrigin(origins = {"https://fellowgenius.com","https://www.fellowgenius.com"})
 public class WebSocketController {
 	@Autowired

@@ -134,6 +134,7 @@ export class ConnectComponent implements OnInit {
         .fetchBookingTutorProfileDetails(this.userId)
         .subscribe((res) => {
           this.teacherProfile = res;
+         
           this.amount = parseInt(this.teacherProfile.price1);
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           this.areaOfExpertises = this.teacherProfile.areaOfExpertise;
@@ -156,6 +157,12 @@ export class ConnectComponent implements OnInit {
             .getTutorTimeAvailabilityTimeArray(this.userId)
             .subscribe((res) => {
               this.ScheduleTime = res;
+              if(this.ScheduleTime.length==0){
+                console.log('notified expert for no schedule!');
+                this.httpService.notifyExpertNoSchedule(this.teacherProfile.bookingId.toString()).subscribe((res)=>{
+                  console.log(res);
+                });
+              }
               this.selectedDate = this.scheduleDates[0];
               setTimeout(() => {
                 this.dateChange();
@@ -376,12 +383,13 @@ export class ConnectComponent implements OnInit {
     this.processingPayment = false;
     console.log(this.bookingDetails)
     this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
+      console.log('is bookind valid ->',res);
       if (res) {
         this.isLoading = true;
         this.initPay();
       } else if (!res) {
         this.errorMessage =
-          'Tutor is busy in between your selected time slots !';
+          'Tutor is not available in between the selected time slots !';
       }
     });
   }
@@ -542,7 +550,7 @@ export class ConnectComponent implements OnInit {
             this.case5b = false;
           }
         } else {
-          this.errorMessage = "You can't book a tutor for more than 3 hours";
+          // this.errorMessage = "You can't book an Expert for more than 3 hours";
           this.startDisabled = true;
           this.endDisabled = true;
           event.isStartDate = false;

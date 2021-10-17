@@ -1,0 +1,504 @@
+<body>
+  <div class="page-content dashboard__Panel">
+    <section class="wi_full py_5 full_expert_sec" style="padding-top: 0">
+      <div class="container">
+        <!-- <div class="row" style="margin-bottom: 20px">
+          <h2>Featured Experts</h2>
+          <p *ngIf="featuredExperts.length == 0">No featured Experts</p>
+          <div style="padding: 20px">
+            <div class="carousel_sec">
+              <div class="expert-carousel owl-carousel owl-theme">
+                <div class="item" *ngFor="let slide of featuredExperts;let i = index">
+                  <div class="button-area">
+                    <button
+                      class="delete-button"
+                      (click)="deleteFeaturedExpert(slide)"
+                    >
+                      -
+                    </button>
+                    <button (click)="moveUp(slide)" *ngIf="i!=0" >L</button>
+                    <button (click)="moveDown(slide)" *ngIf="i!=(featuredExperts.length-1)">R</button>
+                  </div>
+                 
+                  <div class="item_wrap">
+                    <img [src]="slide.profilePictureUrl" alt="#" />
+                    <h5>{{ slide.name }}</h5>
+                    <small>{{ slide.topic }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="page-content">
+            <section
+              class="wi_full py_5 full_expert_sec"
+              style="padding-top: 0"
+            >
+              <div class="container">
+                <div class="row">
+                  <div class="col-12">
+                    <!-- <div class="expert_filter">
+                      <div class="row">
+                        <div class="col-12 col-md-9 col-lg-7 exprt_sel_fltr">
+                          <div class="filter_sel">
+                            <select
+                              id="domainFilter"
+                              class="select2 form-control"
+                              (change)="searchBySubject($event)"
+                            >
+                              <option selected value="defaultDomain" disabled>
+                                Domain Options
+                              </option>
+                              <option *ngFor="let c of categories">
+                                {{ c.category }}
+                              </option>
+                            </select>
+                          </div>
+                          <div class="filter_sel">
+                            <select
+                              id="subjectFilter"
+                              class="select2 form-control"
+                              (change)="searchBySubject($event)"
+                            >
+                              <option selected value="defaultSubject" disabled>
+                                Topic Options
+                              </option>
+                              <option *ngFor="let sc of subCategories">
+                                {{ sc.subCategory }}
+                              </option>
+                            </select>
+                          </div>
+                          <div class="filter_sel price_filter">
+                            <select
+                              id="priceFilter"
+                              class="select2 form-control"
+                              (change)="searchByPrice($event)"
+                            >
+                              <option selected value="defaultPrice" disabled>
+                                Price
+                              </option>
+                              <option value="0-500">0-500</option>
+                              <option value="500-1000">500-1000</option>
+                              <option value="1000-2500">1000-2500</option>
+                              <option value="2500-5000">2500-5000</option>
+                              <option value="5000-50000">5000+</option>
+                            </select>
+                          </div>
+                          <div class="filter_sel">
+                                    <select
+                                    id="ratingFilter"
+                                      class="select2 form-control"
+                                      (change)="searchByRatings($event)"
+                                    >
+                                      <option selected value="defaultRating" disabled>Average Reviews</option>
+                                      <option value="1">1 & up</option>
+                                      <option value="2">2 & up</option>
+                                      <option value="3">3 & up</option>
+                                      <option value="4">4 & up</option>
+                                    </select>
+                                  </div>
+                        </div>
+                        <div class="col-12" style="margin-top: 10px">
+                          <ul class="nav nav-pills">
+                            <li
+                              class="nav-item"
+                              *ngFor="let filters of domainFilterApplied"
+                            >
+                              <a class="nav-link">
+                                <span [innerHTML]="filters"></span>
+                                <span
+                                  class="material-icons"
+                                  style="cursor: pointer"
+                                  (click)="deleteSubject(filters)"
+                                >
+                                  close
+                                </span></a
+                              >
+                            </li>
+                            <li
+                              class="nav-item"
+                              *ngFor="let filters of subjectFiltersApplied"
+                            >
+                              <a class="nav-link">
+                                <span [innerHTML]="filters"></span>
+                                <span
+                                  class="material-icons"
+                                  style="cursor: pointer"
+                                  (click)="deleteSubject(filters)"
+                                >
+                                  close
+                                </span></a
+                              >
+                            </li>
+                            <li
+                              class="nav-item"
+                              *ngFor="let filters of priceFiltersApplied"
+                            >
+                              <a class="nav-link">
+                                <span [innerHTML]="filters"></span>
+                                <span
+                                  class="material-icons"
+                                  style="cursor: pointer"
+                                  (click)="deletePrice(filters)"
+                                >
+                                  close
+                                </span></a
+                              >
+                            </li>
+                            <li
+                              class="nav-item"
+                              *ngFor="let filters of ratingFilterApplied"
+                            >
+                              <a class="nav-link">
+                                <span>{{ filters }}&nbsp; & up</span>
+                                <span
+                                  class="material-icons"
+                                  style="cursor: pointer"
+                                  (click)="deleteRating(filters)"
+                                >
+                                  close
+                                </span></a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col-12 availbale_expert">
+                          <div class="total_expert">
+                            {{ expertsCount }} Experts Available
+                          </div>
+                          <div class="sort_by_exprt">
+                            Sort by
+                            <div class="pice_select">
+                              <select class="select2" id="sortExpert">
+                                <option value="priceLowToHigh">
+                                  Price: Low to High
+                                </option>
+                                <option value="priceHighToLow">
+                                  Price: High to Low
+                                </option>
+                                <option value="ratingLowToHigh">
+                                  Rating: Low to High
+                                </option>
+                                <option value="ratingHighToLow">
+                                  Rating: High to Low
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div>
+                      <div
+                        *ngIf="isLoading"
+                        style="
+                          text-align: center;
+                          margin-top: 8vh;
+                          margin-left: auto;
+                          margin-right: auto;
+                        "
+                      >
+                        <app-loading></app-loading>
+                        <p style="margin: 1rem; font-size: larger">
+                          Loading Experts..
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="
+                        allFiltersApplied.price.length == 0 &&
+                        allFiltersApplied.ratings.length == 0 &&
+                        allFiltersApplied.subjects.length == 0
+                      "
+                    >
+                    <div class="total_expert">
+                      {{ expertsCount }} Experts Available
+                    </div>
+                      <div class="expert__available">
+                        <div
+                          class="expert__item"
+                          *ngFor="let result of searchResults"
+                        >
+                          <span style="color: gold" *ngIf="isFeatured(result)"
+                            ><i class="fa fa-star" aria-hidden="true"></i
+                          ></span>
+                          <span
+                            class="feature-icon"
+                            *ngIf="!isFeatured(result)"
+                            href="#featureExpert__Popup"
+                            (click)="featureExpert(result)"
+                            data-toggle="modal"
+                            data-bs-toggle="tooltip"
+                            data-placement="bottom"
+                            ><i
+                              class="fa fa-star"
+                              aria-hidden="true"
+                              style="cursor: pointer"
+                            ></i
+                          ></span>
+                          <div class="expert__img">
+                            <img [src]="result.profilePictureUrl" alt="#" />
+                          </div>
+                          <div class="expert__txt">
+                            <h6>
+                              {{ result.fullName }}
+                            </h6>
+                            <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                            <!-- <p>NPD<span>Marketing</span></p> -->
+                            <div class="domain__rating">
+                              <p>
+                                <span>{{
+                                  createExpertString(result) | shorten
+                                }}</span>
+                              </p>
+                            </div>
+
+                            <ul>
+                              <li>
+                                <span class="review_cnt"
+                                  ><img
+                                    src="../../assets/images/review_icon.svg"
+                                    alt="#"
+                                  />{{ result.reviewCount }} REVIEWS</span
+                                >
+                              </li>
+                              <li>
+                                <span class="review_session"
+                                  ><img
+                                    src="../../assets/images/session_icon.svg"
+                                    alt="#"
+                                  />{{ result.lessonCompleted }} SESSIONS</span
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="expert__price">
+                            ₹{{ result.price1 }}<span>Per Hour</span
+                            ><span class="expert__rtng"
+                              ><i class="fa fa-star" aria-hidden="true"></i>
+                              {{ result.rating / 20 }}</span
+                            >
+                          </div>
+                          <div class="expert__Btn">
+                            <a
+                              href="javascript:;"
+                              class="button exprt_btn connect_btn"
+                              [routerLink]="['../expert-profile']"
+                              [queryParams]="{expertId: result.tid}"
+                              >View Profile</a
+                            >
+                            <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                          </div>
+                        </div>
+
+                        <div class="Page_nav" *ngIf="searchResults.length > 16">
+                          <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                              <a
+                                class="page-link"
+                                href="#"
+                                tabindex="-1"
+                                aria-disabled="true"
+                                ><i class="fas fa-angle-left"></i
+                              ></a>
+                            </li>
+                            <li class="page-item active">
+                              <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" href="#"
+                                ><i class="fas fa-angle-right"></i
+                              ></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      *ngIf="
+                        allFiltersApplied.price.length != 0 ||
+                        allFiltersApplied.ratings.length != 0 ||
+                        allFiltersApplied.subjects.length != 0
+                      "
+                    >
+                      <div class="expert__available">
+                        <div
+                          class="expert__item"
+                          *ngFor="let result of filteredArray"
+                        >
+                          <div class="expert__img">
+                            <img [src]="result.profilePictureUrl" alt="#" />
+                          </div>
+                          <div class="expert__txt">
+                            <h6>
+                              {{ result.fullName }}
+                            </h6>
+                            <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                            <!-- <p>NPD<span>Marketing</span></p> -->
+                            <div class="domain__rating">
+                              <p>
+                                <span>{{
+                                  createExpertString(result) | shorten
+                                }}</span>
+                              </p>
+                            </div>
+
+                            <ul>
+                              <li>
+                                <span class="review_cnt"
+                                  ><img
+                                    src="../../assets/images/review_icon.svg"
+                                    alt="#"
+                                  />{{ result.reviewCount }} REVIEWS</span
+                                >
+                              </li>
+                              <li>
+                                <span class="review_session"
+                                  ><img
+                                    src="../../assets/images/session_icon.svg"
+                                    alt="#"
+                                  />{{ result.lessonCompleted }} SESSIONS</span
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="expert__price">
+                            ₹{{ result.price1 }}<span>Per Hour</span
+                            ><span class="expert__rtng"
+                              ><i class="fa fa-star" aria-hidden="true"></i>
+                              {{ result.rating / 20 }}</span
+                            >
+                          </div>
+                          <div class="expert__Btn">
+                            <a
+                              href="javascript:;"
+                              class="button exprt_btn connect_btn"
+                              (click)="viewProfile(result)"
+                              >Connect</a
+                            >
+                            <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                          </div>
+                        </div>
+
+                        <div class="Page_nav" *ngIf="filteredArray.length > 16">
+                          <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                              <a
+                                class="page-link"
+                                href="#"
+                                tabindex="-1"
+                                aria-disabled="true"
+                                ><i class="fas fa-angle-left"></i
+                              ></a>
+                            </li>
+                            <li class="page-item active">
+                              <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                              <a class="page-link" href="#"
+                                ><i class="fas fa-angle-right"></i
+                              ></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="
+                        ((searchResults.length == 0 &&
+                          filteredArray.length == 0) ||
+                          (checkFilters() && filteredArray.length == 0)) &&
+                        !isLoading
+                      "
+                    >
+                      <div class="row">
+                        <div class="col-12 col-lg-8 mx-auto">
+                          <div class="nodata_wrapper">
+                            <img
+                              src="../../assets/images/No-data-clip.png"
+                              alt="#"
+                              class="nodata_thumbnail"
+                            />
+                            <div class="nodata__desc">
+                              <h2>
+                                Sorry no expert match your selected criteria
+                              </h2>
+                              <p>Please relax your preferences</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div
+    class="modal fade"
+    id="featureExpert__Popup"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0">
+        <div class="modal-body feature-dialog">
+          <h3>Feature Expert</h3>
+          <hr />
+          <div>
+            <div><img [src]="selectedExpert.profilePictureUrl" alt="#" /></div>
+            <div>
+              <p style="font-size: x-large">{{ selectedExpert.fullName }}</p>
+            </div>
+            <div>
+              <label for="selectExpertise">choose topic</label>
+              <select
+                [(ngModel)]="selectedExpertTopic"
+                class="form-control"
+                id="selectExpertise"
+              >
+                <option
+                  *ngFor="let c of selectedExpert.areaOfExpertise"
+                  [value]="c.subCategory"
+                >
+                  {{ c.subCategory }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <hr />
+          <div style="float: right">
+            <button
+              class="btn close-button"
+              id="closePopUpButton"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+            <button class="btn" (click)="saveFeaturedExperts()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

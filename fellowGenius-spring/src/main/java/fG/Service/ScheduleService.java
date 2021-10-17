@@ -103,7 +103,10 @@ public class ScheduleService {
 				String startTimeString = formatter.format(startTimeSchedule);
 				String endTimeString = formatter.format(endTimeSchedule);
 				String currentDateString = formatter.format(date);
-
+				Calendar c = Calendar.getInstance(); 
+				c.setTime(date); 
+				c.add(Calendar.DATE, 1);
+				String nextDateString = formatter.format(c.getTime());
 				// in this condition it is checked whether the start time and end time date
 				// matches or not
 				if ((currentDateString.equals(startTimeString)) && (currentDateString.equals(endTimeString))) {
@@ -134,9 +137,9 @@ public class ScheduleService {
 						}
 					}
 					// if end date is next day
-				} else if ((date.compareTo(startTimeSchedule) == 0) && (date.compareTo(endTimeSchedule)) != 0) {
+				} else if ((currentDateString.equals(startTimeString)) && (nextDateString.equals(endTimeString))) {
 					ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
-					System.out.println();
+					System.out.println("end date is next day");
 					sh = startHours;
 					sm = startMinutes;
 					eh = 0;

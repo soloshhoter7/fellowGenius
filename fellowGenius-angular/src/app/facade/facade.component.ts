@@ -15,6 +15,7 @@ import * as $ from 'jquery';
 import {initiate} from '../../assets/js/custom';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RegisterDiaologComponent } from './register-diaolog/register-diaolog.component';
+import { featuredExpert } from '../model/tutorProfileDetails';
 declare const owlCarousel: any;
 @Component({
   selector: 'app-facade',
@@ -33,7 +34,7 @@ export class FacadeComponent implements OnInit {
   ) {
     
   }
-  
+  featuredExperts:featuredExpert[]=[];
   switchView: boolean = false;
   showContainer: boolean = false;
   reviewsView = true;
@@ -105,10 +106,10 @@ export class FacadeComponent implements OnInit {
   slidesStore = [
     {
       id: 1,
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1630739477876?alt=media&token=a590b0bc-850b-462e-ad95-9b86fca93836',
-      name: 'Tejpal Singh Kang',
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632597827378?alt=media&token=76adf521-fc64-430d-85b8-d02cac72d0aa',
+      name: 'Ruchir Thakkar',
       specialisation: 'PIET - B.tech[CSE]',
-      domain:'Key Account Management',
+      domain:'B2C Sales and Distribution',
       studentsCount: 50,
       sessionsCount: 98,
       rating: 85,
@@ -117,6 +118,18 @@ export class FacadeComponent implements OnInit {
     },
     {
       id: 2,
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632218586352?alt=media&token=78a15381-7bbf-455f-96e0-57c1a8cdceb2',
+      name: 'Ritam Dasgupta',
+      specialisation: 'PIET - B.tech[CSE]',
+      domain:'International Sales',
+      studentsCount: 50,
+      sessionsCount: 98,
+      rating: 85,
+      review:
+        'Its beautiful user interface make Experts and learner feel at home.',
+    },
+    {
+      id: 3,
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1630788559940?alt=media&token=c88171bc-de02-43da-b3f7-cba3e2fe7197',
       name: 'Vikas Dabas',
       domain:'Product Management',
@@ -127,9 +140,8 @@ export class FacadeComponent implements OnInit {
       sessionsCount: 46,
       rating: 90,
     },
-   
     {
-      id: 3,
+      id: 4,
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1631097989114?alt=media&token=ef49be5a-167a-471c-a09f-a140374268fd',
       name: 'Paawan juneja',
       domain:'Talent Acquisition',
@@ -141,16 +153,40 @@ export class FacadeComponent implements OnInit {
       rating: 100,
     },
     {
-      id: 4,
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1630865500585?alt=media&token=65088f67-2bdb-4273-8578-90b1f306d8fe',
-      name: 'Shubham Sharma',
-      domain:'Website Development',
+      id: 5,
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632124416978?alt=media&token=ebc11fdc-e4f2-4e3f-afb5-afb35717ee23',
+      name: 'Rajdeep Singh Kang',
       specialisation: 'PIET - B.tech[CSE]',
+      domain:'Website Development',
+      studentsCount: 50,
+      sessionsCount: 98,
+      rating: 85,
       review:
-        'I loved the experience of teaching here and the quality functionality.',
-      studentsCount: 21,
-      sessionsCount: 53,
-      rating: 100,
+        'Its beautiful user interface make Experts and learner feel at home.',
+    },
+    {
+      id: 6,
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632637731432?alt=media&token=51b3fad3-05f7-47ba-8ec9-8671992b9b84',
+      name: 'Sayantika Bose',
+      specialisation: 'PIET - B.tech[CSE]',
+      domain:'Wellness and Life Coaching',
+      studentsCount: 50,
+      sessionsCount: 98,
+      rating: 85,
+      review:
+        'Its beautiful user interface make Experts and learner feel at home.',
+    },
+    {
+      id: 7,
+      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1631989579407?alt=media&token=65d14c69-78c4-4dc9-949a-49b0f501b8ca',
+      name: 'Rahul Garg',
+      specialisation: 'PIET - B.tech[CSE]',
+      domain:'GATE/GRE/JEE',
+      studentsCount: 50,
+      sessionsCount: 98,
+      rating: 85,
+      review:
+        'Its beautiful user interface make Experts and learner feel at home.',
     }
   ];
   ngAfterViewInit(){
@@ -163,6 +199,7 @@ export class FacadeComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+    this.fetchFeaturedExperts();
   }
   signUpRouting(val){
     document.getElementById('closePopUpButton').click();
@@ -174,7 +211,18 @@ export class FacadeComponent implements OnInit {
 
     })
   }
-
+  fetchFeaturedExperts() {
+    this.httpService.fetchFeaturedExperts().subscribe((res) => {
+      this.featuredExperts = res;
+      this.sortFeaturedExperts();
+      console.log(this.featuredExperts);
+    });
+  }
+  sortFeaturedExperts() {
+    this.featuredExperts.sort((a, b) =>
+      a.precedence > b.precedence ? 1 : b.precedence > a.precedence ? -1 : 0
+    );
+  }
   getAllCategories(){    
     this.httpService.getAllCategories().subscribe((res)=>{
       let categories:Category[] = res;
@@ -203,7 +251,11 @@ export class FacadeComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
-
+  optionSelected(val){
+    this.router.navigate(['search-results'], {
+      queryParams: { subject: val },
+    });
+  }
   displaySelectedSubjects() {
     if (this.selectedSubject) {
       this.router.navigate(['search-results'], {

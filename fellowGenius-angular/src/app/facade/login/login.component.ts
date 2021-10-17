@@ -128,10 +128,12 @@ export class LoginComponent implements OnInit {
         queryParams: { page:this.expert_userId,subject:this.expert_domain },
       });
     }else if(this.prev_route=='home'){
+      console.log('home called');
       this.cookieService.delete("prev");
       this.router.navigate(['home']);
     }else {
-      this.cookieService.delete("prev");
+      console.log('else called')
+      // this.cookieService.delete("prev");
       this.router.navigate([this.prev_route]);
     }
   }

@@ -30,6 +30,8 @@ import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Query } from '@syncfusion/ej2-data';
 import { ThrowStmt } from '@angular/compiler';
+import { DatePipe } from '@angular/common';
+import * as moment from 'moment';
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -46,8 +48,11 @@ export class tutorScheduleComponent implements OnInit {
   }
   ngAfterViewInit() {
     if (this.tutorService.getPersonalAvailabilitySchedule()) {
+      console.log('i am here')
+      console.log(this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule);
       this.scheduleObj.eventSettings.dataSource =
         this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
+        console.log(this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule);
       // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
       this.tutorAvailabilitySchedule.fullName =
         this.tutorService.getTutorDetials().fullName;
@@ -66,7 +71,8 @@ export class tutorScheduleComponent implements OnInit {
     private httpService: HttpService,
     private tutorService: TutorService,
     private loginService: LoginDetailsService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private datePipe:DatePipe
   ) {}
 
   @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
@@ -181,14 +187,95 @@ export class tutorScheduleComponent implements OnInit {
     appointment.Type = 'availability';
     return appointment;
   }
+  checkIfSameDate(appointment:scheduleData){
+    let startDateTime:Date = new Date(appointment.StartTime);
+    let endDateTime:Date = new Date (appointment.EndTime);
+    let diffHours:any = Math.abs(endDateTime.getTime()-startDateTime.getTime())/36e5;
+    let allAppointments:scheduleData[]=[];
+    // let formattedStartDate:Date = new Date(this.datePipe.transform(startDateTime,'dd/MM/yyyy'));
+    let formattedStartDate:Date = new Date(this.datePipe.transform(startDateTime,'MM-dd-yyyy'));
+    let formattedEndDate:Date = new Date(this.datePipe.transform(endDateTime,'MM-dd-yyyy'));
+    console.log(formattedStartDate);
+    let str3:string = formattedStartDate.toString()
+
+    console.log(str3);
+
+    console.log(formattedEndDate);
+    if(formattedStartDate.getTime()==formattedEndDate.getTime()){
+      allAppointments.push(appointment);
+      console.log('same date');
+      return allAppointments;
+    }else{
+      let diffInDates = 
+      Math.abs(formattedEndDate.getTime()-formattedStartDate.getTime())/36e5/24;
+      let arrDiffDates:Date[]=[];
+      console.log(diffInDates)
+      arrDiffDates.push(new Date(formattedStartDate.getTime()));
+      if(diffInDates>1){
+        let selectedDate = formattedStartDate;
+        for(let i=2;i<=diffInDates;i++){
+          selectedDate.setDate(selectedDate.getDate()+1);
+          arrDiffDates.push(new Date(selectedDate.getTime()));
+        }
+      }
+      arrDiffDates.push(new Date(formattedEndDate.getTime()))
+      
+      console.log('different dates are : ');
+      console.log(arrDiffDates);
+      let startingId=appointment.Id;
+     
+      for(let j=0;j<arrDiffDates.length;j++){
+        let startDate:Date = new Date(arrDiffDates[j].getTime());
+        let endDate:Date = new Date(arrDiffDates[j].getTime());
+        let app = new scheduleData();
+        app.Id=startingId;
+        startingId++;
+        app.Subject="My Availability";
+        app.Type="availability";
+        app.IsAllDay=false;
+        if(j==0){
+          console.log('first item')
+           startDate.setHours(startDateTime.getHours());
+           startDate.setMinutes(startDateTime.getMinutes());
+           endDate.setHours(24);
+           endDate.setMinutes(0);
+           app.StartTime=startDate.toString();
+           app.EndTime= endDate.toString();
+        }else if(j==(arrDiffDates.length-1)){
+          console.log('last item')
+          startDate.setHours(0);
+           startDate.setMinutes(0);
+           endDate.setHours(endDateTime.getHours());
+           endDate.setMinutes(endDateTime.getMinutes());
+           app.StartTime=startDate.toString();
+           app.EndTime= endDate.toString();
+        }else if(j>0&&j<(arrDiffDates.length-1)){
+          console.log('mid item')
+          startDate.setHours(0);
+           startDate.setMinutes(0);
+           endDate.setHours(24);
+           endDate.setMinutes(0);
+           app.StartTime=startDate.toString();
+           app.EndTime= endDate.toString();
+        }
+        allAppointments.push(app);
+      }
+      console.log(allAppointments);
+      return allAppointments;
+    }
+  }
   // for adding events into calendar schedules
   addEvents(appointment: scheduleData) {
-    this.availableSchedules.push(appointment);
+    console.log(appointment);
+    let allAppointments:scheduleData[] = this.checkIfSameDate(appointment); 
+    for(let item of allAppointments){
+      this.availableSchedules.push(item);
+    }
+    console.log(allAppointments);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
-    this.isLoading = true;
-    setTimeout(() => {
-      //<<<---    using ()=> syntax
+    console.log(this.availableSchedules);
+    this.isLoading=false;
       if (this.userId != null) {
         this.tutorAvailabilitySchedule.tid =
           this.tutorService.getTutorDetials().bookingId;
@@ -201,7 +288,6 @@ export class tutorScheduleComponent implements OnInit {
             this.tutorAvailabilitySchedule;
           this.isLoading = false;
         });
-    }, 3000);
   }
   
   onPopupOpen(args) {
@@ -251,8 +337,8 @@ export class tutorScheduleComponent implements OnInit {
     }
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
-    this.isLoading = true;
-    setTimeout(() => {
+    console.log(this.availableSchedules)
+ 
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
@@ -260,7 +346,7 @@ export class tutorScheduleComponent implements OnInit {
             this.tutorAvailabilitySchedule;
           this.isLoading = false;
         });
-    }, 3000);
+    
   }
   //for deleting events into calendar schedules
   deleteEvents(appointment: scheduleData) {
@@ -270,8 +356,8 @@ export class tutorScheduleComponent implements OnInit {
     this.availableSchedules.splice(deleteIndex, 1);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
-    this.isLoading = true;
-    setTimeout(() => {
+    // this.isLoading = true;
+  
       this.httpService
         .saveScheduleData(this.tutorAvailabilitySchedule)
         .subscribe((res) => {
@@ -279,13 +365,13 @@ export class tutorScheduleComponent implements OnInit {
             this.tutorAvailabilitySchedule;
           this.isLoading = false;
         });
-    }, 3000);
   }
   //for updating special case
   updateSpecialEvents() {
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
-    this.isLoading = true;
+      console.log(this.availableSchedules)
+    // this.isLoading = true;
     setTimeout(() => {
       //<<<---    using ()=> syntax
       this.httpService
@@ -306,20 +392,24 @@ export class tutorScheduleComponent implements OnInit {
     if (args.requestType === 'eventCreate') {
       schedule = args.addedRecords;
       // this.isLoading=!this.isLoading;
+      this.isLoading=true;
       setTimeout(() => {
         this.addEvents(this.copyAppointment(schedule[0]));
       }, 3000);
     } else if (args.requestType === 'eventChange') {
       // when an event is changed
       schedule = args.changedRecords;
-      this.isLoading = !this.isLoading;
+      console.log(schedule);
+      // this.isLoading = !this.isLoading;
+      this.isLoading=true;
       setTimeout(() => {
         if (
           schedule[0].Guid != null &&
           schedule[0].RecurrenceException != null
         ) {
+          console.log('called recurrence rule exception')
           // if an recurrence exception is created
-          this.availableSchedules.splice(0, this.availableSchedules.length);
+          // this.availableSchedules.splice(0, this.availableSchedules.length);
           for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
             .allAvailabilitySchedule) {
             var appointment = new scheduleData();
@@ -336,52 +426,45 @@ export class tutorScheduleComponent implements OnInit {
           }
           this.updateSpecialEvents();
         } else {
+          console.log('called normal updation !')
           //normal updation
           this.updateEvents(this.copyAppointment(schedule[0]));
         }
       }, 3000);
     } else if (args.requestType === 'eventRemove') {
+      console.log('event is removed !');
       // when an event is removed
       schedule = args.deletedRecords;
+      console.log(schedule);
+      
       if (schedule.length != 0) {
+        this.isLoading=true;
         setTimeout(() => {
-          this.availableSchedules.splice(0, this.availableSchedules.length);
-          for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
-            .allAvailabilitySchedule) {
-            var appointment = new scheduleData();
-            appointment.Id = schedule.Id;
-            appointment.Subject = schedule.Subject;
-            appointment.StartTime = schedule.StartTime.toString();
-            appointment.EndTime = schedule.EndTime.toString();
-            appointment.IsAllDay = schedule.IsAllDay;
-            appointment.RecurrenceRule = schedule.RecurrenceRule;
-            appointment.RecurrenceException = schedule.RecurrenceException;
-            appointment.Guid = schedule.Guid;
-            appointment.RecurrenceID = schedule.RecurrenceID;
-            this.availableSchedules.push(appointment);
+          for( let sch of schedule){
+            this.deleteEvents(this.copyAppointment(sch));
           }
-          this.updateSpecialEvents();
         }, 3000);
-      } else if (schedule.length == 0) {
-        setTimeout(() => {
-          this.availableSchedules.splice(0, this.availableSchedules.length);
-          for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
-            .allAvailabilitySchedule) {
-            var appointment = new scheduleData();
-            appointment.Id = schedule.Id;
-            appointment.Subject = schedule.Subject;
-            appointment.StartTime = schedule.StartTime.toString();
-            appointment.EndTime = schedule.EndTime.toString();
-            appointment.IsAllDay = schedule.IsAllDay;
-            appointment.RecurrenceRule = schedule.RecurrenceRule;
-            appointment.RecurrenceException = schedule.RecurrenceException;
-            appointment.Guid = schedule.Guid;
-            appointment.RecurrenceID = schedule.RecurrenceID;
-            this.availableSchedules.push(appointment);
-          }
-          this.updateSpecialEvents();
-        }, 3000);
-      }
+      } 
+      // else if (schedule.length == 0) {
+      //   setTimeout(() => {
+      //     this.availableSchedules.splice(0, this.availableSchedules.length);
+      //     for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
+      //       .allAvailabilitySchedule) {
+      //       var appointment = new scheduleData();
+      //       appointment.Id = schedule.Id;
+      //       appointment.Subject = schedule.Subject;
+      //       appointment.StartTime = schedule.StartTime.toString();
+      //       appointment.EndTime = schedule.EndTime.toString();
+      //       appointment.IsAllDay = schedule.IsAllDay;
+      //       appointment.RecurrenceRule = schedule.RecurrenceRule;
+      //       appointment.RecurrenceException = schedule.RecurrenceException;
+      //       appointment.Guid = schedule.Guid;
+      //       appointment.RecurrenceID = schedule.RecurrenceID;
+      //       this.availableSchedules.push(appointment);
+      //     }
+      //     this.updateSpecialEvents();
+      //   }, 3000);
+      // }
     }
   }
 }

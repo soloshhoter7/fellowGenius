@@ -119,7 +119,7 @@ export class ProfileComponent implements OnInit {
   duplicateExpertiseArea;
   duplicatePreviousOrganisation;
   duplicateEducationArea;
-  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{10}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
@@ -374,71 +374,72 @@ export class ProfileComponent implements OnInit {
     return this.educationQualifications[0].split(':')[0];
   }
   saveExpertBasicProfile(form: any) {
-    this.userId = this.cookieService.get('userId');
-    if (this.userId && this.expertises.length > 0) {
-      this.tutorProfile.tid = this.userId;
-      this.tutorProfile.contact = form.value.contact;
-      this.tutorProfile.dateOfBirth = form.value.dob;
-      this.tutorProfile.fullName = form.value.fullName;
-      this.tutorProfile.bookingId =
-        this.tutorService.getTutorDetials().bookingId;
-      this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+    console.log(form);
+    // this.userId = this.cookieService.get('userId');
+    // if (this.userId && this.expertises.length > 0) {
+    //   this.tutorProfile.tid = this.userId;
+    //   this.tutorProfile.contact = form.value.contact;
+    //   this.tutorProfile.dateOfBirth = form.value.dob;
+    //   this.tutorProfile.fullName = form.value.fullName;
+    //   this.tutorProfile.bookingId =
+    //     this.tutorService.getTutorDetials().bookingId;
+    //   this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
 
-      this.tutorProfileDetails.tid = this.userId;
-      this.tutorProfileDetails.educationalQualifications =
-        this.educationQualifications;
-      this.tutorProfileDetails.professionalSkills =
-        form.value.professionalSkills;
-      this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
-      this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
-      this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
+    //   this.tutorProfileDetails.tid = this.userId;
+    //   this.tutorProfileDetails.educationalQualifications =
+    //     this.educationQualifications;
+    //   this.tutorProfileDetails.professionalSkills =
+    //     form.value.professionalSkills;
+    //   this.tutorProfileDetails.fullName = this.tutorProfile.fullName;
+    //   this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+    //   this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
 
-      this.tutorProfileDetails.areaOfExpertise = this.expertises;
-      this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
-      this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
-      this.tutorProfileDetails.currentOrganisation =
-        form.value.currentOrganisation;
-      this.tutorProfileDetails.previousOrganisations =
-        this.previousOraganisations;
-      this.tutorProfileDetails.description = form.value.description;
-      this.tutorProfileDetails.speciality = form.value.speciality;
-      this.tutorProfileDetails.bookingId =
-        this.tutorService.getTutorProfileDetails().bookingId;
-      this.tutorProfileDetails.institute = this.getInstitute();
-      this.tutorProfileDetails.currentDesignation =
-        form.value.currentDesignation;
-      this.tutorProfileDetails.upiID = form.value.upiID;
-      this.tutorProfileDetails.gst = form.value.gst;
-      console.log(this.tutorProfileDetails);
+    //   this.tutorProfileDetails.areaOfExpertise = this.expertises;
+    //   this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+    //   this.tutorProfileDetails.yearsOfExperience = form.value.yearsOfExperience;
+    //   this.tutorProfileDetails.currentOrganisation =
+    //     form.value.currentOrganisation;
+    //   this.tutorProfileDetails.previousOrganisations =
+    //     this.previousOraganisations;
+    //   this.tutorProfileDetails.description = form.value.description;
+    //   this.tutorProfileDetails.speciality = form.value.speciality;
+    //   this.tutorProfileDetails.bookingId =
+    //     this.tutorService.getTutorProfileDetails().bookingId;
+    //   this.tutorProfileDetails.institute = this.getInstitute();
+    //   this.tutorProfileDetails.currentDesignation =
+    //     form.value.currentDesignation;
+    //   this.tutorProfileDetails.upiID = form.value.upiID;
+    //   this.tutorProfileDetails.gst = form.value.gst;
+    //   console.log(this.tutorProfileDetails);
 
-      this.calculateProfileCompleted();
-      this.httpService
-        .updateTutorProfile(this.tutorProfile)
-        .subscribe((res) => {
-          this.tutorService.setTutorDetails(this.tutorProfile);
-          this.tutorProfileDetails.profileCompleted =
-            this.calculateProfileCompleted();
-          this.httpService
-            .updateTutorProfileDetails(this.tutorProfileDetails)
-            .subscribe(() => {
-              // if (this.tutorProfileDetails.profileCompleted < 40) {
-              // this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
-              // }
-              this.tutorService.setTutorProfileDetails(
-                this.tutorProfileDetails
-              );
-              this.snackBar.open(
-                'Information saved Successfully !',
-                'close',
-                this.config
-              );
-              // this.advancedProfileToggle();
-              // this.router.navigate(['/home/tutor-dashboard']);
-            });
-        });
-    } else {
-      this.errorText = 'Enter atleast one area of Expertise !';
-    }
+    //   this.calculateProfileCompleted();
+    //   this.httpService
+    //     .updateTutorProfile(this.tutorProfile)
+    //     .subscribe((res) => {
+    //       this.tutorService.setTutorDetails(this.tutorProfile);
+    //       this.tutorProfileDetails.profileCompleted =
+    //         this.calculateProfileCompleted();
+    //       this.httpService
+    //         .updateTutorProfileDetails(this.tutorProfileDetails)
+    //         .subscribe(() => {
+    //           // if (this.tutorProfileDetails.profileCompleted < 40) {
+    //           // this.tutorProfileDetails.profileCompleted = this.calculateProfileCompleted();
+    //           // }
+    //           this.tutorService.setTutorProfileDetails(
+    //             this.tutorProfileDetails
+    //           );
+    //           this.snackBar.open(
+    //             'Information saved Successfully !',
+    //             'close',
+    //             this.config
+    //           );
+    //           // this.advancedProfileToggle();
+    //           // this.router.navigate(['/home/tutor-dashboard']);
+    //         });
+    //     });
+    // } else {
+    //   this.errorText = 'Enter atleast one area of Expertise !';
+    // }
   }
 
   saveExpertAdvancedProfile(form: any) {

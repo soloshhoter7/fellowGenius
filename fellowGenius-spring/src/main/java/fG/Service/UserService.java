@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,12 +20,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
-import fG.DAO.dao;
 import fG.Entity.AppInfo;
 import fG.Entity.BookingDetails;
 import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
+import fG.Entity.FeaturedExperts;
 import fG.Entity.LearningAreas;
 import fG.Entity.Notification;
 import fG.Entity.PendingTutorProfileDetails;
@@ -36,11 +39,11 @@ import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.UserActivity;
-import fG.Model.UserDataModel;
 import fG.Entity.Users;
 import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
 import fG.Model.Category;
+import fG.Model.FeaturedExpertsModel;
 import fG.Model.NotificationModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
@@ -52,18 +55,21 @@ import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
 import fG.Model.UserActivityAnalytics;
+import fG.Model.UserDataModel;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryCategory;
 import fG.Repository.repositoryExpertiseAreas;
+import fG.Repository.repositoryFeaturedExperts;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositoryPendingTutorProfileDetails;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositorySubCategoryList;
+import fG.Repository.repositoryTutorAvailabilitySchedule;
 import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
@@ -74,7 +80,7 @@ import fG.Repository.repositoryUsers;
 public class UserService implements UserDetailsService {
 
 	@Autowired
-	dao dao;
+	Dao dao;
 
 	@Autowired
 	MeetingDao meetingDao;
@@ -128,10 +134,17 @@ public class UserService implements UserDetailsService {
 	repositoryPendingTutorProfileDetails repPendingTutorProfileDetails;
 	
 	@Autowired
-	private BCryptPasswordEncoder encoder;
+	repositoryFeaturedExperts repFeaturedExperts;
 	
 	@Autowired
+	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
+
+	@Autowired
 	MailService mailService;
+	
 	
 	public boolean savePendingTutor(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
@@ -328,6 +341,7 @@ public class UserService implements UserDetailsService {
 			tutProfileDetails.setTid(tutorProfile.getTid());
 			tutProfileDetails.setBookingId(tutorProfile.getBookingId());
 			//personal info
+			
 			tutProfileDetails.setFullName(pt.getFullName());
 			tutProfileDetails.setUpiId(pt.getUpiId());
 			tutProfileDetails.setGst(pt.getGst());
@@ -729,12 +743,22 @@ public class UserService implements UserDetailsService {
 	// for getting the list of teachers with 100% profile completion
 	public List<TutorProfileDetailsModel> getTutorList(String subject) {
 		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
-		List<TutorProfileDetails> tutList = dao.getTutorList(subject);
-		for (TutorProfileDetails tutProfileDetails : tutList) {
-			TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
-			tutorModel.setTid(null);
-			tutListModel.add(tutorModel);
+		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
+		if(!subject.equals("*")) {
+			tutList = dao.getTutorList(subject);
+			for (TutorProfileDetails tutProfileDetails : tutList) {
+				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+				tutorModel.setTid(null);
+				tutListModel.add(tutorModel);
+			}
+		}else {
+			tutList = repTutorProfileDetails.findAll();
+			for (TutorProfileDetails tutProfileDetails : tutList) {
+				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+				tutListModel.add(tutorModel);
+			}
 		}
+		
 		return tutListModel;
 	}
 
@@ -946,9 +970,13 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings, String domain) {
-		CategoryList categ = repCategory.findCategory(domain);
-		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings,categ.getCategoryId());
+	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings, String domain,String[] domains) {
+		CategoryList categ = new CategoryList();
+				
+		if(repCategory.findCategory(domain)!=null) {
+			categ = repCategory.findCategory(domain);
+		}
+		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings,categ.getCategoryId(),domains);
 		if (tutors == null) {
 			return null;
 		} else {
@@ -1276,6 +1304,112 @@ public class UserService implements UserDetailsService {
 		return null;
 	}
 
+	public List<FeaturedExpertsModel> fetchFeaturedExperts() {
+		List<FeaturedExpertsModel> expertsDTO= new ArrayList<FeaturedExpertsModel>();
+		List<FeaturedExperts> experts = repFeaturedExperts.findAll();
+		if(experts!=null) {
+			for( FeaturedExperts e : experts) {
+				expertsDTO.add(copyFeaturedExpertsToDTO(e));
+			}
+		}
+		return expertsDTO;
+	}
 
+	public boolean saveFeaturedExpert(FeaturedExpertsModel fe) {
+		if(repFeaturedExperts.save(copyFeaturedExperts(fe)) != null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	public void deleteFeaturedExpert(FeaturedExpertsModel fe) {
+		repFeaturedExperts.delete(copyFeaturedExperts(fe));
+	}
+	
+	public boolean updateFeaturedExperts(List<FeaturedExpertsModel>exps) {
+		repFeaturedExperts.deleteAll();
+		for(FeaturedExpertsModel fe:exps) {
+			repFeaturedExperts.save(copyFeaturedExperts(fe));
+		}
+		return true;
+	}
+
+	public FeaturedExperts copyFeaturedExperts(FeaturedExpertsModel fe) {
+		FeaturedExperts e = new FeaturedExperts();
+		e.setExpertId(fe.getExpertId());
+		e.setName(fe.getName());
+		e.setPrecedence(fe.getPrecedence());
+		e.setProfilePictureUrl(fe.getProfilePictureUrl());
+		e.setTopic(fe.getTopic());
+		return e;
+	}
+	
+	public FeaturedExpertsModel copyFeaturedExpertsToDTO(FeaturedExperts fe) {
+		FeaturedExpertsModel e = new FeaturedExpertsModel();
+		e.setExpertId(fe.getExpertId());
+		e.setName(fe.getName());
+		e.setPrecedence(fe.getPrecedence());
+		e.setProfilePictureUrl(fe.getProfilePictureUrl());
+		e.setTopic(fe.getTopic());
+		return e;
+	}
+
+	public PendingTutorProfileDetails findPendingExpertById(String id) {
+		return repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
+	}
+
+	public void rejectExpert(String id) {
+		PendingTutorProfileDetails pt = repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
+		if(pt!=null) {
+			mailService.sendRejectedMail(pt.getEmail(),pt.getFullName());
+			repPendingTutorProfileDetails.delete(pt);
+		}	
+	}
+	//to check if expert has a schedule within a week
+	public boolean checkIfExpertHasSchedule(Integer tid) {
+		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
+		ArrayList<ScheduleTime> timeArray = scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
+		if(timeArray!=null&&timeArray.size()!=0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	public void notifyNoScheduleExpert(Integer tid) throws ParseException {
+		TutorProfileDetails exp = repTutorProfileDetails.bookingIdExist(tid);
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+		String date = sdf.format(new Date());
+		// todayDate string
+		Date now = sdf.parse(date);
+		if(exp!=null) {
+			TutorProfile tut = repTutorProfile.idExist(exp.getTid());
+			if(!checkIfExpertHasSchedule(tid)) {
+				TutorAvailabilitySchedule sch = repTutorAvailabilitySchedule.idExist(tid);
+				if(sch!=null) {
+					Date lastNotificationTime = sch.getNoScheduleNotificationTime();
+					if(lastNotificationTime==null) {
+						sch.setNoScheduleNotificationTime(now);
+						repTutorAvailabilitySchedule.save(sch);
+//						experts.add(tut);
+						mailService.sendExpertNoScheduleNotification(tut);
+					}else {
+						long duration = now.getTime()-lastNotificationTime.getTime();
+						long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+						if(diffInHours>=24) {
+//							experts.add(tut);
+							mailService.sendExpertNoScheduleNotification(tut);
+						}else {
+							System.out.println("less than 24 hours !");
+						}
+					}	
+				}
+				
+			}
+			
+		}
+	}
 	 
 }

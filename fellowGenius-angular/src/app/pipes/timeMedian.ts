@@ -6,9 +6,10 @@ export class TimeMedian implements PipeTransform {
 	transform(value: any) {
         if(value<12){
             return 'AM';
+        }else if(value==24){
+            return 'AM';
         }else{
             return 'PM';
         }
-        
 	}
 }

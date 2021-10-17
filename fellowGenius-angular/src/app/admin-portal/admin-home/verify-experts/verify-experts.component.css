@@ -6,4 +6,8 @@ button img{
 .btn {
     min-width: unset;
     min-height: unset;
+    margin: 10px;
+}
+.reject-button{
+    background-color:#dd3439;
 }

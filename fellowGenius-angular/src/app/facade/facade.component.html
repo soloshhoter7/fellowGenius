@@ -14,7 +14,7 @@
 								<input type="search" class="form-control domain_srch" placeholder="Find Experts by Domain" [formControl]="myControl"
 								[matAutocomplete]="auto"
 								[(ngModel)]="selectedSubject" />
-								<mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+								<mat-autocomplete #auto="matAutocomplete" (optionSelected)='optionSelected($event.option.value)' autoActiveFirstOption>
 									<mat-option
 									  *ngFor="let option of filteredOptions | async"
 									  [value]="option"
@@ -272,8 +272,7 @@
 									<div class="item_wrap">
 										<img [src]="slide.imageUrl" alt="#">
 										<h5>{{slide.name}}</h5>
-										<small>{{slide.domain}}</small>
-										
+										<small>{{slide.domain}}</small>			
 									</div>
 								</div>
 							</div>

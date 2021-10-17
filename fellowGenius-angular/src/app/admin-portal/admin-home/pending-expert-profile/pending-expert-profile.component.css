@@ -1,0 +1,6 @@
+.nav-item{
+    width: calc(100% / 4) !important;
+}
+.two-items {
+    width: calc(100% / 3) !important;
+}

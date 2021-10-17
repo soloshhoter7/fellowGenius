@@ -18,10 +18,14 @@
     <div
     *ngIf="isLoading"
     style="
-      width: max-content;
-      margin: auto;
-      padding-top: 20vh;
-      text-align: center;
+         width: 100%;
+    position: absolute;
+    margin: auto;
+    background-color: #f7f7f7;
+    padding-top: 20vh;
+    text-align: center;
+    height: 80%;
+    z-index: 1000;
     "
   >
     <app-loading></app-loading>
@@ -29,15 +33,15 @@
   </div>
   <div
     class="Box"
-    style="width: 95%; margin: auto; padding: 0"
-    [class.hideBlock]="isLoading"
+    style="width: 95%; margin: auto; padding: 0;position: absolute;"
+    
   >
     <ejs-schedule
       #scheduleObj
       width="100%"
       height="560px"
-      (popupOpen)="onPopupOpen($event)"
       [views]="scheduleViews"
+      (popupOpen)="onPopupOpen($event)"
       [readonly]="calendarView == 'Meeting'"
       (eventRendered)="onEventRendered($event)"
       (actionBegin)="onActionBegin($event)"

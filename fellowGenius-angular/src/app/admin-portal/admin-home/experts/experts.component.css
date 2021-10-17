@@ -1,0 +1,47 @@
+.button-area{
+    position: absolute;
+    right: 0;
+    top: 5px;
+    
+}
+.button-area button{
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    font-size: large;
+}
+.delete-button {
+  background-color: red;
+  
+}
+.feature-icon {
+  text-shadow: 0 0 3px #000;
+  color: white;
+}
+.feature-icon:hover{
+    color: gold;
+}
+.feature-dialog img{
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.modal-body button{
+    margin-left: 10px;
+}
+.close-button{
+    background-color: white;
+    color: grey;
+    border: 1px solid grey;
+}
+.display-flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

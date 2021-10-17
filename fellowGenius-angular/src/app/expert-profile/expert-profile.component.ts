@@ -19,6 +19,7 @@ import { LoginComponent } from '../facade/login/login.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { filter, pairwise } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
+import { SearchExpertProfileService } from '../service/search-expert-profile.service';
 @Component({
   selector: 'app-expert-profile',
   templateUrl: './expert-profile.component.html',
@@ -101,15 +102,10 @@ export class ExpertProfileComponent implements OnInit {
     private cookieService:CookieService,
     public activatedRoute: ActivatedRoute,
     public loginService: LoginDetailsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private searchExpertProfileService:SearchExpertProfileService
   ) {
     
-    // this.router.events
-    // .pipe(filter((evt: any) => evt instanceof RoutesRecognized), pairwise())
-    // .subscribe((events: RoutesRecognized[]) => {
-    //   console.log('previous url', events[0].urlAfterRedirects);
-    //   console.log('current url', events[1].urlAfterRedirects);
-    // });
   }
   ngOnInit(): void {
     window.scroll(0,0);
@@ -155,20 +151,7 @@ export class ExpertProfileComponent implements OnInit {
     }
   }
   createExpertString(result:any){
-    let filteredArray =  result.areaOfExpertise.filter(
-      (x) => x.category == this.selectedDomain
-    );
-    let expertise:string='';
-    for(let i=0;i<filteredArray.length;i++){
-      if(filteredArray[i].category==this.selectedDomain){
-        expertise+=filteredArray[i].subCategory;
-        if(i!=filteredArray.length-1){
-          expertise+=',';
-        }
-      }
-      
-    }
-    return expertise;
+    return this.searchExpertProfileService.createExpertString(result,this.selectedDomain,90);
   }
   openConnectPage() {
     if (this.loginService.getLoginType() != null) {

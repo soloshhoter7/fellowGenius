@@ -1,6 +1,7 @@
 package fG.Entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ public class TutorAvailabilitySchedule {
 	ArrayList<String> allAvailabilitySchedule;
 	String fullName;
 	String isAvailable;
+	Date noScheduleNotificationTime;
 	
 	public String getIsAvailable() {
 		return isAvailable;
@@ -44,14 +46,19 @@ public class TutorAvailabilitySchedule {
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	
+	public Date getNoScheduleNotificationTime() {
+		return noScheduleNotificationTime;
+	}
+	public void setNoScheduleNotificationTime(Date noScheduleNotificationTime) {
+		this.noScheduleNotificationTime = noScheduleNotificationTime;
+	}
 	@Override
 	public String toString() {
 		return "TutorAvailabilitySchedule [tid=" + tid + ", allAvailabilitySchedule=" + allAvailabilitySchedule
-				+ ", fullName=" + fullName + ", isAvailable=" + isAvailable + "]";
+				+ ", fullName=" + fullName + ", isAvailable=" + isAvailable + ", noScheduleNotificationTime="
+				+ noScheduleNotificationTime + "]";
 	}
-	
 
-	
-	
 	
 }

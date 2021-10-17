@@ -4,7 +4,7 @@
       <h2>Verify experts</h2>
       <div *ngIf="isLoading" style="text-align: center">
         <app-loading></app-loading>
-        <p style="margin: 1rem; font-size: large">Verifying expert..</p>
+        <p style="margin: 1rem; font-size: large">{{loadingText}}</p>
       </div>
       <div *ngIf="!isLoading">
         <div>
@@ -30,12 +30,26 @@
             </div>
             <div class="col-12 col-md-4">
               <button
+              class="btn"
+              [routerLink]="['../expert-profile']"
+              [queryParams]="{pendingId: expert.id}"
+            >
+              View Profile
+            </button>
+              <button
                 class="btn"
                 (click)="verifyExpert(expert, i)"
                 [disabled]="expert.pendingAreaOfExpertise.length != 0"
               >
                 Verify
               </button>
+              <button
+                class="btn reject-button"
+                (click)="reject(expert, i)"
+              >
+                Reject
+              </button>
+           
             </div>
             <div
               class="col-12"

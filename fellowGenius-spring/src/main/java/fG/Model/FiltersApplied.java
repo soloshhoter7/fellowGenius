@@ -5,6 +5,7 @@ import java.util.Arrays;
 public class FiltersApplied{
 	public String[] subjects;
 	public String[] price;
+	public String[] domains;
 	public Integer[] ratings;
 	String domain;
 	public String[] getSubjects() {
@@ -46,13 +47,26 @@ public class FiltersApplied{
 		this.domain = domain;
 	}
 
+	
+	public String[] getDomains() {
+		return domains;
+	}
+
+
+	public void setDomains(String[] domains) {
+		this.domains = domains;
+	}
+
 
 	@Override
 	public String toString() {
 		return "FiltersApplied [subjects=" + Arrays.toString(subjects) + ", price=" + Arrays.toString(price)
-				+ ", ratings=" + Arrays.toString(ratings) + ", domain=" + domain + "]";
+				+ ", domains=" + Arrays.toString(domains) + ", ratings=" + Arrays.toString(ratings) + ", domain="
+				+ domain + "]";
 	}
 
+
+	
 
 	
 

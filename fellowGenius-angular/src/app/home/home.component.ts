@@ -90,9 +90,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.preventBackButton();
     this.toggleNavigation = true;
-    if(this.cookieService.get('prev')){
-      this.cookieService.delete("prev");
-    }
+    // if(this.cookieService.get('prev')){
+    //   this.cookieService.delete("prev");
+    // }
 
     if (this.isTokenValid()) {
       console.log('heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
@@ -143,7 +143,16 @@ export class HomeComponent implements OnInit {
         this.fullName=this.tutorProfile.fullName;
         console.log(this.fullName)
         // this.dashboardUrl = '/home/tutorDashboard';
-        this.router.navigate(['home/tutor-dashboard']);
+        let prev_route = this.cookieService.get('prev');
+        this.cookieService.delete('prev');
+        if(prev_route=='/home/tutor-schedule'){
+          console.log('heyyyyyyyyyyyy');
+          this.router.navigate([prev_route]);
+        }else{
+          this.router.navigate(['home/tutor-dashboard']);
+        }
+    
+        
         console.log(this.loginService.getTrType());
         if (this.loginService.getTrType() == 'sign-up') {
           console.log('sigggnnn uppp')
@@ -154,8 +163,15 @@ export class HomeComponent implements OnInit {
       }
       this.initialiseNotifications();
     } else {
+      console.log('router - url :'+this.router.url);
       this.router.navigate(['login']);
-      this.cookieService.set("prev","home");
+      if(this.router.url == '/home/tutor-schedule'){
+        console.log('mai bola heyy')
+        this.cookieService.set("prev","/home/tutor-schedule");
+      }else{
+        this.cookieService.set("prev","home");
+      }
+      
     }
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),

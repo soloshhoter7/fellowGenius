@@ -30,3 +30,8 @@
   ::ng-deep .e-schedule-dialog .e-subject-container { 
     width: 100%; 
   } 
+  .calendar-box{
+    width: 100%;
+    height:100%;
+    
+  }

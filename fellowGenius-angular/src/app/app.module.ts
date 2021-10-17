@@ -69,7 +69,6 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ConnectComponent } from './expert-profile/connect/connect.component';
 import { ShortenLength } from './pipes/shortenLength.pipe';
 import { LoginDialogComponent } from './expert-profile/login-dialog/login-dialog.component';
-import { ExpertsComponent } from './home/experts/experts.component';
 import { AdvertisementBannerComponent } from './advertisement-banner/advertisement-banner.component';
 import { FiltersDialogComponent } from './search-results/filters-dialog/filters-dialog.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
@@ -105,7 +104,9 @@ import { RegisterDiaologComponent } from './facade/register-diaolog/register-dia
 import { Angular2CsvModule } from 'angular2-csv';
 import { AdminLoginComponent } from './admin-portal/admin-login/admin-login.component';
 import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.component';
-
+import { ExpertsComponent } from './admin-portal/admin-home/experts/experts.component';
+import { PendingExpertProfileComponent } from './admin-portal/admin-home/pending-expert-profile/pending-expert-profile.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -145,7 +146,6 @@ import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.compone
     NavBarComponent,
     ConnectComponent,
     LoginDialogComponent,
-    ExpertsComponent,
     AdvertisementBannerComponent,
     FiltersDialogComponent,
     ResetPasswordComponent,
@@ -172,6 +172,8 @@ import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.compone
     RegisterDiaologComponent,
     AdminLoginComponent,
     AdminHomeComponent,
+    ExpertsComponent,
+    PendingExpertProfileComponent,
   ],
   imports: [
     NoopAnimationsModule,
@@ -220,6 +222,7 @@ import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.compone
     WorkWeekService,
     MonthService,
     MonthAgendaService,
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })

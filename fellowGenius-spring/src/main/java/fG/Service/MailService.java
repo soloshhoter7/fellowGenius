@@ -18,7 +18,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import fG.Configuration.JwtUtil;
-import fG.DAO.dao;
+import fG.DAO.Dao;
 import fG.Entity.BookingDetails;
 import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfile;
@@ -30,7 +30,7 @@ import fG.Repository.repositoryUsers;
 public class MailService {
 
 	@Autowired
-	dao userDao;
+	Dao userDao;
 
 	@Autowired
 	repositoryUsers repUsers;
@@ -429,7 +429,64 @@ public class MailService {
 			return false;
 		}
 	}
+	
+	void sendRejectedMail(String email,String name) {
+		InitiateMailService("registration@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
+		
+			String Url = rootUrl;
+			String to = email;
+			String recipientName = name;
+			try {
+				MimeMessage message = new MimeMessage(session);
+				MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+				helper.setFrom(senderEmail);
+				helper.setTo(to);
+				helper.setSubject("FellowGenius Application Status Update");
+				String mailContent = "<html>\r\n" + 
+						"    <head>\r\n" + 
+						"    </head>\r\n" + 
+						"<body>\r\n" + 
+						"    <body>\r\n" + 
+						"        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n" + 
+						"            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n" + 
+						"                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n" + 
+						"                    <img src=\"cid:logoImage\" style=\"width: 90px;\">\r\n" + 
+						"                </div>\r\n" + 
+						"                <div style=\"width: 100%; display: inline-block;\">\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "+recipientName+"</p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">We appreciate your interest in FellowGenius and the time you invested in sharing your details with us.\r\n" + 
+						"                    </p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Based on the screening of the details provided by you, we regret to inform you that we will not be able to take your request to enroll as the FellowGenius's expert.\r\n" + 
+						"                      <br> <br> We will retain your information in our active database and connect with you should a suitable opportunity arise.\r\n" + 
+						"                        </p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Till then, Visit FellowGenius and Interact with experts from your domain in just a click!!<br><a href=\""+Url+"\">FellowGenius</a></p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\"><br>Regards,<br>Team FellowGenius</p>\r\n" + 
+						"                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n" + 
+						"                </div>\r\n" + 
+						"            </div>\r\n" + 
+						"        </div>\r\n" + 
+						"    </body>\r\n" + 
+						"</body>\r\n" + 
+						"</html>";
+				
+				helper.setText(mailContent, true);
+				ClassPathResource resource = new ClassPathResource("logo.png");
+				helper.addInline("logoImage", resource);
+				Transport.send(message);
+
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		
+	}
 	boolean sendResetMail(String email) {
 		InitiateMailService("support@fellowgenius.com");
 		String from = senderEmail;
@@ -492,6 +549,117 @@ public class MailService {
 		} else {
 			return false;
 		}
+	}
+
+	public void sendExpertNoScheduleNotification(TutorProfile expert) {
+		InitiateMailService("support@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
+		
+			String Url = rootUrl+"home/tutor-schedule";
+			String to = expert.getEmail();
+			String recipientName = expert.getFullName();
+			try {
+				MimeMessage message = new MimeMessage(session);
+				MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+				helper.setFrom(senderEmail);
+				helper.setTo(to);
+				helper.setSubject("FellowGenius - Update Availability");
+				String mailContent = "<html>\r\n" + 
+						"    <head>\r\n" + 
+						"    </head>\r\n" + 
+						"<body>\r\n" + 
+						"    <body>\r\n" + 
+						"        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n" + 
+						"            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n" + 
+						"                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n" + 
+						"                    <img src=\"cid:logoImage\" style=\"width: 90px;\">\r\n" + 
+						"                </div>\r\n" + 
+						"                <div style=\"width: 100%; display: inline-block;\">\r\n" + 
+						"                   \r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "+recipientName+"</p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Your profile is getting noticed!\r\n" + 
+						"                    </p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">FellowGenius learners are trying to connect with you. Please update your availability using the calendar provided in your dashboard. You can also access the calendar by clicking <a href=\""+Url+"\">here</a></p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Regards,<br>Team FellowGenius</p>\r\n" + 
+						"                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n" + 
+						"                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n" + 
+						"                </div>\r\n" + 
+						"            </div>\r\n" + 
+						"        </div>\r\n" + 
+						"    </body>\r\n" + 
+						"</body>\r\n" + 
+						"</html>";
+				
+				helper.setText(mailContent, true);
+				ClassPathResource resource = new ClassPathResource("logo.png");
+				helper.addInline("logoImage", resource);
+				Transport.send(message);
+
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		
+	}
+	public void sendBlankEmail() {
+		InitiateMailService("support@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
+		
+			String to = "navjeetkumar.007@gmail.com";
+			try {
+				MimeMessage message = new MimeMessage(session);
+				MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+				helper.setFrom(senderEmail);
+				helper.setTo(to);
+				helper.setSubject("FellowGenius - Get Rs 250 Cashback");
+				String mailContent = "<html>\r\n" + 
+						"    <head>\r\n" + 
+						"    </head>\r\n" + 
+						"<body>\r\n" + 
+						"    <body>\r\n" + 
+						"        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n" + 
+						"            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n" + 
+						"                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n" + 
+						"                    <img src=\"cid:logoImage\" style=\"width: 90px;\">\r\n" + 
+						"                </div>\r\n" + 
+						"                <div style=\"width: 100%; display: inline-block;\">\r\n" + 
+						"                   \r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Hello Mr. Navjeet,</p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Thank you for booking your 1st session with FellowGenius. We hope it was a productive session.\r\n" + 
+						"                    </p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">For your next session on FellowGenius, use coupon code FG091001 and get INR 250 as cashback.<br><br>Coupon code is valid till 30th November 2021. A valid UPI id is required for processing the cashback amount</p>\r\n" + 
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Regards,<br>Team FellowGenius</p>\r\n" + 
+						"                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n" + 
+						"                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n" + 
+						"                </div>\r\n" + 
+						"            </div>\r\n" + 
+						"        </div>\r\n" + 
+						"    </body>\r\n" + 
+						"</body>\r\n" + 
+						"</html>";
+				
+				helper.setText(mailContent, true);
+				ClassPathResource resource = new ClassPathResource("logo.png");
+				helper.addInline("logoImage", resource);
+				Transport.send(message);
+
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		
 	}
 
 }

@@ -15,6 +15,7 @@ import { Category } from '../model/category';
 import { initiateSelect2 } from 'src/assets/js/custom';
 import { stringify } from '@angular/compiler/src/util';
 import { NgZone } from '@angular/core';
+import { SearchExpertProfileService } from '../service/search-expert-profile.service';
 declare const window: any;
 @Component({
   selector: 'app-search-results',
@@ -53,6 +54,7 @@ export class SearchResultsComponent implements OnInit {
     private matDialog: MatDialog,
     private ngZone: NgZone,
     private activatedRoute: ActivatedRoute,
+    private searchExpertProfileService:SearchExpertProfileService
   ) {
     this.allFiltersApplied = new filtersApplied();
   }
@@ -256,20 +258,7 @@ export class SearchResultsComponent implements OnInit {
     this.router.navigate(['login']);
   }
   createExpertString(result:any){
-    let filteredArray =  result.areaOfExpertise.filter(
-      (x) => x.category == this.selectedSubject
-    );
-    let expertise:string='';
-    for(let i=0;i<filteredArray.length;i++){
-      if(filteredArray[i].category==this.selectedSubject){
-        expertise+=filteredArray[i].subCategory;
-        if(i!=filteredArray.length-1){
-          expertise+=',';
-        }
-      }
-      
-    }
-    return expertise;
+    return this.searchExpertProfileService.createExpertString(result,this.selectedSubject,50);
   }
   viewProfile(profile: tutorProfileDetails) {
     this.profileService.setProfile(profile);

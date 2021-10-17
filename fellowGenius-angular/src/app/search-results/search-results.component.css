@@ -1,7 +1,14 @@
-.nav-link{
-    color: #bebcbc;
-    background: white;
-    display: flex;
-    border-radius: 10px;
-    margin-right: 10px;
+.nav-link {
+  color: #bebcbc;
+  background: white;
+  display: flex;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.profile-topic-description {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 44px;
+  overflow: hidden;
 }

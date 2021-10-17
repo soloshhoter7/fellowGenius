@@ -15,22 +15,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.google.gson.JsonObject;
 
+import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
-import fG.DAO.dao;
 import fG.Entity.BookingDetails;
 import fG.Entity.Notification;
+import fG.Entity.ScheduleData;
 import fG.Entity.TutorProfileDetails;
 import fG.Model.BookingDetailsModel;
 import fG.Model.EarningDataModel;
 import fG.Model.KeyValueModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
+import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryNotification;
+import fG.Repository.repositoryTutorAvailabilitySchedule;
 import fG.Repository.repositoryTutorProfileDetails;
 
 @Service
@@ -42,11 +44,14 @@ public class MeetingService {
 	MeetingDao meetingDao;
 
 	@Autowired
-	dao userDao;
+	Dao userDao;
 
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
 
+	@Autowired
+	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
+	
 	@Autowired
 	ScheduleService scheduleService;
 
@@ -225,14 +230,17 @@ public class MeetingService {
 	}
 
 	// to check if the booking is Valid
-	public boolean isBookingValid(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date) {
+	public boolean isBookingValid(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date) throws ParseException {
+		System.out.println("is booking valid -->> start time :"+sh+":"+sm+" end time :"+eh+":"+em+" Date :"+date+" tid :"+tid);
 		ArrayList<BookingDetails> tutorBookings = (ArrayList<BookingDetails>) meetingDao.fetchApprovedListTutor(tid);
 		ArrayList<ScheduleTime> timeSlots = scheduleService.createTimeSlots(sh, sm, eh, em, date);
 		Boolean bookingExceptionFound = false;
+		Boolean calendarExceptionFound=false;
 		Integer endMinutes = (eh * 60) + em;
 
 		outerloop: for (BookingDetails booking : tutorBookings) {
 			if (booking.getDateOfMeeting().equals(date)) {
+			
 				System.out.println("date Matches");
 				System.out.println(booking.getStartTimeHour() + " / " + booking.getStartTimeMinute());
 				if (eh > booking.getStartTimeHour()) {
@@ -255,11 +263,37 @@ public class MeetingService {
 				}
 			}
 		}
-		if (bookingExceptionFound) {
+		if (bookingExceptionFound||!checkIfExpertIsAvailableInTime(sh,sm,eh,em,tid,date)) {
 			return false;
-		} else {
+		} else if(!bookingExceptionFound&&checkIfExpertIsAvailableInTime(sh,sm,eh,em,tid,date)) {
 			return true;
+		}else {
+			return false;
 		}
+	}
+	public boolean checkIfExpertIsAvailableInTime(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date) throws ParseException {
+		TutorAvailabilityScheduleModel tutorSchedule = userDao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
+		List<ScheduleData> expertSch = tutorSchedule.getAllAvailabilitySchedule();
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+        Date bookingStartDateTime = (Date) sdf.parse(date);
+        Date bookingEndDateTime = (Date) sdf.parse(date);
+        bookingStartDateTime.setHours(sh);
+        bookingStartDateTime.setMinutes(sm);
+        bookingEndDateTime.setHours(eh);
+        bookingEndDateTime.setMinutes(em);
+		for(ScheduleData sch: expertSch) {
+			Date schStartTime = new Date(sch.getStartTime());
+			Date schEndTime = new Date(sch.getEndTime());
+			if(bookingStartDateTime.getTime()>=schStartTime.getTime()&&bookingEndDateTime.getTime()<=schEndTime.getTime()) {
+				System.out.println("Time matcheddd");
+				return true;
+			}
+		}
+	 
+	 return false;	
 	}
 
 	public ArrayList<BookingDetails> isBeforeTime(ArrayList<BookingDetails> bookings) throws ParseException {
@@ -360,7 +394,7 @@ public class MeetingService {
 		}
 	}
 
-	public ResponseModel updateRescheduledBooking(BookingDetailsModel booking) {
+	public ResponseModel updateRescheduledBooking(BookingDetailsModel booking) throws ParseException {
 		BookingDetails bk = repBooking.bidExists(booking.getBid());
 		bk.setStartTimeHour(booking.getStartTimeHour());
 		bk.setStartTimeMinute(booking.getStartTimeMinute());

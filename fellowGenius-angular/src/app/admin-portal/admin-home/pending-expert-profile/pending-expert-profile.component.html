@@ -1,0 +1,236 @@
+<body>
+    <div class="page-content dashboard__Panel">
+        <section class="wi_full py_5 expert_detail_sec" style="padding-top:0;">
+          <div class="container">
+            <div class="row expert__inner__Row">
+              <div class="col-12 col-lg-12">
+                <div class="expert__profile" style="padding: 20px;">
+                  <img
+                    [src]="teacherProfile.profilePictureUrl"
+                    alt="#"
+                    class="exprt_thumbnail"
+                  />
+                  <div class="profile__desc">
+                    <div class="profile_name">
+                      <div class="name_title">
+                        <h4>{{ teacherProfile.fullName }}</h4>
+                        <p>{{teacherProfile.email}}</p>
+                      </div>
+                      <div class="price_rate">
+                        <p style="font-size: 30px;">₹{{ teacherProfile.price1 }}<span>Per Hour</span></p>
+                      </div>
+                    </div>
+                    <div class="profile_rating">
+                      <ul>
+                        <li>
+                          <span class="review_fld"
+                            ><div class="stars-outer" style="position: relative">
+                              <div
+                                class="stars-inner"
+                                [style.width.%]="teacherProfile.rating"
+                              ></div>
+                              <span> {{ teacherProfile.rating / 20 }}</span>
+                            </div>
+                          </span>
+                        </li>
+                        <li>
+                          <span class="review_cnt"
+                            ><img
+                              src="../../assets/images/review_icon.svg"
+                              alt="#"
+                            />{{ teacherProfile.reviewCount }} REVIEWS</span
+                          >
+                        </li>
+                        <li>
+                          <span class="review_session"
+                            ><img
+                              src="../../assets/images/session_icon.svg"
+                              alt="#"
+                            />{{ teacherProfile.lessonCompleted }} SESSIONS</span
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="expert__description">
+                  <div class="description__tabs">
+                    <ul class="nav nav-tabs" role="tablist">
+                      <li class="nav-item" id="about_li">
+                        <a
+                          class="nav-link"
+                          id="about_nav"
+                          data-toggle="tab"
+                          href="#TAb_1"
+                          role="tab"
+                          >About</a
+                        >
+                      </li>
+                      <li class="nav-item" id="education_li">
+                        <a
+                          class="nav-link"
+                          data-toggle="tab"
+                          id="education_nav"
+                          href="#TAb_2"
+                          role="tab"
+                          >Education</a
+                        >
+                      </li>
+                      
+                      <li class="nav-item" id="work_li">
+                        <a
+                          class="nav-link"
+                          data-toggle="tab"
+                          id="work_nav"
+                          href="#TAb_4"
+                          role="tab"
+                        >
+                          Professional Background</a
+                        >
+                      </li>
+                      <li class="nav-item" id="work_li">
+                        <a
+                          class="nav-link"
+                          data-toggle="tab"
+                          id="work_nav"
+                          href="#TAb_5"
+                          role="tab"
+                        >
+                          Other Details</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="description__Content">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                      <div class="tab-pane" id="TAb_1" role="tabpanel">
+                        <h3>About</h3>
+                        <p>{{ teacherProfile.description }}</p>
+                      </div>
+                      <div class="tab-pane" id="TAb_2" role="tabpanel">
+                        <h3>Education</h3>
+                        <p
+                          class="tuple"
+                          *ngFor="
+                            let ed of teacherProfile.educationalQualifications
+                          "
+                        >
+                          {{ ed }}
+                        </p>
+                      </div>
+                  
+                      <div class="tab-pane" id="TAb_4" role="tabpanel">
+                        <h3>Professional Background</h3>
+                        <div>
+                          <p>
+                            Years of Experience :
+                            {{ teacherProfile.yearsOfExperience }}
+                          </p>
+                          <p *ngIf="teacherProfile.currentOrganisation">
+                            Current Organisation :
+                            {{ teacherProfile.currentOrganisation }}
+                          </p>
+                          <p *ngIf="teacherProfile.currentDesignation">
+                            Current Designation :
+                            {{ teacherProfile.currentDesignation }}
+                          </p>
+                          <div *ngIf="teacherProfile.previousOrganisations.length!=0">
+                            <h4>Previous Organisations</h4>
+                            <p
+                              class="tuple"
+                              *ngFor="
+                                let prev of teacherProfile.previousOrganisations
+                              "
+                            >
+                              {{ prev }}
+                            </p>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="tab-pane" id="TAb_5" role="tabpanel">
+                        <h3>Domains and topics</h3>
+                        <p *ngFor="let area of teacherProfile.areaOfExpertise"  class="tuple">{{area.category}} : {{area.subCategory}}</p>
+                        <h3>Other Details</h3>
+                        <div>
+                            <p *ngIf="!teacherProfile.upiId&&!teacherProfile.upiID" class="tuple">
+                                UPI id not available
+                              </p>
+                          <p *ngIf="teacherProfile.upiID" class="tuple">
+                            UPI id :
+                            {{ teacherProfile.upiID }}
+                          </p>
+                          <p *ngIf="teacherProfile.upiId" class="tuple">
+                            UPI id :
+                            {{ teacherProfile.upiId }}
+                          </p>
+                          <p *ngIf="teacherProfile.linkedInProfile" class="tuple">
+                            LinkedIn profile :
+                            <a [href]="teacherProfile.linkedInProfile" style="color:#8dc63f;cursor:pointer" target="_blank">Click to Open</a>
+                          </p>
+                          <p *ngIf="teacherProfile.gst==''||!teacherProfile.gst" class="tuple">
+                            GST number not available
+                          </p>
+                          <p *ngIf="teacherProfile.gst!=''" class="tuple">
+                            GST Number :
+                            {{ teacherProfile.gst }}
+                          </p>
+                          <p *ngIf="!teacherProfile.contact" class="tuple">Contact number not available.</p>
+                          <p *ngIf="teacherProfile.contact" class="tuple">Contact number : {{teacherProfile.contact}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-8">
+                <div class="expert__review">
+                  <h2>Reviews</h2>
+                  <span *ngIf="reviewList.length == 0">No Reviews</span>
+                  <div class="review_list" *ngIf="reviewList.length != 0">
+                    <div class="lits__item"  *ngFor="let review of reviewList">
+                      <div class="txt_wrapper">
+                        <div class="review__title">
+                          <!-- <span class="review__icon">J</span> -->
+                          <h5>{{review.studentName}}</h5>
+                          <span class="review__star"
+                            ><i class="fa fa-star" aria-hidden="true"></i>{{review.rating/20}}</span
+                          >
+                        </div>
+                        <div class="review__dsc">
+                          <small
+                            >Proin gravida nibh vel velit auctor aliquet. Aenean
+                            sollicitudin, lorem quis bibendum auctor, nisi elit
+                            consequat ipsum, nec sagittis sem nibh id elit.</small
+                          >
+                        </div>
+                        <div class="publication_wrapper">
+                          <div class="commnctn_list">
+                            <span
+                              ><img
+                                src="../../assets/images/like-icon.svg"
+                                alt="#"
+                                class="like"
+                              />Communication</span
+                            ><span
+                              ><img
+                                src="../../assets/images/like-icon.svg"
+                                alt="#"
+                                class="like"
+                              />Video Quality</span
+                            >
+                          </div>
+                          <div class="pblctn_txt">Published 1 month ago</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    
+</body>

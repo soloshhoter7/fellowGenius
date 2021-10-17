@@ -1317,6 +1317,10 @@ ul.MenusNav_Style li.active a.Link_Styled {
     flex-wrap: wrap;
     justify-content: space-between;
 }
+.expert__profile .profile__desc .profile_name .name_title{
+    width: 63%;
+    margin-right: 10px;
+}
 .expert__profile .profile__desc .profile_name .name_title h4 {
     margin: 0;
     padding-right: 15px;

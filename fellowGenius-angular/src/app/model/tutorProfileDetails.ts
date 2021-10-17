@@ -26,6 +26,7 @@ export class tutorProfileDetails {
   public yearsOfExperience: number;
   public linkedInProfile: string;
   public upiID:string;
+  public upiId:string;
   public gst:string;
 }
 export class expertise {
@@ -37,4 +38,11 @@ export class expertise {
   public isChoosable:boolean=false
   public isLoading:boolean=false;
   public corrExpertiseId;
+}
+export class featuredExpert{
+  name:string;
+  expertId:number;
+  topic:string;
+  profilePictureUrl:string;
+  precedence:number;
 }

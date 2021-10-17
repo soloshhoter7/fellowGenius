@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { StudentLoginModel } from '../model/studentLoginModel';
 import { tutorLoginModel } from '../model/tutorLoginModel';
 import { tutorProfile } from '../model/tutorProfile';
-import { expertise, tutorProfileDetails } from '../model/tutorProfileDetails';
+import { expertise, featuredExpert, tutorProfileDetails } from '../model/tutorProfileDetails';
 import { bookingDetails } from '../model/bookingDetails';
 import { TutorVerification } from '../model/tutorVerification';
 import { socialLogin } from '../model/socialModel';
@@ -249,6 +249,14 @@ export class HttpService {
     })
   }
 
+  rejectExpert(id){
+    return this.http.get(this.backendUrl+'/fellowGenius/rejectExpert',{
+      params:{
+        id:id
+      }
+    })
+  }
+
   updateAndAddExpertiseArea(area:expertise):Observable<Object>{
     return this.http.get<Object>(this.backendUrl+'/fellowGenius/updateAndAddExpertiseArea',{
       params:{
@@ -393,7 +401,16 @@ export class HttpService {
       }
     );
   }
-
+  getAdminTutorProfileDetails(tid: number): Observable<tutorProfileDetails> {
+    return this.http.get<tutorProfileDetails>(
+      this.backendUrl+'/fellowGenius/Admin/getTutorProfileDetails',
+      {
+        params: {
+          tid: tid.toString(),
+        },
+      }
+    );
+  }
   //for saving  booking Details
   saveBooking(bookingModel: bookingDetails): Observable<Object> {
     return this.http.post(
@@ -750,5 +767,31 @@ choosePassword(token,password):Observable<Object> {
   }
   fetchAllUserData():Observable<UserData>{
     return this.http.get<UserData>(this.backendUrl+'/fellowGenius/fetchAllUsersData');
+  }
+  fetchFeaturedExperts():Observable<featuredExpert[]>{
+    return this.http.get<featuredExpert[]>(this.backendUrl+'/fellowGenius/fetchFeaturedExperts');
+  }
+  saveFeaturedExpert(expert:featuredExpert):Observable<Object>{
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/saveFeaturedExperts',expert);
+  }
+  deleteFeaturedExpert(expert:featuredExpert):Observable<Object>{
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/deleteFeaturedExperts',expert);
+  }
+  updateFeaturedExperts(experts:featuredExpert[]):Observable<Object>{
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/updateFeaturedExperts',experts)
+  }
+  findPendingExpertById(id:string):Observable<tutorProfileDetails>{
+    return this.http.get<tutorProfileDetails>(this.backendUrl+'/fellowGenius/findPendingExpertById',{
+      params:{
+        id:id
+      }
+    });
+  }
+  notifyExpertNoSchedule(id:string):Observable<Object>{
+    return this.http.get<Object>(this.backendUrl+'/fellowGenius/notifyExpert',{
+      params:{
+        tid:id
+      }
+    });
   }
 }
