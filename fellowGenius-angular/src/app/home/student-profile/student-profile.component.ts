@@ -148,6 +148,7 @@ export class StudentProfileComponent implements OnInit {
     this.studentProfile.highestQualification = form.value.highestQualification;
     this.studentProfile.currentOrganisation = form.value.currentOrganisation;
     this.studentProfile.currentDesignation = form.value.currentDesignation;
+    this.studentProfile.upiID = form.value.upiID
     if (this.learningAreasDuplicacyCheck(this.learningAreas)) {
       this.httpService
         .updateStudentProfile(this.studentProfile)

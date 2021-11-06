@@ -11,5 +11,5 @@ export class StudentProfileModel {
 	public yearsOfExperience:number;
 	public currentOrganisation:string;
 	public currentDesignation:string;
-
+	upiID:string;
 }

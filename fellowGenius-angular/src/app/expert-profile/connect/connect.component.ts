@@ -21,6 +21,7 @@ import {
 } from 'src/app/service/window-ref.service';
 import { Observable } from 'rxjs';
 import { WebSocketService } from 'src/app/service/web-socket.service';
+import { Schedule } from '@syncfusion/ej2-schedule';
 @Component({
   selector: 'app-connect',
   templateUrl: './connect.component.html',
@@ -110,8 +111,8 @@ export class ConnectComponent implements OnInit {
   paymentResponse: any = {};
   duration;
   selectedDomain;
-  showExpertCode:boolean=false;
-  expertCode:string;
+  showExpertCode: boolean = false;
+  expertCode: string;
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -125,7 +126,7 @@ export class ConnectComponent implements OnInit {
     private dialog: MatDialog,
     private zone: NgZone,
     private winRef: WindowRefService,
-    private webSocket: WebSocketService,
+    private webSocket: WebSocketService
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -134,7 +135,7 @@ export class ConnectComponent implements OnInit {
         .fetchBookingTutorProfileDetails(this.userId)
         .subscribe((res) => {
           this.teacherProfile = res;
-         
+
           this.amount = parseInt(this.teacherProfile.price1);
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           this.areaOfExpertises = this.teacherProfile.areaOfExpertise;
@@ -157,11 +158,16 @@ export class ConnectComponent implements OnInit {
             .getTutorTimeAvailabilityTimeArray(this.userId)
             .subscribe((res) => {
               this.ScheduleTime = res;
-              if(this.ScheduleTime.length==0){
+              console.log(res);
+              if (this.ScheduleTime.length == 0) {
                 console.log('notified expert for no schedule!');
-                this.httpService.notifyExpertNoSchedule(this.teacherProfile.bookingId.toString()).subscribe((res)=>{
-                  console.log(res);
-                });
+                this.httpService
+                  .notifyExpertNoSchedule(
+                    this.teacherProfile.bookingId.toString()
+                  )
+                  .subscribe((res) => {
+                    console.log(res);
+                  });
               }
               this.selectedDate = this.scheduleDates[0];
               setTimeout(() => {
@@ -179,65 +185,110 @@ export class ConnectComponent implements OnInit {
   }
 
   dateChange() {
+    console.log('date change');
+    console.log(this.selectedDate);
     if (this.selectedDate.hasElements == false) {
       this.noSchedule = true;
     } else if (this.selectedDate.hasElements == true) {
+      console.log('selected date elements : ')
+      console.log(this.selectedDate.hasElements);
       this.noSchedule = false;
-
       this.fillSlots('start');
     }
   }
   startSlotChange() {
     this.endSlots = [];
-    var i;
-    for (i = this.startTimeValue + 1; i < this.startSlotsCopy.length; i++) {
-      this.endSlots.push(this.startSlotsCopy[i]);
+    console.log('start slot value is :' + this.startTimeValue);
+    let time: ScheduleTime =
+      this.ScheduleTime[
+        this.ScheduleTime.indexOf(this.startSlots[this.startTimeValue])
+      ];
+    let remainingSlots: ScheduleTime[] = this.returnNextFrameSlots(
+      this.ScheduleTime,
+      time.frame,
+      time
+    );
+    for (let slot of remainingSlots) {
+      this.endSlots.push(slot);
     }
+    this.endTimeValue= 0;
     this.dynamicPrice();
   }
-  endSlotChange(){
+  endSlotChange() {
     this.dynamicPrice();
+  }
+  returnNextFrameSlots(
+    ScheduleTime: ScheduleTime[],
+    currentFrame: number,
+    time: ScheduleTime
+  ): ScheduleTime[] {
+    let index: number = ScheduleTime.indexOf(time);
+    let nextSlots: ScheduleTime[] = [];
+    if (index != -1) {
+      for (let j = index + 1; j < ScheduleTime.length; j++) {
+        if (ScheduleTime[j].frame == currentFrame) {
+          nextSlots.push(ScheduleTime[j]);
+        }
+      }
+    }
+
+    return nextSlots;
   }
   fillSlots(method) {
     if (method == 'start') {
       this.startSlots = [];
       this.endSlots = [];
-      this.startSlotsCopy = [];
+      let selectedFrame: number = 0;
+      // console.log('fill slots called')
       for (let time of this.ScheduleTime) {
+        let frame: number = time.frame;
         if (time.date == this.selectedDate.date) {
-          this.startSlots.push(time);
+          // console.log('date matched')
+          let elLeftInFrame = this.returnNextFrameSlots(
+            this.ScheduleTime,
+            frame,
+            time
+          ).length;
+          console.log('element left in frame :'+frame+'is :'+elLeftInFrame)
+          if (elLeftInFrame !=0) {
+            this.startSlots.push(time);
+          }
         }
       }
-      for (let time of this.ScheduleTime) {
-        if (time.date == this.selectedDate.date) {
-          this.startSlotsCopy.push(time);
-        }
-      }
-      var i;
-      for (i = 1; i < this.startSlotsCopy.length; i++) {
-        this.endSlots.push(this.startSlotsCopy[i]);
-      }
+
       this.startTimeValue = 0;
       this.endTimeValue = 0;
-      this.startSlots.pop();
+      let time: ScheduleTime =
+        this.ScheduleTime[
+          this.ScheduleTime.indexOf(this.startSlots[this.startTimeValue])
+        ];
+      let remainingSlots: ScheduleTime[] = this.returnNextFrameSlots(
+        this.ScheduleTime,
+        time.frame,
+        time
+      );
+      console.log('remaining slots: ',remainingSlots)
+      for (let slot of remainingSlots) {
+        this.endSlots.push(slot);
+      }
+      console.log('end slots :', this.endSlots);
+      // this.startSlots.pop();
       this.dynamicPrice();
-      
     }
   }
-  dynamicPrice(){
+  dynamicPrice() {
     let startIndex, endIndex;
     startIndex = this.ScheduleTime.indexOf(
       this.startSlots[this.startTimeValue]
     );
-    endIndex = this.ScheduleTime.indexOf(
-      this.endSlots[this.endTimeValue]
-    );
-    console.log(startIndex,endIndex)
-    this.timeSelector(
-      this.startSlots[this.startTimeValue],
-      startIndex
-    );
-    this.timeSelector(this.endSlots[this.endTimeValue], endIndex);
+    endIndex = this.ScheduleTime.indexOf(this.endSlots[this.endTimeValue]);
+    console.log(startIndex, endIndex);
+    this.st.sh = this.ScheduleTime[startIndex].hours;
+    this.st.sm = this.ScheduleTime[startIndex].minutes;
+    this.et.eh = this.ScheduleTime[endIndex].hours;
+    this.et.em = this.ScheduleTime[endIndex].minutes;
+    // this.timeSelector(this.startSlots[this.startTimeValue], startIndex);
+    // this.timeSelector(this.endSlots[this.endTimeValue], endIndex);
     this.bookingDetails.duration = this.findDuration(
       this.st.sh,
       this.st.sm,
@@ -268,7 +319,7 @@ export class ConnectComponent implements OnInit {
         ondismiss: () => {
           this.zone.run(() => {
             console.log('payment failed');
-            this.isLoading=false;
+            this.isLoading = false;
           });
         },
       },
@@ -292,9 +343,9 @@ export class ConnectComponent implements OnInit {
     console.log(subject);
     for (let area of this.teacherProfile.areaOfExpertise) {
       if (area.subCategory == subject) {
-        console.log('found!!')
+        console.log('found!!');
         this.selectedDomain = area.category;
-        console.log(area.category,this.selectedDomain);
+        console.log(area.category, this.selectedDomain);
         subjectPrice = area.price;
       }
     }
@@ -346,16 +397,20 @@ export class ConnectComponent implements OnInit {
       this.startSlots[this.startTimeValue]
     );
     endIndex = this.ScheduleTime.indexOf(this.endSlots[this.endTimeValue]);
-    console.log(startIndex,endIndex);
-    this.timeSelector(this.startSlots[this.startTimeValue], startIndex);
-    this.timeSelector(this.endSlots[this.endTimeValue], endIndex);
+    console.log(startIndex, endIndex);
+    // this.timeSelector(this.startSlots[this.startTimeValue], startIndex);
+    // this.timeSelector(this.endSlots[this.endTimeValue], endIndex);
+    this.st.sh = this.ScheduleTime[startIndex].hours;
+    this.st.sm = this.ScheduleTime[startIndex].minutes;
+    this.et.eh = this.ScheduleTime[endIndex].hours;
+    this.et.em = this.ScheduleTime[endIndex].minutes;
 
     this.bookingDetails.startTimeHour = this.st.sh;
     // this.bookingDetails.startTimeHour = this.startSlots[this.startTimeValue].hours;
     this.bookingDetails.startTimeMinute = this.st.sm;
     // this.bookingDetails.startTimeMinute = this.startSlots[this.startTimeValue].minutes;
-    this.bookingDetails.dateOfMeeting = this.startDate;
-    // this.bookingDetails.dateOfMeeting = this.selectedDate;
+    // this.bookingDetails.dateOfMeeting = this.startDate;
+    this.bookingDetails.dateOfMeeting = this.selectedDate.date;
     this.bookingDetails.duration = this.findDuration(
       this.st.sh,
       this.st.sm,
@@ -374,24 +429,26 @@ export class ConnectComponent implements OnInit {
       this.teacherProfile.profilePictureUrl;
     this.bookingDetails.studentId =
       this.studentService.getStudentProfileDetails().sid;
-    console.log(this.expertCode)
+    console.log(this.expertCode);
     this.bookingDetails.expertCode = this.expertCode;
     this.calculatePrice();
     this.findDomain(this.bookingDetails.subject);
-    console.log(this.selectedDomain)
+    console.log(this.selectedDomain);
     this.bookingDetails.domain = this.selectedDomain;
     this.processingPayment = false;
-    console.log(this.bookingDetails)
-    this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
-      console.log('is bookind valid ->',res);
-      if (res) {
-        this.isLoading = true;
-        this.initPay();
-      } else if (!res) {
-        this.errorMessage =
-          'Tutor is not available in between the selected time slots !';
-      }
-    });
+    console.log(this.bookingDetails);
+    // this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
+    //   console.log('is bookind valid ->', res);
+    //   if (res) {
+    //     this.isLoading = true;
+    //     this.initPay();
+    //   } else if (!res) {
+    //     this.errorMessage =
+    //       'Tutor is not available in between the selected time slots !';
+    //   }
+    // });
+    this.isLoading = true;
+    this.initPay();
   }
 
   closeNav() {
@@ -400,261 +457,6 @@ export class ConnectComponent implements OnInit {
 
   openConnectPage() {
     this.dialog.open(ConnectComponent);
-  }
-
-  timeSelector(event, index: number) {
-    console.log('calleddd')
-    this.clickedIndex = index;
-    // if start time and end time are null
-    if (
-      this.st.sh == -1 &&
-      this.st.sm == -1 &&
-      this.et.eh == -1 &&
-      this.et.em == -1
-    ) {
-      this.clickedIndex1 = index;
-      this.startDisabled = false;
-      this.startDate = event.date;
-      this.st.sh = event.hours;
-      this.st.sm = event.minutes;
-      event.isStartDate = true;
-      this.startSelect = this.clickedIndex;
-      if (this.st.sm == 0) {
-        this.startTimeString = this.st.sh + ':' + '0' + this.st.sm;
-      } else {
-        this.startTimeString = this.st.sh + ':' + this.st.sm;
-      }
-      this.errorMessage = '';
-
-      //case 1 or case 3
-      if (
-        this.tempArray.clickIndex1 == null &&
-        this.tempArray.clickIndex2 == null &&
-        (this.clickedIndex - 1 == -1 ||
-          this.ScheduleTime[this.clickedIndex - 1].date != event.date)
-      ) {
-        if (this.clickedIndex - 1 == -1) {
-        }
-        this.tempArray.clickIndex1 = index;
-
-        this.case1a = true;
-        this.case3a = true;
-      } else if (
-        this.tempArray.clickIndex1 == null &&
-        this.tempArray.clickIndex2 == null &&
-        this.ScheduleTime[this.clickedIndex - 1].date == event.date
-      ) {
-        //case 2 or case 4 or case 5
-        this.tempArray.clickIndex1 = index;
-        this.case2a = true;
-        this.case4a = true;
-        this.case5a = true;
-      }
-
-      // else if start time is selected and end time is not selected
-    } else if (
-      this.st.sh != -1 &&
-      this.st.sm != -1 &&
-      this.et.eh == -1 &&
-      this.et.em == -1
-    ) {
-      this.clickedIndex2 = index;
-      // if date of start time selection and end time selection date are same
-      if (this.startDate == event.date) {
-        if (this.clickedIndex2 - this.clickedIndex1 <= 6) {
-          this.et.eh = event.hours;
-          this.et.em = event.minutes;
-          //if end time is greater than start time
-          if (this.et.eh * 60 + this.et.em > this.st.sh * 60 + this.st.sm) {
-            this.endDisabled = false;
-            event.isEndDate = true;
-            this.endSelect = this.clickedIndex;
-            if (this.et.em == 0) {
-              this.endTimeString = this.et.eh + ':' + '0' + this.et.em;
-            } else {
-              this.endTimeString = this.et.eh + ':' + this.et.em;
-            }
-            this.errorMessage = '';
-            //case 1 or case 4 or case 5
-            if (
-              this.tempArray.clickIndex1 != null &&
-              this.tempArray.clickIndex2 == null &&
-              this.ScheduleTime[this.clickedIndex].date == event.date
-              // this.ScheduleTime[this.clickedIndex + 1].date == event.date
-            ) {
-              if (this.tempArray.clickIndex1 != null) {
-              }
-              this.tempArray.clickIndex2 = index;
-
-              this.case1b = true;
-              this.case4b = true;
-              this.case5b = true;
-
-              if (this.case1a && this.case1b) {
-                this.bookingDetails.bookingCase = 1;
-              }
-              var diff = index - this.tempArray.clickIndex1;
-
-              if (diff == 1 && this.case4a && this.case4b) {
-                this.bookingDetails.bookingCase = 4;
-              } else if (diff != 1 && this.case5a && this.case5b) {
-                this.bookingDetails.bookingCase = 5;
-              }
-            } else if (
-              this.tempArray.clickIndex1 != null &&
-              this.tempArray.clickIndex2 == null &&
-              this.ScheduleTime[this.clickedIndex + 1].date != event.date
-            ) {
-              //case 2 or case 3
-              this.tempArray.clickIndex2 = index;
-              this.case2b = true;
-              this.case3b = true;
-
-              if (this.case2a && this.case2b) {
-                this.bookingDetails.bookingCase = 2;
-              } else if (this.case3a && this.case3b) {
-                this.bookingDetails.bookingCase = 3;
-              }
-            }
-          } else if (
-            this.et.eh * 60 + this.et.em <=
-            this.st.sh * 60 + this.st.sm
-          ) {
-            //if end time is less than start time
-            this.startDisabled = true;
-            this.endDisabled = true;
-            this.startSelect = -1;
-            this.endSelect = -1;
-
-            event.isEndDate = false;
-            event.isStartDate = false;
-            this.et.eh = -1;
-            this.et.em = -1;
-            this.st.sh = -1;
-            this.st.sm = -1;
-            this.startTimeString = 'Start Time ';
-            this.endTimeString = 'End Time';
-            this.errorMessage = 'End time should be after Start time, Reset !';
-
-            this.tempArray.clickIndex1 = null;
-            this.tempArray.clickIndex2 = null;
-            this.case1a = false;
-            this.case1b = false;
-            this.case2a = false;
-            this.case2b = false;
-            this.case3a = false;
-            this.case3b = false;
-            this.case4a = false;
-            this.case4b = false;
-            this.case5a = false;
-            this.case5b = false;
-          }
-        } else {
-          // this.errorMessage = "You can't book an Expert for more than 3 hours";
-          this.startDisabled = true;
-          this.endDisabled = true;
-          event.isStartDate = false;
-          this.startSelect = -1;
-          this.st.sh = -1;
-          this.st.sm = -1;
-          this.startTimeString = 'Start Time ';
-          this.tempArray.clickIndex1 = null;
-          this.tempArray.clickIndex2 = null;
-          this.case1a = false;
-          this.case1b = false;
-          this.case2a = false;
-          this.case2b = false;
-          this.case3a = false;
-          this.case3b = false;
-          this.case4a = false;
-          this.case4b = false;
-          this.case5a = false;
-          this.case5b = false;
-        }
-      } else {
-        // if start time date and end time date are not equal
-        this.errorMessage = 'Start date and End date should be same';
-        this.startDisabled = true;
-        this.endDisabled = true;
-        event.isStartDate = false;
-        this.startSelect = -1;
-        this.st.sh = -1;
-        this.st.sm = -1;
-        this.startTimeString = 'Start Time ';
-        this.tempArray.clickIndex1 = null;
-        this.tempArray.clickIndex2 = null;
-        this.case1a = false;
-        this.case1b = false;
-        this.case2a = false;
-        this.case2b = false;
-        this.case3a = false;
-        this.case3b = false;
-        this.case4a = false;
-        this.case4b = false;
-        this.case5a = false;
-        this.case5b = false;
-      }
-    } else if (
-      this.st.sh != -1 &&
-      this.st.sm != -1 &&
-      this.et.eh != -1 &&
-      this.et.em != -1
-    ) {
-      // if both start time and end time are already selected
-      this.endDisabled = true;
-      this.startDisabled = false;
-      this.startSelect = this.clickedIndex;
-      this.endSelect = -1;
-      this.startDate = event.date;
-      this.st.sh = event.hours;
-      this.st.sm = event.minutes;
-      this.et.eh = -1;
-      this.et.em = -1;
-      event.isEndDate = false;
-      if (this.st.sm == 0) {
-        this.startTimeString = this.st.sh + ':' + '0' + this.st.sm;
-      } else {
-        this.startTimeString = this.st.sh + ':' + this.st.sm;
-      }
-      this.endTimeString = 'End Time';
-
-      this.errorMessage = '';
-
-      this.tempArray.clickIndex1 = null;
-      this.tempArray.clickIndex2 = null;
-      this.case1a = false;
-      this.case1b = false;
-      this.case2a = false;
-      this.case2b = false;
-      this.case3a = false;
-      this.case3b = false;
-      this.case4a = false;
-      this.case4b = false;
-      this.case5a = false;
-      this.case5b = false;
-
-      //case 1 or case 3
-      if (
-        this.tempArray.clickIndex1 == null &&
-        this.tempArray.clickIndex2 == null &&
-        (this.clickedIndex - 1 == -1 ||
-          this.ScheduleTime[this.clickedIndex - 1].date != event.date)
-      ) {
-        this.tempArray.clickIndex1 = index;
-        this.case1a = true;
-        this.case3a = true;
-      } else if (
-        this.tempArray.clickIndex1 == null &&
-        this.tempArray.clickIndex2 == null &&
-        this.ScheduleTime[this.clickedIndex - 1].date == event.date
-      ) {
-        //case 2 or case 4 or case 5
-        this.tempArray.clickIndex1 = index;
-        this.case2a = true;
-        this.case4a = true;
-        this.case5a = true;
-      }
-    }
   }
 
   timeFrom = (X) => {
@@ -679,16 +481,17 @@ export class ConnectComponent implements OnInit {
 
   manipulateTimeSlots() {
     for (let date of this.scheduleDates) {
-      var flag = 0;
+      let count=0;
       for (let slot of this.ScheduleTime) {
         if (slot.date == date.date) {
-          flag = 1;
-          break;
+          count++;
         }
       }
-      if (flag == 1) {
+      date.elementCount = count;
+      if (count>1) {
         date.hasElements = true;
       } else {
+        date.hasElements=false;
       }
     }
   }
@@ -734,4 +537,5 @@ export class ConnectComponent implements OnInit {
 export class dateModel {
   date: string;
   hasElements: boolean = false;
+  elementCount:number;
 }

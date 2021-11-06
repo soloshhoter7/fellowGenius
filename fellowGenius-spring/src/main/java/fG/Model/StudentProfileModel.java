@@ -17,7 +17,7 @@ public class StudentProfileModel {
 	String currentOrganisation;
 	String currentDesignation;
 	String highestQualification;
-	
+	String upiID;
 
 	public String getLinkedInProfile() {
 		return linkedInProfile;
@@ -105,6 +105,12 @@ public class StudentProfileModel {
 	public void setHighestQualification(String highestQualification) {
 		this.highestQualification = highestQualification;
 	}
+	public String getUpiID() {
+		return upiID;
+	}
+	public void setUpiID(String upiID) {
+		this.upiID = upiID;
+	}
 	@Override
 	public String toString() {
 		return "StudentProfileModel [sid=" + sid + ", fullName=" + fullName + ", email=" + email + ", dateOfBirth="
@@ -112,7 +118,8 @@ public class StudentProfileModel {
 				+ profilePictureUrl + ", gradeLevel=" + gradeLevel + ", linkedInProfile=" + linkedInProfile
 				+ ", learningAreas=" + learningAreas + ", yearsOfExperience=" + yearsOfExperience
 				+ ", currentOrganisation=" + currentOrganisation + ", currentDesignation=" + currentDesignation
-				+ ", highestQualification=" + highestQualification + "]";
+				+ ", highestQualification=" + highestQualification + ", upiID=" + upiID + "]";
 	}
+	
 	
 }

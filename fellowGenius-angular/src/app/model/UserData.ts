@@ -5,4 +5,5 @@ export class UserData{
     email:string;
     expertises:string;
     expertCode:string;
+    upiID:string;
 }

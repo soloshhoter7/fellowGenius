@@ -42,7 +42,6 @@
       height="560px"
       [views]="scheduleViews"
       (popupOpen)="onPopupOpen($event)"
-      [readonly]="calendarView == 'Meeting'"
       (eventRendered)="onEventRendered($event)"
       (actionBegin)="onActionBegin($event)"
     ></ejs-schedule>

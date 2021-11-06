@@ -538,6 +538,7 @@ public class UserService implements UserDetailsService {
 		stuProfileModel.setCurrentDesignation(stuProfile.getCurrentDesignation());
 		stuProfileModel.setYearsOfExperience(stuProfile.getYearsOfExperience());
 		stuProfileModel.setHighestQualification(stuProfile.getHighestQualification());
+		stuProfileModel.setUpiID(stuProfile.getUpiID());
 		for (LearningAreas area : stuProfile.getLearningAreas()) {
 			stuProfileModel.getLearningAreas().add(area.getSubject());
 		}
@@ -560,7 +561,7 @@ public class UserService implements UserDetailsService {
 		studentProfile.setCurrentDesignation(studentModel.getCurrentDesignation());
 		studentProfile.setCurrentOrganisation(studentModel.getCurrentOrganisation());
 		studentProfile.setHighestQualification(studentModel.getHighestQualification());
-		
+		studentProfile.setUpiID(studentModel.getUpiID());
 		for (String area : studentModel.getLearningAreas()) {
 			LearningAreas subject = new LearningAreas();
 			subject.setUserId(studentProfile);
@@ -881,7 +882,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	// get tutor time array with tid
-	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) {
+	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) throws NumberFormatException, ParseException {
 		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		return scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
 	}
@@ -1287,9 +1288,14 @@ public class UserService implements UserDetailsService {
 				ud.setFullName(fetchUserName(u.getUserId(),u.getRole()));
 				ud.setUserId(u.getUserId().toString());
 				if(u.getRole().equals("Expert")) {
+					TutorProfileDetails tut = new TutorProfileDetails();
+					tut = repTutorProfileDetails.idExist(u.getUserId());
+					ud.setUpiID(tut.getUpiId());
 					ud.setExpertises(fetchExpertiseString(u.getUserId()));
 				}
 				if(u.getRole().equals("Learner")) {
+					StudentProfile su = repStudentProfile.idExist(u.getUserId());
+					ud.setUpiID(su.getUpiID());
 					ud.setExpertCode(u.getExpertCode());
 				}
 				result.add(ud);
@@ -1367,7 +1373,7 @@ public class UserService implements UserDetailsService {
 		}	
 	}
 	//to check if expert has a schedule within a week
-	public boolean checkIfExpertHasSchedule(Integer tid) {
+	public boolean checkIfExpertHasSchedule(Integer tid) throws ParseException {
 		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		ArrayList<ScheduleTime> timeArray = scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
 		if(timeArray!=null&&timeArray.size()!=0) {
@@ -1411,5 +1417,7 @@ public class UserService implements UserDetailsService {
 			
 		}
 	}
+
+	
 	 
 }

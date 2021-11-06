@@ -77,7 +77,10 @@ public class MeetingDao {
 	public List<?> fetchAllTutorBookings(Integer tid) {
 		return repBooking.fetchAllTutorBookings(tid);
 	}
-
+	// for fetching all bookings that are not cancelled
+	public List<?> findAllTutorBookings(Integer tid) {
+		return repBooking.findAllTutorBookings(tid);
+	}
 	// for fetching all bookings of student except pending
 	public List<?> fetchAllStudentBookings(Integer sid) {
 		return repBooking.fetchAllStudentBookings(sid);

@@ -49,6 +49,7 @@ export const routerOptions: ExtraOptions = {
   useHash: true,
 };
 export const appRoutes: Routes = [
+  //post login
   {
     path: 'home',
     component: HomeComponent,
@@ -67,6 +68,7 @@ export const appRoutes: Routes = [
       { path: 'sessions-expert', component: ExpertSessionsComponent },
     ],
   },
+  //pre login routes
   { path: '', component: FacadeComponent },
   { path: 'how-it-works', component: HowItWorksComponent },
   { path: 'search-results', component: SearchResultsComponent },
@@ -79,6 +81,7 @@ export const appRoutes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'cancel-booking', component: DeleteMeetingComponent },
   { path: 'reschedule-booking', component: RescheduleMeetingComponent },
+  //admin routes
   {
     path: 'admin',
     component: AdminPortalComponent,
@@ -99,6 +102,7 @@ export const appRoutes: Routes = [
     ],
   },
   { path: 'admin-login', component: AdminLoginComponent },
+
   { path: 'faq', component: FaqComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact-us', component: ContactUsInfoComponent },

@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -16,8 +17,6 @@ import com.google.gson.JsonParser;
 import fG.Service.MeetingService; 
 
 @Controller
-//@CrossOrigin(origins = "${crossOrigin}")
-//@CrossOrigin(origins = {"https://fellowgenius.com","https://www.fellowgenius.com"})
 public class WebSocketController {
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
@@ -32,7 +31,6 @@ public class WebSocketController {
     }
 	
 	public String sendMeetingNotificationWebSocket(@DestinationVariable String userId,@Payload String Notification) {
-		
 		this.messagingTemplate.convertAndSend("/user/Notifications/"+userId, Notification);
 		System.out.println("notification sending to "+userId+" as : "+Notification);
 		return Notification;
@@ -53,6 +51,7 @@ public class WebSocketController {
 		service.saveNotification(msg);
 		return "updateNotification";
 	}
+	
 	// for chatting inside the meeting
 	@MessageMapping("/sendChat/{bookingId}")
 	@SendTo("/inbox/MeetingChat/{bookingId}")
@@ -68,12 +67,5 @@ public class WebSocketController {
 		return file;
 	}
 	
-//	@MessageMapping("/sendNotification/{bookingId}")
-//	@SendTo("/user/Notifications/{userId}")
-//	public String sendMeetingNotificationWebSocket(@DestinationVariable String userId,@Payload String Notification) {
-//		System.out.println("notification sending to "+userId+" as : "+Notification);
-//		return Notification;
-//	}
-//	
 }
 

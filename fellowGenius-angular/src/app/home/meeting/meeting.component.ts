@@ -51,6 +51,7 @@ import { environment } from 'src/environments/environment';
 import { stringify } from '@angular/compiler/src/util';
 import { AuthService } from 'src/app/service/auth.service';
 import { isThisISOWeek } from 'date-fns';
+import * as moment from 'moment';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -261,7 +262,7 @@ export class MeetingComponent implements OnInit {
     this.bookingDetails = res;
     this.bookingDetails = this.meetingService.getBooking();
     let timeLeft = this.calculateRemainingTime();
-    
+    console.log(timeLeft)
     if (timeLeft == null) {
       this.meetingTimeInvalid = true;
       this.meetingTimeError = 'Meeting has expired !';
@@ -543,10 +544,19 @@ export class MeetingComponent implements OnInit {
     }
   }
   calculateRemainingTime() {
-    var endTime =
-      this.bookingDetails.endTimeHour * 60 + this.bookingDetails.endTimeMinute;
+    
+    let bookingDate:Date= moment(this.bookingDetails.dateOfMeeting,'DD/MM/YYYY').toDate();
+    bookingDate.setHours(this.bookingDetails.endTimeHour);
+    bookingDate.setMinutes(this.bookingDetails.endTimeMinute);
+    console.log('booking date :',bookingDate);
     var date: Date = new Date();
-    var currentTime = date.getHours() * 60 + date.getMinutes();
+    date.setSeconds(0);
+    // var currentTime = date.getHours() * 60 + date.getMinutes();
+    // var endTime =
+    // this.bookingDetails.endTimeHour * 60 + this.bookingDetails.endTimeMinute;
+    var currentTime =Math.floor(date.getTime() / 60000);
+    var endTime =Math.floor(bookingDate.getTime() / 60000);
+    console.log(endTime,currentTime);
     if (endTime > currentTime) {
       return endTime - currentTime;
     } else {

@@ -57,6 +57,8 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='Pending'", nativeQuery=true)
 	List<BookingDetails> fetchAllTutorBookings(Integer tid);
 	
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='cancelled'", nativeQuery=true)
+	List<BookingDetails> findAllTutorBookings(Integer tid);
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND NOT approval_status='Pending'", nativeQuery=true)
 	List<BookingDetails> fetchAllStudentBookings(Integer sid);
 

@@ -661,5 +661,76 @@ public class MailService {
 			}
 		
 	}
+	public void sendDiwaliMail(String email) {		
+		InitiateMailService("support@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
+		
+			String to = email;
+			try {
+				MimeMessage message = new MimeMessage(session);
+				MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+				helper.setFrom(senderEmail);
+				helper.setTo(to);
+				helper.setSubject("Happy Diwali from FellowGenius");
+				String mailContent = "<html>\r\n" + 
+						"    <body>\r\n" + 
+						"        <div>\r\n" + 
+						"            <img src=\"cid:diwaliPost\" style=\"width: 500px;\" alt=\"\">\r\n" + 
+						"        </div>\r\n" + 
+						"    </body>\r\n" + 
+						"</html>";
+				
+				helper.setText(mailContent, true);
+				ClassPathResource resource = new ClassPathResource("diwali.png");
+				helper.addInline("diwaliPost", resource);
+//				ClassPathResource resource = new ClassPathResource("logo.png");
+//				helper.addInline("logoImage", resource);
+				Transport.send(message);
+
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+
+	}
+//	public static void SendMessageWithEmbeddedImages()
+//	{
+//	  String htmlMessage = "<html>\r\n" + 
+//				"    <body>\r\n" + 
+//				"        <div>\r\n" + 
+//				"            <img src=\"cid:diwaliPost\" style=\"width: 500px;\" alt=\"\">\r\n" + 
+//				"        </div>\r\n" + 
+//				"    </body>\r\n" + 
+//				"</html>";
+//	  SmtpClient client = new SmtpClient("mail.server.com");
+//	  MailMessage msg = new MailMessage("noreply@deventerprise.net",
+//	                                    "someone@deventerprise.net");
+//	  // Create the HTML view
+//	  AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
+//	                                               htmlMessage,
+//	                                               Encoding.UTF8,
+//	                                               MediaTypeNames.Text.Html);
+//	
+//	  LinkedResource img = new LinkedResource("\"C:\\Users\\drnic\\Downloads\\diwali_post.png\"", mediaType);
+//	  // Make sure you set all these values!!!
+//	  img.ContentId = "EmbeddedContent_1";
+//	  img.ContentType.MediaType = mediaType;
+//	  img.TransferEncoding = TransferEncoding.Base64;
+//	  img.ContentType.Name = img.ContentId;
+//	  img.ContentLink = new Uri("cid:" + img.ContentId);
+//	  htmlView.LinkedResources.Add(img);
+//	  //////////////////////////////////////////////////////////////
+//	  msg.AlternateViews.Add(plainView);
+//	  msg.AlternateViews.Add(htmlView);
+//	  msg.IsBodyHtml = true;
+//	  msg.Subject = "Some subject";
+//	  client.Send(msg);
+//	}
 
 }

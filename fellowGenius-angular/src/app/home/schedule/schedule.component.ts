@@ -32,6 +32,7 @@ import { Query } from '@syncfusion/ej2-data';
 import { ThrowStmt } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
+import { stringify } from 'querystring';
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -126,6 +127,7 @@ export class tutorScheduleComponent implements OnInit {
             // 	scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
             // }, 3000);
             // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
+            console.log(this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule);
             this.scheduleObj.eventSettings.dataSource =
               this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
             // this.scheduleObj.eventSettings.dataSource = this.combinedSchedule;
@@ -145,6 +147,7 @@ export class tutorScheduleComponent implements OnInit {
       appointment.IsAllDay = schedule.IsAllDay;
       appointment.RecurrenceRule = schedule.RecurrenceRule;
       appointment.RecurrenceException = schedule.RecurrenceException;
+      appointment.RecurrenceID = schedule.RecurrenceID;
       appointment.Guid = schedule.Guid;
       appointment.IsReadonly = false;
       appointment.Type = 'availability';
@@ -166,6 +169,7 @@ export class tutorScheduleComponent implements OnInit {
         appointment.IsAllDay = schedule.IsAllDay;
         appointment.RecurrenceRule = schedule.RecurrenceRule;
         appointment.RecurrenceException = schedule.RecurrenceException;
+        appointment.RecurrenceID = schedule.RecurrenceID;
         appointment.Guid = schedule.Guid;
         appointment.Type = 'booking';
         appointment.IsReadonly = true;
@@ -182,6 +186,7 @@ export class tutorScheduleComponent implements OnInit {
     appointment.IsAllDay = schedule.IsAllDay;
     appointment.RecurrenceRule = schedule.RecurrenceRule;
     appointment.RecurrenceException = schedule.RecurrenceException;
+    appointment.RecurrenceID = schedule.RecurrenceID;
     appointment.Guid = schedule.Guid;
     appointment.Description = schedule.Description;
     appointment.Type = 'availability';
@@ -258,6 +263,11 @@ export class tutorScheduleComponent implements OnInit {
            app.StartTime=startDate.toString();
            app.EndTime= endDate.toString();
         }
+        app.IsAllDay = appointment.IsAllDay;
+        app.RecurrenceRule = appointment.RecurrenceRule;
+        app.RecurrenceException = appointment.RecurrenceException;
+        app.RecurrenceID = appointment.RecurrenceID;
+        app.Guid = appointment.Guid;
         allAppointments.push(app);
       }
       console.log(allAppointments);
@@ -267,11 +277,11 @@ export class tutorScheduleComponent implements OnInit {
   // for adding events into calendar schedules
   addEvents(appointment: scheduleData) {
     console.log(appointment);
-    let allAppointments:scheduleData[] = this.checkIfSameDate(appointment); 
-    for(let item of allAppointments){
-      this.availableSchedules.push(item);
-    }
-    console.log(allAppointments);
+    // let allAppointments:scheduleData[] = this.checkIfSameDate(appointment); 
+    
+      this.availableSchedules.push(appointment);
+    
+    // console.log(allAppointments);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
     console.log(this.availableSchedules);
@@ -290,41 +300,7 @@ export class tutorScheduleComponent implements OnInit {
         });
   }
   
-  onPopupOpen(args) {
-    if (args.type === 'Editor') {
-      args.element.querySelector('.e-start').ej2_instances[0].format =
-        'd/M/yy h:mm a';
-      args.element.querySelector('.e-end').ej2_instances[0].format =
-        'd/M/yy h:mm a';
-    }
-  }
-  // public onPopupOpen(args: PopupOpenEventArgs): void {
-  //   if (args.type == 'Editor') {
-  //     (this.scheduleObj.eventWindow as any).recurrenceEditor.frequencies = [
-  //       'daily',
-  //       'never',
-  //     ];
-  //     (document.querySelector(
-  //       '.e-repeat-interval'
-  //     ) as any).ej2_instances[0].max = 1;
-  //     let end = (document.querySelector('.e-end-on-element') as any)
-  //       .ej2_instances[0];
-  //     end.query = new Query().where('value', 'equal', 'never');
-  //     end.setProperties(
-  //       { query: new Query().where('value', 'equal', 'never') },
-  //       true
-  //     );
-  //     end.dataBind();
-  //   }
-  // }
 
-  public onEventRendered(args: any): void {
-    if (args.data.Type == 'booking') {
-      args.element.style.backgroundColor = '#e30084';
-    } else if (args.data.Type == 'availability') {
-      args.element.style.backgroundColor = '#7d0f7d';
-    }
-  }
   // for updating events into calendar schedules
   updateEvents(newAppointment: scheduleData) {
     let updateIndex = this.availableSchedules.findIndex(
@@ -349,11 +325,31 @@ export class tutorScheduleComponent implements OnInit {
     
   }
   //for deleting events into calendar schedules
-  deleteEvents(appointment: scheduleData) {
-    let deleteIndex = this.availableSchedules.findIndex(
-      (obj) => obj.Id == appointment.Id
+  deleteEvents(appointment: scheduleData[],mode:string) {
+    
+    let index = this.availableSchedules.findIndex(
+      (obj) => obj.Id == appointment[0].Id
     );
-    this.availableSchedules.splice(deleteIndex, 1);
+    if(mode=='whole'){
+      this.availableSchedules.splice(index, 1);
+    }else if(mode == 'recurrenceEvent'){
+      let parentIndex; 
+      console.log('deleting recurrent event !')
+      console.log(appointment);
+      if(appointment.length==2){
+        this.availableSchedules.splice(index,1);
+        parentIndex = this.availableSchedules.findIndex(
+          (obj) => obj.Id == appointment[1].Id
+        );
+        if(parentIndex!=-1){
+          this.availableSchedules[parentIndex]=appointment[1];
+        }
+        
+      }else if(appointment.length==1){
+        this.availableSchedules[index]=appointment[0];
+      }
+    }
+    console.log(this.availableSchedules)
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
     // this.isLoading = true;
@@ -367,11 +363,34 @@ export class tutorScheduleComponent implements OnInit {
         });
   }
   //for updating special case
-  updateSpecialEvents() {
+  updateSpecialEvents(parentSchedule,occurrenceSchedule) {
+    console.log(this.availableSchedules);
+    let parentAppointment:scheduleData = this.copyAppointment(parentSchedule);
+    let occurrenceAppointment:scheduleData = this.copyAppointment(occurrenceSchedule);
+    //updating the parent schedule
+    let parentIndex = this.availableSchedules.findIndex(
+      (obj) => obj.Id == parentAppointment.Id
+    );
+    if (parentIndex == -1) {
+      this.availableSchedules.push(parentAppointment);
+    } else {
+      this.availableSchedules[parentIndex] = parentAppointment;
+    }
+    
+    // adding the occurrence schedule
+    let occurrenceIndex = this.availableSchedules.findIndex(
+      (obj) => obj.Id == occurrenceAppointment.Id
+    );
+    if(occurrenceIndex==-1){
+      this.availableSchedules.push(occurrenceAppointment);
+    }else{
+      this.availableSchedules[occurrenceIndex] = occurrenceAppointment;
+    }
+
+
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
-      this.availableSchedules;
-      console.log(this.availableSchedules)
-    // this.isLoading = true;
+    this.availableSchedules;
+    console.log(this.availableSchedules);
     setTimeout(() => {
       //<<<---    using ()=> syntax
       this.httpService
@@ -383,13 +402,36 @@ export class tutorScheduleComponent implements OnInit {
         });
     }, 3000);
   }
-  // on event rendered
-  // onEventRendered(args: EventRenderedArgs): void {}
+
+  onPopupOpen(args) {
+    if (args.type === 'Editor') {
+
+      args.element.querySelector('.e-start').ej2_instances[0].format =
+        'd/M/yy h:mm a';
+      args.element.querySelector('.e-end').ej2_instances[0].format =
+        'd/M/yy h:mm a';
+
+      (<any>this.scheduleObj.eventWindow).recurrenceEditor.frequencies = [
+        'none',
+        'daily',
+        'weekly',
+      ];
+    }
+  }
+
+  onEventRendered(args: any): void {
+    if (args.data.Type == 'booking') {
+      args.element.style.backgroundColor = '#e30084';
+    } else if (args.data.Type == 'availability') {
+      args.element.style.backgroundColor = '#7d0f7d';
+    }
+  }
 
   onActionBegin(args: ActionEventArgs): void {
     var schedule;
     //when an event is created
     if (args.requestType === 'eventCreate') {
+      console.log(this.availableSchedules)
       schedule = args.addedRecords;
       // this.isLoading=!this.isLoading;
       this.isLoading=true;
@@ -397,74 +439,49 @@ export class tutorScheduleComponent implements OnInit {
         this.addEvents(this.copyAppointment(schedule[0]));
       }, 3000);
     } else if (args.requestType === 'eventChange') {
+      console.log(this.availableSchedules);
       // when an event is changed
-      schedule = args.changedRecords;
-      console.log(schedule);
-      // this.isLoading = !this.isLoading;
+      schedule=args.data;
       this.isLoading=true;
+      console.log(this.availableSchedules);
       setTimeout(() => {
-        if (
-          schedule[0].Guid != null &&
-          schedule[0].RecurrenceException != null
-        ) {
-          console.log('called recurrence rule exception')
-          // if an recurrence exception is created
-          // this.availableSchedules.splice(0, this.availableSchedules.length);
-          for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
-            .allAvailabilitySchedule) {
-            var appointment = new scheduleData();
-            appointment.Id = schedule.Id;
-            appointment.Subject = schedule.Subject;
-            appointment.StartTime = schedule.StartTime.toString();
-            appointment.EndTime = schedule.EndTime.toString();
-            appointment.IsAllDay = schedule.IsAllDay;
-            appointment.RecurrenceRule = schedule.RecurrenceRule;
-            appointment.RecurrenceException = schedule.RecurrenceException;
-            appointment.Guid = schedule.Guid;
-            appointment.RecurrenceID = schedule.RecurrenceID;
-            this.availableSchedules.push(appointment);
-          }
-          this.updateSpecialEvents();
-        } else {
+        if(schedule.occurrence!=null&&schedule.parent!=null){
+          console.log('recurrence exception !')
+          console.log(schedule.occurrence);
+          console.log(schedule.parent)
+          this.updateSpecialEvents(schedule.parent,schedule.occurrence);
+        }else if(schedule!=null&&schedule.occurrence==null&&schedule.parent==null){
+            //normal updation
+          schedule=args.changedRecords;
           console.log('called normal updation !')
-          //normal updation
           this.updateEvents(this.copyAppointment(schedule[0]));
         }
       }, 3000);
     } else if (args.requestType === 'eventRemove') {
       console.log('event is removed !');
+      let mode:string='whole'
       // when an event is removed
       schedule = args.deletedRecords;
       console.log(schedule);
-      
-      if (schedule.length != 0) {
-        this.isLoading=true;
-        setTimeout(() => {
-          for( let sch of schedule){
-            this.deleteEvents(this.copyAppointment(sch));
+      console.log(args.data);
+      this.isLoading=true;
+      setTimeout(() => {
+        if(args.deletedRecords.length==0&&args.data[0].parent!=null){
+          if(args.data[0].occurrence!=null){
+            schedule.push(this.copyAppointment(args.data[0].occurrence))
           }
-        }, 3000);
-      } 
-      // else if (schedule.length == 0) {
-      //   setTimeout(() => {
-      //     this.availableSchedules.splice(0, this.availableSchedules.length);
-      //     for (let schedule of this.tutorService.getPersonalAvailabilitySchedule()
-      //       .allAvailabilitySchedule) {
-      //       var appointment = new scheduleData();
-      //       appointment.Id = schedule.Id;
-      //       appointment.Subject = schedule.Subject;
-      //       appointment.StartTime = schedule.StartTime.toString();
-      //       appointment.EndTime = schedule.EndTime.toString();
-      //       appointment.IsAllDay = schedule.IsAllDay;
-      //       appointment.RecurrenceRule = schedule.RecurrenceRule;
-      //       appointment.RecurrenceException = schedule.RecurrenceException;
-      //       appointment.Guid = schedule.Guid;
-      //       appointment.RecurrenceID = schedule.RecurrenceID;
-      //       this.availableSchedules.push(appointment);
-      //     }
-      //     this.updateSpecialEvents();
-      //   }, 3000);
-      // }
+          if(args.data[0].parent!=null){
+            schedule.push(this.copyAppointment(args.data[0].parent))
+          }  
+          mode='recurrenceEvent';
+          console.log('deleting a recurrence event',schedule)
+          this.deleteEvents(schedule,mode);
+        }else{
+          schedule.push(this.copyAppointment(args.data[0]));
+          this.deleteEvents(schedule,mode);
+        }  
+      }, 3000);
+      
     }
   }
 }

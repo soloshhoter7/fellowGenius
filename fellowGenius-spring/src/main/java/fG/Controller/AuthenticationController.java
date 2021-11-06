@@ -18,8 +18,6 @@ import fG.Service.UserService;
 
 
 @RestController
-//@CrossOrigin(origins = "${crossOrigin}")
-//@CrossOrigin(origins = {"https://fellowgenius.com","https://www.fellowgenius.com"})
 public class AuthenticationController {
 	
 		@Autowired

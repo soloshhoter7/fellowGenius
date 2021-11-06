@@ -238,11 +238,11 @@ export class HttpService {
   }
   fetchPendingExperts():Observable<tutorProfileDetails[]>{
     return this.http.get<tutorProfileDetails[]>(
-      this.backendUrl+'/fellowGenius/fetchPendingExperts'
+      this.backendUrl+'/fellowGenius/Admin/fetchPendingExperts'
     );
   }
   verifyExpert(id){
-    return this.http.get(this.backendUrl+'/fellowGenius/verifyExpert',{
+    return this.http.get(this.backendUrl+'/fellowGenius/Admin/verifyExpert',{
       params:{
         id:id
       }
@@ -250,7 +250,7 @@ export class HttpService {
   }
 
   rejectExpert(id){
-    return this.http.get(this.backendUrl+'/fellowGenius/rejectExpert',{
+    return this.http.get(this.backendUrl+'/fellowGenius/Admin/rejectExpert',{
       params:{
         id:id
       }
@@ -258,7 +258,7 @@ export class HttpService {
   }
 
   updateAndAddExpertiseArea(area:expertise):Observable<Object>{
-    return this.http.get<Object>(this.backendUrl+'/fellowGenius/updateAndAddExpertiseArea',{
+    return this.http.get<Object>(this.backendUrl+'/fellowGenius/Admin/updateAndAddExpertiseArea',{
       params:{
         category:area.category,
         subCategory:area.subCategory
@@ -274,7 +274,7 @@ export class HttpService {
   }
   updatePendingExpert(tutorProfileDetails: tutorProfileDetails):Observable<Object> {
     return this.http.post<Object>(
-      this.backendUrl+'/fellowGenius/updatePendingExpert',
+      this.backendUrl+'/fellowGenius/Admin/updatePendingExpert',
       tutorProfileDetails
     );
   }
@@ -721,7 +721,7 @@ choosePassword(token,password):Observable<Object> {
   }
   
   addNewCategory(category:Category):Observable<Object>{
-    return this.http.post<Object>(this.backendUrl+'/fellowGenius/addCategories',{
+    return this.http.post<Object>(this.backendUrl+'/fellowGeniu/Admin/addCategories',{
       category:category.category,
       subCategory:category.subCategory
     });
@@ -730,7 +730,7 @@ choosePassword(token,password):Observable<Object> {
     return this.http.get<Category[]>(this.backendUrl+'/fellowGenius/getAllCategories');
   }
   addNewSubCategory(category:Category):Observable<Object>{
-    return this.http.post<Object>(this.backendUrl+'/fellowGenius/addSubCategories',
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/addSubCategories',
     {
       category:category.category,
       subCategory:category.subCategory
@@ -763,25 +763,25 @@ choosePassword(token,password):Observable<Object> {
   }
 
   fetchUserAnalytics():Observable<UserActivityAnalytics>{
-    return this.http.get<UserActivityAnalytics>(this.backendUrl+'/fellowGenius/fetchUserDataAnalytics');
+    return this.http.get<UserActivityAnalytics>(this.backendUrl+'/fellowGenius/Admin/fetchUserDataAnalytics');
   }
   fetchAllUserData():Observable<UserData>{
-    return this.http.get<UserData>(this.backendUrl+'/fellowGenius/fetchAllUsersData');
+    return this.http.get<UserData>(this.backendUrl+'/fellowGenius/Admin/fetchAllUsersData');
   }
   fetchFeaturedExperts():Observable<featuredExpert[]>{
-    return this.http.get<featuredExpert[]>(this.backendUrl+'/fellowGenius/fetchFeaturedExperts');
+    return this.http.get<featuredExpert[]>(this.backendUrl+'/fellowGenius/Admin/fetchFeaturedExperts');
   }
   saveFeaturedExpert(expert:featuredExpert):Observable<Object>{
-    return this.http.post<Object>(this.backendUrl+'/fellowGenius/saveFeaturedExperts',expert);
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/saveFeaturedExperts',expert);
   }
   deleteFeaturedExpert(expert:featuredExpert):Observable<Object>{
-    return this.http.post<Object>(this.backendUrl+'/fellowGenius/deleteFeaturedExperts',expert);
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/deleteFeaturedExperts',expert);
   }
   updateFeaturedExperts(experts:featuredExpert[]):Observable<Object>{
-    return this.http.post<Object>(this.backendUrl+'/fellowGenius/updateFeaturedExperts',experts)
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/updateFeaturedExperts',experts)
   }
   findPendingExpertById(id:string):Observable<tutorProfileDetails>{
-    return this.http.get<tutorProfileDetails>(this.backendUrl+'/fellowGenius/findPendingExpertById',{
+    return this.http.get<tutorProfileDetails>(this.backendUrl+'/fellowGenius/Admin/findPendingExpertById',{
       params:{
         id:id
       }

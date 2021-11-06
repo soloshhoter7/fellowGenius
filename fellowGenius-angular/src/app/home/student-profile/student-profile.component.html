@@ -122,6 +122,37 @@
                     >
                   </div>
                 </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <label class="">UPI ID</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter UPI ID"
+                      name="upiID"
+                      maxlength="30"
+                      [ngModel]="studentProfile.upiID"
+                      ngModel
+                      #upiID="ngModel"
+                    />
+                    <span
+                      class="help-block"
+                      *ngIf="!upiID.valid && upiID.touched"
+                      >Invalid UPI ID</span
+                    >
+                    <div>
+                      <span
+                        class="help-block"
+                        style="
+                          color: grey;
+                          font-size: smaller;
+                        "
+                        >UPI ID is necessary for processing your
+                        payments</span
+                      >
+                    </div>
+                  </div>
+                </div>
                 <div class="col-12">
                   <div class="form__btn">
                     <button type="submit" class="button save__btn" [disabled]="learnerProfile.invalid" >Save</button>

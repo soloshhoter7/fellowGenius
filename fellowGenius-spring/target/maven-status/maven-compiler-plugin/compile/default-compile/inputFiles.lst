@@ -17,6 +17,7 @@ D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\MailService.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\expertise.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositorySocialLogin.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Controller\AdminController.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Controller\UserController.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\TutorVerification.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\ScheduleTime.java
@@ -65,6 +66,7 @@ D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\SocialLoginModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryUserActivity.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\FeaturedExperts.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\AdminService.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Configuration\JwtRequestFilter.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\DAO\MeetingDao.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\MeetingService.java

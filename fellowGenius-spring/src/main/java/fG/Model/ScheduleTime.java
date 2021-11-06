@@ -4,8 +4,9 @@ public class ScheduleTime {
 	public String date;
 	public Integer hours;
 	public Integer minutes;
-    public Integer totalMinutes;
-    
+	public Integer totalMinutes;
+	public Integer frame;
+
 	public Integer getTotalMinutes() {
 		return totalMinutes;
 	}
@@ -38,22 +39,40 @@ public class ScheduleTime {
 		this.minutes = minutes;
 	}
 
-	
+
 	@Override
 	public String toString() {
 		return "ScheduleTime [date=" + date + ", hours=" + hours + ", minutes=" + minutes + ", totalMinutes="
-				+ totalMinutes + "]";
+				+ totalMinutes + ", frame=" + frame + "]";
 	}
 
+	public Integer getFrame() {
+		return frame;
+	}
+
+	public void setFrame(Integer frame) {
+		this.frame = frame;
+	}
+
+//	@Override
+//	public boolean equals(Object anObject) {
+//		if (!(anObject instanceof ScheduleTime)) {
+//			return false;
+//		}
+//		ScheduleTime otherMember = (ScheduleTime) anObject;
+//		return ((otherMember.getDate().equals(this.getDate())) && (otherMember.getHours().equals(this.getHours()))
+//				&& (otherMember.getMinutes().equals(this.getMinutes()))
+//				&& (otherMember.getFrame().equals(this.getFrame())));
+//	}
+	
 	@Override
-    public boolean equals(Object anObject) {
-        if (!(anObject instanceof ScheduleTime)) {
-            return false;
-        }
-        ScheduleTime otherMember = (ScheduleTime)anObject;
-        return ( (otherMember.getDate().equals(this.getDate())) && (otherMember.getHours().equals(this.getHours())) && (otherMember.getMinutes().equals(this.getMinutes())));
-    }
+	public boolean equals(Object anObject) {
+		if (!(anObject instanceof ScheduleTime)) {
+			return false;
+		}
+		ScheduleTime otherMember = (ScheduleTime) anObject;
+		return ((otherMember.getDate().equals(this.getDate())) && (otherMember.getHours().equals(this.getHours()))
+				&& (otherMember.getMinutes().equals(this.getMinutes())));
+	}
 
 }
-
-

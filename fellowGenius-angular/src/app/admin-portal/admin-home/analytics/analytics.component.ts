@@ -18,12 +18,12 @@ export class AnalyticsComponent implements OnInit {
     quoteStrings: '"',
     decimalseparator: '.',
     showLabels: false,
-    headers: ["User Id","Full Name","Role","Email","Expert Code","Expertises"],
+    headers: ["User Id","Full Name","Role","Email","Expert Code","Expertises","Upi_Id"],
     showTitle: true,
     title: 'user data',
     useBom: false,
     removeNewLines: true,
-    keys: ['userId','fullName','role','email','expertCode','expertises' ]
+    keys: ['userId','fullName','role','email','expertCode','expertises','upiID' ]
   };
 
   ngOnInit(): void {

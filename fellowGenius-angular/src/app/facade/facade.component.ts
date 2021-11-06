@@ -109,7 +109,8 @@ export class FacadeComponent implements OnInit {
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632597827378?alt=media&token=76adf521-fc64-430d-85b8-d02cac72d0aa',
       name: 'Ruchir Thakkar',
       specialisation: 'PIET - B.tech[CSE]',
-      domain:'B2C Sales and Distribution',
+      subject:'',
+      domain:'Personal Finance',
       studentsCount: 50,
       sessionsCount: 98,
       rating: 85,
@@ -199,7 +200,6 @@ export class FacadeComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
-    this.fetchFeaturedExperts();
   }
   signUpRouting(val){
     document.getElementById('closePopUpButton').click();

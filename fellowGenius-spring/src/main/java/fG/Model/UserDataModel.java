@@ -7,6 +7,7 @@ public class UserDataModel {
 	String email;
 	String expertises;
 	String expertCode;
+	String upiID;
 	public String getUserId() {
 		return userId;
 	}
@@ -46,10 +47,17 @@ public class UserDataModel {
 	public void setExpertCode(String expertCode) {
 		this.expertCode = expertCode;
 	}
+	
+	public String getUpiID() {
+		return upiID;
+	}
+	public void setUpiID(String upiID) {
+		this.upiID = upiID;
+	}
 	@Override
 	public String toString() {
 		return "UserDataModel [userId=" + userId + ", fullName=" + fullName + ", role=" + role + ", email=" + email
-				+ ", expertises=" + expertises + ", expertCode=" + expertCode + "]";
+				+ ", expertises=" + expertises + ", expertCode=" + expertCode + ", upiID=" + upiID + "]";
 	}
 	
 	

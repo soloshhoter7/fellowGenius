@@ -206,7 +206,7 @@ export class SignUpExpertComponent implements OnInit {
       disableEditDomainView: () => this.disableEditDomainView(),
     };
     this.getAllCategories();
-    this.getEarningAppInfo();
+    // this.getEarningAppInfo();
     $('.select2').select2({
       placeholder: {
         id: '-1', // the value of the option

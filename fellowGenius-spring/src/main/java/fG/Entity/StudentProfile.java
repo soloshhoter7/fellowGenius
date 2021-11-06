@@ -39,7 +39,8 @@ public class StudentProfile {
 	String expertCode;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userId")
 	Set<LearningAreas> learningAreas = new HashSet<>();
-
+    String upiID;
+    
 	public Integer getUserBookingId() {
 		return userBookingId;
 	}
@@ -152,6 +153,14 @@ public class StudentProfile {
 		this.expertCode = expertCode;
 	}
 
+	public String getUpiID() {
+		return upiID;
+	}
+
+	public void setUpiID(String upiID) {
+		this.upiID = upiID;
+	}
+
 	@Override
 	public String toString() {
 		return "StudentProfile [sid=" + sid + ", userBookingId=" + userBookingId + ", fullName=" + fullName + ", email="
@@ -159,7 +168,9 @@ public class StudentProfile {
 				+ profilePictureUrl + ", linkedInProfile=" + linkedInProfile + ", yearsOfExperience="
 				+ yearsOfExperience + ", currentOrganisation=" + currentOrganisation + ", currentDesignation="
 				+ currentDesignation + ", highestQualification=" + highestQualification + ", expertCode=" + expertCode
-				+ ", learningAreas=" + learningAreas + "]";
+				+ ", learningAreas=" + learningAreas + ", upiID=" + upiID + "]";
 	}
+
+	
 
 }
