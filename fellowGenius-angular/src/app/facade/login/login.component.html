@@ -35,7 +35,17 @@ style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
                           <div class="form-group">
                               <label class="">Password</label>
                               <div class="password_wrap" >
-                                <input type="password" id="password"  class="form-control" name="password" ngModel required #password="ngModel" maxLength="40">
+                                <input 
+                                type="password"
+                                id="password-field"  
+                                class="form-control" 
+                                name="password" 
+                                ngModel 
+                                required 
+                                #password="ngModel" 
+                                maxLength="40" 
+                                
+                                />
                                 <span
                           toggle="#password-field"
                           class="fa fa-fw fa-eye field-icon toggle-password"

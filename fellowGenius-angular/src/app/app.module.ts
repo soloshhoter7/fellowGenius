@@ -107,6 +107,7 @@ import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.compone
 import { ExpertsComponent } from './admin-portal/admin-home/experts/experts.component';
 import { PendingExpertProfileComponent } from './admin-portal/admin-home/pending-expert-profile/pending-expert-profile.component';
 import { DatePipe } from '@angular/common';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 @NgModule({
   declarations: [
@@ -174,6 +175,7 @@ import { DatePipe } from '@angular/common';
     AdminHomeComponent,
     ExpertsComponent,
     PendingExpertProfileComponent,
+    FeedbackComponent,
   ],
   imports: [
     NoopAnimationsModule,
