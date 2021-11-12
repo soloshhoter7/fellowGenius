@@ -355,13 +355,20 @@
                           <!-- <input
                             matInput
                             [matDatepicker]="picker"
+                             type="date"
+                            id="dob"
+                            name="dob"
+                            ngModel
                             class="form-control"
-                          />
-                          <div><mat-datepicker-toggle
+                            dobValidator
+                            required
+                            #dob="ngModel"
+                          /> -->
+                          <!-- <mat-datepicker-toggle
                             matSuffix
                             [for]="picker"
                           ></mat-datepicker-toggle>
-                          <mat-datepicker #picker></mat-datepicker></div> -->
+                          <mat-datepicker #picker></mat-datepicker> -->
                         </div>
                       </div>
 

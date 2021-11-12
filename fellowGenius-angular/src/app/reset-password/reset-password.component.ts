@@ -42,7 +42,7 @@ export class ResetPasswordComponent implements OnInit {
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   ngOnInit(): void {
-    // this.seePassword();
+    this.seePassword();
     this.activatedRoute.queryParams.subscribe((params) => {
       this.code = params['token'];
       if (this.code == null) {
@@ -50,17 +50,19 @@ export class ResetPasswordComponent implements OnInit {
       } else {
         this.showPassword = true;
       }
-  
+      
       // this.httpService
       //   .fetchTutorProfileDetails(this.userId)
       //   .subscribe((res) => {
       //     this.teacherProfile = res;
 
       //   });
+      
     });
   }
   seePassword() {
     $('.toggle-password').each(function (index) {
+      console.log('hello');
       $(this).on('click', function () {
         $(this).toggleClass('fa-eye fa-eye-slash');
         var input = $($(this).attr('toggle'));

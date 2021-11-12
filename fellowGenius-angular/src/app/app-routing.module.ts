@@ -29,6 +29,7 @@ import { RescheduleMeetingComponent } from './reschedule-meeting/reschedule-meet
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { TestComponent } from './test/test.component';
+import { FeedbackComponent } from './feedback/feedback.component';
 import { BlogsComponent } from './facade/blogs/blogs.component';
 import { ResourceVideosComponent } from './facade/resource-videos/resource-videos.component';
 import { ResourceEventsComponent } from './facade/resource-events/resource-events.component';
@@ -78,9 +79,11 @@ export const appRoutes: Routes = [
   { path: 'sign-up-expert', component: SignUpExpertComponent },
   { path: 'meeting/:id', component: MeetingComponent },
   { path: 'test', component: TestComponent },
+  { path: 'feedback',component: FeedbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'cancel-booking', component: DeleteMeetingComponent },
   { path: 'reschedule-booking', component: RescheduleMeetingComponent },
+  
   //admin routes
   {
     path: 'admin',
