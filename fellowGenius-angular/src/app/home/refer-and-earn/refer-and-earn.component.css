@@ -1,0 +1,253 @@
+/* --------------------Referral css----------------------------- */
+.Referal__dashbrd .sec__title p {
+    color: #B5B3B3;
+}
+.Referal__dashbrd .sec__title {
+    margin-bottom: 20px;
+    position: relative;
+    padding-right: 130px;
+}
+.Referal__dashbrd .sec__title h2 {
+    margin-bottom: 3px;
+}
+table th.fld_status, table td.fld_status {
+    width: 160px;
+}
+table .td_btn .red_btn, table .td_btn .red_btn:hover {
+    background-color: #FF2D58;
+    color: #fff !important;
+}
+table td.fld_status .td_btn {
+    justify-content: flex-start;
+}
+table td.fld_status .td_btn .table_btn {
+    width: 150px;
+}
+.Referal__Sec .referal__banner {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    align-items: center;
+    justify-content: space-between;
+}
+.Referal__Sec .referal__banner .rfrl_bnrTxt, .Referal__Sec .referal__banner .rfrl_bnrimage {
+    width: 50%;
+    padding: 15px;
+}
+.Referal__Sec .referal__banner h2 {
+    margin-bottom: 5px;
+}
+.Referal__Sec .referal__banner p {
+    color: #B5B3B3;
+}
+.Referal__Sec .referal__banner .rfrl_bnrimage img {
+    max-width: 70%;
+    float: right;
+    padding-right: 10%;
+}
+
+
+
+.refer_Earn_page .Referal__Sec .sec__divider {
+    width: 100%;
+    display: inline-block;
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    padding: 1.5em 0;
+    margin: 1em 0;
+}
+.refer_Earn_page .Referal__Sec .referal__steps {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    position: relative;
+}
+.refer_Earn_page .Referal__Sec .referal__steps .step_item {
+    position: relative;
+    width: calc(100% / 3);
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.refer_Earn_page .Referal__Sec .referal__steps .step_item:before {
+    content: '';
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    top: 35px;
+    left: 15px;
+    border-top: 2px dashed #8dc63f;
+    z-index: 0;
+}
+.refer_Earn_page .Referal__Sec .referal__steps .step_item:last-child:before{
+	display: none;
+}
+.refer_Earn_page .Referal__Sec .referal__steps .step_item .rfr_step_wrap {
+    position: relative;
+}
+.refer_Earn_page .Referal__Sec .referal__steps .step_item .icon__box {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    background-color: #8dc63f;
+    border-radius: 10px;
+    padding: 10px;
+}
+.refer_Earn_page .Referal__Sec .referal__steps .step_item .txt_box p {
+    margin-top: 4px;
+}
+.referal__code_box h4, .invite__friend_box h4 {
+    margin-bottom: 2px;
+}
+.referal__code_box p, .invite__friend_box p {
+    color: #B5B3B3;
+    margin-bottom: 10px;
+}
+.Referal__Sec .input-group .form-control {
+    border: 1px solid #F6F6F6;
+    border-radius: 10px !important;
+    width: 100%;
+    box-shadow: none;
+    outline: none;
+    padding: 10px 125px 10px 10px;
+    height: 55px;
+    z-index: 1;
+}
+.Referal__Sec .input-group .button {
+    width: 110px;
+    border-radius: 10px;
+    padding: 10px;
+    height: 45px;
+    min-width: auto;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 110%;
+    z-index: 2;
+}
+.referal__code_box .share__code_fld {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.referal__code_box .share__code_fld .referal__input {
+    width: calc(100% - 175px);
+    margin-right: 15px;
+}
+.referal__code_box .share__code_fld .referal__input .form-control {
+    background: #F6F6F6;
+}
+.referal__code_box .share__code_fld .share__options {
+    width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.referal__code_box .share__code_fld .share__options a.share_btn {
+    width: 48px;
+    height: 48px;
+    background: #ec008c;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Referal__Sec .invite__friend_box {
+    margin-top: 1.5em;
+}
+.Referal__dashbrd .sec__title .credit__box {
+    width: 120px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: 1px solid #F6F6F6;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+.Referal__dashbrd .sec__title .credit__box img {
+    max-width: 40px;
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    display: flex;
+    align-items: center;
+}
+.Referal__dashbrd .sec__title .credit__box span {
+    color: #B5B3B3;
+    padding-left: 53px;
+    width: 100%;
+    display: inline-block;
+    font-size: 80%;
+}
+.Referal__dashbrd .sec__title .credit__box span strong {
+    color: #000;
+    display: block;
+}
+
+
+@media only screen and (max-width: 767px) {
+	.Referal__Sec .referal__banner .rfrl_bnrTxt, .Referal__Sec .referal__banner .rfrl_bnrimage {
+	    width: 100%;
+	    padding: 0 15px;
+	}
+	.Referal__Sec .referal__banner .rfrl_bnrimage img {
+	    max-width: 70%;
+	    float: none;
+	    margin: 2em auto;
+	    display: block;
+	}
+	.referal__code_box .share__code_fld .referal__input {
+	    width: 100%;
+	    margin-right: 0;
+	    margin-bottom: 1em;
+	}
+	.refer_Earn_page .Referal__Sec .referal__steps .step_item .icon__box {
+	    width: 60px;
+	    height: 60px;
+	}
+	.refer_Earn_page .Referal__Sec .referal__steps .step_item:before{
+		top: 30px;
+	}
+	table td.fld_status .td_btn .table_btn {
+	    width: 110px;
+	}
+	table th.fld_status, table td.fld_status {
+	    width: 110px;
+	}
+	.Referal__dashbrd .sec__title{
+		padding-right: 0;
+	}
+	.Referal__dashbrd .sec__title .credit__box {
+	    width: 120px;
+	    position: relative;
+	}
+}
+
+@media only screen and (max-width: 575px) {
+	.refer_Earn_page .Referal__Sec .referal__steps .step_item{
+		margin: 10px 0;
+		width: 100%;
+	}
+	.refer_Earn_page .Referal__Sec .referal__steps .step_item:before{
+		display: none;
+	}
+	.Referal__Sec .input-group .form-control{
+		padding-right: 105px;
+	}
+	.Referal__Sec .input-group .button{
+		width: 90px;
+		padding: 7px;
+	}
+}
