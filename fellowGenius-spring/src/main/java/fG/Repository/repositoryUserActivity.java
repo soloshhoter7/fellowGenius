@@ -26,4 +26,10 @@ public interface repositoryUserActivity extends JpaRepository<UserActivity,Integ
 	
 	@Query(value = "SELECT * FROM user_activity WHERE created_date > now() - interval 1 month AND type='signup'", nativeQuery = true)   
 	List<UserActivity> findLast1MonthSignUp();
+	
+	@Query(value = "SELECT * FROM user_activity WHERE type='login' ORDER BY id DESC limit 50", nativeQuery = true) 
+	List<UserActivity> findAllLoginAcitivities();
+	
+	@Query(value = "SELECT * FROM user_activity WHERE type='signup' ORDER BY id DESC limit 50", nativeQuery = true) 
+	List<UserActivity> findAllSignUpAcitivities();
 }

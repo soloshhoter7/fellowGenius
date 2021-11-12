@@ -42,6 +42,7 @@ import fG.Entity.UserActivity;
 import fG.Entity.Users;
 import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
+import fG.Model.BookingDetailsModel;
 import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.NotificationModel;
@@ -55,6 +56,7 @@ import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
 import fG.Model.UserActivityAnalytics;
+import fG.Model.UserActivityModel;
 import fG.Model.UserDataModel;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
@@ -89,6 +91,9 @@ public class UserService implements UserDetailsService {
 	ScheduleService scheduleService;
 
 	@Autowired
+	MeetingService meetingService;
+
+	@Autowired
 	repositoryStudentLogin repStudentLogin;
 
 	@Autowired
@@ -99,65 +104,64 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	repositoryUsers repUsers;
-    
+
 	@Autowired
 	repositoryTutorProfile repTutorProfile;
-	
+
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
-	
-	@Autowired 
+
+	@Autowired
 	repositoryCategory repCategory;
-	
-	@Autowired 
+
+	@Autowired
 	repositorySubCategoryList repSubcategory;
-	
-	@Autowired 
+
+	@Autowired
 	repositoryNotification repNotification;
-	
+
 	@Autowired
 	repositoryStudentProfile repStudentProfile;
-	
+
 	@Autowired
 	repositoryAppInfo repAppInfo;
-	
+
 	@Autowired
 	repositoryUserActivity repUserActivity;
-	
+
 	@Autowired
 	repositoryBooking repBooking;
-	
+
 	@Autowired
 	repositoryExpertiseAreas repExpertiseAreas;
-	
+
 	@Autowired
 	repositoryPendingTutorProfileDetails repPendingTutorProfileDetails;
-	
+
 	@Autowired
 	repositoryFeaturedExperts repFeaturedExperts;
-	
+
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
 	@Autowired
 	private BCryptPasswordEncoder encoder;
-	
 
 	@Autowired
 	MailService mailService;
-	
-	
+
 	public boolean savePendingTutor(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
 		PendingTutorProfileDetails ptLoaded = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
-		if(ptLoaded==null) {
-			//saving pt to generate id
+		if (ptLoaded == null) {
+			// saving pt to generate id
 			PendingTutorProfileDetails pt = new PendingTutorProfileDetails();
 			pt.setEmail(tutorModel.getEmail());
 			repPendingTutorProfileDetails.save(pt);
-			//fetching pt with email to get id
-			PendingTutorProfileDetails tutProfileDetails = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
+			// fetching pt with email to get id
+			PendingTutorProfileDetails tutProfileDetails = repPendingTutorProfileDetails
+					.emailExist(tutorModel.getEmail());
 
-			//personal info
+			// personal info
 			tutProfileDetails.setFullName(tutorModel.getFullName());
 			tutProfileDetails.setEmail(tutorModel.getEmail());
 			tutProfileDetails.setContact(tutorModel.getContact());
@@ -165,61 +169,59 @@ public class UserService implements UserDetailsService {
 			tutProfileDetails.setUpiId(tutorModel.getUpiID());
 			tutProfileDetails.setGst(tutorModel.getGst());
 			tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
-			//education
+			// education
 			tutProfileDetails.setInstitute(tutorModel.getInstitute());
 			tutProfileDetails.setEducationalQualifications(tutorModel.getEducationalQualifications());
-			//description and speciality
+			// description and speciality
 			tutProfileDetails.setDescription(tutorModel.getDescription());
 			tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
-			//work experience
+			// work experience
 			tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
 			tutProfileDetails.setCurrentOrganisation(tutorModel.getCurrentOrganisation());
 			tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
 			tutProfileDetails.setPreviousOrganisations(tutorModel.getPreviousOrganisations());
-			//photo
+			// photo
 			tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-			//domain
+			// domain
 			tutProfileDetails.setPrice1(tutorModel.getPrice1());
 			tutProfileDetails.setPrice2(tutorModel.getPrice2());
 			tutProfileDetails.setPrice3(tutorModel.getPrice3());
 			tutProfileDetails.setAreaOfExpertise(tutorModel.getAreaOfExpertise());
-			
-			
+
 			repPendingTutorProfileDetails.save(tutProfileDetails);
 			return true;
-		}else {
+		} else {
 			return false;
 		}
-		
 
 	}
-	
+
 	public void updatePendingTutor(TutorProfileDetailsModel tutorModel) {
-		
-		//fetching pt with email to get id
+
+		// fetching pt with email to get id
 		PendingTutorProfileDetails tutProfileDetails = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
 
-		//personal info
+		// personal info
 		tutProfileDetails.setFullName(tutorModel.getFullName());
 		tutProfileDetails.setEmail(tutorModel.getEmail());
 		tutProfileDetails.setContact(tutorModel.getContact());
 		tutProfileDetails.setDateOfBirth(tutorModel.getDateOfBirth());
 		tutProfileDetails.setUpiId(tutorModel.getUpiID());
 		tutProfileDetails.setLinkedInProfile(tutorModel.getLinkedInProfile());
-		//education
+		// education
 		tutProfileDetails.setInstitute(tutorModel.getInstitute());
 		tutProfileDetails.setEducationalQualifications(tutorModel.getEducationalQualifications());
-		//description and speciality
+		// description and speciality
 		tutProfileDetails.setDescription(tutorModel.getDescription());
 		tutProfileDetails.setSpeciality(tutorModel.getSpeciality());
-		//work experience
+		// work experience
 		tutProfileDetails.setYearsOfExperience(tutorModel.getYearsOfExperience());
 		tutProfileDetails.setCurrentOrganisation(tutorModel.getCurrentOrganisation());
 		tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
 		tutProfileDetails.setPreviousOrganisations(tutorModel.getPreviousOrganisations());
-		//photo
+		// photo
 		tutProfileDetails.setProfilePictureUrl(tutorModel.getProfilePictureUrl());
-		//domain
+		// domain
 		tutProfileDetails.setPrice1(tutorModel.getPrice1());
 		tutProfileDetails.setPrice2(tutorModel.getPrice2());
 		tutProfileDetails.setPrice3(tutorModel.getPrice3());
@@ -227,28 +229,30 @@ public class UserService implements UserDetailsService {
 		System.out.println(tutProfileDetails);
 		repPendingTutorProfileDetails.save(tutProfileDetails);
 	}
-	public String validateUser(String email, String password,String method) {
-		System.out.println(email+" : "+password+" : "+method);
+
+	public String validateUser(String email, String password, String method) {
+		System.out.println(email + " : " + password + " : " + method);
 		Users userLogin = repUsers.emailExist(email);
 		Date lastLogin = new Date();
 		UserActivity userActivity = new UserActivity();
-		if(userLogin!=null) {
-			if(encoder.matches("social",method)) {
+		if (userLogin != null) {
+			if (encoder.matches("social", method)) {
 				System.out.println("entered social");
 				userActivity.setUserId(userLogin);
 				userActivity.setType("login");
 				userLogin.setLastLogin(lastLogin);
-				
-				if(encoder.matches(password, userLogin.getSocialId())||encoder.matches("N/A", userLogin.getSocialId())) {
-					
+
+				if (encoder.matches(password, userLogin.getSocialId())
+						|| encoder.matches("N/A", userLogin.getSocialId())) {
+
 					repUsers.save(userLogin);
 					repUserActivity.save(userActivity);
 					System.out.println("social id exists and matches");
 					return String.valueOf(userLogin.getUserId());
-				}else {
+				} else {
 					return null;
 				}
-			}else if(encoder.matches("manual",method)) {
+			} else if (encoder.matches("manual", method)) {
 				System.out.println("entered manual");
 				userActivity.setUserId(userLogin);
 				userActivity.setType("login");
@@ -258,13 +262,13 @@ public class UserService implements UserDetailsService {
 					repUsers.save(userLogin);
 					repUserActivity.save(userActivity);
 					return String.valueOf(userLogin.getUserId());
-				}else {
+				} else {
 					return null;
 				}
-			}else {
+			} else {
 				return null;
 			}
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -272,17 +276,17 @@ public class UserService implements UserDetailsService {
 	public String validateAdmin(String email, String password) {
 		AppInfo adminEmail = repAppInfo.keyExist("admin_id");
 		AppInfo adminPassword = repAppInfo.keyExist("admin_password");
-		if(email.equals(adminEmail.getValue())&&password.equals(adminPassword.getValue())){
+		if (email.equals(adminEmail.getValue()) && password.equals(adminPassword.getValue())) {
 			return adminEmail.getValue();
-		}else {
+		} else {
 			return null;
 		}
-		
+
 	}
-	
+
 	public User loadUserByUserId(String userId) {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		if(!userId.equals(repAppInfo.keyExist("admin_id").getValue())){
+		if (!userId.equals(repAppInfo.keyExist("admin_id").getValue())) {
 			Users user = repUsers.idExists(Integer.valueOf(userId));
 			if (user != null) {
 				authorities.add(new SimpleGrantedAuthority(user.getRole()));
@@ -290,11 +294,11 @@ public class UserService implements UserDetailsService {
 			} else {
 				return null;
 			}
-		}else {
+		} else {
 			authorities.add(new SimpleGrantedAuthority("Admin"));
 			return new User(userId, "", authorities);
 		}
-		
+
 	}
 
 	public boolean verifyExpert(String id) {
@@ -336,32 +340,31 @@ public class UserService implements UserDetailsService {
 			dao.saveTutorAvailbilitySchedule(tutSchedule);
 			userActivity.setUserId(user);
 			repUserActivity.save(userActivity);
-			
-			
+
 			tutProfileDetails.setTid(tutorProfile.getTid());
 			tutProfileDetails.setBookingId(tutorProfile.getBookingId());
-			//personal info
-			
+			// personal info
+
 			tutProfileDetails.setFullName(pt.getFullName());
 			tutProfileDetails.setUpiId(pt.getUpiId());
 			tutProfileDetails.setGst(pt.getGst());
 			tutProfileDetails.setLinkedInProfile(pt.getLinkedInProfile());
-			//education
+			// education
 			tutProfileDetails.setInstitute(pt.getInstitute());
 			tutProfileDetails.setEducationalQualifications(pt.getEducationalQualifications());
-			//description and speciality
+			// description and speciality
 			tutProfileDetails.setDescription(pt.getDescription());
 			tutProfileDetails.setSpeciality(pt.getSpeciality());
-			//work experience
+			// work experience
 			tutProfileDetails.setYearsOfExperience(pt.getYearsOfExperience());
 			tutProfileDetails.setCurrentOrganisation(pt.getCurrentOrganisation());
 			tutProfileDetails.setCurrentDesignation(pt.getCurrentDesignation());
 			tutProfileDetails.setPreviousOrganisations(pt.getPreviousOrganisations());
-			//photo
+			// photo
 			tutProfileDetails.setProfilePictureUrl(pt.getProfilePictureUrl());
-			//domain
+			// domain
 			tutProfileDetails.setPrice1(pt.getPrice1());
-						
+
 //			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 			TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorProfile.getTid());
 			// for setting the expertise areas
@@ -371,29 +374,30 @@ public class UserService implements UserDetailsService {
 			for (expertise area : pt.getAreaOfExpertise()) {
 				ExpertiseAreas subject = new ExpertiseAreas();
 				SubcategoryList subCateg = repSubcategory.findSubCategoryByName(area.getSubCategory());
-				if(subCateg!=null) {
+				if (subCateg != null) {
 					subject.setUserId(tutProfileDetails);
 					subject.setSubCategory(subCateg);
 					subject.setCategory(subCateg.getCategory());
 					subject.setPrice(area.getPrice());
 					if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
-							.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst().isPresent()) {
+							.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory()))
+							.findFirst().isPresent()) {
 						tutProfileDetails.getAreaOfExpertise().add(subject);
-					
+
 					}
-					
+
 				}
 			}
 
 //			tutProfileDetails.setAreaOfExpertise(areas);
 //			System.out.println(tutProfileDetails);
 			dao.updateTutorProfile(tutProfileDetails);
-			
-			//to update the price of all the expertise of a user to the price1
+
+			// to update the price of all the expertise of a user to the price1
 			List<ExpertiseAreas> exp = repExpertiseAreas.searchExpertiseAreasByUserId(tutProfileDetails.getTid());
-			
-			if(exp!=null) {
-				for(ExpertiseAreas e:exp) {
+
+			if (exp != null) {
+				for (ExpertiseAreas e : exp) {
 					e.setPrice(Integer.valueOf(tutProfileDetails.getPrice1()));
 					dao.updateExpertiseArea(e);
 				}
@@ -405,6 +409,7 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
+
 	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
 		UserActivity userActivity = new UserActivity();
@@ -427,7 +432,7 @@ public class UserService implements UserDetailsService {
 				user.setRole("Learner");
 				user.setSocialId(encoder.encode("N/A"));
 				user.setExpertCode(registrationModel.getExpertCode());
-				if(registrationModel.getSocialId()!=null) {
+				if (registrationModel.getSocialId() != null) {
 					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
 				}
 				dao.saveUserLogin(user);
@@ -451,7 +456,7 @@ public class UserService implements UserDetailsService {
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
 				user.setUserId(tutorProfile.getTid());
 				user.setSocialId(encoder.encode("N/A"));
-				if(registrationModel.getSocialId()!=null) {
+				if (registrationModel.getSocialId() != null) {
 					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
 				}
 				user.setRole("Expert");
@@ -483,15 +488,17 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
+
 	public Integer genUserBookingId() {
-	  IdGenerator id = new IdGenerator();
-	  Integer bookingId = id.generate9DigitNumber();
-	  if(repTutorProfile.findByBookingId(bookingId)==null) {
-		  return bookingId;
-	  }else {
-		return genUserBookingId();
-	  }
+		IdGenerator id = new IdGenerator();
+		Integer bookingId = id.generate9DigitNumber();
+		if (repTutorProfile.findByBookingId(bookingId) == null) {
+			return bookingId;
+		} else {
+			return genUserBookingId();
+		}
 	}
+
 	// saving student registration details
 	public boolean saveStudentProfile(StudentProfileModel studentModel) {
 		StudentProfile studentProfile = new StudentProfile();
@@ -580,7 +587,7 @@ public class UserService implements UserDetailsService {
 	// saving updating details of tutor
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
-		System.out.println("here =>> "+tutorModel);
+		System.out.println("here =>> " + tutorModel);
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 		TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
 		tutProfileDetails.setTid(tutorModel.getTid());
@@ -620,33 +627,30 @@ public class UserService implements UserDetailsService {
 		for (expertise area : tutorModel.getAreaOfExpertise()) {
 			ExpertiseAreas subject = new ExpertiseAreas();
 			SubcategoryList subCateg = repSubcategory.findSubCategoryByName(area.getSubCategory());
-			if(subCateg!=null) {
+			if (subCateg != null) {
 				subject.setUserId(tutProfileDetails);
 				subject.setSubCategory(subCateg);
 				subject.setCategory(subCateg.getCategory());
 				subject.setPrice(area.getPrice());
 				if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
-						.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst().isPresent()) {
+						.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst()
+						.isPresent()) {
 					tutProfileDetails.getAreaOfExpertise().add(subject);
-				
+
 				}
-				
+
 			}
 		}
-		
-		
-		
-		
 
 //		tutProfileDetails.setAreaOfExpertise(areas);
 //		System.out.println(tutProfileDetails);
 		dao.updateTutorProfile(tutProfileDetails);
-		
-		//to update the price of all the expertise of a user to the price1
+
+		// to update the price of all the expertise of a user to the price1
 		List<ExpertiseAreas> exp = repExpertiseAreas.searchExpertiseAreasByUserId(tutProfileDetails.getTid());
-		
-		if(exp!=null) {
-			for(ExpertiseAreas e:exp) {
+
+		if (exp != null) {
+			for (ExpertiseAreas e : exp) {
 				e.setPrice(Integer.valueOf(tutProfileDetails.getPrice1()));
 				dao.updateExpertiseArea(e);
 			}
@@ -729,7 +733,7 @@ public class UserService implements UserDetailsService {
 	public TutorProfileModel getTutorDetails(String userId) {
 		TutorProfileModel tutorProfileModel = new TutorProfileModel();
 		TutorProfile tutorProfile = dao.getTutorDetails(userId);
-		System.out.println("tutorProfile => "+tutorProfile);
+		System.out.println("tutorProfile => " + tutorProfile);
 		tutorProfileModel.setContact(tutorProfile.getContact());
 		tutorProfileModel.setDateOfBirth(tutorProfile.getDateOfBirth());
 		tutorProfileModel.setEmail(tutorProfile.getEmail());
@@ -737,7 +741,7 @@ public class UserService implements UserDetailsService {
 		tutorProfileModel.setTid(tutorProfile.getTid());
 		tutorProfileModel.setProfilePictureUrl(tutorProfile.getProfilePictureUrl());
 		tutorProfileModel.setBookingId(tutorProfile.getBookingId());
-		System.out.println("tutorProfileModel =>"+tutorProfileModel);
+		System.out.println("tutorProfileModel =>" + tutorProfileModel);
 		return tutorProfileModel;
 	}
 
@@ -745,22 +749,52 @@ public class UserService implements UserDetailsService {
 	public List<TutorProfileDetailsModel> getTutorList(String subject) {
 		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
 		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
-		if(!subject.equals("*")) {
+		if (!subject.equals("*")) {
 			tutList = dao.getTutorList(subject);
 			for (TutorProfileDetails tutProfileDetails : tutList) {
 				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
 				tutorModel.setTid(null);
 				tutListModel.add(tutorModel);
 			}
-		}else {
+		} else {
 			tutList = repTutorProfileDetails.findAll();
 			for (TutorProfileDetails tutProfileDetails : tutList) {
 				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
 				tutListModel.add(tutorModel);
 			}
 		}
-		
 		return tutListModel;
+	}
+
+	public List<TutorProfileDetailsModel> fetchAllTutorList() throws NumberFormatException, ParseException {
+		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
+		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
+		tutList = repTutorProfileDetails.findAll();
+		for (TutorProfileDetails tutProfileDetails : tutList) {
+			TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+			tutorModel.setLastLogin(returnLastLoginTime(tutProfileDetails.getTid()));
+			ArrayList<ScheduleTime> schedule = getTutorTimeAvailabilityTimeArray(
+					tutProfileDetails.getBookingId().toString());
+			if (schedule != null && schedule.size() != 0) {
+				tutorModel.setIsWeeklyCalendarUpdated(true);
+			} else {
+				tutorModel.setIsWeeklyCalendarUpdated(false);
+			}
+			tutListModel.add(tutorModel);
+		}
+		return tutListModel;
+	}
+
+	public String returnLastLoginTime(Integer userId) {
+		String lastLogin = "";
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		Users user = repUsers.idExists(userId);
+		if (user.getLastLogin() != null) {
+			lastLogin = formatter.format(user.getLastLogin());
+		} else {
+			lastLogin = "N/A";
+		}
+		return lastLogin;
 	}
 
 	// for updating tutor verification
@@ -772,20 +806,22 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
-	//getting tutor profile details with tutor bookingId
+
+	// getting tutor profile details with tutor bookingId
 	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(Integer bookingId) {
 		TutorProfileDetails tutProfileDetails = dao.fetchTutorProfileDetailsByBookingId(bookingId);
-		TutorProfileDetailsModel tutProfileDetailsModel =copyTutorProfileDetails(tutProfileDetails);
+		TutorProfileDetailsModel tutProfileDetailsModel = copyTutorProfileDetails(tutProfileDetails);
 		tutProfileDetailsModel.setTid(null);
 		return tutProfileDetailsModel;
 	}
+
 	// getting tutor profile details with tid
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
 		TutorProfileDetails tutProfileDetails = dao.getTutorProfileDetails(tid);
-	    return copyTutorProfileDetails(tutProfileDetails);
+		return copyTutorProfileDetails(tutProfileDetails);
 	}
-	
-	//from copying content of tutorProfileDetails entity to model
+
+	// from copying content of tutorProfileDetails entity to model
 	public TutorProfileDetailsModel copyTutorProfileDetails(TutorProfileDetails tutProfileDetails) {
 		TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
 		tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
@@ -821,7 +857,7 @@ public class UserService implements UserDetailsService {
 		System.out.println(tutorProfileDetailsModel);
 		return tutorProfileDetailsModel;
 	}
-	
+
 	// for saving social login details
 	public boolean registerSocialLogin(SocialLoginModel socialLoginModel) {
 		SocialLogin socialLogin = new SocialLogin();
@@ -834,7 +870,6 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
-
 
 	// for saving tutor Availability Schedule
 	public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
@@ -882,7 +917,8 @@ public class UserService implements UserDetailsService {
 	}
 
 	// get tutor time array with tid
-	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid) throws NumberFormatException, ParseException {
+	public ArrayList<ScheduleTime> getTutorTimeAvailabilityTimeArray(String tid)
+			throws NumberFormatException, ParseException {
 		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		return scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
 	}
@@ -937,7 +973,6 @@ public class UserService implements UserDetailsService {
 
 	}
 
-
 	// fetch if the tutor is available ?
 	public boolean getTutorIsAvailable(String bookingId) {
 		if (dao.getTutorAvailabilitySchedule(Integer.valueOf(bookingId)).getIsAvailable().equals("yes")) {
@@ -971,13 +1006,14 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings, String domain,String[] domains) {
+	public List<TutorProfileDetailsModel> filtersApplied(String[] subjects, String[] price, Integer[] ratings,
+			String domain, String[] domains) {
 		CategoryList categ = new CategoryList();
-				
-		if(repCategory.findCategory(domain)!=null) {
+
+		if (repCategory.findCategory(domain) != null) {
 			categ = repCategory.findCategory(domain);
 		}
-		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings,categ.getCategoryId(),domains);
+		List<TutorProfileDetails> tutors = dao.filtersApplied(subjects, price, ratings, categ.getCategoryId(), domains);
 		if (tutors == null) {
 			return null;
 		} else {
@@ -1004,44 +1040,43 @@ public class UserService implements UserDetailsService {
 
 	public boolean updatePassword(String userId, String password) {
 		System.out.println(userId);
-		if(repUsers.idExists(Integer.valueOf(userId))!=null) {
+		if (repUsers.idExists(Integer.valueOf(userId)) != null) {
 			String newPassword = encoder.encode(password);
-			repUsers.updatePassword(Integer.valueOf(userId),newPassword);
+			repUsers.updatePassword(Integer.valueOf(userId), newPassword);
 			return true;
-		}else {
-			return false;	
+		} else {
+			return false;
 		}
 	}
 
-	//to create new subject category
+	// to create new subject category
 	public boolean addNewCategory(Category category) {
 		// TODO Auto-generated method stub
 		CategoryList newCategory = new CategoryList();
 		List<CategoryList> allCategories = new ArrayList<CategoryList>();
 		allCategories = repCategory.findAll();
-		int categoryFoundFlag=0;
-		if(allCategories.size()>0) {
-			for(CategoryList c:allCategories) {
-				if(c.getCategoryName().equals(category.getCategory())) {
-					categoryFoundFlag=1;
+		int categoryFoundFlag = 0;
+		if (allCategories.size() > 0) {
+			for (CategoryList c : allCategories) {
+				if (c.getCategoryName().equals(category.getCategory())) {
+					categoryFoundFlag = 1;
 				}
 			}
 		}
-		if(categoryFoundFlag!=1) {
+		if (categoryFoundFlag != 1) {
 			newCategory.setCategoryName(category.getCategory());
 			repCategory.save(newCategory);
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
 
-
 	public List<Category> getAllCategories() {
 		List<CategoryList> categoryEntity = repCategory.findAll();
 		List<Category> categoryModel = new ArrayList<Category>();
-		if(categoryEntity!=null) {
-			for(CategoryList c:categoryEntity) {
+		if (categoryEntity != null) {
+			for (CategoryList c : categoryEntity) {
 				Category newC = new Category();
 				newC.setCategory(c.getCategoryName());
 				categoryModel.add(newC);
@@ -1050,45 +1085,43 @@ public class UserService implements UserDetailsService {
 		return categoryModel;
 	}
 
-
 	public boolean addNewSubCategories(Category category) {
 		SubcategoryList subCateg = new SubcategoryList();
 		CategoryList categ = repCategory.findCategory(category.getCategory());
-		if(categ!=null) {
+		if (categ != null) {
 			subCateg.setCategory(categ);
 			subCateg.setSubCategoryName(category.getSubCategory());
 			repSubcategory.save(subCateg);
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
 
-
 	public List<Category> getSubCategories(String category) {
-		CategoryList  categ = repCategory.findCategory(category);
+		CategoryList categ = repCategory.findCategory(category);
 		List<Category> subCategsModel = new ArrayList<Category>();
-		if(categ!=null) {
+		if (categ != null) {
 			List<SubcategoryList> subCategs = repSubcategory.findSubCategories(categ.getCategoryId());
 			System.out.println(subCategs);
-			if(subCategs!=null) {
-				for(SubcategoryList sc:subCategs) {
+			if (subCategs != null) {
+				for (SubcategoryList sc : subCategs) {
 					Category cat = new Category();
 					cat.setCategory(sc.getCategory().getCategoryName());
 					cat.setSubCategory(sc.getSubCategoryName());
 					subCategsModel.add(cat);
 				}
-			}	
+			}
 		}
-		
+
 		return subCategsModel;
 	}
-	
-	public List<Category> getAllSubCategories(){
+
+	public List<Category> getAllSubCategories() {
 		List<Category> categModel = new ArrayList<Category>();
 		List<SubcategoryList> subCategs = repSubcategory.findAll();
-		if(subCategs!=null) {
-			for(SubcategoryList sc:subCategs) {
+		if (subCategs != null) {
+			for (SubcategoryList sc : subCategs) {
 				Category categ = new Category();
 				categ.setCategory(sc.getCategory().getCategoryName());
 				categ.setSubCategory(sc.getSubCategoryName());
@@ -1098,49 +1131,48 @@ public class UserService implements UserDetailsService {
 		return categModel;
 	}
 
-	//for fetching notifications using userId
+	// for fetching notifications using userId
 	public List<NotificationModel> fetchNotifications(String userId) {
 		List<NotificationModel> notifList = new ArrayList<NotificationModel>();
-		if(userId!=null) {
+		if (userId != null) {
 			List<Notification> notifications = repNotification.notificationExist(userId);
-			if(notifications!=null) {
-				for(Notification n:notifications) {
+			if (notifications != null) {
+				for (Notification n : notifications) {
 					NotificationModel nModel = new NotificationModel();
 					nModel.setPictureUrl(n.getPictureUrl());
 					nModel.setReadStatus(n.isReadStatus());
 					nModel.setTimestamp(n.getTimestamp());
-					String message="";
-					if(n.getEntityTypeId()==11) {
-					 StudentProfile sp = repStudentProfile.idExist(Integer.valueOf(n.getActorId()));
-					 message = sp.getFullName()+ " sent you an appointment request";
-					}else if(n.getEntityTypeId()==12) {
-					 TutorProfile tp = repTutorProfile.findByBookingId(Integer.valueOf(n.getActorId()));
-					 message = tp.getFullName()+" has accepted your appointment request";
-					}else if(n.getEntityTypeId()==13) {
-						 StudentProfile sp = repStudentProfile.idExist(Integer.valueOf(n.getActorId()));
-						 message = sp.getFullName()+ " has cancelled its recent appointment";
+					String message = "";
+					if (n.getEntityTypeId() == 11) {
+						StudentProfile sp = repStudentProfile.idExist(Integer.valueOf(n.getActorId()));
+						message = sp.getFullName() + " sent you an appointment request";
+					} else if (n.getEntityTypeId() == 12) {
+						TutorProfile tp = repTutorProfile.findByBookingId(Integer.valueOf(n.getActorId()));
+						message = tp.getFullName() + " has accepted your appointment request";
+					} else if (n.getEntityTypeId() == 13) {
+						StudentProfile sp = repStudentProfile.idExist(Integer.valueOf(n.getActorId()));
+						message = sp.getFullName() + " has cancelled its recent appointment";
 					}
 					nModel.setMessage(message);
 					notifList.add(nModel);
 				}
 			}
-			if(notifList!=null) {
+			if (notifList != null) {
 				Collections.sort(notifList, new Comparator<NotificationModel>() {
-				    public int compare(NotificationModel n1, NotificationModel n2) {
-				        return n2.getTimestamp().compareTo(n1.getTimestamp());
-				    }
+					public int compare(NotificationModel n1, NotificationModel n2) {
+						return n2.getTimestamp().compareTo(n1.getTimestamp());
+					}
 				});
 			}
 		}
 		return notifList;
 	}
 
-
 	public List<AppInfoModel> getEarningAppInfo() {
-		List<AppInfoModel> appInfoList= new ArrayList<AppInfoModel>();
+		List<AppInfoModel> appInfoList = new ArrayList<AppInfoModel>();
 		List<AppInfo> appInfo = repAppInfo.typeExist("Earnings");
-		if(appInfo!=null) {
-			for(AppInfo ai:appInfo) {
+		if (appInfo != null) {
+			for (AppInfo ai : appInfo) {
 				AppInfoModel aInfo = new AppInfoModel();
 				aInfo.setKey(ai.getKeyName());
 				aInfo.setValue(ai.getValue());
@@ -1150,28 +1182,27 @@ public class UserService implements UserDetailsService {
 		return appInfoList;
 	}
 
-
 	public UserActivityAnalytics fetchUserDataAnalytics() {
-		UserActivityAnalytics userAnalytics= new UserActivityAnalytics();
+		UserActivityAnalytics userAnalytics = new UserActivityAnalytics();
 		long userCount = repUsers.count();
-		userAnalytics.setUsersCount((int)userCount);
+		userAnalytics.setUsersCount((int) userCount);
 		List<UserActivity> users = repUserActivity.findLast1WeekLogins();
 		userAnalytics.setWeeklyLoginCount(users.size());
-		users= repUserActivity.findTodayLogins();
+		users = repUserActivity.findTodayLogins();
 		userAnalytics.setDailyLoginCount(users.size());
 		users = repUserActivity.findLast1MonthLogins();
 		userAnalytics.setMonthlyLoginCount(users.size());
-		
-		users=repUserActivity.findTodaySignUp();
+
+		users = repUserActivity.findTodaySignUp();
 		userAnalytics.setDailySignUpCount(users.size());
-		users=repUserActivity.findLast1WeekSignUp();
+		users = repUserActivity.findLast1WeekSignUp();
 		userAnalytics.setWeeklySignUpCount(users.size());
-		users=repUserActivity.findLast1MonthSignUp();
+		users = repUserActivity.findLast1MonthSignUp();
 		userAnalytics.setMonthlySignUpCount(users.size());
-		
+
 		List<BookingDetails> bookings = repBooking.findTodayMeetings();
 		userAnalytics.setDailyMeetingsSetup(bookings.size());
-		bookings=repBooking.findLast1WeekMeetings();
+		bookings = repBooking.findLast1WeekMeetings();
 		userAnalytics.setWeeklyMeetingSetup(bookings.size());
 		bookings = repBooking.findLast1MonthMeetings();
 		userAnalytics.setMonthlyMeetingSetup(bookings.size());
@@ -1180,13 +1211,13 @@ public class UserService implements UserDetailsService {
 
 	public List<PendingTutorProfileDetails> fetchPendingExperts() {
 		List<PendingTutorProfileDetails> result = new ArrayList<PendingTutorProfileDetails>();
-		List<PendingTutorProfileDetails> pendingTutors =  repPendingTutorProfileDetails.findAll();
+		List<PendingTutorProfileDetails> pendingTutors = repPendingTutorProfileDetails.findAll();
 		List<PendingTutorProfileDetails> toBeDeleted = new ArrayList<PendingTutorProfileDetails>();
-		if(pendingTutors!=null) {
-			for(PendingTutorProfileDetails tut:pendingTutors) {
-				if(repUsers.emailExist(tut.getEmail())==null) {
+		if (pendingTutors != null) {
+			for (PendingTutorProfileDetails tut : pendingTutors) {
+				if (repUsers.emailExist(tut.getEmail()) == null) {
 					result.add(tut);
-				}else {
+				} else {
 					repPendingTutorProfileDetails.delete(tut);
 				}
 			}
@@ -1194,27 +1225,27 @@ public class UserService implements UserDetailsService {
 		return result;
 	}
 
-	public ResponseModel expertChoosePassword(String userId,String password) {
-		
+	public ResponseModel expertChoosePassword(String userId, String password) {
+
 		System.out.println(userId);
 		Users user = repUsers.idExists(Integer.valueOf(userId));
-		if(user!=null) {
+		if (user != null) {
 			String newPassword = encoder.encode(password);
-			if(encoder.matches("N/A",user.getPassword())){
-				repUsers.updatePassword(Integer.valueOf(userId),newPassword);
-				return new ResponseModel(user.getEmail());	
-			}else {
+			if (encoder.matches("N/A", user.getPassword())) {
+				repUsers.updatePassword(Integer.valueOf(userId), newPassword);
+				return new ResponseModel(user.getEmail());
+			} else {
 				return new ResponseModel("password not changed");
 			}
-			
-		}else {
-			return new ResponseModel("password not changed");	
+
+		} else {
+			return new ResponseModel("password not changed");
 		}
 	}
 
 	public boolean updateAndAddExpertiseArea(String category, String subCategory) {
 		CategoryList categ = repCategory.findCategory(category);
-		if(categ==null) {
+		if (categ == null) {
 			CategoryList c = new CategoryList();
 			c.setCategoryName(category);
 			repCategory.save(c);
@@ -1224,7 +1255,7 @@ public class UserService implements UserDetailsService {
 			sc.setSubCategoryName(subCategory);
 			repSubcategory.save(sc);
 			return true;
-		}else{
+		} else {
 			SubcategoryList sc = new SubcategoryList();
 			sc.setCategory(categ);
 			sc.setSubCategoryName(subCategory);
@@ -1232,68 +1263,72 @@ public class UserService implements UserDetailsService {
 			return true;
 		}
 	}
-	public String fetchUserName(Integer userId,String role) {
-		if(role.equals("Learner")) {
+
+	public String fetchUserName(Integer userId, String role) {
+		if (role.equals("Learner")) {
 			StudentProfile stu = repStudentProfile.idExist(userId);
 			return stu.getFullName();
-		}else if(role.equals("Expert")) {
+		} else if (role.equals("Expert")) {
 			TutorProfile exp = repTutorProfile.idExist(userId);
 			return exp.getFullName();
-		}else {
+		} else {
 			return "";
 		}
 	}
+
 	public String fetchExpertiseString(Integer userId) {
 		String expertise = "";
 		TutorProfileDetails tut = new TutorProfileDetails();
 		tut = repTutorProfileDetails.idExist(userId);
-		if(tut.getAreaOfExpertise()!=null) {
-			Integer count =0;
-			for(ExpertiseAreas expa:tut.getAreaOfExpertise()) {
+		if (tut.getAreaOfExpertise() != null) {
+			Integer count = 0;
+			for (ExpertiseAreas expa : tut.getAreaOfExpertise()) {
 				count++;
-				expertise+=expa.getCategory().getCategoryName();
-				expertise+=" : ";
-				expertise+=expa.getSubCategory().getSubCategoryName();
-				if(!count.equals(tut.getAreaOfExpertise().size())) {
-					expertise+=" , ";
+				expertise += expa.getCategory().getCategoryName();
+				expertise += " : ";
+				expertise += expa.getSubCategory().getSubCategoryName();
+				if (!count.equals(tut.getAreaOfExpertise().size())) {
+					expertise += " , ";
 				}
 			}
 		}
 		return expertise;
 	}
+
 	public List<String> fetchExpertiseList(Integer userId) {
 		List<String> expertise = new ArrayList<String>();
 		TutorProfileDetails tut = new TutorProfileDetails();
 		tut = repTutorProfileDetails.idExist(userId);
-		if(tut.getAreaOfExpertise()!=null) {
-			
-			for(ExpertiseAreas expa:tut.getAreaOfExpertise()) {
-			String expt ="";
-			expt+=expa.getCategory().getCategoryName();
-			expt+=" : ";
-			expt+=expa.getSubCategory().getSubCategoryName();
-			expertise.add(expt);
+		if (tut.getAreaOfExpertise() != null) {
+
+			for (ExpertiseAreas expa : tut.getAreaOfExpertise()) {
+				String expt = "";
+				expt += expa.getCategory().getCategoryName();
+				expt += " : ";
+				expt += expa.getSubCategory().getSubCategoryName();
+				expertise.add(expt);
 			}
 		}
 		return expertise;
 	}
+
 	public List<UserDataModel> fetchAllUserData() {
 		List<Users> allUsers = repUsers.findAll();
 		List<UserDataModel> result = new ArrayList<UserDataModel>();
-		if(allUsers!=null){
-			for(Users u: allUsers) {
+		if (allUsers != null) {
+			for (Users u : allUsers) {
 				UserDataModel ud = new UserDataModel();
 				ud.setEmail(u.getEmail());
 				ud.setRole(u.getRole());
-				ud.setFullName(fetchUserName(u.getUserId(),u.getRole()));
+				ud.setFullName(fetchUserName(u.getUserId(), u.getRole()));
 				ud.setUserId(u.getUserId().toString());
-				if(u.getRole().equals("Expert")) {
+				if (u.getRole().equals("Expert")) {
 					TutorProfileDetails tut = new TutorProfileDetails();
 					tut = repTutorProfileDetails.idExist(u.getUserId());
 					ud.setUpiID(tut.getUpiId());
 					ud.setExpertises(fetchExpertiseString(u.getUserId()));
 				}
-				if(u.getRole().equals("Learner")) {
+				if (u.getRole().equals("Learner")) {
 					StudentProfile su = repStudentProfile.idExist(u.getUserId());
 					ud.setUpiID(su.getUpiID());
 					ud.setExpertCode(u.getExpertCode());
@@ -1301,7 +1336,7 @@ public class UserService implements UserDetailsService {
 				result.add(ud);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -1311,10 +1346,10 @@ public class UserService implements UserDetailsService {
 	}
 
 	public List<FeaturedExpertsModel> fetchFeaturedExperts() {
-		List<FeaturedExpertsModel> expertsDTO= new ArrayList<FeaturedExpertsModel>();
+		List<FeaturedExpertsModel> expertsDTO = new ArrayList<FeaturedExpertsModel>();
 		List<FeaturedExperts> experts = repFeaturedExperts.findAll();
-		if(experts!=null) {
-			for( FeaturedExperts e : experts) {
+		if (experts != null) {
+			for (FeaturedExperts e : experts) {
 				expertsDTO.add(copyFeaturedExpertsToDTO(e));
 			}
 		}
@@ -1322,9 +1357,9 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean saveFeaturedExpert(FeaturedExpertsModel fe) {
-		if(repFeaturedExperts.save(copyFeaturedExperts(fe)) != null) {
+		if (repFeaturedExperts.save(copyFeaturedExperts(fe)) != null) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -1332,10 +1367,10 @@ public class UserService implements UserDetailsService {
 	public void deleteFeaturedExpert(FeaturedExpertsModel fe) {
 		repFeaturedExperts.delete(copyFeaturedExperts(fe));
 	}
-	
-	public boolean updateFeaturedExperts(List<FeaturedExpertsModel>exps) {
+
+	public boolean updateFeaturedExperts(List<FeaturedExpertsModel> exps) {
 		repFeaturedExperts.deleteAll();
-		for(FeaturedExpertsModel fe:exps) {
+		for (FeaturedExpertsModel fe : exps) {
 			repFeaturedExperts.save(copyFeaturedExperts(fe));
 		}
 		return true;
@@ -1350,7 +1385,7 @@ public class UserService implements UserDetailsService {
 		e.setTopic(fe.getTopic());
 		return e;
 	}
-	
+
 	public FeaturedExpertsModel copyFeaturedExpertsToDTO(FeaturedExperts fe) {
 		FeaturedExpertsModel e = new FeaturedExpertsModel();
 		e.setExpertId(fe.getExpertId());
@@ -1367,21 +1402,24 @@ public class UserService implements UserDetailsService {
 
 	public void rejectExpert(String id) {
 		PendingTutorProfileDetails pt = repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
-		if(pt!=null) {
-			mailService.sendRejectedMail(pt.getEmail(),pt.getFullName());
+		if (pt != null) {
+			mailService.sendRejectedMail(pt.getEmail(), pt.getFullName());
 			repPendingTutorProfileDetails.delete(pt);
-		}	
+		}
 	}
-	//to check if expert has a schedule within a week
+
+	// to check if expert has a schedule within a week
 	public boolean checkIfExpertHasSchedule(Integer tid) throws ParseException {
 		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
-		ArrayList<ScheduleTime> timeArray = scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(), Integer.valueOf(tid));
-		if(timeArray!=null&&timeArray.size()!=0) {
+		ArrayList<ScheduleTime> timeArray = scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(),
+				Integer.valueOf(tid));
+		if (timeArray != null && timeArray.size() != 0) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
+
 	public void notifyNoScheduleExpert(Integer tid) throws ParseException {
 		TutorProfileDetails exp = repTutorProfileDetails.bookingIdExist(tid);
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
@@ -1390,34 +1428,136 @@ public class UserService implements UserDetailsService {
 		String date = sdf.format(new Date());
 		// todayDate string
 		Date now = sdf.parse(date);
-		if(exp!=null) {
+		if (exp != null) {
 			TutorProfile tut = repTutorProfile.idExist(exp.getTid());
-			if(!checkIfExpertHasSchedule(tid)) {
+			if (!checkIfExpertHasSchedule(tid)) {
 				TutorAvailabilitySchedule sch = repTutorAvailabilitySchedule.idExist(tid);
-				if(sch!=null) {
+				if (sch != null) {
 					Date lastNotificationTime = sch.getNoScheduleNotificationTime();
-					if(lastNotificationTime==null) {
+					if (lastNotificationTime == null) {
 						sch.setNoScheduleNotificationTime(now);
 						repTutorAvailabilitySchedule.save(sch);
 //						experts.add(tut);
 						mailService.sendExpertNoScheduleNotification(tut);
-					}else {
-						long duration = now.getTime()-lastNotificationTime.getTime();
+					} else {
+						long duration = now.getTime() - lastNotificationTime.getTime();
 						long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
-						if(diffInHours>=24) {
+						if (diffInHours >= 24) {
 //							experts.add(tut);
 							mailService.sendExpertNoScheduleNotification(tut);
-						}else {
+						} else {
 							System.out.println("less than 24 hours !");
 						}
-					}	
+					}
 				}
-				
+
 			}
-			
+
 		}
 	}
 
-	
-	 
+	// notify all experts with no schedule
+	public void notifyAllExpertsWithNoSchedule(String[] users) throws NumberFormatException, ParseException {
+		for (String user : users) {
+			System.out.println("notifying expert :" + user);
+			notifyNoScheduleExpert(Integer.valueOf(user));
+		}
+	}
+	//fetching last 50 login data
+	public ArrayList<UserActivityModel> fetchAllLoginData() {
+		ArrayList<UserActivityModel> loginData = new ArrayList<UserActivityModel>();
+		List<UserActivity> userActivities = repUserActivity.findAllLoginAcitivities();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		if (userActivities != null) {
+			for (UserActivity ua : userActivities) {
+				UserActivityModel uam = new UserActivityModel();
+				Users user = ua.getUserId();
+				uam.setUserId(user.getUserId().toString());
+
+				uam.setFullName(fetchUserName(user.getUserId(), user.getRole()));
+				uam.setRole(user.getRole());
+				uam.setLoginTime(sdf.format(ua.getCreatedDate()));
+				loginData.add(uam);
+			}
+			Collections.sort(loginData, new Comparator<UserActivityModel>() {
+				@Override
+				public int compare(UserActivityModel o1, UserActivityModel o2) {
+					try {
+						return (int) sdf.parse(o1.getLoginTime()).getTime()
+								- (int) sdf.parse(o2.getLoginTime()).getTime();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return 0;
+				}
+			});
+			Collections.reverse(loginData);
+		}
+
+		return loginData;
+	}
+	//fetching last 50 sign up data
+	public ArrayList<UserActivityModel> fetchAllSignUpData() {
+		ArrayList<UserActivityModel> signUpData = new ArrayList<UserActivityModel>();
+		List<UserActivity> userActivities = repUserActivity.findAllSignUpAcitivities();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		if (userActivities != null) {
+			for (UserActivity ua : userActivities) {
+				UserActivityModel uam = new UserActivityModel();
+				Users user = ua.getUserId();
+				uam.setUserId(user.getUserId().toString());
+
+				uam.setFullName(fetchUserName(user.getUserId(), user.getRole()));
+				uam.setRole(user.getRole());
+				uam.setSignUpTime(sdf.format(ua.getCreatedDate()));
+				uam.setReferralCode(user.getExpertCode());
+				signUpData.add(uam);
+			}
+			Collections.sort(signUpData, new Comparator<UserActivityModel>() {
+				@Override
+				public int compare(UserActivityModel o1, UserActivityModel o2) {
+					try {
+						return (int) sdf.parse(o1.getSignUpTime()).getTime()
+								- (int) sdf.parse(o2.getSignUpTime()).getTime();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return 0;
+				}
+			});
+			Collections.reverse(signUpData);
+		}
+		return signUpData;
+	}
+	//fetching all previous meeting data
+	public ArrayList<BookingDetailsModel> fetchAllMeetingsData() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		ArrayList<BookingDetailsModel> allBookingsModel = new ArrayList<BookingDetailsModel>();
+		List<BookingDetails> allBookings = repBooking.findAll();
+		if (allBookings != null) {
+			for (BookingDetails bk : allBookings) {
+				BookingDetailsModel bkm = new BookingDetailsModel();
+				bkm = meetingService.copyBookingDetailsToBookingDetailsModel(bk);
+				allBookingsModel.add(bkm);
+			}
+			Collections.sort(allBookingsModel, new Comparator<BookingDetailsModel>() {
+				@Override
+				public int compare(BookingDetailsModel o1, BookingDetailsModel o2) {
+					try {
+						return (int) sdf.parse(o1.getCreationTime()).getTime()
+								- (int) sdf.parse(o2.getCreationTime()).getTime();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return 0;
+				}
+			});
+			Collections.reverse(allBookingsModel);
+		}
+		return allBookingsModel;
+	}
+
 }

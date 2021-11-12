@@ -51,7 +51,7 @@ public class MeetingService {
 
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
-	
+
 	@Autowired
 	ScheduleService scheduleService;
 
@@ -106,6 +106,52 @@ public class MeetingService {
 			return null;
 		}
 
+	}
+
+	public BookingDetailsModel copyBookingDetailsToBookingDetailsModel(BookingDetails booking) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		BookingDetailsModel bkModel = new BookingDetailsModel();
+		bkModel.setBid(booking.getBid());
+		bkModel.setDateOfMeeting(booking.getDateOfMeeting());
+		bkModel.setDescription(booking.getDescription());
+		bkModel.setDuration(booking.getDuration());
+		bkModel.setEndTimeHour(booking.getEndTimeHour());
+		bkModel.setEndTimeMinute(booking.getEndTimeMinute());
+		bkModel.setMeetingId(booking.getMeetingId());
+		bkModel.setStartTimeHour(booking.getStartTimeHour());
+		bkModel.setStartTimeMinute(booking.getStartTimeMinute());
+		bkModel.setStudentId(booking.getStudentId());
+		bkModel.setTutorId(booking.getTutorId());
+		bkModel.setStudentName(booking.getStudentName());
+		bkModel.setTutorName(booking.getTutorName());
+		bkModel.setApprovalStatus(booking.getApprovalStatus());
+		bkModel.setBookingCase(booking.getBookingCase());
+		bkModel.setSubject(booking.getSubject());
+		bkModel.setDomain(booking.getDomain());
+		bkModel.setAmount(booking.getAmount());
+		bkModel.setTutorProfilePictureUrl(booking.getTutorProfilePictureUrl());
+		bkModel.setCreationTime(sdf.format(booking.getCreatedDate()));
+		String start = booking.getStartTimeHour() + ":" + booking.getStartTimeMinute();
+		String end = booking.getEndTimeHour() + ":" + booking.getEndTimeMinute();
+		bkModel.setStartTime(start);
+		bkModel.setEndTime(end);
+		if (booking.getExpertJoinTime() != null) {
+			bkModel.setExpertJoinTime(sdf.format(booking.getExpertJoinTime()));
+		}
+		if (booking.getExpertLeavingTime() != null) {
+			bkModel.setExpertLeavingTime(sdf.format(booking.getExpertLeavingTime()));
+		}
+		if (booking.getLearnerJoinTime() != null) {
+			bkModel.setLearnerJoinTime(sdf.format(booking.getLearnerJoinTime()));
+		}
+		if (booking.getLearnerLeavingTime() != null) {
+			bkModel.setLearnerLeavingTime(sdf.format(booking.getLearnerLeavingTime()));
+		}
+
+		bkModel.setExpertCode(booking.getExpertCode());
+		bkModel.setRazorpay_payment_id(booking.getRazorpay_payment_id());
+		bkModel.setIsRescheduled(booking.getIsRescheduled());
+		return bkModel;
 	}
 
 	// to save the bookings requested by student
@@ -230,17 +276,19 @@ public class MeetingService {
 	}
 
 	// to check if the booking is Valid
-	public boolean isBookingValid(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date) throws ParseException {
-		System.out.println("is booking valid -->> start time :"+sh+":"+sm+" end time :"+eh+":"+em+" Date :"+date+" tid :"+tid);
+	public boolean isBookingValid(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date)
+			throws ParseException {
+		System.out.println("is booking valid -->> start time :" + sh + ":" + sm + " end time :" + eh + ":" + em
+				+ " Date :" + date + " tid :" + tid);
 		ArrayList<BookingDetails> tutorBookings = (ArrayList<BookingDetails>) meetingDao.fetchApprovedListTutor(tid);
 		ArrayList<ScheduleTime> timeSlots = scheduleService.createTimeSlots(sh, sm, eh, em, date);
 		Boolean bookingExceptionFound = false;
-		Boolean calendarExceptionFound=false;
+		Boolean calendarExceptionFound = false;
 		Integer endMinutes = (eh * 60) + em;
 
 		outerloop: for (BookingDetails booking : tutorBookings) {
 			if (booking.getDateOfMeeting().equals(date)) {
-			
+
 				System.out.println("date Matches");
 				System.out.println(booking.getStartTimeHour() + " / " + booking.getStartTimeMinute());
 				if (eh > booking.getStartTimeHour()) {
@@ -263,37 +311,40 @@ public class MeetingService {
 				}
 			}
 		}
-		if (bookingExceptionFound||!checkIfExpertIsAvailableInTime(sh,sm,eh,em,tid,date)) {
+		if (bookingExceptionFound || !checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date)) {
 			return false;
-		} else if(!bookingExceptionFound&&checkIfExpertIsAvailableInTime(sh,sm,eh,em,tid,date)) {
+		} else if (!bookingExceptionFound && checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date)) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
-	public boolean checkIfExpertIsAvailableInTime(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date) throws ParseException {
+
+	public boolean checkIfExpertIsAvailableInTime(Integer sh, Integer sm, Integer eh, Integer em, Integer tid,
+			String date) throws ParseException {
 		TutorAvailabilityScheduleModel tutorSchedule = userDao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		List<ScheduleData> expertSch = tutorSchedule.getAllAvailabilitySchedule();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
-        Date bookingStartDateTime = (Date) sdf.parse(date);
-        Date bookingEndDateTime = (Date) sdf.parse(date);
-        bookingStartDateTime.setHours(sh);
-        bookingStartDateTime.setMinutes(sm);
-        bookingEndDateTime.setHours(eh);
-        bookingEndDateTime.setMinutes(em);
-		for(ScheduleData sch: expertSch) {
+		Date bookingStartDateTime = (Date) sdf.parse(date);
+		Date bookingEndDateTime = (Date) sdf.parse(date);
+		bookingStartDateTime.setHours(sh);
+		bookingStartDateTime.setMinutes(sm);
+		bookingEndDateTime.setHours(eh);
+		bookingEndDateTime.setMinutes(em);
+		for (ScheduleData sch : expertSch) {
 			Date schStartTime = new Date(sch.getStartTime());
 			Date schEndTime = new Date(sch.getEndTime());
-			if(bookingStartDateTime.getTime()>=schStartTime.getTime()&&bookingEndDateTime.getTime()<=schEndTime.getTime()) {
+			if (bookingStartDateTime.getTime() >= schStartTime.getTime()
+					&& bookingEndDateTime.getTime() <= schEndTime.getTime()) {
 				System.out.println("Time matcheddd");
 				return true;
 			}
 		}
-	 
-	 return false;	
+
+		return false;
 	}
 
 	public ArrayList<BookingDetails> isBeforeTime(ArrayList<BookingDetails> bookings) throws ParseException {
@@ -457,8 +508,6 @@ public class MeetingService {
 
 	}
 
-
-
 	public EarningDataModel fetchEarningData(String tid) {
 		TutorProfileDetails exp = repTutorProfileDetails.bookingIdExist(Integer.valueOf(tid));
 		EarningDataModel result = new EarningDataModel();
@@ -470,17 +519,17 @@ public class MeetingService {
 			ArrayList<KeyValueModel> monthlyEarningData = new ArrayList<KeyValueModel>();
 			ArrayList<KeyValueModel> yearlyEarningData = new ArrayList<KeyValueModel>();
 			// for weekly Data
-			
+
 			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Calcutta"));
 			System.out.println(calendar.getTime());
 			int dayCount = calendar.get(Calendar.DAY_OF_WEEK);
 			System.out.println(dayCount + ".............................");
-			
+
 			for (int i = 1; i <= dayCount; i++) {
 				Integer earning = 0;
 				KeyValueModel day = new KeyValueModel();
 				LocalDateTime then = now.minusDays(i);
-				day.setKeyName(now.minusDays(i - 1).getDayOfWeek().toString().substring(0,3));
+				day.setKeyName(now.minusDays(i - 1).getDayOfWeek().toString().substring(0, 3));
 				List<BookingDetails> bk = repBooking.fetchExpertMeetingsBetweenTwoDates(exp.getBookingId(), then,
 						now.minusDays(i - 1));
 				System.out.println(then + " : " + bk);
@@ -498,12 +547,11 @@ public class MeetingService {
 				weeklyEarningData.add(day);
 			}
 			// for monthly Data
-			
-			
+
 			LocalDate today = LocalDate.now();
 			int monthNumber = today.getMonthValue();
-			
-			for (int i = 1; i <=monthNumber; i++) {
+
+			for (int i = 1; i <= monthNumber; i++) {
 				Integer earning = 0;
 				KeyValueModel month = new KeyValueModel();
 				LocalDateTime then = now.minusMonths(i);
@@ -542,10 +590,10 @@ public class MeetingService {
 					}
 				}
 				year.setValueName(earning.toString());
-				if(Integer.valueOf(year.getKeyName())>=2021) {
-					yearlyEarningData.add(year);	
+				if (Integer.valueOf(year.getKeyName()) >= 2021) {
+					yearlyEarningData.add(year);
 				}
-				
+
 			}
 
 			Collections.reverse(weeklyEarningData);
@@ -567,7 +615,7 @@ public class MeetingService {
 
 //		System.out.println(repBooking.fetchExpertMeetingsBetweenTwoDates(then,now));
 	}
-	
+
 	public List<?> findTutorCompletedBookings(String tid) {
 		return repBooking.fetchCompletedBookingExpert(Integer.valueOf(tid));
 	}
@@ -608,9 +656,9 @@ public class MeetingService {
 		// todayDate string
 		Date now = sdf.parse(date);
 		if (booking != null) {
-			if (Integer.valueOf(userId).equals(booking.getStudentId())&&booking.getLearnerJoinTime()!=null) {
+			if (Integer.valueOf(userId).equals(booking.getStudentId()) && booking.getLearnerJoinTime() != null) {
 				booking.setLearnerLeavingTime(now);
-			} else if (Integer.valueOf(userId).equals(booking.getTutorId())&&booking.getExpertJoinTime()!=null) {
+			} else if (Integer.valueOf(userId).equals(booking.getTutorId()) && booking.getExpertJoinTime() != null) {
 				booking.setExpertLeavingTime(now);
 			}
 			repBooking.save(booking);

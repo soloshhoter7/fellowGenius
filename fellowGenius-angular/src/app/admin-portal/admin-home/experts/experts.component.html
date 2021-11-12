@@ -2,6 +2,13 @@
   <div class="page-content dashboard__Panel">
     <section class="wi_full py_5 full_expert_sec" style="padding-top: 0">
       <div class="container">
+        <div class="box">
+          <h3>Experts who haven't updated Calendar : {{expertsWithNoSchedule.length}} / {{expertsCount}} </h3>
+          <div>
+            <button class="btn" style="float: right;" (click)="notifyAllExpertsForCalendar()">Notify All</button>
+          </div>
+          
+        </div>
         <!-- <div class="row" style="margin-bottom: 20px">
           <h2>Featured Experts</h2>
           <p *ngIf="featuredExperts.length == 0">No featured Experts</p>
@@ -213,9 +220,9 @@
                         allFiltersApplied.subjects.length == 0
                       "
                     >
-                    <div class="total_expert">
-                      {{ expertsCount }} Experts Available
-                    </div>
+                      <div class="total_expert">
+                        {{ expertsCount }} Experts Available
+                      </div>
                       <div class="expert__available">
                         <div
                           class="expert__item"
@@ -245,6 +252,16 @@
                             <h6>
                               {{ result.fullName }}
                             </h6>
+                            <div>
+                              <div class="experts-info">
+                                Last login : {{ result.lastLogin }}
+                              </div>
+                              <div class="experts-info">
+                                Calendar Updated :
+                                <span class="positive" *ngIf="result.isWeeklyCalendarUpdated==true">Yes</span>
+                                <span class="negative" *ngIf="result.isWeeklyCalendarUpdated==false">No</span>
+                              </div>
+                            </div>
                             <!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
                             <!-- <p>NPD<span>Marketing</span></p> -->
                             <div class="domain__rating">
@@ -286,7 +303,7 @@
                               href="javascript:;"
                               class="button exprt_btn connect_btn"
                               [routerLink]="['../expert-profile']"
-                              [queryParams]="{expertId: result.tid}"
+                              [queryParams]="{ expertId: result.tid }"
                               >View Profile</a
                             >
                             <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->

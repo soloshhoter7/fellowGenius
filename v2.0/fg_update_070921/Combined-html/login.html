@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- <link rel="stylesheet" href="css/media.css"> -->
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
+    <!--required stylesheet for plugin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Login- Fellow Genius</title>
+</head>
+<body>
+
+    <div class="access_page wi_full">
+        <div class="container">
+        	<div class="page_wrapper">
+        		<div class="access_icon_box">
+        			<img src="images/login-clip.svg" alt="#" class="graphic_style">
+        		</div>
+        		<div class="access_field_box">
+        			<div class="access_header">
+                        <a href="" class="back_button"><img src="images/arrow-grey.svg" alt="#"></a>
+        				<a href="" class="accs_logo"><img src="images/fellow genius logo.svg" alt="#"></a>
+        			</div>
+                    <div class="access_data">
+                        <div class="content_wrapper">
+                            <h2>Log in</h2>
+                            <div class="tagline"></div>
+                            <form>
+                                <div class="form-group">
+                                    <label class="">E-Mail</label>
+                                    <input type="text" class="form-control" placeholder="shivam92.goel@gmail.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="">Password</label>
+                                    <div class="password_wrap">
+                                        <input id="password-field" type="password" class="form-control" name="password"  value="">
+                                        <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                    </div>
+                                    <a href="" class="frgt_pwd">Forgot Password ?</a>
+                                </div>
+                                <button type="button" class="button form_Btn">Login</button>
+                                <div class="sepratr_login">Easy login with</div>
+                                <button type="button" class="button google_Btn"><i class="fab fa-google"></i>Google</button>
+                                <div class="error_message">
+                                	<div class="msg_wrap">
+                                		<img src="images/required-error.svg" alt="#" class="erro_icon">
+                                		<span><strong>Error</strong>Your E-Mail Address is Invalid</span>
+                                	</div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+        			<div class="access_footer">
+                        <p>Don't have an account yet? <a href="">Create an account</a></p>         
+                    </div>
+        		</div>
+        	</div>
+        </div>
+	</div> 
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/owl.carousel.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tooltip.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="js/custom.js"></script> <!-- Resource jQuery -->
+
+    <script type="text/javascript">
+        $( ".toggle-password" ).each(function(index) {
+            $(this).on("click", function(){
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

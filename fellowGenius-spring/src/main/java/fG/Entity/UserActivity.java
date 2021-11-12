@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
+import fG.Model.ScheduleTime;
+
 @Entity
 public class UserActivity implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -73,10 +75,13 @@ public class UserActivity implements Serializable {
 		return "UserActivity [id=" + id + ", type=" + type + ", createdDate=" + createdDate + "]";
 	}
 
-	
-	
-	
-	
-	
+	@Override
+	public boolean equals(Object anObject) {
+		if (!(anObject instanceof UserActivity)) {
+			return false;
+		}
+		UserActivity otherMember = (UserActivity) anObject;
+		return (otherMember.getId().equals(this.id));
+	}
 	
 }

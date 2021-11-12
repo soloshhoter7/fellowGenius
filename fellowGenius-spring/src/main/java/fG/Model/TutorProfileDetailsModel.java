@@ -31,8 +31,22 @@ public class TutorProfileDetailsModel {
 	String linkedInProfile;
 	String gst;
 	String upiID;
+	String lastLogin;
+	Boolean isWeeklyCalendarUpdated;
 	public Integer getTid() {
 		return tid;
+	}
+	public String getLastLogin() {
+		return lastLogin;
+	}
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+	public Boolean getIsWeeklyCalendarUpdated() {
+		return isWeeklyCalendarUpdated;
+	}
+	public void setIsWeeklyCalendarUpdated(Boolean isWeeklyCalendarUpdated) {
+		this.isWeeklyCalendarUpdated = isWeeklyCalendarUpdated;
 	}
 	public void setTid(Integer tid) {
 		this.tid = tid;

@@ -1,5 +1,6 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Category } from 'src/app/model/category';
 import { filtersApplied } from 'src/app/model/filtersApplied';
@@ -102,6 +103,7 @@ export class ExpertsComponent implements OnInit {
   showMobileFilterButton: boolean = false;
   subCategories: Category[] = [];
   categories: Category[] = [];
+  expertsWithNoSchedule:tutorProfileDetails[] =[];
   constructor(
     private router: Router,
     private httpService: HttpService,
@@ -109,12 +111,20 @@ export class ExpertsComponent implements OnInit {
     private profileService: ProfileService,
     private matDialog: MatDialog,
     private ngZone: NgZone,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar:MatSnackBar
   ) {
     initiate();
     this.allFiltersApplied = new filtersApplied();
   }
-
+  
+  config: MatSnackBarConfig = {
+    duration: 5000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+    panelClass: ['snackbar'],
+  };
+  
   ngOnInit(): void {
     window.scroll(0, 0);
     this.fetchFeaturedExperts();
@@ -215,6 +225,20 @@ export class ExpertsComponent implements OnInit {
     this.findFromSearchResult = false;
     this.findFromFilterSearch = false;
   }
+  notifyAllExpertsForCalendar(){
+    let usersList:string[]=[];
+    for(let exp of this.expertsWithNoSchedule){
+      usersList.push(exp.bookingId.toString());
+    }
+    this.httpService.notifyAllExpertsWithNoSchedule(usersList).subscribe((res)=>{
+      console.log('notified all experts')
+    });
+    this.snackBar.open(
+      'Notified all experts !',
+      'close',
+      this.config
+    );
+  }
   isFeatured(expert: tutorProfileDetails) {
     for (let i = 0; i < this.featuredExperts.length; i++) {
       if (expert.bookingId == this.featuredExperts[i].expertId) {
@@ -295,11 +319,21 @@ export class ExpertsComponent implements OnInit {
         location.reload();
       });
   }
+  filterExpertsWithNoSchedule(){
+    for(let expert of this.searchResults){
+      if(expert.isWeeklyCalendarUpdated==false){
+        this.expertsWithNoSchedule.push(expert);
+      }
+    }
+  }
   fetchTutorList() {
-    this.httpService.getTutorList('*').subscribe((req) => {
+    this.httpService.fetchExpertsList().subscribe((req) => {
       this.searchResults = [];
       this.filteredArray = [];
+      
       this.searchResults = req;
+      console.log(this.searchResults);
+      this.filterExpertsWithNoSchedule();
       this.isLoading = false;
       this.expertsCount = this.searchResults.length;
     });

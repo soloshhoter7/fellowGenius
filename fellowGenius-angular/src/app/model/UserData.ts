@@ -7,3 +7,11 @@ export class UserData{
     expertCode:string;
     upiID:string;
 }
+export class ActivityTimeDetails{
+    userId:string;
+    fullName:string;
+    role:string;
+    loginTime:string;
+    signUpTime:string;
+    referralCode:string;
+}

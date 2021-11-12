@@ -78,6 +78,7 @@ D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\TutorProfileDetailsModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\AuthenticationResponse.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\StudentLogin.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\TimeSlot.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryStudentProfile.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Entity\CategoryList.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryTutorLogin.java
@@ -86,5 +87,6 @@ D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\AppInfoModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryUsers.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Service\IdGenerator.java
+D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\UserActivityModel.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Repository\repositoryLearningAreasCount.java
 D:\Projects\fellow Genius\fellowGenius\fellowGenius\fellowGenius-spring\src\main\java\fG\Model\NotificationModel.java

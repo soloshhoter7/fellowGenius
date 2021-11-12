@@ -1,5 +1,7 @@
 package fG.Model;
 
+import java.util.Date;
+
 public class BookingDetailsModel {
   Integer bid;
   Integer endTimeHour;
@@ -27,6 +29,13 @@ public class BookingDetailsModel {
   String isRescheduled;
   String domain;
   String expertCode;
+  String creationTime;
+  String startTime;
+  String endTime;
+  String expertJoinTime;
+  String learnerJoinTime;
+  String expertLeavingTime;
+  String learnerLeavingTime;
   
 public String getTutorProfilePictureUrl() {
 	return tutorProfilePictureUrl;
@@ -189,6 +198,49 @@ public String getExpertCode() {
 }
 public void setExpertCode(String expertCode) {
 	this.expertCode = expertCode;
+}
+
+public String getCreationTime() {
+	return creationTime;
+}
+public void setCreationTime(String creationTime) {
+	this.creationTime = creationTime;
+}
+public String getStartTime() {
+	return startTime;
+}
+public void setStartTime(String startTime) {
+	this.startTime = startTime;
+}
+public String getEndTime() {
+	return endTime;
+}
+public void setEndTime(String endTime) {
+	this.endTime = endTime;
+}
+public String getExpertJoinTime() {
+	return expertJoinTime;
+}
+public void setExpertJoinTime(String expertJoinTime) {
+	this.expertJoinTime = expertJoinTime;
+}
+public String getLearnerJoinTime() {
+	return learnerJoinTime;
+}
+public void setLearnerJoinTime(String learnerJoinTime) {
+	this.learnerJoinTime = learnerJoinTime;
+}
+public String getExpertLeavingTime() {
+	return expertLeavingTime;
+}
+public void setExpertLeavingTime(String expertLeavingTime) {
+	this.expertLeavingTime = expertLeavingTime;
+}
+public String getLearnerLeavingTime() {
+	return learnerLeavingTime;
+}
+public void setLearnerLeavingTime(String learnerLeavingTime) {
+	this.learnerLeavingTime = learnerLeavingTime;
 }
 @Override
 public String toString() {

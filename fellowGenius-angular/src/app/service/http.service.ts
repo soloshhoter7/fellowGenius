@@ -21,7 +21,7 @@ import { NotificationModel } from '../model/notification';
 import { environment } from 'src/environments/environment';
 import { AppInfo } from '../model/AppInfo';
 import { UserActivityAnalytics } from '../model/userActivityAnalytics';
-import { UserData } from '../model/UserData';
+import { ActivityTimeDetails, UserData } from '../model/UserData';
 @Injectable({
   providedIn: 'root',
 })
@@ -326,6 +326,12 @@ export class HttpService {
     );
   }
 
+   //fetch all the experts for admin page
+   fetchExpertsList() {
+    return this.http.get<tutorProfileDetails[]>(
+      this.backendUrl+'/fellowGenius/Admin/fetchAllExpertsList'
+    );
+  }
   //fetch Top Tutors List
   fetchTopTutors(subject: string) {
     return this.http.get<tutorProfileDetails[]>(
@@ -768,6 +774,15 @@ choosePassword(token,password):Observable<Object> {
   fetchAllUserData():Observable<UserData>{
     return this.http.get<UserData>(this.backendUrl+'/fellowGenius/Admin/fetchAllUsersData');
   }
+  fetchAllLoginData():Observable<ActivityTimeDetails[]>{
+    return this.http.get<ActivityTimeDetails[]>(this.backendUrl+'/fellowGenius/Admin/fetchAllLoginData');
+  }
+  fetchAllSignUpData():Observable<ActivityTimeDetails[]>{
+    return this.http.get<ActivityTimeDetails[]>(this.backendUrl+'/fellowGenius/Admin/fetchAllSignUpData');
+  }
+  fetchAllMeetingsData():Observable<bookingDetails[]>{
+    return this.http.get<bookingDetails[]>(this.backendUrl+'/fellowGenius/Admin/fetchAllMeetingData');
+  }
   fetchFeaturedExperts():Observable<featuredExpert[]>{
     return this.http.get<featuredExpert[]>(this.backendUrl+'/fellowGenius/Admin/fetchFeaturedExperts');
   }
@@ -791,6 +806,13 @@ choosePassword(token,password):Observable<Object> {
     return this.http.get<Object>(this.backendUrl+'/fellowGenius/notifyExpert',{
       params:{
         tid:id
+      }
+    });
+  }
+  notifyAllExpertsWithNoSchedule(users:string[]):Observable<Object>{
+    return this.http.get<Object>(this.backendUrl+'/fellowGenius/Admin/notifyAllExpertsWithNoSchedule',{
+      params:{
+        users:users
       }
     });
   }

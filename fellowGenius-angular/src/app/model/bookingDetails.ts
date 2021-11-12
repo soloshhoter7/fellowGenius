@@ -23,10 +23,17 @@ export class bookingDetails {
   public reviewText: string;
   public amount: number;
   public tutorProfilePictureUrl: string;
-   razorpay_payment_id;
-   razorpay_order_id;
-   razorpay_signature;
-   expertCode
+  creationTime;
+  razorpay_payment_id;
+  razorpay_order_id;
+  razorpay_signature;
+  expertCode;
+  expertJoinTime;
+  expertLeavingTime;
+  learnerJoinTime;
+  startTime;
+  endTime;
+  learnerLeavingTime;
   public isRescheduled;
   public domain;
 }

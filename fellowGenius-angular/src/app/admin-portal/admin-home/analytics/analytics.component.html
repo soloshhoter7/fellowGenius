@@ -1,46 +1,84 @@
 <div class="page-content dashboard__Panel">
   <div class="wrapper">
-   
-    <angular2csv
-      [data]="userData"
-      filename="userData"
-      [options]="options"
-      style="display: flex; margin: 10px; margin-left: 0"
-    ></angular2csv>
-    <div>
-      <div style="margin-bottom: 10px">
-        <h2>Users count : {{ userAnalytics.usersCount }}</h2>
+    <div class="total__list white__bg">
+      <div>
+        <h2>User Data</h2>
+        <angular2csv
+        class="download-button"
+          [data]="userData"
+          filename="User Data"
+          [options]="options"
+          style="display: flex; margin: 10px; margin-left: 0"
+        ></angular2csv>
       </div>
-      <div style="margin-bottom: 10px">
-        <h2>Daily Login : {{ userAnalytics.dailyLoginCount }}</h2>
+      <div>
+        <div style="margin-bottom: 10px">
+          <h3>Users count : {{ userAnalytics.usersCount }}</h3>
+        </div>
       </div>
+      </div>
+      <div class="total__list white__bg">
+        <h2>Login Details</h2>
+        <angular2csv
+          [data]="loginData"
+          class="download-button"
+          filename="Login Data"
+          [options]="loginDataOptions"
+          style="display: flex; margin: 10px; margin-left: 0"
+        ></angular2csv>
+        <div style="margin-bottom: 10px">
+          <h3>Daily Login : {{ userAnalytics.dailyLoginCount }}</h3>
+        </div>
 
-      <div style="margin-bottom: 10px">
-        <h2>Weekly Login : {{ userAnalytics.weeklyLoginCount }}</h2>
+        <div style="margin-bottom: 10px">
+          <h3>Weekly Login : {{ userAnalytics.weeklyLoginCount }}</h3>
+        </div>
+        <div style="margin-bottom: 10px">
+          <h3>Monthly Login : {{ userAnalytics.monthlyLoginCount }}</h3>
+        </div>
       </div>
-      <div style="margin-bottom: 10px">
-        <h2>Monthly Login : {{ userAnalytics.monthlyLoginCount }}</h2>
+      <div class="total__list white__bg">
+        <h2>Sign Up details</h2>
+        <angular2csv
+          [data]="signUpData"
+          class="download-button"
+          filename="Sign Up Data"
+          [options]="signUpDataOptions"
+          style="display: flex; margin: 10px; margin-left: 0"
+        ></angular2csv>
+        <div style="margin-bottom: 10px">
+          <h3>Daily SignUp : {{ userAnalytics.dailySignUpCount }}</h3>
+        </div>
+        <div style="margin-bottom: 10px">
+          <h3>Weekly SignUp : {{ userAnalytics.weeklySignUpCount }}</h3>
+        </div>
+        <div style="margin-bottom: 10px">
+          <h3>Monthly SignUp : {{ userAnalytics.monthlySignUpCount }}</h3>
+        </div>
       </div>
-      <div style="margin-bottom: 10px">
-        <h2>Daily SignUp : {{ userAnalytics.dailySignUpCount }}</h2>
+      <div class="total__list white__bg">
+        <h2>Meeting Details</h2>
+        <angular2csv
+        class="download-button"
+          [data]="meetingData"
+          filename="Meeting Data"
+          [options]="meetingDataOptions"
+          style="display: flex; margin: 10px; margin-left: 0"
+        ></angular2csv>
+        <div style="margin-bottom: 10px">
+          <h3>Daily Meetings Setup : {{ userAnalytics.dailyMeetingsSetup }}</h3>
+        </div>
+        <div style="margin-bottom: 10px">
+          <h3>
+            Weekly Meetings Setup : {{ userAnalytics.weeklyMeetingSetup }}
+          </h3>
+        </div>
+        <div style="margin-bottom: 10px">
+          <h3>
+            Monthly Meetings Setup : {{ userAnalytics.monthlyMeetingSetup }}
+          </h3>
+        </div>
       </div>
-      <div style="margin-bottom: 10px">
-        <h2>Weekly SignUp : {{ userAnalytics.weeklySignUpCount }}</h2>
-      </div>
-      <div style="margin-bottom: 10px">
-        <h2>Monthly SignUp : {{ userAnalytics.monthlySignUpCount }}</h2>
-      </div>
-      <div style="margin-bottom: 10px">
-        <h2>Daily Meetings Setup : {{ userAnalytics.dailyMeetingsSetup }}</h2>
-      </div>
-      <div style="margin-bottom: 10px">
-        <h2>Weekly Meetings Setup : {{ userAnalytics.weeklyMeetingSetup }}</h2>
-      </div>
-      <div style="margin-bottom: 10px">
-        <h2>
-          Monthly Meetings Setup : {{ userAnalytics.monthlyMeetingSetup }}
-        </h2>
-      </div>
-    </div>
+    
   </div>
 </div>

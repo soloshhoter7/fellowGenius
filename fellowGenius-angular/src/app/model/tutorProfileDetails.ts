@@ -28,6 +28,8 @@ export class tutorProfileDetails {
   public upiID:string;
   public upiId:string;
   public gst:string;
+  public lastLogin:string;
+  public isWeeklyCalendarUpdated:boolean;
 }
 export class expertise {
   public category: string;

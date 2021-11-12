@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- <link rel="stylesheet" href="css/media.css"> -->
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
+    <!--required stylesheet for plugin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Expert- Fellow Genius</title>
+</head>
+<body>
+
+<header class="header"> 
+    <nav class="navbar navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><img src="images/fellow genius logo.svg" alt="logo"></a>
+            <ul class="nav navbar-nav">
+            	<a href="" class="expert_btn hdr_btn">
+            		<span class="btn_icon"><img src="images/expert-icon.svg" alt="#"></span>
+            		<span class="btn_txt">Become an Expert</span>
+            	</a>
+            	<a href="" class="login_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Login">
+            		<img src="images/header-icon-1.svg" alt="#">
+            		<small>Login</small>
+            	</a>
+            	<a href="" class="register_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up">
+            		<img src="images/header-icon-2.svg" alt="#">
+            		<small>Sign Up</small>
+            	</a>
+            	<div class="setting_menu">
+                	<a class="user_profile dropdown-toggle" href="#" id="settingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user-circle"></i></a>
+		          	<ul class="dropdown-menu" aria-labelledby="settingDropdown">
+		            	<li><a class="dropdown-item" href="#"><i class="far fa-user-circle"></i> User Name</a></li>
+		            	<li><a class="dropdown-item" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+		            	<li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a></li>
+		          	</ul>
+		        </div>
+            </ul>
+        </div>
+    </nav>  
+</header>
+
+<style type="text/css">
+footer:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f7f7f7;
+    top: 0;
+    z-index: -1;
+}
+</style>
+
+<div class="page-content">
+    <section class="wi_full py_5 full_expert_sec">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-breadcrumb">
+                        <ul class="breadcrumb">
+					        <li><a href="#"><img src="images/breadcrumb-home.svg" alt="#"></a></li>
+					        <li class="active">Marketing</li>
+					    </ul>
+                    </div>
+                    <div class="expert_filter">
+                    	<div class="row">
+                    		<div class="col-12 col-md-9 col-lg-7 exprt_sel_fltr">
+                    			<div class="filter_sel">
+                    				<select class="select2 form-control">
+                    					<option>Topic Options</option>
+                    					<option>Topic Options</option>
+                    					<option>Topic Options</option>
+                    				</select>
+                    			</div>
+                    			<div class="filter_sel price_filter">
+                    				<select class="select2 form-control">
+                    					<option>Price</option>
+                    					<option>Price</option>
+                    					<option>Price</option>
+                    				</select>
+                    			</div>
+                    			<div class="filter_sel">
+                    				<select class="select2 form-control">
+                    					<option>Average Reviews</option>
+                    					<option>Average Reviews</option>
+                    					<option>Average Reviews</option>
+                    				</select>
+                    			</div>
+                    		</div>
+                    		<div class="col-12 col-md-3 col-lg-4 ml-auto">
+                    			<div class="serach_field">
+	    							<input type="search" class="form-control expert_srch" placeholder="Search">
+	    						</div>
+                    		</div>
+                    		<div class="col-12 availbale_expert">
+                    			<div class="total_expert">120 Experts Available</div>
+                    			<div class="sort_by_exprt">Sort by 
+                    				<div class="pice_select"><select class="select2">
+                    					<option>Low to High Price</option>
+                    					<option>High to Low Price</option>
+	                    			</select></div>
+	                    		</div>
+                    		</div>
+                    	</div>
+                    </div>
+                    <div class="expert__available">
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-1.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                    			<h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                    		</div>
+                    		<div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                    		<div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                    		</div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-2.png" alt="#">
+                    		</div>
+                            <div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-3.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-4.png" alt="#">
+                    		</div><div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-5.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-6.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-7.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-8.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-1.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-2.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-3.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-4.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-5.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-6.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-7.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                    	<div class="expert__item">
+                    		<div class="expert__img">
+                    			<img src="images/expert-thumb-8.png" alt="#">
+                    		</div>
+                    		<div class="expert__txt">
+                                <h6>Shubham Sharma</h6>
+                    			<!-- <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p> -->
+                                <div class="domain__rating">
+                                <p>NPD<span>Marketing</span></p></div>
+                                <ul>
+                                    <li><span class="review_cnt"><img src="images/review_icon.svg" alt="#">4 REVIEWS</span></li>
+                                    <li><span class="review_session"><img src="images/session_icon.svg" alt="#">4 SESSIONS</span></li>
+                                </ul>
+                            </div>
+                            <div class="expert__price">₹100<span>Per Hour</span><span class="expert__rtng"><i class="fa fa-star" aria-hidden="true"></i> 4.5</span></div>
+                            <div class="expert__Btn">
+                                <a href="" class="button exprt_btn connect_btn">Connect</a>
+                                <!-- <a href="" class="button exprt_btn profile_btn">View Profile</a> -->
+                            </div>
+                    	</div>
+                        <div class="Page_nav">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-angle-left"></i></a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                  <a class="page-link" href="#"><i class="fas fa-angle-right"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer class="wi_full py_5">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-lg-5">
+				<div class="ftr_logo">
+					<img src="images/footer-logo.svg" alt="#" class="btm_logo">
+					<p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum</p>
+				</div>
+			</div>
+			<div class="col-12 col-md-7 col-lg-4">
+				<div class="ftr_nav">
+					<h5>Company</h5>
+					<ul>
+						<li><a href="">About us</a></li>
+						<li><a href="">Contact us</a></li>
+						<li><a href="">FAQ</a></li>
+						<li><a href="">Terms and Conditions</a></li>
+						<li><a href="">Privacy Policy</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 col-md-5 col-lg-3">
+				<div class="ftr_nav">
+					<h5>Resources</h5>
+					<ul>
+						<li><a href="">Blogs</a></li>
+						<li><a href="">Video</a></li>
+						<li><a href="">Events</a></li>
+					</ul>
+					<div class="social_links">
+						<a href=""><img src="images/Linkedin.svg" alt="#"></a>
+						<a href=""><img src="images/Twitter.svg" alt="#"></a>
+						<a href=""><img src="images/Youtube.svg" alt="#"></a>
+						<a href=""><img src="images/instagram.svg" alt="#"></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 text-center">
+				<div class="cpyrgt_txt">© Copyright 2021 | Designed by <a href="https://cresttechnosoft.com/" target="_blank">Cresttechnosoft</a></div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<!-- Optional JavaScript; choose one of the two! -->
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/owl.carousel.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tooltip.js"></script>
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="js/custom.js"></script> <!-- Resource jQuery -->
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+   <!-- <link rel="stylesheet" href="css/dashboard-style.css">
+    <link rel="stylesheet" href="css/dashboard-media.css"> -->
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css">
+    <!--required stylesheet for plugin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Profile- Fellow Genius</title>
+</head>
+<body>
+
+    <header class="dashboard__Header">
+    	<div class="page__title">
+	        <div class="page-breadcrumb">
+	            <ul class="breadcrumb">
+	                <li><a href="#"><img src="images/breadcrumb-home.svg" alt="#"></a></li>
+	                <li class="active">Profile</li>
+	            </ul>
+	        </div>
+	    </div>
+        <div class="page_btns">
+            <a href="" class="notfcn_btn hdr_btns"><img src="images/notification-icon.svg"></a>
+            <a href="" class="setng_btn hdr_btns"><img src="images/learner-profile.png"></a>
+        </div>
+    </header>
+
+    <div class="side-menu"> 
+        <nav class="fixed_menu">
+            <div class="web_logo">
+                <a href="" class="logo_img"><img src="images/fellow genius logo.svg"></a>
+            </div>
+            <ul class="nav_menu nav_list">
+                <li class="list-item" class="">
+                    <a href="" class="menu_item">
+                        <img src="images/dashboard-icon.svg" class="mnu_icn">
+                        <span class="menu_txt">Dashboard</span>
+                    </a>
+                </li>
+                <li class="list-item">
+                    <a href="" class="menu_item">
+                        <img src="images/session-icon.svg" class="mnu_icn">
+                        <span class="menu_txt">Sessions</span>
+                    </a>
+                </li>
+                <!-- <li class="list-item">
+                    <a href="" class="menu_item">
+                        <img src="images/availability-schedule-icon.svg" class="mnu_icn">
+                        <span class="menu_txt">Availability Schedule</span>
+                    </a>
+                </li> -->
+                <li class="list-item">
+                    <a href="" class="active menu_item">
+                        <img src="images/profile-icon.svg" class="mnu_icn">
+                        <span class="menu_txt">Profile</span>
+                    </a>
+                </li>
+            </ul>
+         </nav> 
+    </div>
+
+    <div class="page-content dashboard__Panel">
+        <div class="wrapper">
+            <div class="profile_page">
+            	<div class="profile_tabs learner_profile">
+					<ul class="nav nav-tabs" role="tablist">
+					    <li><a href="#Tab__1" role="tab" data-toggle="tab" class="active">Personal Info</a></li>
+					    <li><a href="#Tab__2" role="tab" data-toggle="tab">Photo</a></li>
+					    <li><a href="#Tab__3" role="tab" data-toggle="tab">Work and Education</a></li>
+					    <li><a href="#Tab__4" role="tab" data-toggle="tab">Area of Interest</a></li>
+					    <li><a href="#Tab__5" role="tab" data-toggle="tab">Change Password</a></li>
+					</ul>
+				</div>
+            	<div class="profile__TabContent">
+            		<form>
+					  	<div class="tab-content">
+					    	<div role="tabpanel" class="tab-pane active" id="Tab__1">
+					    		<div class="row">
+					    			<div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">First Name</label>
+                                            <input type="text" class="form-control" value="Jaspreet">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">Last Name</label>
+                                            <input type="text" class="form-control" value="Singh">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">Phone Number</label>
+                                            <input type="text" class="form-control" value="9465446610">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">E-Mail</label>
+                                            <input type="text" class="form-control" value="jaspreetsingh.cts@gmail.com">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">LinkedIn Profile</label>
+                                            <input type="text" class="form-control" value="jaspreetsingh.cts">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                    	<div class="form__btn">
+                                    		<button type="submit" class="button save__btn">Save</button>
+                                    	</div>
+                                    </div>
+					    		</div>
+					    	</div>
+					    	<div role="tabpanel" class="tab-pane" id="Tab__2">
+					    		<div class="row">
+					    			<div class="col-12">
+					    				<div class="profile_upload form-group">
+                                            <div class="img__contain">
+                                                <img id="img__profile" src="images/learner-profile-pic.png" alt="image" />
+                                            </div> 
+                                            <div class="input-group"> 
+                                                <div class="custom-file">
+                                                    <input type="file" id="inputGroupProfile" class="imgInp custom-file-input">
+                                                    <label class="custom-file-label" for="inputGroupProfile">Choose file</label>
+                                                </div>
+                                            </div>
+                                        </div>
+					    			</div>
+                                    <div class="col-12">
+                                    	<div class="form__btn">
+                                    		<button type="submit" class="button save__btn">Save</button>
+                                    	</div>
+                                    </div>
+					    		</div>
+					    	</div>
+					    	<div role="tabpanel" class="tab-pane" id="Tab__3">
+					    		<div class="row">
+					    			<div class="col-12 col-md-6">
+					    				<div class="form-group">
+					    					<label class="">Total Years of Experience</label>
+					    					<input type="text" class="form-control" name="" placeholder="">
+					    				</div>
+					    			</div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">Current Organisation</label>
+                                            <input type="text" class="form-control" name="" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">Title/Designation</label>
+                                            <input type="text" class="form-control" name="" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">Highest Education Qualification</label>
+                                            <input type="text" class="form-control" name="" placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                    	<div class="form__btn">
+                                    		<button type="submit" class="button save__btn">Save</button>
+                                    	</div>
+                                    </div>
+					    		</div>
+					    	</div>
+					    	<div role="tabpanel" class="tab-pane" id="Tab__4">
+					    		<div class="row">
+                                    <div class="field_repeater">
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label class="">Choose Domain</label>
+                                                    <select class="select2 form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <label class="">Choose Topic</label>
+                                                    <select class="select2 form-control">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="reptr___btn">
+                                        <a href="JavaScript:Void(0);" class="add_RBtn"><img src="images/add-repeater.svg" alt="add">Add more</a>
+                                    </div>
+                                    <div class="col-12">
+                                    	<div class="form__btn">
+                                    		<button type="submit" class="button save__btn">Save</button>
+                                    	</div>
+                                    </div>
+					    		</div>
+					    	</div>
+					    	<div role="tabpanel" class="tab-pane" id="Tab__5">
+					    		<div class="row">
+	                                <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="">Old Password</label>
+                                            <input id="old-password" type="text" class="form-control" name="password" value="">
+                                        </div>
+                                    </div>
+						    		<div class="col-12 col-md-6">
+	                                    <div class="form-group">
+	                                        <label class="">Password</label>
+	                                        <div class="password_wrap">
+	                                            <input id="p-password" type="password" class="form-control" name="password" value="">
+	                                            <span toggle="#p-password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                                <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="">Confirm Password</label>
+                                            <div class="password_wrap">
+                                                <input id="confirm-password" type="password" class="form-control" name="password" value="">
+                                                <span toggle="#confirm-password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                    	<div class="form__btn">
+                                    		<button type="submit" class="button save__btn">Save</button>
+                                    	</div>
+                                    </div>
+                                </div>
+					    	</div>
+					  	</div>	
+					</form>
+				</div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/owl.carousel.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tooltip.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="js/custom.js"></script> <!-- Resource jQuery -->
+
+    <script type="text/javascript">
+        $( ".toggle-password" ).each(function(index) {
+            $(this).on("click", function(){
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#inputGroupProfile").change(function(event) {  
+            readURL(this);    
+        });
+        function readURL(input) {    
+          if (input.files && input.files[0]) {   
+            var reader = new FileReader();
+            var filename = $("#inputGroupProfile").val();
+            filename = filename.substring(filename.lastIndexOf('\\')+1);
+            reader.onload = function(e) {
+              debugger;      
+              $('#img__profile').attr('src', e.target.result);
+              $('#img__profile').hide();
+              $('#img__profile').fadeIn(500);      
+              $('.custom-file-label').text(filename);             
+            }
+            reader.readAsDataURL(input.files[0]);    
+          } 
+        }
+    </script>
+     <script type="text/javascript">
+            // INITIALIZE DATEPICKER PLUGIN
+            $('.datepicker').datepicker({
+              format: "mm/dd/yyyy",
+              autoclose: true
+              // startView: "year", 
+              // minView: "year",
+              // minViewMode: 1,
+            });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+   <!-- <link rel="stylesheet" href="css/dashboard-style.css">
+    <link rel="stylesheet" href="css/dashboard-media.css"> -->
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css">
+    <!--required stylesheet for plugin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Join Class- Fellow Genius</title>
+
+    <style type="text/css">
+        html, body{
+            height: 100%;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat__page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 chat__wrap_Bx">
+                    <div class="chat__video">
+                        <div class="chat__header">
+                            <div class="logo_img"><img src="images/fellow genius logo.svg" alt="logo"></div>
+                            <div class="chat__name"><h5>Marketing Meeting</h5><small>NPD</small></div>
+                        </div>
+                        <div class="chat__thumb">
+                            <img src="images/chat-image-dummy.svg" alt="#" class="mob_avtar">
+                            <img src="images/user-avatar.svg" alt="#" class="desk_avtar">
+                        </div>
+                        <div class="chat__buttons">
+                            <ul>
+                                <li><a href="" class="active">
+                                    <span class="opt__icon"><img src="images/cam.svg" alt="#"></span><span>Cam</span>
+                                </a></li>
+                                <li><a href="" class="active">
+                                    <span class="opt__icon"><img src="images/mic.svg" alt="#"></span><span>Mic</span>
+                                </a></li>
+                                <li><a href="" class="">
+                                    <span class="opt__icon"><img src="images/share.svg" alt="#"></span><span>Share</span>
+                                </a></li>
+                                <li><a href="" class="">
+                                    <span class="opt__icon"><img src="images/draw.svg" alt="#"></span><span>Draw</span>
+                                </a></li>
+                                <li><a href="javascript:void(0)" class="chat__btn">
+                                    <span class="opt__icon"><img src="images/chat.svg" alt="#"></span><span>Chat</span>
+                                </a></li>
+                                <li><a href="#rate_review_modal" class="cancel_btn" data-toggle="modal">
+                                    <span class="opt__icon"><img src="images/leave-chat.svg" alt="#"></span><span>Leave</span>
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chat__message">
+                        <div class="chat__title">
+                            <h4>Chat with Shivam</h4>
+                            <button type="button" class="close_btn"><img src="images/close-chat.svg" alt="#"></button>
+                        </div>
+                        <div class="chat__wrapper">
+                            <div class="chat__item">
+                                <div class="icon__box"><img src="images/chat-john.png" alt="#"></div>
+                                <div class="chat__msg"><span>John Doe</span>Hello there!</div>
+                                <div class="msg__time">4 mins ago</div>
+                            </div>
+                            <div class="chat__item">
+                                <div class="icon__box"><img src="images/chat-shivam.png" alt="#"></div>
+                                <div class="chat__msg"><span>Shivam Goel</span>Hello John, How are you?</div>
+                                <div class="msg__time">3 mins ago</div>
+                            </div>
+                            <div class="chat__item">
+                                <div class="icon__box"><img src="images/chat-john.png" alt="#"></div>
+                                <div class="chat__msg"><span>John Doe</span>I am Good, What about you?</div>
+                                <div class="msg__time">2 mins ago</div>
+                            </div>
+                        </div>
+                        <div class="chat__text">
+                            <div class="type_msg">
+                                <input type="text" name="send msesage" placeholder="Type your Message">
+                                <button type="submit"><img src="images/send-message.svg" alt="#"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade join__Modal" id="rate_review_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal Content: begins -->
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Modal Body -->  
+                <div class="modal-body">
+                    <div class="body-message">
+                        <h4>Rate & Review</h4>
+                        <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio.</p>
+                        <form>
+                            <div class="chat_rating border_box">
+                                <div class="box_title">Rate your overall experience</div>
+                                <div class="rating_star">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="chat_like border_box">
+                                <div class="box_title">What did you like</div>
+                                <div class="check_list">
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="like_option1" value="1" checked="checked">
+                                        <label class="chckbx_lbl checkbox" for="like_option1"><span>Option 1</span></label>
+                                    </div>
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="like_option2" value="1" checked="checked">
+                                        <label class="chckbx_lbl checkbox" for="like_option2"><span>Option 2</span></label>
+                                    </div>
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="like_option3" value="1">
+                                        <label class="chckbx_lbl checkbox" for="like_option3"><span>Option 3</span></label>
+                                    </div>
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="like_option4" value="1">
+                                        <label class="chckbx_lbl checkbox" for="like_option4"><span>Option 4</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat_dislike border_box">
+                                <div class="box_title">What you didn't like</div>
+                                <div class="check_list">
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="dislike_option1" value="1">
+                                        <label class="chckbx_lbl checkbox" for="dislike_option1"><span>Option 1</span></label>
+                                    </div>
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="dislike_option2" value="1" checked="checked">
+                                        <label class="chckbx_lbl checkbox" for="dislike_option2"><span>Option 2</span></label>
+                                    </div>
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="dislike_option3" value="1">
+                                        <label class="chckbx_lbl checkbox" for="dislike_option3"><span>Option 3</span></label>
+                                    </div>
+                                    <div class="chk_item">
+                                        <input type="checkbox" class="" id="dislike_option4" value="1">
+                                        <label class="chckbx_lbl checkbox" for="dislike_option4"><span>Option 4</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" cols="2" rows="2" placeholder="Write a Review"></textarea>
+                            </div>
+                            <div class="modal_btn">
+                                <button type="submit" class="button btn_mdl">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Content: ends -->
+        </div>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/owl.carousel.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tooltip.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="js/custom.js"></script> <!-- Resource jQuery -->
+
+    <script type="text/javascript">
+        $( ".toggle-password" ).each(function(index) {
+            $(this).on("click", function(){
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#inputGroupProfile").change(function(event) {  
+            readURL(this);    
+        });
+        function readURL(input) {    
+          if (input.files && input.files[0]) {   
+            var reader = new FileReader();
+            var filename = $("#inputGroupProfile").val();
+            filename = filename.substring(filename.lastIndexOf('\\')+1);
+            reader.onload = function(e) {
+              debugger;      
+              $('#img__profile').attr('src', e.target.result);
+              $('#img__profile').hide();
+              $('#img__profile').fadeIn(500);      
+              $('.custom-file-label').text(filename);             
+            }
+            reader.readAsDataURL(input.files[0]);    
+          } 
+        }
+    </script>
+
+    <script type="text/javascript">
+            // INITIALIZE DATEPICKER PLUGIN
+            $('.datepicker').datepicker({
+              format: "mm/dd/yyyy",
+              autoclose: true
+              // startView: "year", 
+              // minView: "year",
+              // minViewMode: 1,
+            });
+    </script>
+
+    <script type="text/javascript">
+        $('.chat__btn').click(function(){
+            $('.chat__message, .chat__video').toggleClass('toggle__chat')
+        });
+        $('.close_btn').click(function () {
+            $('.chat__message, .chat__video').removeClass('toggle__chat')
+        });
+    </script>
+
+</body>
+</html>

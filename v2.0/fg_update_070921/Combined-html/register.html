@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- <link rel="stylesheet" href="css/media.css"> -->
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet"/>
+    <!--required stylesheet for plugin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Register- Fellow Genius</title>
+</head>
+<body>
+
+    <div class="access_page wi_full">
+        <div class="container">
+        	<div class="page_wrapper">
+        		<div class="access_icon_box">
+        			<img src="images/signup-clip.svg" alt="#" class="graphic_style">
+        		</div>
+        		<div class="access_field_box">
+        			<div class="access_header">
+                        <a href="" class="back_button"><img src="images/arrow-grey.svg" alt="#"></a>
+        				<a href="" class="accs_logo"><img src="images/fellow genius logo.svg" alt="#"></a>
+        			</div>
+                    <div class="access_data">
+                        <div class="content_wrapper">
+                            <h2>Create account</h2>
+                            <div class="tagline"></div>
+                            <form>
+                                <div class="row">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="">First Name</label>
+                                            <input type="text" class="form-control" placeholder="First Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="">Last Name</label>
+                                            <input type="text" class="form-control" placeholder="Last Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="">E-Mail</label>
+                                            <input type="text" class="form-control" placeholder="shivam92.goel@gmail.com">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="">Phone Number</label>
+                                            <input type="text" class="form-control" placeholder="73580 75350">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="">Password</label>
+                                            <div class="password_wrap">
+                                                <input id="password-field" type="password" class="form-control" name="password" value="secret">
+                                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="">Confirm Password</label>
+                                            <div class="password_wrap">
+                                                <input id="password-field2" type="password" class="form-control" name="password" value="secret">
+                                                <span toggle="#password-field2" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="button form_Btn">Sign up</button>
+                                <div class="sepratr_login">Easy Sign up with</div>
+                                <button type="button" class="button google_Btn"><i class="fab fa-google"></i>Google</button>
+                            </form>
+                        </div>
+                    </div>
+        			<div class="access_footer">
+                        <p>Already have an Account ? <a href="">Log in</a><span>or</span>Sign up as an expert</p>         
+                    </div>
+        		</div>
+        	</div>
+        </div>
+	</div> 
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/owl.carousel.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/tooltip.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="js/custom.js"></script> <!-- Resource jQuery -->
+
+    <script type="text/javascript">
+        $( ".toggle-password" ).each(function(index) {
+            $(this).on("click", function(){
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

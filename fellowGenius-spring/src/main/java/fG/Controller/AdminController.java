@@ -1,6 +1,8 @@
 package fG.Controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fG.Entity.PendingTutorProfileDetails;
-import fG.Model.AppInfoModel;
+import fG.Model.BookingDetailsModel;
 import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.UserActivityAnalytics;
+import fG.Model.UserActivityModel;
 import fG.Model.UserDataModel;
 import fG.Service.AdminService;
 import fG.Service.MailService;
@@ -148,5 +151,33 @@ public class AdminController {
 	public void updatePendingExpert(@RequestBody TutorProfileDetailsModel tutorDetailsModel) {
 		service.updatePendingTutor(tutorDetailsModel);
 	}
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value = "/fetchAllExpertsList", produces = "application/JSON")
+	@ResponseBody
+	public List<TutorProfileDetailsModel> fetchAllExpertsList() throws NumberFormatException, ParseException {
+		List<TutorProfileDetailsModel> tutorProfileDetails = service.fetchAllTutorList();
+		return tutorProfileDetails;
+	}
 	
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value = "/notifyAllExpertsWithNoSchedule")
+	public void notifyAllExpertsWithNoSchedule(String[] users) throws NumberFormatException, ParseException {
+		service.notifyAllExpertsWithNoSchedule(users);	
+	}
+	
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value = "/fetchAllLoginData")
+	public ArrayList<UserActivityModel> fetchAllLoginData(){
+		return service.fetchAllLoginData();	
+	}
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value = "/fetchAllSignUpData")
+	public ArrayList<UserActivityModel> fetchAllSignUpData() throws NumberFormatException, ParseException {
+		return service.fetchAllSignUpData();	
+	}
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value = "/fetchAllMeetingData")
+	public ArrayList<BookingDetailsModel> fetchAllMeetingsData() throws NumberFormatException, ParseException {
+		return service.fetchAllMeetingsData();	
+	}
 }

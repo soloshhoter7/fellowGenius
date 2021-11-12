@@ -73,11 +73,11 @@ public class UserController {
 		return service.saveUserProfile(registrationModel);
 	}
 
-	// for getting student details after login
-		@RequestMapping(value = "/sendDiwaliMail")
-		public boolean sendDiwalimail() {
-			return service.sendDiwaliMail();
-		}
+//	// for getting student details after login
+//		@RequestMapping(value = "/sendDiwaliMail")
+//		public boolean sendDiwalimail() {
+//			return service.sendDiwaliMail();
+//		}
 	// for saving tutor registration details
 //	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerTutor")
