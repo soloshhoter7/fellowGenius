@@ -150,6 +150,8 @@ export class SignUpComponent implements OnInit {
          element.focus();
  }
   seePassword() {
+    console.log(this.hide);
+    
     $('.toggle-password').each(function (index) {
       $(this).on('click', function () {
         $(this).toggleClass('fa-eye fa-eye-slash');
@@ -161,6 +163,8 @@ export class SignUpComponent implements OnInit {
         }
       });
     });
+    
+    
   }
   toSignUpPage() {
     this.router.navigate(['sign-up']);

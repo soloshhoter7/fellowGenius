@@ -1,0 +1,195 @@
+<a href="#rate_review_modal" class="cancel_btn" data-toggle="modal">
+    <span class="opt__icon"><img src="images/leave-chat.svg" alt="#"></span><span>Leave</span>
+</a>
+
+<div class="modal fade join__Modal" id="rate_review_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content: begins -->
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" id="close-popup" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Modal Body -->  
+            <div class="modal-body">
+                <div class="body-message">
+                    <h4>Share your feedback</h4>
+                   
+                    <form (ngSubmit)="onFeedback(t)" #t="ngForm">
+                        <div class="chat_rating border_box">
+                            <div class="box_title">Rate your overall experience *</div>
+                            
+                            
+                        <div class="rating_star">
+                            
+                            <ul class="rate-area">
+                                <input type="radio" id="5-star" name="rating" value="5" [(ngModel)]="rating">
+                <label for="5-star" title="Amazing">5 stars</label>
+                                <input type="radio" id="4-star" name="rating" value="4" [(ngModel)]="rating">
+                <label for="4-star" title="Good">4 stars</label>
+                                <input type="radio" id="3-star" name="rating" value="3" [(ngModel)]="rating">
+                <label for="3-star" title="Average">3 stars</label>
+                                <input type="radio" id="2-star" name="rating" value="2" [(ngModel)]="rating">
+                <label for="2-star" title="Not Good">2 stars</label>
+                                <input type="radio" id="1-star" required="" [(ngModel)]="rating"
+                 name="rating" value="1" aria-required="true">
+                <label for="1-star" title="Bad">1 star</label>
+                              </ul>
+                        </div>
+
+                        
+                        
+                        </div>
+
+                        <div class="mobile_view_rating">
+                            
+                        <div class="box_title align_center rating_title">Rate your overall experience</div>
+                        
+                        <div class="rating_star align_center">
+                            
+                            <ul class="rate-area">
+                                <input type="radio" id="5-star" name="rating" value="5" [(ngModel)]="rating">
+                <label for="5-star" title="Amazing">5 stars</label>
+                                <input type="radio" id="4-star" name="rating" value="4" [(ngModel)]="rating">
+                <label for="4-star" title="Good">4 stars</label>
+                                <input type="radio" id="3-star" name="rating" value="3" [(ngModel)]="rating">
+                <label for="3-star" title="Average">3 stars</label>
+                                <input type="radio" id="2-star" name="rating" value="2" [(ngModel)]="rating">
+                <label for="2-star" title="Not Good">2 stars</label>
+                                <input type="radio" id="1-star" required="" [(ngModel)]="rating"
+                 name="rating" value="1" aria-required="true">
+                <label for="1-star" title="Bad">1 star</label>
+                              </ul>
+                        </div>
+                        
+                        </div>
+                        <!-- Learners feedback-->
+                        <div *ngIf=" role==='learner' ">
+                        <div class="chat_like border_box">
+                            <div class="box_title">What did you like</div>
+                            <div class="check_list">
+                                <div *ngFor='let learnerlike of learner_likes'>
+                                    <div class="chk_item">
+                                        <input 
+                                        type="checkbox" 
+                                        [value]="learnerlike.name"
+                                        [checked]="learnerlike.checked" 
+                                        (change)="onChangeLearnerLike($event)"
+                                        [(ngModel)]="learnerlike.checked"
+                                        [name]="learnerlike.name"  
+                                        >
+                                        <label 
+                                        class="chckbx_lbl checkbox" 
+                                        for="{{learnerlike.name}}"
+                                        ><span>{{learnerlike.name}}</span></label>
+                                    </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="chat_dislike border_box">
+                            <div class="box_title">What you didn't like</div>
+                            <div class="check_list">
+                                <div *ngFor='let learnerdislike of learner_dislikes'>
+                                    <div class="chk_item">
+                                        <input 
+                                        type="checkbox" 
+                                        [value]="learnerdislike.name"
+                                        [checked]="learnerdislike.checked" 
+                                        (change)="onChangeLearnerDislike($event)"
+                                        [(ngModel)]="learnerdislike.checked"
+                                        [name]="learnerdislike.name" 
+                                        >
+                                        <label 
+                                        class="chckbx_lbl checkbox" 
+                                        for="{{learnerdislike.name}}"
+                                        ><span>{{learnerdislike.name}}</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <!-- Expert feedback-->
+                        <div *ngIf=" role==='expert' ">
+                        <div class="chat_like border_box">
+                            <div class="box_title">What did you like</div>
+                            <div class="check_list">
+                                <div *ngFor='let expertlike of expert_likes'>
+                                <div class="chk_item">
+                                    <input 
+                                    type="checkbox" 
+                                    [value]="expertlike.name"
+                                    [checked]="expertlike.checked" 
+                                    (change)="onChangeExpertLike($event)"
+                                    [(ngModel)]="expertlike.checked"
+                                    [name]="expertlike.name"
+                                    >
+                                    <label 
+                                    class="chckbx_lbl checkbox" 
+                                    for="{{expertlike.name}}"
+                                    ><span>{{expertlike.name}}</span></label>
+                                </div>
+                                </div>
+                                 
+                            </div>
+                        </div>
+                        <div class="chat_dislike border_box">
+                            <div class="box_title">What you didn't like</div>
+                            <div class="check_list">
+                                <div *ngFor='let expertdislike of expert_dislikes'>
+                                    <div class="chk_item">
+                                        <input 
+                                        type="checkbox" 
+                                    [value]="expertdislike.name"
+                                    [checked]="expertdislike.checked" 
+                                    (change)="onChangeExpertDislike($event)"
+                                    [(ngModel)]="expertdislike.checked"
+                                    [name]="expertdislike.name"
+                                        >
+                                        <label 
+                                        class="chckbx_lbl checkbox" 
+                                        for="{{expertdislike.name}}"
+                                        ><span>{{expertdislike.name}}</span></label>
+                                    </div>
+                                    </div>
+                                
+                                
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="form-group review_text">
+                            <textarea 
+                            id="review" 
+                            name="review"
+                            class="form-control" 
+                            required
+                            [(ngModel)]="review"
+                            cols="2" 
+                            rows="3" 
+                            maxLength="250"
+                            placeholder="Tell us in detail about your experience"
+                            >
+                            </textarea>
+                            <span class="setLength"
+                            >{{
+                              review.length
+                            }}/250</span
+                          >
+                        </div>
+                        <!-- error msg -->
+                        <span *ngIf="errorText" class="error">Please provide the star rating</span>
+                        <div class="modal_btn feedback_submit">
+                            <button 
+                            type="submit" 
+                            class="button btn_mdl"
+                            >Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Content: ends -->
+    </div>
+</div>

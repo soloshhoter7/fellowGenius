@@ -103,6 +103,8 @@ export class LoginComponent implements OnInit {
     this.seePassword();
   }
   seePassword() {
+    console.log(this.hide);
+    
     $('.toggle-password').each(function (index) {
       $(this).on('click', function () {
         $(this).toggleClass('fa-eye fa-eye-slash');
@@ -114,6 +116,8 @@ export class LoginComponent implements OnInit {
         }
       });
     });
+    
+    
   }
   toFacade() {
     this.router.navigate(['']);

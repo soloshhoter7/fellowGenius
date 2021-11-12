@@ -1,4 +1,5 @@
+abc/*
+fellowGenius-spring/*
+!fellowGenius-spring/src
 
-
-
-
+fellowGenius-spring/src/main/resources/*
