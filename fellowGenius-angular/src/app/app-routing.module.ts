@@ -44,6 +44,7 @@ import { AdminLoginComponent } from './admin-portal/admin-login/admin-login.comp
 import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.component';
 import { ExpertsComponent } from './admin-portal/admin-home/experts/experts.component';
 import { PendingExpertProfileComponent } from './admin-portal/admin-home/pending-expert-profile/pending-expert-profile.component';
+import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.component';
 // const routes:Routes=[];
 export const routerOptions: ExtraOptions = {
   anchorScrolling: 'enabled',
@@ -67,6 +68,7 @@ export const appRoutes: Routes = [
       { path: 'knowledge-base', component: KnowledgeBaseComponent },
       { path: 'sessions-learner', component: LearnerSessionsComponent },
       { path: 'sessions-expert', component: ExpertSessionsComponent },
+      { path: 'refer', component:ReferAndEarnComponent}
     ],
   },
   //pre login routes
