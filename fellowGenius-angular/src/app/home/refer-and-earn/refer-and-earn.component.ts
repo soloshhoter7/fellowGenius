@@ -3,7 +3,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { StudentService } from 'src/app/service/student.service';
 import { TutorService } from 'src/app/service/tutor.service';
-
+import { Clipboard } from '@angular/cdk/clipboard';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
 @Component({
   selector: 'app-refer-and-earn',
   templateUrl: './refer-and-earn.component.html',
@@ -14,20 +16,74 @@ export class ReferAndEarnComponent implements OnInit {
     private cookieService: CookieService,
     private loginService: LoginDetailsService,
     private studentService: StudentService,
-    private tutorService: TutorService
+    private tutorService: TutorService,
+    private clipboard:Clipboard
   ) {}
-  userId;
-  userName;
+  userId:string="";
+  fullName:string;
+  referCode:string;
+  
+
+  //email chips variable
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  emailsArray:string[]=[];
+
   ngOnInit(): void {
-    console.log(this.getUserId());
+    this.userId=this.getUserId();
+    this.referCode="";
     if (this.loginService.getLoginType() == 'Learner') {
-      this.userName = this.studentService.getStudentProfileDetails().fullName;
+      this.fullName = this.studentService.getStudentProfileDetails().fullName;
     } else if (this.loginService.getLoginType() == 'Expert') {
-      this.userName = this.tutorService.getTutorDetials().fullName;
+      this.fullName = this.tutorService.getTutorDetials().fullName;
     }
-    console.log(this.userName,this.userId);
+    console.log(this.fullName,this.userId);
+    this.getReferCode();
   }
   getUserId() {
+
     return this.cookieService.get('userId');
   }
+
+  getReferCode(){
+    this.referCode=this.referCode.concat("FG");
+    let currentYear=new Date().getFullYear();
+    this.referCode=this.referCode.concat(currentYear.toString().substring(2,4));
+    const nameArray=this.fullName.split(" ");
+    for(let name of nameArray){
+      const initials=name.substring(0,1);
+      this.referCode=this.referCode.concat(initials);
+    }
+    const last4uid=this.userId.substring(this.userId.length-4);
+    this.referCode=this.referCode.concat(last4uid);
+    console.log(this.referCode);
+  }
+
+  copyReferCode(){
+    this.clipboard.copy(this.referCode);
+    console.log('Inside copy method');
+  }
+
+    add(event: MatChipInputEvent): void {
+     const value = (event.value || '').trim();
+
+    // Add our email
+   if (value) {
+      this.emailsArray.push(value);
+    }
+
+    // Clear the input value
+   // event.chipInput!.clear();
+  }
+
+   remove(email: string ): void {
+    const index = this.emailsArray.indexOf(email);
+
+    if (index >= 0) {
+      this.emailsArray.splice(index, 1);
+    }
+   }
+
 }

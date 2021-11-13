@@ -53,8 +53,15 @@
                     <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum.</p>
                     <div class="share__code_fld">
                         <div class="input-group referal__input">
-                            <input type="text" class="form-control" value="!dE^vI^sA%" />
-                            <button type="submit" class="button green_btn">Copy code</button>
+                            <input 
+                            type="text" 
+                            class="form-control" 
+                            [value]="referCode"
+                            readonly
+                             />
+                            <button type="submit" 
+                            class="button green_btn"
+                            (click)="copyReferCode()">Copy code</button>
                         </div>
                         <div class="share__options">
                             <a href="" class="share_btn"><img src="../../../assets/images/Linkedin.svg" alt="#"></a>
