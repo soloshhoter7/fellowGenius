@@ -18,7 +18,7 @@ export class TutorService {
   tutorProfileDetails = new tutorProfileDetails();
   tutorProfile = new tutorProfile();
   tutorLogin = new tutorLoginModel();
- 
+  tutorProfileDetailsChanged = new Subject<tutorProfileDetails>();
   editVariable: string;
 
 //tutor dashboard stuff
@@ -48,6 +48,7 @@ export class TutorService {
   }
   setTutorProfileDetails(tutorProfile: tutorProfileDetails) {
     this.tutorProfileDetails = tutorProfile;
+    this.tutorProfileDetailsChanged.next(this.tutorProfileDetails);
   }
   getTutorProfileDetails() {
     return this.tutorProfileDetails;

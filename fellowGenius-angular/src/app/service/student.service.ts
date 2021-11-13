@@ -25,6 +25,8 @@ export class StudentService {
   liveMeetingsChanged = new Subject<bookingDetails[]>();
   upcomingMeetingsChanged = new Subject<bookingDetails[]>();
   completedMeetingsChanged = new Subject<bookingDetails[]>();
+  studentProfileChanged = new Subject<StudentProfileModel>();
+
   constructor(
     private httpService: HttpService,
     private loginService: LoginDetailsService
@@ -84,6 +86,7 @@ export class StudentService {
 
   setStudentProfileDetails(studentProfile: StudentProfileModel) {
     this.studentProfile = studentProfile;
+    this.studentProfileChanged.next(this.studentProfile);
   }
   getStudentProfileDetails() {
     return this.studentProfile;

@@ -19,11 +19,10 @@ export class ReferAndEarnComponent implements OnInit {
     private tutorService: TutorService,
     private clipboard:Clipboard
   ) {}
-  userId:string="";
-  fullName:string;
   referCode:string;
-  
-
+  userId:any;
+  fullName:any;
+  userEmail:any;
   //email chips variable
   selectable = true;
   removable = true;
@@ -41,11 +40,28 @@ export class ReferAndEarnComponent implements OnInit {
     }
     console.log(this.fullName,this.userId);
     this.getReferCode();
+  
+    this.userId = this.getUserId();
+    if (this.loginService.getLoginType() == 'Learner') {
+      this.studentService.studentProfileChanged.subscribe((res)=>{
+        this.fullName = this.studentService.getStudentProfileDetails().fullName;
+        this.userEmail = this.studentService.getStudentProfileDetails().email;
+        console.log(this.fullName,this.userId);
+      })
+    } else if (this.loginService.getLoginType() == 'Expert') {
+      this.tutorService.tutorProfileDetailsChanged.subscribe((res)=>{
+        this.fullName = this.tutorService.getTutorDetials().fullName;
+        this.userEmail = this.tutorService.getTutorDetials().email;
+        console.log(this.fullName,this.userId);
+      })
+    }
+    
   }
-  getUserId() {
 
+  getUserId(){
     return this.cookieService.get('userId');
   }
+    
 
   getReferCode(){
     this.referCode=this.referCode.concat("FG");

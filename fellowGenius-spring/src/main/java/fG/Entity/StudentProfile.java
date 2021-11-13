@@ -40,6 +40,7 @@ public class StudentProfile {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userId")
 	Set<LearningAreas> learningAreas = new HashSet<>();
     String upiID;
+    Integer lessonCompleted=0;
     
 	public Integer getUserBookingId() {
 		return userBookingId;
@@ -159,6 +160,15 @@ public class StudentProfile {
 
 	public void setUpiID(String upiID) {
 		this.upiID = upiID;
+	}
+	
+	
+	public Integer getLessonCompleted() {
+		return lessonCompleted;
+	}
+
+	public void setLessonCompleted(Integer lessonCompleted) {
+		this.lessonCompleted = lessonCompleted;
 	}
 
 	@Override

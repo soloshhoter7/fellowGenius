@@ -72,7 +72,11 @@ public class UserController {
 		System.out.println(registrationModel);
 		return service.saveUserProfile(registrationModel);
 	}
-
+	
+	@RequestMapping(value="/blankApi")
+	public boolean hitBlankApi() {
+		return service.getReferralInformation();
+	}
 //	// for getting student details after login
 //		@RequestMapping(value = "/sendDiwaliMail")
 //		public boolean sendDiwalimail() {

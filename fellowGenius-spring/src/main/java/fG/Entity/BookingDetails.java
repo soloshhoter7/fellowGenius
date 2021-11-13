@@ -34,6 +34,7 @@ public class BookingDetails implements Serializable{
 	  String description;
 	  Integer studentId;
 	  Integer tutorId;
+	  @Column(name = "meeting_id", unique = true, nullable = false)
 	  String meetingId;
 	  String approvalStatus;
 	  String studentName;
