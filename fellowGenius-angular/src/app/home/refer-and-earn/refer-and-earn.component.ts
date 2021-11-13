@@ -19,9 +19,9 @@ export class ReferAndEarnComponent implements OnInit {
     private tutorService: TutorService,
     private clipboard:Clipboard
   ) {}
-  referCode:string;
-  userId:any;
-  fullName:any;
+  referCode:any="";
+  userId:any="";
+  fullName:any="";
   userEmail:any;
   //email chips variable
   selectable = true;
@@ -31,28 +31,21 @@ export class ReferAndEarnComponent implements OnInit {
   emailsArray:string[]=[];
 
   ngOnInit(): void {
-    this.userId=this.getUserId();
-    this.referCode="";
-    if (this.loginService.getLoginType() == 'Learner') {
-      this.fullName = this.studentService.getStudentProfileDetails().fullName;
-    } else if (this.loginService.getLoginType() == 'Expert') {
-      this.fullName = this.tutorService.getTutorDetials().fullName;
-    }
-    console.log(this.fullName,this.userId);
-    this.getReferCode();
-  
+   
     this.userId = this.getUserId();
     if (this.loginService.getLoginType() == 'Learner') {
       this.studentService.studentProfileChanged.subscribe((res)=>{
         this.fullName = this.studentService.getStudentProfileDetails().fullName;
         this.userEmail = this.studentService.getStudentProfileDetails().email;
         console.log(this.fullName,this.userId);
+        this.getReferCode();
       })
     } else if (this.loginService.getLoginType() == 'Expert') {
       this.tutorService.tutorProfileDetailsChanged.subscribe((res)=>{
         this.fullName = this.tutorService.getTutorDetials().fullName;
         this.userEmail = this.tutorService.getTutorDetials().email;
         console.log(this.fullName,this.userId);
+        this.getReferCode();
       })
     }
     
@@ -64,7 +57,8 @@ export class ReferAndEarnComponent implements OnInit {
     
 
   getReferCode(){
-    this.referCode=this.referCode.concat("FG");
+    if(this.referCode===""){
+      this.referCode=this.referCode.concat("FG");
     let currentYear=new Date().getFullYear();
     this.referCode=this.referCode.concat(currentYear.toString().substring(2,4));
     const nameArray=this.fullName.split(" ");
@@ -75,6 +69,8 @@ export class ReferAndEarnComponent implements OnInit {
     const last4uid=this.userId.substring(this.userId.length-4);
     this.referCode=this.referCode.concat(last4uid);
     console.log(this.referCode);
+
+    }
   }
 
   copyReferCode(){
@@ -83,15 +79,22 @@ export class ReferAndEarnComponent implements OnInit {
   }
 
     add(event: MatChipInputEvent): void {
+      console.log(event);
      const value = (event.value || '').trim();
-
+      
     // Add our email
-   if (value) {
+    //firstly check if email is valid
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+  
+   if (value.match(validRegex)){
       this.emailsArray.push(value);
     }
 
-    // Clear the input value
-   // event.chipInput!.clear();
+    console.log(this.emailsArray);
+
+    //Clear the input value
+   event.input.value="";
   }
 
    remove(email: string ): void {
@@ -100,6 +103,6 @@ export class ReferAndEarnComponent implements OnInit {
     if (index >= 0) {
       this.emailsArray.splice(index, 1);
     }
+    console.log(this.emailsArray);
    }
-
 }

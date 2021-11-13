@@ -74,7 +74,24 @@
                     <h4>Invite your friends</h4>
                     <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum.</p>
                     <div class="input-group invite__input">
-                        <input type="email" class="form-control" placeholder="Your E-Mail" />
+                        <!-- <input type="email" class="form-control" placeholder="Your E-Mail" /> -->
+                        <mat-form-field class="example-chip-list" appearance="fill">
+                            
+                            <mat-chip-list #chipList aria-label="Email selection">
+                              <mat-chip *ngFor="let email of emailsArray" [selectable]="selectable"
+                                       [removable]="removable" (removed)="remove(email)">
+                                {{email}}
+                                <button matChipRemove *ngIf="removable">
+                                  <mat-icon>cancel</mat-icon>
+                                </button>
+                              </mat-chip>
+                              <input placeholder="New Emails..."
+                                     [matChipInputFor]="chipList"
+                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                     [matChipInputAddOnBlur]="addOnBlur"
+                                     (matChipInputTokenEnd)="add($event)">
+                            </mat-chip-list>
+                          </mat-form-field>
                         <button type="submit" class="button green_btn">Submit</button>
                     </div>
                 </div>
