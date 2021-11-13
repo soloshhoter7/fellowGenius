@@ -39,8 +39,18 @@ public class Users implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="signup_date")
 	Date createdDate;
+	
+	Integer credits;
 //	String lastLogin;
 	
+	public Integer getCredits() {
+		return credits;
+	}
+
+	public void setCredits(Integer credits) {
+		this.credits = credits;
+	}
+
 	public Integer getUserId() {
 		return userId;
 	}
@@ -116,9 +126,7 @@ public class Users implements Serializable {
 	public String toString() {
 		return "Users [userId=" + userId + ", email=" + email + ", password=" + password + ", socialId=" + socialId
 				+ ", role=" + role + ", expertCode=" + expertCode + ", lastLogin=" + lastLogin + ", createdDate="
-				+ createdDate + "]";
+				+ createdDate + ", credits=" + credits + "]";
 	}
 
-	
-	
 }

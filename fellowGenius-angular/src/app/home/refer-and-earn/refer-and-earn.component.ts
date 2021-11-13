@@ -18,16 +18,27 @@ export class ReferAndEarnComponent implements OnInit {
   ) {}
   userId;
   userName;
+  userEmail;
   ngOnInit(): void {
-    console.log(this.getUserId());
+    this.userId = this.getUserId();
     if (this.loginService.getLoginType() == 'Learner') {
-      this.userName = this.studentService.getStudentProfileDetails().fullName;
+      this.studentService.studentProfileChanged.subscribe((res)=>{
+        this.userName = this.studentService.getStudentProfileDetails().fullName;
+        this.userEmail = this.studentService.getStudentProfileDetails().email;
+        console.log(this.userName,this.userId);
+      })
     } else if (this.loginService.getLoginType() == 'Expert') {
-      this.userName = this.tutorService.getTutorDetials().fullName;
+      this.tutorService.tutorProfileDetailsChanged.subscribe((res)=>{
+        this.userName = this.tutorService.getTutorDetials().fullName;
+        this.userEmail = this.tutorService.getTutorDetials().email;
+        console.log(this.userName,this.userId);
+      })
     }
-    console.log(this.userName,this.userId);
+    
   }
+
   getUserId() {
     return this.cookieService.get('userId');
   }
+
 }

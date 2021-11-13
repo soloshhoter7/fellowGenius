@@ -39,6 +39,7 @@ import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.UserActivity;
+import fG.Entity.UserReferrals;
 import fG.Entity.Users;
 import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
@@ -76,6 +77,7 @@ import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryUserActivity;
+import fG.Repository.repositoryUserReferrals;
 import fG.Repository.repositoryUsers;
 
 @Service
@@ -143,6 +145,10 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
+	
+	@Autowired
+	repositoryUserReferrals repUserReferrals;
+	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
@@ -438,6 +444,9 @@ public class UserService implements UserDetailsService {
 				dao.saveUserLogin(user);
 				userActivity.setUserId(user);
 				repUserActivity.save(userActivity);
+				if(user.getExpertCode()!=null) {
+					updateReferralCompleted(parseReferralCode(user.getExpertCode()),user);
+				}
 				return true;
 			} else {
 				return false;
@@ -488,7 +497,74 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 	}
-
+	
+	void updateReferralCompleted(String userId,Users user){
+		if(userId!=null&&userId!="") {
+			System.out.println(repUserReferrals.findByUserId(Integer.valueOf(userId)));
+			UserReferrals  ur = repUserReferrals.findByUserId(Integer.valueOf(userId));
+			if(ur==null) {
+				System.out.println("user referral is null");
+				ur = new UserReferrals();
+			}
+			ur.setUser(repUsers.idExists(Integer.valueOf(userId)));
+			List<Users> refers = ur.getReferCompleted();
+			refers.add(user);
+			ur.setReferCompleted(refers);
+			System.out.println("completed till here");
+			repUserReferrals.save(ur);
+		}
+		
+	}
+	
+	public boolean getReferralInformation() {
+		System.out.println("referralInformation : "+repUserReferrals.findByUserId(Integer.valueOf(765270902)));
+		return false;
+	}
+	
+	//returns the valid userId after parsing refCode
+	public String parseReferralCode(String refCode){
+//		String refCode = "FG21SS0902";     //input string
+		String lastFourDigits = "";
+				//substring containing last 4 characters
+		String rawInitials = "";
+		String userInitials="";
+		if (refCode.length() > 4) 
+		{
+		    lastFourDigits = refCode.substring(refCode.length() - 4);
+		    rawInitials = refCode.substring(4,6);
+		} 
+		List<Users> matchingUsers = repUsers.findByLast4Digits(lastFourDigits);
+		Integer userId=0;
+		
+		if(matchingUsers.size()>0) {
+			for(int i=0;i<matchingUsers.size();i++) {
+				Users user= new Users();
+				user = matchingUsers.get(0);
+				System.out.println("user email:"+user.getEmail());
+				System.out.println("raw Initials :"+rawInitials);
+				userInitials = genInitials(fetchUserName(user.getUserId(), user.getRole()));
+				userInitials = userInitials.toUpperCase();
+				System.out.println("user initials :"+userInitials);
+				
+				if(rawInitials.equals(userInitials)) {
+					 return user.getUserId().toString();
+				}
+			}
+		}
+		return "";
+		
+	}
+	String genInitials(String fullName) {
+		String initials="";
+		if(fullName.length()>1) {
+			String[] name = fullName.split("\\s+");
+			for(String n:name) {
+				initials+=n.charAt(0);
+			}
+		}
+		return initials;
+		
+	}
 	public Integer genUserBookingId() {
 		IdGenerator id = new IdGenerator();
 		Integer bookingId = id.generate9DigitNumber();
@@ -1559,5 +1635,7 @@ public class UserService implements UserDetailsService {
 		}
 		return allBookingsModel;
 	}
+
+	
 
 }

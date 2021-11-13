@@ -342,7 +342,7 @@ export class HomeComponent implements OnInit {
 
       this.httpService.getStudentDetails(this.userId).subscribe((res) => {
         this.studentProfile = res;
-       
+       console.log('user has logged in')
         this.calculateStudentProfilePercentage();
         this.studentService.setStudentProfileDetails(this.studentProfile);
         if (this.studentServce.getStudentProfileDetails().profilePictureUrl == null) {
