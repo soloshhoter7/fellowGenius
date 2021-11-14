@@ -64,9 +64,22 @@
                             (click)="copyReferCode()">Copy code</button>
                         </div>
                         <div class="share__options">
-                            <a href="" class="share_btn"><img src="../../../assets/images/Linkedin.svg" alt="#"></a>
-                            <a href="" class="share_btn"><img src="../../../assets/images/envelope-icon.svg" alt="#"></a>
-                            <a href="" class="share_btn"><img src="../../../assets/images/watsapp-icon.svg" alt="#"></a>
+                            <a class="share_btn"
+                            href="javascript:void(0)" 
+                            (click)="shareLinkedIn()">
+                                <img src="../../../assets/images/Linkedin.svg" alt="#">
+                            </a>
+                            <a href="javascript:void(0)"
+                            (click) ="shareMail()"
+                            class="share_btn">
+                                <img src="../../../assets/images/envelope-icon.svg" alt="#">
+                            </a>
+                            <a 
+                            href="javascript:void(0)"
+                            (click)="shareWhatsapp()"
+                            class="share_btn">
+                                <img src="../../../assets/images/watsapp-icon.svg" alt="#">
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -30,6 +30,11 @@ export class ReferAndEarnComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   emailsArray:string[]=[];
 
+  //SHARE DATA VARIABLES
+  wSize = "width=600,height=460";
+  title = "share";
+  loc = encodeURIComponent(window.location.href)
+  siteURL="https://fellowgenius.com/"
   ngOnInit(): void {
    
     this.userId = this.getUserId();
@@ -48,14 +53,13 @@ export class ReferAndEarnComponent implements OnInit {
         this.getReferCode();
       })
     }
-    
+   // this.shareLinkedIn(); 
   }
 
   getUserId(){
     return this.cookieService.get('userId');
   }
     
-
   getReferCode(){
     if(this.referCode===""){
       this.referCode=this.referCode.concat("FG");
@@ -104,5 +108,42 @@ export class ReferAndEarnComponent implements OnInit {
       this.emailsArray.splice(index, 1);
     }
     console.log(this.emailsArray);
+   }
+
+   shareLinkedIn(){
+    //  const summary=`Refer%20Code%20is%20${this.referCode}`;
+    
+     const url=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
+     console.log('Hello from hello linkedin');
+     //const linkedinURL=`https://www.linkedin.com/sharing/share-offsite/?url={url}`;
+    // window.open(url,"_self");
+
+    // $('.shareLI').each(function(index){
+    //   $(this).on('click', function (){
+    //     $('head').append("<meta property='og:title' content='Title of the article'/>");
+    //   });
+    // });
+
+    document.getElementById("og_title").setAttribute("content", "Refer Code");
+document.getElementById("og_description").setAttribute("content", `Welcome to Fellow Genius.Your refer code is ${this.referCode}`);
+    document.getElementById("og_url").setAttribute("content",`https://www.fellowgenius.com/signup`); 
+    window.open(url,"_self");   
+   }
+
+   shareWhatsapp(){
+     const siteurl="https://www.fellowgenius.com/";
+     const msg=`Refer%20Code%20is%20${this.referCode}%0AWebsite%20Link%20is%20${siteurl}`;
+    /* const LargeMsg="Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%0ASampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit%20Sampe%20Text%20to%20check%20word%limit"; */
+    const whatsappLink=`https://wa.me/?text=${msg}`;
+    window.open(whatsappLink,"_self");
+   } 
+
+   shareMail(){
+    const emailLink=`https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=new`;
+    window.open(emailLink,"_self");
+   }
+
+   shareMultipleEmail(){
+
    }
 }
