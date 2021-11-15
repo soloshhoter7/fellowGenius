@@ -36,7 +36,13 @@ export class ReferAndEarnComponent implements OnInit {
   loc = encodeURIComponent(window.location.href)
   siteURL="https://fellowgenius.com/"
   ngOnInit(): void {
-   
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+	
+		if (isMobile) {
+  			console.log("You are using Mobile");
+		} else {
+			  console.log("Laptop");
+		}
     this.userId = this.getUserId();
     if (this.loginService.getLoginType() == 'Learner') {
       this.studentService.studentProfileChanged.subscribe((res)=>{
@@ -111,35 +117,24 @@ export class ReferAndEarnComponent implements OnInit {
    }
 
    shareLinkedIn(){
-    //  const summary=`Refer%20Code%20is%20${this.referCode}`;
+  
     
-     const url=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
-     const encodedURL=
-     //const shareUrl="http://www.linkedin.com/shareArticle?mini=true&url=https://stackoverflow.com/questions/10713542/how-to-make-custom-linkedin-share-button/10737122&title=How%20to%20make%20custom%20linkedin%20share%20button&summary=some%20summary%20if%20you%20want&source=stackoverflow.com"
+     const shareUrl=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
+
+     
      console.log('Hello from hello linkedin');
-     //const linkedinURL=`https://www.linkedin.com/sharing/share-offsite/?url={url}`;
-    // window.open(url,"_self");
 
-    // $('.shareLI').each(function(index){
-    //   $(this).on('click', function (){
-    //     $('head').append("<meta property='og:title' content='Title of the article'/>");
-    //   });
-    // });
-
-//     document.getElementById("og_title").setAttribute("content", "Refer Code");
-// document.getElementById("og_description").setAttribute("content", `Welcome to Fellow Genius.Your refer code is ${this.referCode}`);
-//     document.getElementById("og_url").setAttribute("content",`https://www.fellowgenius.com/signup`); 
-    //window.open(shareUrl,"_self");   
+    window.open(shareUrl,"_blank");   
    }
 
    shareWhatsapp(){
     const whatsappLink=this.getWhatsappMsgLink();
-    window.open(whatsappLink,"_self");
+    window.open(whatsappLink,"_blank");
    } 
 
    shareMail(){
     const emailLink=this.getEmailLink();
-    window.open(emailLink,"_self");
+    window.open(emailLink,"_blank");
    }
 
    shareMultipleEmail(){
@@ -151,7 +146,7 @@ export class ReferAndEarnComponent implements OnInit {
     const subject="Refer Code Invite";
     const body=`Hello%20from%20${this.fullName}%0AWelcome%20to%20Fellowgenius.%20Your%20Refer%20Code%20is%20${this.referCode}`; 
     const emailLink=`https://mail.google.com/mail/?compose=1&view=cm&fs=1&to=${To}&su=${subject}&body=${body}`;
-    window.open(emailLink,"_self");
+    window.open(emailLink,"_blank");
    }
 
    getWhatsappMsgLink(){
