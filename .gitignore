@@ -1,2 +1,3 @@
-fellowGenius-spring/
+fellowGenius-spring/*
+!fellowGenius-spring/src/*
 

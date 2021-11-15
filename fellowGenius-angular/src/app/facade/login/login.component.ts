@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
     private dialogRef: MatDialog,
     private authService:AuthService
   ) {
-    togglePassword();
+    
   }
 
   @ViewChild('googleSignUp', { static: true })
@@ -86,6 +86,7 @@ export class LoginComponent implements OnInit {
   expert_userId;
   expert_domain;
 
+  showPassword:boolean=false;
   // --------------- models ---------------------------------
   registrationModel = new registrationModel();
   //---------------- configurations ----------------------
@@ -100,7 +101,11 @@ export class LoginComponent implements OnInit {
     this.expert_domain = this.cookieService.get("expert_domain");
     // this.goToPreviousUrl();
     this.googleSDK();
-    this.seePassword();
+    
+  }
+  togglePassword(){
+    this.showPassword=!this.showPassword;
+    console.log(this.showPassword);
   }
   seePassword() {
     console.log(this.hide);
@@ -117,7 +122,7 @@ export class LoginComponent implements OnInit {
       });
     });
     
-    
+
   }
   toFacade() {
     this.router.navigate(['']);

@@ -11,7 +11,7 @@ import * as JwtDecode from 'jwt-decode';
   styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent implements OnInit {
-
+  showPassword:boolean=false;
   constructor(private loginService:LoginDetailsService,private httpService:HttpService,private router:Router,private cookieService:CookieService) { }
   errorText;
   isLoading=false;
@@ -19,6 +19,9 @@ export class AdminLoginComponent implements OnInit {
   incorrectLoginDetails;
   loginModel= new loginModel();
   ngOnInit(): void {
+  }
+  togglePassword(){
+    this.showPassword=!this.showPassword;
   }
   onAdminLogin(form:any){
     this.isLoading=true;
