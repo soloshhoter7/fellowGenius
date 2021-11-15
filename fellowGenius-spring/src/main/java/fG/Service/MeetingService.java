@@ -13,16 +13,21 @@ import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 
 import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
+import fG.Entity.AppInfo;
 import fG.Entity.BookingDetails;
 import fG.Entity.Notification;
 import fG.Entity.ScheduleData;
+import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfileDetails;
+import fG.Entity.UserReferrals;
+import fG.Entity.Users;
 import fG.Model.BookingDetailsModel;
 import fG.Model.EarningDataModel;
 import fG.Model.KeyValueModel;
@@ -32,8 +37,11 @@ import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryNotification;
+import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
 import fG.Repository.repositoryTutorProfileDetails;
+import fG.Repository.repositoryUserReferrals;
+import fG.Repository.repositoryUsers;
 
 @Service
 public class MeetingService {
@@ -68,7 +76,16 @@ public class MeetingService {
 	MailService mailService;
 
 	@Autowired
+	repositoryStudentProfile repStudentProfile;
+
+	@Autowired
+	repositoryUsers repUsers;
+
+	@Autowired
 	repositoryAppInfo repAppInfo;
+
+	@Autowired
+	repositoryUserReferrals repUserReferral;
 
 	public void saveNotification(JsonObject msg) {
 		Notification notification = new Notification(msg.get("entityType").getAsInt(),
@@ -156,6 +173,7 @@ public class MeetingService {
 
 	// to save the bookings requested by student
 	public boolean saveBooking(BookingDetailsModel bookingModel) {
+		boolean meetingBooked = false;
 		BookingDetails booking = new BookingDetails();
 		booking.setDateOfMeeting(bookingModel.getDateOfMeeting());
 		booking.setDescription(bookingModel.getDescription());
@@ -179,12 +197,139 @@ public class MeetingService {
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
 		booking.setRazorpay_payment_id(bookingModel.getRazorpay_payment_id());
 		booking.setRazorpay_signature(bookingModel.getRazorpay_signature());
-		booking.setExpertCode(bookingModel.getExpertCode());
 		String message = "New appointment request";
 		System.out.println("booking==>" + booking);
+		StudentProfile sp = repStudentProfile.idExist(booking.getStudentId());
+		if (sp.getLessonCompleted() == 0) {
+			AppInfo thresholdCost = repAppInfo.keyExist("ReferralMeetingCost");
+			AppInfo thresholdTime = repAppInfo.keyExist("ReferralExpirationTime");
+			Integer diffInTime = findDaysFromRegistration(booking.getStudentId(), new Date());
+			System.out.println("Threshold cost:"+thresholdCost);
+			System.out.println("Threshold time:"+thresholdTime);
+			System.out.println("Difference in time from sign up:"+diffInTime);
+			System.out.println(("booking amount:"+booking.getAmount()));
+			if (booking.getAmount() >= Integer.valueOf(thresholdCost.getValue())
+					&& diffInTime <= Integer.valueOf(thresholdTime.getValue())) {
+				booking.setExpertCode(getReferralCodeFromUser(booking.getStudentId()));
+			}
+		}
+		meetingBooked = meetingDao.saveBooking(booking);
 //		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
-		sendNotificationTutor(bookingModel.getTutorId(), booking);
-		return meetingDao.saveBooking(booking);
+		
+		if (meetingBooked) {
+			StudentProfile learner = repStudentProfile.idExist(booking.getStudentId());
+			Integer learnerSessionCompleted = learner.getLessonCompleted()+1;
+			learner.setLessonCompleted(learnerSessionCompleted);
+			repStudentProfile.save(learner);
+			
+			sendNotificationTutor(bookingModel.getTutorId(), booking);
+			updateMeetingsSetUpInReferrals(booking.getMeetingId());
+			
+		}
+		return meetingBooked;
+	}
+
+	void updateMeetingsSetUpInReferrals(String meetingId) {
+		BookingDetails booking = repBooking.meetingIdExists(meetingId);
+		String referralCode = booking.getExpertCode();
+
+		if (referralCode != null && referralCode != "") {
+			if (userService.isValidFormatForReferralCode(referralCode)) {
+				String referralUserId = userService.parseReferralCode(referralCode);
+				if (referralUserId != "") {
+					UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referralUserId));
+					List<BookingDetails> bks = ur.getMeetingSetup();
+					bks.add(booking);
+					ur.setMeetingSetup(bks);
+					repUserReferral.save(ur);
+				}
+			}
+		}
+	}
+
+	@Scheduled(cron = "0 36 13 1/1 * *")
+	void updateMeetingCompleted() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		ArrayList<String> last2DatesInString = new ArrayList<String>();
+		System.out.println("Now is: " + new Date());
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, -1);
+		last2DatesInString.add(formatter.format(c.getTime()));
+		c.add(Calendar.DATE, -1);
+		last2DatesInString.add(formatter.format(c.getTime()));
+		System.out.println(last2DatesInString);
+		for (String date : last2DatesInString) {
+			List<BookingDetails> bookings = repBooking.fetchBookingsForDate(date);
+			if (bookings != null && bookings.size() != 0) {
+				for (BookingDetails b : bookings) {
+					Date endDateTime = calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute());
+					Date currentDate = new Date();
+					if (currentDate.getTime() > endDateTime.getTime()) {
+						if (b.getExpertJoinTime() == null) {
+							b.setApprovalStatus("expert_absent");
+						} else if (b.getLearnerJoinTime() == null) {
+							b.setApprovalStatus("learner_absent");
+						} else if (b.getExpertJoinTime() != null && b.getExpertLeavingTime() != null
+								&& b.getLearnerJoinTime() != null && b.getLearnerLeavingTime() != null) {
+							b.setApprovalStatus("completed");
+						}else if(b.getExpertJoinTime()==null&&b.getLearnerJoinTime()==null) {
+							b.setApprovalStatus("No one joined");
+						}
+						repBooking.save(b);
+						if(b.getApprovalStatus().equals("completed")) {
+							//giving credit to user B (learner)
+							Users learner = repUsers.idExists(b.getStudentId());
+							Integer referralCredit = Integer.valueOf(repAppInfo.keyExist("ReferralCredit").getValue());
+							if(referralCredit!=null) {
+								Integer credit = learner.getCredits()+referralCredit;
+								learner.setCredits(credit);
+								repUsers.save(learner);
+							}
+							if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
+								String refCode = b.getExpertCode();
+								String referrerUserId = userService.parseReferralCode(refCode);
+								UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referrerUserId));
+								List<BookingDetails> meetingsCompleted = ur.getMeetingCompleted();
+								List<BookingDetails> meetingsSetup = ur.getMeetingSetup();
+								for(BookingDetails bs:meetingsSetup) {
+									if(bs.getBid().equals(b.getBid())) {
+										meetingsCompleted.add(b);
+									}
+								}
+								ur.setMeetingCompleted(meetingsCompleted);
+								repUserReferral.save(ur);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	Date calculateDate(String dateOfMeeting, int eh, int em) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(dateOfMeeting);
+		date.setHours(eh);
+		date.setMinutes(em);
+		return date;
+	}
+
+	Integer findDaysFromRegistration(Integer userId, Date current) {
+		Integer difference_days = 0;
+		Users user = repUsers.idExists(userId);
+		Date signUpTime = user.getCreatedDate();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(signUpTime);
+		Integer startDate = cal.get(Calendar.DAY_OF_YEAR);
+		cal.setTime(current);
+		Integer endDate = cal.get(Calendar.DAY_OF_YEAR);
+		return Math.abs(endDate - startDate);
+	}
+
+	String getReferralCodeFromUser(Integer userId) {
+		Users user = repUsers.idExists(userId);
+		return user.getExpertCode();
 	}
 
 	// send notification to tutor upon booking request
@@ -211,7 +356,6 @@ public class MeetingService {
 		System.out.println(booking);
 		sendNotificationTutor(booking.getStudentId(), booking);
 		return meetingDao.updateBookingStatus(Integer.valueOf(bid), approvalStatus);
-
 	}
 
 	// for finding students pending bookings

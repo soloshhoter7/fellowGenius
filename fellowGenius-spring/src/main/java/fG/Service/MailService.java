@@ -73,7 +73,14 @@ public class MailService {
 			}
 		});
 	}
-
+	boolean isGmail(String email) {
+		if(email!=null) {
+			if(email.contains("@gmail")) {
+				return true;
+			}
+		}
+		return false;
+	}
 	// For sending OTP verification email
 	void sendVerificationEmail(String email, String otp) {
 		InitiateMailService("registration@fellowgenius.com");
@@ -101,7 +108,8 @@ public class MailService {
 					+ otp + "</div>\r\n"
 					+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">If you didn't request a code, you can safely ignore this email.</p>\r\n"
 					+ "                <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
-					+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n"
+					+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? "
+					+ "<a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
 					+ "            </div>\r\n" + "        </div>\r\n" + "    </div>\r\n" + "\r\n" + "</body>\r\n"
 					+ "</html>";
 			helper.setFrom(from);
@@ -174,7 +182,7 @@ public class MailService {
 						+ link + "\">Go to Dashboard</a></p>\r\n"
 						+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Have a productive discussion!<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
 						+ "                <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
-						+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n"
+						+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
 						+ "            </div>\r\n" + "        </div>\r\n" + "    </div>\r\n" + "</body>\r\n"
 						+ "</html>";
 
@@ -218,13 +226,13 @@ public class MailService {
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Thank you for booking a meeting with FellowGenius. Please view the full details of your\r\n"
 						+ "meeting below. Ensure to check the details carefully and notify us of any errors.</p>\r\n"
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Expert Name - "
-						+ name + "<br>Topic - " + topic + "<br>Meeting Slot - " + slot + "<br>Amount - ₹"
+						+ name + "<br>Topic - " + topic + "<br>Meeting Slot - " + slot + "<br>Amount - INR "
 						+ booking.getAmount() + "</p>\r\n"
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Use this link to connect - <a href=\""
 						+ link + "\">Go to Dashboard</a></p>\r\n"
 						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Have a productive discussion!<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
 						+ "                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
-						+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n"
+						+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
 						+ "                </div>\r\n" + "            </div>\r\n" + "        </div>\r\n"
 						+ "    </body>\r\n" + "</body>\r\n" + "\r\n" + "</html>";
 				helper.setText(mailContent, true);
@@ -272,7 +280,7 @@ public class MailService {
 						+ link + "\">Go to Dashboard</a></p>\r\n"
 						+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Have a productive discussion!<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
 						+ "                <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
-						+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n"
+						+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
 						+ "            </div>\r\n" + "        </div>\r\n" + "    </div>\r\n" + "</body>\r\n" + "\r\n"
 						+ "</html>";
 //				message.setContent("<html><head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0 8px 16px 0 #90a4ae; width: 100%; height: auto; text-align: center; padding: 20px; margin-top: 10px; background: url(https://fellowgenius.com/search_right_bg.7af30faa440a7e6ab2bb.svg) no-repeat; background-size: contain; border: 1px solid #7d0f7d; border-radius: 8px; width: 650px; margin: 0 auto; background-position: left top;}.logo{background: url(https://fellowgenius.com/logo.2dbc598173218fe92921.svg) no-repeat; background-size: contain; height: 100px; display: block; float: right; width: 100px;}tr{padding: 10px;}td{padding: 5px; margin-right: 5px;}</style></head><body> <div class=\"Box\"> <div class=\"box-header\"> <span class=\"logo\"></span> <span style=\"margin-bottom: 20px;color:#892687;width:100%;text-align: center;font-size:16px;font-weight:bold;text-transform: uppercase;\"> Tutor has started the meeting </span> </div><div style=\"padding:20px;width: 350px; margin: 0 auto;\"> <table> <tr> <td><b>Tutor Name</b><br>"+booking.getTutorName()+"</td><td><b>Date</b><br>"+booking.getDateOfMeeting()+"</td></tr><tr> <td><b>Start Time</b><br>"+booking.getStartTimeHour()+":"+booking.getStartTimeMinute()+"</td><td><b>Duration</b><br>"+booking.getDuration()+" Minutes</td></tr></table> </div><p style=\"margin-top: 30px; font-size: 10px; text-align: center; width: 100%;\">This is an auto-generated message please don't reply back.</p></div><div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-2\"></div><div class=\"col-sm-7\"> </div><div class=\"com-sm-3\"></div></div></div></body></html>","text/html");
@@ -356,7 +364,7 @@ public class MailService {
 					+ "          <p\r\n" + "            style=\"\r\n" + "              text-align: center;\r\n"
 					+ "              font-size: 14px;\r\n" + "              color: #b5b3b3;\r\n"
 					+ "              margin-bottom: 0;\r\n" + "            \"\r\n" + "          >\r\n"
-					+ "            Questions? <span style=\"color: #ec008c\">We're here to help.</span>\r\n"
+					+ "            Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a>\r\n"
 					+ "          </p>\r\n" + "        </div>\r\n" + "      </div>\r\n" + "    </div>\r\n"
 					+ "  </body>\r\n" + "</html>";
 			helper.setText(mailContent, true);
@@ -411,7 +419,7 @@ public class MailService {
 						+ faqUrl
 						+ "\">FAQ</a> to know more about FellowGenius.<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
 						+ "                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
-						+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n"
+						+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
 						+ "                </div>\r\n" + "            </div>\r\n" + "        </div>\r\n"
 						+ "    </body>\r\n" + "</body>\r\n" + "</html>";
 				
@@ -533,7 +541,7 @@ public class MailService {
 						+ "          <p\r\n" + "            style=\"\r\n" + "              text-align: center;\r\n"
 						+ "              font-size: 14px;\r\n" + "              color: #b5b3b3;\r\n"
 						+ "              margin-bottom: 0;\r\n" + "            \"\r\n" + "          >\r\n"
-						+ "            Questions? <span style=\"color: #ec008c\">We're here to help.</span>\r\n"
+						+ "            Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a>\r\n"
 						+ "          </p>\r\n" + "        </div>\r\n" + "      </div>\r\n" + "    </div>\r\n"
 						+ "  </body>\r\n" + "</html>\r\n";
 				helper.setText(mailContent, true);
@@ -588,7 +596,7 @@ public class MailService {
 						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">FellowGenius learners are trying to connect with you. Please update your availability using the calendar provided in your dashboard. You can also access the calendar by clicking <a href=\""+Url+"\">here</a></p>\r\n" + 
 						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Regards,<br>Team FellowGenius</p>\r\n" + 
 						"                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n" + 
-						"                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n" + 
+						"                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n" + 
 						"                </div>\r\n" + 
 						"            </div>\r\n" + 
 						"        </div>\r\n" + 
@@ -642,7 +650,7 @@ public class MailService {
 						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">For your next session on FellowGenius, use coupon code FG091001 and get INR 250 as cashback.<br><br>Coupon code is valid till 30th November 2021. A valid UPI id is required for processing the cashback amount</p>\r\n" + 
 						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Regards,<br>Team FellowGenius</p>\r\n" + 
 						"                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n" + 
-						"                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <span style=\"color: #EC008C;\">We're here to help.</span></p>\r\n" + 
+						"                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n" + 
 						"                </div>\r\n" + 
 						"            </div>\r\n" + 
 						"        </div>\r\n" + 

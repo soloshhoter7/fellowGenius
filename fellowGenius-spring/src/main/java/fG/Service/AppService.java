@@ -58,6 +58,22 @@ public class AppService {
 			appInfo.setValue("120");
 			appInfo.setType("Meeting");
 			repAppInfo.save(appInfo);
+			
+			appInfo.setKeyName("ReferralExpirationTime");
+			appInfo.setValue("7");
+			repAppInfo.save(appInfo);
+			
+			appInfo.setKeyName("ReferralMeetingCost");
+			appInfo.setValue("500");
+			repAppInfo.save(appInfo);
+			
+			appInfo.setKeyName("ReferralCredit");
+			appInfo.setValue("200");
+			repAppInfo.save(appInfo);
+			
+			appInfo.setKeyName("ReferralAmount");
+			appInfo.setValue("250");
+			repAppInfo.save(appInfo);
 				
 		}	
 	}

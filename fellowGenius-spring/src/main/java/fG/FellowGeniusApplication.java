@@ -1,16 +1,15 @@
 package fG;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Date;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import fG.Service.UserService;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @SpringBootApplication
-@EnableScheduling
 public class FellowGeniusApplication {
 	
 	public static void main(String[] args) {
@@ -30,6 +29,11 @@ public class FellowGeniusApplication {
 //		   });
 //		
 //	}
+}
+@Configuration
+@EnableScheduling
+@ConditionalOnProperty(name="scheduling.enabled",matchIfMissing=true)
+class SchedulingConfiguration{
 	
 }
 

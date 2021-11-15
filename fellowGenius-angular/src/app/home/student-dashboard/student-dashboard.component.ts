@@ -382,9 +382,9 @@ export class StudentDashboardComponent implements OnInit {
           if (Math.abs(differenceMinutes) > bookingDuration) {
             this.bookingList.splice(this.bookingList.indexOf(booking), 1);
 
-            this.httpService
-              .updateBookingStatus(booking.bid, 'completed unattended')
-              .subscribe((res) => {});
+            // this.httpService
+            //   .updateBookingStatus(booking.bid, 'completed unattended')
+            //   .subscribe((res) => {});
           }
         }
       }, 5000);

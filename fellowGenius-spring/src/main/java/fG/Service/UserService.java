@@ -445,7 +445,9 @@ public class UserService implements UserDetailsService {
 				userActivity.setUserId(user);
 				repUserActivity.save(userActivity);
 				if(user.getExpertCode()!=null) {
-					updateReferralCompleted(parseReferralCode(user.getExpertCode()),user);
+					if(isValidFormatForReferralCode(user.getExpertCode())) {
+						updateReferralCompleted(parseReferralCode(user.getExpertCode()),user);
+					}
 				}
 				return true;
 			} else {
@@ -514,6 +516,10 @@ public class UserService implements UserDetailsService {
 			repUserReferrals.save(ur);
 		}
 		
+	}
+	
+	boolean isValidFormatForReferralCode(String code) {
+		return code.matches("FG21[A-Z]{2}[\\d]{4}");
 	}
 	
 	public boolean getReferralInformation() {

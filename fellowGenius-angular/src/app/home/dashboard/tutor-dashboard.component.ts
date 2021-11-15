@@ -461,9 +461,9 @@ export class TutorDashboardComponent implements OnInit {
             if (this.meetingList.length == 0) {
               this.approvedMeetingsMessage = 'No upcoming meetings.';
             }
-            this.httpService
-              .updateBookingStatus(booking.bid, 'completed unattended')
-              .subscribe((res) => {});
+            // this.httpService
+            //   .updateBookingStatus(booking.bid, 'completed unattended')
+            //   .subscribe((res) => {});
           }
         }
       }, 5000);

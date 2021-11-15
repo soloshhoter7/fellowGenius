@@ -11,6 +11,8 @@ import {
   ActionEventArgs,
   PopupCloseEventArgs,
   PopupOpenEventArgs,
+  CellClickEventArgs,
+  EventClickArgs,
 } from '@syncfusion/ej2-angular-schedule';
 import * as jwt_decode from 'jwt-decode';
 
@@ -49,11 +51,17 @@ export class tutorScheduleComponent implements OnInit {
   }
   ngAfterViewInit() {
     if (this.tutorService.getPersonalAvailabilitySchedule()) {
-      console.log('i am here')
-      console.log(this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule);
+      console.log('i am here');
+      console.log(
+        this.tutorService.getPersonalAvailabilitySchedule()
+          .allAvailabilitySchedule
+      );
       this.scheduleObj.eventSettings.dataSource =
         this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
-        console.log(this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule);
+      console.log(
+        this.tutorService.getPersonalAvailabilitySchedule()
+          .allAvailabilitySchedule
+      );
       // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
       this.tutorAvailabilitySchedule.fullName =
         this.tutorService.getTutorDetials().fullName;
@@ -73,12 +81,13 @@ export class tutorScheduleComponent implements OnInit {
     private tutorService: TutorService,
     private loginService: LoginDetailsService,
     private cookieService: CookieService,
-    private datePipe:DatePipe
+    private datePipe: DatePipe
   ) {}
 
   @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
   @ViewChild('meetingObj') public meetingObj: ScheduleComponent;
-  public scheduleViews: View[] = ['Day', 'Week', 'WorkWeek', 'Month'];
+  public scheduleViews: View[] = ['Day', 'Week', 'Month'];
+  public showQuickInfo: Boolean = false;
   tutorAvailabilitySchedule = new tutorAvailabilitySchedule();
   calendarLoaded = false;
   calendarView = 'Availability';
@@ -127,7 +136,10 @@ export class tutorScheduleComponent implements OnInit {
             // 	scheduleObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
             // }, 3000);
             // this.meetingObj.eventSettings.dataSource = this.tutorService.getPersonalAvailabilitySchedule().allMeetingsSchedule;
-            console.log(this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule);
+            console.log(
+              this.tutorService.getPersonalAvailabilitySchedule()
+                .allAvailabilitySchedule
+            );
             this.scheduleObj.eventSettings.dataSource =
               this.tutorService.getPersonalAvailabilitySchedule().allAvailabilitySchedule;
             // this.scheduleObj.eventSettings.dataSource = this.combinedSchedule;
@@ -192,76 +204,83 @@ export class tutorScheduleComponent implements OnInit {
     appointment.Type = 'availability';
     return appointment;
   }
-  checkIfSameDate(appointment:scheduleData){
-    let startDateTime:Date = new Date(appointment.StartTime);
-    let endDateTime:Date = new Date (appointment.EndTime);
-    let diffHours:any = Math.abs(endDateTime.getTime()-startDateTime.getTime())/36e5;
-    let allAppointments:scheduleData[]=[];
+  checkIfSameDate(appointment: scheduleData) {
+    let startDateTime: Date = new Date(appointment.StartTime);
+    let endDateTime: Date = new Date(appointment.EndTime);
+    let diffHours: any =
+      Math.abs(endDateTime.getTime() - startDateTime.getTime()) / 36e5;
+    let allAppointments: scheduleData[] = [];
     // let formattedStartDate:Date = new Date(this.datePipe.transform(startDateTime,'dd/MM/yyyy'));
-    let formattedStartDate:Date = new Date(this.datePipe.transform(startDateTime,'MM-dd-yyyy'));
-    let formattedEndDate:Date = new Date(this.datePipe.transform(endDateTime,'MM-dd-yyyy'));
+    let formattedStartDate: Date = new Date(
+      this.datePipe.transform(startDateTime, 'MM-dd-yyyy')
+    );
+    let formattedEndDate: Date = new Date(
+      this.datePipe.transform(endDateTime, 'MM-dd-yyyy')
+    );
     console.log(formattedStartDate);
-    let str3:string = formattedStartDate.toString()
+    let str3: string = formattedStartDate.toString();
 
     console.log(str3);
 
     console.log(formattedEndDate);
-    if(formattedStartDate.getTime()==formattedEndDate.getTime()){
+    if (formattedStartDate.getTime() == formattedEndDate.getTime()) {
       allAppointments.push(appointment);
       console.log('same date');
       return allAppointments;
-    }else{
-      let diffInDates = 
-      Math.abs(formattedEndDate.getTime()-formattedStartDate.getTime())/36e5/24;
-      let arrDiffDates:Date[]=[];
-      console.log(diffInDates)
+    } else {
+      let diffInDates =
+        Math.abs(formattedEndDate.getTime() - formattedStartDate.getTime()) /
+        36e5 /
+        24;
+      let arrDiffDates: Date[] = [];
+      console.log(diffInDates);
       arrDiffDates.push(new Date(formattedStartDate.getTime()));
-      if(diffInDates>1){
+      if (diffInDates > 1) {
         let selectedDate = formattedStartDate;
-        for(let i=2;i<=diffInDates;i++){
-          selectedDate.setDate(selectedDate.getDate()+1);
+        for (let i = 2; i <= diffInDates; i++) {
+          selectedDate.setDate(selectedDate.getDate() + 1);
           arrDiffDates.push(new Date(selectedDate.getTime()));
         }
       }
-      arrDiffDates.push(new Date(formattedEndDate.getTime()))
-      
+      arrDiffDates.push(new Date(formattedEndDate.getTime()));
+
       console.log('different dates are : ');
       console.log(arrDiffDates);
-      let startingId=appointment.Id;
-     
-      for(let j=0;j<arrDiffDates.length;j++){
-        let startDate:Date = new Date(arrDiffDates[j].getTime());
-        let endDate:Date = new Date(arrDiffDates[j].getTime());
+      let startingId = appointment.Id;
+
+      for (let j = 0; j < arrDiffDates.length; j++) {
+        let startDate: Date = new Date(arrDiffDates[j].getTime());
+        let endDate: Date = new Date(arrDiffDates[j].getTime());
         let app = new scheduleData();
-        app.Id=startingId;
+        app.Id = startingId;
         startingId++;
-        app.Subject="My Availability";
-        app.Type="availability";
-        app.IsAllDay=false;
-        if(j==0){
-          console.log('first item')
-           startDate.setHours(startDateTime.getHours());
-           startDate.setMinutes(startDateTime.getMinutes());
-           endDate.setHours(24);
-           endDate.setMinutes(0);
-           app.StartTime=startDate.toString();
-           app.EndTime= endDate.toString();
-        }else if(j==(arrDiffDates.length-1)){
-          console.log('last item')
+        app.Subject = 'Availability Schedule';
+        app.Type = 'availability';
+        app.IsAllDay = false;
+        if (j == 0) {
+          console.log('first item');
+          startDate.setHours(startDateTime.getHours());
+          startDate.setMinutes(startDateTime.getMinutes());
+          endDate.setHours(24);
+          endDate.setMinutes(0);
+          app.StartTime = startDate.toString();
+          app.EndTime = endDate.toString();
+        } else if (j == arrDiffDates.length - 1) {
+          console.log('last item');
           startDate.setHours(0);
-           startDate.setMinutes(0);
-           endDate.setHours(endDateTime.getHours());
-           endDate.setMinutes(endDateTime.getMinutes());
-           app.StartTime=startDate.toString();
-           app.EndTime= endDate.toString();
-        }else if(j>0&&j<(arrDiffDates.length-1)){
-          console.log('mid item')
+          startDate.setMinutes(0);
+          endDate.setHours(endDateTime.getHours());
+          endDate.setMinutes(endDateTime.getMinutes());
+          app.StartTime = startDate.toString();
+          app.EndTime = endDate.toString();
+        } else if (j > 0 && j < arrDiffDates.length - 1) {
+          console.log('mid item');
           startDate.setHours(0);
-           startDate.setMinutes(0);
-           endDate.setHours(24);
-           endDate.setMinutes(0);
-           app.StartTime=startDate.toString();
-           app.EndTime= endDate.toString();
+          startDate.setMinutes(0);
+          endDate.setHours(24);
+          endDate.setMinutes(0);
+          app.StartTime = startDate.toString();
+          app.EndTime = endDate.toString();
         }
         app.IsAllDay = appointment.IsAllDay;
         app.RecurrenceRule = appointment.RecurrenceRule;
@@ -277,29 +296,28 @@ export class tutorScheduleComponent implements OnInit {
   // for adding events into calendar schedules
   addEvents(appointment: scheduleData) {
     console.log(appointment);
-    // let allAppointments:scheduleData[] = this.checkIfSameDate(appointment); 
-    
-      this.availableSchedules.push(appointment);
-    
+    // let allAppointments:scheduleData[] = this.checkIfSameDate(appointment);
+
+    this.availableSchedules.push(appointment);
+
     // console.log(allAppointments);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
     console.log(this.availableSchedules);
-    this.isLoading=false;
-      if (this.userId != null) {
-        this.tutorAvailabilitySchedule.tid =
-          this.tutorService.getTutorDetials().bookingId;
-      }
+    this.isLoading = false;
+    if (this.userId != null) {
+      this.tutorAvailabilitySchedule.tid =
+        this.tutorService.getTutorDetials().bookingId;
+    }
 
-      this.httpService
-        .saveScheduleData(this.tutorAvailabilitySchedule)
-        .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule =
-            this.tutorAvailabilitySchedule;
-          this.isLoading = false;
-        });
+    this.httpService
+      .saveScheduleData(this.tutorAvailabilitySchedule)
+      .subscribe((res) => {
+        this.tutorService.personalAvailablitySchedule =
+          this.tutorAvailabilitySchedule;
+        this.isLoading = false;
+      });
   }
-  
 
   // for updating events into calendar schedules
   updateEvents(newAppointment: scheduleData) {
@@ -313,60 +331,58 @@ export class tutorScheduleComponent implements OnInit {
     }
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
-    console.log(this.availableSchedules)
- 
-      this.httpService
-        .saveScheduleData(this.tutorAvailabilitySchedule)
-        .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule =
-            this.tutorAvailabilitySchedule;
-          this.isLoading = false;
-        });
-    
+    console.log(this.availableSchedules);
+
+    this.httpService
+      .saveScheduleData(this.tutorAvailabilitySchedule)
+      .subscribe((res) => {
+        this.tutorService.personalAvailablitySchedule =
+          this.tutorAvailabilitySchedule;
+        this.isLoading = false;
+      });
   }
   //for deleting events into calendar schedules
-  deleteEvents(appointment: scheduleData[],mode:string) {
-    
+  deleteEvents(appointment: scheduleData[], mode: string) {
     let index = this.availableSchedules.findIndex(
       (obj) => obj.Id == appointment[0].Id
     );
-    if(mode=='whole'){
+    if (mode == 'whole') {
       this.availableSchedules.splice(index, 1);
-    }else if(mode == 'recurrenceEvent'){
-      let parentIndex; 
-      console.log('deleting recurrent event !')
+    } else if (mode == 'recurrenceEvent') {
+      let parentIndex;
+      console.log('deleting recurrent event !');
       console.log(appointment);
-      if(appointment.length==2){
-        this.availableSchedules.splice(index,1);
+      if (appointment.length == 2) {
+        this.availableSchedules.splice(index, 1);
         parentIndex = this.availableSchedules.findIndex(
           (obj) => obj.Id == appointment[1].Id
         );
-        if(parentIndex!=-1){
-          this.availableSchedules[parentIndex]=appointment[1];
+        if (parentIndex != -1) {
+          this.availableSchedules[parentIndex] = appointment[1];
         }
-        
-      }else if(appointment.length==1){
-        this.availableSchedules[index]=appointment[0];
+      } else if (appointment.length == 1) {
+        this.availableSchedules[index] = appointment[0];
       }
     }
-    console.log(this.availableSchedules)
+    console.log(this.availableSchedules);
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
       this.availableSchedules;
     // this.isLoading = true;
-  
-      this.httpService
-        .saveScheduleData(this.tutorAvailabilitySchedule)
-        .subscribe((res) => {
-          this.tutorService.personalAvailablitySchedule =
-            this.tutorAvailabilitySchedule;
-          this.isLoading = false;
-        });
+
+    this.httpService
+      .saveScheduleData(this.tutorAvailabilitySchedule)
+      .subscribe((res) => {
+        this.tutorService.personalAvailablitySchedule =
+          this.tutorAvailabilitySchedule;
+        this.isLoading = false;
+      });
   }
   //for updating special case
-  updateSpecialEvents(parentSchedule,occurrenceSchedule) {
+  updateSpecialEvents(parentSchedule, occurrenceSchedule) {
     console.log(this.availableSchedules);
-    let parentAppointment:scheduleData = this.copyAppointment(parentSchedule);
-    let occurrenceAppointment:scheduleData = this.copyAppointment(occurrenceSchedule);
+    let parentAppointment: scheduleData = this.copyAppointment(parentSchedule);
+    let occurrenceAppointment: scheduleData =
+      this.copyAppointment(occurrenceSchedule);
     //updating the parent schedule
     let parentIndex = this.availableSchedules.findIndex(
       (obj) => obj.Id == parentAppointment.Id
@@ -376,20 +392,19 @@ export class tutorScheduleComponent implements OnInit {
     } else {
       this.availableSchedules[parentIndex] = parentAppointment;
     }
-    
+
     // adding the occurrence schedule
     let occurrenceIndex = this.availableSchedules.findIndex(
       (obj) => obj.Id == occurrenceAppointment.Id
     );
-    if(occurrenceIndex==-1){
+    if (occurrenceIndex == -1) {
       this.availableSchedules.push(occurrenceAppointment);
-    }else{
+    } else {
       this.availableSchedules[occurrenceIndex] = occurrenceAppointment;
     }
 
-
     this.tutorAvailabilitySchedule.allAvailabilitySchedule =
-    this.availableSchedules;
+      this.availableSchedules;
     console.log(this.availableSchedules);
     setTimeout(() => {
       //<<<---    using ()=> syntax
@@ -405,16 +420,17 @@ export class tutorScheduleComponent implements OnInit {
 
   onPopupOpen(args) {
     if (args.type === 'Editor') {
-
+      (args.element.querySelector('.e-subject.e-field') as any).value='Availability Schedule'; 
+      (args.element.querySelector('.e-subject.e-field') as any).readOnly = true; 
       args.element.querySelector('.e-start').ej2_instances[0].format =
         'd/M/yy h:mm a';
       args.element.querySelector('.e-end').ej2_instances[0].format =
         'd/M/yy h:mm a';
 
       (<any>this.scheduleObj.eventWindow).recurrenceEditor.frequencies = [
-        'none',
         'daily',
         'weekly',
+        'none',
       ];
     }
   }
@@ -426,62 +442,74 @@ export class tutorScheduleComponent implements OnInit {
       args.element.style.backgroundColor = '#7d0f7d';
     }
   }
-
+  onCellClick(args: CellClickEventArgs): void {
+    this.scheduleObj.openEditor(args, 'Add'); // to open editor window on empty cell click
+  }
+  onEventClick(args: EventClickArgs): void {
+    if (!(args.event as any).RecurrenceRule) {
+      this.scheduleObj.openEditor(args.event, 'Save'); // to open event editor window on appointment click
+    } else {
+      this.scheduleObj.quickPopup.openRecurrenceAlert();
+    }
+  }
   onActionBegin(args: ActionEventArgs): void {
     var schedule;
     //when an event is created
     if (args.requestType === 'eventCreate') {
-      console.log(this.availableSchedules)
+      console.log(this.availableSchedules);
       schedule = args.addedRecords;
       // this.isLoading=!this.isLoading;
-      this.isLoading=true;
+      this.isLoading = true;
       setTimeout(() => {
         this.addEvents(this.copyAppointment(schedule[0]));
       }, 3000);
     } else if (args.requestType === 'eventChange') {
       console.log(this.availableSchedules);
       // when an event is changed
-      schedule=args.data;
-      this.isLoading=true;
+      schedule = args.data;
+      this.isLoading = true;
       console.log(this.availableSchedules);
       setTimeout(() => {
-        if(schedule.occurrence!=null&&schedule.parent!=null){
-          console.log('recurrence exception !')
+        if (schedule.occurrence != null && schedule.parent != null) {
+          console.log('recurrence exception !');
           console.log(schedule.occurrence);
-          console.log(schedule.parent)
-          this.updateSpecialEvents(schedule.parent,schedule.occurrence);
-        }else if(schedule!=null&&schedule.occurrence==null&&schedule.parent==null){
-            //normal updation
-          schedule=args.changedRecords;
-          console.log('called normal updation !')
+          console.log(schedule.parent);
+          this.updateSpecialEvents(schedule.parent, schedule.occurrence);
+        } else if (
+          schedule != null &&
+          schedule.occurrence == null &&
+          schedule.parent == null
+        ) {
+          //normal updation
+          schedule = args.changedRecords;
+          console.log('called normal updation !');
           this.updateEvents(this.copyAppointment(schedule[0]));
         }
       }, 3000);
     } else if (args.requestType === 'eventRemove') {
       console.log('event is removed !');
-      let mode:string='whole'
+      let mode: string = 'whole';
       // when an event is removed
       schedule = args.deletedRecords;
       console.log(schedule);
       console.log(args.data);
-      this.isLoading=true;
+      this.isLoading = true;
       setTimeout(() => {
-        if(args.deletedRecords.length==0&&args.data[0].parent!=null){
-          if(args.data[0].occurrence!=null){
-            schedule.push(this.copyAppointment(args.data[0].occurrence))
+        if (args.deletedRecords.length == 0 && args.data[0].parent != null) {
+          if (args.data[0].occurrence != null) {
+            schedule.push(this.copyAppointment(args.data[0].occurrence));
           }
-          if(args.data[0].parent!=null){
-            schedule.push(this.copyAppointment(args.data[0].parent))
-          }  
-          mode='recurrenceEvent';
-          console.log('deleting a recurrence event',schedule)
-          this.deleteEvents(schedule,mode);
-        }else{
+          if (args.data[0].parent != null) {
+            schedule.push(this.copyAppointment(args.data[0].parent));
+          }
+          mode = 'recurrenceEvent';
+          console.log('deleting a recurrence event', schedule);
+          this.deleteEvents(schedule, mode);
+        } else {
           schedule.push(this.copyAppointment(args.data[0]));
-          this.deleteEvents(schedule,mode);
-        }  
+          this.deleteEvents(schedule, mode);
+        }
       }, 3000);
-      
     }
   }
 }

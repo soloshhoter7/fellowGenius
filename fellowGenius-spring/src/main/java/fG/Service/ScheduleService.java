@@ -484,7 +484,7 @@ public class ScheduleService {
 							System.out.println("nextDates size =>" + nextDates.size());
 
 							for (int i = 0; i < nextDates.size(); i++) {
-								System.out.println("day :" + i + 1);
+								System.out.println("day :" + (i + 1));
 								if (i == 0) {
 									ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
 									sh = startHours;
