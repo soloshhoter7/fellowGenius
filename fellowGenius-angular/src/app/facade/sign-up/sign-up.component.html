@@ -117,7 +117,7 @@
                       <div class="password_wrap">
                         <input
                           id="password-field"
-                          type="password"
+                          [type]="showPassword ? 'text': 'password' "
                           class="form-control"
                           name="password"
                           ngModel
@@ -129,8 +129,9 @@
                           placeholder="Enter password"
                         />
                         <span
-                          toggle="#password-field"
-                          class="fa fa-fw fa-eye field-icon toggle-password"
+                          (click)="togglePassword()"
+                          class="fa fa-fw field-icon toggle-password"
+                          [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
                         ></span>
                       </div>
                     </div>

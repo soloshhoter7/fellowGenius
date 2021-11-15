@@ -47,9 +47,9 @@ style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
                                 
                                 />
                                 <span
-                          
-                          class="fa fa-fw fa-eye field-icon toggle-password"
-                          (click)="togglePassword()"
+                                (click)="togglePassword()"
+                          class="fa fa-fw field-icon toggle-password"
+                          [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
                         ></span>
                         
                               </div>
