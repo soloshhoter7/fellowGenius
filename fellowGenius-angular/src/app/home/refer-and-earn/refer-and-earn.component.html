@@ -65,9 +65,69 @@
                         <div class="share__options">
                             <a 
                             class="share_btn shareLI"
-                            href="javascript:void(0)" 
-                            (click)="shareLinkedIn()" >
-                            <img src="../../../assets/images/Linkedin.svg" alt="#"></a>
+                            href="#Linkedin_Modal" 
+                            data-toggle="modal"
+                            (click)="copyReferCode()"
+                             >
+                            <img 
+                            src="../../../assets/images/Linkedin.svg" 
+                            alt="#"
+                            ></a>
+
+                            <!-- Linkedin Modal Starts -->
+                            <div class="modal fade join__Modal" 
+                            id="Linkedin_Modal" 
+                            tabindex="-1" 
+                            role="dialog" 
+                            aria-labelledby="myLargeModalLabel" 
+                            aria-hidden="true">  
+                            <div class="modal-dialog modal-lg">
+                                <!-- Modal Content: begins -->
+                                <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <button type="button" id="close-popup" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal Body -->  
+                                    <div class="modal-body">
+                                        <div class="body-message">
+
+                                            <h4>Share with LinkedIn</h4>
+
+                                            <div class="refer_code border_box">
+                                                <div class="box_title">Your refer code is {{referCode}}</div>
+                                            </div>
+
+                                            <div class="what border_box">
+                                                <div class="box_title">What ?</div>
+                                                <div>
+                                                    <p class="text-black">Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nulla dolor ducimus est animi optio? Hic, officiis. Rem molestiae non labore hic exercitationem optio, expedita dicta ipsum dignissimos blanditiis iusto?</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="how border_box">
+                                                <div class="box_title">How ?</div>
+                                                <div>
+                                                    <p class="text-black">Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit nulla dolor ducimus est animi optio? Hic, officiis. Rem molestiae non labore hic exercitationem optio, expedita dicta ipsum dignissimos blanditiis iusto?</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal_btn feedback_submit">
+                                                <button 
+                                                type="submit" 
+                                                class="button btn_mdl"
+                                                >Go To LinkedIn</button>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>      
+                                <!-- Modal Content: ends --> 
+                            </div>
+                            </div>        
+                            <!-- Linkedin Modal Ends -->
                             <a href="javascript:void(0)"
                             (click) ="shareMail()"
                             class="share_btn">
@@ -113,7 +173,7 @@
                     <h2>Referral Dashboard</h2>
                     <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p>
                     <div class="credit__box">
-                        <img src="images/credits-icon.svg" alt="#">
+                        <img src="../../../assets/images/credits-icon.svg" alt="#">
                         <span>FG Credits<strong>4</strong></span>
                     </div>
                 </div>

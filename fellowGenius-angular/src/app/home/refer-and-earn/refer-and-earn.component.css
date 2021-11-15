@@ -458,3 +458,20 @@ table td.fld_status .td_btn .table_btn {
 		padding: 7px;
 	}
 }
+
+/* Modal Styling */
+.refer_code.border_box{
+    margin-top:15px;
+}
+
+.what.border_box{
+    display:block;
+}
+
+.how.border_box{
+    display:block;
+}
+
+.text-black{
+    color:black
+}
