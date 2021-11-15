@@ -1,4 +1,4 @@
-<div class="page-content  dashboard__Panel">
+<div class="page-content dashboard__Panel">
     <div class="wrapper">
         <div class="refer_Earn_page">
             <div class="Referal__Sec white__bg">
@@ -53,33 +53,29 @@
                     <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum.</p>
                     <div class="share__code_fld">
                         <div class="input-group referal__input">
-                            <input 
-                            type="text" 
-                            class="form-control" 
+                            <input type="text" 
+                            class="form-control"
                             [value]="referCode"
-                            readonly
-                             />
+                            readonly />
                             <button type="submit" 
                             class="button green_btn"
-                            (click)="copyReferCode()">Copy code</button>
+                            (click)="copyReferCode()"
+                            >Copy code</button>
                         </div>
                         <div class="share__options">
-                            <a class="share_btn"
+                            <a 
+                            class="share_btn shareLI"
                             href="javascript:void(0)" 
-                            (click)="shareLinkedIn()">
-                                <img src="../../../assets/images/Linkedin.svg" alt="#">
-                            </a>
+                            (click)="shareLinkedIn()" >
+                            <img src="../../../assets/images/Linkedin.svg" alt="#"></a>
                             <a href="javascript:void(0)"
                             (click) ="shareMail()"
                             class="share_btn">
-                                <img src="../../../assets/images/envelope-icon.svg" alt="#">
-                            </a>
+                            <img src="../../../assets/images/envelope-icon.svg" alt="#"></a>
                             <a 
                             href="javascript:void(0)"
                             (click)="shareWhatsapp()"
-                            class="share_btn">
-                                <img src="../../../assets/images/watsapp-icon.svg" alt="#">
-                            </a>
+                            class="share_btn"><img src="../../../assets/images/watsapp-icon.svg" alt="#"></a>
                         </div>
                     </div>
                 </div>
@@ -105,7 +101,10 @@
                                      (matChipInputTokenEnd)="add($event)">
                             </mat-chip-list>
                           </mat-form-field>
-                        <button type="submit" class="button green_btn">Submit</button>
+                        <button type="submit" 
+                        href="javascript:void(0)"
+                        (click)="shareMultipleEmail()"
+                        class="button green_btn">Submit</button>
                     </div>
                 </div>
             </div>
@@ -114,7 +113,7 @@
                     <h2>Referral Dashboard</h2>
                     <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin.</p>
                     <div class="credit__box">
-                        <img src="../../../assets/images/credits-icon.svg" alt="#">
+                        <img src="images/credits-icon.svg" alt="#">
                         <span>FG Credits<strong>4</strong></span>
                     </div>
                 </div>
@@ -164,4 +163,5 @@
         </div>
     </div>
 </div>
+
 

@@ -114,6 +114,8 @@ export class ReferAndEarnComponent implements OnInit {
     //  const summary=`Refer%20Code%20is%20${this.referCode}`;
     
      const url=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
+     const encodedURL=
+     //const shareUrl="http://www.linkedin.com/shareArticle?mini=true&url=https://stackoverflow.com/questions/10713542/how-to-make-custom-linkedin-share-button/10737122&title=How%20to%20make%20custom%20linkedin%20share%20button&summary=some%20summary%20if%20you%20want&source=stackoverflow.com"
      console.log('Hello from hello linkedin');
      //const linkedinURL=`https://www.linkedin.com/sharing/share-offsite/?url={url}`;
     // window.open(url,"_self");
@@ -124,10 +126,10 @@ export class ReferAndEarnComponent implements OnInit {
     //   });
     // });
 
-    document.getElementById("og_title").setAttribute("content", "Refer Code");
-document.getElementById("og_description").setAttribute("content", `Welcome to Fellow Genius.Your refer code is ${this.referCode}`);
-    document.getElementById("og_url").setAttribute("content",`https://www.fellowgenius.com/signup`); 
-    window.open(url,"_self");   
+//     document.getElementById("og_title").setAttribute("content", "Refer Code");
+// document.getElementById("og_description").setAttribute("content", `Welcome to Fellow Genius.Your refer code is ${this.referCode}`);
+//     document.getElementById("og_url").setAttribute("content",`https://www.fellowgenius.com/signup`); 
+    //window.open(shareUrl,"_self");   
    }
 
    shareWhatsapp(){
@@ -139,11 +141,21 @@ document.getElementById("og_description").setAttribute("content", `Welcome to Fe
    } 
 
    shareMail(){
-    const emailLink=`https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=new`;
+    const subject="Refer Code Invite";
+    const body=`Hello%20from%20${this.fullName}%0AWelcome%20to%20Fellowgenius.%20Your%20Refer%20Code%20is%20${this.referCode}`; 
+    const emailLink=`https://mail.google.com/mail/?compose=1&view=cm&fs=1&su=${subject}&body=${body}`;
     window.open(emailLink,"_self");
    }
 
    shareMultipleEmail(){
-
+    let To="";
+    this.emailsArray.forEach((email)=>{
+      To=To.concat(email+"%20");
+    });
+    console.log(To);
+    const subject="Refer Code Invite";
+    const body=`Hello%20from%20${this.fullName}%0AWelcome%20to%20Fellowgenius.%20Your%20Refer%20Code%20is%20${this.referCode}`; 
+    const emailLink=`https://mail.google.com/mail/?compose=1&view=cm&fs=1&to=${To}&su=${subject}&body=${body}`;
+    window.open(emailLink,"_self");
    }
 }
