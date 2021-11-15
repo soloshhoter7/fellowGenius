@@ -247,7 +247,7 @@ table td.fld_status .td_btn .table_btn {
 		padding-right: 105px !important;
 	}
 	.Referal__Sec .input-group .button{
-		width: 90px !important;
+		width: 100px !important;
 		padding: 7px !important;
 	}
 }
@@ -454,9 +454,10 @@ table td.fld_status .td_btn .table_btn {
 		padding-right: 105px;
 	}
 	.Referal__Sec .input-group .button{
-		width: 90px;
+		width: 100px;
 		padding: 7px;
 	}
+  
 }
 
 /* Modal Styling */
@@ -474,4 +475,14 @@ table td.fld_status .td_btn .table_btn {
 
 .text-black{
     color:black
+}
+
+.mat-standard-chip .mat-chip-remove, .mat-standard-chip .mat-chip-trailing-icon {
+    width: 24px !important;
+    height: 24px !important;
+    cursor: pointer !important;
+    background: none !important;
+}
+.Referal__Sec .input-group .button {
+width: 124px;
 }

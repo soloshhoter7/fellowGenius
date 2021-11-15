@@ -45,19 +45,37 @@ export class ReferAndEarnComponent implements OnInit {
 		}
     this.userId = this.getUserId();
     if (this.loginService.getLoginType() == 'Learner') {
-      this.studentService.studentProfileChanged.subscribe((res)=>{
+      if(this.studentService.getStudentProfileDetails().fullName==null){
+        this.studentService.studentProfileChanged.subscribe((res)=>{
+          console.log('data called in refer and earn !');
+          this.fullName = this.studentService.getStudentProfileDetails().fullName;
+          this.userEmail = this.studentService.getStudentProfileDetails().email;
+          console.log(this.fullName,this.userId);
+          this.getReferCode();
+        })
+      }else{
         this.fullName = this.studentService.getStudentProfileDetails().fullName;
-        this.userEmail = this.studentService.getStudentProfileDetails().email;
-        console.log(this.fullName,this.userId);
-        this.getReferCode();
-      })
+          this.userEmail = this.studentService.getStudentProfileDetails().email;
+          console.log(this.fullName,this.userId);
+          this.getReferCode();
+      }
+      
     } else if (this.loginService.getLoginType() == 'Expert') {
-      this.tutorService.tutorProfileDetailsChanged.subscribe((res)=>{
+      console.log('data called in refer and earn !');
+      if(this.tutorService.getTutorProfileDetails().fullName==null){
+        this.tutorService.tutorProfileDetailsChanged.subscribe((res)=>{
+          this.fullName = this.tutorService.getTutorDetials().fullName;
+          this.userEmail = this.tutorService.getTutorDetials().email;
+          console.log(this.fullName,this.userId);
+          this.getReferCode();
+        })
+      }else{
         this.fullName = this.tutorService.getTutorDetials().fullName;
-        this.userEmail = this.tutorService.getTutorDetials().email;
-        console.log(this.fullName,this.userId);
-        this.getReferCode();
-      })
+          this.userEmail = this.tutorService.getTutorDetials().email;
+          console.log(this.fullName,this.userId);
+          this.getReferCode();
+      }
+      
     }
    // this.shareLinkedIn(); 
   }
@@ -73,8 +91,8 @@ export class ReferAndEarnComponent implements OnInit {
     this.referCode=this.referCode.concat(currentYear.toString().substring(2,4));
     const nameArray=this.fullName.split(" ");
     for(let name of nameArray){
-      const initials=name.substring(0,1);
-      this.referCode=this.referCode.concat(initials);
+      const initials:string=name.substring(0,1);
+      this.referCode=this.referCode.concat(initials.toUpperCase());
     }
     const last4uid=this.userId.substring(this.userId.length-4);
     this.referCode=this.referCode.concat(last4uid);
