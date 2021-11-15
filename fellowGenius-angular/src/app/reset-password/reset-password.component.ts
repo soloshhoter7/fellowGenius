@@ -16,6 +16,8 @@ import * as bcrypt from 'bcryptjs';
 })
 export class ResetPasswordComponent implements OnInit {
   passwordReset: boolean;
+  showNewPassword:boolean=false;
+  showConfirmPassword:boolean=false;
   constructor(
     public profileService: ProfileService,
     public meetingSevice: MeetingService,
@@ -60,6 +62,15 @@ export class ResetPasswordComponent implements OnInit {
       
     });
   }
+
+  toggleNewPassword(){
+    this.showNewPassword=!this.showNewPassword;
+  }
+
+  toggleConfirmPassword(){
+    this.showConfirmPassword=!this.showConfirmPassword;
+  }
+  
   seePassword() {
     $('.toggle-password').each(function (index) {
       console.log('hello');

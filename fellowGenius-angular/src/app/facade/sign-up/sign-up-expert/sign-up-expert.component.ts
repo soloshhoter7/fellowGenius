@@ -86,6 +86,8 @@ export class SignUpExpertComponent implements OnInit {
   isLoading = false;
   verificationOtp: any;
   wrongOtp: boolean;
+  showPassword:boolean=false;
+
   ngAfterViewInit() {
     togglePassword();
     initiateSelect2();
@@ -253,6 +255,10 @@ export class SignUpExpertComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+  }
+
+  togglePasswords(){
+    this.showPassword=!this.showPassword;
   }
 
   public _filter(value: string): string[] {

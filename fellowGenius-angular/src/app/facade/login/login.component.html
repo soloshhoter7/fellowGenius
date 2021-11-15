@@ -36,7 +36,7 @@ style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
                               <label class="">Password</label>
                               <div class="password_wrap" >
                                 <input 
-                                type="password"
+                                [type]="showPassword ? 'text' : 'password' "
                                 id="password-field"  
                                 class="form-control" 
                                 name="password" 
@@ -47,9 +47,11 @@ style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
                                 
                                 />
                                 <span
-                          toggle="#password-field"
-                          class="fa fa-fw fa-eye field-icon toggle-password"
+                                (click)="togglePassword()"
+                          class="fa fa-fw field-icon toggle-password"
+                          [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
                         ></span>
+                        
                               </div>
                              
                               <a routerLink="/reset-password" class="frgt_pwd" (click)="toResetPassword()">Forgot Password ?</a>

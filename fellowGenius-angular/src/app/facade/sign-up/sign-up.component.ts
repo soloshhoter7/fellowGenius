@@ -67,6 +67,7 @@ export class SignUpComponent implements OnInit {
   hide: boolean = true;
   timeOut: boolean = true;
   showExpertCode:boolean = false;
+  showPassword:boolean=false;
   // ---------- patterns --------------------------------
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,12}$';
   passwordPattern =
@@ -102,7 +103,11 @@ export class SignUpComponent implements OnInit {
     this.expert_userId = this.cookieService.get('expert_userId');
     this.expert_domain = this.cookieService.get('expert_domain');
     this.googleSDK();
-    this.seePassword();
+    
+  }
+  togglePassword(){
+    this.showPassword=!this.showPassword;
+    console.log(this.showPassword);
   }
   goToPreviousUrl() {
     if (this.prev_route != '') {

@@ -59,7 +59,7 @@
                     <div class="password_wrap">
                       <input
                         id="password-new"
-                        type="password"
+                        [type]="showPassword ? 'text' : 'password'"
                         name="password-new"
                         [(ngModel)]="newPassword"
                         class="form-control"
@@ -70,8 +70,9 @@
                         #password="ngModel"
                       />
                       <span
-                        toggle="#password-new"
-                        class="fa fa-fw fa-eye field-icon toggle-password"
+                        (click)="togglePasswords()"
+                        class="fa fa-fw field-icon toggle-password"
+                        [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
                       ></span>
                     </div>
                     <div class="col-12" style="margin-bottom: 10px">

@@ -8,7 +8,8 @@ import { NgForm } from '@angular/forms';
 export class FeedbackComponent implements OnInit {
   //role to be get by session
   role="expert";
-  rating:Number;
+  rating:Number=0;
+  mobilerating:Number=0;
   review:String;
   learner_likes:Likes[]
   learner_dislikes:Likes[]
@@ -22,6 +23,7 @@ export class FeedbackComponent implements OnInit {
 
     //  INITIALIZE VARIABLES
     this.rating=0;
+    this.mobilerating=0;
     this.review="";
     this.role="learner"
     this.learner_likes=[
@@ -52,8 +54,12 @@ export class FeedbackComponent implements OnInit {
   onFeedback(form: NgForm){
       
     if(this.rating===0){
-      this.errorText=true;
-      window.scroll(0,0);
+      if(this.mobilerating !=0){
+        this.rating=this.mobilerating;
+      }else{
+        this.errorText=true;
+        window.scroll(0,0);
+      }   
     }else{
       this.feedback.role=this.role;
       this.feedback.rating=this.rating;
@@ -154,6 +160,11 @@ export class FeedbackComponent implements OnInit {
       return d;
     });
     console.log(this.expert_dislikes);
+  }
+
+  onRatingChange(event: any){
+    const value = event.target.value;
+    console.log(value);
   }
   }
 

@@ -60,6 +60,68 @@
     padding-left:10px;
 }
 
+.chat_dislike.border_box{
+    display: block !important;
+}
+
+.chat_like.border_box{
+    display:block !important;
+}
+
+/* Star rating mobile  */
+.rate-area-mobile {
+    float:left;
+    border-style: none;
+}
+
+.rate-area-mobile:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+    clip:rect(0,0,0,0);
+}
+
+.rate-area-mobile:not(:checked) > label {
+    float: right;
+    width: .80em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 40px;
+    line-height: 32px;
+    color: lightgrey;
+    margin-bottom: 10px !important;
+}
+
+.rate-area-mobile:not(:checked) > label:before {
+    content: '★';
+}
+
+.rate-area-mobile > input:checked ~ label {
+    color:  #ffc107;
+    text-shadow: none;
+}
+
+.rate-area-mobile:not(:checked) > label:hover,
+.rate-area-mobile:not(:checked) > label:hover ~ label {
+    color:  #ffc107;
+    
+}
+
+.rate-area-mobile > input:checked + label:hover,
+.rate-area-mobile > input:checked + label:hover ~ label,
+.rate-area-mobile > input:checked ~ label:hover,
+.rate-area-mobile > input:checked ~ label:hover ~ label,
+.rate-area-mobile > label:hover ~ input:checked ~ label {
+    color: #ffc107;
+    text-shadow: none;
+    
+}
+
+.rate-area-mobile > label:active {
+    position:relative;
+    top:0px;
+    left:0px; 
+}
 @media only screen and (max-width: 767px){
     .rating_title{
         margin-top: 10px;
