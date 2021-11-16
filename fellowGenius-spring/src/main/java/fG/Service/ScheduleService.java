@@ -209,7 +209,11 @@ public class ScheduleService {
 				System.out.println("start minutes ->" + Integer.valueOf(stSplitColons[1])); // stSplitColons[1]
 				System.out.println("end hours ->" + Integer.valueOf(etSplitColons[0])); // etSplitColons[0]
 				System.out.println("end minutes ->" + Integer.valueOf(etSplitColons[1]));// etSplitColons[1]
-
+				System.out.println("current date time:"+removeTimeFromDate(date).getTime());
+				System.out.println("start date time:"+startTimeSchedule.getTime());
+				System.out.println("end date time:"+endTimeSchedule.getTime());
+				System.out.println(date.getTime()>=startTimeSchedule.getTime());
+				System.out.println(date.getTime()<=endTimeSchedule.getTime());
 				Integer startHours = Integer.valueOf(stSplitColons[0]);
 				Integer startMinutes = Integer.valueOf(stSplitColons[1]);
 				Integer endHours = Integer.valueOf(etSplitColons[0]);
@@ -525,6 +529,55 @@ public class ScheduleService {
 								}
 							}
 						}
+					}else if(!startTimeString.equals(currentDateString)&&(removeTimeFromDate(date).getTime()>=startTimeSchedule.getTime()&&removeTimeFromDate(date).getTime()<=endTimeSchedule.getTime())) {
+						System.out.println("the date is in between of a schedule");
+						ArrayList<Date> validDates = getNextNumberOfDates(removeTimeFromDate(startTimeSchedule),diffInDays+1);
+						ArrayList<String> validDatesInString = new ArrayList<String>();
+						for(Date d:validDates) {
+							validDatesInString.add(formatter.format(d));
+						}
+						System.out.println("Valid dates in string  :"+validDatesInString);
+						int index = validDatesInString.indexOf(currentDateString);
+						if(index!=-1) {
+							if (index == 0) {
+								ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
+								sh = startHours;
+								sm = startMinutes;
+								eh = 24;
+								em = 0;
+								System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em + " date:"
+										+ currentDateString);
+								timeSlots = createTimeSlots(sh, sm, eh, em, currentDateString);
+								for (ScheduleTime tp : timeSlots) {
+									timeArray.add(tp);
+								}
+							} else if (index == validDatesInString.size() - 1) {
+								ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
+								sh = 0;
+								sm = 0;
+								eh = endHours;
+								em = endMinutes;
+								System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em + " date:"
+										+ currentDateString);
+								timeSlots = createTimeSlots(sh, sm, eh, em, currentDateString);
+								for (ScheduleTime tp : timeSlots) {
+									timeArray.add(tp);
+								}
+							} else {
+								ArrayList<ScheduleTime> timeSlots = new ArrayList<ScheduleTime>();
+								sh = 0;
+								sm = 0;
+								eh = 24;
+								em = 0;
+//								System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em);
+								System.out.println("sh :" + sh + "sm :" + sm + "eh :" + eh + "em :" + em + " date:"
+										+ currentDateString);
+								timeSlots = createTimeSlots(sh, sm, eh, em,currentDateString);
+								for (ScheduleTime tp : timeSlots) {
+									timeArray.add(tp);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -621,9 +674,12 @@ public class ScheduleService {
 		ArrayList<ScheduleTime> frameSlots = new ArrayList<ScheduleTime>();
 		System.out.println(timeSlots);
 		System.out.println(bookingSlots);
-		Integer frame=timeSlots.get(timeSlots.indexOf(bookingSlots.get(0))).frame;
-		System.out.println("Frame no. corresponding to booking :"+frame);
-		frameSlots = getSlotsForFrameNumber(frame, timeSlots);
+		Integer bookingSlotsStartingIndex=timeSlots.indexOf(bookingSlots.get(0));
+		if(bookingSlotsStartingIndex!=-1) {
+			Integer frame=timeSlots.get(bookingSlotsStartingIndex).frame;
+			System.out.println("Frame no. corresponding to booking :"+frame);
+			frameSlots = getSlotsForFrameNumber(frame, timeSlots);
+		}
 		return frameSlots; 
 	}
 	Integer findBookingCase(ArrayList<ScheduleTime> bookingSlots,ArrayList<ScheduleTime> frameSlots) {
@@ -679,39 +735,42 @@ public class ScheduleService {
 						bookingSlots = createTimeSlots(booking.getStartTimeHour(), booking.getStartTimeMinute(),
 								booking.getEndTimeHour(), booking.getEndTimeMinute(), booking.getDateOfMeeting());
 						ArrayList<ScheduleTime> overlappingFrameSlots = findBookingOverlappingSlots(bookingSlots, timeSlots);
-						Integer bookingCase = findBookingCase(bookingSlots, overlappingFrameSlots);
-						System.out.println(overlappingFrameSlots);
-						System.out.println("booking case =>"+bookingCase);
-						if(bookingCase==1) {
-							bookingSlots.remove(bookingSlots.size()-1);
-						}else if(bookingCase==2) {
-							Integer startIndex=0,endIndex=0;
-							startIndex = overlappingFrameSlots.indexOf(bookingSlots.get(0));
-							endIndex = overlappingFrameSlots.indexOf(bookingSlots.get(bookingSlots.size()-1));
-							System.out.println(bookingSlots.get(bookingSlots.size()-1));
-							System.out.println("start Index:"+startIndex);
-							System.out.println("end Index:"+endIndex);
-							for(int i = endIndex;i<overlappingFrameSlots.size();i++) {
-								ScheduleTime slot = new ScheduleTime();
-								slot = overlappingFrameSlots.get(i);
-								slot.setFrame(frameCount);
-								slotsToBeAdded.add(slot);
-							}
-							frameCount++;
-							
+						if(overlappingFrameSlots.size()>0) {
+							Integer bookingCase = findBookingCase(bookingSlots, overlappingFrameSlots);
 							System.out.println(overlappingFrameSlots);
-							System.out.println(slotsToBeAdded);
-							bookingSlots.clear();
-							for(int j=startIndex+1;j<overlappingFrameSlots.size()-1;j++) {
-								bookingSlots.add(overlappingFrameSlots.get(j));
+							System.out.println("booking case =>"+bookingCase);
+							if(bookingCase==1) {
+								bookingSlots.remove(bookingSlots.size()-1);
+							}else if(bookingCase==2) {
+								Integer startIndex=0,endIndex=0;
+								startIndex = overlappingFrameSlots.indexOf(bookingSlots.get(0));
+								endIndex = overlappingFrameSlots.indexOf(bookingSlots.get(bookingSlots.size()-1));
+								System.out.println(bookingSlots.get(bookingSlots.size()-1));
+								System.out.println("start Index:"+startIndex);
+								System.out.println("end Index:"+endIndex);
+								for(int i = endIndex;i<overlappingFrameSlots.size();i++) {
+									ScheduleTime slot = new ScheduleTime();
+									slot = overlappingFrameSlots.get(i);
+									slot.setFrame(frameCount);
+									slotsToBeAdded.add(slot);
+								}
+								frameCount++;
+								
+								System.out.println(overlappingFrameSlots);
+								System.out.println(slotsToBeAdded);
+								bookingSlots.clear();
+								for(int j=startIndex+1;j<overlappingFrameSlots.size()-1;j++) {
+									bookingSlots.add(overlappingFrameSlots.get(j));
+								}
+								System.out.println("booking slots to be removed=>"+bookingSlots);
+							}else if(bookingCase==3) {
+								bookingSlots.remove(0);
 							}
-							System.out.println("booking slots to be removed=>"+bookingSlots);
-						}else if(bookingCase==3) {
-							bookingSlots.remove(0);
+							for (ScheduleTime slot : bookingSlots) {
+								bookingArray.add(slot);
+							}
 						}
-						for (ScheduleTime slot : bookingSlots) {
-							bookingArray.add(slot);
-						}
+						
 					}
 				}
 			} else {
