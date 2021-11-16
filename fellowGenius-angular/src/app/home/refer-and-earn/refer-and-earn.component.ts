@@ -35,14 +35,16 @@ export class ReferAndEarnComponent implements OnInit {
   title = "share";
   loc = encodeURIComponent(window.location.href)
   siteURL="https://fellowgenius.com/"
+  deviceType:string="";
   ngOnInit(): void {
-    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	
 		if (isMobile) {
-  			console.log("You are using Mobile");
+  			this.deviceType="Mobile";
 		} else {
-			  console.log("Laptop");
+			  this.deviceType="Laptop";
 		}
+    console.log(this.deviceType);
     this.userId = this.getUserId();
     if (this.loginService.getLoginType() == 'Learner') {
       if(this.studentService.getStudentProfileDetails().fullName==null){
@@ -112,11 +114,19 @@ export class ReferAndEarnComponent implements OnInit {
       
     // Add our email
     //firstly check if email is valid
-    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    var validRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
 
+    
   
    if (value.match(validRegex)){
+
+    //check if this email is already present or not
+    if(this.emailsArray.includes(value)){
+      console.log("This email already entered");
+    }else{
       this.emailsArray.push(value);
+    }
+      
     }
 
     console.log(this.emailsArray);
@@ -134,14 +144,9 @@ export class ReferAndEarnComponent implements OnInit {
     console.log(this.emailsArray);
    }
 
-   shareLinkedIn(){
-  
-    
-     const shareUrl=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
-
-     
-     console.log('Hello from hello linkedin');
-
+   shareLinkedIn(){   
+    const shareUrl=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
+    console.log('Hello from hello linkedin');
     window.open(shareUrl,"_blank");   
    }
 
@@ -168,9 +173,18 @@ export class ReferAndEarnComponent implements OnInit {
    }
 
    getWhatsappMsgLink(){
+    
     const siteurl="https://www.fellowgenius.com/";
     const msg=`Refer%20Code%20is%20${this.referCode}%0AWebsite%20Link%20is%20${siteurl}`;
-    const whatsappLink=`https://wa.me/?text=${msg}`;
+    var whatsappLink="";
+    if(this.deviceType==="Laptop"){
+      whatsappLink=`https://web.whatsapp.com/send?text=${msg}`
+    }else if(this.deviceType==="Mobile"){
+      whatsappLink=`https://wa.me/?text=${msg}`;
+    }else{
+      console.log("Sorry something went wrong")
+    }
+    
     return whatsappLink;
    }
 
