@@ -1,0 +1,19 @@
+.cancel_btn{
+    display:none;
+}
+
+@media only screen and (max-width: 767px){
+.cancel_img{
+    display:none
+}
+
+.cancel_btn{
+    display: inline !important;
+    background-color: rgb(255,45,88);
+    color: white;
+    border: white;
+    border-radius: 10px;
+
+}
+
+}
