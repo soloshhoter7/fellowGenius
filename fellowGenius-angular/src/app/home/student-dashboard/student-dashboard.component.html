@@ -151,8 +151,10 @@
                             *ngIf="element.approvalStatus == 'Pending'"
                             (click)="deleteBooking(element)"
                             ><img
+                              class="cancel_img"
                               src="../../../assets/images/delete-meeting.svg"
-                          /></a>
+                          />
+                        <button class="cancel_btn">Cancel</button></a>
                           <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
                         </div>
                       </td>
@@ -278,8 +280,9 @@
                 class="delete_btn"
                 *ngIf="selectedUpcomingMeeting.approvalStatus == 'Pending'"
                 (click)="deleteBooking(selectedUpcomingMeeting)"
-                ><img src="../../../assets/images/delete-meeting.svg"
-              /></a>
+                ><button class="cancel_btn" >Cancel 
+                  <!-- <span>&#10005;</span>  -->
+                </button></a>
               <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
 
               <div
