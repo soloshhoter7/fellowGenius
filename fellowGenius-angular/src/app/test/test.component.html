@@ -1,30 +1,81 @@
 <div class="container row">
+  <form (ngSubmit)="onSubmit(basicProfile)"
+      #basicProfile="ngForm">
   <div class="col-12 col-md-6">
     <div class="form-group">
-      <label class="">Full Name*</label>
-      <input
-        type="text"
-        id="fullName"
-        name="fullName"
-        ngModel
+      <label class="">Completion Date*</label>
+      <!-- <input
+        type="date"
         class="form-control"
-        required
-        #fullName="ngModel"
-        maxlength="50"
-        placeholder="Full Name"
-      />
-      <span
-        class="help-block"
-        *ngIf="!fullName.valid && fullName.touched"
-        >Invalid Name</span
+        name="completionDate"
+        [(ngModel)]="inputCompletionDate"
+        placeholder="Enter Completion Date"
+        #completionDate="ngModel"
+      /> -->
+      <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
+      
+      <mat-form-field appDateFormatMMYYYY
+        appearance="fill"
+        style="width: inherit"
       >
+        <mat-label>Month and Year</mat-label>
+        <input
+          matInput
+          [min]="minDate"
+          [max]="maxDate"
+          [matDatepicker]="dp"
+          [formControl]="inputCompletionDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="dp"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          #dp
+          startView="multi-year"
+          (yearSelected)="chosenYearHandler($event)"
+          (monthSelected)="chosenMonthHandler($event, dp)"
+          panelClass="example-month-picker"
+        >
+        </mat-datepicker>
+      </mat-form-field>
+
+      
     </div>
   </div>
-
   <div class="col-12 col-md-6">
     <div class="form-group">
-      <label class="">Date of Birth*</label>
-      <input
+       <label class="">Date of Birth (DD/MM/YY)* </label>
+       <mat-form-field
+        appearance="fill"
+        style="width: inherit"
+      >
+        <mat-label>Choose a date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="dobdp"
+          id="dob"
+          name="dob"
+          ngModel
+          #dob="ngModel"
+          dobValidator
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="dobdp"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          #dobdp
+          
+        >
+        </mat-datepicker>
+      </mat-form-field>
+      <span
+                            *ngIf="dob.errors?.invalidDob && dob.touched"
+                            class="help-block"
+                            >Invalid date of birth</span
+                          >
+    <!--  <input
         type="date"
         id="dob"
         name="dob"
@@ -33,13 +84,8 @@
         dobValidator
         required
         #dob="ngModel"
-      />
-      <span
-        *ngIf="dob.errors?.invalidDob && dob.touched"
-        class="help-block"
-        >Invalid date of birth</span
-      >
-      <!-- <input
+      /> -->
+            <!-- <input
         matInput
         [matDatepicker]="picker"
          type="date"
@@ -59,4 +105,7 @@
     </div>
   </div>
 
+  <button class="btn btn-primary" type="submit" >Submit</button>
+
+</form>
 </div>

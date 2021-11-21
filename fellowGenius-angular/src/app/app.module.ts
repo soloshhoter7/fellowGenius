@@ -109,6 +109,7 @@ import { PendingExpertProfileComponent } from './admin-portal/admin-home/pending
 import { DatePipe } from '@angular/common';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.component';
+import { DateFormatMMYYYYDirective } from './custom-directives/date-format-mmyyyy.directive';
 
 @NgModule({
   declarations: [
@@ -178,6 +179,7 @@ import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.comp
     PendingExpertProfileComponent,
     FeedbackComponent,
     ReferAndEarnComponent,
+    DateFormatMMYYYYDirective,
   ],
   imports: [
     NoopAnimationsModule,
