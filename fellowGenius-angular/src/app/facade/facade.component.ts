@@ -257,13 +257,14 @@ export class FacadeComponent implements OnInit {
     });
   }
   displaySelectedSubjects() {
+    console.log(this.selectedSubject);
     if (this.selectedSubject) {
       this.router.navigate(['search-results'], {
         queryParams: { subject: this.selectedSubject },
       });
     }
   }
-  displayFromTiles(category) {
+  displayFromTiles(category:any) {
     console.log(category)
     if (category!=null) {
       this.router.navigate(['search-results'], {

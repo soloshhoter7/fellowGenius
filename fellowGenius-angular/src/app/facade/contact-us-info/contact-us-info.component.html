@@ -41,22 +41,42 @@
 	                    <div class="sec_title text-center">
 	                        <h2>Send Us a Message</h2>
 	                    </div>
-                        <form>
+                        <form (ngSubmit)="formSubmit()">
                             <div class="row">
                                 <div class="col-12 col-lg-6">
                                     <div class="form-group">
-                                        <input type="text" name="name" class="form-control" placeholder="Your Name">
+                                        <input 
+                                        type="text" 
+                                        name="name"
+                                        [(ngModel)]="contact.name" 
+                                        class="form-control" 
+                                        placeholder="Your Name">
                                     </div>
                                     <div class="form-group">
-                                        <input type="email" name="email" class="form-control" placeholder="Your E-Mail">
+                                        <input 
+                                        type="email" 
+                                        name="email" 
+                                        class="form-control" 
+                                        [(ngModel)]="contact.email"
+                                        placeholder="Your E-Mail">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" name="phone" class="form-control" placeholder="Your Phone Number">
+                                        <input 
+                                        type="text" 
+                                        name="phone" 
+                                        class="form-control"
+                                        [(ngModel)]="contact.phone" 
+                                        placeholder="Your Phone Number">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-6">
                                     <div class="form-group">
-                                        <textarea class="form-control" cols="3" placeholder="Your Message"></textarea>
+                                        <textarea 
+                                        class="form-control" 
+                                        cols="3"
+                                        name="message"
+                                        [(ngModel)]="contact.message" 
+                                        placeholder="Your Message"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <input type="submit" name="Submit" class="submit_btn" value="Submit">

@@ -45,7 +45,7 @@
                   </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+             <!--   <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label class="">Date of Birth*</label>
                     <input
@@ -64,6 +64,42 @@
                       class="help-block"
                       >Invalid date of birth</span
                     >
+                  </div>
+                </div> -->
+
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <label class="">Date of Birth (DD/MM/YY)* </label>
+ <div style="display:flex">
+  <input
+    appDateFormatDdmmyyyy
+    class="form-control"
+    matInput
+    placeholder="Date of Birth"
+    [matDatepicker]="dobdp"
+    id="dob"
+    name="dob"
+    ngModel
+    [ngModel]="tutorProfile.dateOfBirth" 
+    #dob="ngModel"
+  />
+  <mat-datepicker-toggle
+    matSuffix
+    [for]="dobdp"
+  ></mat-datepicker-toggle>
+  <mat-datepicker
+    #dobdp
+    
+  >
+  </mat-datepicker>
+</div>
+<span
+                      *ngIf="dob.errors?.invalidDob && dob.touched"
+                      class="help-block"
+                      >Invalid date of birth</span
+                    >
+
+                   
                   </div>
                 </div>
 
@@ -375,6 +411,7 @@
                               ><img
                                 src="../assets/images/delete-repeater.svg"
                                 alt="delete"
+                                style="margin-bottom: 10px;"
                             /></a>
                           </div>
                         </div>
@@ -493,6 +530,7 @@
                               ><img
                                 src="../assets/images/delete-repeater.svg"
                                 alt="delete"
+                                style="margin-bottom: 10px;"
                             /></a>
                           </div>
                         </div>
@@ -524,7 +562,7 @@
                             />
                           </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 ">
                           <div class="form-group">
                             <label class="">Completion Date*</label>
                             <!-- <input
@@ -536,18 +574,22 @@
                               #completionDate="ngModel"
                             /> -->
                             <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
-                          
-                            <mat-form-field appearance="fill" style="width: inherit;" class="matField">
-                              <mat-label>Month and Year</mat-label>
-                              <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp" [formControl]="inputCompletionDate">
-                              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                              <div style="display:flex">
+                            
+                              <input
+                              appDateFormatMMYYYY
+                              class="form-control"
+                               matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp" [formControl]="inputCompletionDate">
+                              <mat-datepicker-toggle 
+                              
+                              matSuffix [for]="dp"></mat-datepicker-toggle>
                               <mat-datepicker #dp
                                               startView="multi-year"
                                               (yearSelected)="chosenYearHandler($event)"
                                               (monthSelected)="chosenMonthHandler($event, dp)"
                                               panelClass="example-month-picker">
                               </mat-datepicker>
-                            </mat-form-field>
+                            </div>
                          
                             <span
                               class="help-block"
@@ -711,6 +753,7 @@
                             ><img
                               src="../assets/images/delete-repeater.svg"
                               alt="delete"
+                              style="margin-bottom: 10px;"
                           /></a>
                         </div>
                       </div>

@@ -16,7 +16,7 @@ export class dobValidator implements Validator {
             return null
         }else{
             var dateOfBirth = control.value;
-            if(dateOfBirth !=null){
+            if(dateOfBirth !=undefined){
             console.log(dateOfBirth);
             var dobYear=dateOfBirth._i.year;
             // var studentDOB = dateOfBirth.split('-');

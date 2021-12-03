@@ -69,19 +69,7 @@ declare const window: any;
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
-  providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ],
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
   addExpertise = new expertise();

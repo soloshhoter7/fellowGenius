@@ -110,6 +110,7 @@ import { DatePipe } from '@angular/common';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.component';
 import { DateFormatMMYYYYDirective } from './custom-directives/date-format-mmyyyy.directive';
+import { DateFormatDdmmyyyyDirective } from './custom-directives/date-format-ddmmyyyy.directive';
 
 @NgModule({
   declarations: [
@@ -180,6 +181,7 @@ import { DateFormatMMYYYYDirective } from './custom-directives/date-format-mmyyy
     FeedbackComponent,
     ReferAndEarnComponent,
     DateFormatMMYYYYDirective,
+    DateFormatDdmmyyyyDirective,
   ],
   imports: [
     NoopAnimationsModule,

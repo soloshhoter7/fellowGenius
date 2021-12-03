@@ -273,6 +273,14 @@ export class TutorDashboardComponent implements OnInit {
    
   }
 
+  rescheduleSnackBar(){
+    this.snackBar.open(
+      "Cant reschedule as time limit to reschedule exceeded",
+      'close',
+      this.config
+    )
+  }
+
   //for denying bookings
   denyBooking(booking: bookingDetails) {
     booking.approvalStatus = 'Rejected';
