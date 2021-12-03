@@ -78,7 +78,7 @@
                   </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <!-- <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label class="form-control-placeholder" for="dob"
                       >Date of Birth<sup>*</sup></label
@@ -99,6 +99,42 @@
                       class="help-block"
                       >Invalid dob</span
                     >
+                  </div>
+                </div> -->
+
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <label class="">Date of Birth (DD/MM/YY)* </label>
+ <div style="display:flex">
+  <input
+    appDateFormatDdmmyyyy
+    class="form-control"
+    matInput
+    placeholder="Date of Birth"
+    [matDatepicker]="dobdp"
+    id="dob"
+    name="dob"
+    ngModel
+    [ngModel]="studentProfile.dateOfBirth"
+    #dob="ngModel" 
+  />
+  <mat-datepicker-toggle
+    matSuffix
+    [for]="dobdp"
+  ></mat-datepicker-toggle>
+  <mat-datepicker
+    #dobdp
+    
+  >
+  </mat-datepicker>
+</div>
+<span
+                      *ngIf="dob.errors?.invalidDob && dob.touched"
+                      class="help-block"
+                      >Invalid date of birth</span
+                    >
+
+                   
                   </div>
                 </div>
                 
@@ -458,6 +494,7 @@
                                 ><img
                                   src="../assets/images/delete-repeater.svg"
                                   alt="delete"
+                                  style="margin-bottom: 10px;"
                               /></a>
                             </div>
                           </div>

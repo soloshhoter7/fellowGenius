@@ -1,0 +1,30 @@
+@media only screen and (max-width: 481px){
+    .dashboard__Panel .profile_tabs ul.nav-tabs li+li {
+        margin-top: 0px !important;
+        margin-bottom:5px !important;
+    }
+}
+
+::ng-deep .mat-icon-button{
+    color: #8DC63F !important;
+}
+
+
+::ng-deep .mat-icon-button .mat-button-wrapper{
+    position: absolute;
+    top: 0;
+    right: 7px;
+} 
+
+::ng-deep .matMMYY .mat-icon-button .mat-button-wrapper{
+    color:white;
+    position: absolute;
+    top: 12px;
+    right: 8px;
+}
+
+@media only screen and (max-width: 1080px){
+    ::ng-deep .mat-icon-button .mat-button-wrapper{
+        color:white;       
+    } 
+}

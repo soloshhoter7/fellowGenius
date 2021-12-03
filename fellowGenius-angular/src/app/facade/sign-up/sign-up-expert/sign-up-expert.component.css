@@ -1,0 +1,29 @@
+/* @media only screen and (max-width: 767px){
+    .access_page.expert_signup .page_wrapper .access_field_box .access_header{
+        display:none !important;
+    }
+} */
+
+::ng-deep .mat-icon-button{
+    color: #8DC63F !important;
+}
+.dob-mat-datepicker{
+top: 35px;
+position: absolute;
+right: 5px;
+}
+::ng-deep .mat-icon-button .mat-button-wrapper{
+    position: absolute;
+    top: 0;
+    right: 7px;
+} 
+
+@media only screen and (max-width: 700px){
+    ::ng-deep .mat-icon-button .mat-button-wrapper{
+        color:#8DC63F;       
+    } 
+
+    .dob-mat-datepicker{
+        top:30px;
+    }
+}

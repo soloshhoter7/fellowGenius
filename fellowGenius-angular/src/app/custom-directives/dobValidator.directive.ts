@@ -16,8 +16,11 @@ export class dobValidator implements Validator {
             return null
         }else{
             var dateOfBirth = control.value;
-            var studentDOB = dateOfBirth.split('-');
-            var dobYear = parseInt(studentDOB[0]);
+            if(dateOfBirth !=undefined){
+            console.log(dateOfBirth);
+            var dobYear=dateOfBirth._i.year;
+            // var studentDOB = dateOfBirth.split('-');
+            // var dobYear = parseInt(studentDOB[0]);
             var maxYear = new Date().getFullYear() - 6;
             var minYear = new Date().getFullYear() - 70;
     
@@ -26,6 +29,9 @@ export class dobValidator implements Validator {
             }else{
                 return { 'invalidDob': true}
             }
+            }
+            
+            
         }
        
         
