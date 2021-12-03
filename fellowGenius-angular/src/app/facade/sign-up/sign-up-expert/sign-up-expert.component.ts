@@ -44,17 +44,6 @@ import { default as _rollupMoment, Moment } from 'moment';
 const moment = _rollupMoment || _moment;
 // See the Moment.js docs for the meaning of these formats:
 // https://momentjs.com/docs/#/displaying/format/
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 declare let $: any;
 declare const window: any;
 @Component({
@@ -62,19 +51,11 @@ declare const window: any;
   templateUrl: './sign-up-expert.component.html',
   styleUrls: ['./sign-up-expert.component.css'],
   providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ],
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
+  ]
 })
 export class SignUpExpertComponent implements OnInit {
+  dateOfBirth=new Date();
   choosePassword;
   newPassword;
   loginEmail;
@@ -321,6 +302,8 @@ export class SignUpExpertComponent implements OnInit {
     this.inputCompletionDate.setValue(ctrlValue);
     datepicker.close();
   }
+
+
   saveNewPassword() {
     this.isLoading = true;
     this.httpService
@@ -517,6 +500,13 @@ export class SignUpExpertComponent implements OnInit {
   getInstitute() {
     return this.educationQualifications[0].split(':')[0];
   }
+
+  formatDobFromMoment(momentDate: any){
+    // console.log(momentDate);
+     let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
+     return formattedDate;
+   }
+
   saveExpertBasicProfile(form: any) {
     if (this.expertises.length > 0) {
       if (this.errorText) {
@@ -530,7 +520,8 @@ export class SignUpExpertComponent implements OnInit {
           this.isLoading = true;
 
           this.tutorProfileDetails.contact = form.value.contact;
-          this.tutorProfileDetails.dateOfBirth = form.value.dob;
+          this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(form.value.dob);
+          console.log(this.tutorProfileDetails.dateOfBirth);
           this.tutorProfileDetails.email = form.value.email;
           this.tutorProfileDetails.educationalQualifications =
             this.educationQualifications;
@@ -577,7 +568,7 @@ export class SignUpExpertComponent implements OnInit {
                     this.verifyEmail = true;
                   });
               }
-            });
+            }); 
         } else {
           this.emptyProfilePicture = true;
           let el = document.getElementById('photoBox');
@@ -1045,6 +1036,7 @@ export class SignUpExpertComponent implements OnInit {
       this.inputInstitute
     ) {
       let dateString = this.getMonthYearString(this.inputCompletionDate);
+      console.log(dateString);
       if (this.invalidEducationDetails == true) {
         this.invalidEducationDetails = false;
       }

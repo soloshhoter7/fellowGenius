@@ -337,22 +337,39 @@
 
                       <div class="col-12 col-md-6">
                         <div class="form-group">
-                          <label class="">Date of Birth*</label>
-                          <input
-                            type="date"
-                            id="dob"
-                            name="dob"
-                            ngModel
-                            class="form-control"
-                            dobValidator
-                            required
-                            #dob="ngModel"
-                          />
-                          <span
+                          <label class="">Date of Birth (DD/MM/YY)* </label>
+       <div style="display:flex">
+        <input
+        appDateFormatDdmmyyyy
+          class="form-control"
+          matInput
+          placeholder="Date of Birth"
+          [matDatepicker]="dobdp"
+          id="dob"
+          name="dob"
+          ngModel
+          #dob="ngModel"
+          dobValidator
+          
+        />
+        <mat-datepicker-toggle
+          class="dob-mat-datepicker"
+          matSuffix
+          [for]="dobdp"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+
+          #dobdp
+          
+        >
+        </mat-datepicker>
+      </div>
+      <span
                             *ngIf="dob.errors?.invalidDob && dob.touched"
                             class="help-block"
                             >Invalid date of birth</span
                           >
+
                           <!-- <input
                             matInput
                             [matDatepicker]="picker"
@@ -1071,13 +1088,13 @@
                                 #completionDate="ngModel"
                               /> -->
                               <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
-
-                              <mat-form-field
-                                appearance="fill"
-                                style="width: inherit"
-                              >
-                                <mat-label>Month and Year</mat-label>
+                                <div style="display:flex">
+                              
+                               
                                 <input
+                                  appDateFormatMMYYYY
+                                  class="form-control"
+                                  placeholder="Choose Month and Year"
                                   matInput
                                   [min]="minDate"
                                   [max]="maxDate"
@@ -1085,6 +1102,7 @@
                                   [formControl]="inputCompletionDate"
                                 />
                                 <mat-datepicker-toggle
+                                class="dob-mat-datepicker"
                                   matSuffix
                                   [for]="dp"
                                 ></mat-datepicker-toggle>
@@ -1098,13 +1116,15 @@
                                   panelClass="example-month-picker"
                                 >
                                 </mat-datepicker>
-                              </mat-form-field>
+                              
 
                               <span
                                 class="help-block"
                                 *ngIf="invalidCompletionDate"
                                 >Invalid Completion Date</span
                               >
+
+                              </div>
                             </div>
                           </div>
                           <div

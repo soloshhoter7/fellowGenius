@@ -160,7 +160,7 @@
               style="width: 100%"
               class="button proceed_btn"
               (click)="onBooking()"
-              [disabled]="!bookingDetails.subject"
+              [disabled]="!bookingDetails.subject||noSchedule"
             >
               Proceed to Payment (₹{{ payableAmount }})
             </button>

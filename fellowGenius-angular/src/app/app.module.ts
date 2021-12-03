@@ -1,7 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { appRoutes, AppRoutingModule, routerOptions } from './app-routing.module';
+import {
+  appRoutes,
+  AppRoutingModule,
+  routerOptions,
+} from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { NgxAgoraModule } from 'ngx-agora';
@@ -72,9 +76,9 @@ import { LoginDialogComponent } from './expert-profile/login-dialog/login-dialog
 import { AdvertisementBannerComponent } from './advertisement-banner/advertisement-banner.component';
 import { FiltersDialogComponent } from './search-results/filters-dialog/filters-dialog.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { TimeMedian } from './pipes/timeMedian';
-import { TimeConverter} from './pipes/timeConverter';
+import { TimeConverter } from './pipes/timeConverter';
 import { AboutUsComponent } from './facade/about-us/about-us.component';
 import { FaqComponent } from './facade/faq/faq.component';
 import { HowItWorksComponent } from './facade/how-it-works/how-it-works.component';
@@ -97,9 +101,9 @@ import { SignUpExpertComponent } from './facade/sign-up/sign-up-expert/sign-up-e
 import { VerifyExpertsComponent } from './admin-portal/admin-home/verify-experts/verify-experts.component';
 import { LearnerSessionsComponent } from './home/learner-sessions/learner-sessions.component';
 import { ExpertSessionsComponent } from './home/expert-sessions/expert-sessions.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatMomentDateModule } from "@angular/material-moment-adapter";
-import {MatNativeDateModule} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatNativeDateModule } from '@angular/material/core';
 import { RegisterDiaologComponent } from './facade/register-diaolog/register-diaolog.component';
 import { Angular2CsvModule } from 'angular2-csv';
 import { AdminLoginComponent } from './admin-portal/admin-login/admin-login.component';
@@ -110,6 +114,8 @@ import { DatePipe } from '@angular/common';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.component';
 import { MediaAccessDialogComponent } from './home/meeting/media-access-dialog/media-access-dialog.component';
+import { DateFormatMMYYYYDirective } from './custom-directives/date-format-mmyyyy.directive';
+import { DateFormatDdmmyyyyDirective } from './custom-directives/date-format-ddmmyyyy.directive';
 
 @NgModule({
   declarations: [
@@ -180,6 +186,8 @@ import { MediaAccessDialogComponent } from './home/meeting/media-access-dialog/m
     FeedbackComponent,
     ReferAndEarnComponent,
     MediaAccessDialogComponent,
+    DateFormatMMYYYYDirective,
+    DateFormatDdmmyyyyDirective,
   ],
   imports: [
     NoopAnimationsModule,
@@ -210,9 +218,10 @@ import { MediaAccessDialogComponent } from './home/meeting/media-access-dialog/m
     MatInputModule,
     GoogleChartsModule,
     MatDatepickerModule,
-    MatNativeDateModule, MatMomentDateModule,
-    RouterModule.forRoot(appRoutes,routerOptions),
-    Angular2CsvModule
+    MatNativeDateModule,
+    MatMomentDateModule,
+    RouterModule.forRoot(appRoutes, routerOptions),
+    Angular2CsvModule,
   ],
   entryComponents: [WelcomeComponent],
   providers: [
@@ -228,7 +237,7 @@ import { MediaAccessDialogComponent } from './home/meeting/media-access-dialog/m
     WorkWeekService,
     MonthService,
     MonthAgendaService,
-    DatePipe
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })
