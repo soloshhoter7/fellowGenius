@@ -1,5 +1,72 @@
 <body style="max-width: 100vw; max-height: 100vh">
-  <div class="chat__page" [class.hideBlock]="isInMeeting">
+  <div
+    class="modal fade"
+    id="device_info_modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myLargeModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <!-- Modal Content: begins -->
+      <div class="modal-content">
+        <button
+          type="button"
+          id="closePopUpButton"
+          class="dialog-close-button close"
+          style="border: none"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../assets/images/close-modal.svg" alt="#" />
+        </button>
+        <!-- Modal Header -->
+        <div class="modal-header">Device Info</div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <div class="body-message">
+            <div>
+              Media Access Allowed : {{ mediaAccessAllowed }} <br />
+              Camera Access Allowed : {{ camAccessAllowed }} <br />Mic Access
+              Allowed : {{ micAccessAllowed }}
+              <br />
+              Stream playing :{{ isLocalStreamPlaying }}<br />
+              Mic Stream Playing : {{ isLocalMicStreamPlaying }}<br />
+              Cam Stream Published : {{ isLocalCamStreamPublished }}<br />
+              Mic Stream Published : {{ isLocalMicStreamPublished }}
+            </div>
+
+            <div *ngIf="mediaAccessAllowed == true">
+              <hr />
+              Video Recording Device :
+              <span *ngIf="camAccessAllowed">{{ activeVideoDeviceName }}</span>
+              <span *ngIf="!camAccessAllowed">Camera is off</span> <br />
+              Audio Output Device : {{ activeAudioOutputDeviceName }}<br />
+              Audio Input Device :
+              <span *ngIf="micAccessAllowed">{{
+                activeAudioInputDeviceName
+              }}</span>
+              <span *ngIf="!micAccessAllowed">Microphone is off</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal Content: ends -->
+    </div>
+  </div>
+  <div
+    *ngIf="isLoading"
+    style="
+      text-align: center;
+      margin-top: 20%;
+      margin-left: auto;
+      margin-right: auto;
+    "
+  >
+    <app-loading></app-loading>
+    <p style="margin: 1rem; font-size: large">Joining the meeting ...</p>
+  </div>
+  <div class="chat__page" [class.hideBlock]="isInMeeting || isLoading==true">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 mx-auto">
@@ -33,7 +100,24 @@
                   <div class="col-md-7">
                     <div class="pre-meeting-local">
                       <div [id]="localCallId1" class="local"></div>
-                      <div class="shadow-top"></div>
+                      <!-- id for pre meeting mic -->
+                      <div
+                        [id]="localCallId2"
+                        class="local"
+                        style="display: none"
+                      ></div>
+                      <div class="shadow-top">
+                        <button
+                          href="#device_info_modal"
+                          data-toggle="modal"
+                          class="device-info"
+                        >
+                          <img
+                            src="../../../assets/icons/info_icon.svg"
+                            alt=""
+                          />
+                        </button>
+                      </div>
                       <div
                         style="
                           position: absolute;
@@ -41,7 +125,10 @@
                           color: white;
                           width: 100%;
                         "
-                        *ngIf="muteHostVideoStatus == 'unmute host video'"
+                        *ngIf="
+                          muteHostVideoStatus == 'unmute host video' ||
+                          camAccessAllowed == false
+                        "
                       >
                         <p style="font-size: 22px; text-align: center">
                           Camera is off
@@ -78,8 +165,30 @@
                         "
                       >
                         <div style="width: max-content; margin: auto">
+                          <div
+                            class="microphone-playing"
+                            *ngIf="micAccessAllowed == true"
+                          >
+                            <img
+                              *ngIf="audioLevel < 0.1"
+                              src="../../../assets/icons/microphone.png"
+                              class="microphone-playing-img"
+                              alt=""
+                            />
+                            <img
+                              *ngIf="audioLevel > 0.1"
+                              src="../../../assets/icons/microphone_playing.png"
+                              class="microphone-playing-img"
+                              alt=""
+                            />
+                          </div>
+
                           <button
-                            class="pre-meeting-control-buttons btn pre-meeting-mic"
+                            class="
+                              pre-meeting-control-buttons
+                              btn
+                              pre-meeting-mic
+                            "
                             (click)="preMeetingMuteAudio()"
                           >
                             <span
@@ -95,7 +204,9 @@
                           </button>
                           <button
                             class="
-                              pre-meeting-control-buttons btn pre-meeting-video
+                              pre-meeting-control-buttons
+                              btn
+                              pre-meeting-video
                             "
                             style="margin-left: 2vw"
                             (click)="preMeetingMuteVideo()"
@@ -124,7 +235,12 @@
                         class="button jn_BTN"
                         style="border-radius: 10%"
                         (click)="preMeetingJoin()"
-                        [disabled]="meetingTimeInvalid"
+                        [disabled]="
+                          meetingTimeInvalid ||
+                          !mediaAccessAllowed ||
+                          !camAccessAllowed ||
+                          !micAccessAllowed
+                        "
                       >
                         Join
                       </button>
@@ -138,7 +254,14 @@
                           <span><strong>Error</strong>Unable to join</span>
                         </div>
                       </div>
-                      <div class="error_message" *ngIf="meetingTimeInvalid">
+                      <div
+                        class="error_message"
+                        *ngIf="
+                          !mediaAccessAllowed ||
+                          !camAccessAllowed ||
+                          !micAccessAllowed
+                        "
+                      >
                         <div class="msg_wrap">
                           <img
                             src="../../../assets/images/required-error.svg"
@@ -146,7 +269,16 @@
                             class="erro_icon"
                           />
                           <span
-                            ><strong>Error</strong>{{ meetingTimeError }}</span
+                            ><strong>Error</strong>Media Access Not
+                            Allowed</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="error_message" *ngIf="meetingTimeInvalid">
+                        <div class="msg_wrap" style="padding-left: 14px">
+                          <span
+                            ><strong>Info</strong>{{ meetingTimeError }}</span
                           >
                         </div>
                       </div>
@@ -160,12 +292,17 @@
       </div>
     </div>
   </div>
-  <div class="meeting-container" [class.hideBlock]="!isInMeeting">
+  <div class="meeting-container" [class.hideBlock]="!isInMeeting || isLoading==true">
     <div id="mySidenav" class="sidenav boxShadow" style="position: absolute">
       <div class="chat__message">
         <div class="chat__title" style="margin-bottom: 20px">
           <h4>Chat with {{ peerName }}</h4>
-          <button type="button btn" style="border:none" class="close_btn" (click)="closeSideNav()">
+          <button
+            type="button btn"
+            style="border: none"
+            class="close_btn"
+            (click)="closeSideNav()"
+          >
             <img src="../../../assets/images/close-chat.svg" alt="#" />
           </button>
 
@@ -173,14 +310,20 @@
             ><span>{{ timeLeft | formatTime }}</span></span
           > -->
         </div>
-        <div class="chat__wrapper" #chatWindow #chatWindow
-        [scrollTop]="chatWindow.scrollHeight"
-        style="position: relative">
+        <div
+          class="chat__wrapper"
+          #chatWindow
+          #chatWindow
+          [scrollTop]="chatWindow.scrollHeight"
+          style="position: relative"
+        >
           <div class="chat__item" *ngFor="let message of meetingChat">
-              
-              <div class="chat__msg"><span>{{message.senderName}}</span>{{message.messageText}}</div>
+            <div class="chat__msg">
+              <span>{{ message.senderName }}</span
+              >{{ message.messageText }}
+            </div>
           </div>
-      </div>
+        </div>
         <!-- <div *ngFor="let message of meetingChat">
           <div class="incoming_msg" *ngIf="message.senderId != senderId">
             <div class="received_msg">
@@ -202,7 +345,7 @@
                   </div>
                   <a
                     [href]="message.dataSource"
-                    [download]="message.fileName"
+                    [download]="message.fileNameF"
                     class="downloadButton"
                     ><img
                       src="../../../assets/icons/download_black.svg"
@@ -242,14 +385,21 @@
               [(ngModel)]="messageText"
               placeholder="Type your Message"
             />
-            <button type="button" style="border:none" (click)="sendChatMessage()">
+            <button
+              type="button"
+              style="border: none"
+              (click)="sendChatMessage()"
+            >
               <img src="../../../assets/images/send-message.svg" alt="#" />
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div class="chat__page meeting-page" style="height: 100vh; position: relative">
+    <div
+      class="chat__page meeting-page"
+      style="height: 100vh; position: relative"
+    >
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
@@ -266,8 +416,15 @@
                     ><h5>{{ bookingDetails.domain }} Meeting</h5>
                     <small>{{ bookingDetails.subject }}</small></span
                   >
-                  <span class="duration-container" *ngIf="remoteJoined"
-                    ><span>{{ timeLeft | formatTime }}</span></span
+                  <!-- <span class="duration-container" *ngIf="remoteJoined"
+                    ><span>{{ timeDifference | formatTime }}</span></span
+                  > -->
+                  <span class="duration-container"
+                    ><span
+                      >{{ hoursToDday }}:{{ minutesToDday }}:{{
+                        secondsToDday
+                      }}</span
+                    ></span
                   >
                   <!-- <span style="float: right;margin-right: 20px;"><h4>00:00</h4></span> -->
                 </div>
@@ -309,6 +466,11 @@
                       [id]="callId"
                       class="remote-video-play"
                     ></div>
+                    <div
+                      *ngFor="let callId of micRemoteCalls"
+                      [id]="callId"
+                      style="display: none;"
+                    ></div>
                   </div>
                 </div>
 
@@ -319,6 +481,7 @@
                   </span>
 
                   <div [id]="localCallId" class="local-video-play"></div>
+                  <div [id]="localCallMicId" style="display: none"></div>
                 </div>
               </div>
 
@@ -334,7 +497,9 @@
                       <span
                         class=""
                         *ngIf="muteHostVideoStatus == 'unmute host video'"
-                        ><img src="../../../assets/images/camera mute white.svg" alt="#"
+                        ><img
+                          src="../../../assets/images/camera mute white.svg"
+                          alt="#"
                       /></span></button
                     ><span>Cam</span>
                   </li>
@@ -354,9 +519,10 @@
                       (click)="screenShare()"
                       [disabled]="screenRemoteCalls.length != 0"
                     >
-                      <span
-                        *ngIf="hostScreenShareStatus == true"
-                        ><img src="../../../assets/images/screen sharing mute white.svg" alt="#"
+                      <span *ngIf="hostScreenShareStatus == true"
+                        ><img
+                          src="../../../assets/images/screen sharing mute white.svg"
+                          alt="#"
                         />
                       </span>
                       <span *ngIf="hostScreenShareStatus == false"
@@ -371,17 +537,17 @@
                         ><img src="../../assets/images/chat.svg" alt="#"
                       /></span>
                       <span
-              style="
-                background-color: #32cd32;
-                width: 10px;
-                height: 10px;
-                border-radius: 50%;
-                position: absolute;
-                top: -5px;
-                right: -5px;
-              "
-              *ngIf="newMessageNotification"
-            ></span></button
+                        style="
+                          background-color: #32cd32;
+                          width: 10px;
+                          height: 10px;
+                          border-radius: 50%;
+                          position: absolute;
+                          top: -5px;
+                          right: -5px;
+                        "
+                        *ngIf="newMessageNotification"
+                      ></span></button
                     ><span>Chat</span>
                   </li>
                   <li>
@@ -393,6 +559,18 @@
                         ><img src="../../assets/images/leave-chat.svg" alt="#"
                       /></span></button
                     ><span>Leave</span>
+                  </li>
+                  <li>
+                    <button
+                          href="#device_info_modal"
+                          data-toggle="modal"
+                          style="background-color: black;"
+                        >
+                          <img
+                            src="../../../assets/icons/info_icon.svg"
+                            alt=""
+                          />
+                        </button>
                   </li>
                 </ul>
               </div>

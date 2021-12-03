@@ -27,6 +27,40 @@
   height: 100%;
   margin:0;
 }
+.microphone-playing{
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  left: 16px;
+  bottom: 16px;
+  background-color: #8DC63F;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.microphone-playing-img{
+  height: 30px;
+  width: 30px;
+}
+.device-info{
+  position: absolute;
+    right: 0;
+    top: 10px;
+  
+    background: none;
+    border: none;
+    outline: none;
+}
+.device-info img{
+  width: 35px;
+  height: 35px;
+}
+.dialog-close-button{
+  right: 10px !important;
+  top: 0px !important;
+  width: 18px !important;
+}
 .pre-meeting-local{
   position: relative;
   width: 100%;
@@ -265,7 +299,7 @@
 .duration-container{
   position: absolute;
     right: 15px;
-    top: 10px;
+    bottom: 10px;
     font-size: x-large;
     font-weight: 500;
 }
@@ -483,6 +517,44 @@
   display: none;
 }
 @media only screen and (max-width: 767px){
+  .device-info{
+    right: -10px;
+    top: 1px;
+  }
+  .device-info img{
+    width: 30px;
+    height: 30px;
+  }
+  .microphone-playing {
+    height: 30px;
+    width: 30px;
+    left: 10px;
+    bottom: 10px;
+  }
+  .microphone-playing-img {
+    height: 15px;
+    width: 15px;
+  }
+  .account-info-block{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: small;
+  }
+  .pre-meeting-container{
+    padding-top: 5vh !important;
+  }
+  h5{
+    font-size: small;
+  }
+  .pre-meeting-info{
+    margin-top: 15px;
+  }
+  .duration-container{
+    right: 8px;
+    bottom: 5px;
+    font-size: medium;
+  }
   .chat__thumb{
       width: 100%;
   }
