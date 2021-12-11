@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { ɵZoneScheduler } from '@angular/fire';
 import { HomeComponent } from '../home.component';
 import { Category } from 'src/app/model/category';
+import moment from 'moment';
 
 @Component({
   selector: 'app-student-profile',
@@ -28,9 +29,9 @@ export class StudentProfileComponent implements OnInit {
     private snackBar: MatSnackBar,
     private firebaseStorage: AngularFireStorage,
     private httpService: HttpService,
-    private router:Router,
-    private zone:NgZone,
-    private home:HomeComponent
+    private router: Router,
+    private zone: NgZone,
+    private home: HomeComponent
   ) {}
   isLoading3: boolean = false;
   profilePicUploadStatus: boolean;
@@ -45,7 +46,7 @@ export class StudentProfileComponent implements OnInit {
   options: string[] = [];
   filteredOptions: Observable<string[]>;
   // learningAreas = new Array(3);
-  subCategories:Category[]=[];
+  subCategories: Category[] = [];
   index: Number;
   learningArea;
   learningAreas: string[] = [];
@@ -60,9 +61,9 @@ export class StudentProfileComponent implements OnInit {
     verticalPosition: 'top',
     panelClass: ['snackbar'],
   };
-  invalidPicture:boolean = false;
-  pictureInfo:boolean = true;
-  emptyProfilePicture
+  invalidPicture: boolean = false;
+  pictureInfo: boolean = true;
+  emptyProfilePicture;
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -89,16 +90,16 @@ export class StudentProfileComponent implements OnInit {
     );
   }
 
-  fillOptions(){
-    this.httpService.getAllSubCategories().subscribe((res)=>{
-            this.subCategories = res;
-            if(this.subCategories.length>0){
-              for(var i=0;i<this.subCategories.length;i++){
-                this.options.push(this.subCategories[i].subCategory);
-              }
-            }
-          })
+  fillOptions() {
+    this.httpService.getAllSubCategories().subscribe((res) => {
+      this.subCategories = res;
+      if (this.subCategories.length > 0) {
+        for (var i = 0; i < this.subCategories.length; i++) {
+          this.options.push(this.subCategories[i].subCategory);
+        }
       }
+    });
+  }
   cancelForm() {
     location.reload();
   }
@@ -134,12 +135,15 @@ export class StudentProfileComponent implements OnInit {
   //     this.openNav();
   //   }
   // }
-  
-
+  formatDobFromMoment(momentDate: any) {
+    // console.log(momentDate);
+    let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
+    return formattedDate;
+  }
   saveStudentProfile(form: NgForm) {
-
     this.studentProfile.contact = form.value.contact;
-    this.studentProfile.dateOfBirth = form.value.dob;
+    console.log(this.formatDobFromMoment(form.value.dob));
+    this.studentProfile.dateOfBirth = this.formatDobFromMoment(form.value.dob);
     this.studentProfile.fullName = form.value.fullName;
     this.studentProfile.linkedInProfile = form.value.linkedInProfile;
     this.studentProfile.learningAreas = this.learningAreas;
@@ -148,23 +152,21 @@ export class StudentProfileComponent implements OnInit {
     this.studentProfile.highestQualification = form.value.highestQualification;
     this.studentProfile.currentOrganisation = form.value.currentOrganisation;
     this.studentProfile.currentDesignation = form.value.currentDesignation;
-    this.studentProfile.upiID = form.value.upiID
+    this.studentProfile.upiID = form.value.upiID;
     if (this.learningAreasDuplicacyCheck(this.learningAreas)) {
       this.httpService
         .updateStudentProfile(this.studentProfile)
         .subscribe((res) => {
           this.studentService.setStudentProfileDetails(this.studentProfile);
           this.home.calculateStudentProfilePercentage();
-            this.zone.run(()=>{
-              this.snackBar.open(
-                'information saved successfully !',
-                'close',
-                this.config
-              );
-              // this.router.navigate(['/home/student-dashboard']);
-             
-            })
-         
+          this.zone.run(() => {
+            this.snackBar.open(
+              'information saved successfully !',
+              'close',
+              this.config
+            );
+            // this.router.navigate(['/home/student-dashboard']);
+          });
         });
     } else {
     }
@@ -185,35 +187,35 @@ export class StudentProfileComponent implements OnInit {
     return fields.includes(item);
   }
   profilePictureChange(event) {
- // this.profilePictureDisabled = true;
- this.uploadedProfilePicture = <File>event.target.files[0];
- this.isLoading3 = true;
+    // this.profilePictureDisabled = true;
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    this.isLoading3 = true;
 
- // this.profilePictureDisabled = true;
- this.uploadedProfilePicture = <File>event.target.files[0];
- const fileSize = Math.round((this.uploadedProfilePicture.size / 1024));
- const fileType = this.uploadedProfilePicture.type;
+    // this.profilePictureDisabled = true;
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    const fileSize = Math.round(this.uploadedProfilePicture.size / 1024);
+    const fileType = this.uploadedProfilePicture.type;
 
- if(fileSize>3072||!fileType.includes('image')){
-   this.invalidPicture=true;
-   this.isLoading3=false;
- }else{
-   this.invalidPicture=false;
-   const reader = new FileReader();
- var imageSrc;
- // var Image: File = evt.target.files[0];
+    if (fileSize > 3072 || !fileType.includes('image')) {
+      this.invalidPicture = true;
+      this.isLoading3 = false;
+    } else {
+      this.invalidPicture = false;
+      const reader = new FileReader();
+      var imageSrc;
+      // var Image: File = evt.target.files[0];
 
- if (event.target.files && event.target.files.length) {
-   this.uploadedProfilePicture = event.target.files[0];
-   reader.readAsDataURL(this.uploadedProfilePicture);
-   reader.onload = () => {
-     imageSrc = reader.result as string;
-     this.openDialog(imageSrc);
-   };
- }
- }
- 
- // this.uploadProfilePicture();
+      if (event.target.files && event.target.files.length) {
+        this.uploadedProfilePicture = event.target.files[0];
+        reader.readAsDataURL(this.uploadedProfilePicture);
+        reader.onload = () => {
+          imageSrc = reader.result as string;
+          this.openDialog(imageSrc);
+        };
+      }
+    }
+
+    // this.uploadProfilePicture();
   }
   openDialog(imageSrc) {
     const dialogConfig = new MatDialogConfig();

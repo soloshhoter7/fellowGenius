@@ -56,6 +56,7 @@ import * as moment from 'moment';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MediaAccessDialogComponent } from './media-access-dialog/media-access-dialog.component';
+import { setTime } from '@syncfusion/ej2-schedule';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -91,6 +92,9 @@ export class MeetingComponent implements OnInit {
   @Input() public height = 650;
 
   private cx: CanvasRenderingContext2D;
+  defaultAudioOutputDeviceId;
+  defaultAudioOutputDeviceName;
+  inputAudioOutputDeviceId;
   isLoading = false;
   isMobile = false;
   mediaAccessPopUpDialogRef;
@@ -133,6 +137,7 @@ export class MeetingComponent implements OnInit {
   localStreams: string[] = [];
   localMicStreams: string[] = [];
   localScreenStreams: string[] = [];
+  remoteMicStreams: Stream[] = [];
   remoteVideoMute = false;
   muteHostVideoStatus = 'mute host video';
   hostVideo = true;
@@ -203,12 +208,29 @@ export class MeetingComponent implements OnInit {
   activeAudioInputDeviceName = 'Not Defined';
   activeVideoDeviceId;
   activeVideoDeviceName = 'Not Defined';
+  private subscription1: Subscription;
+  private endDate: Date;
+  public dateNow = new Date();
+  public dDay = new Date('Jan 01 2022 00:00:00');
+  milliSecondsInASecond = 1000;
+  hoursInADay = 24;
+  minutesInAnHour = 60;
+  SecondsInAMinute = 60;
+  public timeDifference = 0;
+  public secondsToDday = '00';
+  public minutesToDday = '00';
+  public hoursToDday = '00';
+  // public daysToDday;
+  audioLevel = 0;
+  remoteAudioLevel = 0;
+  localAudioLevelSubscription: Subscription;
+  remoteAudioLevelSubscription: Subscription;
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
   }
-  audioLevel = 0;
+
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
     if (this.meetingState == 'pre-meeting') {
@@ -223,10 +245,12 @@ export class MeetingComponent implements OnInit {
   }
 
   ngOnInit() {
+    //calculating device height and width
     this.width = (window.screen.width / 100) * 97;
     this.height = (window.screen.height / 100) * 80;
     this.screenWidth = window.screen.width;
     this.screenHeight = window.screen.height;
+    //determining if device is mobile
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
@@ -234,18 +258,19 @@ export class MeetingComponent implements OnInit {
     ) {
       this.isMobile = true;
     }
+    //extracting meeting id from route
     this.activatedRoute.params.subscribe((params) => {
       let id = params['id'];
       this.meetingId = id;
       if (this.meetingId != '' || this.meetingId != null) {
-        console.log('meeting is not null');
+        //fetching booking details from meeting id
         this.httpService
           .fetchBookingDetailsWithMeetingId(id)
           .subscribe((res) => {
             if (res != null) {
               console.log(res);
               if (this.authService.getIsAuth() == false) {
-                console.log('user is not signed in');
+                console.log('user is not authenticated !');
                 console.log(this.router.url);
                 if (this.router.url != null) {
                   this.cookieService.set('prev', this.router.url);
@@ -278,20 +303,6 @@ export class MeetingComponent implements OnInit {
       }
     });
   }
-  private subscription1: Subscription;
-  private endDate: Date;
-  public dateNow = new Date();
-  public dDay = new Date('Jan 01 2022 00:00:00');
-  milliSecondsInASecond = 1000;
-  hoursInADay = 24;
-  minutesInAnHour = 60;
-  SecondsInAMinute = 60;
-
-  public timeDifference = 0;
-  public secondsToDday = '00';
-  public minutesToDday = '00';
-  public hoursToDday = '00';
-  // public daysToDday;
 
   ngOnDestroy() {
     this.endCall();
@@ -299,7 +310,7 @@ export class MeetingComponent implements OnInit {
 
   initiateAfterLogin(res) {
     this.meetingService.setBooking(res);
-    this.bookingDetails = res;
+    // this.bookingDetails = res;
     this.bookingDetails = this.meetingService.getBooking();
     this.domain = this.bookingDetails.domain;
     this.topic = this.bookingDetails.subject;
@@ -310,7 +321,7 @@ export class MeetingComponent implements OnInit {
       this.meetingTimeError = 'Meeting has expired !';
     } else {
       if (this.loginService.getLoginType() == 'Learner') {
-        console.log('its learnerrrrrrrrrrrrrrrr');
+        console.log('USER IS LEARNER !');
         if (
           this.studentService.getStudentProfileDetails().profilePictureUrl !=
           null
@@ -323,9 +334,10 @@ export class MeetingComponent implements OnInit {
         this.userEmail = this.studentService.getStudentProfileDetails().email;
         this.userId = this.studentService.getStudentProfileDetails().sid;
         this.remoteUserId = this.bookingDetails.tutorId;
+        //if user refreshes the page update then update member leaving time
         this.meetingMemberLeft(this.meetingId, this.userId);
       } else if (this.loginService.getLoginType() == 'Expert') {
-        console.log('its experttttttttttttttttttt');
+        console.log('USER IS EXPERT');
         if (this.tutorService.getTutorDetials().profilePictureUrl != null) {
           this.profilePictureUrl =
             this.tutorService.getTutorDetials().profilePictureUrl;
@@ -337,7 +349,6 @@ export class MeetingComponent implements OnInit {
         this.meetingMemberLeft(this.meetingId, this.userId);
       }
       console.log(this.userName, this.userEmail, this.userId);
-
       if (
         (this.loginService.getLoginType() == 'Expert' &&
           this.bookingDetails.approvalStatus == 'Accepted') ||
@@ -365,11 +376,11 @@ export class MeetingComponent implements OnInit {
         // creating user client
         this.client = this.ngxAgoraService.createClient({
           mode: 'rtc',
-          codec: 'h264',
+          codec: 'vp8',
         });
         this.micClient = this.ngxAgoraService.createClient({
           mode: 'rtc',
-          codec: 'h264',
+          codec: 'vp8',
         });
         //assigning client handlers
         this.assignClientHandlers(this);
@@ -385,36 +396,50 @@ export class MeetingComponent implements OnInit {
     }
   }
   initialisePreMeetingStreams() {
-    //creating pre local stream(cam) and pre local mic stream
-    this.preLocalStream = this.ngxAgoraService.createStream({
-      streamID: this.uid + 3,
-      audio: false,
-      video: true,
-      screen: false,
-    });
-
-    this.preLocalMicStream = this.ngxAgoraService.createStream({
-      streamID: this.uid + 4,
-      audio: true,
-      video: false,
-      screen: false,
-    });
-
-    //initiating and playing pre meeting streams
-    this.initPreMeetingLocalStream(() => {
-      console.log('PRE MEETING CAM STREAM PLAYING');
-    });
-    this.initPreMeetingMicLocalStream(() => {
-      console.log('PRE MEETING MIC STREAM PLAYING');
-    });
-    //assigning pre meeting stream handlers
-    this.assignLocalStreamHandlers(this.preLocalStream);
-    this.assignPreLocalMicStreamHandlers(this.preLocalMicStream);
-    this.checkIfNoDevicesAllowed();
-    if (this.mediaAccessAllowed == true) {
-      this.getDevicesInfo();
-      this.checkBluetoothDevices();
+    if (this.preLocalStream != null) {
+      this.preLocalStream.stop();
+      this.preLocalMicStream.close();
     }
+    if (this.preLocalMicStream != null) {
+      this.preLocalMicStream.stop();
+      this.preLocalMicStream.close();
+    }
+    this.getDevicesInfo();
+    setTimeout(() => {
+      //creating pre local stream(cam) and pre local mic stream
+      this.preLocalStream = this.ngxAgoraService.createStream({
+        streamID: this.uid + 3,
+        audio: false,
+        video: true,
+        screen: false,
+      });
+      console.log(
+        this.activeAudioInputDeviceId,
+        this.activeAudioInputDeviceName
+      );
+      this.preLocalMicStream = this.ngxAgoraService.createStream({
+        streamID: this.uid + 4,
+        audio: true,
+        video: false,
+        screen: false,
+        microphoneId: this.activeAudioInputDeviceId,
+      });
+
+      //initiating and playing pre meeting streams
+      this.initPreMeetingLocalStream(() => {
+        console.log('PRE MEETING CAM STREAM PLAYING');
+      });
+      this.initPreMeetingMicLocalStream(() => {
+        console.log('PRE MEETING MIC STREAM PLAYING');
+      });
+      //assigning pre meeting stream handlers
+      this.assignLocalStreamHandlers(this.preLocalStream);
+      this.assignPreLocalMicStreamHandlers(this.preLocalMicStream);
+      this.checkIfNoDevicesAllowed();
+      if (this.mediaAccessAllowed == true) {
+        this.getDevicesInfo();
+      }
+    }, 1000);
   }
 
   preMeetingJoin() {
@@ -426,6 +451,7 @@ export class MeetingComponent implements OnInit {
       ) {
         this.invalidUser = false;
         console.log('valid user');
+        //------------------------------redundant code--------------------------------
         this.uid = this.userId;
         console.log('uid==>' + this.uid);
         this.senderName = this.userName;
@@ -441,6 +467,7 @@ export class MeetingComponent implements OnInit {
         } else {
           this.peerName = this.bookingDetails.tutorName;
         }
+        //------------------------------ / redundant code ----------------------------
         this.meetingState = 'in-meeting';
         this.connectToMeetingWebSocket(this.meeting.roomName);
         this.isPreMeeting = false;
@@ -450,8 +477,10 @@ export class MeetingComponent implements OnInit {
         this.preLocalStream.close();
         this.preLocalMicStream.stop();
         this.preLocalMicStream.close();
+        //------------------------------redundant code--------------------------------
         this.meeting = this.meetingService.getMeeting();
         console.log('meeting', this.meeting);
+        //------------------------------ / redundant code ----------------------------
         this.httpService
           .meetingMemberJoined(this.meetingId, this.userId)
           .subscribe((res) => {
@@ -476,12 +505,14 @@ export class MeetingComponent implements OnInit {
     ) {
       document.getElementById('meeting-body').classList.add('no-remote');
     }
-    // this.limitStream();
+
+    //to display and update timer
     this.subscription1 = interval(1000).subscribe((x) => {
       this.limitStream2();
     });
-    this.isLoading = true;
+
     this.mid = this.uid + 10;
+
     this.getDevicesInfo();
 
     this.join(() => {
@@ -512,7 +543,7 @@ export class MeetingComponent implements OnInit {
       this.startMicStream();
     }
   }
-
+  //----------------------------- Stream start and stop functions---------------------------------------------
   startLocalStream() {
     console.log('starting local stream!');
     if (this.localStreams.length > 0) {
@@ -536,32 +567,39 @@ export class MeetingComponent implements OnInit {
   startMicStream() {
     if (this.localMicStreams.length > 0) {
       this.removeLocalMicStream();
-    }
-    console.log('device id:' + this.activeAudioInputDeviceId);
-    this.localMicStream = this.ngxAgoraService.createStream({
-      streamID: this.mid,
-      audio: true,
-      video: false,
-      screen: false,
-    });
-    this.localMicStream.setAudioProfile('speech_standard');
-    this.assignLocalMicStreamHandlers(this.localMicStream);
-    let localStreamId: string = this.localMicStream.getId().toString();
-
-    this.initLocalMicStream(() => {
-      this.localMicStreams.push(localStreamId);
-      if (!this.localMicOn) {
-        this.localMicStream.muteAudio();
+      if (this.localMicStream != null) {
+        this.localMicStream.stop();
+        this.localMicStream.close();
+        this.localMicStreams = [];
       }
-      this.micPublish(this.localMicStream);
-    });
+    }
+    console.log('LOCAL MIC STREAMS : ', this.localMicStreams);
+    if (this.localMicStreams.length == 0) {
+      this.getDevicesInfo();
+      setTimeout(() => {
+        console.log('device id:' + this.activeAudioInputDeviceId);
+        this.localMicStream = this.ngxAgoraService.createStream({
+          streamID: this.mid,
+          audio: true,
+          video: false,
+          screen: false,
+          microphoneId: this.activeAudioInputDeviceId,
+        });
+        this.localMicStream.setAudioProfile('speech_standard');
+        this.assignLocalMicStreamHandlers(this.localMicStream);
+        let localStreamId: string = this.localMicStream.getId().toString();
+
+        this.initLocalMicStream(() => {
+          this.localMicStreams.push(localStreamId);
+          if (!this.localMicOn) {
+            this.localMicStream.muteAudio();
+          }
+          this.micPublish(this.localMicStream);
+        });
+      }, 1000);
+    }
   }
 
-  meetingMemberLeft(meetingId, userId) {
-    this.httpService.meetingMemberLeft(meetingId, userId).subscribe((res) => {
-      console.log('meeting member left!');
-    });
-  }
   removeLocalStream() {
     this.unPublish(this.localStream);
     this.localStreams = [];
@@ -577,84 +615,13 @@ export class MeetingComponent implements OnInit {
       this.localMicStream.close();
     }
   }
-  muteVideo() {
-    if (this.muteHostVideoStatus == 'mute host video') {
-      this.localVideoOn = false;
-      this.removeLocalStream();
-      this.muteHostVideoStatus = 'unmute host video';
-    } else if (this.muteHostVideoStatus == 'unmute host video') {
-      this.localVideoOn = true;
-      let localStreamId: string = this.localStream.getId().toString();
-      if (!this.localStreams.includes(localStreamId)) {
-        this.startLocalStream();
-      } else {
-        this.removeLocalStream();
-        this.startLocalStream();
-      }
-      this.muteHostVideoStatus = 'mute host video';
-    }
-  }
-
-  muteAudio() {
-    if (this.muteHostAudioStatus == 'mute host mic') {
-      this.localMicOn = false;
-      this.localMicStream.muteAudio();
-      this.muteHostAudioStatus = 'unmute host mic';
-    } else {
-      this.localMicOn = true;
-      this.localMicStream.unmuteAudio();
-      this.muteHostAudioStatus = 'mute host mic';
-    }
-  }
-
-  unPublish(stream: Stream): void {
-    this.client.unpublish(stream, (err) => {});
-    this.isLocalCamStreamPublished = false;
-  }
-  unPublishMicStream(stream: Stream): void {
-    this.micClient.unpublish(stream, (err) => {});
-    this.isLocalMicStreamPublished = false;
-  }
 
   closeLocalVideo(stream: Stream) {
     stream.stop();
     stream.close();
   }
-  private initPreMeetingLocalStream(onSuccess?: () => any): void {
-    this.preLocalStream.init(
-      () => {
-        this.preLocalStream.play(this.localCallId1);
-        if (onSuccess) {
-          this.isLocalStreamPlaying = true;
-        }
-      },
-      (err) => {
-        // this.dialog.open(MediaAccessDialogComponent);
-        this.mediaAccessAllowed = false;
-        console.error('getUserMedia failed', err);
-      }
-    );
-  }
-  private initPreMeetingMicLocalStream(onSuccess?: () => any): void {
-    this.preLocalMicStream.init(
-      () => {
-        this.preLocalMicStream.play(this.localCallId2);
-        if (onSuccess) {
-          this.isLocalMicStreamPlaying = true;
-          setInterval(() => {
-            if (this.preLocalMicStream.isPlaying) {
-              this.audioLevel = this.preLocalMicStream.getAudioLevel();
-              // console.log(this.audioLevel);
-            }
-          }, 100);
-        }
-      },
-      (err) => {
-        this.mediaAccessAllowed = false;
-        console.error('getUserMedia failed', err);
-      }
-    );
-  }
+
+  //route user to login page if not authenticated
   redirectUser() {
     if (this.meetingId == null) {
       if (this.authService.isTokenValid()) {
@@ -682,131 +649,8 @@ export class MeetingComponent implements OnInit {
       }
     }
   }
-  calculateRemainingTime() {
-    let bookingDate: Date = moment(
-      this.bookingDetails.dateOfMeeting,
-      'DD/MM/YYYY'
-    ).toDate();
-    bookingDate.setHours(this.bookingDetails.endTimeHour);
-    bookingDate.setMinutes(this.bookingDetails.endTimeMinute);
-    if (this.endDate == null) {
-      this.endDate = bookingDate;
-    }
 
-    console.log('booking date :', bookingDate);
-    var date: Date = new Date();
-    date.setSeconds(0);
-    // var currentTime = date.getHours() * 60 + date.getMinutes();
-    // var endTime =
-    // this.bookingDetails.endTimeHour * 60 + this.bookingDetails.endTimeMinute;
-    var currentTime = Math.floor(date.getTime() / 60000);
-    var endTime = Math.floor(bookingDate.getTime() / 60000);
-    console.log('endddd timeeee====>>>', endTime, currentTime);
-    if (endTime > currentTime) {
-      return endTime - currentTime;
-    } else {
-      return null;
-    }
-  }
-  preventBackButton() {
-    history.pushState(null, null, location.href);
-    this.locationStrategy.onPopState(() => {
-      history.pushState(null, null, location.href);
-    });
-  }
-
-  shareScreen() {
-    // if (this.meetingService.getMeeting().role == 'host') {
-    this.enableScreenShareView();
-    this.screenClient = this.ngxAgoraService.createClient({
-      mode: 'rtc',
-      codec: 'h264',
-    });
-    this.assignScreenClientHandlers();
-    this.screenStream = this.ngxAgoraService.createStream({
-      streamID: this.uid,
-      audio: false,
-      video: false,
-      screen: true,
-    });
-    this.sid = this.userId + 2;
-    console.log(this.userId, this.sid);
-    this.assignScreenStreamHandlers(this.screenStream);
-    let localScreenStreamId: string = this.screenStream.getId().toString();
-    this.localScreenStreams.push(localScreenStreamId);
-    this.initScreenStream(() => {
-      this.screenJoin(
-        (sid) => this.screenPublish(),
-        (error) => console.error(error)
-      );
-    });
-  }
-  endCall() {
-    //closing all screen sharing streams if any
-
-    if (this.screenStream != null) {
-      this.localScreenStreams = [];
-      this.screenStream.stop();
-      this.screenClient.leave();
-      this.screenStream.close();
-    }
-    //unpublishing the cam stream
-    if (this.preLocalStream != null) {
-      this.preLocalStream.stop();
-      this.preLocalStream.close();
-    }
-    if (this.preLocalMicStream != null) {
-      this.preLocalMicStream.stop();
-      this.preLocalMicStream.close();
-    }
-    if (this.localStream != null) {
-      this.client.unpublish(this.localStream, (err) => {});
-    }
-
-    //unpublishing the mic stream
-    if (this.localMicStream != null) {
-      this.micClient.unpublish(this.localMicStream, (err) => {});
-    }
-
-    //leaving client from channel
-    if (this.client != null) {
-      this.client.leave();
-    }
-    if (this.micClient != null) {
-      this.micClient.leave();
-    }
-    if (this.screenClient != null) {
-      this.screenClient.leave();
-    }
-    //closing all cam streams
-    if (this.localStream != null) {
-      this.localStream.stop();
-      this.localStream.close();
-    }
-    //closing all mic streams
-    if (this.localMicStream != null) {
-      this.localMicStream.stop();
-      this.localMicStream.close();
-    }
-    //updating member check out in db
-    this.meetingMemberLeft(this.meetingId, this.userId);
-    //unsubscribing the timer
-    if (this.subscription1 != null) {
-      this.subscription1.unsubscribe();
-    }
-    //disconnecting from web socket
-    if (this.ws != null) {
-      this.ws.disconnect();
-    }
-
-    //routing to dashboard
-    if (this.meeting.role == 'Expert') {
-      this.router.navigate(['home/tutor-dashboard']);
-    } else if (this.meeting.role == 'Learner') {
-      this.router.navigate(['home/student-dashboard']);
-    }
-  }
-
+  //------------------------ timer functions------------------------------
   limitStream2() {
     this.timeDifference = this.endDate.getTime() - new Date().getTime();
     let minutesLeft = Math.floor(this.timeDifference / 60000);
@@ -835,6 +679,7 @@ export class MeetingComponent implements OnInit {
       }
     }
   }
+
   private allocateTimeUnits(timeDifference) {
     this.secondsToDday = Math.floor(
       (timeDifference / this.milliSecondsInASecond) % this.SecondsInAMinute
@@ -851,6 +696,34 @@ export class MeetingComponent implements OnInit {
         this.hoursInADay
     ).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
   }
+  calculateRemainingTime() {
+    let bookingDate: Date = moment(
+      this.bookingDetails.dateOfMeeting,
+      'DD/MM/YYYY'
+    ).toDate();
+    bookingDate.setHours(this.bookingDetails.endTimeHour);
+    bookingDate.setMinutes(this.bookingDetails.endTimeMinute);
+    if (this.endDate == null) {
+      this.endDate = bookingDate;
+    }
+
+    console.log('booking date :', bookingDate);
+    var date: Date = new Date();
+    date.setSeconds(0);
+    // var currentTime = date.getHours() * 60 + date.getMinutes();
+    // var endTime =
+    // this.bookingDetails.endTimeHour * 60 + this.bookingDetails.endTimeMinute;
+    var currentTime = Math.floor(date.getTime() / 60000);
+    var endTime = Math.floor(bookingDate.getTime() / 60000);
+    console.log('endddd timeeee====>>>', endTime, currentTime);
+    if (endTime > currentTime) {
+      return endTime - currentTime;
+    } else {
+      return null;
+    }
+  }
+  //------------------------------------------------------------------------------------
+  //---------------------------------View changing functions----------------------------
   enableScreenShareView() {
     if (
       !document
@@ -893,6 +766,7 @@ export class MeetingComponent implements OnInit {
       document.getElementById('meeting-body').classList.add('no-remote');
     }
   }
+  //---------------------------------------------------------------------------------------------------
   //---------------------------------------------- client Handlers -------------------------------------------------------------
   // normal client handler
   private assignClientHandlers(that): void {
@@ -946,13 +820,26 @@ export class MeetingComponent implements OnInit {
         if (!this.micRemoteCalls.length) {
           console.log('remote stream is mic stream and subscribed!');
           this.micRemoteCalls.push(id);
-          setTimeout(() => stream.play(id), 1000);
+          if (stream != null) {
+            that.remoteMicStreams.push(stream);
+            that.assignRemoteMicStreamHandlers(stream);
+          }
+          this.remoteAudioLevelSubscription = interval(100).subscribe(() => {
+            if (stream.isPlaying()) {
+              this.remoteAudioLevel = stream.getAudioLevel();
+            }
+          });
+          setTimeout(() => {
+            stream.play(id);
+          }, 1000);
         }
       } else {
         if (!this.remoteCalls.length) {
           console.log('remote stream is camera stream and subscribed!');
           this.remoteCalls.push(id);
-          setTimeout(() => stream.play(id), 1000);
+          setTimeout(() => {
+            stream.play(id);
+          }, 1000);
         }
       }
     });
@@ -972,6 +859,7 @@ export class MeetingComponent implements OnInit {
         if (stream) {
           stream.stop();
           this.micRemoteCalls = [];
+          this.remoteMicStreams = [];
           // this.remoteCalls = this.remoteCalls.filter(e => e !== idt.toString());
           console.log('remote mic stream is removed ');
           // this.endCall();
@@ -1043,12 +931,17 @@ export class MeetingComponent implements OnInit {
   private assignMicClientHandlers(that): void {
     this.micClient.on(ClientEvent.LocalStreamPublished, (evt) => {
       console.log('mic stream published @');
-      this.isLocalMicStreamPublished = true;
-      this.isLoading = false;
+      that.isLocalMicStreamPublished = true;
+      that.isLoading = false;
     });
     this.micClient.on(ClientEvent.RecordingDeviceChanged, function (evt) {
       console.log('THE DEVICE HAS BEEN CHANGED !');
-      that.checkBluetoothDevices();
+      console.log('MEETING STATE =>', that.meetingState);
+      if (that.meetingState == 'pre-meeting') {
+        that.initialisePreMeetingStreams();
+      } else if (that.meetingState == 'in-meeting') {
+        that.startMicStream();
+      }
     });
   }
   // screen client Handlers
@@ -1063,13 +956,46 @@ export class MeetingComponent implements OnInit {
   }
   //----------------------------------------------------------------------------------------------------------
   //--------------------------------------stream Handlers----------------------------------------------------
-  // private assignLocalStreamHandlers(): void {
-  //   this.localStream.on(StreamEvent.MediaAccessAllowed, () => {});
 
-  //   // The user has denied access to the camera and mic.
-  //   this.localStream.on(StreamEvent.MediaAccessDenied, () => {});
-  // }
+  // local camera stream handlers
   private assignLocalStreamHandlers(stream: Stream): void {
+    //the user has allowed the media access to the camera
+    stream.on(StreamEvent.MediaAccessAllowed, () => {
+      console.log('Media access allowed !');
+      this.mediaAccessAllowed = true;
+      this.camAccessAllowed = true;
+      this.getDevicesInfo();
+    });
+
+    // The user has denied access to the camera
+    stream.on(StreamEvent.MediaAccessDenied, () => {
+      this.mediaAccessAllowed = false;
+      this.camAccessAllowed = false;
+      console.log('media access denied !');
+    });
+  }
+
+  //Local Mic stream Handlers
+  private assignLocalMicStreamHandlers(stream: Stream): void {
+    //the user has allowed the media access to the camera
+    stream.on(StreamEvent.MediaAccessAllowed, () => {
+      console.log('Media access allowed !');
+      this.getDevicesInfo();
+    });
+    //the user has denied the media access to the camera
+    stream.on(StreamEvent.MediaAccessDenied, () => {
+      this.mediaAccessAllowed = false;
+      this.micAccessAllowed = false;
+      console.log('media access denied !');
+    });
+    //the audio track has been ended
+    stream.on(StreamEvent.AudioTrackEnded, () => {
+      this.startMicStream();
+    });
+  }
+  //Pre local Camera stream Handlers
+  private assignPreLocalStreamHandlers(stream: Stream): void {
+    //the user has allowed the media access to the camera
     stream.on(StreamEvent.MediaAccessAllowed, () => {
       console.log('Media access allowed !');
       this.mediaAccessAllowed = true;
@@ -1080,7 +1006,7 @@ export class MeetingComponent implements OnInit {
       this.getDevicesInfo();
     });
 
-    // The user has denied access to the camera and mic.
+    // The user has denied access to the camera
     stream.on(StreamEvent.MediaAccessDenied, () => {
       this.mediaAccessAllowed = false;
       this.camAccessAllowed = false;
@@ -1089,25 +1015,9 @@ export class MeetingComponent implements OnInit {
     });
   }
 
-  //Local Mic stream Handlers
-  private assignLocalMicStreamHandlers(stream: Stream): void {
-    stream.on(StreamEvent.MediaAccessAllowed, () => {
-      console.log('Media access allowed !');
-      this.getDevicesInfo();
-    });
-
-    stream.on(StreamEvent.MediaAccessDenied, () => {
-      this.mediaAccessAllowed = false;
-      this.micAccessAllowed = false;
-      console.log('media access denied !');
-    });
-
-    stream.on(StreamEvent.AudioTrackEnded, () => {
-      // this.startMicStream();
-    });
-  }
-
+  //Pre local Mic Stream Handlers
   private assignPreLocalMicStreamHandlers(stream: Stream): void {
+    // The user has allowed access to the camera.
     stream.on(StreamEvent.MediaAccessAllowed, () => {
       console.log('Media access allowed !');
       this.mediaAccessAllowed = true;
@@ -1118,28 +1028,62 @@ export class MeetingComponent implements OnInit {
       this.getDevicesInfo();
     });
 
-    // The user has denied access to the camera and mic.
+    // The user has denied access to the camera.
     stream.on(StreamEvent.MediaAccessDenied, () => {
       this.mediaAccessAllowed = false;
       this.micAccessAllowed = false;
-      // let dialogRef = this.dialog.open(MediaAccessDialogComponent);
       console.log('media access denied !');
     });
-    stream.on(StreamEvent.AudioTrackEnded, () => {
-      console.log('mic changed !');
-    });
   }
+  //Screen Stream Handlers
   private assignScreenStreamHandlers(stream: Stream): void {
     stream.on(StreamEvent.ScreenSharingStopped, () => {
-      console.log('screen streammm is stopppeeddddd !!!!');
+      console.log('SCREEN STREAM HAS BEEN STOPPED !');
       this.screenShare();
     });
+  }
+  //Remote Mic stream Handlers
+  private assignRemoteMicStreamHandlers(stream: Stream): void {
+    stream.on(StreamEvent.StreamPlaybackStatusChanged, function (evt) {
+      console.log('REMOTE STREAM STATUS IS :' + evt.status);
+      console.log('REMOTE STREAM STATUS CHANGE REASON :' + evt.reason);
+      console.log('REMOTE STREAM ERROR STATE :' + evt.isErrorState);
+      console.log('REMOTE STREAM MEDIA TYPE IS :' + evt.mediaType);
 
-    // The user has denied access to the camera and mic.
-    stream.on(StreamEvent.MediaAccessDenied, () => {});
+      if (evt.isErrorState && evt.status === 'paused') {
+        console.error(`Stream is paused unexpectedly. Trying to resume...`);
+        stream
+          .resume()
+          .then(function () {
+            console.log(`Stream is resumed successfully`);
+          })
+          .catch(function (e) {
+            console.error(
+              `Failed to resume stream. Error ${e.name} Reason ${e.message}`
+            );
+          });
+      }
+      if (evt.status === 'aborted') {
+        console.error(`Stream is aboorted unexpectedly. Trying to resume...`);
+        stream
+          .resume()
+          .then(function () {
+            console.log(`Stream is resumed successfully`);
+          })
+          .catch(function (e) {
+            console.error(
+              `Failed to resume stream. Error ${e.name} Reason ${e.message}`
+            );
+          });
+      }
+      if (evt.status === 'play') {
+        console.log('REMOTE STREAM IS PLAYING !');
+      }
+    });
   }
   //------------------------------------------------------------------------------------------------------------
   //------------------------------init functions for streams ---------------------------------------------------
+  //In meeting camera Stream init
   private initLocalStream(onSuccess?: () => any): void {
     this.localStream.init(
       () => {
@@ -1155,6 +1099,7 @@ export class MeetingComponent implements OnInit {
       }
     );
   }
+  //In meeting Mic Stream init
   private initLocalMicStream(onSuccess?: () => any): void {
     this.localMicStream.init(
       () => {
@@ -1170,6 +1115,43 @@ export class MeetingComponent implements OnInit {
       }
     );
   }
+  //Pre meeting Camera Stream init
+  private initPreMeetingLocalStream(onSuccess?: () => any): void {
+    this.preLocalStream.init(
+      () => {
+        this.preLocalStream.play(this.localCallId1);
+        if (onSuccess) {
+          this.isLocalStreamPlaying = true;
+        }
+      },
+      (err) => {
+        // this.dialog.open(MediaAccessDialogComponent);
+        this.mediaAccessAllowed = false;
+        console.error('getUserMedia failed', err);
+      }
+    );
+  }
+  //Pre meeting Mic Stream Init
+  private initPreMeetingMicLocalStream(onSuccess?: () => any): void {
+    this.preLocalMicStream.init(
+      () => {
+        this.preLocalMicStream.play(this.localCallId2);
+        if (onSuccess) {
+          this.isLocalMicStreamPlaying = true;
+          this.localAudioLevelSubscription = interval(100).subscribe(() => {
+            if (this.preLocalMicStream.isPlaying) {
+              this.audioLevel = this.preLocalMicStream.getAudioLevel();
+            }
+          });
+        }
+      },
+      (err) => {
+        this.mediaAccessAllowed = false;
+        console.error('getUserMedia failed', err);
+      }
+    );
+  }
+  //Screen Stream Init
   private initScreenStream(onSuccess?: () => any): void {
     this.screenStream.init(
       () => {
@@ -1189,7 +1171,7 @@ export class MeetingComponent implements OnInit {
 
   //-----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------join and publish functions----------------------------------------------
-
+  //camera client join with uid
   join(
     onSuccess?: (uid: number | string) => void,
     onFailure?: (error: Error) => void
@@ -1202,7 +1184,21 @@ export class MeetingComponent implements OnInit {
       onFailure
     );
   }
-
+  //camera client publish local camera stream
+  publish(stream: Stream): void {
+    console.log('TRYING TO PUBLISH LOCAL STREAM');
+    console.log(stream.getId().toString());
+    this.client.publish(stream, (err) => {
+      console.log('ERR OCCURRED WHILE PUBLISHING THE STREAM');
+      console.log(err);
+    });
+  }
+  //camera client unpublish local camera stream
+  unPublish(stream: Stream): void {
+    this.client.unpublish(stream, (err) => {});
+    this.isLocalCamStreamPublished = false;
+  }
+  //mic client join with mid : (uid+10)
   micClientJoin(
     onSuccess?: (mid: number | string) => void,
     onFailure?: (error: Error) => void
@@ -1215,6 +1211,7 @@ export class MeetingComponent implements OnInit {
       onFailure
     );
   }
+  //mic client publish local mic stream
   micPublish(stream: Stream) {
     console.log('TRYING TO PUBLISH LOCAL MIC STREAM');
     this.micClient.publish(stream, (err) => {
@@ -1222,16 +1219,12 @@ export class MeetingComponent implements OnInit {
       console.log(err);
     });
   }
-
-  publish(stream: Stream): void {
-    console.log('TRYING TO PUBLISH LOCAL STREAM');
-    console.log(stream.getId().toString());
-    this.client.publish(stream, (err) => {
-      console.log('ERR OCCURRED WHILE PUBLISHING THE STREAM');
-      console.log(err);
-    });
+  //mic client unpublish local mic stream
+  unPublishMicStream(stream: Stream): void {
+    this.micClient.unpublish(stream, (err) => {});
+    this.isLocalMicStreamPublished = false;
   }
-
+  //screen client join with sid : (uid+2)
   screenJoin(
     onSuccess?: (sid: number | string) => void,
     onFailure?: (error: Error) => void
@@ -1245,15 +1238,94 @@ export class MeetingComponent implements OnInit {
       onFailure
     );
   }
-
+  //screen client publish local screen stream
   screenPublish(): void {
-    this.screenClient.publish(this.screenStream, (err) => {});
+    this.screenClient.publish(this.screenStream, (err) => {
+      console.log('ERROR WHILE PUBLISHING SCREEN STREAM', err);
+    });
+  }
+  //screen client un-publish local screen stream
+  screenUnpublish(): void {
+    this.screenClient.unpublish(this.screenStream, (err) => {
+      console.log('ERROR WHILE UN-PUBLISHING SCREEN STREAM', err);
+    });
   }
   // ------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------- control button functions --------------------------------------------
   stopStream() {
     if (confirm('Are you sure you want to cancel !')) {
       this.endCall();
+    }
+  }
+  endCall() {
+    //closing all screen sharing streams if any
+
+    if (this.screenStream != null) {
+      this.localScreenStreams = [];
+      this.screenStream.stop();
+      this.screenClient.leave();
+      this.screenStream.close();
+    }
+    //unpublishing the cam stream
+    if (this.preLocalStream != null) {
+      this.preLocalStream.stop();
+      this.preLocalStream.close();
+    }
+    if (this.preLocalMicStream != null) {
+      this.preLocalMicStream.stop();
+      this.preLocalMicStream.close();
+    }
+    if (this.localStream != null) {
+      this.client.unpublish(this.localStream, (err) => {});
+    }
+
+    //unpublishing the mic stream
+    if (this.localMicStream != null) {
+      this.micClient.unpublish(this.localMicStream, (err) => {});
+    }
+
+    //leaving client from channel
+    if (this.client != null) {
+      this.client.leave();
+    }
+    if (this.micClient != null) {
+      this.micClient.leave();
+    }
+    if (this.screenClient != null) {
+      this.screenClient.leave();
+    }
+    //closing all cam streams
+    if (this.localStream != null) {
+      this.localStream.stop();
+      this.localStream.close();
+    }
+    //closing all mic streams
+    if (this.localMicStream != null) {
+      this.localMicStream.stop();
+      this.localMicStream.close();
+    }
+    //updating member check out in db
+    this.meetingMemberLeft(this.meetingId, this.userId);
+    //unsubscribing the timer
+    if (this.subscription1 != null) {
+      this.subscription1.unsubscribe();
+    }
+    if (this.localAudioLevelSubscription != null) {
+      this.localAudioLevelSubscription.unsubscribe();
+    }
+    if (this.remoteAudioLevelSubscription != null) {
+      this.remoteAudioLevelSubscription.unsubscribe();
+    }
+    //disconnecting from web socket
+    if (this.ws != null) {
+      this.ws.disconnect();
+    }
+
+    //routing to dashboard
+    if (this.meeting.role == 'Expert') {
+      this.router.navigate(['home/tutor-dashboard']);
+    } else if (this.meeting.role == 'Learner') {
+      this.router.navigate(['home/student-dashboard']);
     }
   }
   preMeetingMuteVideo() {
@@ -1279,7 +1351,7 @@ export class MeetingComponent implements OnInit {
         (
           document.querySelector('.pre-meeting-video') as HTMLElement
         ).style.borderColor = '';
-        this.assignLocalStreamHandlers(this.preLocalStream);
+        this.assignPreLocalStreamHandlers(this.preLocalStream);
         this.initPreMeetingLocalStream(() => {
           if (this.meetingState == 'pre-meeting') {
           }
@@ -1322,7 +1394,35 @@ export class MeetingComponent implements OnInit {
       }, 4000);
     }
   }
+  muteVideo() {
+    if (this.muteHostVideoStatus == 'mute host video') {
+      this.localVideoOn = false;
+      this.removeLocalStream();
+      this.muteHostVideoStatus = 'unmute host video';
+    } else if (this.muteHostVideoStatus == 'unmute host video') {
+      this.localVideoOn = true;
+      let localStreamId: string = this.localStream.getId().toString();
+      if (!this.localStreams.includes(localStreamId)) {
+        this.startLocalStream();
+      } else {
+        this.removeLocalStream();
+        this.startLocalStream();
+      }
+      this.muteHostVideoStatus = 'mute host video';
+    }
+  }
 
+  muteAudio() {
+    if (this.muteHostAudioStatus == 'mute host mic') {
+      this.localMicOn = false;
+      this.localMicStream.muteAudio();
+      this.muteHostAudioStatus = 'unmute host mic';
+    } else {
+      this.localMicOn = true;
+      this.localMicStream.unmuteAudio();
+      this.muteHostAudioStatus = 'mute host mic';
+    }
+  }
   screenShare() {
     if (this.hostScreenShareStatus == false) {
       this.hostScreenShareStatus = true;
@@ -1338,7 +1438,32 @@ export class MeetingComponent implements OnInit {
       this.localStreams = [];
     }
   }
-
+  shareScreen() {
+    // if (this.meetingService.getMeeting().role == 'host') {
+    this.enableScreenShareView();
+    this.screenClient = this.ngxAgoraService.createClient({
+      mode: 'rtc',
+      codec: 'h264',
+    });
+    this.assignScreenClientHandlers();
+    this.screenStream = this.ngxAgoraService.createStream({
+      streamID: this.uid,
+      audio: false,
+      video: false,
+      screen: true,
+    });
+    this.sid = this.userId + 2;
+    console.log(this.userId, this.sid);
+    this.assignScreenStreamHandlers(this.screenStream);
+    let localScreenStreamId: string = this.screenStream.getId().toString();
+    this.localScreenStreams.push(localScreenStreamId);
+    this.initScreenStream(() => {
+      this.screenJoin(
+        (sid) => this.screenPublish(),
+        (error) => console.error(error)
+      );
+    });
+  }
   openChatWindow() {
     if (this.chatOpen == false) {
       this.openSideNav();
@@ -1350,26 +1475,8 @@ export class MeetingComponent implements OnInit {
       this.closeSideNav();
     }
   }
-  scrollToBottom(): void {
-    try {
-      console.log('called scrollto bottom');
-      this.chatWindow.nativeElement.scrollTop =
-        this.chatWindow.nativeElement.scrollHeight;
-    } catch (err) {}
-  }
-  openSideNav() {
-    if (this.screenWidth <= 500) {
-      document.getElementById('mySidenav').style.width = '100%';
-    } else {
-      document.getElementById('mySidenav').style.width = '400px';
-    }
-  }
-  closeSideNav() {
-    document.getElementById('mySidenav').style.width = '0';
-    this.chatOpen = false;
-    this.newMessageNotification = false;
-  }
 
+  //--------------------------------------------- chat functions--------------------------------------------------
   connectToMeetingWebSocket(bookingId) {
     // let socket = new WebSocket('ws://backend.fellowgenius.com/fellowGenius');
     let socket = new SockJS(this.backendUrl + '/fellowGenius');
@@ -1418,7 +1525,6 @@ export class MeetingComponent implements OnInit {
     );
   }
 
-  //--------------------------------------------- chat functions--------------------------------------------------
   sendChatMessage() {
     var senderId: number;
     if (this.messageText != '') {
@@ -1449,7 +1555,25 @@ export class MeetingComponent implements OnInit {
       this.sendChatMessage();
     }
   }
-
+  scrollToBottom(): void {
+    try {
+      console.log('called scrollto bottom');
+      this.chatWindow.nativeElement.scrollTop =
+        this.chatWindow.nativeElement.scrollHeight;
+    } catch (err) {}
+  }
+  openSideNav() {
+    if (this.screenWidth <= 500) {
+      document.getElementById('mySidenav').style.width = '100%';
+    } else {
+      document.getElementById('mySidenav').style.width = '400px';
+    }
+  }
+  closeSideNav() {
+    document.getElementById('mySidenav').style.width = '0';
+    this.chatOpen = false;
+    this.newMessageNotification = false;
+  }
   handleFileInput(files: FileList) {
     var file: File = files.item(0);
     this.uploadedFile = file;
@@ -1518,9 +1642,10 @@ export class MeetingComponent implements OnInit {
     this.fileUploadedBox = false;
     this.fileSizeExceeded = false;
   }
+  // -------------------------------------------Device Utility Functions----------------------------------------
   checkBluetoothDevices() {
     let isBluetooth: boolean = false;
-    this.client.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
+    this.micClient.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
       console.log('audio output devices : ', devices);
       for (let device of devices) {
         console.log('ITERATION OUTPUT :', device);
@@ -1532,7 +1657,7 @@ export class MeetingComponent implements OnInit {
         ) {
           isBluetooth = true;
           console.log('BlUETOOTH OUTPUT FOUND');
-          this.setDeviceForStream(
+          this.setActiveDeviceIdForBluetooth(
             device.deviceId,
             'audio_output',
             device.label
@@ -1541,7 +1666,7 @@ export class MeetingComponent implements OnInit {
         }
       }
     });
-    this.client.getRecordingDevices((devices: MediaDeviceInfo[]) => {
+    this.micClient.getRecordingDevices((devices: MediaDeviceInfo[]) => {
       console.log('audio input devices : ', devices);
 
       for (let device of devices) {
@@ -1554,31 +1679,15 @@ export class MeetingComponent implements OnInit {
         ) {
           isBluetooth = true;
           console.log('BlUETOOTH INPUT FOUND');
-          this.setDeviceForStream(device.deviceId, 'audio_input', device.label);
+          this.setActiveDeviceIdForBluetooth(
+            device.deviceId,
+            'audio_input',
+            device.label
+          );
           break;
         }
       }
     });
-
-    if (isBluetooth == false) {
-      console.log('BLUETOOTH IS OFF !');
-      this.getDevicesInfo();
-      setTimeout(() => {
-        console.log(
-          'DEFAULT AUDIO INPUT ->',
-          this.activeAudioInputDeviceName,
-          this.activeAudioInputDeviceId
-        );
-        console.log(
-          'DEFAULT AUDIO OUTPUT ->',
-          this.activeAudioOutputDeviceName,
-          this.activeAudioOutputDeviceId
-        );
-        if (isBluetooth == false) {
-          this.startMicStream();
-        }
-      }, 2000);
-    }
   }
   doesDeviceExist(type, deviceId) {
     if (deviceId == null) {
@@ -1601,6 +1710,17 @@ export class MeetingComponent implements OnInit {
           }
         }
       });
+    }
+  }
+  setActiveDeviceIdForBluetooth(deviceId, type, name) {
+    if (deviceId != null) {
+      if (type == 'audio_input') {
+        this.activeAudioInputDeviceName = name;
+        this.activeAudioInputDeviceId = deviceId;
+      } else if (type == 'audio_output') {
+        this.activeAudioOutputDeviceId = deviceId;
+        this.activeAudioOutputDeviceName = name;
+      }
     }
   }
   setDeviceForStream(deviceId, type, name) {
@@ -1680,6 +1800,8 @@ export class MeetingComponent implements OnInit {
       ) {
         this.activeAudioOutputDeviceId = defaultAudioOutputDeviceId;
         this.activeAudioOutputDeviceName = defaultAudioOutputDevice;
+        this.defaultAudioOutputDeviceId = defaultAudioOutputDeviceId;
+        this.defaultAudioOutputDeviceName = defaultAudioOutputDevice;
       }
     });
     this.client.getRecordingDevices((devices: MediaDeviceInfo[]) => {
@@ -1696,6 +1818,7 @@ export class MeetingComponent implements OnInit {
         this.activeAudioInputDeviceName = defaultAudioInputDevice;
       }
     });
+    this.checkBluetoothDevices();
   }
   //getting default device name out of list of connected devices
   getDefaultDeviceName(devices) {
@@ -1778,4 +1901,111 @@ export class MeetingComponent implements OnInit {
       });
     }
   }
+  // ----------------------------------------------------------------------------------------------------------------------
+  // ------------------------------------------------------ Miscellaneous functions -------------------------------------
+  meetingMemberLeft(meetingId, userId) {
+    this.httpService.meetingMemberLeft(meetingId, userId).subscribe((res) => {
+      console.log('meeting member left!');
+    });
+  }
+  preventBackButton() {
+    history.pushState(null, null, location.href);
+    this.locationStrategy.onPopState(() => {
+      history.pushState(null, null, location.href);
+    });
+  }
+  checkIfAudioPlaying() {
+    if (this.remoteMicStreams.length > 0) {
+      let stream: Stream = this.remoteMicStreams[0];
+      let audioHTMLElementId = 'video' + stream.getId();
+      console.log(audioHTMLElementId);
+      var remoteAudio: any = document.getElementById(audioHTMLElementId);
+      if (remoteAudio != null) {
+        let isPlaying =
+          remoteAudio.currentTime > 0 &&
+          !remoteAudio.paused &&
+          !remoteAudio.ended &&
+          remoteAudio.readyState > remoteAudio.HAVE_CURRENT_DATA;
+
+        if (!isPlaying) {
+          console.log('REMOTE AUDIO IS NOT PLAYING !');
+          console.log('TRYING TO PLAY !');
+          remoteAudio.play();
+        } else {
+          console.log('REMOTE AUDIO IS ALREADY PLAYING !');
+          console.log('REMOTE AUDIO CURRENT TIME :', remoteAudio.currentTime);
+        }
+      }
+    } else {
+      console.log('NO REMOTE STREAM PRESENT !');
+    }
+  }
+  changeOutputDevice() {
+    console.log('CHANGE OUTPUT DEVICE !');
+    if (this.remoteMicStreams.length > 0) {
+      let stream: Stream = this.remoteMicStreams[0];
+      if (stream.isPlaying()) {
+        console.log('REMOTE VIDEO ON :' + stream.isVideoOn());
+        console.log('REMOTE AUDIO ON :' + stream.isAudioOn());
+        console.log('REMOTE STREAM VIDEO ENABLED :' + stream.videoEnabled);
+        this.getDevicesInfo();
+        setTimeout(() => {
+          console.log(
+            'DEFAULT OUTPUT DEVICE NAME :',
+            this.defaultAudioOutputDeviceName
+          );
+          console.log(
+            'DEFAULT OUTPUT DEVICE ID :',
+            this.defaultAudioOutputDeviceId
+          );
+          if (this.defaultAudioOutputDeviceId != null) {
+            stream.setAudioOutput(
+              this.defaultAudioOutputDeviceId,
+              () => {
+                console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
+                console.log('TRYING TO RESUME THE STREAM');
+                console.log(
+                  stream.resume().then(() => {
+                    console.log('STREAM RESUMED SUCCESSFULLY !');
+                  })
+                );
+              },
+              (err) => {
+                console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
+              }
+            );
+          } else {
+            console.log('OUTPUT DEVICE ID IS NULL !');
+          }
+        }, 1000);
+      }
+    } else {
+      console.log('REMOTE STREAMS ARE NULL !');
+    }
+  }
+  setAudioOutputDevice() {
+    console.log(this.inputAudioOutputDeviceId);
+    if (
+      this.inputAudioOutputDeviceId != null &&
+      this.remoteMicStreams.length > 0
+    ) {
+      let stream: Stream = this.remoteMicStreams[0];
+      stream.setAudioOutput(
+        this.inputAudioOutputDeviceId,
+        () => {
+          console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
+          console.log('TRYING TO RESUME THE STREAM');
+          console.log(
+            stream.resume().then(() => {
+              console.log('STREAM RESUMED SUCCESSFULLY !');
+            })
+          );
+        },
+        (err) => {
+          console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
+        }
+      );
+    }
+  }
+  //------------------------------------------------------------------------------------------------------------------------
 }

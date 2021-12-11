@@ -77,6 +77,8 @@
     matInput
     placeholder="Date of Birth"
     [matDatepicker]="dobdp"
+    [min]=dobStartDate
+    [max]=dobEndDate
     id="dob"
     name="dob"
     ngModel

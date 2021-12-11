@@ -23,6 +23,17 @@
         <!-- Modal Header -->
         <div class="modal-header">Device Info</div>
         <!-- Modal Body -->
+        <div style="display: flex;">
+          <button class="btn" style="margin: 5px;" (click)="changeOutputDevice()">CHANGE OUTPUT DEVICE</button>
+          <button class="btn" style="margin: 5px;" (click)="checkIfAudioPlaying()">CHECK REMOTE AUDIO STATUS</button>
+        </div>
+        <div>
+          <div class="form-group">
+            <input type="text" placeholder="Enter Device Id to switch" class="form-control" [(ngModel)]="inputAudioOutputDeviceId">
+          </div>
+          <button class="btn" (click)="setAudioOutputDevice()">Switch</button>
+        </div>
+        
         <div class="modal-body">
           <div class="body-message">
             <div>
@@ -42,12 +53,39 @@
               <span *ngIf="camAccessAllowed">{{ activeVideoDeviceName }}</span>
               <span *ngIf="!camAccessAllowed">Camera is off</span> <br />
               Audio Output Device : {{ activeAudioOutputDeviceName }}<br />
+              Default Audio Output Device : {{ defaultAudioOutputDeviceName }}<br />
               Audio Input Device :
               <span *ngIf="micAccessAllowed">{{
                 activeAudioInputDeviceName
               }}</span>
               <span *ngIf="!micAccessAllowed">Microphone is off</span>
             </div>
+
+            <div *ngIf='isInMeeting'>
+              Remote Audio Level : {{remoteAudioLevel}}
+              <hr/>
+              Camera Streams :
+              <div>
+                local
+                <div *ngFor="let stream of localStreams">{{stream}}</div>
+              </div>
+              <div>
+                Remote
+                <div *ngFor="let stream of remoteCalls">{{stream}}</div>
+              </div>
+              Mic Streams:
+              <div>
+                local
+                <div *ngFor="let stream of localMicStreams">{{stream}}</div>
+              </div>
+              <div>
+                Remote
+                <div *ngFor="let stream of micRemoteCalls">{{stream}}</div>
+              </div>
+              <hr/>
+            </div>
+            
+
           </div>
         </div>
       </div>
@@ -324,59 +362,7 @@
             </div>
           </div>
         </div>
-        <!-- <div *ngFor="let message of meetingChat">
-          <div class="incoming_msg" *ngIf="message.senderId != senderId">
-            <div class="received_msg">
-              <div class="received_withd_msg">
-                <b style="color: black">{{ message.senderName }}</b> &emsp;
-                <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
-                <div class="fileWrapper" *ngIf="!message.messageText">
-                  <img
-                    [src]="message.dataSource"
-                    alt=""
-                    class="imageTransfer"
-                    *ngIf="message.fileType == 'image/jpeg'"
-                  />
-                  <div
-                    class="fileName"
-                    *ngIf="message.fileType != 'image/jpeg'"
-                  >
-                    {{ message.fileName }}
-                  </div>
-                  <a
-                    [href]="message.dataSource"
-                    [download]="message.fileNameF"
-                    class="downloadButton"
-                    ><img
-                      src="../../../assets/icons/download_black.svg"
-                      alt=""
-                      style="height: 30px; width: 30px; margin: 10px"
-                  /></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="outgoing_msg" *ngIf="message.senderId == senderId">
-            <div class="sent_msg">
-              <p *ngIf="!message.dataSource">{{ message.messageText }}</p>
-              <div class="fileWrapper" *ngIf="!message.messageText">
-                <img
-                  [src]="message.dataSource"
-                  alt=""
-                  class="imageTransfer"
-                  *ngIf="message.fileType == 'image/jpeg'"
-                />
-                <div
-                  class="fileName"
-                  *ngIf="message.fileType != 'image/jpeg'"
-                >
-                  {{ message.fileName }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
+      
         <div class="chat__text">
           <div class="type_msg">
             <input
@@ -457,6 +443,24 @@
                 </div>
                 <div>
                   <div class="remote-window remote">
+                    <div
+                    class="microphone-playing"
+                    *ngIf="remoteMicStreams.length>0"
+                    style="z-index: 100;top: 16px;"
+                  >
+                    <img
+                      *ngIf="remoteAudioLevel < 0.1"
+                      src="../../../assets/icons/microphone.png"
+                      class="microphone-playing-img"
+                      alt=""
+                    />
+                    <img
+                      *ngIf="remoteAudioLevel > 0.1"
+                      src="../../../assets/icons/microphone_playing.png"
+                      class="microphone-playing-img"
+                      alt=""
+                    />
+                  </div>
                     <div class="remote-name">{{ peerName }}</div>
                     <span class="material-icons blurred-icons remote-user-icon">
                       person
@@ -469,7 +473,7 @@
                     <div
                       *ngFor="let callId of micRemoteCalls"
                       [id]="callId"
-                      style="display: none;"
+                      
                     ></div>
                   </div>
                 </div>
