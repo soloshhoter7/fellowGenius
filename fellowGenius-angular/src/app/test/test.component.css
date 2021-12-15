@@ -1,277 +1,48 @@
-.nav-button{
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 10px;
-    border-radius: 50%;
-    background: #8DC63F;
-    display: inline-block;
-    justify-content: center;
-}
-.nav-button img {
-    width: 27px;
-}
-.nav-button:hover{
-    background:#ec008c;
-}
-.leave-button{
-    background: #FF2D58;
-}
-.leave-button:hover{
-    background: #FF2D58;
-}
-.leave-button img {
-    width: 20px!important;
-}
-.nav-button img {
-    filter: brightness(0) invert(1);
-    width: 27px;
-}
+@media only screen and (max-width: 767px){
+    .access_header_signup_web{
+        display:none !important;
+    }
 
-button{
-    min-width: unset;
-    float: unset;
-    width: unset;
-    min-height: unset;
-    border-radius: unset;
-    text-align: unset;
-    outline: unset !important;
-    box-shadow: unset !important;
-    padding: unset;
-    font-weight: unset;
-    transition: unset;
-    border: unset;
-    color: unset;
-    background: unset;
-}
-.chat__buttons{
-    position:absolute;
-    bottom: 0;
-}
-.chat__thumb{
-    display: flex;
-    color: white;
-    height: 67%;
-    border-radius: 10px;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.local-window{
-    position: absolute;
-    background: #8dc63f;
-    bottom: 10px;
-    right: 10px;
-    width: 25%;
-    height: 25%;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .access_header_signup_mobile{
+        display:block !important;
+    }
 
-.remote-window{
-    width: 100%;
-    height: 100%;
-    background-color: purple;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
+    .logo-ml-100{
+        margin-left:100px;
+        margin-bottom: -7px;
+    }
+
+    .h1-pt-15{
+        padding-top:15px;
+    }
+
+    .form-mt-0{
+        margin-top: 0px !important;
+    }
 }
 
 
 
-.screen-share-window{
-    height: 100%;
-    width: 70%;
-    left: 0;
-    border-radius: 10px;
+::ng-deep .mat-icon-button{
+    color: #8DC63F !important;
+}
+.dob-mat-datepicker{
+top: 35px;
+position: absolute;
+right: 5px;
+}
+::ng-deep .mat-icon-button .mat-button-wrapper{
     position: absolute;
-    background-color: grey;
-    z-index: 1000;
-    display: none;
-}
-
-.remote-window .remote-name{
-    position: absolute;
-    left: 15px;
-    bottom: 5px;
-    font-size: x-large;
-}
-.remote-user-icon{
-   font-size: 200px; 
-}
-.local-user-icon{
-    font-size: 100px; 
-}
-.local-window .local-name{
-    position: absolute;
-    left: 15px;
-    bottom: 5px;
-    font-size: larger;
-}
-
-/* style for no remote */
-.no-remote.chat__thumb .remote-window {
-    display: none;
-}
-.no-remote.chat__thumb .local-window{
-    position: unset;
-    background: purple;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-/* style for screen share */
-.screen-shared.chat__thumb{
-    display: flex;
-    color: white;
-    height: 67%;
-    border-radius: 10px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.screen-shared.chat__thumb .screen-share-window{
-    display: block;
-}
-.screen-shared.chat__thumb .remote-window{
-    width: 28%;
-    height: 45%;
-    background-color: purple;
-    top: 10px;
-    right: 10px;
-    border-radius: 10px;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.screen-shared.chat__thumb .local-window{
-    position: absolute;
-    background: #8dc63f;
-    bottom: 10px;
-    right: 10px;
-    width: 28%;
-    height: 45%;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.screen-shared.no-remote.chat__thumb .local-window{
-    bottom: unset;
     top: 0;
-}
-.screen-shared.no-remote.chat__thumb .remote-window{
-    display: none;
-}
-.screen-shared.chat__thumb .remote-window .remote-user-icon{
-    font-size: 100px; 
- }  
- .screen-shared.chat__thumb .remote-window .remote-name{
-    position: absolute;
-    left: 15px;
-    bottom: 5px;
-    font-size: larger;
+    right: 7px;
 } 
 
-@media only screen and (max-width: 767px){
-    .chat__thumb{
-        width: 100%;
-    }
-    .nav-button{
-        width: 40px;
-        height: 40px;
-    }
-    .nav-button img {
-	    width: 22px;
-	}
-	.leave-button img {
-	    width: 15px;
-	}
-    .chat__buttons{
-        margin-bottom: 10px;
-    }
-    .remote-user-icon{
-        font-size: 150px; 
-     }
-     .local-user-icon{
-        font-size: 50px; 
-    }
-    .screen-shared.chat__thumb .remote-window .remote-user-icon{
-        font-size: 50px; 
-    }
-    .screen-shared.chat__thumb .remote-window .remote-name{
-        position: absolute;
-        left: 15px;
-        bottom: 5px;
-        font-size: larger;
-    }
-    .screen-shared.chat__thumb .remote-window{
-        width: 48%;
-        height: 41%;
-        background-color: purple;
-        top:unset;
-        bottom: 10px;
-        left: 0;
-        border-radius: 10px;
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .screen-shared.chat__thumb .local-window{
-        position: absolute;
-        background: #8dc63f;
-        bottom: 10px;
-        right: 0;
-        width: 48%;
-        height: 41%;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .screen-share-window {
-        height: 55%;
-        top: 0;
-        width: 100%;
-        left: 0;
-        border-radius: 10px;
-        position: absolute;
-        background-color: grey;
-        z-index: 1000;
-        display: none;
-    }
+@media only screen and (max-width: 700px){
+    ::ng-deep .mat-icon-button .mat-button-wrapper{
+        color:#8DC63F;       
+    } 
 
-    .no-remote.chat__thumb .local-window .local-name{
-        position: absolute;
-        left: 15px;
-        bottom: 5px;
-        font-size: x-large;
-    }
-    .no-remote.chat__thumb .local-window  .local-user-icon{
-        font-size: 150px; 
+    .dob-mat-datepicker{
+        top:30px;
     }
 }
-.timer {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    font-size: 1.4em;
-    letter-spacing: -1px;
-  }
-  .timer span {
-    font-size: 2em;
-    margin: 0 3px 0 15px;
-  }

@@ -154,6 +154,8 @@ export class ProfileComponent implements OnInit {
   pictureInfo: boolean = true;
   emptyProfilePicture;
   prevArrangedOrganisations: any = [];
+  userDob: any;
+
   ngOnInit() {
     window['angularComponentReference'] = {
       component: this,
@@ -178,6 +180,9 @@ export class ProfileComponent implements OnInit {
     );
     if (this.tutorService.getTutorProfileDetails().profileCompleted) {
       this.tutorProfile = this.tutorService.getTutorDetials();
+      this.userDob=this.userDob=this.formatDateFromString(this.tutorProfile.dateOfBirth);
+      console.log(this.userDob);
+      console.log(this.tutorProfileDetails)
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
       if (this.tutorProfileDetails.educationalQualifications != null) {
         this.educationQualifications =
@@ -193,10 +198,15 @@ export class ProfileComponent implements OnInit {
       if (this.tutorProfileDetails.profilePictureUrl != null) {
         this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
       }
+
+      console.log(this.tutorProfileDetails);
       this.getEarningAppInfo();
     } else {
       setTimeout(() => {
         this.tutorProfile = this.tutorService.getTutorDetials();
+        this.userDob=this.formatDateFromString(this.tutorProfile.dateOfBirth);
+        console.log(this.userDob);
+        console.log(this.tutorProfile);
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
         if (this.tutorProfileDetails.educationalQualifications != null) {
           this.educationQualifications =
@@ -212,9 +222,19 @@ export class ProfileComponent implements OnInit {
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
         }
+        console.log(this.tutorProfileDetails);
         this.getEarningAppInfo();
       }, 1000);
     }
+  }
+
+
+
+  formatDateFromString(dateString){
+    //  Convert a "dd/MM/yyyy" string into a Date object
+    let d = dateString.split("/");
+    let dat = new Date(d[2] + '/' + d[1] + '/' + d[0]);
+    return dat;    
   }
 
   public _filter(value: string): string[] {
@@ -365,23 +385,26 @@ export class ProfileComponent implements OnInit {
   getInstitute() {
     return this.educationQualifications[0].split(':')[0];
   }
-  formatDobFromMoment(momentDate: any) {
-    // console.log(momentDate);
-    let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
-    return formattedDate;
-  }
+  formatDobFromMoment(momentDate: any){
+     console.log(momentDate);
+     let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
+     return formattedDate;
+   }
   saveExpertBasicProfile(form: any) {
     console.log(form);
+    console.log(form.value.userDob);
     this.userId = this.cookieService.get('userId');
     if (this.userId && this.expertises.length > 0) {
       this.tutorProfile.tid = this.userId;
       this.tutorProfile.contact = form.value.contact;
-      console.log;
-      this.tutorProfile.dateOfBirth = form.value.dob;
+      this.tutorProfile.dateOfBirth =this.formatDobFromMoment(form.value.userDob) ;
+      console.log(this.tutorProfile.dateOfBirth);
       this.tutorProfile.fullName = form.value.fullName;
       this.tutorProfile.bookingId =
         this.tutorService.getTutorDetials().bookingId;
       this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
+
+      console.log(this.tutorProfile);
 
       this.tutorProfileDetails.tid = this.userId;
       this.tutorProfileDetails.educationalQualifications =
