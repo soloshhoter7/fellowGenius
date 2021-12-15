@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="30.759" height="40.056" viewBox="0 0 30.759 40.056">
-  <g id="mic_mute_grey" data-name="mic mute grey" transform="translate(-494.193 -914)">
-    <g id="_107737" data-name="107737" transform="translate(460.218 914)">
-      <path id="Path_4502" data-name="Path 4502" d="M64.381,113.359a1.2,1.2,0,0,0-2.4,0,11.9,11.9,0,1,1-23.8,0,1.2,1.2,0,0,0-2.4,0,14.318,14.318,0,0,0,13.1,14.248v4.249H43.532a1.2,1.2,0,1,0,0,2.4h13.1a1.2,1.2,0,1,0,0-2.4H51.282v-4.249A14.318,14.318,0,0,0,64.381,113.359Z" transform="translate(0 -94.201)" fill="#b5b3b3"/>
-      <path id="Path_4503" data-name="Path 4503" d="M84.438,26.908a7.759,7.759,0,0,0,7.75-7.75V7.75a7.75,7.75,0,0,0-15.5,0V19.158A7.759,7.759,0,0,0,84.438,26.908ZM79.09,7.75a5.348,5.348,0,0,1,10.7,0V19.158a5.348,5.348,0,0,1-10.7,0Z" transform="translate(-34.357)" fill="#b5b3b3"/>
-    </g>
-    <rect id="Rectangle_1455" data-name="Rectangle 1455" width="41" height="2.5" rx="1.25" transform="translate(494.193 944.985) rotate(-45)" fill="#b5b3b3"/>
-  </g>
-</svg>
