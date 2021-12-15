@@ -281,7 +281,7 @@
         <div class="container">
           <div class="page_wrapper">
             <div class="access_field_box">
-              <div class="access_header">
+              <div class="access_header access_header_signup_web">
                 <div style="display: flex; align-items: center">
                   <a
                     href="#"
@@ -303,8 +303,35 @@
                   ><img src="../assets/images/fellow genius logo.svg" alt="#"
                 /></a>
               </div>
+
+              <div class="access_header access_header_signup_mobile" style="display:none">
+                <div style="display: flex; ">
+                  <a
+                    href="#"
+                    class="register_btn hdr_btn"
+                    data-bs-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Home"
+                  >
+                    <img
+                      src="../../assets/images/breadcrumb-home.svg"
+                      alt="#"
+                      style="width: 50px"
+                    />
+                  </a>
+
+                  <a href="" class="accs_logo"
+                  ><img src="../assets/images/fellow genius logo.svg" alt="#" class="logo-ml-100"
+                /></a>
+                </div>
+                <h1 class="h1-pt-15"
+                >Sign up <strong>as an Expert</strong></h1>
+
+                
+              </div>
               <div class="access_data">
                 <form
+                  class="form-mt-0"
                   (ngSubmit)="saveExpertBasicProfile(basicProfile)"
                   #basicProfile="ngForm"
                 >
@@ -717,7 +744,7 @@
                           ><img
                             src="../assets/images/add-repeater.svg"
                             alt="add"
-                          />Add</a
+                          />Save</a
                         >
                       </div>
                       
@@ -766,7 +793,14 @@
                       <div *ngIf="expertises.length==0">
                         <span
                           class="help-block"
-                          style="color: grey; font-size: smaller"
+                          style="color:black; font-size: 20px"
+                          ><span style="color: red;">*</span> 
+                          Please click on save to save atleast 1 domain</span
+                        >
+                        <br/>
+                        <span
+                          class="help-block"
+                          style="color:black; font-size: 20px"
                           ><span style="color: red;">*</span> Please select Others option to add a domain or topic not listed in the drop down menu</span
                         >
                       </div>
@@ -1044,6 +1078,7 @@
                                   alt="delete"
                               /></a>
                             </div>
+
                           </div>
                         </div>
                       </div>
@@ -1149,8 +1184,18 @@
                           ><img
                             src="../assets/images/add-repeater.svg"
                             alt="add"
-                          />Add</a
+                          />Save</a
                         >
+                      </div>
+                      <div *ngIf="expertises.length==0">
+                        <span
+                          class="help-block"
+                          style="color:black; font-size: 20px"
+                          ><span style="color: red;">*</span> 
+                          Please click on save to save atleast 1 education</span
+                        >
+                        <br/>
+                        
                       </div>
                     </div>
                   </div>

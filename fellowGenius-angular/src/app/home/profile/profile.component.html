@@ -77,11 +77,11 @@
     matInput
     placeholder="Date of Birth"
     [matDatepicker]="dobdp"
-    id="dob"
-    name="dob"
-    ngModel
-    [ngModel]="tutorProfile.dateOfBirth" 
+    id="userDob"
+    name="userDob"
+    [(ngModel)]="userDob" 
     #dob="ngModel"
+    dobValidator
   />
   <mat-datepicker-toggle
     matSuffix

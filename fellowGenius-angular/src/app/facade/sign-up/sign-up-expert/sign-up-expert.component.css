@@ -1,8 +1,27 @@
-/* @media only screen and (max-width: 767px){
-    .access_page.expert_signup .page_wrapper .access_field_box .access_header{
+@media only screen and (max-width: 767px){
+    .access_header_signup_web{
         display:none !important;
     }
-} */
+
+    .access_header_signup_mobile{
+        display:block !important;
+    }
+
+    .logo-ml-100{
+        margin-left:100px;
+        margin-bottom: -7px;
+    }
+
+    .h1-pt-15{
+        padding-top:15px;
+    }
+
+    .form-mt-0{
+        margin-top: 0px !important;
+    }
+}
+
+
 
 ::ng-deep .mat-icon-button{
     color: #8DC63F !important;
