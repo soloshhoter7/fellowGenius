@@ -45,6 +45,7 @@ import { AdminHomeComponent } from './admin-portal/admin-home/admin-home.compone
 import { ExpertsComponent } from './admin-portal/admin-home/experts/experts.component';
 import { PendingExpertProfileComponent } from './admin-portal/admin-home/pending-expert-profile/pending-expert-profile.component';
 import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.component';
+import { VoiceCallComponent } from './voice-call/voice-call.component';
 // const routes:Routes=[];
 export const routerOptions: ExtraOptions = {
   anchorScrolling: 'enabled',
@@ -68,7 +69,7 @@ export const appRoutes: Routes = [
       { path: 'knowledge-base', component: KnowledgeBaseComponent },
       { path: 'sessions-learner', component: LearnerSessionsComponent },
       { path: 'sessions-expert', component: ExpertSessionsComponent },
-      { path: 'refer', component:ReferAndEarnComponent}
+      { path: 'refer', component: ReferAndEarnComponent },
     ],
   },
   //pre login routes
@@ -81,27 +82,27 @@ export const appRoutes: Routes = [
   { path: 'sign-up-expert', component: SignUpExpertComponent },
   { path: 'meeting/:id', component: MeetingComponent },
   { path: 'test', component: TestComponent },
-  { path: 'feedback',component: FeedbackComponent },
+  { path: 'voice-call', component: VoiceCallComponent },
+  { path: 'feedback', component: FeedbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'cancel-booking', component: DeleteMeetingComponent },
   { path: 'reschedule-booking', component: RescheduleMeetingComponent },
-  
+
   //admin routes
   {
     path: 'admin',
     component: AdminPortalComponent,
     children: [
-    
       {
         path: 'home',
         component: AdminHomeComponent,
         children: [
-          { path: '', redirectTo:'experts',pathMatch:'full' },
+          { path: '', redirectTo: 'experts', pathMatch: 'full' },
           { path: 'categories', component: CategoriesComponent },
           { path: 'analytics', component: AnalyticsComponent },
           { path: 'verify-expert', component: VerifyExpertsComponent },
-          { path: 'experts', component:ExpertsComponent},
-          { path: 'expert-profile', component:PendingExpertProfileComponent}
+          { path: 'experts', component: ExpertsComponent },
+          { path: 'expert-profile', component: PendingExpertProfileComponent },
         ],
       },
     ],

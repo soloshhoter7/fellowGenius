@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="title=='MediaAccess'">
     <div>
         <h4>Allow Fellow Genius to use your camera and microphone</h4>
         
@@ -6,6 +6,19 @@
           Fellow Genius needs access to your camera and microphone so that other
           participant can see and hear you. Fellow Genius will ask you to confirm this
           decision on each browser and device you use
+        </p>
+    </div>
+    <br>
+    <div>
+        <button class="btn"(click)="closeDialog()">Dismiss</button>  
+    </div>
+</div>
+<div *ngIf="title=='RecordingDeviceChanged'">
+    <div>
+        <h4>Recording Device Changed !</h4>
+        
+        <p style="margin-top: 15px;">
+          Fellow Genius recongnised that recording device has been changed. Due to this reason it is possible that you may not be able to listen to the remote user. Please join the meeting after disconnecting your Bluetooth Device.
         </p>
     </div>
     <br>

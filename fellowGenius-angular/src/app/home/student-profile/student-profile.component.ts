@@ -32,7 +32,13 @@ export class StudentProfileComponent implements OnInit {
     private router: Router,
     private zone: NgZone,
     private home: HomeComponent
-  ) {}
+  ) {
+    const currentYear = new Date().getFullYear();
+    this.dobStartDate = new Date(currentYear - 60, 0, 1);
+    this.dobEndDate = new Date(currentYear - 6, 11, 31);
+  }
+  dobStartDate: Date;
+  dobEndDate: Date;
   isLoading3: boolean = false;
   profilePicUploadStatus: boolean;
   duplicateArea;

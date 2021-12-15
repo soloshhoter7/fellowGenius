@@ -376,7 +376,6 @@ export class ProfileComponent implements OnInit {
     if (this.userId && this.expertises.length > 0) {
       this.tutorProfile.tid = this.userId;
       this.tutorProfile.contact = form.value.contact;
-      console.log;
       this.tutorProfile.dateOfBirth = form.value.dob;
       this.tutorProfile.fullName = form.value.fullName;
       this.tutorProfile.bookingId =

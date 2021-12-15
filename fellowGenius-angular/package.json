@@ -27,7 +27,7 @@
     "@angular/router": "~9.1.9",
     "@syncfusion/ej2-angular-schedule": "^18.2.57",
     "@syncfusion/ej2-material-theme": "^18.1.48",
-    "agora-rtc-sdk": "^3.2.1",
+    "agora-rtc-sdk-ng": "^4.7.3",
     "angular-google-charts": "^1.1.6",
     "angular-sockjs": "^0.1.0",
     "angular2-csv": "^0.2.9",

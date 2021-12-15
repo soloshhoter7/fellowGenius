@@ -1,0 +1,35 @@
+<body>
+    <div>
+        <h3>Join a call</h3>
+        <div class="form-group">
+            <div><label for="channelName"></label>Enter Channel Name<input type="text" class="form-control form-input" id="channelName" placeholder="Enter Channel Name" ngModel [(ngModel)]="channelName"></div>
+            <div><label for="uid">Enter UID</label><input type="text" class="form-control form-input" id="uid" placeholder="Enter Uid" ngModel [(ngModel)]="uid"></div>
+            
+            <button class="btn" (click)="joinCall()" [disabled]="voiceCallService.rtc.client!=null">
+                Join
+            </button>
+            <button class="btn" (click)="leaveCall()" [disabled]="voiceCallService.rtc.client==null">Leave</button>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div *ngIf="voiceCallService.rtc.remoteUser!=null">Remote Users : {{voiceCallService.rtc.remoteUser.uid}}</div>
+    <br><br>
+    <div>
+        Local Microphone Audio Level : {{voiceCallService.localTrackAudioLevel}}
+    </div>
+    <br><br>
+    <div>
+        <h3>Description</h3>
+        <ol>
+            <li>Join button will trigger the function for the IAgoraRTCClient to join the entered channel</li>
+            <li>Once client is joined we assign client handlers for events like user-joined,user-published,user-unpublished,user-left</li>
+            <li>Now we do AgoraRTC.getDevices() to fetch all the audio input devices and check if any of the device label contains a keyword "Bluetooth" </li>
+            <li>If any Bluetooth device is found we capture the device id</li>
+            <li>If there is no bluetooth device we select the first audio input device id</li>
+            <li>Then we do AgoraRTC.createMicrophoneAudioTrack with microhophoneId set as the selected device id from above steps</li>
+            <li>Once the audio track is created we publish it into the channel using the client</li>
+            <li>If any remote user joins the channel we display its uid.</li>
+        </ol>
+    </div>  
+</body>

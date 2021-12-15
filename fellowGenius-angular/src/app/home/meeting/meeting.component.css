@@ -1,13 +1,21 @@
 /* ----- pre-meeting-css ------------------ */
 
 @-webkit-keyframes fadeOut {
-  0% {opacity: 1;}
-  100% {opacity: 0;}
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes fadeOut {
-  0% {opacity: 1;}
-  100% {opacity: 0;}
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 :host /deep/ [id^="video"] {
@@ -19,49 +27,49 @@
 }
 
 .pre-meeting-local .local {
-  position:unset;
+  position: unset;
   border-radius: 10px;
   overflow: none;
   z-index: 10;
   width: 100%;
   height: 100%;
-  margin:0;
+  margin: 0;
 }
-.microphone-playing{
+.microphone-playing {
   position: absolute;
   height: 50px;
   width: 50px;
   left: 16px;
   bottom: 16px;
-  background-color: #8DC63F;
+  background-color: #8dc63f;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.microphone-playing-img{
+.microphone-playing-img {
   height: 30px;
   width: 30px;
 }
-.device-info{
+.device-info {
   position: absolute;
-    right: 0;
-    top: 10px;
-  
-    background: none;
-    border: none;
-    outline: none;
+  right: 0;
+  top: 10px;
+
+  background: none;
+  border: none;
+  outline: none;
 }
-.device-info img{
+.device-info img {
   width: 35px;
   height: 35px;
 }
-.dialog-close-button{
+.dialog-close-button {
   right: 10px !important;
   top: 0px !important;
   width: 18px !important;
 }
-.pre-meeting-local{
+.pre-meeting-local {
   position: relative;
   width: 100%;
   height: 50vh;
@@ -78,27 +86,28 @@
   border-radius: 50%;
   min-width: unset;
 }
-.pre-meeting-local .pre-meeting-mic-banner{
-    width: max-content;
-    margin: auto;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 25px;
-    display: flex;
-    background-color: rgb(32,33,36,0.7);
-    
+.pre-meeting-local .pre-meeting-mic-banner {
+  width: max-content;
+  margin: auto;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 25px;
+  display: flex;
+  background-color: rgb(32, 33, 36, 0.7);
 }
-.pre-meeting-local .mic-popup{
+.pre-meeting-local .mic-popup {
   position: absolute;
   top: 12px;
   width: 100%;
   color: white;
   animation-delay: 2s;
-  -webkit-animation-duration: 3s;animation-duration: 3s;
-    -webkit-animation-fill-mode: both;animation-fill-mode: both;
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }
-.pre-meeting-local .pre-meeting-control-buttons{
+.pre-meeting-local .pre-meeting-control-buttons {
   outline: none;
   width: 65px;
   height: 62px;
@@ -111,36 +120,46 @@
   justify-content: center;
   display: flex;
 }
-.pre-meeting-local .shadow-top{
+.pre-meeting-local .shadow-top {
   position: absolute;
   top: -7px;
   height: 80px;
   width: 100%;
-  background-image:-webkit-linear-gradient(top,rgba(0,0,0,0.7) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
+  background-image: -webkit-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0.7) 0,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
-.pre-meeting-local .shadow-bottom{
+.pre-meeting-local .shadow-bottom {
   position: absolute;
   bottom: -7px;
   height: 80px;
   width: 100%;
-  background-image:-webkit-linear-gradient(bottom,rgba(0,0,0,0.7) 0,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
+  background-image: -webkit-linear-gradient(
+    bottom,
+    rgba(0, 0, 0, 0.7) 0,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
-.pre-meeting-local .pre-meeting-control-buttons:hover{
-  background: rgb(255,255,255,0.4);
+.pre-meeting-local .pre-meeting-control-buttons:hover {
+  background: rgb(255, 255, 255, 0.4);
 }
-.pre-meeting-info{
+.pre-meeting-info {
   display: flex;
   justify-content: center;
   align-items: center;
 }
- .pre-meeting-join-button{
-    font-size: large;
-    padding-left: 30px;
-    padding-right: 30px;
-    border-radius: 25px;
+.pre-meeting-join-button {
+  font-size: large;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 25px;
 }
-.meeting-header{
+.meeting-header {
   height: 100px;
   background: #ffffff;
   padding: 5px;
@@ -156,22 +175,22 @@
   height: 8vh;
   float: left;
 }
- .account-info-block{
+.account-info-block {
   float: right;
   display: flex;
   justify-content: center;
   align-items: center;
 }
- .account-info-block .profile-picture{
+.account-info-block .profile-picture {
   height: 50px;
-  width:50px;
+  width: 50px;
   border-radius: 50%;
   box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
 }
 
- .profile-picture{
+.profile-picture {
   height: 50px;
-  width:50px;
+  width: 50px;
   border-radius: 50%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -180,7 +199,7 @@
 }
 
 /* ------------------------------------------------------------------ */
-.meeting-page button{
+.meeting-page button {
   min-width: unset;
   float: unset;
   width: unset;
@@ -195,7 +214,7 @@
   border: unset;
   color: unset;
   background: unset;
-  border:none;
+  border: none;
 }
 .local {
   position: relative;
@@ -203,7 +222,6 @@
   height: 100%;
   overflow: hidden;
   z-index: 10;
-
 }
 
 .remote {
@@ -223,12 +241,12 @@
   position: absolute;
 }
 
-.meeting-container  .nav-button{
+.meeting-container .nav-button {
   width: 50px;
   height: 50px;
   margin: 0 auto 10px;
   border-radius: 50%;
-  background: #8DC63F;
+  background: #8dc63f;
   display: inline-block;
   justify-content: center;
   position: relative;
@@ -236,28 +254,28 @@
 .meeting-container .nav-button img {
   width: 27px;
 }
-.meeting-container .nav-button:hover{
-  background:#ec008c;
+.meeting-container .nav-button:hover {
+  background: #ec008c;
 }
-.meeting-container .leave-button{
-  background: #FF2D58;
+.meeting-container .leave-button {
+  background: #ff2d58;
 }
-.meeting-container .leave-button:hover{
-  background: #FF2D58;
+.meeting-container .leave-button:hover {
+  background: #ff2d58;
 }
 .meeting-container .leave-button img {
-  width: 20px!important;
+  width: 20px !important;
 }
 .meeting-container .nav-button img {
   filter: brightness(0) invert(1);
   width: 27px;
 }
 
-.chat__buttons{
-  position:absolute;
+.chat__buttons {
+  position: absolute;
   bottom: 0;
 }
-.chat__thumb{
+.chat__thumb {
   display: flex;
   color: white;
   height: 67%;
@@ -270,7 +288,7 @@
   position: relative;
   overflow: hidden;
 }
-.local-window{
+.local-window {
   position: absolute;
   background: #8dc63f;
   bottom: 10px;
@@ -283,7 +301,7 @@
   align-items: center;
 }
 
-.remote-window{
+.remote-window {
   width: 100%;
   height: 100%;
   background-color: purple;
@@ -293,18 +311,18 @@
   align-items: center;
   border-radius: 10px;
   top: 0;
-    left: 0;
+  left: 0;
 }
 
-.duration-container{
+.duration-container {
   position: absolute;
-    right: 15px;
-    bottom: 10px;
-    font-size: x-large;
-    font-weight: 500;
+  right: 15px;
+  bottom: 10px;
+  font-size: x-large;
+  font-weight: 500;
 }
 
-.screen-share-window{
+.screen-share-window {
   height: 100%;
   width: 70%;
   left: 0;
@@ -315,20 +333,20 @@
   display: none;
 }
 
-.remote-window .remote-name{
+.remote-window .remote-name {
   position: absolute;
   left: 15px;
   bottom: 5px;
   font-size: x-large;
   z-index: 1;
 }
-.remote-user-icon{
- font-size: 200px; 
+.remote-user-icon {
+  font-size: 200px;
 }
-.local-user-icon{
-  font-size: 100px; 
+.local-user-icon {
+  font-size: 100px;
 }
-.local-window .local-name{
+.local-window .local-name {
   position: absolute;
   left: 30px;
   bottom: 5px;
@@ -340,7 +358,7 @@
 .no-remote.chat__thumb .remote-window {
   display: none;
 }
-.no-remote.chat__thumb .local-window{
+.no-remote.chat__thumb .local-window {
   position: unset;
   background: purple;
   width: 100%;
@@ -352,7 +370,7 @@
   overflow: hidden;
 }
 /* style for screen share */
-.screen-shared.chat__thumb{
+.screen-shared.chat__thumb {
   display: flex;
   color: white;
   height: 67%;
@@ -364,10 +382,10 @@
   align-items: center;
   position: relative;
 }
-.screen-shared.chat__thumb .screen-share-window{
+.screen-shared.chat__thumb .screen-share-window {
   display: block;
 }
-.screen-shared.chat__thumb .remote-window{
+.screen-shared.chat__thumb .remote-window {
   width: 28%;
   height: 45%;
   background-color: purple;
@@ -380,7 +398,7 @@
   justify-content: center;
   align-items: center;
 }
-.screen-shared.chat__thumb .local-window{
+.screen-shared.chat__thumb .local-window {
   position: absolute;
   background: #8dc63f;
   bottom: 10px;
@@ -392,20 +410,20 @@
   justify-content: center;
   align-items: center;
 }
-.screen-shared.chat__thumb .remote-window .remote-user-icon{
-  font-size: 100px; 
-}  
-.screen-shared.chat__thumb .remote-window .remote-name{
+.screen-shared.chat__thumb .remote-window .remote-user-icon {
+  font-size: 100px;
+}
+.screen-shared.chat__thumb .remote-window .remote-name {
   position: absolute;
   left: 15px;
   bottom: 5px;
   font-size: larger;
-} 
+}
 
 .chat__message .chat__title {
   width: 100%;
   height: 56px;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   padding: 15px;
   border-radius: 15px;
 }
@@ -431,9 +449,8 @@
   height: calc(100% - 50px);
   padding: 15px;
   overflow-y: auto;
-  
 }
-.chat__message .chat__wrapper .chat__item+.chat__item {
+.chat__message .chat__wrapper .chat__item + .chat__item {
   margin-top: 10px;
 }
 .chat__message .chat__text {
@@ -449,7 +466,7 @@
   flex-wrap: wrap;
   position: relative;
 }
-.chat__message .chat__wrapper .chat__item+.chat__item{
+.chat__message .chat__wrapper .chat__item + .chat__item {
   margin-top: 15px;
 }
 /* .chat__message .chat__wrapper .chat__item .icon__box {
@@ -466,7 +483,7 @@
   background: #fff;
   padding: 8px;
   border-radius: 8px;
-  color: #B5B3B3;
+  color: #b5b3b3;
 }
 .chat__message .chat__wrapper .chat__item .chat__msg span {
   color: #000;
@@ -477,7 +494,7 @@
 .chat__message .chat__wrapper .chat__item .msg__time {
   width: 100%;
   margin-top: 5px;
-  color: #B5B3B3;
+  color: #b5b3b3;
   font-size: 90%;
 }
 .chat__message .chat__text .type_msg {
@@ -509,19 +526,19 @@
   right: 5px;
   top: 5px;
 }
-.screen-shared.no-remote.chat__thumb .local-window{
+.screen-shared.no-remote.chat__thumb .local-window {
   bottom: unset;
   top: 0;
 }
-.screen-shared.no-remote.chat__thumb .remote-window{
+.screen-shared.no-remote.chat__thumb .remote-window {
   display: none;
 }
-@media only screen and (max-width: 767px){
-  .device-info{
+@media only screen and (max-width: 767px) {
+  .device-info {
     right: -10px;
     top: 1px;
   }
-  .device-info img{
+  .device-info img {
     width: 30px;
     height: 30px;
   }
@@ -535,102 +552,102 @@
     height: 15px;
     width: 15px;
   }
-  .account-info-block{
+  .account-info-block {
     position: absolute;
     right: 10px;
     top: 10px;
     font-size: small;
   }
-  .pre-meeting-container{
+  .pre-meeting-container {
     padding-top: 5vh !important;
   }
-  h5{
+  h5 {
     font-size: small;
   }
-  .pre-meeting-info{
+  .pre-meeting-info {
     margin-top: 15px;
   }
-  .duration-container{
+  .duration-container {
     right: 8px;
     bottom: 5px;
     font-size: medium;
   }
-  .chat__thumb{
-      width: 100%;
+  .chat__thumb {
+    width: 100%;
   }
-  .meeting-container  .nav-button{
-      width: 40px;
-      height: 40px;
+  .meeting-container .nav-button {
+    width: 40px;
+    height: 40px;
   }
-  .meeting-container  .nav-button img {
+  .meeting-container .nav-button img {
     width: 22px;
-}
-.meeting-container .leave-button img {
+  }
+  .meeting-container .leave-button img {
     width: 15px;
-}
-  .chat__buttons{
-      margin-bottom: 10px;
   }
-  .remote-user-icon{
-      font-size: 150px; 
-   }
-   .local-user-icon{
-      font-size: 50px; 
+  .chat__buttons {
+    margin-bottom: 10px;
   }
-  .screen-shared.chat__thumb .remote-window .remote-user-icon{
-      font-size: 50px; 
+  .remote-user-icon {
+    font-size: 150px;
   }
-  .screen-shared.chat__thumb .remote-window .remote-name{
-      position: absolute;
-      left: 15px;
-      bottom: 5px;
-      font-size: larger;
+  .local-user-icon {
+    font-size: 50px;
   }
-  .screen-shared.chat__thumb .remote-window{
-      width: 48%;
-      height: 41%;
-      background-color: purple;
-      top:unset;
-      bottom: 10px;
-      left: 0;
-      border-radius: 10px;
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .screen-shared.chat__thumb .remote-window .remote-user-icon {
+    font-size: 50px;
   }
-  .screen-shared.chat__thumb .local-window{
-      position: absolute;
-      background: #8dc63f;
-      bottom: 10px;
-      right: 0;
-      width: 48%;
-      height: 41%;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .screen-shared.chat__thumb .remote-window .remote-name {
+    position: absolute;
+    left: 15px;
+    bottom: 5px;
+    font-size: larger;
+  }
+  .screen-shared.chat__thumb .remote-window {
+    width: 48%;
+    height: 41%;
+    background-color: purple;
+    top: unset;
+    bottom: 10px;
+    left: 0;
+    border-radius: 10px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .screen-shared.chat__thumb .local-window {
+    position: absolute;
+    background: #8dc63f;
+    bottom: 10px;
+    right: 0;
+    width: 48%;
+    height: 41%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .screen-share-window {
-      height: 55%;
-      top: 0;
-      width: 100%;
-      left: 0;
-      border-radius: 10px;
-      position: absolute;
-      background-color: grey;
-      z-index: 1000;
-      display: none;
+    height: 55%;
+    top: 0;
+    width: 100%;
+    left: 0;
+    border-radius: 10px;
+    position: absolute;
+    background-color: grey;
+    z-index: 1000;
+    display: none;
   }
 
-  .no-remote.chat__thumb .local-window .local-name{
-      position: absolute;
-      left: 30px;
-      bottom: 5px;
-      font-size: x-large;
+  .no-remote.chat__thumb .local-window .local-name {
+    position: absolute;
+    left: 30px;
+    bottom: 5px;
+    font-size: x-large;
   }
-  .no-remote.chat__thumb .local-window  .local-user-icon{
-      font-size: 150px; 
+  .no-remote.chat__thumb .local-window .local-user-icon {
+    font-size: 150px;
   }
 }
 /* button {
@@ -658,22 +675,20 @@
   padding-right: 10px;
 }
 
-
-.local-video-play{
+.local-video-play {
   position: absolute;
   height: 100%;
   width: 100%;
   top: 0;
   left: 0;
 }
-.remote-video-play{
+.remote-video-play {
   position: absolute;
   height: 100%;
   width: 100%;
   top: 0;
   left: 0;
 }
-
 
 .hideBlock {
   display: none;
@@ -729,4 +744,3 @@
   border-radius: 50%;
   color: black;
 }
-

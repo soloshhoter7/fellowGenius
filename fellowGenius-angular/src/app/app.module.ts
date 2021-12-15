@@ -116,6 +116,7 @@ import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.comp
 import { MediaAccessDialogComponent } from './home/meeting/media-access-dialog/media-access-dialog.component';
 import { DateFormatMMYYYYDirective } from './custom-directives/date-format-mmyyyy.directive';
 import { DateFormatDdmmyyyyDirective } from './custom-directives/date-format-ddmmyyyy.directive';
+import { VoiceCallComponent } from './voice-call/voice-call.component';
 
 @NgModule({
   declarations: [
@@ -188,6 +189,7 @@ import { DateFormatDdmmyyyyDirective } from './custom-directives/date-format-ddm
     MediaAccessDialogComponent,
     DateFormatMMYYYYDirective,
     DateFormatDdmmyyyyDirective,
+    VoiceCallComponent,
   ],
   imports: [
     NoopAnimationsModule,

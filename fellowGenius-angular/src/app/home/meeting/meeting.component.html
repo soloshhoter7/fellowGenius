@@ -1,4 +1,4 @@
-<body style="max-width: 100vw; max-height: 100vh">
+<body style="max-width: 100vw; max-height: 100%">
   <div
     class="modal fade"
     id="device_info_modal"
@@ -23,7 +23,7 @@
         <!-- Modal Header -->
         <div class="modal-header">Device Info</div>
         <!-- Modal Body -->
-        <div style="display: flex;">
+        <!-- <div style="display: flex;">
           <button class="btn" style="margin: 5px;" (click)="changeOutputDevice()">CHANGE OUTPUT DEVICE</button>
           <button class="btn" style="margin: 5px;" (click)="checkIfAudioPlaying()">CHECK REMOTE AUDIO STATUS</button>
         </div>
@@ -32,7 +32,7 @@
             <input type="text" placeholder="Enter Device Id to switch" class="form-control" [(ngModel)]="inputAudioOutputDeviceId">
           </div>
           <button class="btn" (click)="setAudioOutputDevice()">Switch</button>
-        </div>
+        </div> -->
         
         <div class="modal-body">
           <div class="body-message">
@@ -40,11 +40,10 @@
               Media Access Allowed : {{ mediaAccessAllowed }} <br />
               Camera Access Allowed : {{ camAccessAllowed }} <br />Mic Access
               Allowed : {{ micAccessAllowed }}
-              <br />
-              Stream playing :{{ isLocalStreamPlaying }}<br />
+              <!-- Stream playing :{{ isLocalStreamPlaying }}<br />
               Mic Stream Playing : {{ isLocalMicStreamPlaying }}<br />
               Cam Stream Published : {{ isLocalCamStreamPublished }}<br />
-              Mic Stream Published : {{ isLocalMicStreamPublished }}
+              Mic Stream Published : {{ isLocalMicStreamPublished }} -->
             </div>
 
             <div *ngIf="mediaAccessAllowed == true">
@@ -61,7 +60,7 @@
               <span *ngIf="!micAccessAllowed">Microphone is off</span>
             </div>
 
-            <div *ngIf='isInMeeting'>
+            <!-- <div *ngIf='isInMeeting'>
               Remote Audio Level : {{remoteAudioLevel}}
               <hr/>
               Camera Streams :
@@ -83,9 +82,7 @@
                 <div *ngFor="let stream of micRemoteCalls">{{stream}}</div>
               </div>
               <hr/>
-            </div>
-            
-
+            </div> -->
           </div>
         </div>
       </div>
@@ -517,7 +514,7 @@
                       /></span></button
                     ><span>Mic</span>
                   </li>
-                  <li>
+                  <li *ngIf="!isMobile" >
                     <button
                       class="nav-button"
                       (click)="screenShare()"
@@ -564,7 +561,7 @@
                       /></span></button
                     ><span>Leave</span>
                   </li>
-                  <li>
+                  <!-- <li>
                     <button
                           href="#device_info_modal"
                           data-toggle="modal"
@@ -575,7 +572,7 @@
                             alt=""
                           />
                         </button>
-                  </li>
+                  </li> -->
                 </ul>
               </div>
             </div>

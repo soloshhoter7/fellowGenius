@@ -92,9 +92,6 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Modifying
 	@Query(value = "UPDATE booking_details SET rating=?2, review_text=?3 WHERE meeting_id=?1", nativeQuery = true)
 	void saveTutorRatings(String meetingId, Integer rating, String reviewText);
-	
-	
-	
-	
+
 }
 
