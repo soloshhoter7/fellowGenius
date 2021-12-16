@@ -69,10 +69,10 @@ localTracks = {
 remoteUsers = {};
 // Agora client options
 options = {
-  appid: '45f3ee50e0fd491aa46bd17c05fc7073',
-  channel: 'FG@123456',
-  uid: null,
-  token: null
+  appid: '',
+  channel: '',
+  uid: '',
+  token: ''
 };
 
 mics = []; // all microphones devices you can use
@@ -123,15 +123,15 @@ $("#media-device-test").on("hidden.bs.modal", function (e) {
 })
   }
 
-  async formJoinSubmit(e){
-    e.preventDefault();
+  async formJoinSubmit(){
+   console.log(this.options);
     $("#join").attr("disabled", true);
     $("#device-wrapper").css("display", "flex");
     try {
       this.options.appid = this.appId;
-      this.options.token = $("#token").val();
+      this.options.token = 'hello';
       this.options.channel = this.channelName;
-      this.options.uid = Number($("#uid").val());
+      
       await this.join();
       if(this.options.token) {
         $("#success-alert-with-token").css("display", "block");
@@ -153,7 +153,6 @@ $("#media-device-test").on("hidden.bs.modal", function (e) {
     this.client.on("user-unpublished", this.handleUserUnpublished);
     
     // join a channel.
-    this.options.uid = 
     await this.client.join(this.options.appid, this.options.channel, 
       this.options.token || null, this.options.uid || null);
   
