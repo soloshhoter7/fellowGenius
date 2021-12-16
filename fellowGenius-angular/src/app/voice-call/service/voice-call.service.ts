@@ -17,48 +17,47 @@ export class VoiceCallService {
   };
   localTrackAudioLevel: string = '0';
   selectedMicrophoneId;
+  options = {
+    appid: '45f3ee50e0fd491aa46bd17c05fc7073',
+    channel: 'FG@123456',
+    uid: null,
+    token: null,
+  };
+  remoteUsers = {};
+  mics = [];
+  cams = [];
+  currentMic;
+  currentCam;
+  localTracks = {
+    videoTrack: null,
+    audioTrack: null,
+  };
+  async getMediaDevicesInfo() {
+    this.mics = await AgoraRTC.getMicrophones();
+    this.currentMic = this.mics[0];
+    this.cams = await AgoraRTC.getCameras();
+    this.currentCam = this.cams[0];
+  }
   async startBasicCall(channelName, Uid, AppId) {
+    await this.getMediaDevicesInfo();
     console.log('STARTING BASIC CALL !');
     this.rtc.client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
     console.log('CLIENT CREATED !');
     console.log('APP ID :' + AppId);
+    this.assignClientHandlers();
     await this.rtc.client.join(AppId, channelName, null, Uid).then(() => {
       console.log('CLIENT JOINED !');
-      this.assignClientHandlers();
     });
-
-    AgoraRTC.getDevices().then((devices) => {
-      const audioDevices = devices.filter(function (device) {
-        return device.kind === 'audioinput';
-      });
-      console.log('AUDIO DEVICES :', audioDevices);
-      let bluetoothDevice: MediaDeviceInfo = null;
-      for (let device of audioDevices) {
-        if (device.label.includes('Bluetooth')) {
-          bluetoothDevice = device;
-        }
-      }
-      if (bluetoothDevice != null) {
-        console.log('MICROPHONE LABEL :', bluetoothDevice.label);
-        this.selectedMicrophoneId = bluetoothDevice.deviceId;
-      } else if (bluetoothDevice == null) {
-        console.log('MICROPHONE LABEL :', audioDevices[0].label);
-        this.selectedMicrophoneId = audioDevices[0].deviceId;
-      }
-
-      AgoraRTC.createMicrophoneAudioTrack({
-        microphoneId: this.selectedMicrophoneId,
-      }).then((audioTrack: IMicrophoneAudioTrack) => {
-        console.log('AUDIO TRACK CREATED !');
-        this.rtc.localAudioTrack = audioTrack;
-        this.rtc.client.publish(this.rtc.localAudioTrack).then(() => {
-          console.log('AUDIO STREAM PUBLISHED !');
-        });
-        setInterval(() => {
-          this.localTrackAudioLevel = audioTrack.getVolumeLevel().toFixed(1);
-        });
-      });
-    });
+    if (!this.localTracks.audioTrack) {
+      [this.localTracks.audioTrack] = await Promise.all([
+        // create local tracks, using microphone and camera
+        AgoraRTC.createMicrophoneAudioTrack({
+          microphoneId: this.currentMic.deviceId,
+        }),
+      ]);
+    }
+    await this.rtc.client.publish(this.localTracks.audioTrack);
+    console.log('publish success');
   }
   async leaveCall() {
     if (this.rtc.client != null) {
@@ -70,40 +69,40 @@ export class VoiceCallService {
   }
   assignClientHandlers() {
     let micClient: IAgoraRTCClient = this.rtc.client;
-    micClient.on('user-joined', (user: IAgoraRTCRemoteUser) => {
-      console.log('REMOTE USER JOINED WITH USER ID :', user.uid);
-      this.rtc.remoteUser = user;
-    });
-    micClient.on('user-left', (user, reason) => {
-      console.log('REMOTE USER LEFT WITH UID :', user.uid);
-      if (this.rtc.remoteUser.uid == user.uid) {
-        console.log('RECOGNISED REMOTE USER HAS LEFT !');
-        this.rtc.remoteUser = null;
-      }
-    });
     micClient.on('user-published', async (user, mediaType) => {
-      await this.rtc.client.subscribe(user, mediaType).then(() => {
-        console.log('REMOTE USER PUBLISHED A STREAM');
-        if (mediaType === 'audio') {
-          this.rtc.remoteAudioTrack = user.audioTrack;
-          this.rtc.remoteAudioTrack.play();
-        }
-      });
+      const id = user.uid;
+      this.remoteUsers[id] = user;
+      this.subscribe(user, mediaType);
     });
-    AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
-      console.log('RECORDING DEVICE CHANGED !');
-      console.log('CHANGED DEVICE :', changedDevice);
-      // When plugging in a device, switch to a device that is newly plugged in.
-      if (changedDevice.state === 'ACTIVE') {
-        this.rtc.localAudioTrack.setDevice(changedDevice.device.deviceId);
-        // Switch to an existing device when the current device is unplugged.
-      } else if (
-        changedDevice.device.label === this.rtc.localAudioTrack.getTrackLabel()
-      ) {
-        const oldMicrophones = await AgoraRTC.getMicrophones();
-        oldMicrophones[0] &&
-          this.rtc.localAudioTrack.setDevice(oldMicrophones[0].deviceId);
+    micClient.on('user-unpublished', (user, mediaType) => {
+      if (mediaType === 'video') {
+        const id = user.uid;
+        delete this.remoteUsers[id];
+        $(`#player-wrapper-${id}`).remove();
       }
-    };
+    });
+  }
+  async switchCamera(label) {
+    console.log(label);
+    this.currentCam = this.cams.find((cam) => cam.label === label);
+    // switch device of local video track.
+    await this.localTracks.videoTrack.setDevice(this.currentCam.deviceId);
+  }
+
+  async switchMicrophone(label) {
+    console.log(label);
+    this.currentMic = this.mics.find((mic) => mic.label === label);
+    // switch device of local audio track.
+    await this.localTracks.audioTrack.setDevice(this.currentMic.deviceId);
+  }
+  async subscribe(user, mediaType) {
+    const uid = user.uid;
+    // subscribe to a remote user
+    await this.rtc.client.subscribe(user, mediaType);
+    console.log('subscribe success');
+    if (mediaType === 'audio') {
+      console.log('SUBSCRIBED SOUND IS PLAYING !');
+      user.audioTrack.play();
+    }
   }
 }

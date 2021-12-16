@@ -62,11 +62,14 @@
       </div>
     </form>
 
-    <div id="device-wrapper">
+    <!-- <div id="device-wrapper">
       <div class="input-group">
         <div class="input-group-prepend">
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mics</button>
-          <div class="mic-list dropdown-menu"></div>
+          <div class="mic-list dropdown-menu">
+            <a *ngFor="let mic of mics" (click)="switchMicrophone(mic.label)" style="cursor: pointer;">{{mic.label}}</a>
+            <a>adfasf</a>
+          </div>
         </div>
         <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
       </div>
@@ -74,12 +77,51 @@
       <div class="input-group">
         <div class="input-group-prepend">
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
-          <div class="cam-list dropdown-menu"></div>
+          <div class="cam-list dropdown-menu">
+            <a *ngFor="let camera of cams" (click)="switchCamera(camera.label)">{{camera.label}}</a>
+          </div>
         </div>
         <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
       </div>
-    </div>
-
+    </div> -->
+<br>
+<br>
+  <div class="container">
+            <h5 class="device-name">Microphone</h5>
+            <p id="device-intro">Produce sounds to check if the mic works.</p>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mics</button>
+                <div class="mic-list dropdown-menu">
+                  <ul>
+                    <li *ngFor="let mic of mics">
+                      <a  (click)="switchMicrophone(mic.label)" style="cursor: pointer;">{{mic.label}}</a>
+                    </li>
+                  </ul>
+                  
+                </div>
+              </div>
+              <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
+            </div>
+            <!-- <div class="progress">
+              
+              <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div> -->
+            <div>
+              Volume Level : {{localTrackAudioLevel}}
+            </div>
+            <h5 class="device-name">Camera</h5>
+            <p id="device-intro">Move in front of the camera to check if it works.</p>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
+                <div class="cam-list dropdown-menu">
+                  <a *ngFor="let camera of cams" (click)="switchCamera(camera.label)">{{camera.label}}</a>
+                </div>
+              </div>
+              <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
+            </div>
+          </div>
     <div class="row video-group">
       <div class="col">
         <p id="local-player-name" class="player-name"></p>
@@ -106,19 +148,27 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mics</button>
-                <div class="mic-list dropdown-menu"></div>
+                <div class="mic-list dropdown-menu">
+                  <a *ngFor="let mic of mics" (click)="switchMicrophone(mic.label)" style="cursor: pointer;">{{mic.label}}</a>
+                </div>
               </div>
               <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
             </div>
-            <div class="progress">
+            <!-- <div class="progress">
+              
               <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div> -->
+            <div>
+              Volume Level : {{localTrackAudioLevel}}
             </div>
             <h5 class="device-name">Camera</h5>
             <p id="device-intro">Move in front of the camera to check if it works.</p>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
-                <div class="cam-list dropdown-menu"></div>
+                <div class="cam-list dropdown-menu">
+                  <a *ngFor="let camera of cams" (click)="switchCamera(camera.label)">{{camera.label}}</a>
+                </div>
               </div>
               <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
             </div>
