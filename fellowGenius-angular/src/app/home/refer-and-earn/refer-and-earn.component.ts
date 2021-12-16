@@ -6,6 +6,7 @@ import { TutorService } from 'src/app/service/tutor.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-refer-and-earn',
   templateUrl: './refer-and-earn.component.html',
@@ -17,7 +18,8 @@ export class ReferAndEarnComponent implements OnInit {
     private loginService: LoginDetailsService,
     private studentService: StudentService,
     private tutorService: TutorService,
-    private clipboard:Clipboard
+    private clipboard:Clipboard,
+    private snackBar:MatSnackBar
   ) {}
   referCode:any="";
   userId:any="";
@@ -36,6 +38,14 @@ export class ReferAndEarnComponent implements OnInit {
   loc = encodeURIComponent(window.location.href)
   siteURL="https://fellowgenius.com/"
   deviceType:string="";
+
+  linkedinURL="https://fellowgenius.com/#/sign-up?pt=LI";
+  config: MatSnackBarConfig = {
+    duration: 5000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+    panelClass: ['snackbar'],
+  };
   ngOnInit(): void {
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	
@@ -106,6 +116,28 @@ export class ReferAndEarnComponent implements OnInit {
   copyReferCode(){
     this.clipboard.copy(this.referCode);
     console.log('Inside copy method');
+
+    //mat snackbar
+    this.snackBar.open(
+      'Refer code copied !',
+      'close',
+      this.config
+    );
+  }
+
+  copyLinkedinText(){
+    let linkedInMsg=`Thinking about how to get an expert’s advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!        
+${this.linkedinURL}
+    `
+    this.clipboard.copy(linkedInMsg);
+    console.log('Inside copy method');
+
+    //mat snackbar
+    // this.snackBar.open(
+    //   'Text copied !',
+    //   'close',
+    //   this.config
+    // );
   }
 
     add(event: MatChipInputEvent): void {
@@ -145,7 +177,11 @@ export class ReferAndEarnComponent implements OnInit {
    }
 
    shareLinkedIn(){   
-    const shareUrl=`https://www.linkedin.com/sharing/share-offsite/?url=${this.siteURL}`;
+     //this.copyLinkedinText();
+     let linkedinURL="https://fellowgenius.com/"
+     let url="https://mail.google.com/mail/u/0/#inbox"
+     console.log(linkedinURL);
+    const shareUrl=`https://www.linkedin.com/sharing/share-offsite/?url=${linkedinURL}`;
     console.log('Hello from hello linkedin');
     window.open(shareUrl,"_blank");   
    }
@@ -174,13 +210,17 @@ export class ReferAndEarnComponent implements OnInit {
 
    getWhatsappMsgLink(){
     
-    const siteurl="https://www.fellowgenius.com/";
-    const msg=`Refer%20Code%20is%20${this.referCode}%0AWebsite%20Link%20is%20${siteurl}`;
+    const siteurl="https://fellowgenius.com/#/sign-up?pt=WA";
+    const message=`Thinking about how to get an experts advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
+${siteurl}
+    `
+    let encmsg = encodeURI(message);
+    console.log(encmsg);
     var whatsappLink="";
     if(this.deviceType==="Laptop"){
-      whatsappLink=`https://web.whatsapp.com/send?text=${msg}`
+      whatsappLink=`https://web.whatsapp.com/send?text=${encmsg}`
     }else if(this.deviceType==="Mobile"){
-      whatsappLink=`https://wa.me/?text=${msg}`;
+      whatsappLink=`https://wa.me/?text=${encmsg}`;
     }else{
       console.log("Sorry something went wrong")
     }
