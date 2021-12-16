@@ -377,7 +377,7 @@
           ngModel
           #dob="ngModel"
           dobValidator
-          
+          required
         />
         <mat-datepicker-toggle
           class="dob-mat-datepicker"
@@ -385,14 +385,13 @@
           [for]="dobdp"
         ></mat-datepicker-toggle>
         <mat-datepicker
-
           #dobdp
-          
         >
         </mat-datepicker>
       </div>
       <span
                             *ngIf="dob.errors?.invalidDob && dob.touched"
+                            
                             class="help-block"
                             >Invalid date of birth</span
                           >
@@ -791,12 +790,12 @@
                         </div>
                       </div>
                       <div *ngIf="expertises.length==0">
-                        <span
+                        <!-- <span
                           class="help-block"
                           style="color:black; font-size: 20px"
                           ><span style="color: red;">*</span> 
                           Please click on save to save atleast 1 domain</span
-                        >
+                        > -->
                         <br/>
                         <span
                           class="help-block"
@@ -1188,12 +1187,13 @@
                         >
                       </div>
                       <div *ngIf="expertises.length==0">
-                        <span
+                        <!-- <span
                           class="help-block"
                           style="color:black; font-size: 20px"
-                          ><span style="color: red;">*</span> 
+                          >
+                          <span style="color: red;">*</span> 
                           Please click on save to save atleast 1 education</span
-                        >
+                        > -->
                         <br/>
                         
                       </div>
