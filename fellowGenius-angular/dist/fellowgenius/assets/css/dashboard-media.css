@@ -1,0 +1,385 @@
+@media only screen and (min-width: 1400px){
+.profile_tabs ul.nav-tabs li a{
+    font-size: 18px;
+}
+/* .fixed_menu ul.nav_menu li a img.mnu_icn{
+    width: 25px;
+    height: 25px;
+}
+.fixed_menu ul.nav_menu li a{
+    font-size: 16px;
+}
+.fixed_menu ul.nav_menu li a{
+    padding: 15px 10px 15px 45px;
+} */
+}
+
+
+@media only screen and (max-width: 1199px){
+.page-breadcrumb ul.breadcrumb li{
+	font-size: 20px;
+}
+.page-breadcrumb ul.breadcrumb li+li:before{
+	top: 4px;
+}
+form .profile_upload .custom-file-label::after{
+    padding: 12px;
+}
+.profile_tabs.learner_profile ul.nav-tabs li {
+    width: calc(100% / 3);
+}
+.dahboard__overview .overview__total {
+    width: calc(100% - 30px);
+}
+.dahboard__overview .overview__meeting{
+    width: calc(100% - 30px);
+    margin-top: 0;
+}
+.session_page .completed__meeting .sec_title h3 {
+    width: 100%;
+    margin-bottom: 15px;
+}
+.session_page .completed__meeting .sec_title .sec_filter{
+    width: 100%;
+}
+table td .table_btn{
+    padding: 15px;
+}
+}
+
+
+@media only screen and (max-width: 991px){
+body{
+    font-size: 13px;
+}
+h1 {
+    font-size: 45px;
+}
+h2{ 
+    font-size: 35px;
+}
+h3{
+    font-size: 28px;
+}
+h4{
+    font-size: 22px;
+}
+.button, button, .btn{
+    padding: 13px 20px 10px;
+    min-height: 45px;
+}
+.fixed_menu ul.nav_menu li a span.menu_txt{
+    display: none;
+}
+.fixed_menu ul.nav_menu li a {
+    width: 45px;
+    height: 45px;
+    padding: 12px;
+    border: 1px solid #b5b3b3;
+}
+.side-menu{
+    width: 80px;
+}
+.side-menu nav.fixed_menu .web_logo{
+    max-width: 80px;
+}
+header{
+    width: calc(100% - 80px);
+    left: 80px;
+}
+.page-content{
+    width: calc(100% - 80px);
+    margin-left: 80px;
+}
+.fixed_menu ul.nav_menu li a img.mnu_icn {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.accordion .card-header a[data-toggle="collapse"]::after{
+	right: 0px;
+	top: 5px;
+	background-size: 35px;
+	width: 40px;
+	height: 40px;
+}
+.profile_tabs.learner_profile ul.nav-tabs li, .profile_tabs ul.nav-tabs li {
+    width: auto;
+    min-width: 120px;
+}
+.dahboard__overview .Overview__tabs h3 {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.dahboard__overview .Overview__tabs .sec__Tabs{
+    width: 100%;
+}
+table td.pmt_status, table th.pmt_status {
+    max-width: none;
+}
+
+.chat__video.toggle__chat {
+    width: 100%;
+}
+.chat__message.toggle__chat {
+    width: 100%;
+    margin-left: 0;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    margin: 0;
+    height: 100%;
+    border-radius: 0;
+}
+}
+
+
+@media only screen and (max-width: 767px){
+.dahboard__overview .Overview__tabs .sec__Tabs .earning__filter {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.dahboard__overview .Overview__tabs .sec__Tabs .tab__filter {
+    width: 100%;
+}
+.white__bg{
+    padding: 15px;
+}
+.session_page .completed__meeting .sec_title .sec_filter {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.session_page .completed__meeting .sec_title .sec_filter .filter_sel {
+    width: calc(100% / 3 - 8px);
+    margin-left: 0;
+    margin-right: 8px;
+}
+.chat__video .chat__buttons{
+    margin-bottom: 1em;
+}
+.chat__video .chat__buttons ul a span.opt__icon img {
+    width: 22px;
+}
+.chat__video .chat__buttons ul li a.cancel_btn span.opt__icon img {
+    width: 15px;
+}
+.chat__video .chat__thumb img.mob_avtar{
+    display: block;
+}
+.chat__video .chat__thumb img.desk_avtar{
+    display: none;
+}
+.table>:not(caption)>*>*{
+    font-size: 12px;
+}
+.page-content table tbody td.fld_name .nme_style span, .page-content table tbody td.fld_action .td_btn, 
+.page-content table tbody td.fld_domain, .page-content table thead th.fld_domain,
+.page-content table tbody td.fld_topic, .page-content table thead th.fld_topic,
+.page-content table tbody td.fld_attch, .page-content table thead th.fld_attch,
+.page-content table tbody td.pmt_status, .page-content table thead th.pmt_status{
+    display: none;
+}
+.page-content table tbody td.fld_dTme {
+    word-break: break-all;
+    white-space: normal;
+    width: 100px;
+}
+.page-content table tbody td.fld_mobaction{
+    display: table-cell;
+}
+.page-content table tbody td.fld_action .Modal__BTn, .page-content table tbody td.fld_mobaction .Modal__BTn {
+    min-width: auto;
+    float: right;
+    border-radius: 50%;
+    min-height: auto;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    font-size: 17px;
+    display: block;
+    line-height: 2.15;
+}
+}
+
+
+@media only screen and (max-width: 575px){
+h1 {
+    font-size: 30px;
+}
+h2{
+    font-size: 30px;
+}
+h3{
+    font-size: 24px;
+}
+h4{
+    font-size: 20px;
+}
+header .page_btns a.hdr_btns{
+    width: 40px;
+    height: 40px;
+}
+header .page_btns a.hdr_btns.notfcn_btn:before{
+    top: 7px;
+    right: 8px;
+}
+.side-menu nav.fixed_menu .web_logo {
+    max-width: 60px;
+    padding: 8px;
+}
+.side-menu {
+    width: 60px;
+}
+.page-content {
+    width: calc(100% - 60px);
+    margin-left: 60px;
+    padding: 10px;
+}
+header {
+    width: calc(100% - 60px);
+    left: 60px;
+    padding: 10px;
+    flex-wrap: wrap-reverse;
+    justify-content: flex-end;
+}
+header .page__title {
+    width: 100%;
+    margin-top: 10px;
+}
+.fixed_menu ul.nav_menu li {
+    padding: 10px 10px 0;
+}
+.fixed_menu ul.nav_menu li a {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+}
+.fixed_menu ul.nav_menu li a img.mnu_icn {
+    width: 22px;
+    height: 22px;
+}
+.page-breadcrumb ul.breadcrumb li+li:before{
+	background-size: 6px;
+}
+.page-breadcrumb ul.breadcrumb li+li {
+    padding-top: 4px;
+}
+.page-breadcrumb ul.breadcrumb li:first-child a {
+    width: 30px;
+    height: 30px;
+    top: 0;
+}
+.page-breadcrumb ul.breadcrumb li+li:before {
+    top: 5px;
+    left: 7px;
+}
+.page-breadcrumb ul.breadcrumb li+li {
+    padding-left: 22px;
+    padding-top: 3px;
+}
+.page-breadcrumb ul.breadcrumb li {
+    font-size: 16px;
+}
+.accordion .card-header a[data-toggle="collapse"]::after {
+    right: 5px;
+    top: 5px;
+    background-size: 30px;
+    width: 30px;
+    height: 30px;
+}
+.profile_page{
+    padding: 5px;
+}
+table .td_btn a.reschedule_btn, table .td_btn a.delete_btn, table .td_btn a.confirm_btn, table .td_btn a.restime_btn {
+    width: 35px;
+}
+table td .table_btn{
+    min-height: 40px;
+    padding: 10px 15px;
+}
+table td .nme_style span {
+    min-width: 40px;
+    height: 40px;
+    width: 40px;
+    font-size: 20px;
+    line-height: 40px;
+}
+.session_page .completed__meeting .sec_title .sec_filter .filter_sel {
+    width: calc(100% / 2 - 8px);
+    margin-bottom: 10px;
+}
+.chat__join .join__wrapper .chat__ready{
+    width: 100%;
+    padding-bottom: 0;
+}
+.chat__join .join__wrapper .join__btn{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.chat__join .join__wrapper .join__btn h4{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+}
+.chat__video .chat__buttons ul li{
+    width: 45px;
+    margin-bottom: 10px;
+}
+.chat__video .chat__buttons ul a span.opt__icon {
+    width: 40px;
+    height: 40px;
+}
+.chat__video .chat__buttons ul a{
+    font-size: 11px;
+}
+.chat__message .chat__title .close_btn {
+    width: 30px;
+    height: 30px;
+}
+.chat__video .chat__buttons{
+    height: 40px;
+}
+.chat__video .chat__header .chat__name h5{
+    font-size: 16px;
+}
+.chat__video .chat__header .logo_img, .chat__join .join__header .logo_img {
+    width: 85px;
+}
+.chat__video .chat__header .chat__name {
+    width: calc(100% - 90px);
+}
+.dashboard_page .meet__Tabs .nav-tabs li a, .session_page .meet__Tabs .nav-tabs li a{
+    padding: 10px;
+    font-size: 14px;
+}
+}
+
+@media only screen and (max-width: 481px){
+.profile_tabs.learner_profile ul.nav-tabs li, .profile_tabs ul.nav-tabs li {
+    width: 100%;
+    min-width: 120px;
+}
+.profile_tabs ul.nav-tabs li+li {
+    margin-top: 7px;
+}
+.profile_tabs ul.nav-tabs li a {
+    border: 1px solid #dcdcdc;
+    padding: 10px 8px;
+}
+.profile_tabs ul.nav-tabs li a.active{
+    border-color: #8dc63f;
+}
+.dahboard__overview .Overview__tabs .sec__Tabs ul.nav-tabs li {
+    width: calc(100% / 2);
+}
+.dashboard_page .meet__Tabs .nav-tabs li, .session_page .meet__Tabs .nav-tabs li{
+    width: 100%;
+    margin-left: 0 !important;
+    margin-top: 10px;
+}
+}

@@ -13,11 +13,17 @@
     </div>
     <br>
     <br>
-    <div *ngIf="voiceCallService.rtc.remoteUser!=null">Remote Users : {{voiceCallService.rtc.remoteUser.uid}}</div>
+    <div *ngIf="voiceCallService.connectionState != 'NOT INITIALIZED'">
+
+
     <br><br>
     <div>
         Local Microphone Audio Level : {{voiceCallService.localTrackAudioLevel}}
     </div>
+    <div>
+              Connection State : {{voiceCallService.connectionState}}
+            </div>
+            <!-- <div *ngIf="voiceCallService.remoteUsers!=null">Remote Users : <span *ngFor="let user of voiceCallService.remoteUsers"> {{user.uid}}</span></div> -->
     <br><br>
     <div class="container">
             <h5 class="device-name">Microphone</h5>
@@ -37,27 +43,10 @@
               </div>
               <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
             </div>
-            <!-- <div class="progress">
-              
-              <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div> -->
-            <div>
-              Volume Level : {{voiceCallService.localTrackAudioLevel}}
-            </div>
-            <h5 class="device-name">Camera</h5>
-            <p>Current Cam :{{voiceCallService.currentCam.label}}</p>
-            <p id="device-intro">Move in front of the camera to check if it works.</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
-                <div class="cam-list dropdown-menu">
-                  <a *ngFor="let camera of voiceCallService.cams" (click)="voiceCallService.switchCamera(camera.label)">{{camera.label}}</a>
-                </div>
-              </div>
-              <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
-            </div>
           </div>
-    <div>
+    </div>
+    
+    <!-- <div>
         <br><br>
         <h3>Description</h3>
         <ol>
@@ -70,5 +59,5 @@
             <li>Once the audio track is created we publish it into the channel using the client</li>
             <li>If any remote user joins the channel we display its uid.</li>
         </ol>
-    </div>  
+    </div>   -->
 </body>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="27" viewBox="0 0 30 27">
+  <defs>
+    <clipPath id="clip-dislike-icon">
+      <rect width="30" height="27"/>
+    </clipPath>
+  </defs>
+  <g id="dislike-icon" clip-path="url(#clip-dislike-icon)">
+    <g id="_2087973" data-name="2087973" transform="translate(29.857 27.125) rotate(180)">
+      <path id="Path_4613" data-name="Path 4613" d="M0,1.866V16.794a1.866,1.866,0,0,0,1.866,1.866h5.6V0h-5.6A1.866,1.866,0,0,0,0,1.866Z" transform="translate(0 8.464)" fill="#ff2d58"/>
+      <path id="Path_4614" data-name="Path 4614" d="M17.081,9.36H11.568a.933.933,0,0,1-.816-1.386l1.943-3.5A2.8,2.8,0,0,0,10.927.4L9.556.058a.931.931,0,0,0-.919.281L1.2,8.6A4.663,4.663,0,0,0,0,11.725v9.764a4.671,4.671,0,0,0,4.665,4.665h9.282a4.676,4.676,0,0,0,4.5-3.431l1.992-9.141A3.446,3.446,0,0,0,17.081,9.36Z" transform="translate(9.33 0.97)" fill="#ff2d58"/>
+    </g>
+  </g>
+</svg>

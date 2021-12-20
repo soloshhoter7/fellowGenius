@@ -4,11 +4,14 @@ import AgoraRTC, {
   IAgoraRTCRemoteUser,
   IMicrophoneAudioTrack,
 } from 'agora-rtc-sdk-ng';
+import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class VoiceCallService {
-  constructor() {}
+  constructor() {
+    this.getMediaDevicesInfo();
+  }
   rtc = {
     client: null,
     localAudioTrack: null,
@@ -32,6 +35,8 @@ export class VoiceCallService {
     videoTrack: null,
     audioTrack: null,
   };
+  audioSubscription: Subscription;
+  connectionState = 'NOT INITIALIZED';
   async getMediaDevicesInfo() {
     this.mics = await AgoraRTC.getMicrophones();
     this.currentMic = this.mics[0];
@@ -55,10 +60,33 @@ export class VoiceCallService {
           microphoneId: this.currentMic.deviceId,
         }),
       ]);
+      setInterval(() => {
+        let audioTrack: IMicrophoneAudioTrack = this.localTracks.audioTrack;
+        this.localTrackAudioLevel = audioTrack
+          .getVolumeLevel()
+          .toFixed(2)
+          .toString();
+      }, 100);
     }
-    await this.rtc.client.publish(this.localTracks.audioTrack);
-    console.log('publish success');
+    await this.publish();
   }
+  async publish() {
+    if (this.localTracks != null && this.localTracks.audioTrack != null) {
+      await this.rtc.client
+        .publish(this.localTracks.audioTrack)
+        .then(() => {
+          console.log('MICROPHONE TRACK PUBLISHED SUCCESSFULLY');
+        })
+        .catch((e) => {
+          console.log('MICROPHONE TRACK PUBLISHING FAILED !');
+          console.log(e);
+          setTimeout(() => {
+            this.publish();
+          }, 500);
+        });
+    }
+  }
+
   async leaveCall() {
     if (this.rtc.client != null) {
       await this.rtc.client.leave().then(() => {
@@ -66,21 +94,6 @@ export class VoiceCallService {
         this.rtc.client = null;
       });
     }
-  }
-  assignClientHandlers() {
-    let micClient: IAgoraRTCClient = this.rtc.client;
-    micClient.on('user-published', async (user, mediaType) => {
-      const id = user.uid;
-      this.remoteUsers[id] = user;
-      this.subscribe(user, mediaType);
-    });
-    micClient.on('user-unpublished', (user, mediaType) => {
-      if (mediaType === 'video') {
-        const id = user.uid;
-        delete this.remoteUsers[id];
-        $(`#player-wrapper-${id}`).remove();
-      }
-    });
   }
   async switchCamera(label) {
     console.log(label);
@@ -95,6 +108,7 @@ export class VoiceCallService {
     // switch device of local audio track.
     await this.localTracks.audioTrack.setDevice(this.currentMic.deviceId);
   }
+
   async subscribe(user, mediaType) {
     const uid = user.uid;
     // subscribe to a remote user
@@ -104,5 +118,50 @@ export class VoiceCallService {
       console.log('SUBSCRIBED SOUND IS PLAYING !');
       user.audioTrack.play();
     }
+  }
+
+  assignClientHandlers() {
+    let micClient: IAgoraRTCClient = this.rtc.client;
+    micClient.on('user-published', async (user, mediaType) => {
+      const id = user.uid;
+      // this.rtc.remoteUser = user;
+      this.remoteUsers[id] = user;
+      this.subscribe(user, mediaType);
+    });
+    micClient.on('user-unpublished', (user, mediaType) => {
+      if (mediaType === 'video') {
+        const id = user.uid;
+        // this.rtc.remoteUser=null;
+        delete this.remoteUsers[id];
+        // $(`#player-wrapper-${id}`).remove();
+      }
+    });
+    micClient.on('connection-state-change', (curState, revState, reason) => {
+      this.connectionState = curState;
+      console.log('CONNECTION STATE CHANGED :', curState, revState, reason);
+    });
+    AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
+      await this.getMediaDevicesInfo();
+      // When plugging in a device, switch to a device that is newly plugged in.
+      if (changedDevice.state === 'ACTIVE') {
+        if (this.localTracks != null && this.localTracks.audioTrack != null) {
+          this.localTracks.audioTrack.setDevice(changedDevice.device.deviceId);
+          this.currentMic = this.mics.find(
+            (mic) => mic.label === changedDevice.device.label
+          );
+        }
+        // Switch to an existing device when the current device is unplugged.
+      } else if (
+        changedDevice.device.label ===
+        this.localTracks.audioTrack.getTrackLabel()
+      ) {
+        const oldMicrophones = await AgoraRTC.getMicrophones();
+        oldMicrophones[0] &&
+          this.localTracks.audioTrack.setDevice(oldMicrophones[0].deviceId);
+        this.currentMic = this.mics.find(
+          (mic) => mic.label === oldMicrophones[0].label
+        );
+      }
+    };
   }
 }
