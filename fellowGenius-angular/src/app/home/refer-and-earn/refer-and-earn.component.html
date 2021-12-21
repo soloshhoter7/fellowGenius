@@ -138,10 +138,10 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                         <div class="what border_box">
                           <div class="box_title">What ?</div>
                           <div>
-                            <p class="text-black">
+                            <p class="text-black text-font-size">
                               Thinking about how to get an expert’s advice on your ongoing project. Use my referral code {{referCode}} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
-                              
-                              {{linkedinURL}}
+                              <br>
+                             Joining Link :- {{linkedinURL}}
                             </p>
                           </div>
                         </div>
@@ -149,7 +149,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                         <div class="how border_box">
                           <div class="box_title">How ?</div>
                           <div>
-                            <div class="text-black">
+                            <div class="text-black text-font-size">
                               <ol>
                                 <li>We have copied the above mentioned text for you.</li>
                                 <li>
@@ -181,11 +181,118 @@ Refer your friend today and when they complete their 1st session with a FellowGe
               <!-- Linkedin Modal Ends -->
               <a
                 href="javascript:void(0)"
-                (click)="shareMail()"
+                href="#Mail_Modal"
+                data-toggle="modal"
                 class="share_btn"
               >
                 <img src="../../../assets/images/envelope-icon.svg" alt="#"
               /></a>
+              <!-- mail modal begins-->
+              <div
+                class="modal fade join__Modal"
+                id="Mail_Modal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="myLargeModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-lg">
+                  <!-- Modal Content: begins -->
+                  <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <button
+                        type="button"
+                        id="close-popup"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <div class="body-message">
+                        <h4>Share with Mail</h4>
+
+                        <div class="refer_code border_box">
+                          <div class="box_title">
+                            Your refer code is {{ referCode }}
+                          </div>
+                        </div>
+
+                        <div class="what border_box invite__friend_box">
+                            <h4>Invite your friends</h4>
+                            <p>
+                              Please add email adresses of person you want to refer
+                            </p>
+                            <div>
+                              <div class="input-group invite__input">
+                                  
+                                  <mat-form-field class="example-chip-list" appearance="fill">
+                                    <mat-chip-list #chipList aria-label="Email selection">
+                                      <mat-chip
+                                        *ngFor="let email of emailsArray"
+                                        [selectable]="selectable"
+                                        [removable]="removable"
+                                        (removed)="remove(email)"
+                                      >
+                                        {{ email }}
+                                        <button matChipRemove *ngIf="removable">
+                                          <mat-icon>cancel</mat-icon>
+                                        </button>
+                                      </mat-chip>
+                                      <input
+                                        placeholder="New Emails..."
+                                        [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        [matChipInputAddOnBlur]="addOnBlur"
+                                        (matChipInputTokenEnd)="add($event)"
+                                      />
+                                    </mat-chip-list>
+                                  </mat-form-field>
+                                </div>
+                                
+                            </div>
+                            
+                          
+                        </div>
+
+                        <div class="how border_box">
+                          <div class="box_title">How ?</div>
+                          <div>
+                            <div class="text-black">
+                              <ol>
+                                <li>We have copied the above mentioned text for you.</li>
+                                <li>
+                                  Click on go to linked in.
+                                </li>
+                                <li>You can choose from given options to either "Share in a post" or "Send as private Message".</li>
+                                <li>Paste the text that we have copied for you and you can send.</li>
+                              </ol>
+                              
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="modal_btn feedback_submit">
+                          <button
+                            type="submit"
+                            (click)="sendMail()"
+                            class="button btn_mdl"
+                          >
+                            Send Mail
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Modal Content: ends -->
+                </div>
+              </div>
+              <!-- Linkedin Modal Ends -->
+
               <a
                 href="javascript:void(0)"
                 (click)="shareWhatsapp()"
@@ -195,11 +302,10 @@ Refer your friend today and when they complete their 1st session with a FellowGe
             </div>
           </div>
         </div>
-        <div class="invite__friend_box">
+        <!-- <div class="invite__friend_box">
           <h4>Invite your friends</h4>
           <p>
-            Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin,
-            lorem quis bibendum auctor, nisi elit consequat ipsum.
+            Please add email adresses of person you want to refer
           </p>
           <div>
             <div class="input-group invite__input">
@@ -237,7 +343,8 @@ Refer your friend today and when they complete their 1st session with a FellowGe
               </button>
           </div>
           
-        </div>
+        </div> -->
+        <!-- invite box ends-->
       </div>
       <div class="Referal__dashbrd white__bg">
         <div class="sec__title">

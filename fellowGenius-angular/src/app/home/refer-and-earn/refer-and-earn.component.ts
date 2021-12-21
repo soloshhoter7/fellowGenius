@@ -7,6 +7,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { HttpService } from 'src/app/service/http.service';
 @Component({
   selector: 'app-refer-and-earn',
   templateUrl: './refer-and-earn.component.html',
@@ -14,6 +15,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 })
 export class ReferAndEarnComponent implements OnInit {
   constructor(
+    private httpService:HttpService,
     private cookieService: CookieService,
     private loginService: LoginDetailsService,
     private studentService: StudentService,
@@ -31,6 +33,8 @@ export class ReferAndEarnComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   emailsArray:string[]=[];
+  isLoading=false;
+  linkSent=false;
 
   //SHARE DATA VARIABLES
   wSize = "width=600,height=460";
@@ -43,7 +47,7 @@ export class ReferAndEarnComponent implements OnInit {
   config: MatSnackBarConfig = {
     duration: 5000,
     horizontalPosition: 'center',
-    verticalPosition: 'top',
+    verticalPosition: 'bottom',
     panelClass: ['snackbar'],
   };
   ngOnInit(): void {
@@ -126,8 +130,9 @@ export class ReferAndEarnComponent implements OnInit {
   }
 
   copyLinkedinText(){
-    let linkedInMsg=`Thinking about how to get an expert’s advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!        
-${this.linkedinURL}
+    let linkedInMsg=`Thinking about how to get an expert’s advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
+Joining Link : -  ${this.linkedinURL}      
+
     `
     this.clipboard.copy(linkedInMsg);
     console.log('Inside copy method');
@@ -233,5 +238,26 @@ ${siteurl}
     const body=`Hello%20from%20${this.fullName}%0AWelcome%20to%20Fellowgenius.%20Your%20Refer%20Code%20is%20${this.referCode}`; 
     const emailLink=`https://mail.google.com/mail/?compose=1&view=cm&fs=1&su=${subject}&body=${body}`;
     return emailLink;
+   }
+
+   sendMail(){
+     console.log(this.emailsArray);
+    this.isLoading=true;
+     this.httpService.sendReferInviteMail(this.emailsArray,this.referCode,this.fullName).subscribe(
+       (res)=>{
+         this.isLoading=false;
+         if (res == true) {
+          this.linkSent = !this.linkSent;
+        }else{
+          console.log("Some error occured in server");
+        }
+       }
+     )
+     //mat snackbar
+    this.snackBar.open(
+      'Mail sent successfully !',
+      'close',
+      this.config
+    );
    }
 }

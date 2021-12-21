@@ -816,4 +816,14 @@ choosePassword(token,password):Observable<Object> {
       }
     });
   }
+
+  sendReferInviteMail(users:string[],referCode:string,senderName:string):Observable<Object>{
+    return this.http.get(this.backendUrl+'/fellowGenius/sendReferInviteMail',{
+      params:{
+        users:users,
+        referCode:referCode,
+        senderName:senderName
+      }
+    }) 
+  }
 }

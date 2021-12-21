@@ -141,27 +141,27 @@ export class VoiceCallService {
       console.log('CONNECTION STATE CHANGED :', curState, revState, reason);
     });
     AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
-      await this.getMediaDevicesInfo();
+     await this.getMediaDevicesInfo();
       // When plugging in a device, switch to a device that is newly plugged in.
-      if (changedDevice.state === 'ACTIVE') {
-        if (this.localTracks != null && this.localTracks.audioTrack != null) {
-          this.localTracks.audioTrack.setDevice(changedDevice.device.deviceId);
-          this.currentMic = this.mics.find(
-            (mic) => mic.label === changedDevice.device.label
-          );
-        }
-        // Switch to an existing device when the current device is unplugged.
-      } else if (
-        changedDevice.device.label ===
-        this.localTracks.audioTrack.getTrackLabel()
-      ) {
-        const oldMicrophones = await AgoraRTC.getMicrophones();
-        oldMicrophones[0] &&
-          this.localTracks.audioTrack.setDevice(oldMicrophones[0].deviceId);
-        this.currentMic = this.mics.find(
-          (mic) => mic.label === oldMicrophones[0].label
-        );
-      }
+      // if (changedDevice.state === 'ACTIVE') {
+      //   if (this.localTracks != null && this.localTracks.audioTrack != null) {
+      //     this.localTracks.audioTrack.setDevice(changedDevice.device.deviceId);
+      //     this.currentMic = this.mics.find(
+      //       (mic) => mic.label === changedDevice.device.label
+      //     );
+      //   }
+      //   // Switch to an existing device when the current device is unplugged.
+      // } else if (
+      //   changedDevice.device.label ===
+      //   this.localTracks.audioTrack.getTrackLabel()
+      // ) {
+      //   const oldMicrophones = await AgoraRTC.getMicrophones();
+      //   oldMicrophones[0] &&
+      //     this.localTracks.audioTrack.setDevice(oldMicrophones[0].deviceId);
+      //   this.currentMic = this.mics.find(
+      //     (mic) => mic.label === oldMicrophones[0].label
+      //   );
+      // }
     };
   }
 }

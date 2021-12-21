@@ -145,6 +145,18 @@ public class UserController {
 	public boolean sendResetLink(String email) {
 		return service.sendResetLink(email);
 	}
+	
+	@RequestMapping(value="/sendReferInviteMail",method=RequestMethod.GET)
+	@ResponseBody
+	public boolean sendReferInviteMail(String[] users,String referCode,String senderName) {
+		System.out.println("Users array:- ");
+		for(String user:users) {
+			System.out.println(user);
+		}
+		System.out.println("Refer code:- "+ referCode);
+		System.out.println("sender name:- "+senderName);
+		return service.sendReferInviteMail(users,referCode,senderName);
+	}
 
 	@RequestMapping(value = "/updatePassword")
 	@ResponseBody
