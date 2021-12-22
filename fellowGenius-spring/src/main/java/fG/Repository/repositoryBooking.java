@@ -85,7 +85,7 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 && NOT (approval_status='Pending' OR approval_status='cancelled') && created_date BETWEEN ?2 and ?3", nativeQuery=true)
 	List<BookingDetails> fetchExpertMeetingsBetweenTwoDates(Integer tid,LocalDateTime start,LocalDateTime end);
 	
-	@Query(value= "SELECT * FROM booking_details WHERE date_of_meeting=?1 && NOT approval_status='completed'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE date_of_meeting=?1", nativeQuery=true)
 	List<BookingDetails> fetchBookingsForDate(String date);
 	
 	@Transactional

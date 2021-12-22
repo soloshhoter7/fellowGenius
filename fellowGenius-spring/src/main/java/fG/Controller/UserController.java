@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,12 +17,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import fG.Configuration.JwtUtil;
-import fG.Entity.PendingTutorProfileDetails;
 import fG.Entity.TutorProfileDetails;
-import fG.Model.UserDataModel;
 import fG.Model.AppInfoModel;
 import fG.Model.Category;
-import fG.Model.FeaturedExpertsModel;
 import fG.Model.FiltersApplied;
 import fG.Model.NotificationModel;
 import fG.Model.ResponseModel;
@@ -32,7 +28,7 @@ import fG.Model.StudentProfileModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
-import fG.Model.UserActivityAnalytics;
+import fG.Model.UserReferralInfo;
 import fG.Model.registrationModel;
 import fG.Model.updatePasswordModel;
 import fG.Service.MailService;
@@ -303,5 +299,10 @@ public class UserController {
 	public List<AppInfoModel> getEarningAppInfo() {
 		return service.getEarningAppInfo();
 	}
-
+	//to fetch user referral infog
+	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
+	@RequestMapping(value="/getUserReferralInfo",method = RequestMethod.GET)
+	public List<UserReferralInfo> getUserReferralInfo(String userId) throws ParseException{
+		return service.getUserReferralInformationEvents(userId);
+	}
 }

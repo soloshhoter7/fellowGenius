@@ -15,6 +15,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 
+import fG.Model.ScheduleTime;
+
 
 @Entity
 public class BookingDetails implements Serializable{
@@ -255,6 +257,16 @@ public class BookingDetails implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	@Override
+	public boolean equals(Object anObject) {
+		if (!(anObject instanceof BookingDetails)) {
+			return false;
+		}
+		BookingDetails otherMember = (BookingDetails) anObject;
+		return ((otherMember.getBid().equals(this.getBid())));
+	}
+	
 	@Override
 	public String toString() {
 		return "BookingDetails [bid=" + bid + ", endTimeHour=" + endTimeHour + ", endTimeMinute=" + endTimeMinute

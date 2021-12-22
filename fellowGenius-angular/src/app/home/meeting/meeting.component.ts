@@ -72,9 +72,8 @@ const numbers = timer(3000, 1000);
   styleUrls: ['./meeting.component.css'],
 })
 export class MeetingComponent implements OnInit {
- 
   constructor(
-    private voiceCallService:VoiceCallService,
+    private voiceCallService: VoiceCallService,
     private ngxAgoraService: NgxAgoraService,
     private meetingService: MeetingService,
     private router: Router,
@@ -129,7 +128,7 @@ export class MeetingComponent implements OnInit {
   isLocalStreamPlaying = false;
   isLocalMicStreamPlaying = false;
   isLocalCamStreamPublished = false;
- // isLocalMicStreamPublished = false;
+  // isLocalMicStreamPublished = false;
   fiveMinuteAlertShown: boolean = false;
   newMessageNotification: boolean = false;
   meetingChat: MessageModel[] = [];
@@ -153,20 +152,20 @@ export class MeetingComponent implements OnInit {
   remoteJoined: boolean = false;
   meeting = new meetingDetails();
   localCallId = 'agora_local';
-  //localCallMicId = 'agora_local_mic';
+  localCallMicId = 'agora_local_mic';
   screenCallId = 'agora_screen';
   localScreenCallId = 'agora_screen_local';
   remoteCalls: string[] = [];
- //micRemoteCalls: string[] = [];
+  micRemoteCalls: string[] = [];
   screenRemoteCalls: string[] = [];
   localStreams: string[] = [];
- // localMicStreams: string[] = [];
+  localMicStreams: string[] = [];
   localScreenStreams: string[] = [];
-//  remoteMicStreams: Stream[] = [];
+  remoteMicStreams: Stream[] = [];
   remoteVideoMute = false;
- muteHostVideoStatus = 'mute host video';
+  muteHostVideoStatus = 'mute host video';
   hostVideo = true;
- // muteHostAudioStatus = 'mute host mic';
+  muteHostAudioStatus = 'mute host mic';
   hostScreenShareStatus = false;
   timelimit = 0;
   timeLeft = this.timelimit;
@@ -184,10 +183,10 @@ export class MeetingComponent implements OnInit {
   fileSize = '';
   uploadedFile: File;
   private client: AgoraClient;
- // private micClient: AgoraClient;
+  // private micClient: AgoraClient;
   private screenClient: AgoraClient;
   private localStream: Stream;
- // private localMicStream: Stream;
+  // private localMicStream: Stream;
   private screenStream: Stream;
   private preLocalStream: Stream;
   private preLocalMicStream: Stream;
@@ -209,7 +208,7 @@ export class MeetingComponent implements OnInit {
   meetingState = 'pre-meeting';
   micTriggered: boolean = false;
   localVideoOn: boolean = true;
-//  localMicOn: boolean = true;
+  //  localMicOn: boolean = true;
   isPreMeeting = true;
   isInMeeting = false;
   localCallId1 = 'agora_local_1';
@@ -247,9 +246,9 @@ export class MeetingComponent implements OnInit {
   public hoursToDday = '00';
   // public daysToDday;
   audioLevel = 0;
- // remoteAudioLevel = 0;
- localAudioLevelSubscription: Subscription;
- // remoteAudioLevelSubscription: Subscription;
+  remoteAudioLevel = 0;
+  localAudioLevelSubscription: Subscription;
+  // remoteAudioLevelSubscription: Subscription;
   dialogConfig = new MatDialogConfig();
   @HostListener('')
   @HostListener('window:resize', ['$event'])
@@ -419,7 +418,7 @@ export class MeetingComponent implements OnInit {
         // });
         //assigning client handlers
         this.assignClientHandlers(this);
-       // this.assignMicClientHandlers(this);
+        // this.assignMicClientHandlers(this);
         //getting user devices info
 
         if (this.mediaAccessAllowed == true) {
@@ -628,7 +627,6 @@ export class MeetingComponent implements OnInit {
     //     this.localMicStream.setAudioProfile('speech_standard');
     //     this.assignLocalMicStreamHandlers(this.localMicStream);
     //     let localStreamId: string = this.localMicStream.getId().toString();
-
     //     this.initLocalMicStream(() => {
     //       this.localMicStreams.push(localStreamId);
     //       if (!this.localMicOn) {
@@ -838,7 +836,7 @@ export class MeetingComponent implements OnInit {
       const stream = evt.stream as Stream;
       var id = stream.getId();
       // if (
-      //   !this.localStreams.includes(id.toString()) 
+      //   !this.localStreams.includes(id.toString())
       //   &&
       //   !this.localMicStreams.includes(id.toString())
       // ) {
@@ -869,7 +867,7 @@ export class MeetingComponent implements OnInit {
         //   // this.remoteMicStreams = [];
         // }
         console.log('remote stream is mic stream and subscribed!');
-       // this.micRemoteCalls.push(id);
+        // this.micRemoteCalls.push(id);
         if (stream != null) {
           // this.remoteMicStreams.push(stream);
           // this.assignRemoteMicStreamHandlers(stream);
@@ -1996,7 +1994,6 @@ export class MeetingComponent implements OnInit {
     //       !remoteAudio.paused &&
     //       !remoteAudio.ended &&
     //       remoteAudio.readyState > remoteAudio.HAVE_CURRENT_DATA;
-
     //     if (!isPlaying) {
     //       console.log('REMOTE AUDIO IS NOT PLAYING !');
     //       console.log('TRYING TO PLAY !');

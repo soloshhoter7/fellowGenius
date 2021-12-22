@@ -34,6 +34,7 @@ import fG.Model.KeyValueModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
+import fG.Model.UserReferralInfo;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryNotification;
@@ -86,7 +87,8 @@ public class MeetingService {
 
 	@Autowired
 	repositoryUserReferrals repUserReferral;
-
+	
+	
 	public void saveNotification(JsonObject msg) {
 		Notification notification = new Notification(msg.get("entityType").getAsInt(),
 				msg.get("entityTypeId").getAsInt(), msg.get("actorId").getAsString(),
@@ -247,65 +249,83 @@ public class MeetingService {
 		}
 	}
 
-//	@Scheduled(cron = "0 36 13 1/1 * *")
-//	void updateMeetingCompleted() throws ParseException {
-//		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//		ArrayList<String> last2DatesInString = new ArrayList<String>();
-//		System.out.println("Now is: " + new Date());
-//		Calendar c = Calendar.getInstance();
-//		c.setTime(new Date());
-//		c.add(Calendar.DATE, -1);
-//		last2DatesInString.add(formatter.format(c.getTime()));
-//		c.add(Calendar.DATE, -1);
-//		last2DatesInString.add(formatter.format(c.getTime()));
-//		System.out.println(last2DatesInString);
-//		for (String date : last2DatesInString) {
-//			List<BookingDetails> bookings = repBooking.fetchBookingsForDate(date);
-//			if (bookings != null && bookings.size() != 0) {
-//				for (BookingDetails b : bookings) {
-//					Date endDateTime = calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute());
-//					Date currentDate = new Date();
-//					if (currentDate.getTime() > endDateTime.getTime()) {
-//						if (b.getExpertJoinTime() == null) {
-//							b.setApprovalStatus("expert_absent");
-//						} else if (b.getLearnerJoinTime() == null) {
-//							b.setApprovalStatus("learner_absent");
-//						} else if (b.getExpertJoinTime() != null && b.getExpertLeavingTime() != null
-//								&& b.getLearnerJoinTime() != null && b.getLearnerLeavingTime() != null) {
-//							b.setApprovalStatus("completed");
-//						}else if(b.getExpertJoinTime()==null&&b.getLearnerJoinTime()==null) {
-//							b.setApprovalStatus("No one joined");
-//						}
-//						repBooking.save(b);
-//						if(b.getApprovalStatus().equals("completed")) {
-//							//giving credit to user B (learner)
-//							Users learner = repUsers.idExists(b.getStudentId());
-//							Integer referralCredit = Integer.valueOf(repAppInfo.keyExist("ReferralCredit").getValue());
-//							if(referralCredit!=null) {
-//								Integer credit = learner.getCredits()+referralCredit;
-//								learner.setCredits(credit);
-//								repUsers.save(learner);
-//							}
-//							if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
-//								String refCode = b.getExpertCode();
-//								String referrerUserId = userService.parseReferralCode(refCode);
-//								UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referrerUserId));
-//								List<BookingDetails> meetingsCompleted = ur.getMeetingCompleted();
-//								List<BookingDetails> meetingsSetup = ur.getMeetingSetup();
-//								for(BookingDetails bs:meetingsSetup) {
-//									if(bs.getBid().equals(b.getBid())) {
-//										meetingsCompleted.add(b);
-//									}
-//								}
-//								ur.setMeetingCompleted(meetingsCompleted);
-//								repUserReferral.save(ur);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
+	@Scheduled(cron = "0 57 2 1/1 * *")
+	void updateMeetingCompleted() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		ArrayList<String> last2DatesInString = new ArrayList<String>();
+		System.out.println("Now is: " + new Date());
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		last2DatesInString.add(formatter.format(c.getTime()));
+		c.add(Calendar.DATE, -1);
+		last2DatesInString.add(formatter.format(c.getTime()));
+		c.add(Calendar.DATE, -1);
+		last2DatesInString.add(formatter.format(c.getTime()));
+		System.out.println(last2DatesInString);
+		for (String date : last2DatesInString) {
+			List<BookingDetails> bookings = repBooking.fetchBookingsForDate(date);
+			if (bookings != null && bookings.size() != 0) {
+				for (BookingDetails b : bookings) {
+					System.out.println("BOOKINGS FOUND !"+bookings);
+					
+					Date endDateTime = calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute());
+					Date currentDate = new Date();
+					System.out.println(endDateTime+" : "+endDateTime.getTime());
+					System.out.println(currentDate+" : "+currentDate.getTime());
+					if (currentDate.getTime() > endDateTime.getTime()) {
+						if (b.getExpertJoinTime() == null) {
+							b.setApprovalStatus("expert_absent");
+						} else if (b.getLearnerJoinTime() == null) {
+							b.setApprovalStatus("learner_absent");
+						} else if (b.getExpertJoinTime() != null && b.getExpertLeavingTime() != null
+								&& b.getLearnerJoinTime() != null && b.getLearnerLeavingTime() != null) {
+							b.setApprovalStatus("completed");
+						}else if(b.getExpertJoinTime()==null&&b.getLearnerJoinTime()==null) {
+							b.setApprovalStatus("No one joined");
+						}
+						repBooking.save(b);
+						if(b.getApprovalStatus().equals("completed")) {
+							System.out.println("BOOKING FOUND !");
+							//giving credit to user B (learner)
+							Users learner = repUsers.idExists(b.getStudentId());
+							
+							if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
+								Integer referralCredit = Integer.valueOf(repAppInfo.keyExist("ReferralCredit").getValue());
+								
+								if(referralCredit!=null) {
+									Integer credit = learner.getCredits()+referralCredit;
+									learner.setCredits(credit);
+									repUsers.save(learner);
+								}
+								String refCode = b.getExpertCode();
+								String referrerUserId = userService.parseReferralCode(refCode);
+								UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referrerUserId));
+								List<BookingDetails> meetingsCompleted = ur.getMeetingCompleted();
+								List<BookingDetails> meetingsSetup = ur.getMeetingSetup();
+								System.out.println("FETCHED DETAILS !");
+//								System.out.println("MEETINGS SETUP : "+meetingsSetup);
+//								System.out.println("MEETINGS COMPLETED : "+meetingsCompleted);
+								if(!meetingsCompleted.contains(b)) {
+									Integer referralAmount = Integer.valueOf(repAppInfo.keyExist("ReferralAmount").getValue());
+									Integer amountDue = ur.getPaymentDue()+referralAmount;
+									ur.setPaymentDue(amountDue);
+									
+									for(BookingDetails bs:meetingsSetup) {
+										if(bs.getBid().equals(b.getBid())) {
+											meetingsCompleted.add(b);
+											System.out.println("MEETING MATCHED !");
+										}
+									}
+									ur.setMeetingCompleted(meetingsCompleted);
+									repUserReferral.save(ur);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	Date calculateDate(String dateOfMeeting, int eh, int em) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");

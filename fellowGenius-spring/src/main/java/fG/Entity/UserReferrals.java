@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 public class UserReferrals implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -27,12 +30,15 @@ public class UserReferrals implements Serializable {
 	private Users user;
 
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Users> referCompleted = new ArrayList<>();
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany( fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<BookingDetails> meetingSetup = new ArrayList<>();
 
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<BookingDetails> meetingCompleted = new ArrayList<>();
 
 	private Integer paymentDue = 0;

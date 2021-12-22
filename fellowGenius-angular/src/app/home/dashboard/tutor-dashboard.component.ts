@@ -35,7 +35,7 @@ export class TutorDashboardComponent implements OnInit {
     public router: Router,
     public loginService: LoginDetailsService,
     private locationStrategy: LocationStrategy,
-    private webSocketService:WebSocketService,
+    private webSocketService: WebSocketService,
     private snackBar: MatSnackBar
   ) {
     setInterval(() => {
@@ -49,7 +49,7 @@ export class TutorDashboardComponent implements OnInit {
     if (screenWidth <= 800) {
       this.tutorChartWidth = '250';
       this.tutorChartHeight = '150';
-    }else{
+    } else {
       this.tutorChartWidth = '750';
       this.tutorChartHeight = '300';
     }
@@ -77,14 +77,14 @@ export class TutorDashboardComponent implements OnInit {
   // --------------------------Earnings Tracker --------------------------
   earningTrackerType = 'ColumnChart';
   earningPeriod = 'Week';
-  earningTrackerDataMonthly:any = [];
-  earningTrackerDataWeekly:any = [];
-  earningTrackerDataYearly:any = [];
+  earningTrackerDataMonthly: any = [];
+  earningTrackerDataWeekly: any = [];
+  earningTrackerDataYearly: any = [];
   // earningTrackerColumnNames = ["Earnings", "Average"];
   earningTrackerOptions = {
     vAxis: {
       title: 'Earnings (Rupees ₹)',
-      minValue:1
+      minValue: 1,
     },
   };
   toggleEarningPeriod(value) {
@@ -113,15 +113,15 @@ export class TutorDashboardComponent implements OnInit {
     verticalPosition: 'top',
   };
   earningData;
-  selectedBooking= new bookingDetails();
-  selectedPendingRequest=new bookingDetails();
+  selectedBooking = new bookingDetails();
+  selectedPendingRequest = new bookingDetails();
   ngOnInit(): void {
     this.preventBackButton();
     if (window.innerWidth <= 800) {
       this.tutorChartWidth = '250';
       this.tutorChartHeight = '150';
     }
-    
+
     this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
     if (
       this.loginService.getLoginType() == 'Expert' &&
@@ -137,48 +137,50 @@ export class TutorDashboardComponent implements OnInit {
       this.handleRefresh();
     }
   }
-  setSelectedBooking(booking:bookingDetails){
-    console.log('selected upcoming booking : '+booking);
-    this.selectedBooking=booking;
+  setSelectedBooking(booking: bookingDetails) {
+    console.log('selected upcoming booking : ' + booking);
+    this.selectedBooking = booking;
   }
-  setSelectedPendingBooking(booking:bookingDetails){
-    console.log('pending booking : '+booking);
-    this.selectedPendingRequest=booking;
+  setSelectedPendingBooking(booking: bookingDetails) {
+    console.log('pending booking : ' + booking);
+    this.selectedPendingRequest = booking;
   }
-  initialiseEarningData(){
+  initialiseEarningData() {
     // let data=['Spere',200,200];
     // this.earningTrackerDataMonthly.push(data);
-    this.httpService.fetchEarningData(this.tutorProfileDetails.bookingId).subscribe((res)=>{
-      this.earningData=res;
-      console.log(this.earningData);
+    this.httpService
+      .fetchEarningData(this.tutorProfileDetails.bookingId)
+      .subscribe((res) => {
+        this.earningData = res;
+        console.log(this.earningData);
 
-      for(let bk of this.earningData.weeklyData){
-        let d=[bk.keyName,parseInt(bk.valueName)];
-        this.earningTrackerDataWeekly.push(d);
-      }
-      for(let bk of this.earningData.monthlyData){
-        let d=[bk.keyName,parseInt(bk.valueName)];
-        this.earningTrackerDataMonthly.push(d);
-      }
-      for(let bk of this.earningData.yearlyData){
-        let d=[bk.keyName,parseInt(bk.valueName)];
-        this.earningTrackerDataYearly.push(d);
-      }
-    })
+        for (let bk of this.earningData.weeklyData) {
+          let d = [bk.keyName, parseInt(bk.valueName)];
+          this.earningTrackerDataWeekly.push(d);
+        }
+        for (let bk of this.earningData.monthlyData) {
+          let d = [bk.keyName, parseInt(bk.valueName)];
+          this.earningTrackerDataMonthly.push(d);
+        }
+        for (let bk of this.earningData.yearlyData) {
+          let d = [bk.keyName, parseInt(bk.valueName)];
+          this.earningTrackerDataYearly.push(d);
+        }
+      });
   }
-  initialisePendingRequests(){
+  initialisePendingRequests() {
     this.tutorService.fetchTutorPendingBookings();
-    this.tutorService.bookingsChanged.subscribe((booking:bookingDetails[])=>{
+    this.tutorService.bookingsChanged.subscribe((booking: bookingDetails[]) => {
       this.bookingList = booking;
-      this.sortMeetings(this.bookingList)
+      this.sortMeetings(this.bookingList);
       if (this.bookingList.length == 0) {
         this.bookingRequestMessage = 'No booking requests pending.';
         this.pendingRequestsCount = 0;
       } else {
         this.pendingRequestsCount = this.bookingList.length;
       }
-    })
-    this.bookingList=this.tutorService.getBookings();
+    });
+    this.bookingList = this.tutorService.getBookings();
   }
   viewPendingRequests() {
     this.takeAction = !this.takeAction;
@@ -213,45 +215,51 @@ export class TutorDashboardComponent implements OnInit {
   // for accepting bookings
   acceptBooking(booking: bookingDetails) {
     let index = this.bookingList.indexOf(booking);
-    this.acceptingIndex=index;
+    this.acceptingIndex = index;
     this.isLoading = true;
     booking.approvalStatus = 'Accepted';
-    let status:string;
-    if(booking.isRescheduled!='requested'){
-      this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
+    let status: string;
+    if (booking.isRescheduled != 'requested') {
+      this.httpService.fetchBookingStatus(booking.bid).subscribe((res: any) => {
         // let response=res;
         status = res.status;
-        if(status=='Pending'){
+        if (status == 'Pending') {
           this.httpService
-          .updateBookingStatus(booking.bid, booking.approvalStatus)
-          .subscribe((res) => {
-            if (res == true) {
-              this.bookingList.splice(this.bookingList.indexOf(booking, 0), 1);
-              if (this.bookingList.length == 0) {
-                this.bookingRequestMessage = 'No booking requests pending.';
-                this.pendingRequestsCount = 0;
-                this.takeAction = false;
+            .updateBookingStatus(booking.bid, booking.approvalStatus)
+            .subscribe((res) => {
+              if (res == true) {
+                this.bookingList.splice(
+                  this.bookingList.indexOf(booking, 0),
+                  1
+                );
+                if (this.bookingList.length == 0) {
+                  this.bookingRequestMessage = 'No booking requests pending.';
+                  this.pendingRequestsCount = 0;
+                  this.takeAction = false;
+                }
+                let data = JSON.stringify({
+                  entityType: '1',
+                  entityTypeId: '12',
+                  actorId: booking.tutorId,
+                  notifierId: booking.studentId,
+                  pictureUrl: booking.tutorProfilePictureUrl,
+                  readStatus: false,
+                });
+                this.webSocketService.sendAppointmentNotfication(
+                  data,
+                  booking.studentId.toString()
+                );
+                this.before10MinutesTime(booking);
+                this.enableJoinNow(booking);
+                this.timeLeft(booking);
+                this.meetingList.push(booking);
+                this.approvedMeetingsMessage = '';
+                this.isLoading = false;
+                this.acceptingIndex = -1;
+                document.getElementById('closePendingRequestDialog').click();
               }
-              let data = JSON.stringify({
-                entityType: "1",
-                entityTypeId:"12",
-                actorId:booking.tutorId,
-                notifierId:booking.studentId,
-                pictureUrl:booking.tutorProfilePictureUrl,
-                readStatus:false
-              });
-              this.webSocketService.sendAppointmentNotfication(data,(booking.studentId).toString());
-              this.before10MinutesTime(booking);
-              this.enableJoinNow(booking);
-              this.timeLeft(booking);
-              this.meetingList.push(booking);
-              this.approvedMeetingsMessage = '';
-              this.isLoading = false;
-              this.acceptingIndex=-1;
-              document.getElementById('closePendingRequestDialog').click();
-            }
-          });
-        }else{
+            });
+        } else {
           this.snackBar.open(
             'Meeting has already been cancelled !',
             'close',
@@ -260,9 +268,8 @@ export class TutorDashboardComponent implements OnInit {
           this.initialisePendingRequests();
           document.getElementById('closePendingRequestDialog').click();
         }
-      })
-      
-    }else{
+      });
+    } else {
       this.snackBar.open(
         "Can't accept meeting after requested to reschedule",
         'close',
@@ -270,15 +277,14 @@ export class TutorDashboardComponent implements OnInit {
       );
       document.getElementById('closePendingRequestDialog').click();
     }
-   
   }
 
-  rescheduleSnackBar(){
+  rescheduleSnackBar() {
     this.snackBar.open(
-      "Cant reschedule as time limit to reschedule exceeded",
+      'Cant reschedule as time limit to reschedule exceeded',
       'close',
       this.config
-    )
+    );
   }
 
   //for denying bookings
@@ -299,29 +305,29 @@ export class TutorDashboardComponent implements OnInit {
       });
   }
 
-  requestToReschedule(booking){
-    this.isRescheduleLoading=true;
-    this.httpService.fetchBookingStatus(booking.bid).subscribe((res:any)=>{
-      if(res.status=='Pending'||res.status=='Accepted'){
-        this.httpService.requestToReschedule(booking.bid).subscribe((res)=>{
-          if(res){
+  requestToReschedule(booking) {
+    this.isRescheduleLoading = true;
+    this.httpService.fetchBookingStatus(booking.bid).subscribe((res: any) => {
+      if (res.status == 'Pending' || res.status == 'Accepted') {
+        this.httpService.requestToReschedule(booking.bid).subscribe((res) => {
+          if (res) {
             this.snackBar.open(
               'Request for reschedule successful',
               'close',
               this.config
             );
-            this.isRescheduleLoading=false;
-            this.isLoading=false
+            this.isRescheduleLoading = false;
+            this.isLoading = false;
             this.initialisePendingRequests();
-          }else{
-            this.isRescheduleLoading=false
+          } else {
+            this.isRescheduleLoading = false;
             this.snackBar.open(
               'Reschedule time limit exceeded !',
               'close',
               this.config
             );
           }
-        })
+        });
       }
     });
   }
@@ -388,21 +394,22 @@ export class TutorDashboardComponent implements OnInit {
     meetingList.sort(function (a, b) {
       // Turn your strings into dates, and then subtract them
       // to get a value that is either negative, positive, or zero.
-      var aYear = a.dateOfMeeting.split("/")[2];
-      var aMonth = a.dateOfMeeting.split("/")[1]-1;
-      var aDate = a.dateOfMeeting.split("/")[0];
+      var aYear = a.dateOfMeeting.split('/')[2];
+      var aMonth = a.dateOfMeeting.split('/')[1] - 1;
+      var aDate = a.dateOfMeeting.split('/')[0];
       var aHour = a.startTimeHour;
       var aMinute = a.startTimeMinute;
 
-
-      var bYear = b.dateOfMeeting.split("/")[2];
-      var bMonth = b.dateOfMeeting.split("/")[1]-1;
-      var bDate = b.dateOfMeeting.split("/")[0];
+      var bYear = b.dateOfMeeting.split('/')[2];
+      var bMonth = b.dateOfMeeting.split('/')[1] - 1;
+      var bDate = b.dateOfMeeting.split('/')[0];
       var bHour = b.startTimeHour;
       var bMinute = b.startTimeMinute;
 
-      return new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0).valueOf() - new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0).valueOf();
-
+      return (
+        new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0).valueOf() -
+        new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0).valueOf()
+      );
     });
   }
   //for checking time
@@ -638,10 +645,10 @@ export class TutorDashboardComponent implements OnInit {
 
   // when tutor initiates the meeting from upcoming meetings
   onHost(booking: bookingDetails) {
-    if(this.selectedBooking){
+    if (this.selectedBooking) {
       document.getElementById('closePopUpButton').click();
     }
-    console.log('reached host')
+    console.log('reached host');
     booking.approvalStatus = 'live';
     this.httpService
       .updateBookingStatus(booking.bid, booking.approvalStatus)
@@ -658,16 +665,16 @@ export class TutorDashboardComponent implements OnInit {
     this.hostMeeting.userId = booking.tutorId;
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(['meeting',booking.meetingId]);
+    this.router.navigate(['meeting', booking.meetingId]);
   }
 
   //on join function for live meetings
   onJoin(booking: bookingDetails) {
-    console.log('reached join')
-    if(this.selectedBooking){
+    console.log('reached join');
+    if (this.selectedBooking) {
       document.getElementById('closePopUpButton').click();
     }
-    console.log('reached join')
+    console.log('reached join');
     this.hostMeeting.roomId = 123;
     this.hostMeeting.role = 'host';
     this.hostMeeting.roomName = booking.meetingId;
@@ -675,7 +682,7 @@ export class TutorDashboardComponent implements OnInit {
     this.hostMeeting.userId = booking.tutorId;
     this.meetingService.setMeeting(this.hostMeeting);
     this.meetingService.setBooking(booking);
-    this.router.navigate(['meeting',booking.meetingId]);
+    this.router.navigate(['meeting', booking.meetingId]);
   }
   preventBackButton() {
     history.pushState(null, null, location.href);

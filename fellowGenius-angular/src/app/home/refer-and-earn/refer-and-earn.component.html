@@ -377,18 +377,18 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                     </div>
                   </td>
                 </tr>
-                <tr>
+                <tr *ngFor="let refInfo of userReferralInfoList">
                   <td class="fld_name">
-                    <div class="nme_style"><span>A</span>Antonio Magnusson</div>
+                    <div class="nme_style"><span>A</span>{{refInfo.name}}</div>
                   </td>
-                  <td class="fld_email">AntonioMagnusson@gmail.com</td>
+                  <td class="fld_email">{{refInfo.email}}</td>
                   <td class="fld_status">
                     <div class="td_btn">
-                      <a href="" class="table_btn green_btn">Registered</a>
+                      <a href="" class="table_btn green_btn">{{refInfo.status}}</a>
                     </div>
                   </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td class="fld_name">
                     <div class="nme_style"><span>M</span>Mika Månsson</div>
                   </td>
@@ -398,7 +398,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                       <a href="" class="table_btn red_btn">Offer expired</a>
                     </div>
                   </td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>

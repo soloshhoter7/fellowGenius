@@ -34,13 +34,13 @@ public class Users implements Serializable {
 	Date lastLogin;
 	
 	
-	@CreationTimestamp
-	@CreatedDate
+//	@CreationTimestamp
+//	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="signup_date")
-	Date createdDate;
+	@Column(name="signup_date",updatable=false)
+	final Date createdDate= new Date();
 	
-	Integer credits;
+	Integer credits=0;
 //	String lastLogin;
 	
 	public Integer getCredits() {
@@ -105,9 +105,9 @@ public class Users implements Serializable {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+//	public void setCreatedDate(Date createdDate) {
+//		this.createdDate = createdDate;
+//	}
 	
 	
 	public String getExpertCode() {

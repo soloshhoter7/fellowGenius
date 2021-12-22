@@ -59,6 +59,7 @@ import fG.Model.TutorVerificationModel;
 import fG.Model.UserActivityAnalytics;
 import fG.Model.UserActivityModel;
 import fG.Model.UserDataModel;
+import fG.Model.UserReferralInfo;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
 import fG.Repository.repositoryAppInfo;
@@ -155,6 +156,53 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	MailService mailService;
 
+	
+	public List<UserReferralInfo> getUserReferralInformationEvents(String userId) throws ParseException{
+		List<UserReferralInfo> referrerDetails = new ArrayList<UserReferralInfo>();
+		UserReferrals userRef = repUserReferrals.findByUserId(Integer.valueOf(userId));
+		//getting user referral information events
+		//getting the registered people with timestamp
+		if(userRef!=null) {
+			List<Users> registeredUsers = userRef.getReferCompleted();
+			List<BookingDetails> meetingsSetup = userRef.getMeetingSetup();
+			List<BookingDetails> meetingsCompleted = userRef.getMeetingCompleted();
+			//for registered users
+			for(Users user:registeredUsers) {
+				UserReferralInfo urf = new UserReferralInfo();
+				urf.setEmail(user.getEmail());
+				urf.setName(fetchUserName(user.getUserId(),user.getRole()));
+				urf.setStatus("Registered");
+				urf.setTimeStamp(user.getCreatedDate());
+				referrerDetails.add(urf);
+			}
+			//for meetings setup
+			for(BookingDetails b:meetingsSetup) {
+				UserReferralInfo urf = new UserReferralInfo();
+				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
+				urf.setEmail(sp.getEmail());
+				urf.setName(sp.getFullName());
+				urf.setStatus("Meeting Setup");
+				urf.setTimeStamp(b.getCreatedDate());
+				referrerDetails.add(urf);
+			}
+			//for meetings completed
+			for(BookingDetails b:meetingsCompleted) {
+				UserReferralInfo urf = new UserReferralInfo();
+				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
+				urf.setEmail(sp.getEmail());
+				urf.setName(sp.getFullName());
+				urf.setStatus("Meeting Completed");
+				urf.setTimeStamp(meetingService.calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute()));
+				referrerDetails.add(urf);
+			}
+		}
+		//sorting on the basis of timestamp
+		referrerDetails.sort((r1,r2) -> r1.getTimeStamp().compareTo(r2.getTimeStamp()));
+		Collections.reverse(referrerDetails);
+//		System.out.println(referrer);
+		return referrerDetails;
+	}
+	
 	public boolean savePendingTutor(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
 		PendingTutorProfileDetails ptLoaded = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
@@ -545,13 +593,12 @@ public class UserService implements UserDetailsService {
 		if(matchingUsers.size()>0) {
 			for(int i=0;i<matchingUsers.size();i++) {
 				Users user= new Users();
-				user = matchingUsers.get(0);
+				user = matchingUsers.get(i);
 				System.out.println("user email:"+user.getEmail());
 				System.out.println("raw Initials :"+rawInitials);
 				userInitials = genInitials(fetchUserName(user.getUserId(), user.getRole()));
 				userInitials = userInitials.toUpperCase();
 				System.out.println("user initials :"+userInitials);
-				
 				if(rawInitials.equals(userInitials)) {
 					 return user.getUserId().toString();
 				}
