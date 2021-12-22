@@ -142,6 +142,7 @@ export class VoiceCallService {
     });
     AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
       await this.getMediaDevicesInfo();
+      let micTrack:IMicrophoneAudioTrack = this.localTracks.audioTrack;
       // When plugging in a device, switch to a device that is newly plugged in.
       if (changedDevice.state === 'ACTIVE') {
         if (this.localTracks != null && this.localTracks.audioTrack != null) {
