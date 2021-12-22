@@ -59,19 +59,19 @@ export class TestComponent implements OnInit {
   uid = '12345';
   clientJoined: boolean = false;
   // create Agora client
-  client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
-  localTracks = {
-    videoTrack: null,
-    audioTrack: null,
-  };
-  remoteUsers = {};
-  // Agora client options
-  options = {
-    appid: '45f3ee50e0fd491aa46bd17c05fc7073',
-    channel: 'FG@123456',
-    uid: null,
-    token: null,
-  };
+client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+localTracks = {
+  videoTrack: null,
+  audioTrack: null
+};
+remoteUsers = {};
+// Agora client options
+options = {
+  appid: '',
+  channel: '',
+  uid: '',
+  token: ''
+};
 
   mics = []; // all microphones devices you can use
   cams = []; // all cameras devices you can use
@@ -97,16 +97,15 @@ export class TestComponent implements OnInit {
     // this.volumeAnimation = requestAnimationFrame(this.setVolumeWave);
   }
 
-  async formJoinSubmit(e) {
-    console.log(this.options);
-    e.preventDefault();
-    $('#join').attr('disabled', true);
-    $('#device-wrapper').css('display', 'flex');
+  async formJoinSubmit(){
+   console.log(this.options);
+    $("#join").attr("disabled", true);
+    $("#device-wrapper").css("display", "flex");
     try {
       this.options.appid = this.appId;
-      this.options.token = $('#token').val();
+      this.options.token = 'hello';
       this.options.channel = this.channelName;
-      this.options.uid = Number($('#uid').val());
+      
       await this.join();
       if (this.options.token) {
         $('#success-alert-with-token').css('display', 'block');
@@ -131,13 +130,9 @@ export class TestComponent implements OnInit {
     this.client.on('user-unpublished', this.handleUserUnpublished);
 
     // join a channel.
-    this.options.uid = await this.client.join(
-      this.options.appid,
-      this.options.channel,
-      this.options.token || null,
-      this.options.uid || null
-    );
-
+    await this.client.join(this.options.appid, this.options.channel, 
+      this.options.token || null, this.options.uid || null);
+  
     if (!this.localTracks.audioTrack || !this.localTracks.videoTrack) {
       [this.localTracks.audioTrack, this.localTracks.videoTrack] =
         await Promise.all([

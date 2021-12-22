@@ -63,6 +63,7 @@ import {
 import { MediaAccessDialogComponent } from './media-access-dialog/media-access-dialog.component';
 import { setTime } from '@syncfusion/ej2-schedule';
 import { timeStamp } from 'console';
+import { VoiceCallService } from './voice-call/voice-call.service';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -71,7 +72,9 @@ const numbers = timer(3000, 1000);
   styleUrls: ['./meeting.component.css'],
 })
 export class MeetingComponent implements OnInit {
+ 
   constructor(
+    private voiceCallService:VoiceCallService,
     private ngxAgoraService: NgxAgoraService,
     private meetingService: MeetingService,
     private router: Router,
@@ -95,12 +98,12 @@ export class MeetingComponent implements OnInit {
     });
     renderer.listen('document', 'mousedown', (e) => {
       console.log('CLICKED THE SCREEN');
-      if (this.remoteMicStreams.length > 0) {
-        let stream: Stream = this.remoteMicStreams[0];
-        let id = this.getRemoteId(stream);
-        stream.play(id, { muted: false });
-        // this.changeOutputDevice();
-      }
+      // if (this.remoteMicStreams.length > 0) {
+      //   let stream: Stream = this.remoteMicStreams[0];
+      //   let id = this.getRemoteId(stream);
+      //   stream.play(id, { muted: false });
+      //   // this.changeOutputDevice();
+      // }
     });
   }
   //   ---------------------
@@ -126,7 +129,7 @@ export class MeetingComponent implements OnInit {
   isLocalStreamPlaying = false;
   isLocalMicStreamPlaying = false;
   isLocalCamStreamPublished = false;
-  isLocalMicStreamPublished = false;
+ // isLocalMicStreamPublished = false;
   fiveMinuteAlertShown: boolean = false;
   newMessageNotification: boolean = false;
   meetingChat: MessageModel[] = [];
@@ -150,20 +153,20 @@ export class MeetingComponent implements OnInit {
   remoteJoined: boolean = false;
   meeting = new meetingDetails();
   localCallId = 'agora_local';
-  localCallMicId = 'agora_local_mic';
+  //localCallMicId = 'agora_local_mic';
   screenCallId = 'agora_screen';
   localScreenCallId = 'agora_screen_local';
   remoteCalls: string[] = [];
-  micRemoteCalls: string[] = [];
+ //micRemoteCalls: string[] = [];
   screenRemoteCalls: string[] = [];
   localStreams: string[] = [];
-  localMicStreams: string[] = [];
+ // localMicStreams: string[] = [];
   localScreenStreams: string[] = [];
-  remoteMicStreams: Stream[] = [];
+//  remoteMicStreams: Stream[] = [];
   remoteVideoMute = false;
-  muteHostVideoStatus = 'mute host video';
+ muteHostVideoStatus = 'mute host video';
   hostVideo = true;
-  muteHostAudioStatus = 'mute host mic';
+ // muteHostAudioStatus = 'mute host mic';
   hostScreenShareStatus = false;
   timelimit = 0;
   timeLeft = this.timelimit;
@@ -181,10 +184,10 @@ export class MeetingComponent implements OnInit {
   fileSize = '';
   uploadedFile: File;
   private client: AgoraClient;
-  private micClient: AgoraClient;
+ // private micClient: AgoraClient;
   private screenClient: AgoraClient;
   private localStream: Stream;
-  private localMicStream: Stream;
+ // private localMicStream: Stream;
   private screenStream: Stream;
   private preLocalStream: Stream;
   private preLocalMicStream: Stream;
@@ -206,7 +209,7 @@ export class MeetingComponent implements OnInit {
   meetingState = 'pre-meeting';
   micTriggered: boolean = false;
   localVideoOn: boolean = true;
-  localMicOn: boolean = true;
+//  localMicOn: boolean = true;
   isPreMeeting = true;
   isInMeeting = false;
   localCallId1 = 'agora_local_1';
@@ -244,9 +247,9 @@ export class MeetingComponent implements OnInit {
   public hoursToDday = '00';
   // public daysToDday;
   audioLevel = 0;
-  remoteAudioLevel = 0;
-  localAudioLevelSubscription: Subscription;
-  remoteAudioLevelSubscription: Subscription;
+ // remoteAudioLevel = 0;
+ localAudioLevelSubscription: Subscription;
+ // remoteAudioLevelSubscription: Subscription;
   dialogConfig = new MatDialogConfig();
   @HostListener('')
   @HostListener('window:resize', ['$event'])
@@ -410,13 +413,13 @@ export class MeetingComponent implements OnInit {
           mode: 'rtc',
           codec: 'vp8',
         });
-        this.micClient = this.ngxAgoraService.createClient({
-          mode: 'rtc',
-          codec: 'vp8',
-        });
+        // this.micClient = this.ngxAgoraService.createClient({
+        //   mode: 'rtc',
+        //   codec: 'vp8',
+        // });
         //assigning client handlers
         this.assignClientHandlers(this);
-        this.assignMicClientHandlers(this);
+       // this.assignMicClientHandlers(this);
         //getting user devices info
 
         if (this.mediaAccessAllowed == true) {
@@ -557,24 +560,24 @@ export class MeetingComponent implements OnInit {
   }
   initialiseStreams() {
     // case 1 mic on video on
-    if (this.localVideoOn && this.localMicOn) {
-      this.startLocalStream();
-      this.startMicStream();
-    }
-    //case 2 mic on video off
-    else if (this.localMicOn && !this.localVideoOn) {
-      this.startMicStream();
-    }
-    //case 3 mic off video on
-    else if (!this.localMicOn && this.localVideoOn) {
-      this.startLocalStream();
-      this.startMicStream();
-      // this.localStream.unmuteAudio();
-    }
-    //case 4 mic off video off
-    else {
-      this.startMicStream();
-    }
+    // if (this.localVideoOn && this.localMicOn) {
+    //   this.startLocalStream();
+    //   this.startMicStream();
+    // }
+    // //case 2 mic on video off
+    // else if (this.localMicOn && !this.localVideoOn) {
+    //   this.startMicStream();
+    // }
+    // //case 3 mic off video on
+    // else if (!this.localMicOn && this.localVideoOn) {
+    //   this.startLocalStream();
+    //   this.startMicStream();
+    //   // this.localStream.unmuteAudio();
+    // }
+    // //case 4 mic off video off
+    // else {
+    //   this.startMicStream();
+    // }
   }
   //----------------------------- Stream start and stop functions---------------------------------------------
   startLocalStream() {
@@ -598,43 +601,43 @@ export class MeetingComponent implements OnInit {
   }
 
   startMicStream() {
-    if (this.localMicStreams.length > 0) {
-      this.removeLocalMicStream();
-      if (this.localMicStream != null) {
-        this.localMicStream.stop();
-        this.localMicStream.close();
-        this.localMicStreams = [];
-      }
-    }
-    console.log('LOCAL MIC STREAMS : ', this.localMicStreams);
-    if (this.localMicStreams.length == 0) {
-      this.getDevicesInfo();
-      setTimeout(() => {
-        console.log('device id:' + this.activeAudioInputDeviceId);
-        console.log(
-          'audio output device while starting the stream' +
-            this.defaultAudioOutputDeviceName
-        );
-        this.localMicStream = this.ngxAgoraService.createStream({
-          streamID: this.mid,
-          audio: true,
-          video: false,
-          screen: false,
-          microphoneId: this.activeAudioInputDeviceId,
-        });
-        this.localMicStream.setAudioProfile('speech_standard');
-        this.assignLocalMicStreamHandlers(this.localMicStream);
-        let localStreamId: string = this.localMicStream.getId().toString();
+    // if (this.localMicStreams.length > 0) {
+    //   this.removeLocalMicStream();
+    //   if (this.localMicStream != null) {
+    //     this.localMicStream.stop();
+    //     this.localMicStream.close();
+    //     this.localMicStreams = [];
+    //   }
+    // }
+    // console.log('LOCAL MIC STREAMS : ', this.localMicStreams);
+    // if (this.localMicStreams.length == 0) {
+    //   this.getDevicesInfo();
+    //   setTimeout(() => {
+    //     console.log('device id:' + this.activeAudioInputDeviceId);
+    //     console.log(
+    //       'audio output device while starting the stream' +
+    //         this.defaultAudioOutputDeviceName
+    //     );
+    //     this.localMicStream = this.ngxAgoraService.createStream({
+    //       streamID: this.mid,
+    //       audio: true,
+    //       video: false,
+    //       screen: false,
+    //       microphoneId: this.activeAudioInputDeviceId,
+    //     });
+    //     this.localMicStream.setAudioProfile('speech_standard');
+    //     this.assignLocalMicStreamHandlers(this.localMicStream);
+    //     let localStreamId: string = this.localMicStream.getId().toString();
 
-        this.initLocalMicStream(() => {
-          this.localMicStreams.push(localStreamId);
-          if (!this.localMicOn) {
-            this.localMicStream.muteAudio();
-          }
-          this.micPublish(this.localMicStream);
-        });
-      }, 1000);
-    }
+    //     this.initLocalMicStream(() => {
+    //       this.localMicStreams.push(localStreamId);
+    //       if (!this.localMicOn) {
+    //         this.localMicStream.muteAudio();
+    //       }
+    //       this.micPublish(this.localMicStream);
+    //     });
+    //   }, 1000);
+    // }
   }
 
   removeLocalStream() {
@@ -649,12 +652,12 @@ export class MeetingComponent implements OnInit {
     }
   }
   removeLocalMicStream() {
-    if (this.localMicStream != null) {
-      this.unPublishMicStream(this.localMicStream);
-      this.localMicStreams = [];
-      this.localMicStream.stop();
-      this.localMicStream.close();
-    }
+    // if (this.localMicStream != null) {
+    //   this.unPublishMicStream(this.localMicStream);
+    //   this.localMicStreams = [];
+    //   this.localMicStream.stop();
+    //   this.localMicStream.close();
+    // }
   }
 
   closeLocalVideo(stream: Stream) {
@@ -834,17 +837,18 @@ export class MeetingComponent implements OnInit {
       console.log('remote stream added');
       const stream = evt.stream as Stream;
       var id = stream.getId();
-      if (
-        !this.localStreams.includes(id.toString()) &&
-        !this.localMicStreams.includes(id.toString())
-      ) {
-        console.log('remote stream is not local stream');
-        this.client.subscribe(
-          stream,
-          { audio: true, video: true },
-          (err) => {}
-        );
-      }
+      // if (
+      //   !this.localStreams.includes(id.toString()) 
+      //   &&
+      //   !this.localMicStreams.includes(id.toString())
+      // ) {
+      //   console.log('remote stream is not local stream');
+      //   this.client.subscribe(
+      //     stream,
+      //     { audio: true, video: true },
+      //     (err) => {}
+      //   );
+      // }
     });
 
     this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
@@ -858,23 +862,23 @@ export class MeetingComponent implements OnInit {
         this.enableScreenShareView();
         setTimeout(() => stream.play(id), 1000);
       } else if (idt == this.remoteUserId + 10) {
-        if (this.micRemoteCalls.length != 0) {
-          this.micRemoteCalls = [];
-          this.remoteMicStreams[0].stop();
-          this.remoteMicStreams[0].close();
-          this.remoteMicStreams = [];
-        }
+        // if (this.micRemoteCalls.length != 0) {
+        //   // this.micRemoteCalls = [];
+        //   // this.remoteMicStreams[0].stop();
+        //   // this.remoteMicStreams[0].close();
+        //   // this.remoteMicStreams = [];
+        // }
         console.log('remote stream is mic stream and subscribed!');
-        this.micRemoteCalls.push(id);
+       // this.micRemoteCalls.push(id);
         if (stream != null) {
-          this.remoteMicStreams.push(stream);
-          this.assignRemoteMicStreamHandlers(stream);
+          // this.remoteMicStreams.push(stream);
+          // this.assignRemoteMicStreamHandlers(stream);
         }
-        this.remoteAudioLevelSubscription = interval(100).subscribe(() => {
-          if (stream.isPlaying()) {
-            this.remoteAudioLevel = stream.getAudioLevel();
-          }
-        });
+        // this.remoteAudioLevelSubscription = interval(100).subscribe(() => {
+        //   // if (stream.isPlaying()) {
+        //   //   this.remoteAudioLevel = stream.getAudioLevel();
+        //   // }
+        // });
         stream.stop();
         stream.play(id, { muted: true });
         this.isRemoteStreamMuted = true;
@@ -925,14 +929,14 @@ export class MeetingComponent implements OnInit {
           console.log('remote camera stream is removed ');
         }
       } else if (idt == this.remoteUserId + 10) {
-        if (stream) {
-          stream.stop();
-          this.micRemoteCalls = [];
-          this.remoteMicStreams = [];
-          // this.remoteCalls = this.remoteCalls.filter(e => e !== idt.toString());
-          console.log('remote mic stream is removed ');
-          // this.endCall();
-        }
+        // if (stream) {
+        //   stream.stop();
+        //   // this.micRemoteCalls = [];
+        //   // this.remoteMicStreams = [];
+        //   // this.remoteCalls = this.remoteCalls.filter(e => e !== idt.toString());
+        //   console.log('remote mic stream is removed ');
+        //   // this.endCall();
+        // }
       } else if (idt == this.remoteUserId + 2) {
         this.disableScreenShareView();
         console.log('remote stream is screen share and remvoed!');
@@ -998,25 +1002,25 @@ export class MeetingComponent implements OnInit {
     });
   }
   private assignMicClientHandlers(that): void {
-    this.micClient.on(ClientEvent.LocalStreamPublished, (evt) => {
-      console.log('mic stream published @');
-      that.isLocalMicStreamPublished = true;
-      that.isLoading = false;
-    });
-    this.micClient.on(ClientEvent.RecordingDeviceChanged, function (evt) {
-      console.log('THE DEVICE HAS BEEN CHANGED !');
-      console.log('MEETING STATE =>', that.meetingState);
-      if (that.meetingState == 'pre-meeting') {
-        that.initialisePreMeetingStreams();
-      } else if (that.meetingState == 'in-meeting') {
-        that.startMicStream();
-        setTimeout(() => {
-          if (that.activeAudioOutputDeviceName.includes('Bluetooth')) {
-            that.openDialog('RecordingDeviceChanged');
-          }
-        }, 1000);
-      }
-    });
+    // this.micClient.on(ClientEvent.LocalStreamPublished, (evt) => {
+    //   console.log('mic stream published @');
+    //   that.isLocalMicStreamPublished = true;
+    //   that.isLoading = false;
+    // });
+    // this.micClient.on(ClientEvent.RecordingDeviceChanged, function (evt) {
+    //   console.log('THE DEVICE HAS BEEN CHANGED !');
+    //   console.log('MEETING STATE =>', that.meetingState);
+    //   if (that.meetingState == 'pre-meeting') {
+    //     that.initialisePreMeetingStreams();
+    //   } else if (that.meetingState == 'in-meeting') {
+    //     that.startMicStream();
+    //     setTimeout(() => {
+    //       if (that.activeAudioOutputDeviceName.includes('Bluetooth')) {
+    //         that.openDialog('RecordingDeviceChanged');
+    //       }
+    //     }, 1000);
+    //   }
+    // });
   }
   // screen client Handlers
   private assignScreenClientHandlers(): void {
@@ -1177,19 +1181,19 @@ export class MeetingComponent implements OnInit {
   }
   //In meeting Mic Stream init
   private initLocalMicStream(onSuccess?: () => any): void {
-    this.localMicStream.init(
-      () => {
-        this.localMicStream.play(this.localCallMicId);
-        if (onSuccess) {
-          this.isLocalMicStreamPlaying = true;
-          onSuccess();
-        }
-      },
-      (err) => {
-        console.error('getUserMedia failed', err);
-        this.mediaAccessAllowed = false;
-      }
-    );
+    // this.localMicStream.init(
+    //   () => {
+    //     this.localMicStream.play(this.localCallMicId);
+    //     if (onSuccess) {
+    //       this.isLocalMicStreamPlaying = true;
+    //       onSuccess();
+    //     }
+    //   },
+    //   (err) => {
+    //     console.error('getUserMedia failed', err);
+    //     this.mediaAccessAllowed = false;
+    //   }
+    // );
   }
   //Pre meeting Camera Stream init
   private initPreMeetingLocalStream(onSuccess?: () => any): void {
@@ -1279,26 +1283,26 @@ export class MeetingComponent implements OnInit {
     onSuccess?: (mid: number | string) => void,
     onFailure?: (error: Error) => void
   ): void {
-    this.micClient.join(
-      null,
-      this.meetingService.getMeeting().roomName,
-      this.mid,
-      onSuccess,
-      onFailure
-    );
+    // this.micClient.join(
+    //   null,
+    //   this.meetingService.getMeeting().roomName,
+    //   this.mid,
+    //   onSuccess,
+    //   onFailure
+    // );
   }
   //mic client publish local mic stream
   micPublish(stream: Stream) {
     console.log('TRYING TO PUBLISH LOCAL MIC STREAM');
-    this.micClient.publish(stream, (err) => {
-      console.log('ERR OCCURRED WHILE PUBLISHING THE STREAM');
-      console.log(err);
-    });
+    // this.micClient.publish(stream, (err) => {
+    //   console.log('ERR OCCURRED WHILE PUBLISHING THE STREAM');
+    //   console.log(err);
+    // });
   }
   //mic client unpublish local mic stream
   unPublishMicStream(stream: Stream): void {
-    this.micClient.unpublish(stream, (err) => {});
-    this.isLocalMicStreamPublished = false;
+    // this.micClient.unpublish(stream, (err) => {});
+    // this.isLocalMicStreamPublished = false;
   }
   //screen client join with sid : (uid+2)
   screenJoin(
@@ -1356,17 +1360,17 @@ export class MeetingComponent implements OnInit {
     }
 
     //unpublishing the mic stream
-    if (this.localMicStream != null) {
-      this.micClient.unpublish(this.localMicStream, (err) => {});
-    }
+    // if (this.localMicStream != null) {
+    //   this.micClient.unpublish(this.localMicStream, (err) => {});
+    // }
 
     //leaving client from channel
     if (this.client != null) {
       this.client.leave();
     }
-    if (this.micClient != null) {
-      this.micClient.leave();
-    }
+    // if (this.micClient != null) {
+    //   this.micClient.leave();
+    // }
     if (this.screenClient != null) {
       this.screenClient.leave();
     }
@@ -1376,22 +1380,22 @@ export class MeetingComponent implements OnInit {
       this.localStream.close();
     }
     //closing all mic streams
-    if (this.localMicStream != null) {
-      this.localMicStream.stop();
-      this.localMicStream.close();
-    }
+    // if (this.localMicStream != null) {
+    //   this.localMicStream.stop();
+    //   this.localMicStream.close();
+    // }
     //updating member check out in db
     this.meetingMemberLeft(this.meetingId, this.userId);
     //unsubscribing the timer
-    if (this.subscription1 != null) {
-      this.subscription1.unsubscribe();
-    }
-    if (this.localAudioLevelSubscription != null) {
-      this.localAudioLevelSubscription.unsubscribe();
-    }
-    if (this.remoteAudioLevelSubscription != null) {
-      this.remoteAudioLevelSubscription.unsubscribe();
-    }
+    // if (this.subscription1 != null) {
+    //   this.subscription1.unsubscribe();
+    // }
+    // if (this.localAudioLevelSubscription != null) {
+    //   this.localAudioLevelSubscription.unsubscribe();
+    // }
+    // if (this.remoteAudioLevelSubscription != null) {
+    //   this.remoteAudioLevelSubscription.unsubscribe();
+    // }
     //disconnecting from web socket
     if (this.ws != null) {
       this.ws.disconnect();
@@ -1439,36 +1443,36 @@ export class MeetingComponent implements OnInit {
 
   preMeetingMuteAudio() {
     this.micTriggered = true;
-    if (this.muteHostAudioStatus == 'mute host mic') {
-      this.localMicOn = false;
-      this.preLocalMicStream.muteAudio();
-      this.muteHostAudioStatus = 'unmute host mic';
-      if (this.meetingState == 'pre-meeting') {
-        (
-          document.querySelector('.pre-meeting-mic') as HTMLElement
-        ).style.backgroundColor = '#d93025';
-        (
-          document.querySelector('.pre-meeting-mic') as HTMLElement
-        ).style.borderColor = '#d93025';
-      }
-    } else {
-      this.localMicOn = true;
-      this.muteHostAudioStatus = 'mute host mic';
-      this.preLocalMicStream.unmuteAudio();
-      if (this.meetingState == 'pre-meeting') {
-        (
-          document.querySelector('.pre-meeting-mic') as HTMLElement
-        ).style.backgroundColor = '';
-        (
-          document.querySelector('.pre-meeting-mic') as HTMLElement
-        ).style.borderColor = '';
-      }
-    }
-    if (this.meetingState == 'pre-meeting') {
-      setTimeout(() => {
-        this.micTriggered = false;
-      }, 4000);
-    }
+    // if (this.muteHostAudioStatus == 'mute host mic') {
+    //   this.localMicOn = false;
+    //   this.preLocalMicStream.muteAudio();
+    //   this.muteHostAudioStatus = 'unmute host mic';
+    //   if (this.meetingState == 'pre-meeting') {
+    //     (
+    //       document.querySelector('.pre-meeting-mic') as HTMLElement
+    //     ).style.backgroundColor = '#d93025';
+    //     (
+    //       document.querySelector('.pre-meeting-mic') as HTMLElement
+    //     ).style.borderColor = '#d93025';
+    //   }
+    // } else {
+    //   // this.localMicOn = true;
+    //   // this.muteHostAudioStatus = 'mute host mic';
+    //   // this.preLocalMicStream.unmuteAudio();
+    //   // if (this.meetingState == 'pre-meeting') {
+    //   //   (
+    //   //     document.querySelector('.pre-meeting-mic') as HTMLElement
+    //   //   ).style.backgroundColor = '';
+    //   //   (
+    //   //     document.querySelector('.pre-meeting-mic') as HTMLElement
+    //   //   ).style.borderColor = '';
+    //   // }
+    // }
+    // if (this.meetingState == 'pre-meeting') {
+    //   setTimeout(() => {
+    //     this.micTriggered = false;
+    //   }, 4000);
+    // }
   }
   muteVideo() {
     if (this.muteHostVideoStatus == 'mute host video') {
@@ -1494,15 +1498,15 @@ export class MeetingComponent implements OnInit {
   }
 
   muteAudio() {
-    if (this.muteHostAudioStatus == 'mute host mic') {
-      this.localMicOn = false;
-      this.localMicStream.muteAudio();
-      this.muteHostAudioStatus = 'unmute host mic';
-    } else {
-      this.localMicOn = true;
-      this.localMicStream.unmuteAudio();
-      this.muteHostAudioStatus = 'mute host mic';
-    }
+    // if (this.muteHostAudioStatus == 'mute host mic') {
+    //   this.localMicOn = false;
+    //   this.localMicStream.muteAudio();
+    //   this.muteHostAudioStatus = 'unmute host mic';
+    // } else {
+    //   this.localMicOn = true;
+    //   this.localMicStream.unmuteAudio();
+    //   this.muteHostAudioStatus = 'mute host mic';
+    // }
   }
   screenShare() {
     if (this.hostScreenShareStatus == false) {
@@ -1726,50 +1730,50 @@ export class MeetingComponent implements OnInit {
   // -------------------------------------------Device Utility Functions----------------------------------------
   checkBluetoothDevices() {
     let isBluetooth: boolean = false;
-    this.micClient.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
-      console.log('audio output devices : ', devices);
-      for (let device of devices) {
-        console.log('ITERATION OUTPUT :', device);
-        if (
-          device.deviceId != 'default' &&
-          device.deviceId != 'communications' &&
-          (device.label.includes('(Bluetooth)') ||
-            device.label.includes('bluetooth'))
-        ) {
-          isBluetooth = true;
-          console.log('BlUETOOTH OUTPUT FOUND');
-          this.setActiveDeviceIdForBluetooth(
-            device.deviceId,
-            'audio_output',
-            device.label
-          );
-          // this.openDialog('RecordingDeviceChanged');
-          break;
-        }
-      }
-    });
-    this.micClient.getRecordingDevices((devices: MediaDeviceInfo[]) => {
-      console.log('audio input devices : ', devices);
+    // this.micClient.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
+    //   console.log('audio output devices : ', devices);
+    //   for (let device of devices) {
+    //     console.log('ITERATION OUTPUT :', device);
+    //     if (
+    //       device.deviceId != 'default' &&
+    //       device.deviceId != 'communications' &&
+    //       (device.label.includes('(Bluetooth)') ||
+    //         device.label.includes('bluetooth'))
+    //     ) {
+    //       isBluetooth = true;
+    //       console.log('BlUETOOTH OUTPUT FOUND');
+    //       this.setActiveDeviceIdForBluetooth(
+    //         device.deviceId,
+    //         'audio_output',
+    //         device.label
+    //       );
+    //       // this.openDialog('RecordingDeviceChanged');
+    //       break;
+    //     }
+    //   }
+    // });
+    // this.micClient.getRecordingDevices((devices: MediaDeviceInfo[]) => {
+    //   console.log('audio input devices : ', devices);
 
-      for (let device of devices) {
-        console.log('ITERATION INPUT :', device);
-        if (
-          device.deviceId != 'default' &&
-          device.deviceId != 'communications' &&
-          (device.label.includes('(Bluetooth)') ||
-            device.label.includes('bluetooth'))
-        ) {
-          isBluetooth = true;
-          console.log('BlUETOOTH INPUT FOUND');
-          this.setActiveDeviceIdForBluetooth(
-            device.deviceId,
-            'audio_input',
-            device.label
-          );
-          break;
-        }
-      }
-    });
+    //   for (let device of devices) {
+    //     console.log('ITERATION INPUT :', device);
+    //     if (
+    //       device.deviceId != 'default' &&
+    //       device.deviceId != 'communications' &&
+    //       (device.label.includes('(Bluetooth)') ||
+    //         device.label.includes('bluetooth'))
+    //     ) {
+    //       isBluetooth = true;
+    //       console.log('BlUETOOTH INPUT FOUND');
+    //       this.setActiveDeviceIdForBluetooth(
+    //         device.deviceId,
+    //         'audio_input',
+    //         device.label
+    //       );
+    //       break;
+    //     }
+    //   }
+    // });
   }
   doesDeviceExist(type, deviceId) {
     if (deviceId == null) {
@@ -1838,29 +1842,29 @@ export class MeetingComponent implements OnInit {
         }
       }
     } else if (this.meetingState == 'in-meeting') {
-      if (this.localMicStream != null) {
-        if (this.localMicStream.isPlaying) {
-          if (type == 'audio_input') {
-            this.localMicStream.switchDevice('audio', deviceId);
-            this.activeAudioInputDeviceId = deviceId;
-            this.activeAudioInputDeviceName = name;
-            console.log(
-              'recording device switched for mic stream !',
-              this.activeAudioInputDeviceId,
-              this.activeAudioInputDeviceName
-            );
-          } else if (type == 'audio_output') {
-            this.localMicStream.setAudioOutput(deviceId);
-            this.activeAudioInputDeviceId = deviceId;
-            this.activeAudioInputDeviceName = name;
-            console.log(
-              'output device switched for mic stream !',
-              this.activeAudioOutputDeviceName,
-              this.activeAudioOutputDeviceId
-            );
-          }
-        }
-      }
+      // if (this.localMicStream != null) {
+      //   if (this.localMicStream.isPlaying) {
+      //     if (type == 'audio_input') {
+      //       //this.localMicStream.switchDevice('audio', deviceId);
+      //       this.activeAudioInputDeviceId = deviceId;
+      //       this.activeAudioInputDeviceName = name;
+      //       console.log(
+      //         'recording device switched for mic stream !',
+      //         this.activeAudioInputDeviceId,
+      //         this.activeAudioInputDeviceName
+      //       );
+      //     } else if (type == 'audio_output') {
+      //     //  this.localMicStream.setAudioOutput(deviceId);
+      //       this.activeAudioInputDeviceId = deviceId;
+      //       this.activeAudioInputDeviceName = name;
+      //       console.log(
+      //         'output device switched for mic stream !',
+      //         this.activeAudioOutputDeviceName,
+      //         this.activeAudioOutputDeviceId
+      //       );
+      //     }
+      //   }
+      // }
     }
   }
 
@@ -1981,98 +1985,98 @@ export class MeetingComponent implements OnInit {
     });
   }
   checkIfAudioPlaying() {
-    if (this.remoteMicStreams.length > 0) {
-      let stream: Stream = this.remoteMicStreams[0];
-      let audioHTMLElementId = 'video' + stream.getId();
-      console.log(audioHTMLElementId);
-      var remoteAudio: any = document.getElementById(audioHTMLElementId);
-      if (remoteAudio != null) {
-        let isPlaying =
-          remoteAudio.currentTime > 0 &&
-          !remoteAudio.paused &&
-          !remoteAudio.ended &&
-          remoteAudio.readyState > remoteAudio.HAVE_CURRENT_DATA;
+    // if (this.remoteMicStreams.length > 0) {
+    //   let stream: Stream = this.remoteMicStreams[0];
+    //   let audioHTMLElementId = 'video' + stream.getId();
+    //   console.log(audioHTMLElementId);
+    //   var remoteAudio: any = document.getElementById(audioHTMLElementId);
+    //   if (remoteAudio != null) {
+    //     let isPlaying =
+    //       remoteAudio.currentTime > 0 &&
+    //       !remoteAudio.paused &&
+    //       !remoteAudio.ended &&
+    //       remoteAudio.readyState > remoteAudio.HAVE_CURRENT_DATA;
 
-        if (!isPlaying) {
-          console.log('REMOTE AUDIO IS NOT PLAYING !');
-          console.log('TRYING TO PLAY !');
-          remoteAudio.play();
-        } else {
-          console.log('REMOTE AUDIO IS ALREADY PLAYING !');
-          console.log('REMOTE AUDIO CURRENT TIME :', remoteAudio.currentTime);
-        }
-      }
-    } else {
-      console.log('NO REMOTE STREAM PRESENT !');
-    }
+    //     if (!isPlaying) {
+    //       console.log('REMOTE AUDIO IS NOT PLAYING !');
+    //       console.log('TRYING TO PLAY !');
+    //       remoteAudio.play();
+    //     } else {
+    //       console.log('REMOTE AUDIO IS ALREADY PLAYING !');
+    //       console.log('REMOTE AUDIO CURRENT TIME :', remoteAudio.currentTime);
+    //     }
+    //   }
+    // } else {
+    //   console.log('NO REMOTE STREAM PRESENT !');
+    // }
   }
   changeOutputDevice(stream: Stream) {
     console.log('CHANGE OUTPUT DEVICE !');
-    if (this.remoteMicStreams.length > 0) {
-      // let stream: Stream = this.remoteMicStreams[0];
-      if (stream.isPlaying()) {
-        console.log('REMOTE VIDEO ON :' + stream.isVideoOn());
-        console.log('REMOTE AUDIO ON :' + stream.isAudioOn());
-        console.log('REMOTE STREAM VIDEO ENABLED :' + stream.videoEnabled);
-        this.getDevicesInfo();
-        setTimeout(() => {
-          console.log(
-            'DEFAULT OUTPUT DEVICE NAME :',
-            this.defaultAudioOutputDeviceName
-          );
-          console.log(
-            'DEFAULT OUTPUT DEVICE ID :',
-            this.defaultAudioOutputDeviceId
-          );
-          if (this.defaultAudioOutputDeviceId != null) {
-            stream.setAudioOutput(
-              this.defaultAudioOutputDeviceId,
-              () => {
-                console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
-                console.log('TRYING TO RESUME THE STREAM');
-                console.log(
-                  stream.resume().then(() => {
-                    console.log('STREAM RESUMED SUCCESSFULLY !');
-                  })
-                );
-              },
-              (err) => {
-                console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
-              }
-            );
-            stream.resume();
-          } else {
-            console.log('OUTPUT DEVICE ID IS NULL !');
-          }
-        }, 1000);
-      }
-    } else {
-      console.log('REMOTE STREAMS ARE NULL !');
-    }
+    // if (this.remoteMicStreams.length > 0) {
+    //   // let stream: Stream = this.remoteMicStreams[0];
+    //   if (stream.isPlaying()) {
+    //     console.log('REMOTE VIDEO ON :' + stream.isVideoOn());
+    //     console.log('REMOTE AUDIO ON :' + stream.isAudioOn());
+    //     console.log('REMOTE STREAM VIDEO ENABLED :' + stream.videoEnabled);
+    //     this.getDevicesInfo();
+    //     setTimeout(() => {
+    //       console.log(
+    //         'DEFAULT OUTPUT DEVICE NAME :',
+    //         this.defaultAudioOutputDeviceName
+    //       );
+    //       console.log(
+    //         'DEFAULT OUTPUT DEVICE ID :',
+    //         this.defaultAudioOutputDeviceId
+    //       );
+    //       if (this.defaultAudioOutputDeviceId != null) {
+    //         stream.setAudioOutput(
+    //           this.defaultAudioOutputDeviceId,
+    //           () => {
+    //             console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
+    //             console.log('TRYING TO RESUME THE STREAM');
+    //             console.log(
+    //               stream.resume().then(() => {
+    //                 console.log('STREAM RESUMED SUCCESSFULLY !');
+    //               })
+    //             );
+    //           },
+    //           (err) => {
+    //             console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
+    //           }
+    //         );
+    //         stream.resume();
+    //       } else {
+    //         console.log('OUTPUT DEVICE ID IS NULL !');
+    //       }
+    //     }, 1000);
+    //   }
+    // } else {
+    //   console.log('REMOTE STREAMS ARE NULL !');
+    // }
   }
   setAudioOutputDevice() {
     console.log(this.inputAudioOutputDeviceId);
-    if (
-      this.inputAudioOutputDeviceId != null &&
-      this.remoteMicStreams.length > 0
-    ) {
-      let stream: Stream = this.remoteMicStreams[0];
-      stream.setAudioOutput(
-        this.inputAudioOutputDeviceId,
-        () => {
-          console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
-          console.log('TRYING TO RESUME THE STREAM');
-          console.log(
-            stream.resume().then(() => {
-              console.log('STREAM RESUMED SUCCESSFULLY !');
-            })
-          );
-        },
-        (err) => {
-          console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
-        }
-      );
-    }
+    // if (
+    //   this.inputAudioOutputDeviceId != null &&
+    //   this.remoteMicStreams.length > 0
+    // ) {
+    //   let stream: Stream = this.remoteMicStreams[0];
+    //   stream.setAudioOutput(
+    //     this.inputAudioOutputDeviceId,
+    //     () => {
+    //       console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
+    //       console.log('TRYING TO RESUME THE STREAM');
+    //       console.log(
+    //         stream.resume().then(() => {
+    //           console.log('STREAM RESUMED SUCCESSFULLY !');
+    //         })
+    //       );
+    //     },
+    //     (err) => {
+    //       console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
+    //     }
+    //   );
+    // }
   }
   openDialog(title) {
     this.dialogConfig.data = {
