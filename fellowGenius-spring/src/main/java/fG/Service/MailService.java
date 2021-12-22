@@ -23,6 +23,7 @@ import fG.Entity.BookingDetails;
 import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfile;
 import fG.Entity.Users;
+import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryUsers;
 
@@ -34,6 +35,9 @@ public class MailService {
 
 	@Autowired
 	repositoryUsers repUsers;
+	
+	@Autowired
+	repositoryStudentProfile repStudentProfile;
 
 	@Autowired
 	repositoryTutorProfile repTutorProfile;
@@ -559,7 +563,110 @@ public class MailService {
 		}
 	}
 	
-	boolean sendReferInviteMail(String[] users,String referCode,String senderName) {
+	void ReferConfirmationMail(String from,String referrerEmail,String referCode,String directUrl) {
+		try {
+			MimeMessage message = new MimeMessage(session);
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			
+			helper.setFrom(from);
+			helper.setTo(referrerEmail);
+			helper.setSubject("Your Refer code invite sent to others ");
+			String mailContent = "<html>\r\n" + "  <head> </head>\r\n" + "\r\n" + "  <body>\r\n" + "    <div\r\n"
+					+ "      style=\"\r\n" + "        width: 100%;\r\n" + "        background-color: #f7f7f7;\r\n"
+					+ "        display: inline-block;\r\n" + "        font-family: 'Roboto', sans-serif;\r\n"
+					+ "      \"\r\n" + "    >\r\n" + "      <div\r\n" + "        style=\"\r\n"
+					+ "          max-width: 500px;\r\n" + "          height: auto;\r\n"
+					+ "          background-color: #fff;\r\n" + "          border-radius: 20px;\r\n"
+					+ "          padding: 30px;\r\n" + "          margin: 3em auto;\r\n" + "        \"\r\n"
+					+ "      >\r\n"
+					+ "        <div style=\"width: 100%; display: inline-block; margin-bottom: 20px\">\r\n"
+					+ "          <img src='cid:logoImage' style=\"width: 90px\" />\r\n" + "        </div>\r\n"
+					+ "        <div style=\"width: 100%; display: inline-block\">\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Below text sent to email adresses you referred</p><br />\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hello there</p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "            Thinking about how to get an experts advice on your ongoing project. Use the referral code below and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.\r\n"
+					+ "<br />\r\n"
+					+ " <div style=\"width: 94%; background-color: #F7F7F7; display: inline-block; padding: 8px; text-align: center; border-radius: 15px; font-size: 40px; font-weight: 400; color: #202124; letter-spacing: 2px;\">"
+					+ referCode + "</div> <br />\r\n"
+					+ "            Enter the refer code by clicking the link below.\r\n" + "          </p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "            <a href=\"" + directUrl + "\">Joining Link</a>\r\n" + "          </p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "            <br />"
+					+ "Regards,<br />Team FellowGenius\r\n" + "          </p>\r\n"
+					+ "          <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7\" />\r\n"
+					+ "          <p\r\n" + "            style=\"\r\n" + "              text-align: center;\r\n"
+					+ "              font-size: 14px;\r\n" + "              color: #b5b3b3;\r\n"
+					+ "              margin-bottom: 0;\r\n" + "            \"\r\n" + "          >\r\n"
+					+ "            Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >Hurry, join the FellowGenius community now!!</a>\r\n"
+					+ "          </p>\r\n" + "        </div>\r\n" + "      </div>\r\n" + "    </div>\r\n"
+					+ "  </body>\r\n" + "</html>\r\n";
+			helper.setText(mailContent, true);
+			ClassPathResource resource = new ClassPathResource("logo.png");
+			helper.addInline("logoImage", resource);
+			Transport.send(message);
+
+		}catch(MessagingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+	}
+	
+	void ReferInviteMail(String from,String to,String senderName, String referCode,String directUrl) {
+		try {
+			MimeMessage message = new MimeMessage(session);
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			
+			helper.setFrom(from);
+			helper.setTo(to);
+			helper.setSubject(senderName+" has referred you to FellowGenius. Join Now!!");
+			String mailContent = "<html>\r\n" + "  <head> </head>\r\n" + "\r\n" + "  <body>\r\n" + "    <div\r\n"
+					+ "      style=\"\r\n" + "        width: 100%;\r\n" + "        background-color: #f7f7f7;\r\n"
+					+ "        display: inline-block;\r\n" + "        font-family: 'Roboto', sans-serif;\r\n"
+					+ "      \"\r\n" + "    >\r\n" + "      <div\r\n" + "        style=\"\r\n"
+					+ "          max-width: 500px;\r\n" + "          height: auto;\r\n"
+					+ "          background-color: #fff;\r\n" + "          border-radius: 20px;\r\n"
+					+ "          padding: 30px;\r\n" + "          margin: 3em auto;\r\n" + "        \"\r\n"
+					+ "      >\r\n"
+					+ "        <div style=\"width: 100%; display: inline-block; margin-bottom: 20px\">\r\n"
+					+ "          <img src='cid:logoImage' style=\"width: 90px\" />\r\n" + "        </div>\r\n"
+					+ "        <div style=\"width: 100%; display: inline-block\">\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hello there</p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "            Thinking about how to get an experts advice on your ongoing project. Use the referral code below and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.\r\n"
+					+ "<br />\r\n"
+					+ " <div style=\"width: 94%; background-color: #F7F7F7; display: inline-block; padding: 8px; text-align: center; border-radius: 15px; font-size: 40px; font-weight: 400; color: #202124; letter-spacing: 2px;\">"
+					+ referCode + "</div> <br />\r\n"
+					+ "            Enter the refer code by clicking the link below.\r\n" + "          </p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "            <a href=\"" + directUrl + "\">Joining Link</a>\r\n" + "          </p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "            <br />"
+					+ "Regards,<br />Team FellowGenius\r\n" + "          </p>\r\n"
+					+ "          <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7\" />\r\n"
+					+ "          <p\r\n" + "            style=\"\r\n" + "              text-align: center;\r\n"
+					+ "              font-size: 14px;\r\n" + "              color: #b5b3b3;\r\n"
+					+ "              margin-bottom: 0;\r\n" + "            \"\r\n" + "          >\r\n"
+					+ "            Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >Hurry, join the FellowGenius community now!!</a>\r\n"
+					+ "          </p>\r\n" + "        </div>\r\n" + "      </div>\r\n" + "    </div>\r\n"
+					+ "  </body>\r\n" + "</html>\r\n";
+			helper.setText(mailContent, true);
+			ClassPathResource resource = new ClassPathResource("logo.png");
+			helper.addInline("logoImage", resource);
+			Transport.send(message);
+
+		}catch(MessagingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+	}
+	
+	boolean sendReferInviteMail(String[] users,String referCode,String referrerEmail) {
 		System.out.println("Inside mail service method of referInvite");
 		InitiateMailService("support@fellowgenius.com");
 		String from = senderEmail;
@@ -569,61 +676,36 @@ public class MailService {
 			}
 		});
 		boolean result=true;
+		
 		System.out.println(users);
 		System.out.println(referCode);
-		System.out.println(senderName);
+		System.out.println(referrerEmail);
 		//send email to all user one by one
-		for(String user:users) {
-			String directUrl = "https://fellowgenius.com/#/sign-up?pt=MA";
-			System.out.println(directUrl);
-			String to = user;
-			try {
-				MimeMessage message = new MimeMessage(session);
-				MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-				
-				helper.setFrom(from);
-				helper.setTo(to);
-				helper.setSubject(senderName+" has referred you to FellowGenius. Join Now!!");
-				String mailContent = "<html>\r\n" + "  <head> </head>\r\n" + "\r\n" + "  <body>\r\n" + "    <div\r\n"
-						+ "      style=\"\r\n" + "        width: 100%;\r\n" + "        background-color: #f7f7f7;\r\n"
-						+ "        display: inline-block;\r\n" + "        font-family: 'Roboto', sans-serif;\r\n"
-						+ "      \"\r\n" + "    >\r\n" + "      <div\r\n" + "        style=\"\r\n"
-						+ "          max-width: 500px;\r\n" + "          height: auto;\r\n"
-						+ "          background-color: #fff;\r\n" + "          border-radius: 20px;\r\n"
-						+ "          padding: 30px;\r\n" + "          margin: 3em auto;\r\n" + "        \"\r\n"
-						+ "      >\r\n"
-						+ "        <div style=\"width: 100%; display: inline-block; margin-bottom: 20px\">\r\n"
-						+ "          <img src='cid:logoImage' style=\"width: 90px\" />\r\n" + "        </div>\r\n"
-						+ "        <div style=\"width: 100%; display: inline-block\">\r\n"
-						+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hello there</p>\r\n"
-						+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-						+ "            Thinking about how to get an experts advice on your ongoing project. Use the referral code below and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.\r\n"
-						+ "<br />\r\n"
-						+ " <div style=\"width: 94%; background-color: #F7F7F7; display: inline-block; padding: 8px; text-align: center; border-radius: 15px; font-size: 40px; font-weight: 400; color: #202124; letter-spacing: 2px;\">"
-						+ referCode + "</div> <br />\r\n"
-						+ "            Enter the refer code by clicking the link below.\r\n" + "          </p>\r\n"
-						+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-						+ "            <a href=\"" + directUrl + "\">Joining Link</a>\r\n" + "          </p>\r\n"
-						+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-						+ "            <br />Regards,<br />Team FellowGenius\r\n" + "          </p>\r\n"
-						+ "          <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7\" />\r\n"
-						+ "          <p\r\n" + "            style=\"\r\n" + "              text-align: center;\r\n"
-						+ "              font-size: 14px;\r\n" + "              color: #b5b3b3;\r\n"
-						+ "              margin-bottom: 0;\r\n" + "            \"\r\n" + "          >\r\n"
-						+ "            Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a>\r\n"
-						+ "          </p>\r\n" + "        </div>\r\n" + "      </div>\r\n" + "    </div>\r\n"
-						+ "  </body>\r\n" + "</html>\r\n";
-				helper.setText(mailContent, true);
-				ClassPathResource resource = new ClassPathResource("logo.png");
-				helper.addInline("logoImage", resource);
-				Transport.send(message);
-
-			}catch(MessagingException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
+		Users userObj=repUsers.emailExist(referrerEmail);
+		System.out.println(userObj.toString());
+		if(userObj!=null) {
+			String senderFullName="";
+			if(userObj.getRole().equals("Learner")) {
+				StudentProfile student=repStudentProfile.emailExist(referrerEmail);
+				senderFullName=student.getFullName();
+			}else if(userObj.getRole().equals("Expert")) {
+				TutorProfile tutor=repTutorProfile.emailExist(referrerEmail);
+				senderFullName=tutor.getFullName();
+			}else {
+				System.out.println("Invalid user");
+				result=false;
 			}
+			for(String user:users) {
+				String directUrl = "https://fellowgenius.com/#/sign-up?pt=MA";
+				System.out.println(directUrl);
+				String to = user;
+				ReferInviteMail(from, to, senderFullName, referCode, directUrl);
+			}
+			
+			//after this send a confirmation mail to sender that referred mail has been sent	
+			ReferConfirmationMail(from, referrerEmail, referCode, senderFullName);
 		}
+		
 		return result;
 	}
 

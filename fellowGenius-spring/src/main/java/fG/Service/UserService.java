@@ -1120,8 +1120,8 @@ public class UserService implements UserDetailsService {
 		return mailService.sendResetMail(email);
 	}
 	
-	public boolean sendReferInviteMail(String[] users,String referCode,String senderName) {
-		return mailService.sendReferInviteMail(users, referCode, senderName);
+	public boolean sendReferInviteMail(String[] users,String referCode,String senderEmail) {
+		return mailService.sendReferInviteMail(users, referCode, senderEmail);
 	}
 
 	public boolean updatePassword(String userId, String password) {

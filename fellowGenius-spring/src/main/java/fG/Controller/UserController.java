@@ -148,14 +148,14 @@ public class UserController {
 	
 	@RequestMapping(value="/sendReferInviteMail",method=RequestMethod.GET)
 	@ResponseBody
-	public boolean sendReferInviteMail(String[] users,String referCode,String senderName) {
+	public boolean sendReferInviteMail(String[] users,String referCode,String senderEmail) {
 		System.out.println("Users array:- ");
 		for(String user:users) {
 			System.out.println(user);
 		}
 		System.out.println("Refer code:- "+ referCode);
-		System.out.println("sender name:- "+senderName);
-		return service.sendReferInviteMail(users,referCode,senderName);
+		System.out.println("sender name:- "+senderEmail);
+		return service.sendReferInviteMail(users,referCode,senderEmail);
 	}
 
 	@RequestMapping(value = "/updatePassword")

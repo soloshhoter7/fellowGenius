@@ -153,13 +153,21 @@ Joining Link : -  ${this.linkedinURL}
     //firstly check if email is valid
     var validRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
 
-    
-  
    if (value.match(validRegex)){
 
     //check if this email is already present or not
     if(this.emailsArray.includes(value)){
-      console.log("This email already entered");
+      this.snackBar.open(
+        'This email is already entered !',
+        'close',
+        this.config
+      );
+    }else if(value==this.userEmail){
+      this.snackBar.open(
+        'This email is same as user registered mail id !',
+        'close',
+        this.config
+      );
     }else{
       this.emailsArray.push(value);
     }
@@ -243,7 +251,7 @@ ${siteurl}
    sendMail(){
      console.log(this.emailsArray);
     this.isLoading=true;
-     this.httpService.sendReferInviteMail(this.emailsArray,this.referCode,this.fullName).subscribe(
+     this.httpService.sendReferInviteMail(this.emailsArray,this.referCode,this.userEmail).subscribe(
        (res)=>{
          this.isLoading=false;
          if (res == true) {
