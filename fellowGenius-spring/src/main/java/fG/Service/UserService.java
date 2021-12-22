@@ -1119,6 +1119,10 @@ public class UserService implements UserDetailsService {
 	public boolean sendResetLink(String email) {
 		return mailService.sendResetMail(email);
 	}
+	
+	public boolean sendReferInviteMail(String[] users,String referCode,String senderEmail) {
+		return mailService.sendReferInviteMail(users, referCode, senderEmail);
+	}
 
 	public boolean updatePassword(String userId, String password) {
 		System.out.println(userId);
