@@ -8,7 +8,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { HttpService } from 'src/app/service/http.service';
-import { UserReferralsInfo } from 'src/app/model/userReferralInfo';
+import { UserReferralsInfo } from 'src/app/model/UserReferralsInfo';
 import { ReferralService } from 'src/app/service/referral.service';
 @Component({
   selector: 'app-refer-and-earn',

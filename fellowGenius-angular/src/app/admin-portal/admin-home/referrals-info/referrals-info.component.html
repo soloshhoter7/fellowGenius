@@ -1,0 +1,164 @@
+<div class="page-content dashboard__Panel">
+    <div class="wrapper">
+        <h3>Referral Details</h3>
+      <div class="total__list white__bg" *ngFor="let ReferralInfo of adminReferralInfoList" style="margin-bottom:20px">
+        
+        <div >
+          <div style="margin-bottom: 10px" >
+            <div class="row">
+                <div class="col-12 col-md-2">
+                    <h3>Referrer Details</h3>
+                </div>
+                <div class="col-12 col-md-6">
+  {{ReferralInfo.referrerInfo.userId}}         {{ReferralInfo.referrerInfo.fullName}}       {{ReferralInfo.referrerInfo.email}}    
+                    <!-- Textbox -->
+                    <!-- <div class="row">
+                      <div class="col-md-2">
+                        {{ReferralInfo.referrerInfo.userId}}
+                      </div>
+                      <div class="col-md-4">
+                        {{ReferralInfo.referrerInfo.fullName}}
+                      </div>
+                      <div class="col-md-6">
+                        {{ReferralInfo.referrerInfo.email}}
+                      </div>
+                    </div> -->
+                </div>
+                <div class="col-12 col-md-4">
+                  <button   
+                  class="button form_Btn"
+                  >
+                  Amount:- {{ReferralInfo.referrerPaymentDue}}
+                </button>
+                </div>
+            </div>
+            
+          </div>
+
+            <!-- Accordion card -->
+  <div class="card">
+
+    <!-- Card header -->
+    <div class="card-header" role="tab" id="headingTwo2">
+      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" 
+      href="#{{ReferralInfo.referrerInfo.userId}}"
+        aria-expanded="false" aria-controls="collapseTwo2">
+        <h5 class="mb-0">
+         User Referred Details  <i class="fas fa-angle-down rotate-icon"></i>
+        </h5>
+      </a>
+    </div>
+
+    <!-- Card body -->
+    <div id="{{ReferralInfo.referrerInfo.userId}}" 
+    class="collapse" role="tabpanel" aria-labelledby="headingTwo2"
+      data-parent="#accordionEx">
+      <div class="card-body">
+        <div class="referal__table">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="fld_name">UserId</th>
+                    <th class="fld_name">Name</th>
+                    <th class="fld_name">Email</th>
+                    <!-- <th class="fld_status">Status</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let userReferredInfo of ReferralInfo.userReferredInfo">
+                    <td class="fld_name">
+                        <div class="nme_style">{{userReferredInfo.userId}}</div>
+                      </td>
+                    <td class="fld_name">
+                      <div class="nme_style">{{userReferredInfo.name}}</div>
+                    </td>
+                    <td class="fld_email">{{userReferredInfo.email}}</td>
+                    <!-- <td class="fld_status">
+                      <div class="td_btn">
+                        <a href="" class="table_btn connect_btn">Invited</a>
+                      </div>
+                    </td> -->
+                  </tr>
+
+                  
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Accordion card -->
+
+           <!-- Accordion card -->
+            <!-- Meeting setup -->
+  <div class="card" style="margin-top: 20px;">
+
+    <!-- Card header -->
+    <div class="card-header" role="tab" id="headingThree3">
+      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" 
+      href="#{{ReferralInfo.referrerInfo.userId}}0"
+        aria-expanded="false" aria-controls="collapseThree3">
+        <h5 class="mb-0">
+          Meetings Setup <i class="fas fa-angle-down rotate-icon"></i>
+        </h5>
+      </a>
+    </div>
+
+    <!-- Card body -->
+    <div id="{{ReferralInfo.referrerInfo.userId}}0" 
+    class="collapse" role="tabpanel" aria-labelledby="headingThree3"
+      data-parent="#accordionEx">
+      <div class="card-body">
+        <div class="referal__table">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="fld_name">Meeting Id</th>
+                    <th class="fld_name">Meeting Timings</th>
+                    <th class="fld_name">Meeting Amount</th>
+                    <th class="fld_status">Meeting Creation Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let meetingsSetup of ReferralInfo.meetingsSetupInfo">
+                    <td class="fld_name">
+                        <div class="nme_style">{{meetingsSetup.bid}}</div>
+                      </td>
+                    <td class="fld_name">
+                      <div class="nme_style">
+      {{meetingsSetup.startTimeHour}}:{{meetingsSetup.startTimeMinute}}-{{meetingsSetup.endTimeHour}}:{{meetingsSetup.endTimeMinute}} (Duration:- {{meetingsSetup.duration}} minutes)
+                      </div>
+                    </td>
+                    <td class="fld_email">{{meetingsSetup.amount}}</td>
+                    <td class="fld_status">
+                      {{meetingsSetup.dateOfMeeting}}
+                    </td>
+                  </tr>
+
+                  
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Accordion card -->
+
+         
+          
+         
+        </div>
+        </div>
+              
+    </div>
+  </div>

@@ -28,7 +28,7 @@ import fG.Model.StudentProfileModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.TutorVerificationModel;
-import fG.Model.UserReferralInfo;
+import fG.Model.UserReferralInfoModel;
 import fG.Model.registrationModel;
 import fG.Model.updatePasswordModel;
 import fG.Service.MailService;
@@ -299,10 +299,10 @@ public class UserController {
 	public List<AppInfoModel> getEarningAppInfo() {
 		return service.getEarningAppInfo();
 	}
-	//to fetch user referral infog
+	//to fetch user referral info
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
 	@RequestMapping(value="/getUserReferralInfo",method = RequestMethod.GET)
-	public List<UserReferralInfo> getUserReferralInfo(String userId) throws ParseException{
+	public List<UserReferralInfoModel> getUserReferralInfo(String userId) throws ParseException{
 		return service.getUserReferralInformationEvents(userId);
 	}
 }

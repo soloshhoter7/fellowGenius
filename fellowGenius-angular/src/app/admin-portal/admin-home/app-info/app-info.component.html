@@ -1,0 +1,45 @@
+<div class="page-content dashboard__Panel">
+    <div class="wrapper">
+      <div class="total__list white__bg">
+        <div>
+          <h3>App Info Details</h3>
+          
+        </div>
+        <div>
+          <div style="margin-bottom: 10px">
+            <div class="row" *ngFor="let info of appInfo" style="margin-bottom: 10px;">
+                <div class="col-12 col-md-3">
+                    <h3>{{info.key}}</h3>
+                </div>
+                <div class="col-12 col-md-5">
+                    <!-- Textbox -->
+                    <input
+                        type="text"
+                        id="adminUsername"
+                        name="adminUsername"
+                        [(ngModel)]="info.value"
+                        class="form-control"
+                        required
+                        maxlength="50"
+                        
+                      />
+                </div>
+                <div class="col-12 col-md-4">
+                  <button   
+                  class="button form_Btn"
+                  (click)="updateAppInfo(info)"
+                  >
+                  Update
+                </button>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+
+
+        </div>
+              
+    </div>
+  </div>
+  

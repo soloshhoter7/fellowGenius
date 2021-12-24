@@ -117,6 +117,9 @@ import { MediaAccessDialogComponent } from './home/meeting/media-access-dialog/m
 import { DateFormatMMYYYYDirective } from './custom-directives/date-format-mmyyyy.directive';
 import { DateFormatDdmmyyyyDirective } from './custom-directives/date-format-ddmmyyyy.directive';
 import { VoiceCallComponent } from './voice-call/voice-call.component';
+import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.component';
+import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
+import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
 
 @NgModule({
   declarations: [
@@ -190,6 +193,9 @@ import { VoiceCallComponent } from './voice-call/voice-call.component';
     DateFormatMMYYYYDirective,
     DateFormatDdmmyyyyDirective,
     VoiceCallComponent,
+    AppInfoComponent,
+    TransactionsInfoComponent,
+    ReferralsInfoComponent,
   ],
   imports: [
     NoopAnimationsModule,

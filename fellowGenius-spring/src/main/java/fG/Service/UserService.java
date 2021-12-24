@@ -59,7 +59,7 @@ import fG.Model.TutorVerificationModel;
 import fG.Model.UserActivityAnalytics;
 import fG.Model.UserActivityModel;
 import fG.Model.UserDataModel;
-import fG.Model.UserReferralInfo;
+import fG.Model.UserReferralInfoModel;
 import fG.Model.expertise;
 import fG.Model.registrationModel;
 import fG.Repository.repositoryAppInfo;
@@ -157,8 +157,8 @@ public class UserService implements UserDetailsService {
 	MailService mailService;
 
 	
-	public List<UserReferralInfo> getUserReferralInformationEvents(String userId) throws ParseException{
-		List<UserReferralInfo> referrerDetails = new ArrayList<UserReferralInfo>();
+	public List<UserReferralInfoModel> getUserReferralInformationEvents(String userId) throws ParseException{
+		List<UserReferralInfoModel> referrerDetails = new ArrayList<UserReferralInfoModel>();
 		UserReferrals userRef = repUserReferrals.findByUserId(Integer.valueOf(userId));
 		//getting user referral information events
 		//getting the registered people with timestamp
@@ -168,7 +168,7 @@ public class UserService implements UserDetailsService {
 			List<BookingDetails> meetingsCompleted = userRef.getMeetingCompleted();
 			//for registered users
 			for(Users user:registeredUsers) {
-				UserReferralInfo urf = new UserReferralInfo();
+				UserReferralInfoModel urf = new UserReferralInfoModel();
 				urf.setEmail(user.getEmail());
 				urf.setName(fetchUserName(user.getUserId(),user.getRole()));
 				urf.setStatus("Registered");
@@ -177,7 +177,7 @@ public class UserService implements UserDetailsService {
 			}
 			//for meetings setup
 			for(BookingDetails b:meetingsSetup) {
-				UserReferralInfo urf = new UserReferralInfo();
+				UserReferralInfoModel urf = new UserReferralInfoModel();
 				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
 				urf.setEmail(sp.getEmail());
 				urf.setName(sp.getFullName());
@@ -187,7 +187,7 @@ public class UserService implements UserDetailsService {
 			}
 			//for meetings completed
 			for(BookingDetails b:meetingsCompleted) {
-				UserReferralInfo urf = new UserReferralInfo();
+				UserReferralInfoModel urf = new UserReferralInfoModel();
 				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
 				urf.setEmail(sp.getEmail());
 				urf.setName(sp.getFullName());
@@ -1691,6 +1691,19 @@ public class UserService implements UserDetailsService {
 			Collections.reverse(allBookingsModel);
 		}
 		return allBookingsModel;
+	}
+	
+	public String getFullNameFromUserId(Users user) {
+		String role=user.getRole();
+		String fullName="";
+		if(role.equals("Learner")) {
+			StudentProfile learner=repStudentProfile.idExist(user.getUserId());
+			fullName=learner.getFullName();
+		}else if(role.equals("Expert")) {
+			TutorProfile expert=repTutorProfile.idExist(user.getUserId());
+			fullName=expert.getFullName();
+		}
+		return fullName;
 	}
 
 	

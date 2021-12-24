@@ -34,7 +34,7 @@ import fG.Model.KeyValueModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
-import fG.Model.UserReferralInfo;
+import fG.Model.UserReferralInfoModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryNotification;
@@ -249,7 +249,7 @@ public class MeetingService {
 		}
 	}
 
-	@Scheduled(cron = "0 57 2 1/1 * *")
+	@Scheduled(cron = "0 48 22 1/1 * *")
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<String> last2DatesInString = new ArrayList<String>();
@@ -307,7 +307,16 @@ public class MeetingService {
 //								System.out.println("MEETINGS COMPLETED : "+meetingsCompleted);
 								if(!meetingsCompleted.contains(b)) {
 									Integer referralAmount = Integer.valueOf(repAppInfo.keyExist("ReferralAmount").getValue());
-									Integer amountDue = ur.getPaymentDue()+referralAmount;
+									Integer amountDue=0;
+									if(ur.getPaymentDue()==0) {
+										//add amount and create new transaction object
+										amountDue=ur.getPaymentDue()+referralAmount;
+										
+									}else {
+										//add amount and update existing transaction object
+										amountDue=ur.getPaymentDue()+referralAmount;
+									}
+									
 									ur.setPaymentDue(amountDue);
 									
 									for(BookingDetails bs:meetingsSetup) {

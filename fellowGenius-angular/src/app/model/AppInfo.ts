@@ -1,4 +1,6 @@
 export class AppInfo{
-    key:string;
-    value:string;
+   public key:string;
+   public value:string;
+
+   
 }
