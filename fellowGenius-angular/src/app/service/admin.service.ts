@@ -1,7 +1,9 @@
 
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
-import { environment } from 'src/environments/environment';
+import { Transaction } from '../model/Transaction';
+import { HttpService } from './http.service';
 
 
 @Injectable({
@@ -9,8 +11,45 @@ import { environment } from 'src/environments/environment';
 })
 export class AdminService {
   
-  constructor() { }
+  constructor(private httpService:HttpService) { }
 
-  
-  
+  private pendingTransactionsList:Transaction[]=[];
+  pendingTransactionsChanged=new Subject<Transaction[]>();
+
+  private previousTransactionsList:Transaction[]=[];
+  previousTransactionsChanged=new Subject<Transaction[]>();
+
+  getPendingTransactionsList(){
+    return this.pendingTransactionsList.slice();
+  }
+
+  setPendingTransactionsList(pendingInfo:Transaction[]) {
+    this.pendingTransactionsList=pendingInfo;
+    this.pendingTransactionsChanged.next(this.pendingTransactionsList.slice());
+  }
+
+  fetchPendingTransactionsList(){
+    this.httpService.fetchPendingTransactionsInfo().subscribe(
+      (res)=>{
+        this.setPendingTransactionsList(res);
+      }
+    )
+  }
+
+  getPreviousTransactionsList(){
+    return this.previousTransactionsList.slice();
+  }
+
+  setPreviousTransactionsList(previousInfo:Transaction[]){
+    this.previousTransactionsList=previousInfo;
+    this.previousTransactionsChanged.next(this.previousTransactionsList.slice());
+  }
+
+  fetchPreviousTransactionsList(){
+    this.httpService.fetchPreviousTransactionsInfo().subscribe(
+      (res)=>{
+        this.setPreviousTransactionsList(res);
+      }
+    )
+  }
 }

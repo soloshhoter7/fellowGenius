@@ -5,7 +5,7 @@ import {
   ElementRef,
   NgZone,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { StudentProfileModel } from '../../model/studentProfile';
 import { HttpService } from 'src/app/service/http.service';
@@ -46,7 +46,8 @@ export class SignUpComponent implements OnInit {
     private cookieService: CookieService,
     private socialService: SocialService,
     private zone: NgZone,
-    private authService: AuthService
+    private authService: AuthService,
+    private route:ActivatedRoute
   ) {}
   // --- parent child relationships ------------
   @ViewChild('loginRef', { static: true })
@@ -103,7 +104,11 @@ export class SignUpComponent implements OnInit {
     this.expert_userId = this.cookieService.get('expert_userId');
     this.expert_domain = this.cookieService.get('expert_domain');
     this.googleSDK();
-    
+    if(this.route.snapshot.queryParams.pt==undefined){
+      this.showExpertCode=false;
+    }else{
+      this.showExpertCode=true;
+    }
   }
   togglePassword(){
     this.showPassword=!this.showPassword;

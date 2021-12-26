@@ -11,4 +11,5 @@ export class adminReferralInfo{
 
     public referrerPaymentDue:Number;
 
+    public referralMeetingsCompletedInfo:bookingDetails[];
 }

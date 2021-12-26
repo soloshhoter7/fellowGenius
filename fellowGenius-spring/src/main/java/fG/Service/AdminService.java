@@ -14,11 +14,13 @@ import fG.Entity.Users;
 import fG.Model.AdminReferralInfoModel;
 import fG.Model.BookingDetailsModel;
 import fG.Model.ReferrerInfoModel;
+import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.UserReferralInfoModel;
 import fG.Repository.repositoryTransactions;
 import fG.Repository.repositoryUserReferrals;
+import fG.Repository.repositoryUsers;
 
 @Service
 public class AdminService {
@@ -28,6 +30,9 @@ public class AdminService {
 	
 	@Autowired
 	repositoryUserReferrals repUserReferrals;
+	
+	@Autowired
+	repositoryUsers repUsers;
 	
 	@Autowired 
 	repositoryTransactions repTransactions;
@@ -53,11 +58,11 @@ public class AdminService {
 		
 		for(UserReferrals userReferral:userReferralsList) {
 			//1st part-referrer info
-			Users ReferrerUser=userReferral.getUser();
-			ReferrerInfoModel ReferrerUserModel=new ReferrerInfoModel();
-			ReferrerUserModel.setUserId(String.valueOf(ReferrerUser.getUserId()));
-			ReferrerUserModel.setEmail(ReferrerUser.getEmail());
-			ReferrerUserModel.setFullName(userService.getFullNameFromUserId(ReferrerUser));
+			Users referrerUser=userReferral.getUser();
+			ReferrerInfoModel referrerUserModel=new ReferrerInfoModel();
+			referrerUserModel.setUserId(String.valueOf(referrerUser.getUserId()));
+			referrerUserModel.setEmail(referrerUser.getEmail());
+			referrerUserModel.setFullName(userService.fetchUserName(referrerUser.getUserId(),referrerUser.getRole()));
 			//System.out.println(ReferrerUserModel);
 			
 			//2nd part-userReferredInfo
@@ -68,7 +73,7 @@ public class AdminService {
 				UserReferralInfoModel userReferredInfoObject=new UserReferralInfoModel();
 				userReferredInfoObject.setUserId(String.valueOf(referredUser.getUserId()));
 				userReferredInfoObject.setEmail(referredUser.getEmail());
-				userReferredInfoObject.setName(userService.getFullNameFromUserId(referredUser));
+				userReferredInfoObject.setName(userService.fetchUserName(referredUser.getUserId(),referredUser.getRole()));
 				
 				userReferredInfoList.add(userReferredInfoObject);
 			}
@@ -80,6 +85,8 @@ public class AdminService {
 			for(BookingDetails referredUsersMeetingSetup:referredUsersMeetingsSetup) {
 				BookingDetailsModel meetingSetupInfoObject=new BookingDetailsModel();
 				meetingSetupInfoObject.setBid(referredUsersMeetingSetup.getBid());
+				meetingSetupInfoObject.setStudentName(referredUsersMeetingSetup.getStudentName());
+				meetingSetupInfoObject.setTutorName(referredUsersMeetingSetup.getTutorName());
 				meetingSetupInfoObject.setStartTimeHour(referredUsersMeetingSetup.getStartTimeHour());
 				meetingSetupInfoObject.setStartTimeMinute(referredUsersMeetingSetup.getStartTimeMinute());
 				meetingSetupInfoObject.setEndTimeHour(referredUsersMeetingSetup.getEndTimeHour());
@@ -93,15 +100,113 @@ public class AdminService {
 			//4th part-referrerPaymentDue
 			Integer referrerPaymentDue=userReferral.getPaymentDue();
 			
+			
+			//5th part-meetingsCompleted
+			ArrayList<BookingDetailsModel> meetingCompletedInfoList=
+					new ArrayList<BookingDetailsModel>();
+	List<BookingDetails> referredUsersMeetingsCompleted=userReferral.getMeetingCompleted();
+	//System.out.println(referredUsersMeetingsCompleted);
+	
+			for(BookingDetails referredUsersMeetingCompleted:referredUsersMeetingsCompleted) {
+				BookingDetailsModel meetingCompletedInfoObject=new BookingDetailsModel();
+				meetingCompletedInfoObject.setBid(referredUsersMeetingCompleted.getBid());
+				meetingCompletedInfoObject.setStudentName(referredUsersMeetingCompleted.getStudentName());
+				meetingCompletedInfoObject.setTutorName(referredUsersMeetingCompleted.getTutorName());
+				meetingCompletedInfoObject.setStartTimeHour(referredUsersMeetingCompleted.getStartTimeHour());
+				meetingCompletedInfoObject.setStartTimeMinute(referredUsersMeetingCompleted.getStartTimeMinute());
+				meetingCompletedInfoObject.setEndTimeHour(referredUsersMeetingCompleted.getEndTimeHour());
+				meetingCompletedInfoObject.setEndTimeMinute(referredUsersMeetingCompleted.getEndTimeMinute());
+				meetingCompletedInfoObject.setDuration(referredUsersMeetingCompleted.getDuration());
+				meetingCompletedInfoObject.setAmount(referredUsersMeetingCompleted.getAmount());
+				meetingCompletedInfoObject.setDateOfMeeting(referredUsersMeetingCompleted.getDateOfMeeting());
+				meetingCompletedInfoList.add(meetingCompletedInfoObject);
+				//System.out.println(meetingCompletedInfoObject);
+			}
+			//System.out.println(meetingCompletedInfoList);
+			
 			AdminReferralInfoModel adminReferralInfoObject=new AdminReferralInfoModel();
-			adminReferralInfoObject.setReferrerInfo(ReferrerUserModel);
+			adminReferralInfoObject.setReferrerInfo(referrerUserModel);
 			adminReferralInfoObject.setUserReferredInfo(userReferredInfoList);
 			adminReferralInfoObject.setMeetingsSetupInfo(meetingSetupInfoList);
 			adminReferralInfoObject.setReferrerPaymentDue(referrerPaymentDue);
+			adminReferralInfoObject.setMeetingsCompletedInfo(meetingCompletedInfoList);
 			System.out.println(adminReferralInfoObject);
 			adminReferralInfoList.add(adminReferralInfoObject);
 		}
 		return adminReferralInfoList;
+	}
+
+	public ArrayList<TransactionsModel> getPendingTransactionsInfo() {
+		// TODO Auto-generated method stub
+		ArrayList<TransactionsModel> transactionsList=new ArrayList<TransactionsModel>();
+		List<UserReferrals> referralsList=repUserReferrals.findAll();
+		
+		for(UserReferrals ur:referralsList) {
+			if(ur.getPaymentDue()>0) {
+				TransactionsModel transaction=new TransactionsModel();
+				transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
+				transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
+				transaction.setContext("Referral");
+				transaction.setPayableAmount(ur.getPaymentDue());
+				transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
+				transaction.setTransactionId("");
+				transactionsList.add(transaction);
+			}
+		}
+		//System.out.println(transactionsList);
+		return transactionsList;
+	}
+
+	public boolean addTransaction(TransactionsModel transaction) {
+		// TODO Auto-generated method stub
+		Transactions transactionObj=new Transactions();
+		Users user=repUsers.idExists(Integer.parseInt(transaction.getUserId()));
+		transactionObj.setPaidToUserId(user);
+		transactionObj.setTransactionDate(new Date());
+		transactionObj.setPayableAmount(transaction.getPayableAmount());
+		transactionObj.setContext("Referral");
+		transactionObj.setUpiId(transaction.getUpiId());
+		transactionObj.setTransactionId(transaction.getTransactionId());
+		System.out.println(transactionObj);
+		repTransactions.save(transactionObj);
+		
+		//reduce the amount from userReferral
+		
+		//firstly find the userReferral object
+		List<UserReferrals> userReferralList=repUserReferrals.findAll();
+		
+		
+		for(UserReferrals ur:userReferralList ) {
+			if(ur.getUser().getUserId()==transactionObj.getPaidToUserId().getUserId()) {
+				Integer revisedPayment=(int) (ur.getPaymentDue()-transactionObj.getPayableAmount());
+				if(revisedPayment<0) {
+					revisedPayment=0;
+				}
+				ur.setPaymentDue(revisedPayment);
+				repUserReferrals.save(ur);
+			}
+		}
+		return true;
+	}
+
+	public ArrayList<TransactionsModel> getPreviousTransactions() {
+		// TODO Auto-generated method stub
+		ArrayList<TransactionsModel> transactionsList=new ArrayList<TransactionsModel>();
+		
+		List<Transactions> repTransactionList=repTransactions.findAll();
+		for(Transactions repTransaction:repTransactionList) {
+			TransactionsModel transactions=new TransactionsModel();
+			transactions.setUserId(String.valueOf(repTransaction.getPaidToUserId().getUserId()));
+			transactions.setContext(repTransaction.getContext());
+			transactions.setName(userService.fetchUserName(repTransaction.getPaidToUserId().getUserId(),
+					repTransaction.getPaidToUserId().getRole()));
+			transactions.setPayableAmount(repTransaction.getPayableAmount());
+			transactions.setTransactionId(repTransaction.getTransactionId());
+			transactions.setUpiId(repTransaction.getUpiId());
+			transactionsList.add(transactions);
+		}
+		System.out.println(transactionsList);
+		return transactionsList;
 	}
 	
 	

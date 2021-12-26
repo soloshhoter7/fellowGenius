@@ -1693,19 +1693,24 @@ public class UserService implements UserDetailsService {
 		return allBookingsModel;
 	}
 	
-	public String getFullNameFromUserId(Users user) {
-		String role=user.getRole();
-		String fullName="";
-		if(role.equals("Learner")) {
-			StudentProfile learner=repStudentProfile.idExist(user.getUserId());
-			fullName=learner.getFullName();
-		}else if(role.equals("Expert")) {
-			TutorProfile expert=repTutorProfile.idExist(user.getUserId());
-			fullName=expert.getFullName();
-		}
-		return fullName;
-	}
-
 	
+	//fetch upi id from user
+	public String fetchUpiId(Users user) {
+		String upiId="";
+		if(user.getRole().equals("Learner")) {
+			StudentProfile sp=repStudentProfile.idExist(user.getUserId());
+			upiId=sp.getUpiID();
+		}else if(user.getRole().equals("Expert")) {
+			TutorProfileDetails tpd=repTutorProfileDetails.idExist(user.getUserId());
+			upiId=tpd.getUpiId();
+		}
+		
+		if(upiId==""||upiId==null) {
+			upiId="NOT_AVAILABLE";
+		}
+		
+		//System.out.println(upiId);
+		return upiId;
+	}
 
 }

@@ -28,6 +28,7 @@ import { UserActivityAnalytics } from '../model/userActivityAnalytics';
 import { ActivityTimeDetails, UserData } from '../model/UserData';
 import { UserReferralsInfo } from '../model/userReferralsInfo';
 import { adminReferralInfo } from '../model/adminReferralInfo';
+import { Transaction } from '../model/Transaction';
 @Injectable({
   providedIn: 'root',
 })
@@ -887,6 +888,18 @@ export class HttpService {
 
   fetchAdminReferralInfo():Observable<adminReferralInfo[]> {
     return this.http.get<adminReferralInfo[]>(this.backendUrl+'/fellowGenius/Admin/fetchAdminReferralInfo');
+  }
+
+  fetchPendingTransactionsInfo():Observable<Transaction[]>{
+    return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchPendingTransactionInfo');
+  }
+
+  fetchPreviousTransactionsInfo():Observable<Transaction[]>{
+    return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchPreviousTransactionsInfo');
+  }
+
+  addTransaction(transaction:Transaction):Observable<Object>{
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/addTransaction',transaction);
   }
   
 }

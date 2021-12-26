@@ -19,6 +19,7 @@ import fG.Model.AppInfoModel;
 import fG.Model.BookingDetailsModel;
 import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
+import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.UserActivityAnalytics;
 import fG.Model.UserActivityModel;
@@ -209,5 +210,23 @@ public class AdminController {
 	}
 	
 	//getting pending Transactions info
-
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchPendingTransactionInfo")
+	public ArrayList<TransactionsModel> fetchPendingTransactionsInfo(){
+		return adminService.getPendingTransactionsInfo();
+	}
+	
+	//add new Transaction
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/addTransaction")
+	public boolean addTransaction(@RequestBody TransactionsModel transaction) {
+		return adminService.addTransaction(transaction);
+	}
+	
+	//getting previous Transactions
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchPreviousTransactionsInfo")
+	public ArrayList<TransactionsModel> fetchPreviousTransactions(){
+		return adminService.getPreviousTransactions();
+	}
 }

@@ -120,6 +120,8 @@
                 <thead>
                   <tr>
                     <th class="fld_name">Meeting Id</th>
+                    <th class="fld_name">Student Name</th>
+                    <th class="fld_name">Tutor Name</th>
                     <th class="fld_name">Meeting Timings</th>
                     <th class="fld_name">Meeting Amount</th>
                     <th class="fld_status">Meeting Creation Date</th>
@@ -129,6 +131,12 @@
                   <tr *ngFor="let meetingsSetup of ReferralInfo.meetingsSetupInfo">
                     <td class="fld_name">
                         <div class="nme_style">{{meetingsSetup.bid}}</div>
+                      </td>
+                      <td class="fld_name">
+                        <div class="nme_style">{{meetingsSetup.studentName}}</div>
+                      </td>
+                      <td class="fld_name">
+                        <div class="nme_style">{{meetingsSetup.tutorName}}</div>
                       </td>
                     <td class="fld_name">
                       <div class="nme_style">
@@ -154,6 +162,70 @@
   </div>
   <!-- Accordion card -->
 
+  <div class="card" style="margin-top: 20px;">
+
+    <!-- Card header -->
+    <div class="card-header" role="tab" id="headingThree3">
+      <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" 
+      href="#{{ReferralInfo.referrerInfo.userId}}1"
+        aria-expanded="false" aria-controls="collapseThree3">
+        <h5 class="mb-0">
+          Meetings Completed <i class="fas fa-angle-down rotate-icon"></i>
+        </h5>
+      </a>
+    </div>
+
+    <!-- Card body -->
+    <div id="{{ReferralInfo.referrerInfo.userId}}1" 
+    class="collapse" role="tabpanel" aria-labelledby="headingThree3"
+      data-parent="#accordionEx">
+      <div class="card-body">
+        <div class="referal__table">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="fld_name">Meeting Id</th>
+                    <th class="fld_name">Student Name</th>
+                    <th class="fld_name">Tutor Name</th>
+                    <th class="fld_name">Meeting Timings</th>
+                    <th class="fld_name">Meeting Amount</th>
+                    <th class="fld_status">Meeting Creation Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let meetingsCompleted of ReferralInfo.meetingsCompletedInfo">
+                    <td class="fld_name">
+                        <div class="nme_style">{{meetingsCompleted.bid}}</div>
+                      </td>
+                      <td class="fld_name">
+                        <div class="nme_style">{{meetingsCompleted.studentName}}</div>
+                      </td>
+                      <td class="fld_name">
+                        <div class="nme_style">{{meetingsCompleted.tutorName}}</div>
+                      </td>
+                    <td class="fld_name">
+                      <div class="nme_style">
+      {{meetingsCompleted.startTimeHour}}:{{meetingsCompleted.startTimeMinute}}-{{meetingsCompleted.endTimeHour}}:{{meetingsCompleted.endTimeMinute}} (Duration:- {{meetingsCompleted.duration}} minutes)
+                      </div>
+                    </td>
+                    <td class="fld_email">{{meetingsCompleted.amount}}</td>
+                    <td class="fld_status">
+                      {{meetingsCompleted.dateOfMeeting}}
+                    </td>
+                  </tr>
+
+                  
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+  </div>
          
           
          
