@@ -46,6 +46,9 @@ import { ExpertsComponent } from './admin-portal/admin-home/experts/experts.comp
 import { PendingExpertProfileComponent } from './admin-portal/admin-home/pending-expert-profile/pending-expert-profile.component';
 import { ReferAndEarnComponent } from './home/refer-and-earn/refer-and-earn.component';
 import { VoiceCallComponent } from './voice-call/voice-call.component';
+import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.component';
+import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
+import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
 // const routes:Routes=[];
 export const routerOptions: ExtraOptions = {
   anchorScrolling: 'enabled',
@@ -103,6 +106,9 @@ export const appRoutes: Routes = [
           { path: 'verify-expert', component: VerifyExpertsComponent },
           { path: 'experts', component: ExpertsComponent },
           { path: 'expert-profile', component: PendingExpertProfileComponent },
+          { path: 'app-info',component: AppInfoComponent },
+          {path:'transactions-info',component: TransactionsInfoComponent },
+          {path:'referrals-info',component: ReferralsInfoComponent },
         ],
       },
     ],

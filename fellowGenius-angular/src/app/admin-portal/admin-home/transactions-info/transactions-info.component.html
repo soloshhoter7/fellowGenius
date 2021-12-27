@@ -1,0 +1,202 @@
+<div class="page-content dashboard__Panel">
+    <div class="wrapper">
+        <h3>Transactions Information</h3>
+      <div class="total__list white__bg">
+        
+        <div class="Referal__dashbrd white__bg">
+          <div class="sec__title">
+            <h3>Pending Transactions</h3>
+            
+            
+          </div>
+          <div class="referal__table">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="fld_name">UserId</th>
+                    <th class="fld_email">Name</th>
+                    <th class="fld_email">Context</th>
+                    <th class="fld_status">Payable Amount</th>
+                    <th class="fld_status">UPI ID</th>
+                    <th class="fld_status">Pay</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let pendingTransaction of pendingTransactions">
+                    <td class="fld_name">
+                      <div class="nme_style">{{pendingTransaction.userId}}</div>
+                    </td>
+                    <td class="fld_email">{{pendingTransaction.name}}</td>
+                    <td class="fld_email">{{pendingTransaction.context}}</td>
+                    <td class="fld_email">{{pendingTransaction.payableAmount}}</td>
+                    <td class="fld_email">{{pendingTransaction.upiId}}</td>
+                    <td class="fld_status" >
+                      <div class="td_btn" style="justify-content: left;">
+                        <button
+                        [disabled]="isUpiIdNotAvailable(pendingTransaction)"
+                        class="table_btn connect_btn">
+                        <a href="javascript:void(0)"
+                        href="#{{pendingTransaction.userId}}"
+                        data-toggle="modal">
+                        Pay
+                        </a>
+                        </button>
+                      </div>
+                    </td>
+
+                    <!-- Modal Starts-->
+                    <div
+                class="modal fade join__Modal"
+                id="{{pendingTransaction.userId}}"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="myLargeModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button
+                        type="button"
+                        id="close-popup"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <div class="body-message">
+                        <h4>Transactions Info</h4>
+                        <form (ngSubmit)="onAddTransaction(pendingTransaction,t)" #t="ngForm">
+                        <div class="what border_box invite__friend_box">
+                          
+                          <div class="row" style="margin-top:10px">
+                            <div class="col-md-4">
+                              Amount Paid
+                            </div>
+                            <div class="col-md-8">
+                              <input
+                              type="text"
+                              id="payableAmount"
+                              name="payableAmount"
+                              ngModel
+                              class="form-control"
+                              #payableAmount=ngModel
+                              required
+                              maxlength="50"
+                              
+                            />
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              Transaction ID
+                            </div>
+                            <div class="col-md-8">
+                              <!-- Textbox -->
+                              <input
+                              type="text"
+                              id="transactionId"
+                              name="transactionId"
+                              ngModel
+                              #transactionId=ngModel
+                              class="form-control"
+                              required
+                              maxlength="50"
+                              
+                            />
+                            </div>
+                          </div>
+                        
+                          
+                        
+                      </div>
+
+
+                        <div class="modal_btn feedback_submit">
+                          <button
+                            type="submit"
+                            [disabled]="!t.valid"
+                            
+                            class="button btn_mdl"
+                          >
+                            Pay
+                          </button>
+                        </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                    <!-- Modal Ends-->
+                  </tr>
+                  
+                  <!-- <tr>
+                    <td class="fld_name">
+                      <div class="nme_style"><span>M</span>Mika Månsson</div>
+                    </td>
+                    <td class="fld_email">MikaMansson@gmail.com</td>
+                    <td class="fld_status">
+                      <div class="td_btn">
+                        <a href="" class="table_btn red_btn">Offer expired</a>
+                      </div>
+                    </td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- pending transaction table ends -->
+          <div class="sec__title">
+            <h3>Previous Transactions</h3>
+            
+            
+          </div>
+
+          <!--previous transaction table starts -->
+          <div class="referal__table">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="fld_name">UserId</th>
+                    <th class="fld_email">Name</th>
+                    <th class="fld_email">Context</th>
+                    <th class="fld_status">Payable Amount</th>
+                    <th class="fld_status">UPI ID</th>
+                    <th class="fld_status">Transaction ID</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let previousTransaction of previousTransactions">
+                    <td class="fld_name">
+                      <div class="nme_style">{{previousTransaction.userId}}</div>
+                    </td>
+                    <td class="fld_email">{{previousTransaction.name}}</td>
+                    <td class="fld_email">{{previousTransaction.context}}</td>
+                    <td class="fld_email">{{previousTransaction.payableAmount}}</td>
+                    <td class="fld_email">{{previousTransaction.upiId}}</td>
+                    <td class="fld_email">{{previousTransaction.transactionId}}</td>
+                   
+
+
+                  </tr>
+                  
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+              
+    </div>
+  </div>

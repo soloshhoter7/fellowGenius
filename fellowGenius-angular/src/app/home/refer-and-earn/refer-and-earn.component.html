@@ -117,7 +117,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                       <button
                         type="button"
                         id="close-popup"
-                        class="close"
+                        class="close close-linkedin"
                         data-dismiss="modal"
                         aria-label="Close"
                       >
@@ -136,7 +136,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                         </div>
 
                         <div class="what border_box">
-                          <div class="box_title">What ?</div>
+                          <!-- <div class="box_title">What ?</div> -->
                           <div>
                             <p class="text-black text-font-size">
                               Thinking about how to get an expert’s advice on your ongoing project. Use my referral code {{referCode}} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
@@ -146,7 +146,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                           </div>
                         </div>
 
-                        <div class="how border_box">
+                        <!-- <div class="how border_box">
                           <div class="box_title">How ?</div>
                           <div>
                             <div class="text-black text-font-size">
@@ -161,7 +161,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                               
                             </div>
                           </div>
-                        </div>
+                        </div> -->
 
                         <div class="modal_btn feedback_submit">
                           <button
@@ -204,7 +204,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                       <button
                         type="button"
                         id="close-popup"
-                        class="close"
+                        class="close close-whatsapp"
                         data-dismiss="modal"
                         aria-label="Close"
                       >
@@ -259,23 +259,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                           
                         </div>
 
-                        <!-- <div class="how border_box">
-                          <div class="box_title">How ?</div>
-                          <div>
-                            <div class="text-black">
-                              <ol>
-                                <li>We have copied the above mentioned text for you.</li>
-                                <li>
-                                  Click on go to linked in.
-                                </li>
-                                <li>You can choose from given options to either "Share in a post" or "Send as private Message".</li>
-                                <li>Paste the text that we have copied for you and you can send.</li>
-                              </ol>
-                              
-                            </div>
-                          </div>
-                        </div> -->
-
+                        
                         <div class="modal_btn feedback_submit">
                           <button
                             type="submit"
@@ -291,7 +275,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                   <!-- Modal Content: ends -->
                 </div>
               </div>
-              <!-- Linkedin Modal Ends -->
+              <!-- Mail Modal Ends -->
 
               <a
                 href="javascript:void(0)"
@@ -302,48 +286,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
             </div>
           </div>
         </div>
-        <!-- <div class="invite__friend_box">
-          <h4>Invite your friends</h4>
-          <p>
-            Please add email adresses of person you want to refer
-          </p>
-          <div>
-            <div class="input-group invite__input">
-                
-                <mat-form-field class="example-chip-list" appearance="fill">
-                  <mat-chip-list #chipList aria-label="Email selection">
-                    <mat-chip
-                      *ngFor="let email of emailsArray"
-                      [selectable]="selectable"
-                      [removable]="removable"
-                      (removed)="remove(email)"
-                    >
-                      {{ email }}
-                      <button matChipRemove *ngIf="removable">
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip>
-                    <input
-                      placeholder="New Emails..."
-                      [matChipInputFor]="chipList"
-                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                      [matChipInputAddOnBlur]="addOnBlur"
-                      (matChipInputTokenEnd)="add($event)"
-                    />
-                  </mat-chip-list>
-                </mat-form-field>
-              </div>
-              <button
-                type="submit"
-                href="javascript:void(0)"
-                (click)="shareMultipleEmail()"
-                class="button green_btn"
-              >
-                Submit
-              </button>
-          </div>
-          
-        </div> -->
+
         <!-- invite box ends-->
       </div>
       <div class="Referal__dashbrd white__bg">
@@ -366,20 +309,10 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="fld_name">
-                    <div class="nme_style"><span>D</span>Danny Berg</div>
-                  </td>
-                  <td class="fld_email">DannyBerg@gmail.com</td>
-                  <td class="fld_status">
-                    <div class="td_btn">
-                      <a href="" class="table_btn connect_btn">Invited</a>
-                    </div>
-                  </td>
-                </tr>
+                
                 <tr *ngFor="let refInfo of userReferralInfoList">
                   <td class="fld_name">
-                    <div class="nme_style"><span>A</span>{{refInfo.name}}</div>
+                    <div class="nme_style">{{refInfo.name}}</div>
                   </td>
                   <td class="fld_email">{{refInfo.email}}</td>
                   <td class="fld_status">
@@ -388,17 +321,7 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                     </div>
                   </td>
                 </tr>
-                <!-- <tr>
-                  <td class="fld_name">
-                    <div class="nme_style"><span>M</span>Mika Månsson</div>
-                  </td>
-                  <td class="fld_email">MikaMansson@gmail.com</td>
-                  <td class="fld_status">
-                    <div class="td_btn">
-                      <a href="" class="table_btn red_btn">Offer expired</a>
-                    </div>
-                  </td>
-                </tr> -->
+                
               </tbody>
             </table>
           </div>

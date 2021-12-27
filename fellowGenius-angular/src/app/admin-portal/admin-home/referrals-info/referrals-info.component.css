@@ -21,7 +21,7 @@ table td.fld_status .td_btn {
     justify-content: flex-start;
 }
 table td.fld_status .td_btn .table_btn {
-    width: 180px;
+    width: 150px;
 }
 .Referal__Sec .referal__banner {
     display: -ms-flexbox;
@@ -373,7 +373,7 @@ table td.fld_status .td_btn .table_btn {
     margin-top: 1.5em;
 }
 .Referal__dashbrd .sec__title .credit__box {
-    width: 130px;
+    width: 120px;
     position: absolute;
     right: 0;
     top: 0;

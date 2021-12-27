@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { UserReferralsInfo } from '../model/userReferralInfo';
+import { UserReferralsInfo } from '../model/userReferralsInfo';
 import { HttpService } from './http.service';
 
 @Injectable({

@@ -26,7 +26,9 @@ import { environment } from 'src/environments/environment';
 import { AppInfo } from '../model/AppInfo';
 import { UserActivityAnalytics } from '../model/userActivityAnalytics';
 import { ActivityTimeDetails, UserData } from '../model/UserData';
-import { UserReferralsInfo } from '../model/userReferralInfo';
+import { UserReferralsInfo } from '../model/userReferralsInfo';
+import { adminReferralInfo } from '../model/adminReferralInfo';
+import { Transaction } from '../model/Transaction';
 @Injectable({
   providedIn: 'root',
 })
@@ -875,4 +877,29 @@ export class HttpService {
       }
     );
   }
+
+  fetchAllAppInfo():Observable<AppInfo[]> {
+    return this.http.get<AppInfo[]>(this.backendUrl+'/fellowGenius/Admin/fetchAllAppInfo');
+  }
+
+  updateAppInfo(appInfo:AppInfo):Observable<AppInfo> {
+    return this.http.post<AppInfo>(this.backendUrl + '/fellowGenius/Admin/updateAppInfo',appInfo);
+  }
+
+  fetchAdminReferralInfo():Observable<adminReferralInfo[]> {
+    return this.http.get<adminReferralInfo[]>(this.backendUrl+'/fellowGenius/Admin/fetchAdminReferralInfo');
+  }
+
+  fetchPendingTransactionsInfo():Observable<Transaction[]>{
+    return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchPendingTransactionInfo');
+  }
+
+  fetchPreviousTransactionsInfo():Observable<Transaction[]>{
+    return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchPreviousTransactionsInfo');
+  }
+
+  addTransaction(transaction:Transaction):Observable<Object>{
+    return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/addTransaction',transaction);
+  }
+  
 }

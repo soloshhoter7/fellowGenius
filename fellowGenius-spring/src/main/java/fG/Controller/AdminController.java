@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fG.Entity.PendingTutorProfileDetails;
+import fG.Model.AdminReferralInfoModel;
+import fG.Model.AppInfoModel;
 import fG.Model.BookingDetailsModel;
 import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
+import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.UserActivityAnalytics;
 import fG.Model.UserActivityModel;
 import fG.Model.UserDataModel;
 import fG.Service.AdminService;
+import fG.Service.AppService;
 import fG.Service.MailService;
 import fG.Service.UserService;
 
@@ -37,6 +41,9 @@ public class AdminController {
  
 	@Autowired
 	MailService mailService;
+	
+	@Autowired
+	AppService appService;
 	
 	// for getting tutor profile details after login
 	@PreAuthorize("hasAuthority('Admin')")
@@ -179,5 +186,47 @@ public class AdminController {
 	@RequestMapping(value = "/fetchAllMeetingData")
 	public ArrayList<BookingDetailsModel> fetchAllMeetingsData() throws NumberFormatException, ParseException {
 		return service.fetchAllMeetingsData();	
+	}
+	
+	//fetching all appInfo
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchAllAppInfo")
+	public ArrayList<AppInfoModel> fetchAllAppInfo(){
+		return appService.fetchAllAppInfo();
+	}
+	
+	//updating appInfo
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/updateAppInfo")
+	public boolean updateAppInfo(@RequestBody AppInfoModel appInfoModel) {
+		return appService.updateAppInfo(appInfoModel);
+	}
+	
+	//getting adminReferralInfo
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchAdminReferralInfo")
+	public ArrayList<AdminReferralInfoModel> fetchAdminReferralInfo(){
+		return adminService.getAdminReferralInfo();
+	}
+	
+	//getting pending Transactions info
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchPendingTransactionInfo")
+	public ArrayList<TransactionsModel> fetchPendingTransactionsInfo(){
+		return adminService.getPendingTransactionsInfo();
+	}
+	
+	//add new Transaction
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/addTransaction")
+	public boolean addTransaction(@RequestBody TransactionsModel transaction) {
+		return adminService.addTransaction(transaction);
+	}
+	
+	//getting previous Transactions
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchPreviousTransactionsInfo")
+	public ArrayList<TransactionsModel> fetchPreviousTransactions(){
+		return adminService.getPreviousTransactions();
 	}
 }

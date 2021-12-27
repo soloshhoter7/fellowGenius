@@ -15,6 +15,7 @@ import com.google.common.collect.Multimap;
 import fG.Entity.AppInfo;
 import fG.Entity.CategoryList;
 import fG.Entity.SubcategoryList;
+import fG.Model.AppInfoModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryCategory;
 import fG.Repository.repositorySubCategoryList;
@@ -175,5 +176,29 @@ public class AppService {
 				}
 			}
 		}
+	}
+	public ArrayList<AppInfoModel> fetchAllAppInfo() {
+		// TODO Auto-generated method stub
+		List<AppInfo> AppInfoList=repAppInfo.findAll();
+		ArrayList<AppInfoModel> result=new ArrayList<>();
+		for(AppInfo appInfo:AppInfoList) {
+			AppInfoModel appDTO=new AppInfoModel();
+			appDTO.setKey(appInfo.getKeyName());
+			appDTO.setValue(appInfo.getValue());
+			result.add(appDTO);
+		}
+		System.out.println(result);
+		return result;
+	}
+	public boolean updateAppInfo(AppInfoModel appInfoModel) {
+		// TODO Auto-generated method stub
+		String key=appInfoModel.getKey();
+		String updatedValue=appInfoModel.getValue();
+		
+		AppInfo appInfo=repAppInfo.keyExist(key);
+		appInfo.setValue(updatedValue);
+		System.out.println(appInfo);
+		repAppInfo.save(appInfo);
+		return true;
 	}
 }
