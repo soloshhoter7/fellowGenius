@@ -1,0 +1,63 @@
+package fG.Controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import fG.Configuration.JwtUtil;
+import fG.Model.AuthenticationRequest;
+import fG.Model.AuthenticationResponse;
+import fG.Service.UserService;
+
+
+@RestController
+public class AuthenticationController {
+	
+		@Autowired
+		private UserService userDetailsService;
+
+		@Autowired
+		private JwtUtil jwtTokenUtil;
+         
+		@Autowired
+		private BCryptPasswordEncoder encoder;
+		
+		
+		@RequestMapping(value ="/authenticate",method = RequestMethod.POST)
+		public ResponseEntity<?> authentication(@RequestBody AuthenticationRequest authenticationRequest){
+
+	        final String userId = userDetailsService.validateUser(authenticationRequest.getEmail(), authenticationRequest.getPassword(),authenticationRequest.getMethod());
+	        
+	        if(userId!=null) {
+	        	final String role = userDetailsService.fetchUserRole(userId);
+	    		final String jwt = jwtTokenUtil.generateToken(userId,role);
+	    		System.out.println(new AuthenticationResponse(jwt));
+	    		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	        }else {
+	        	 return ResponseEntity.ok(new AuthenticationResponse("false"));
+	        }
+		}
+		
+		@RequestMapping(value ="/authenticateAdmin",method = RequestMethod.POST)
+		public ResponseEntity<?> authenticateAdmin(@RequestBody AuthenticationRequest authenticationRequest){
+
+	        final String userId = userDetailsService.validateAdmin(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+	        
+	        if(userId!=null) {
+	        	final String role = "Admin";
+	    		final String jwt = jwtTokenUtil.generateToken(userId,role);
+	    		System.out.println();
+	        	return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	        }else {
+	        	 return ResponseEntity.ok(new AuthenticationResponse("false"));
+	        }
+		}
+		
+}
