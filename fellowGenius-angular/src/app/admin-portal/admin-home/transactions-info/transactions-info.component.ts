@@ -56,13 +56,14 @@ export class TransactionsInfoComponent implements OnInit {
   onAddTransaction(transaction:Transaction,form: NgForm){
     // console.log(transaction);
     // console.log(form.value.payableAmount);
-    transaction.transactionId=form.value.transactionId;
-    if(transaction.payableAmount<form.value.payableAmount){
-      transaction.payableAmount=form.value.payableAmount;
-    }else{
-      transaction.payableAmount=form.value.payableAmount;
-    }
-    console.log(transaction);
+
+     transaction.transactionId=form.value.transactionId;
+     if(transaction.remainingAmount<form.value.paidAmount){
+        transaction.paidAmount=form.value.paidAmount;
+       }else{
+       transaction.paidAmount=form.value.paidAmount;
+      }
+     console.log(transaction);
     
     this.httpService.addTransaction(transaction).subscribe(
       (res)=>{

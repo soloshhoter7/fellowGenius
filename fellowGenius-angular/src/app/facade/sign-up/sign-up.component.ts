@@ -264,7 +264,8 @@ export class SignUpComponent implements OnInit {
       this.registrationModel.email = form.value.email;
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
-      this.registrationModel.expertCode = form.value.expertCode
+      this.registrationModel.expertCode = form.value.expertCode;
+      this.registrationModel.upiId=form.value.upiId;
       this.registrationModel.role = 'Learner';
       this.httpClient
         .checkUser(this.registrationModel.email)

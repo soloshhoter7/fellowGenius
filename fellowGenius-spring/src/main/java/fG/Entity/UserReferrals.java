@@ -41,6 +41,7 @@ public class UserReferrals implements Serializable {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<BookingDetails> meetingCompleted = new ArrayList<>();
 
+	
 	private Integer paymentDue = 0;
 
 	public Integer getId() {

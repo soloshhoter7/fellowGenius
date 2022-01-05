@@ -22,6 +22,8 @@ import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
 import fG.Entity.AppInfo;
 import fG.Entity.BookingDetails;
+import fG.Entity.Cashback;
+import fG.Entity.FGCredits;
 import fG.Entity.Notification;
 import fG.Entity.ScheduleData;
 import fG.Entity.StudentProfile;
@@ -37,6 +39,8 @@ import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.UserReferralInfoModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
+import fG.Repository.repositoryCashback;
+import fG.Repository.repositoryFGCredits;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
@@ -69,7 +73,13 @@ public class MeetingService {
 
 	@Autowired
 	repositoryBooking repBooking;
+	
+	@Autowired
+	repositoryFGCredits repFGCredits;
 
+	@Autowired 
+	repositoryCashback repCashback;
+	
 	@Autowired
 	repositoryNotification repNotification;
 
@@ -148,6 +158,7 @@ public class MeetingService {
 		bkModel.setSubject(booking.getSubject());
 		bkModel.setDomain(booking.getDomain());
 		bkModel.setAmount(booking.getAmount());
+		bkModel.setPaidAmount(booking.getPaidAmount());
 		bkModel.setTutorProfilePictureUrl(booking.getTutorProfilePictureUrl());
 		bkModel.setCreationTime(sdf.format(booking.getCreatedDate()));
 		String start = booking.getStartTimeHour() + ":" + booking.getStartTimeMinute();
@@ -175,7 +186,7 @@ public class MeetingService {
 
 	// to save the bookings requested by student
 	public boolean saveBooking(BookingDetailsModel bookingModel) {
-		boolean meetingBooked = false;
+		BookingDetails meetingBooked = null;
 		BookingDetails booking = new BookingDetails();
 		booking.setDateOfMeeting(bookingModel.getDateOfMeeting());
 		booking.setDescription(bookingModel.getDescription());
@@ -194,6 +205,7 @@ public class MeetingService {
 		booking.setSubject(bookingModel.getSubject());
 		booking.setDomain(bookingModel.getDomain());
 		booking.setAmount(bookingModel.getAmount());
+		booking.setPaidamount(bookingModel.getPaidAmount());
 		booking.setRating(0);
 		booking.setTutorProfilePictureUrl(bookingModel.getTutorProfilePictureUrl());
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
@@ -213,13 +225,54 @@ public class MeetingService {
 			if (booking.getAmount() >= Integer.valueOf(thresholdCost.getValue())
 					&& diffInTime <= Integer.valueOf(thresholdTime.getValue())) {
 				booking.setExpertCode(getReferralCodeFromUser(booking.getStudentId()));
+				
+				
+				
 			}
 		}
 		meetingBooked = meetingDao.saveBooking(booking);
-//		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
 		
-		if (meetingBooked) {
+//		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
+		if (meetingBooked!=null) {
 			StudentProfile learner = repStudentProfile.idExist(booking.getStudentId());
+			if(learner.getLessonCompleted()==0&&meetingBooked.getExpertCode()!=null) {
+				
+				//update credit field of b in user table
+				Users user=repUsers.idExists(learner.getSid());
+				AppInfo referralCredit=repAppInfo.keyExist("ReferralCredit");
+				user.setCredits(user.getCredits()+Integer.valueOf(referralCredit.getValue()));
+				repUsers.save(user);
+				System.out.println("FG Credit updated Successfully");
+				
+				//update this transaction in fg credit table
+				FGCredits credits=new FGCredits();
+				credits.setUser(repUsers.idExists(learner.getSid()));
+				credits.setBookingDetails(meetingBooked);
+				credits.setBalance("+"+referralCredit.getValue());
+				credits.setContext("Added "+referralCredit.getValue()+" FG for signing up via refer code");
+				repFGCredits.save(credits);
+				System.out.println("Credit Info : "+credits);
+			}
+			
+			// if user has paid some amount by FG Credit
+			if(bookingModel.getAmount()-bookingModel.getPaidAmount()>0) {
+				Integer creditsUsed=bookingModel.getAmount()-bookingModel.getPaidAmount();
+				Users user=repUsers.idExists(learner.getSid());
+				user.setCredits(user.getCredits()-creditsUsed);
+				repUsers.save(user);
+				System.out.println("FG Credit updated Successfully");
+				
+				//update this transaction in fg credit table
+				FGCredits credits=new FGCredits();
+				
+				credits.setUser(repUsers.idExists(learner.getSid()));
+				credits.setBookingDetails(meetingBooked);
+				credits.setBalance("-"+creditsUsed);
+				credits.setContext("Withdrawn "+creditsUsed+" FG for setting up meeting via refer code");
+				repFGCredits.save(credits);
+				System.out.println("Credit Info : "+credits);
+			}
+			
 			Integer learnerSessionCompleted = learner.getLessonCompleted()+1;
 			learner.setLessonCompleted(learnerSessionCompleted);
 			repStudentProfile.save(learner);
@@ -228,7 +281,8 @@ public class MeetingService {
 			updateMeetingsSetUpInReferrals(booking.getMeetingId());
 			
 		}
-		return meetingBooked;
+		
+		return (meetingBooked!=null)?true:false;
 	}
 
 	void updateMeetingsSetUpInReferrals(String meetingId) {
@@ -249,7 +303,7 @@ public class MeetingService {
 		}
 	}
 
-	@Scheduled(cron = "0 48 22 1/1 * *")
+	@Scheduled(cron = "0 10 19 1/1 * *")
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<String> last2DatesInString = new ArrayList<String>();
@@ -290,13 +344,7 @@ public class MeetingService {
 							Users learner = repUsers.idExists(b.getStudentId());
 							
 							if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
-								Integer referralCredit = Integer.valueOf(repAppInfo.keyExist("ReferralCredit").getValue());
 								
-								if(referralCredit!=null) {
-									Integer credit = learner.getCredits()+referralCredit;
-									learner.setCredits(credit);
-									repUsers.save(learner);
-								}
 								String refCode = b.getExpertCode();
 								String referrerUserId = userService.parseReferralCode(refCode);
 								UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referrerUserId));
@@ -309,15 +357,23 @@ public class MeetingService {
 									Integer referralAmount = Integer.valueOf(repAppInfo.keyExist("ReferralAmount").getValue());
 									Integer amountDue=0;
 									if(ur.getPaymentDue()==0) {
-										//add amount and create new transaction object
+										
 										amountDue=ur.getPaymentDue()+referralAmount;
 										
 									}else {
-										//add amount and update existing transaction object
+										
 										amountDue=ur.getPaymentDue()+referralAmount;
 									}
 									
 									ur.setPaymentDue(amountDue);
+									
+									Cashback cashback=new Cashback();
+									cashback.setUser(ur.getUser());
+									cashback.setBookingDetails(b);
+									cashback.setBalance(String.valueOf(referralAmount));
+									cashback.setContext("Added Rs. "+String.valueOf(referralAmount)+" cashback as your referral completed meeting");
+									System.out.println("Cashback Info ");
+									repCashback.save(cashback);
 									
 									for(BookingDetails bs:meetingsSetup) {
 										if(bs.getBid().equals(b.getBid())) {
@@ -325,6 +381,7 @@ public class MeetingService {
 											System.out.println("MEETING MATCHED !");
 										}
 									}
+									
 									ur.setMeetingCompleted(meetingsCompleted);
 									repUserReferral.save(ur);
 								}

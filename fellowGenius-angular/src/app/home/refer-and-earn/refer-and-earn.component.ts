@@ -10,7 +10,12 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { HttpService } from 'src/app/service/http.service';
 import { UserReferralsInfo } from 'src/app/model/UserReferralsInfo';
 import { ReferralService } from 'src/app/service/referral.service';
+import {environment } from 'src/environments/environment';
+
 import Swal from 'sweetalert2'
+import { CashbackEarned } from 'src/app/model/CashbackEarned';
+import { FGCredits } from 'src/app/model/FGCredits';
+import { CashbackInfo } from 'src/app/model/CashbackInfo';
 @Component({
   selector: 'app-refer-and-earn',
   templateUrl: './refer-and-earn.component.html',
@@ -30,6 +35,8 @@ export class ReferAndEarnComponent implements OnInit {
   ) {}
   referCode: any = '';
   userId: any = '';
+  FGCredits:Number;
+  CashbackInfo:CashbackEarned;
   fullName: any = '';
   userEmail: any;
   //email chips variable
@@ -41,14 +48,16 @@ export class ReferAndEarnComponent implements OnInit {
   isLoading = false;
   linkSent = false;
   userReferralInfoList: UserReferralsInfo[] = [];
+  creditsTableInfo: FGCredits[]=[]
+  cashbackTableInfo: CashbackInfo[]=[]
   //SHARE DATA VARIABLES
   wSize = 'width=600,height=460';
   title = 'share';
   loc = encodeURIComponent(window.location.href);
-  siteURL = 'https://fellowgenius.com/';
+  siteURL = environment.FRONTEND_PREFIX;
   deviceType: string = '';
 
-  linkedinURL = 'https://fellowgenius.com/#/sign-up?pt=LI';
+  linkedinURL = environment.FRONTEND_PREFIX+'sign-up?pt=LI';
   config: MatSnackBarConfig = {
     duration: 5000,
     horizontalPosition: 'center',
@@ -69,6 +78,9 @@ export class ReferAndEarnComponent implements OnInit {
     console.log(this.deviceType);
     this.userId = this.getUserId();
     this.initialiseUserReferralInfo();
+    this.initialiseFGCredits();
+    this.initialiseCashbackInfo();
+    this.initialiseFGCreditsTableInfo();
     if (this.loginService.getLoginType() == 'Learner') {
       if (this.studentService.getStudentProfileDetails().fullName == null) {
         this.studentService.studentProfileChanged.subscribe((res) => {
@@ -103,6 +115,16 @@ export class ReferAndEarnComponent implements OnInit {
     }
     // this.shareLinkedIn();
   }
+  initialiseFGCredits() {
+    this.httpService.getFGCreditsOfUser(this.userId).subscribe(
+      (res)=>{
+        console.log(res);
+        this.FGCredits=res;
+    },(err)=>{
+      console.log(err);
+
+    })
+  }
 
   getUserId() {
     return this.cookieService.get('userId');
@@ -116,6 +138,38 @@ export class ReferAndEarnComponent implements OnInit {
       }
     );
   }
+
+  initialiseCashbackInfo(){
+    this.httpService.getCashbackEarnedOfUser(this.userId).subscribe(
+      (res)=>{
+        console.log(res);
+        this.CashbackInfo=res;
+        if(this.CashbackInfo.totalCashback>0){
+          this.initialiseCashbackTableInfo();
+        }
+      }
+    );
+  }
+
+  initialiseCashbackTableInfo(){
+    this.httpService.getCashbackTableOfUser(this.userId).subscribe(
+      (res)=>{
+        console.log(res);
+        this.cashbackTableInfo=res;
+      }
+    )
+  }
+  
+  initialiseFGCreditsTableInfo(){
+    this.httpService.getFGCreditsTableOfUser(this.userId).subscribe(
+      (res)=>{
+        console.log(res);
+        this.creditsTableInfo=res;
+        console.log("Credits Table Info "+ this.creditsTableInfo);
+      }
+    )
+  }
+
   getReferCode() {
     if (this.referCode === '') {
       this.referCode = this.referCode.concat('FG');
@@ -248,7 +302,7 @@ Joining Link : -  ${this.linkedinURL}
   }
 
   getWhatsappMsgLink() {
-    const siteurl = 'https://fellowgenius.com/#/sign-up?pt=WA';
+    const siteurl = environment.FRONTEND_PREFIX+'sign-up?pt=WA';
     const message = `Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
 ${siteurl}
     `;

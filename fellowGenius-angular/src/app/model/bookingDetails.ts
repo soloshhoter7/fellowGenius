@@ -22,6 +22,7 @@ export class bookingDetails {
   public rating: number;
   public reviewText: string;
   public amount: number;
+  public paidAmount: number;
   public tutorProfilePictureUrl: string;
   creationTime;
   razorpay_payment_id;

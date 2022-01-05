@@ -22,6 +22,9 @@ import {
 import { Observable } from 'rxjs';
 import { WebSocketService } from 'src/app/service/web-socket.service';
 import { Schedule } from '@syncfusion/ej2-schedule';
+import { AppInfo } from 'src/app/model/AppInfo';
+import Swal from 'sweetalert2';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-connect',
   templateUrl: './connect.component.html',
@@ -100,12 +103,14 @@ export class ConnectComponent implements OnInit {
   clickedIndex1: number;
   clickedIndex2: number;
   userId;
+  loggedUserId;
   selectedDate;
   profilePictureUrl = '../../assets/images/default-user-image.png';
   private _window: ICustomWindow;
   public rzp: any;
   public options: any;
   totalPrice = 0;
+  totalAmount:number;
   payableAmount = 0;
   processingPayment: boolean;
   paymentResponse: any = {};
@@ -113,6 +118,14 @@ export class ConnectComponent implements OnInit {
   selectedDomain;
   showExpertCode: boolean = false;
   expertCode: string;
+  isCreditEligible: boolean=false;
+  isCreditApplied: boolean=false;
+  maxFGCreditRedeemed: number;
+  FGCreditRedeemed:number;
+  FGCredit:number;
+  appInfo:AppInfo;
+  revisedAmount: number;
+  remainingFGCredit: number;
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -126,7 +139,8 @@ export class ConnectComponent implements OnInit {
     private dialog: MatDialog,
     private zone: NgZone,
     private winRef: WindowRefService,
-    private webSocket: WebSocketService
+    private webSocket: WebSocketService,
+    private cookieService:CookieService
   ) {}
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -145,8 +159,13 @@ export class ConnectComponent implements OnInit {
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
+    //console.log(this.teacherProfile);
+    this.loggedUserId=this.getUserId();
+    console.log('Logged in User Id: '+this.loggedUserId);
+    
     if (this.loginService.getLoginType() == 'Learner') {
       console.log('here');
+      
       this.signedIn = true;
       console.log(this.signedIn);
       this.httpService.getTutorIsAvailable(this.userId).subscribe((res) => {
@@ -182,8 +201,32 @@ export class ConnectComponent implements OnInit {
     } else {
       this.signedIn = false;
     }
+   // this.calculateMaxRedeemedFGCredit();
   }
 
+  getUserId() {
+    return this.cookieService.get('userId');
+  }
+
+  onAddCredit(form: NgForm){
+    console.log(form.value.redeemedFGCredit);
+    
+    if(form.value.redeemedFGCredit>this.maxFGCreditRedeemed){
+      this.FGCreditRedeemed=this.maxFGCreditRedeemed;
+    }else{
+      this.FGCreditRedeemed=form.value.redeemedFGCredit;
+    }
+
+    console.log('Redeemed FG Credit '+ this.FGCreditRedeemed);
+
+    //call http
+    this.isCreditApplied=!this.isCreditApplied;
+    $(".close").click();
+
+    Swal.fire('Congratulations',' successfully!','success');
+    this.totalAmount=this.payableAmount; //600
+    this.payableAmount= this.payableAmount-this.FGCreditRedeemed;
+  }
   dateChange() {
     console.log('date change');
     console.log(this.selectedDate);
@@ -298,15 +341,23 @@ export class ConnectComponent implements OnInit {
     console.log(this.bookingDetails.duration);
     this.calculatePrice();
   }
-  initPay(): void {
+  initPay(payableAmount : number): void {
     this.rzp = new this.winRef.nativeWindow['Razorpay'](
-      this.preparePaymentDetails()
+      this.preparePaymentDetails(payableAmount)
     );
     this.rzp.open();
   }
 
-  preparePaymentDetails() {
+  preparePaymentDetails(payableAmount:number) {
     var ref = this;
+     if(this.isCreditApplied){
+       console.log("Total amount : "+ this.totalAmount);
+       console.log("Paid amount : "+ this.payableAmount );
+     }else{
+       console.log("Total amount :  "+ this.payableAmount);
+       console.log("Paid amount : "+this.payableAmount);
+     }
+    
     return {
       key: environment.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
       amount: (ref.payableAmount * 100).toString(), // Amount is in currency subunits. Default currency is INR. Hence, 29935 refers to 29935 paise or INR 299.35.
@@ -354,6 +405,66 @@ export class ConnectComponent implements OnInit {
     this.payableAmount =
       (this.bookingDetails.duration / 60) *
       parseInt(this.teacherProfile.price1);
+      this.calculateMaxRedeemedFGCredit();
+  }
+
+  calculateMaxRedeemedFGCredit(){
+    this.httpService.getRedeemedCreditPercentage().subscribe((res) => {
+      this.appInfo = res;
+      console.log(this.appInfo);
+      let CreditMultiplier=parseFloat(this.appInfo.value)/100;
+      this.maxFGCreditRedeemed=CreditMultiplier*(this.payableAmount);
+      console.log(this.maxFGCreditRedeemed);
+      this.isFGCreditEligible();
+    });
+    
+  }
+
+  isFGCreditEligible(){
+    this.httpService.getFGCreditsOfUser(this.loggedUserId).subscribe((res) => {
+      console.log(res);
+      if(this.maxFGCreditRedeemed>=res&&res>0){
+        this.isCreditEligible=true;
+        this.FGCredit=res;
+        this.remainingFGCredit=0;
+      }else if(res>=this.maxFGCreditRedeemed&&this.maxFGCreditRedeemed>0){
+        console.log("Inside the less expert fees");
+        this.isCreditEligible=true;
+        this.FGCredit=this.maxFGCreditRedeemed;
+        this.remainingFGCredit=res-this.FGCredit;
+      }else{
+        this.isCreditEligible=false;
+      }
+      console.log("Credit Eligible "+ this.isCreditEligible);
+
+      if(this.isCreditApplied){
+        this.totalAmount=this.payableAmount;
+        this.payableAmount=this.totalAmount-this.FGCredit;
+        console.log("Total amount :- "+this.totalAmount);
+        console.log("FG Credit :- "+this.FGCredit);
+        console.log("Payable amount :- "+this.payableAmount);
+      }
+    })
+ //if time slot changes
+
+     
+    // if(this.isCreditApplied){
+    //   this.totalAmount=this.payableAmount;
+    //   this.payableAmount=this.totalAmount-this.FGCredit;
+    // }
+  }
+
+  onAppliedFGCredit(){
+    console.log("Applied FG Credit clicked");
+    this.totalAmount=this.payableAmount;
+    this.payableAmount=this.totalAmount-this.FGCredit;
+    this.isCreditApplied=!this.isCreditApplied;
+  }
+
+  onRemoveFGCredit(){
+    console.log("Remove FG Credit clicked");
+    this.payableAmount=this.totalAmount;
+    this.isCreditApplied=!this.isCreditApplied;
   }
 
   createBooking(res: any) {
@@ -362,7 +473,15 @@ export class ConnectComponent implements OnInit {
       this.bookingDetails.razorpay_payment_id = res.razorpay_payment_id;
       this.bookingDetails.razorpay_order_id = res.razorpay_order_id;
       this.bookingDetails.razorpay_signature = res.razorpay_signature;
-      this.bookingDetails.amount = this.payableAmount;
+      
+      if(this.isCreditApplied){ //user has used credits
+        this.bookingDetails.amount=this.totalAmount;
+        this.bookingDetails.paidAmount=this.payableAmount;
+      }else{
+        this.bookingDetails.amount=this.payableAmount;
+        this.bookingDetails.paidAmount=this.payableAmount;
+      }
+      
       console.log(this.bookingDetails);
       this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
         if (res == true) {
@@ -392,6 +511,7 @@ export class ConnectComponent implements OnInit {
   }
 
   onBooking() {
+    console.log("newlly updated amount : "+ this.payableAmount);
     var startIndex, endIndex;
     startIndex = this.ScheduleTime.indexOf(
       this.startSlots[this.startTimeValue]
@@ -431,7 +551,7 @@ export class ConnectComponent implements OnInit {
       this.studentService.getStudentProfileDetails().sid;
     console.log(this.expertCode);
     this.bookingDetails.expertCode = this.expertCode;
-    this.calculatePrice();
+   // this.calculatePrice();
     this.findDomain(this.bookingDetails.subject);
     console.log(this.selectedDomain);
     this.bookingDetails.domain = this.selectedDomain;
@@ -448,7 +568,8 @@ export class ConnectComponent implements OnInit {
     //   }
     // });
     this.isLoading = true;
-    this.initPay();
+    console.log("here "+ this.payableAmount);
+    this.initPay(this.payableAmount);
   }
 
   closeNav() {

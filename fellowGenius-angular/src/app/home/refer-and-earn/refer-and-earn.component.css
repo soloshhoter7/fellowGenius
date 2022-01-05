@@ -383,6 +383,12 @@ table td.fld_status .td_btn .table_btn {
     display: flex;
     align-items: center;
 }
+.Referal__dashbrd .sec__title .cashback__box {
+    
+    right: 160px !important;
+    width: 180px !important;
+    
+}
 .Referal__dashbrd .sec__title .credit__box img {
     max-width: 40px;
     position: absolute;

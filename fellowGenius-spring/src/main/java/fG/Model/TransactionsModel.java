@@ -8,7 +8,13 @@ public class TransactionsModel {
 	
 	private String context;
 	
-	private double payableAmount;
+	private double totalAmount;
+	
+	private double sumPaidAmount;
+	
+	private double remainingAmount;
+	
+	private double paidAmount;
 	
 	private String upiId;
 	
@@ -19,14 +25,18 @@ public class TransactionsModel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TransactionsModel(String userId, String name, String context, double payableAmount, String upiId,String transactionId) {
+	public TransactionsModel(String userId, String name, String context, double totalAmount, double sumPaidAmount,
+			double remainingAmount, double paidAmount, String upiId, String transactionId) {
 		super();
 		this.userId = userId;
 		this.name = name;
 		this.context = context;
-		this.payableAmount = payableAmount;
+		this.totalAmount = totalAmount;
+		this.sumPaidAmount = sumPaidAmount;
+		this.remainingAmount = remainingAmount;
+		this.paidAmount = paidAmount;
 		this.upiId = upiId;
-		this.transactionId=transactionId;
+		this.transactionId = transactionId;
 	}
 
 	public String getUserId() {
@@ -53,12 +63,36 @@ public class TransactionsModel {
 		this.context = context;
 	}
 
-	public double getPayableAmount() {
-		return payableAmount;
+	public double getTotalAmount() {
+		return totalAmount;
 	}
 
-	public void setPayableAmount(double payableAmount) {
-		this.payableAmount = payableAmount;
+	public void setTotalAmount(double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public double getSumPaidAmount() {
+		return sumPaidAmount;
+	}
+
+	public void setSumPaidAmount(double sumPaidAmount) {
+		this.sumPaidAmount = sumPaidAmount;
+	}
+
+	public double getRemainingAmount() {
+		return remainingAmount;
+	}
+
+	public void setRemainingAmount(double remainingAmount) {
+		this.remainingAmount = remainingAmount;
+	}
+
+	public double getPaidAmount() {
+		return paidAmount;
+	}
+
+	public void setPaidAmount(double paidAmount) {
+		this.paidAmount = paidAmount;
 	}
 
 	public String getUpiId() {
@@ -68,7 +102,6 @@ public class TransactionsModel {
 	public void setUpiId(String upiId) {
 		this.upiId = upiId;
 	}
-	
 
 	public String getTransactionId() {
 		return transactionId;
@@ -80,9 +113,10 @@ public class TransactionsModel {
 
 	@Override
 	public String toString() {
-		return "TransactionsModel [userId=" + userId + ", name=" + name + ", context=" + context + ", payableAmount="
-				+ payableAmount + ", upiId=" + upiId + ", transactionId=" + transactionId + "]";
+		return "TransactionsModel [userId=" + userId + ", name=" + name + ", context=" + context + ", totalAmount="
+				+ totalAmount + ", sumPaidAmount=" + sumPaidAmount + ", remainingAmount=" + remainingAmount
+				+ ", paidAmount=" + paidAmount + ", upiId=" + upiId + ", transactionId=" + transactionId + "]";
 	}
-	
-	
+
+		
 }

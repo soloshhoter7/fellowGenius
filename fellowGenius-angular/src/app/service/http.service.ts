@@ -29,6 +29,9 @@ import { ActivityTimeDetails, UserData } from '../model/UserData';
 import { UserReferralsInfo } from '../model/userReferralsInfo';
 import { adminReferralInfo } from '../model/adminReferralInfo';
 import { Transaction } from '../model/Transaction';
+import { CashbackEarned } from '../model/CashbackEarned';
+import { FGCredits } from '../model/FGCredits';
+import { CashbackInfo } from '../model/CashbackInfo';
 @Injectable({
   providedIn: 'root',
 })
@@ -768,6 +771,15 @@ export class HttpService {
       this.backendUrl + '/fellowGenius/getEarningsAppInfo'
     );
   }
+
+  getRedeemedCreditPercentage(): Observable<AppInfo>{
+    return this.http.get<AppInfo>(
+      this.backendUrl+'/fellowGenius/getRedeemedCreditPercentage'
+    )
+  }
+
+  
+  
   randomApi(): Observable<Object> {
     return this.http.get<Object>(this.backendUrl + '/fellowGenius/randomapi');
   }
@@ -876,6 +888,47 @@ export class HttpService {
         },
       }
     );
+  }
+
+  getFGCreditsOfUser(userId:string):Observable<number>{
+    return this.http.get<number>(
+      this.backendUrl + '/fellowGenius/getFGCreditsOfUser',
+      {
+        params:{
+          userId:userId,
+        }
+      }
+    )
+  }
+
+  getFGCreditsTableOfUser(userId:string):Observable<FGCredits[]>{
+    return this.http.get<FGCredits[]>(
+      this.backendUrl+'/fellowGenius/getFGCreditsTableOfUser',
+      {
+       params: {
+         userId:userId,
+       } 
+      }
+    )
+  }
+
+  getCashbackEarnedOfUser(userId:string):Observable<CashbackEarned>{
+    return this.http.get<CashbackEarned>(
+      this.backendUrl + '/fellowGenius/getCashbackEarnedOfUser',{
+        params:{
+          userId:userId,
+        }
+      })
+  }
+
+  getCashbackTableOfUser(userId:string):Observable<CashbackInfo[]>{
+    return this.http.get<CashbackInfo[]>(
+     this.backendUrl+'/fellowGenius/getCashbackTableOfUser',{
+       params: {
+        userId:userId, 
+       }
+     } 
+    )
   }
 
   fetchAllAppInfo():Observable<AppInfo[]> {

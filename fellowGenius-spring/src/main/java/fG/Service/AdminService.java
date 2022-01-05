@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transaction;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -135,6 +137,25 @@ public class AdminService {
 		}
 		return adminReferralInfoList;
 	}
+	
+	public double remainingAmount(Users user) {
+		UserReferrals ur=repUserReferrals.findByUserId(user.getUserId());
+		Double totalAmount=(double)ur.getPaymentDue();
+		Double remainingAmount=0.0;
+		
+		//sum of all paid transactions of this user
+		Double sumOfPaidAmount=0.0;
+		List<Transactions> TransactionsList=repTransactions.findAll();
+		
+		for(Transactions tr:TransactionsList) {
+			if(tr.getPaidToUserId().getUserId()==user.getUserId()) {
+				sumOfPaidAmount=sumOfPaidAmount+tr.getPaidAmount();
+			}
+		}
+		remainingAmount=totalAmount-sumOfPaidAmount;
+		System.out.println(remainingAmount);
+		return remainingAmount;
+	}
 
 	public ArrayList<TransactionsModel> getPendingTransactionsInfo() {
 		// TODO Auto-generated method stub
@@ -142,18 +163,20 @@ public class AdminService {
 		List<UserReferrals> referralsList=repUserReferrals.findAll();
 		
 		for(UserReferrals ur:referralsList) {
-			if(ur.getPaymentDue()>0) {
+			if(remainingAmount(ur.getUser())>0) {
 				TransactionsModel transaction=new TransactionsModel();
 				transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
 				transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
 				transaction.setContext("Referral");
-				transaction.setPayableAmount(ur.getPaymentDue());
+				transaction.setTotalAmount(ur.getPaymentDue());
+				transaction.setRemainingAmount(remainingAmount(ur.getUser()));
+				transaction.setSumPaidAmount(transaction.getTotalAmount()-transaction.getRemainingAmount());
 				transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
 				transaction.setTransactionId("");
 				transactionsList.add(transaction);
 			}
 		}
-		//System.out.println(transactionsList);
+		System.out.println(transactionsList);
 		return transactionsList;
 	}
 
@@ -163,29 +186,14 @@ public class AdminService {
 		Users user=repUsers.idExists(Integer.parseInt(transaction.getUserId()));
 		transactionObj.setPaidToUserId(user);
 		transactionObj.setTransactionDate(new Date());
-		transactionObj.setPayableAmount(transaction.getPayableAmount());
+		transactionObj.setPaidAmount(transaction.getPaidAmount());
 		transactionObj.setContext("Referral");
 		transactionObj.setUpiId(transaction.getUpiId());
 		transactionObj.setTransactionId(transaction.getTransactionId());
 		System.out.println(transactionObj);
 		repTransactions.save(transactionObj);
 		
-		//reduce the amount from userReferral
 		
-		//firstly find the userReferral object
-		List<UserReferrals> userReferralList=repUserReferrals.findAll();
-		
-		
-		for(UserReferrals ur:userReferralList ) {
-			if(ur.getUser().getUserId()==transactionObj.getPaidToUserId().getUserId()) {
-				Integer revisedPayment=(int) (ur.getPaymentDue()-transactionObj.getPayableAmount());
-				if(revisedPayment<0) {
-					revisedPayment=0;
-				}
-				ur.setPaymentDue(revisedPayment);
-				repUserReferrals.save(ur);
-			}
-		}
 		return true;
 	}
 
@@ -200,7 +208,7 @@ public class AdminService {
 			transactions.setContext(repTransaction.getContext());
 			transactions.setName(userService.fetchUserName(repTransaction.getPaidToUserId().getUserId(),
 					repTransaction.getPaidToUserId().getRole()));
-			transactions.setPayableAmount(repTransaction.getPayableAmount());
+			transactions.setPaidAmount(repTransaction.getPaidAmount());
 			transactions.setTransactionId(repTransaction.getTransactionId());
 			transactions.setUpiId(repTransaction.getUpiId());
 			transactionsList.add(transactions);
