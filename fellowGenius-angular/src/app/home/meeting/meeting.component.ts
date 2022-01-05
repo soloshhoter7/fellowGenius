@@ -63,6 +63,7 @@ import {
 import { MediaAccessDialogComponent } from './media-access-dialog/media-access-dialog.component';
 import { setTime } from '@syncfusion/ej2-schedule';
 import { timeStamp } from 'console';
+import { VoiceCallService } from './voice-call/voice-call.service';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -86,22 +87,11 @@ export class MeetingComponent implements OnInit {
     private cookieService: CookieService,
     private authService: AuthService,
     public dialog: MatDialog,
-    renderer: Renderer2
+    renderer: Renderer2,
+    public voiceCallService: VoiceCallService
   ) {
     this.uid = Math.floor(Math.random() * 100);
     this.sid = 174;
-    renderer.listen('document', 'touchstart', (e) => {
-      console.log('TOUCHED THE SCREEN');
-    });
-    renderer.listen('document', 'mousedown', (e) => {
-      console.log('CLICKED THE SCREEN');
-      if (this.remoteMicStreams.length > 0) {
-        let stream: Stream = this.remoteMicStreams[0];
-        let id = this.getRemoteId(stream);
-        stream.play(id, { muted: false });
-        // this.changeOutputDevice();
-      }
-    });
   }
   //   ---------------------
   @ViewChild('canvas') public canvas: ElementRef;
@@ -120,9 +110,9 @@ export class MeetingComponent implements OnInit {
   isLoading = false;
   isMobile = false;
   mediaAccessPopUpDialogRef;
-  mediaAccessAllowed = false;
-  camAccessAllowed = false;
-  micAccessAllowed = false;
+  mediaAccessAllowed;
+  camAccessAllowed;
+  micAccessAllowed;
   isLocalStreamPlaying = false;
   isLocalMicStreamPlaying = false;
   isLocalCamStreamPublished = false;
@@ -288,55 +278,61 @@ export class MeetingComponent implements OnInit {
       )
     ) {
       this.isMobile = true;
+    } else {
+      this.isMobile = false;
     }
-    //extracting meeting id from route
-    this.activatedRoute.params.subscribe((params) => {
-      let id = params['id'];
-      this.meetingId = id;
-      if (this.meetingId != '' || this.meetingId != null) {
-        //fetching booking details from meeting id
-        this.httpService
-          .fetchBookingDetailsWithMeetingId(id)
-          .subscribe((res) => {
-            if (res != null) {
-              console.log(res);
-              if (this.authService.getIsAuth() == false) {
-                console.log('user is not authenticated !');
-                console.log(this.router.url);
-                if (this.router.url != null) {
-                  this.cookieService.set('prev', this.router.url);
-                }
-                this.redirectUser();
-              } else {
-                if (this.authService.getIsAuth() == true) {
-                  console.log('user is authenticated !');
-                  this.initiateAfterLogin(res);
+
+    if (this.isMobile == false) {
+      //extracting meeting id from route
+      this.activatedRoute.params.subscribe((params) => {
+        let id = params['id'];
+        this.meetingId = id;
+        if (this.meetingId != '' || this.meetingId != null) {
+          //fetching booking details from meeting id
+          this.httpService
+            .fetchBookingDetailsWithMeetingId(id)
+            .subscribe((res) => {
+              if (res != null) {
+                console.log(res);
+                if (this.authService.getIsAuth() == false) {
+                  console.log('user is not authenticated !');
+                  console.log(this.router.url);
+                  if (this.router.url != null) {
+                    this.cookieService.set('prev', this.router.url);
+                  }
+                  this.redirectUser();
                 } else {
-                  this.authService
-                    .getAuthStatusListener()
-                    .subscribe((authRes) => {
-                      if (authRes == false) {
-                        console.log('user is not authenticated');
-                        this.redirectUser();
-                      } else if (authRes == true) {
-                        console.log('user is authenticated !');
-                        this.initiateAfterLogin(res);
-                      }
-                    });
+                  if (this.authService.getIsAuth() == true) {
+                    console.log('user is authenticated !');
+                    this.initiateAfterLogin(res);
+                  } else {
+                    this.authService
+                      .getAuthStatusListener()
+                      .subscribe((authRes) => {
+                        if (authRes == false) {
+                          console.log('user is not authenticated');
+                          this.redirectUser();
+                        } else if (authRes == true) {
+                          console.log('user is authenticated !');
+                          this.initiateAfterLogin(res);
+                        }
+                      });
+                  }
                 }
+              } else {
+                this.redirectUser();
               }
-            } else {
-              this.redirectUser();
-            }
-          });
-      } else {
-        this.redirectUser();
-      }
-    });
+            });
+        } else {
+          this.redirectUser();
+        }
+      });
+    }
   }
 
   ngOnDestroy() {
     console.log('NG ON DESTROY CALLED !');
+    this.meetingState = '';
     this.endCall();
   }
 
@@ -410,13 +406,9 @@ export class MeetingComponent implements OnInit {
           mode: 'rtc',
           codec: 'vp8',
         });
-        this.micClient = this.ngxAgoraService.createClient({
-          mode: 'rtc',
-          codec: 'vp8',
-        });
+
         //assigning client handlers
         this.assignClientHandlers(this);
-        this.assignMicClientHandlers(this);
         //getting user devices info
 
         if (this.mediaAccessAllowed == true) {
@@ -543,37 +535,39 @@ export class MeetingComponent implements OnInit {
       this.limitStream2();
     });
 
-    this.mid = this.uid + 10;
-
     this.getDevicesInfo();
 
     this.join(() => {
       console.log('CAMERA_CLIENT_JOINED');
-      this.micClientJoin(() => {
-        console.log('MIC_CLIENT_JOINED');
-        this.initialiseStreams();
-      });
+      this.voiceCallService
+        .startBasicCall(this.meetingId, this.uid)
+        .then(() => {
+          this.isLoading = false;
+          this.initialiseStreams();
+        });
     });
   }
   initialiseStreams() {
     // case 1 mic on video on
     if (this.localVideoOn && this.localMicOn) {
       this.startLocalStream();
-      this.startMicStream();
+      // this.startMicStream();
     }
     //case 2 mic on video off
     else if (this.localMicOn && !this.localVideoOn) {
-      this.startMicStream();
+      // this.startMicStream();
     }
     //case 3 mic off video on
     else if (!this.localMicOn && this.localVideoOn) {
       this.startLocalStream();
-      this.startMicStream();
+      this.voiceCallService.muteAudioTrack();
+      // this.startMicStream();
       // this.localStream.unmuteAudio();
     }
     //case 4 mic off video off
     else {
-      this.startMicStream();
+      this.voiceCallService.muteAudioTrack();
+      // this.startMicStream();
     }
   }
   //----------------------------- Stream start and stop functions---------------------------------------------
@@ -597,46 +591,6 @@ export class MeetingComponent implements OnInit {
     });
   }
 
-  startMicStream() {
-    if (this.localMicStreams.length > 0) {
-      this.removeLocalMicStream();
-      if (this.localMicStream != null) {
-        this.localMicStream.stop();
-        this.localMicStream.close();
-        this.localMicStreams = [];
-      }
-    }
-    console.log('LOCAL MIC STREAMS : ', this.localMicStreams);
-    if (this.localMicStreams.length == 0) {
-      this.getDevicesInfo();
-      setTimeout(() => {
-        console.log('device id:' + this.activeAudioInputDeviceId);
-        console.log(
-          'audio output device while starting the stream' +
-            this.defaultAudioOutputDeviceName
-        );
-        this.localMicStream = this.ngxAgoraService.createStream({
-          streamID: this.mid,
-          audio: true,
-          video: false,
-          screen: false,
-          microphoneId: this.activeAudioInputDeviceId,
-        });
-        this.localMicStream.setAudioProfile('speech_standard');
-        this.assignLocalMicStreamHandlers(this.localMicStream);
-        let localStreamId: string = this.localMicStream.getId().toString();
-
-        this.initLocalMicStream(() => {
-          this.localMicStreams.push(localStreamId);
-          if (!this.localMicOn) {
-            this.localMicStream.muteAudio();
-          }
-          this.micPublish(this.localMicStream);
-        });
-      }, 1000);
-    }
-  }
-
   removeLocalStream() {
     if (this.localStream != null) {
       if (this.localStream.isPlaying()) {
@@ -646,14 +600,6 @@ export class MeetingComponent implements OnInit {
         this.localStream.stop();
         this.localStream.close();
       }
-    }
-  }
-  removeLocalMicStream() {
-    if (this.localMicStream != null) {
-      this.unPublishMicStream(this.localMicStream);
-      this.localMicStreams = [];
-      this.localMicStream.stop();
-      this.localMicStream.close();
     }
   }
 
@@ -811,12 +757,17 @@ export class MeetingComponent implements OnInit {
   //---------------------------------------------- client Handlers -------------------------------------------------------------
   // normal client handler
   private assignClientHandlers(that): void {
+    this.client.on(ClientEvent.RecordingDeviceChanged, (evt) => {
+      if (this.meetingState == 'in-meeting') {
+        if (this.localMicOn) {
+          this.snackbar.open('Microphone muted !', 'close', this.config);
+          this.muteAudio();
+        }
+      }
+    });
     this.client.on(ClientEvent.LocalStreamPublished, (evt) => {
       console.log('local stream published @');
       this.isLocalCamStreamPublished = true;
-      // if(this.isLocalCamStreamPublished&&this.isLocalMicStreamPublished){
-      //   this.isLoading=false;
-      // }
       this.isLoading = false;
     });
 
@@ -858,27 +809,6 @@ export class MeetingComponent implements OnInit {
         this.enableScreenShareView();
         setTimeout(() => stream.play(id), 1000);
       } else if (idt == this.remoteUserId + 10) {
-        if (this.micRemoteCalls.length != 0) {
-          this.micRemoteCalls = [];
-          this.remoteMicStreams[0].stop();
-          this.remoteMicStreams[0].close();
-          this.remoteMicStreams = [];
-        }
-        console.log('remote stream is mic stream and subscribed!');
-        this.micRemoteCalls.push(id);
-        if (stream != null) {
-          this.remoteMicStreams.push(stream);
-          this.assignRemoteMicStreamHandlers(stream);
-        }
-        this.remoteAudioLevelSubscription = interval(100).subscribe(() => {
-          if (stream.isPlaying()) {
-            this.remoteAudioLevel = stream.getAudioLevel();
-          }
-        });
-        stream.stop();
-        stream.play(id, { muted: true });
-        this.isRemoteStreamMuted = true;
-        this.changeOutputDevice(stream);
       } else {
         if (!this.remoteCalls.length) {
           console.log('remote stream is camera stream and subscribed!');
@@ -925,14 +855,6 @@ export class MeetingComponent implements OnInit {
           console.log('remote camera stream is removed ');
         }
       } else if (idt == this.remoteUserId + 10) {
-        if (stream) {
-          stream.stop();
-          this.micRemoteCalls = [];
-          this.remoteMicStreams = [];
-          // this.remoteCalls = this.remoteCalls.filter(e => e !== idt.toString());
-          console.log('remote mic stream is removed ');
-          // this.endCall();
-        }
       } else if (idt == this.remoteUserId + 2) {
         this.disableScreenShareView();
         console.log('remote stream is screen share and remvoed!');
@@ -997,27 +919,7 @@ export class MeetingComponent implements OnInit {
       }
     });
   }
-  private assignMicClientHandlers(that): void {
-    this.micClient.on(ClientEvent.LocalStreamPublished, (evt) => {
-      console.log('mic stream published @');
-      that.isLocalMicStreamPublished = true;
-      that.isLoading = false;
-    });
-    this.micClient.on(ClientEvent.RecordingDeviceChanged, function (evt) {
-      console.log('THE DEVICE HAS BEEN CHANGED !');
-      console.log('MEETING STATE =>', that.meetingState);
-      if (that.meetingState == 'pre-meeting') {
-        that.initialisePreMeetingStreams();
-      } else if (that.meetingState == 'in-meeting') {
-        that.startMicStream();
-        setTimeout(() => {
-          if (that.activeAudioOutputDeviceName.includes('Bluetooth')) {
-            that.openDialog('RecordingDeviceChanged');
-          }
-        }, 1000);
-      }
-    });
-  }
+
   // screen client Handlers
   private assignScreenClientHandlers(): void {
     this.screenClient.on(ClientEvent.LocalStreamPublished, (evt) => {});
@@ -1051,24 +953,6 @@ export class MeetingComponent implements OnInit {
     });
   }
 
-  //Local Mic stream Handlers
-  private assignLocalMicStreamHandlers(stream: Stream): void {
-    //the user has allowed the media access to the camera
-    stream.on(StreamEvent.MediaAccessAllowed, () => {
-      console.log('Media access allowed !');
-      this.getDevicesInfo();
-    });
-    //the user has denied the media access to the camera
-    stream.on(StreamEvent.MediaAccessDenied, () => {
-      this.mediaAccessAllowed = false;
-      this.micAccessAllowed = false;
-      console.log('media access denied !');
-    });
-    //the audio track has been ended
-    stream.on(StreamEvent.AudioTrackEnded, () => {
-      this.startMicStream();
-    });
-  }
   //Pre local Camera stream Handlers
   private assignPreLocalStreamHandlers(stream: Stream): void {
     //the user has allowed the media access to the camera
@@ -1118,45 +1002,7 @@ export class MeetingComponent implements OnInit {
       this.screenShare();
     });
   }
-  //Remote Mic stream Handlers
-  private assignRemoteMicStreamHandlers(stream: Stream): void {
-    stream.on(StreamEvent.StreamPlaybackStatusChanged, function (evt) {
-      console.log('REMOTE STREAM STATUS IS :' + evt.status);
-      console.log('REMOTE STREAM STATUS CHANGE REASON :' + evt.reason);
-      console.log('REMOTE STREAM ERROR STATE :' + evt.isErrorState);
-      console.log('REMOTE STREAM MEDIA TYPE IS :' + evt.mediaType);
 
-      if (evt.isErrorState && evt.status === 'paused') {
-        console.error(`Stream is paused unexpectedly. Trying to resume...`);
-        stream
-          .resume()
-          .then(function () {
-            console.log(`Stream is resumed successfully`);
-          })
-          .catch(function (e) {
-            console.error(
-              `Failed to resume stream. Error ${e.name} Reason ${e.message}`
-            );
-          });
-      }
-      if (evt.status === 'aborted') {
-        console.error(`Stream is aboorted unexpectedly. Trying to resume...`);
-        stream
-          .resume()
-          .then(function () {
-            console.log(`Stream is resumed successfully`);
-          })
-          .catch(function (e) {
-            console.error(
-              `Failed to resume stream. Error ${e.name} Reason ${e.message}`
-            );
-          });
-      }
-      if (evt.status === 'play') {
-        console.log('REMOTE STREAM IS PLAYING !');
-      }
-    });
-  }
   //------------------------------------------------------------------------------------------------------------
   //------------------------------init functions for streams ---------------------------------------------------
   //In meeting camera Stream init
@@ -1175,22 +1021,7 @@ export class MeetingComponent implements OnInit {
       }
     );
   }
-  //In meeting Mic Stream init
-  private initLocalMicStream(onSuccess?: () => any): void {
-    this.localMicStream.init(
-      () => {
-        this.localMicStream.play(this.localCallMicId);
-        if (onSuccess) {
-          this.isLocalMicStreamPlaying = true;
-          onSuccess();
-        }
-      },
-      (err) => {
-        console.error('getUserMedia failed', err);
-        this.mediaAccessAllowed = false;
-      }
-    );
-  }
+
   //Pre meeting Camera Stream init
   private initPreMeetingLocalStream(onSuccess?: () => any): void {
     this.preLocalStream.init(
@@ -1271,35 +1102,12 @@ export class MeetingComponent implements OnInit {
   }
   //camera client unpublish local camera stream
   unPublish(stream: Stream): void {
-    this.client.unpublish(stream, (err) => {});
-    this.isLocalCamStreamPublished = false;
+    if (this.client != null) {
+      this.client.unpublish(stream, (err) => {});
+      this.isLocalCamStreamPublished = false;
+    }
   }
-  //mic client join with mid : (uid+10)
-  micClientJoin(
-    onSuccess?: (mid: number | string) => void,
-    onFailure?: (error: Error) => void
-  ): void {
-    this.micClient.join(
-      null,
-      this.meetingService.getMeeting().roomName,
-      this.mid,
-      onSuccess,
-      onFailure
-    );
-  }
-  //mic client publish local mic stream
-  micPublish(stream: Stream) {
-    console.log('TRYING TO PUBLISH LOCAL MIC STREAM');
-    this.micClient.publish(stream, (err) => {
-      console.log('ERR OCCURRED WHILE PUBLISHING THE STREAM');
-      console.log(err);
-    });
-  }
-  //mic client unpublish local mic stream
-  unPublishMicStream(stream: Stream): void {
-    this.micClient.unpublish(stream, (err) => {});
-    this.isLocalMicStreamPublished = false;
-  }
+
   //screen client join with sid : (uid+2)
   screenJoin(
     onSuccess?: (sid: number | string) => void,
@@ -1364,9 +1172,9 @@ export class MeetingComponent implements OnInit {
     if (this.client != null) {
       this.client.leave();
     }
-    if (this.micClient != null) {
-      this.micClient.leave();
-    }
+    //leaving mic client from service
+    this.voiceCallService.leaveCall();
+
     if (this.screenClient != null) {
       this.screenClient.leave();
     }
@@ -1375,11 +1183,7 @@ export class MeetingComponent implements OnInit {
       this.localStream.stop();
       this.localStream.close();
     }
-    //closing all mic streams
-    if (this.localMicStream != null) {
-      this.localMicStream.stop();
-      this.localMicStream.close();
-    }
+
     //updating member check out in db
     this.meetingMemberLeft(this.meetingId, this.userId);
     //unsubscribing the timer
@@ -1496,11 +1300,11 @@ export class MeetingComponent implements OnInit {
   muteAudio() {
     if (this.muteHostAudioStatus == 'mute host mic') {
       this.localMicOn = false;
-      this.localMicStream.muteAudio();
+      this.voiceCallService.muteAudioTrack();
       this.muteHostAudioStatus = 'unmute host mic';
     } else {
       this.localMicOn = true;
-      this.localMicStream.unmuteAudio();
+      this.voiceCallService.unmuteAudioTrack();
       this.muteHostAudioStatus = 'mute host mic';
     }
   }
@@ -1724,145 +1528,6 @@ export class MeetingComponent implements OnInit {
     this.fileSizeExceeded = false;
   }
   // -------------------------------------------Device Utility Functions----------------------------------------
-  checkBluetoothDevices() {
-    let isBluetooth: boolean = false;
-    this.micClient.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
-      console.log('audio output devices : ', devices);
-      for (let device of devices) {
-        console.log('ITERATION OUTPUT :', device);
-        if (
-          device.deviceId != 'default' &&
-          device.deviceId != 'communications' &&
-          (device.label.includes('(Bluetooth)') ||
-            device.label.includes('bluetooth'))
-        ) {
-          isBluetooth = true;
-          console.log('BlUETOOTH OUTPUT FOUND');
-          this.setActiveDeviceIdForBluetooth(
-            device.deviceId,
-            'audio_output',
-            device.label
-          );
-          // this.openDialog('RecordingDeviceChanged');
-          break;
-        }
-      }
-    });
-    this.micClient.getRecordingDevices((devices: MediaDeviceInfo[]) => {
-      console.log('audio input devices : ', devices);
-
-      for (let device of devices) {
-        console.log('ITERATION INPUT :', device);
-        if (
-          device.deviceId != 'default' &&
-          device.deviceId != 'communications' &&
-          (device.label.includes('(Bluetooth)') ||
-            device.label.includes('bluetooth'))
-        ) {
-          isBluetooth = true;
-          console.log('BlUETOOTH INPUT FOUND');
-          this.setActiveDeviceIdForBluetooth(
-            device.deviceId,
-            'audio_input',
-            device.label
-          );
-          break;
-        }
-      }
-    });
-  }
-  doesDeviceExist(type, deviceId) {
-    if (deviceId == null) {
-      return false;
-    }
-    if (type == 'audio_input') {
-      this.client.getRecordingDevices((devices: MediaDeviceInfo[]) => {
-        for (let device of devices) {
-          if (device.deviceId == deviceId) {
-            return true;
-          }
-        }
-      });
-    } else if (type == 'audio_output') {
-      this.client.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
-        console.log('audio output devices : ', devices);
-        for (let device of devices) {
-          if (device.deviceId == deviceId) {
-            return true;
-          }
-        }
-      });
-    }
-  }
-  setActiveDeviceIdForBluetooth(deviceId, type, name) {
-    if (deviceId != null) {
-      if (type == 'audio_input') {
-        this.activeAudioInputDeviceName = name;
-        this.activeAudioInputDeviceId = deviceId;
-      } else if (type == 'audio_output') {
-        this.activeAudioOutputDeviceId = deviceId;
-        this.activeAudioOutputDeviceName = name;
-      }
-    }
-  }
-  setDeviceForStream(deviceId, type, name) {
-    console.log('TRYING TO SET DEVICE :', deviceId, name, type);
-
-    if (this.doesDeviceExist(type, deviceId) == true) {
-      console.log('DEVICE IS VALID !');
-    } else {
-      console.log("'DEVICE NOT VALID");
-    }
-    if (this.meetingState == 'pre-meeting') {
-      if (this.preLocalMicStream != null) {
-        if (this.preLocalMicStream.isPlaying) {
-          if (type == 'audio_input') {
-            this.preLocalMicStream.switchDevice('audio', deviceId);
-            this.activeAudioInputDeviceId = deviceId;
-            this.activeAudioInputDeviceName = name;
-            console.log(
-              'recording device switched for mic stream !',
-              this.activeAudioInputDeviceId,
-              this.activeAudioInputDeviceName
-            );
-          } else if (type == 'audio_output') {
-            this.preLocalMicStream.setAudioOutput(deviceId);
-            this.activeAudioInputDeviceId = deviceId;
-            this.activeAudioInputDeviceName = name;
-            console.log(
-              'output device switched for premeeting stream !',
-              this.activeAudioOutputDeviceName,
-              this.activeAudioOutputDeviceId
-            );
-          }
-        }
-      }
-    } else if (this.meetingState == 'in-meeting') {
-      if (this.localMicStream != null) {
-        if (this.localMicStream.isPlaying) {
-          if (type == 'audio_input') {
-            this.localMicStream.switchDevice('audio', deviceId);
-            this.activeAudioInputDeviceId = deviceId;
-            this.activeAudioInputDeviceName = name;
-            console.log(
-              'recording device switched for mic stream !',
-              this.activeAudioInputDeviceId,
-              this.activeAudioInputDeviceName
-            );
-          } else if (type == 'audio_output') {
-            this.localMicStream.setAudioOutput(deviceId);
-            this.activeAudioInputDeviceId = deviceId;
-            this.activeAudioInputDeviceName = name;
-            console.log(
-              'output device switched for mic stream !',
-              this.activeAudioOutputDeviceName,
-              this.activeAudioOutputDeviceId
-            );
-          }
-        }
-      }
-    }
-  }
 
   //get devices info
   getDevicesInfo() {
@@ -1900,7 +1565,6 @@ export class MeetingComponent implements OnInit {
         this.activeAudioInputDeviceName = defaultAudioInputDevice;
       }
     });
-    this.checkBluetoothDevices();
   }
   //getting default device name out of list of connected devices
   getDefaultDeviceName(devices) {

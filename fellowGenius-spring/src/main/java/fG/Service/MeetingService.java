@@ -249,7 +249,7 @@ public class MeetingService {
 		}
 	}
 
-	@Scheduled(cron = "0 48 22 1/1 * *")
+	@Scheduled(cron = "0 48 23 1/1 * *")
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<String> last2DatesInString = new ArrayList<String>();

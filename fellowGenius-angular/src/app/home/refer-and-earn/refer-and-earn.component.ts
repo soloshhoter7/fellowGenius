@@ -10,7 +10,8 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { HttpService } from 'src/app/service/http.service';
 import { UserReferralsInfo } from 'src/app/model/UserReferralsInfo';
 import { ReferralService } from 'src/app/service/referral.service';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-refer-and-earn',
   templateUrl: './refer-and-earn.component.html',
@@ -26,7 +27,6 @@ export class ReferAndEarnComponent implements OnInit {
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
     private referralService: ReferralService
-
   ) {}
   referCode: any = '';
   userId: any = '';
@@ -203,26 +203,25 @@ Joining Link : -  ${this.linkedinURL}
 
   shareLinkedIn() {
     //this.copyLinkedinText();
-    $(".close-linkedin").click();
+    $('.close-linkedin').click();
     Swal.fire({
       title: 'Connect Linkedin Community to FellowGenius',
-      text: "Paste the text that we have copied for you and share via Post or direct message.",
+      text: 'Paste the text that we have copied for you and share via Post or direct message.',
       icon: 'info',
       showCancelButton: false,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Great'
+      confirmButtonText: 'Yes, Great',
     }).then((result) => {
       if (result.isConfirmed) {
         let linkedinURL = 'https://fellowgenius.com/';
-    let url = 'https://mail.google.com/mail/u/0/#inbox';
-    console.log(linkedinURL);
-    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${linkedinURL}`;
-    console.log('Hello from hello linkedin');
-    window.open(shareUrl, '_blank');  
+        let url = 'https://mail.google.com/mail/u/0/#inbox';
+        console.log(linkedinURL);
+        const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${linkedinURL}`;
+        console.log('Hello from hello linkedin');
+        window.open(shareUrl, '_blank');
       }
-    })
-    
+    });
   }
 
   shareWhatsapp() {
@@ -248,7 +247,7 @@ Joining Link : -  ${this.linkedinURL}
   }
 
   getWhatsappMsgLink() {
-    const siteurl = 'https://fellowgenius.com/#/sign-up?pt=WA';
+    const siteurl = environment.FRONTEND_PREFIX + 'sign-up?pt=WA';
     const message = `Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
 ${siteurl}
     `;
@@ -274,9 +273,9 @@ ${siteurl}
   }
 
   sendMail() {
-    if(this.emailsArray.length==0){
+    if (this.emailsArray.length == 0) {
       this.snackBar.open('No email adresses added !', 'close', this.config);
-      $(".close-whatsapp").click();
+      $('.close-whatsapp').click();
       return;
     }
     console.log(this.emailsArray);
@@ -292,21 +291,18 @@ ${siteurl}
         }
       });
     //mat snackbar
-    $(".close-whatsapp").click();
-    Swal.fire('Congratulations','Mail Sent successfully!','success');
-    
+    $('.close-whatsapp').click();
+    Swal.fire('Congratulations', 'Mail Sent successfully!', 'success');
   }
 
-  extractInitialsOfFullName(fullName:String){
-    let result="";
+  extractInitialsOfFullName(fullName: String) {
+    let result = '';
     const nameArray = fullName.split(' ');
-      for (let name of nameArray) {
-        const initials: string = name.substring(0, 1);
-        result = result.concat(initials.toUpperCase());
-      }
+    for (let name of nameArray) {
+      const initials: string = name.substring(0, 1);
+      result = result.concat(initials.toUpperCase());
+    }
 
     return result;
   }
-
-
 }
