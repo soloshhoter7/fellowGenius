@@ -3,8 +3,10 @@ package fG.Entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+
 public class AppInfo {
 	@Id
 	@Column(name="keyName",length=50)

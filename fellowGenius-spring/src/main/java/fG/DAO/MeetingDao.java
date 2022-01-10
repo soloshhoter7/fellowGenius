@@ -25,9 +25,9 @@ public class MeetingDao {
 	repositoryRefundBookings repRefundBookings;
 	
 	// for saving booking in database
-	public boolean saveBooking(BookingDetails booking) {
-		repBooking.save(booking);
-		return true;
+	public BookingDetails saveBooking(BookingDetails booking) {
+		BookingDetails bookedMeeting=repBooking.save(booking);
+		return bookedMeeting;
 	}
      
 	public BookingDetails findBooking(Integer bid) {

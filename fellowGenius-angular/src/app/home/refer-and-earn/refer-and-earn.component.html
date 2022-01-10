@@ -292,32 +292,226 @@ Refer your friend today and when they complete their 1st session with a FellowGe
       <div class="Referal__dashbrd white__bg">
         <div class="sec__title">
           <h2>Referral Dashboard</h2>
-          
+          <div style="display:flex">
+          <!-- casback credit box  starts -->
+          <div *ngIf="CashbackInfo.totalCashback; else hideCashbackInfo">
+          <a
+                href="javascript:void(0)"
+                href="#Cashback_Modal"
+                data-toggle="modal"
+                class="share_btn"
+          >
+          <div class="credit__box cashback__box">
+            <img src="../../../assets/images/credits-icon.svg" alt="#" />
+            <span>Cashback Earned<strong>{{CashbackInfo.totalCashback}}</strong></span>
+          </div>
+          </a>
+          </div>
+          <ng-template #hideCashbackInfo>
+            <div class="credit__box cashback__box">
+              <img src="../../../assets/images/credits-icon.svg" alt="#" />
+              <span>Cashback Earned<strong>{{CashbackInfo.totalCashback}}</strong></span>
+            </div>
+          </ng-template>
+          <!-- Cashback Modal begins -->
+          <div
+                class="modal fade join__Modal"
+                id="Cashback_Modal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="myLargeModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-lg">
+                  <!-- Modal Content: begins -->
+                  <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <button
+                        type="button"
+                        id="close-popup"
+                        class="close close-linkedin"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <div class="body-message">
+                        <h4>Cashback Info</h4>
+
+                        
+
+                            
+    
+                            
+                                <div class="referal__table">
+                                  <div class="table-responsive">
+                                    <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th class="fld_name">Date</th>
+                                          <th class="fld_email">Referred User</th>
+                                          <th class="fld_status">Context</th>
+                                          <th class="fld_status">Balance</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        
+                                        <tr *ngFor="let cashback of cashbackTableInfo">
+                                          <td class="fld_name">
+                                            <div class="nme_style">{{cashback.date}}</div>
+                                          </td>
+                                          <td class="fld_email">{{cashback.referredUserName}}</td>
+                                          <td class="fld_email">{{cashback.context}}</td>
+                                          <td class="fld_email">{{cashback.amount}}</td>
+                                        </tr>
+                                        
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              
+
+
+                            Total Cashback Earned :- {{CashbackInfo.totalCashback}} <br/>
+                            Redeemed Cashback :- {{CashbackInfo.redeemedCashback}}  <br/>
+                            Remaining Cashback :- {{CashbackInfo.remainingCashback}}
+                          
+
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Modal Content: ends -->
+                </div>
+              </div>
+              <!--Cashback Modal Ends-->
+              <!-- cashback credit box ends -->
+              <!-- FG credit box starts -->
+            <div *ngIf="creditsTableInfo.length==0;else showCreditModal">
+              <div class="credit__box">
+                <img src="../../../assets/images/credits-icon.svg" alt="#" />
+                <span>FG Credits<strong>{{FGCredits}}</strong></span>
+              </div>
+           </div>
+        <ng-template #showCreditModal>
+          <a
+                href="javascript:void(0)"
+                href="#CreditsTable_Modal"
+                data-toggle="modal"
+                class="share_btn"
+          >
           <div class="credit__box">
             <img src="../../../assets/images/credits-icon.svg" alt="#" />
-            <span>FG Credits<strong>4</strong></span>
+            <span>FG Credits<strong>{{FGCredits}}</strong></span>
           </div>
+          </a>
+          
+        </ng-template>
+                    <!-- Credits Modal begins -->
+                    <div
+                    class="modal fade join__Modal"
+                    id="CreditsTable_Modal"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="myLargeModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog modal-lg">
+                      <!-- Modal Content: begins -->
+                      <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                          <button
+                            type="button"
+                            id="close-popup"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                          <div class="body-message">
+                            <h4> FG Credits Transaction Info</h4>
+                            
+                            
+                            <div class="referal__table">
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th class="fld_name">Date</th>
+                                      <th class="fld_email">Context</th>
+                                      <th class="fld_status">Type</th>
+                                      <th class="fld_status">Amount</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    
+                                    <tr *ngFor="let credits of creditsTableInfo ; let i =index" >
+                                      <td class="fld_name">
+                                        <div class="nme_style">{{credits.date}}</div>
+                                      </td>
+                                      <td class="fld_email">{{credits.context}}</td>
+                                      <td class="fld_status">{{credits.type}}</td>
+                                      <td class="fld_status">
+                                         {{credits.amount}}
+                                      </td>
+                                    </tr>
+                                    
+                                  </tbody>
+                                </table>
+                              </div>
+                            
+                          </div>
+
+
+                                
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Modal Content: ends -->
+                    </div>
+                  </div>
+                  <!--Credits Table Modal Ends-->
+
+
+                  <!-- FG Credit box ends -->
+                </div>
         </div>
+        
+       <div *ngIf="userReferralInfoList.length; else hideReferralInfoList"> 
         <div class="referal__table">
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th class="fld_name">NAME</th>
+                  <th class="fld_name">Name</th>
                   <th class="fld_email">Email</th>
                   <th class="fld_status">Status</th>
                 </tr>
               </thead>
               <tbody>
                 
-                <tr *ngFor="let refInfo of userReferralInfoList">
+                <tr *ngFor="let refInfo of userReferralInfoList ; let i =index" >
                   <td class="fld_name">
                     <div class="nme_style">{{refInfo.name}}</div>
                   </td>
                   <td class="fld_email">{{refInfo.email}}</td>
                   <td class="fld_status">
                     <div class="td_btn">
-                      <a href="" class="table_btn green_btn">{{refInfo.status}}</a>
+                      <div style="display:flex">
+                        <div class="referral_status_btn" [id]=returnStatusId(i)
+                        [class]=getClass(refInfo.status,i)
+                        
+                        >{{refInfo.status}}</div>
+                      </div>
+                      
                     </div>
                   </td>
                 </tr>
@@ -326,6 +520,11 @@ Refer your friend today and when they complete their 1st session with a FellowGe
             </table>
           </div>
         </div>
+      </div> 
+      <ng-template #hideReferralInfoList>
+        <p>Refer your friends to see their status here</p>
+      </ng-template>
+        <!-- referral table ends here-->
       </div>
     </div>
   </div>

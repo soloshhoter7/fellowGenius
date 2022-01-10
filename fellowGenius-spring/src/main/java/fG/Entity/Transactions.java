@@ -3,6 +3,7 @@ package fG.Entity;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,12 +35,12 @@ public class Transactions {
 		this.transactionDate = transactionDate;
 	}
 
-	private double payableAmount;
+	private double paidAmount;
 	
 	private String upiId;
 	
-	@OneToOne
-	@JoinColumn(name="userId")
+	@OneToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
 	private Users paidToUserId;
 	
 	private String transactionId;
@@ -51,12 +52,12 @@ public class Transactions {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Transactions(UUID id, Date transactionDate, double payableAmount, String upiId, Users paidToUserId,
+	public Transactions(UUID id, Date transactionDate, double paidAmount, String upiId, Users paidToUserId,
 			String transactionId, String context) {
 		super();
 		this.id = id;
 		this.transactionDate = transactionDate;
-		this.payableAmount = payableAmount;
+		this.paidAmount = paidAmount;
 		this.upiId = upiId;
 		this.paidToUserId = paidToUserId;
 		this.transactionId = transactionId;
@@ -71,12 +72,12 @@ public class Transactions {
 		this.id = id;
 	}
 
-	public double getPayableAmount() {
-		return payableAmount;
+	public double getPaidAmount() {
+		return paidAmount;
 	}
 
-	public void setPayableAmount(double payableAmount) {
-		this.payableAmount = payableAmount;
+	public void setPaidAmount(double paidAmount) {
+		this.paidAmount = paidAmount;
 	}
 
 	public String getUpiId() {
@@ -117,14 +118,12 @@ public class Transactions {
 
 	@Override
 	public String toString() {
-		return "Transactions [id=" + id + ", transactionDate=" + transactionDate + ", payableAmount=" + payableAmount
+		return "Transactions [id=" + id + ", transactionDate=" + transactionDate + ", paidAmount=" + paidAmount
 				+ ", upiId=" + upiId + ", paidToUserId=" + paidToUserId + ", transactionId=" + transactionId
-				+ ", context=" + context + ", getId()=" + getId() + ", getPayableAmount()=" + getPayableAmount()
-				+ ", getUpiId()=" + getUpiId() + ", getPaidToUserId()=" + getPaidToUserId() + ", getTransactionId()="
-				+ getTransactionId() + ", getContext()=" + getContext() + ", getTransactionDate()="
-				+ getTransactionDate() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+				+ ", context=" + context + "]";
 	}
+
+
 	
 
 	}

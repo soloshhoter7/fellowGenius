@@ -171,6 +171,25 @@
                       One special character (@, #,&, %)</span
                     >
                   </div>
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label class="">UPI ID</label>
+                      <input
+                        type="text"
+                        id="upiId"
+                        class="form-control"
+                        ngModel
+                        name="upiId"
+                        #upiId="ngModel"
+                        placeholder="Enter UPI ID"
+                      />
+                      <span
+                        *ngIf="!upiId.valid && upiId.touched"
+                        class="help-block"
+                        >Invalid number</span
+                      >
+                    </div>
+                  </div>
                   <div class="col-12" style="margin-bottom:10px">
                     <a
                       href="javascript:;"

@@ -51,6 +51,7 @@ public class MeetingController {
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/saveMeeting")
 	public boolean saveBooking(@RequestBody BookingDetailsModel booking) {
+		System.out.println("Booking model recieved "+booking);
 		return meetingService.saveBooking(booking);
 	}
 
