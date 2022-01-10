@@ -17,9 +17,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import fG.Configuration.JwtUtil;
+import fG.Entity.FGCredits;
 import fG.Entity.TutorProfileDetails;
 import fG.Model.AppInfoModel;
+import fG.Model.CashbackEarned;
+import fG.Model.CashbackInfo;
 import fG.Model.Category;
+import fG.Model.FGCreditModel;
 import fG.Model.FiltersApplied;
 import fG.Model.NotificationModel;
 import fG.Model.ResponseModel;
@@ -294,15 +298,51 @@ public class UserController {
 		return topTutors;
 	}
 	
-	@PreAuthorize("hasAuthority('Expert')")
+	@PreAuthorize("hasAuthority('Expert') ")
 	@RequestMapping(value = "/getEarningsAppInfo", method = RequestMethod.GET)
 	public List<AppInfoModel> getEarningAppInfo() {
 		return service.getEarningAppInfo();
 	}
+	
+	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
+	@RequestMapping(value="/getRedeemedCreditPercentage",method=RequestMethod.GET)
+	public AppInfoModel getRedeemedCreditAppInfo() {
+		return service.getRedeemedCreditAppInfo();
+	}
+	
 	//to fetch user referral info
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
 	@RequestMapping(value="/getUserReferralInfo",method = RequestMethod.GET)
 	public List<UserReferralInfoModel> getUserReferralInfo(String userId) throws ParseException{
 		return service.getUserReferralInformationEvents(userId);
 	}
+	
+	//to fetch fgCredits of user
+	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
+	@RequestMapping(value="/getFGCreditsOfUser",method = RequestMethod.GET)
+	public Integer getFGCreditsOfUser(String userId) {
+		return service.getFGCreditsOfUser(userId);
+	}
+	
+	//to fetch FG Credits Table of user
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value="/getFGCreditsTableOfUser",method=RequestMethod.GET)
+	public List<FGCreditModel> getFGCreditsTableOfUser(String userId){
+		return service.getFGCreditsTableOfUser(userId);
+	}
+	
+	//to fetch cashback info of user
+	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
+	@RequestMapping(value="/getCashbackEarnedOfUser",method = RequestMethod.GET)
+	public CashbackEarned getCashbackEarnedOfUser(String userId) {
+		return service.getCashbackEarnedInfo(userId);
+	}
+	
+	//to fetch cashback table of user
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value="/getCashbackTableOfUser",method=RequestMethod.GET)
+	public List<CashbackInfo> getCashbackTableOfUser(String userId){
+		return service.getCashbackTableOfUser(userId);
+	}
+	
 }

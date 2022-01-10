@@ -128,6 +128,154 @@
               </div>
             </div>
           </div>
+          <div *ngIf="isCreditEligible">
+          <div class="col-12" style="margin-bottom: 15px;">
+            <h5>Redeem FG Credits</h5>
+            <div *ngIf="!isCreditApplied">
+              <div class="row">
+                <div class="col-9">
+                  Get discount of Rs. {{FGCredit}} 
+                </div>
+                <div class="col-3 align-right">
+                  <a href="javascript:;"
+                  (click)="onAppliedFGCredit()"
+                  class="col-green">
+                  Apply
+                </a>
+                </div>
+              </div> 
+              
+            </div>
+            
+          <!-- FG Credit Modal begins -->
+          <div
+          class="modal fade join__Modal"
+          id="Credits_Modal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myLargeModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <!-- Modal Content: begins -->
+            <div class="modal-content">
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <button
+                  type="button"
+                  id="close-popup"
+                  class="close close-credit"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <!-- Modal Body -->
+              <div class="modal-body">
+                <div class="body-message">
+                  <h4>Credits Info</h4>
+                  <form (ngSubmit)="onAddCredit(t)" #t="ngForm">
+                    <div class="what border_box invite__friend_box">
+                      
+                      <div class="row" style="margin-top:10px">
+                        <div class="col-md-4">
+                          FG Credits
+                        </div>
+                        <div class="col-md-8">
+                          <input
+                          type="number"
+                          id="redeemedFGCredit"
+                          name="redeemedFGCredit"
+                          ngModel
+                          class="form-control"
+                          #redeemedFGCredit=ngModel
+                          required
+                          maxlength="50"
+                          
+                        />
+                        </div>
+                      </div>
+
+                    
+                      
+                    
+                  </div>
+
+
+                    <div class="modal_btn feedback_submit">
+                      <button
+                        type="submit"
+                        [disabled]="!t.valid"
+                        
+                        class="button btn_mdl"
+                      >
+                        Pay via FG Credit
+                      </button>
+                    </div>
+                  </form>
+                  
+                </div>
+              </div>
+            </div>
+            <!-- Modal Content: ends -->
+          </div>
+        </div>
+        <!--FG Credit Modal Ends-->
+
+            <div *ngIf="isCreditApplied">
+              <div class="row">
+                <div class="col-9">
+                  Discount of ₹{{FGCredit}} applied
+                </div>
+                <div class="col-3 align-right">
+                  <a href="javascript:;"
+              (click)="onRemoveFGCredit()"
+              class="col-green">Remove</a>
+                </div>
+              </div>
+              
+              
+            </div>
+          </div>
+         
+          <div class="col-12">
+            <div *ngIf="isCreditApplied">
+
+              <hr class="hr-bold">
+              <h5>Payment Summary</h5>
+              <div class="row">
+                <div class="col-9">
+                  Total Amount:-
+                </div>
+                <div class="col-3 align-right">
+                  ₹{{totalAmount}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  Credits Discount:-
+                </div>
+                <div class="col-3 align-right">
+                  -₹{{FGCredit}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  ({{remainingFGCredit}} FG Credits Remaining)
+                </div>
+              </div>
+              <hr class="hr-dashed">
+              <div class="row">
+                <div class="col-9">
+                  Payable Amount:-
+                </div>
+                <div class="col-3 align-right">
+                  ₹{{payableAmount}}
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- <div class="col-12" style="margin-bottom: 15px">
             <a
               href="javascript:;"
@@ -155,9 +303,29 @@
                           </div>
                         </div>
                       </div> -->
-          <div class="col-12">
+
+          <!-- <div *ngIf="!isCreditApplied&&isCreditEligible">
+            <div class="col-12">
+              <button
+                style="width: 100%"
+                class="button proceed_btn"
+                (click)="onAppliedFGCredit()"
+              >
+               Apply FG Credit
+              </button>
+            </div>
+          </div> -->
+          </div>
+          <!-- <ng-template #notFGCreditEligible>
+            <div class="row" style="margin-top: 10px;">
+              <div class="col-12">
+                No FG Credits to get discount on booking amount
+              </div>
+            </div>
+          </ng-template> -->
+          <div class="col-12" >
             <button
-              style="width: 100%"
+              style="width: 100%; margin-top: 15px;"
               class="button proceed_btn"
               (click)="onBooking()"
               [disabled]="!bookingDetails.subject||noSchedule"

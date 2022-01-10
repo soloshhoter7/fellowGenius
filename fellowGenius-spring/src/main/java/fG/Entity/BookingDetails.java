@@ -50,6 +50,7 @@ public class BookingDetails implements Serializable{
 	  String razorpay_order_id;
 	  String razorpay_signature;
 	  Integer amount;
+	  Integer paidAmount;
 	  String tutorProfilePictureUrl;
 	  String isRescheduled="false";
 	  Date expertJoinTime;
@@ -254,6 +255,13 @@ public class BookingDetails implements Serializable{
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+	
+	public Integer getPaidAmount() {
+		return paidAmount;
+	}
+	public void setPaidamount(Integer paidAmount) {
+		this.paidAmount = paidAmount;
+	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -276,11 +284,13 @@ public class BookingDetails implements Serializable{
 				+ ", studentName=" + studentName + ", tutorName=" + tutorName + ", bookingCase=" + bookingCase
 				+ ", Subject=" + Subject + ", domain=" + domain + ", rating=" + rating + ", reviewText=" + reviewText
 				+ ", razorpay_payment_id=" + razorpay_payment_id + ", razorpay_order_id=" + razorpay_order_id
-				+ ", razorpay_signature=" + razorpay_signature + ", amount=" + amount + ", tutorProfilePictureUrl="
-				+ tutorProfilePictureUrl + ", isRescheduled=" + isRescheduled + ", expertJoinTime=" + expertJoinTime
-				+ ", learnerJoinTime=" + learnerJoinTime + ", expertLeavingTime=" + expertLeavingTime
-				+ ", learnerLeavingTime=" + learnerLeavingTime + ", expertCode=" + expertCode + ", createdDate="
-				+ createdDate + "]";
+				+ ", razorpay_signature=" + razorpay_signature + ", amount=" + amount + ", paidAmount=" + paidAmount
+				+ ", tutorProfilePictureUrl=" + tutorProfilePictureUrl + ", isRescheduled=" + isRescheduled
+				+ ", expertJoinTime=" + expertJoinTime + ", learnerJoinTime=" + learnerJoinTime + ", expertLeavingTime="
+				+ expertLeavingTime + ", learnerLeavingTime=" + learnerLeavingTime + ", expertCode=" + expertCode
+				+ ", createdDate=" + createdDate + "]";
 	}
+	
+	
 
 }

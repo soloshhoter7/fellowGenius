@@ -17,7 +17,9 @@
                     <th class="fld_name">UserId</th>
                     <th class="fld_email">Name</th>
                     <th class="fld_email">Context</th>
-                    <th class="fld_status">Payable Amount</th>
+                    <th class="fld_status">Total Amount</th>
+                    <th class="fld_status">Total Paid Amount</th>
+                    <th class="fld_status">Remaining Amount</th>
                     <th class="fld_status">UPI ID</th>
                     <th class="fld_status">Pay</th>
                   </tr>
@@ -29,7 +31,9 @@
                     </td>
                     <td class="fld_email">{{pendingTransaction.name}}</td>
                     <td class="fld_email">{{pendingTransaction.context}}</td>
-                    <td class="fld_email">{{pendingTransaction.payableAmount}}</td>
+                    <td class="fld_email">{{pendingTransaction.totalAmount}}</td>
+                    <td class="fld_email">{{pendingTransaction.sumPaidAmount}}</td>
+                    <td class="fld_email">{{pendingTransaction.remainingAmount}}</td>
                     <td class="fld_email">{{pendingTransaction.upiId}}</td>
                     <td class="fld_status" >
                       <div class="td_btn" style="justify-content: left;">
@@ -81,11 +85,11 @@
                             <div class="col-md-8">
                               <input
                               type="text"
-                              id="payableAmount"
-                              name="payableAmount"
+                              id="paidAmount"
+                              name="paidAmount"
                               ngModel
                               class="form-control"
-                              #payableAmount=ngModel
+                              #paidAmount=ngModel
                               required
                               maxlength="50"
                               
@@ -169,7 +173,7 @@
                     <th class="fld_name">UserId</th>
                     <th class="fld_email">Name</th>
                     <th class="fld_email">Context</th>
-                    <th class="fld_status">Payable Amount</th>
+                    <th class="fld_status">Paid Amount</th>
                     <th class="fld_status">UPI ID</th>
                     <th class="fld_status">Transaction ID</th>
                    
@@ -182,7 +186,7 @@
                     </td>
                     <td class="fld_email">{{previousTransaction.name}}</td>
                     <td class="fld_email">{{previousTransaction.context}}</td>
-                    <td class="fld_email">{{previousTransaction.payableAmount}}</td>
+                    <td class="fld_email">{{previousTransaction.paidAmount}}</td>
                     <td class="fld_email">{{previousTransaction.upiId}}</td>
                     <td class="fld_email">{{previousTransaction.transactionId}}</td>
                    

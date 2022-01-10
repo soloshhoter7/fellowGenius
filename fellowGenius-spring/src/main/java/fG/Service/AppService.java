@@ -43,6 +43,10 @@ public class AppService {
 			appInfo.setValue("12.5");
 			appInfo.setType("Earnings");
 			repAppInfo.save(appInfo);
+			appInfo.setKeyName("redeemedCreditPercentage");
+			appInfo.setValue("50");
+			appInfo.setType("Earnings");
+			repAppInfo.save(appInfo);
 			appInfo.setKeyName("admin_id");
 			appInfo.setValue("fellowgenius@admin");
 			appInfo.setType("login");
@@ -73,7 +77,7 @@ public class AppService {
 			repAppInfo.save(appInfo);
 			
 			appInfo.setKeyName("ReferralAmount");
-			appInfo.setValue("250");
+			appInfo.setValue("200");
 			repAppInfo.save(appInfo);
 				
 		}	

@@ -1,5 +1,6 @@
 package fG.Service;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,12 +25,15 @@ import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
 import fG.Entity.AppInfo;
 import fG.Entity.BookingDetails;
+import fG.Entity.Cashback;
 import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
+import fG.Entity.FGCredits;
 import fG.Entity.FeaturedExperts;
 import fG.Entity.LearningAreas;
 import fG.Entity.Notification;
 import fG.Entity.PendingTutorProfileDetails;
+import fG.Entity.ReferralActivity;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -44,9 +48,13 @@ import fG.Entity.Users;
 import fG.Model.AppInfoModel;
 import fG.Model.AuthenticationResponse;
 import fG.Model.BookingDetailsModel;
+import fG.Model.CashbackEarned;
+import fG.Model.CashbackInfo;
 import fG.Model.Category;
+import fG.Model.FGCreditModel;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.NotificationModel;
+import fG.Model.ReferralActivityAnalytics;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
@@ -64,11 +72,14 @@ import fG.Model.expertise;
 import fG.Model.registrationModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
+import fG.Repository.repositoryCashback;
 import fG.Repository.repositoryCategory;
 import fG.Repository.repositoryExpertiseAreas;
+import fG.Repository.repositoryFGCredits;
 import fG.Repository.repositoryFeaturedExperts;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositoryPendingTutorProfileDetails;
+import fG.Repository.repositoryReferralActivity;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
@@ -95,6 +106,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	MeetingService meetingService;
+	
+	@Autowired
+	AdminService adminService;
 
 	@Autowired
 	repositoryStudentLogin repStudentLogin;
@@ -108,6 +122,7 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	repositoryUsers repUsers;
 
+	
 	@Autowired
 	repositoryTutorProfile repTutorProfile;
 
@@ -134,6 +149,12 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	repositoryBooking repBooking;
+	
+	@Autowired
+	repositoryFGCredits repFGCredit;
+	
+	@Autowired
+	repositoryCashback repCashback;
 
 	@Autowired
 	repositoryExpertiseAreas repExpertiseAreas;
@@ -151,55 +172,108 @@ public class UserService implements UserDetailsService {
 	repositoryUserReferrals repUserReferrals;
 	
 	@Autowired
+	repositoryReferralActivity repReferralActivity;
+	
+	@Autowired
 	private BCryptPasswordEncoder encoder;
 
 	@Autowired
 	MailService mailService;
 
+	public String getLatestReferralStatus(Integer userId,UserReferrals userRef) {
+		String status="";
+		System.out.println("Referred user id "+userId);
+		List<BookingDetails> meetingsCompleted=userRef.getMeetingCompleted();
+		//System.out.println("Referred Meeting Completed "+ meetingsCompleted);
+		List<BookingDetails> meetingsSetup=userRef.getMeetingSetup();
+		//System.out.println("Referred Meeting Setup "+ meetingsSetup);
+		List<Users> registeredUsers=userRef.getReferCompleted();
+		//System.out.println("Referred Users : "+ registeredUsers);
+		//check for meeting completed
+		for(BookingDetails meetCompleted:meetingsCompleted) {
+			//System.out.println("meeting id: "+meetCompleted.getStudentId());
+			if(meetCompleted.getStudentId().equals(userId)) {
+				status="Meeting Completed";
+				//System.out.println(status);
+				return status;
+			}
+		}
+		
+		//check for meeting setups
+		for(BookingDetails meetSetup:meetingsSetup) {
+			if(meetSetup.getStudentId().equals(userId)) {
+				status="Meeting Setup";
+				//System.out.println(status);
+				return status;
+			}
+		}
+		
+		//check for offer expired
+		
+		
+		//check for registered and offer expired
+		for(Users user:registeredUsers) {
+			if(user.getUserId().equals(userId)) {
+			Integer diffInTime=meetingService.findDaysFromRegistration(user.getUserId(), new Date());
+			AppInfo thresholdTime=repAppInfo.keyExist("ReferralExpirationTime");
+			
+			if(diffInTime > Integer.valueOf(thresholdTime.getValue())) {
+				status="Offer Expired";
+			}else {
+				status="Registered";
+			}
+				return status;
+			}
+			
+			
+		}
+		
+		return status;
+	}
 	
 	public List<UserReferralInfoModel> getUserReferralInformationEvents(String userId) throws ParseException{
 		List<UserReferralInfoModel> referrerDetails = new ArrayList<UserReferralInfoModel>();
 		UserReferrals userRef = repUserReferrals.findByUserId(Integer.valueOf(userId));
+		System.out.println(userRef);
 		//getting user referral information events
 		//getting the registered people with timestamp
 		if(userRef!=null) {
 			List<Users> registeredUsers = userRef.getReferCompleted();
-			List<BookingDetails> meetingsSetup = userRef.getMeetingSetup();
-			List<BookingDetails> meetingsCompleted = userRef.getMeetingCompleted();
+			
 			//for registered users
 			for(Users user:registeredUsers) {
 				UserReferralInfoModel urf = new UserReferralInfoModel();
 				urf.setEmail(user.getEmail());
 				urf.setName(fetchUserName(user.getUserId(),user.getRole()));
-				urf.setStatus("Registered");
+				urf.setStatus(getLatestReferralStatus(user.getUserId(), userRef));
 				urf.setTimeStamp(user.getCreatedDate());
 				referrerDetails.add(urf);
 			}
 			//for meetings setup
-			for(BookingDetails b:meetingsSetup) {
-				UserReferralInfoModel urf = new UserReferralInfoModel();
-				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
-				urf.setEmail(sp.getEmail());
-				urf.setName(sp.getFullName());
-				urf.setStatus("Meeting Setup");
-				urf.setTimeStamp(b.getCreatedDate());
-				referrerDetails.add(urf);
-			}
-			//for meetings completed
-			for(BookingDetails b:meetingsCompleted) {
-				UserReferralInfoModel urf = new UserReferralInfoModel();
-				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
-				urf.setEmail(sp.getEmail());
-				urf.setName(sp.getFullName());
-				urf.setStatus("Meeting Completed");
-				urf.setTimeStamp(meetingService.calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute()));
-				referrerDetails.add(urf);
-			}
+//			for(BookingDetails b:meetingsSetup) {
+//				UserReferralInfoModel urf = new UserReferralInfoModel();
+//				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
+//				urf.setEmail(sp.getEmail());
+//				urf.setName(sp.getFullName());
+//				urf.setStatus("Meeting Setup");
+//				urf.setTimeStamp(b.getCreatedDate());
+//				referrerDetails.add(urf);
+//			}
+//			//for meetings completed
+//			for(BookingDetails b:meetingsCompleted) {
+//				UserReferralInfoModel urf = new UserReferralInfoModel();
+//				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
+//				urf.setEmail(sp.getEmail());
+//				urf.setName(sp.getFullName());
+//				urf.setStatus("Meeting Completed");
+//				urf.setTimeStamp(meetingService.calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute()));
+//				referrerDetails.add(urf);
+//			}
 		}
 		//sorting on the basis of timestamp
 		referrerDetails.sort((r1,r2) -> r1.getTimeStamp().compareTo(r2.getTimeStamp()));
 		Collections.reverse(referrerDetails);
-//		System.out.println(referrer);
+		System.out.println(referrerDetails);
 		return referrerDetails;
 	}
 	
@@ -473,12 +547,15 @@ public class UserService implements UserDetailsService {
 		}
 		System.out.println(registrationModel);
 		if (registrationModel.getRole().equals("Learner")) {
+			System.out.println("Inside learner");
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());
 			studentProfile.setEmail(registrationModel.getEmail());
 			studentProfile.setFullName(registrationModel.getFullName());
 			studentProfile.setExpertCode(registrationModel.getExpertCode());
+			studentProfile.setUpiID(registrationModel.getUpiId());
 			if (dao.saveStudentProfile(studentProfile)) {
+				System.out.println("Inside save student profile");
 				Users user = new Users();
 				user.setEmail(registrationModel.getEmail());
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
@@ -490,11 +567,17 @@ public class UserService implements UserDetailsService {
 					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
 				}
 				dao.saveUserLogin(user);
+				
 				userActivity.setUserId(user);
 				repUserActivity.save(userActivity);
+				
 				if(user.getExpertCode()!=null) {
+					
+					System.out.println("User expert code: "+user.getExpertCode());
 					if(isValidFormatForReferralCode(user.getExpertCode())) {
+						System.out.println("Inside valid format");
 						updateReferralCompleted(parseReferralCode(user.getExpertCode()),user);
+						saveReferralActivity(user,registrationModel.getReferActivity());
 					}
 				}
 				return true;
@@ -548,6 +631,34 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	private void saveReferralActivity(Users user, String referActivityType) {
+		// TODO Auto-generated method stub
+		System.out.println("Refer Activity Type "+ referActivityType);
+		String referType=referActivityType.trim();
+		System.out.println(referActivityType.equals("LI"));
+		System.out.println(referType.equals("LI"));
+		if(!referActivityType.equals("NO")) {
+			ReferralActivity referralActivity=new ReferralActivity();
+			referralActivity.setUserId(user);
+			
+			if(referActivityType.equals("MA")) {
+				referralActivity.setType("MAIL");
+			}else if(referActivityType.equals("LI")) {
+				System.out.println("Inside the linkedin method");
+				referralActivity.setType("LINKEDIN");
+			}else if(referActivityType.equals("WA")){
+				referralActivity.setType("WHATSAPP");
+			}else {
+				
+			}
+			System.out.println("Refer Activity Object :"+referralActivity);
+			repReferralActivity.save(referralActivity);
+			System.out.println(referralActivity);
+		}else {
+			System.out.println("User has not come via refer URLs");
+		}
+	}
+
 	void updateReferralCompleted(String userId,Users user){
 		if(userId!=null&&userId!="") {
 			System.out.println(repUserReferrals.findByUserId(Integer.valueOf(userId)));
@@ -561,13 +672,20 @@ public class UserService implements UserDetailsService {
 			refers.add(user);
 			ur.setReferCompleted(refers);
 			System.out.println("completed till here");
+			System.out.println("completed till here");
+			System.out.println("completed till here");
+			System.out.println("completed till here");
+			System.out.println("User referral here");
 			repUserReferrals.save(ur);
+			
+			
 		}
 		
 	}
 	
 	boolean isValidFormatForReferralCode(String code) {
-		return code.matches("FG21[A-Z]{2}[\\d]{4}");
+		//will work in 2022 only 🤣🤣
+		return code.matches("FG22[A-Z]{2}[\\d]{4}");
 	}
 	
 	public boolean getReferralInformation() {
@@ -1315,6 +1433,14 @@ public class UserService implements UserDetailsService {
 		}
 		return appInfoList;
 	}
+	
+	public AppInfoModel getRedeemedCreditAppInfo() {
+		AppInfo appInfo=repAppInfo.keyExist("redeemedCreditPercentage");
+		AppInfoModel appModel=new AppInfoModel();
+		appModel.setKey(appInfo.getKeyName());
+		appModel.setValue(appInfo.getValue());
+		return appModel;
+	}
 
 	public UserActivityAnalytics fetchUserDataAnalytics() {
 		UserActivityAnalytics userAnalytics = new UserActivityAnalytics();
@@ -1714,4 +1840,100 @@ public class UserService implements UserDetailsService {
 		return upiId;
 	}
 
+	public Integer getFGCreditsOfUser( String userId ) {
+		// TODO Auto-generated method stub
+		System.out.println("User id "+Integer.valueOf(userId));
+		
+		Users user=repUsers.idExists(Integer.valueOf(userId));
+		System.out.println("User objects of FG Credit"+user);
+		Integer FGCredits=0;
+		if(user!=null) {
+			if(user.getCredits()==null) {
+				user.setCredits(0);
+				user=repUsers.save(user);
+			}
+			
+			FGCredits=user.getCredits();
+		}
+		System.out.println("FG Credits of User " + FGCredits);
+		return FGCredits;
+	}
+
+	public CashbackEarned getCashbackEarnedInfo(String userId) {
+		// TODO Auto-generated method stub
+		Users user=repUsers.idExists(Integer.valueOf(userId));
+		UserReferrals userReferral=repUserReferrals.findByUserId(user.getUserId());
+		CashbackEarned cashback=new CashbackEarned();
+		//user has not referred anyone 
+		if(userReferral==null) {
+			cashback.setTotalCashback(0.0);
+			cashback.setRemainingCashback(0.0);
+			cashback.setRedeemedCashback(0.0);
+		}else {
+			cashback.setTotalCashback((double)userReferral.getPaymentDue());
+			cashback.setRemainingCashback(adminService.remainingAmount(user));
+			cashback.setRedeemedCashback(cashback.getTotalCashback()-cashback.getRemainingCashback());
+		}
+		
+		System.out.println(cashback);
+		return cashback;
+	}
+
+	public List<FGCreditModel> getFGCreditsTableOfUser(String userId) {
+		// TODO Auto-generated method stub
+		List<FGCredits> creditList=repFGCredit.findByUserId(Integer.valueOf(userId));
+		ArrayList<FGCreditModel> creditModelList=new ArrayList<FGCreditModel>();
+		if(creditList!=null) {
+			
+		
+		
+		for(FGCredits credit:creditList) {
+			
+			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			FGCreditModel creditModel=new FGCreditModel();
+			creditModel.setDate(formatter.format(credit.getCreditDate()));
+			
+			Integer amount=credit.getAmount();
+			
+			creditModel.setType(credit.getType());
+			
+			creditModel.setAmount(amount);
+			
+			creditModel.setContext(credit.getContext());
+			
+			creditModelList.add(creditModel);
+		}
+		
+		}
+		return creditModelList;
+	}
+
+	public List<CashbackInfo> getCashbackTableOfUser(String userId) {
+		// TODO Auto-generated method stub
+		List<Cashback> repCashbackList=repCashback.findByUserId(Integer.valueOf(userId));
+		
+		ArrayList<CashbackInfo> cashbackList=new ArrayList<CashbackInfo>();
+		
+		for(Cashback cashback:repCashbackList) {
+			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			CashbackInfo cashbackModel=new CashbackInfo();
+			cashbackModel.setDate(formatter.format(cashback.getCashbackDate()));
+			
+			BookingDetails booking=cashback.getBookingDetails();
+			cashbackModel.setReferredUserName(booking.getStudentName());
+			
+			cashbackModel.setContext(cashback.getContext());
+			
+		    cashbackModel.setAmount(cashback.getAmount());
+		    
+		    System.out.println("Cashback Model "+cashbackModel);
+		    
+		    cashbackList.add(cashbackModel);
+		}
+		return cashbackList;
+	}
+
+	
+
+	
 }

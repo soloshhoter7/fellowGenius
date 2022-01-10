@@ -1,3 +1,19 @@
 .hideBlock{
     display: none;
 }
+
+.align-right{
+    text-align:right;
+}
+
+.col-green{
+    color: #8dc63f;
+}
+
+.hr-bold{
+    border-top: 4px solid #8dc63f;
+}
+
+.hr-dashed{
+    border-top: 4px dotted #8dc63f;
+}

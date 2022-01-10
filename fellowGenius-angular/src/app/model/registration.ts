@@ -6,4 +6,6 @@ export class registrationModel {
 	public role: string;
 	public socialId:string;
 	public expertCode:string;
+    public upiId: string;
+	public referActivity: string;
 }

@@ -9,6 +9,8 @@ public class registrationModel {
 	 String role;
 	 String socialId;
 	 String expertCode;
+	 String upiId;
+	 String referActivity;
 	 
 	public String getFullName() {
 		return fullName;
@@ -54,12 +56,25 @@ public class registrationModel {
 	public void setExpertCode(String expertCode) {
 		this.expertCode = expertCode;
 	}
+	
+	public String getUpiId() {
+		return upiId;
+	}
+	public void setUpiId(String upiId) {
+		this.upiId = upiId;
+	}
+	
+	public String getReferActivity() {
+		return referActivity;
+	}
+	public void setReferActivity(String referActivity) {
+		this.referActivity = referActivity;
+	}
 	@Override
 	public String toString() {
 		return "registrationModel [fullName=" + fullName + ", email=" + email + ", contact=" + contact + ", password="
-				+ password + ", role=" + role + ", socialId=" + socialId + ", expertCode=" + expertCode + "]";
+				+ password + ", role=" + role + ", socialId=" + socialId + ", expertCode=" + expertCode + ", upiId="
+				+ upiId + ", referActivity=" + referActivity + "]";
 	}
 	
-	
-	 
 }

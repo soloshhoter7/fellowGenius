@@ -6,12 +6,12 @@ import AgoraRTC, {
 } from 'agora-rtc-sdk-ng';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MeetingComponent } from '../meeting.component';
+
 @Injectable({
   providedIn: 'root',
 })
 export class VoiceCallService {
-  constructor(private meetingComponent: MeetingComponent) {
+  constructor() {
     this.getMediaDevicesInfo();
   }
   rtc = {
@@ -152,9 +152,9 @@ export class VoiceCallService {
     micClient.on('connection-state-change', (curState, revState, reason) => {
       this.connectionState = curState;
       console.log('CONNECTION STATE CHANGED :', curState, revState, reason);
-      if (this.connectionState == 'DISCONNECTED') {
-        this.meetingComponent.endCall();
-      }
+      // if (this.connectionState == 'DISCONNECTED') {
+      //   this.meetingComponent.endCall();
+      // }
     });
     AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
       await this.getMediaDevicesInfo();

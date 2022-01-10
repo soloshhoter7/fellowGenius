@@ -19,6 +19,7 @@ import fG.Model.AppInfoModel;
 import fG.Model.BookingDetailsModel;
 import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
+import fG.Model.ReferralActivityAnalytics;
 import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.UserActivityAnalytics;
@@ -182,10 +183,21 @@ public class AdminController {
 	public ArrayList<UserActivityModel> fetchAllSignUpData() throws NumberFormatException, ParseException {
 		return service.fetchAllSignUpData();	
 	}
+	
 	@PreAuthorize("hasAuthority('Admin')")
 	@RequestMapping(value = "/fetchAllMeetingData")
 	public ArrayList<BookingDetailsModel> fetchAllMeetingsData() throws NumberFormatException, ParseException {
 		return service.fetchAllMeetingsData();	
+	}
+	
+		
+	//fetching all referralActivity info for excel sheet
+	
+	//fetching referral data Analytics
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value = "/fetchReferralDataAnalytics")
+	public ReferralActivityAnalytics fetchReferralData()  {
+		return adminService.fetchReferralDataAnalytics();	
 	}
 	
 	//fetching all appInfo
