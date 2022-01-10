@@ -29,8 +29,10 @@ public class FGCredits {
 	final Date creditDate= new Date();
 	
 	private String context;
+	
+	private String type;
 
-	private String balance;
+	private int amount;
 	
 	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "bId", referencedColumnName = "bId", nullable = false)
@@ -41,12 +43,13 @@ public class FGCredits {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FGCredits(Integer id, Users user, String context, String balance, BookingDetails bookingDetails) {
+	public FGCredits(Integer id, Users user, String context, String type, int amount, BookingDetails bookingDetails) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.context = context;
-		this.balance = balance;
+		this.type = type;
+		this.amount = amount;
 		this.bookingDetails = bookingDetails;
 	}
 
@@ -74,12 +77,20 @@ public class FGCredits {
 		this.context = context;
 	}
 
-	public String getBalance() {
-		return balance;
+	public String getType() {
+		return type;
 	}
 
-	public void setBalance(String balance) {
-		this.balance=balance;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 	public BookingDetails getBookingDetails() {
@@ -97,7 +108,8 @@ public class FGCredits {
 	@Override
 	public String toString() {
 		return "FGCredits [id=" + id + ", user=" + user + ", creditDate=" + creditDate + ", context=" + context
-				+ ", balance=" + balance + ", bookingDetails=" + bookingDetails + "]";
+				+ ", type=" + type + ", amount=" + amount + ", bookingDetails=" + bookingDetails + "]";
 	}
-	
+
+		
 }

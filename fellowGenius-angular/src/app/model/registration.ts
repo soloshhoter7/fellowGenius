@@ -7,4 +7,5 @@ export class registrationModel {
 	public socialId:string;
 	public expertCode:string;
     public upiId: string;
+	public referActivity: string;
 }

@@ -25,7 +25,46 @@
   -webkit-animation-name: fadeOut;
   animation-name: fadeOut;
 }
-
+.mobile-view-banner {
+  padding: 20px;
+}
+.mobile-view-banner-header {
+  padding: 10px;
+  padding-bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+.mobile-view-banner-header .tag {
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  font-size: x-large;
+}
+.tag {
+  font-weight: 600;
+  font-size: x-large;
+}
+.mobile-view-banner-body {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mobile-view-banner-body img {
+  height: 40vh;
+}
+.mobile-view-banner-footer {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+}
 .pre-meeting-local .local {
   position: unset;
   border-radius: 10px;

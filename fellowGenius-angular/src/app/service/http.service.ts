@@ -32,6 +32,7 @@ import { Transaction } from '../model/Transaction';
 import { CashbackEarned } from '../model/CashbackEarned';
 import { FGCredits } from '../model/FGCredits';
 import { CashbackInfo } from '../model/CashbackInfo';
+import { ReferralActivityAnalytics } from '../model/referralActivityAnalytics';
 @Injectable({
   providedIn: 'root',
 })
@@ -954,5 +955,11 @@ export class HttpService {
   addTransaction(transaction:Transaction):Observable<Object>{
     return this.http.post<Object>(this.backendUrl+'/fellowGenius/Admin/addTransaction',transaction);
   }
-  
+
+  fetchReferralAnalytics(): Observable<ReferralActivityAnalytics> {
+    return this.http.get<ReferralActivityAnalytics>(
+      this.backendUrl + '/fellowGenius/Admin/fetchReferralDataAnalytics'
+    );
+  }
+
 }

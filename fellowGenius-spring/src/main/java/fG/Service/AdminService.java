@@ -10,16 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fG.Entity.BookingDetails;
+import fG.Entity.ReferralActivity;
 import fG.Entity.Transactions;
 import fG.Entity.UserReferrals;
 import fG.Entity.Users;
 import fG.Model.AdminReferralInfoModel;
 import fG.Model.BookingDetailsModel;
+import fG.Model.ReferralActivityAnalytics;
 import fG.Model.ReferrerInfoModel;
 import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.UserReferralInfoModel;
+import fG.Repository.repositoryReferralActivity;
 import fG.Repository.repositoryTransactions;
 import fG.Repository.repositoryUserReferrals;
 import fG.Repository.repositoryUsers;
@@ -38,6 +41,9 @@ public class AdminService {
 	
 	@Autowired 
 	repositoryTransactions repTransactions;
+	
+	@Autowired
+	repositoryReferralActivity repReferralActivity;
 
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
 		TutorProfileDetailsModel tut = new TutorProfileDetailsModel();
@@ -161,21 +167,23 @@ public class AdminService {
 		// TODO Auto-generated method stub
 		ArrayList<TransactionsModel> transactionsList=new ArrayList<TransactionsModel>();
 		List<UserReferrals> referralsList=repUserReferrals.findAll();
-		
-		for(UserReferrals ur:referralsList) {
-			if(remainingAmount(ur.getUser())>0) {
-				TransactionsModel transaction=new TransactionsModel();
-				transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
-				transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
-				transaction.setContext("Referral");
-				transaction.setTotalAmount(ur.getPaymentDue());
-				transaction.setRemainingAmount(remainingAmount(ur.getUser()));
-				transaction.setSumPaidAmount(transaction.getTotalAmount()-transaction.getRemainingAmount());
-				transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
-				transaction.setTransactionId("");
-				transactionsList.add(transaction);
+		if(referralsList!=null) {
+			for(UserReferrals ur:referralsList) {
+				if(remainingAmount(ur.getUser())>0) {
+					TransactionsModel transaction=new TransactionsModel();
+					transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
+					transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
+					transaction.setContext("Referral");
+					transaction.setTotalAmount(ur.getPaymentDue());
+					transaction.setRemainingAmount(remainingAmount(ur.getUser()));
+					//transaction.setSumPaidAmount(transaction.getTotalAmount()-transaction.getRemainingAmount());
+					transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
+					transaction.setTransactionId("");
+					transactionsList.add(transaction);
+				}
 			}
 		}
+		
 		System.out.println(transactionsList);
 		return transactionsList;
 	}
@@ -202,21 +210,35 @@ public class AdminService {
 		ArrayList<TransactionsModel> transactionsList=new ArrayList<TransactionsModel>();
 		
 		List<Transactions> repTransactionList=repTransactions.findAll();
-		for(Transactions repTransaction:repTransactionList) {
-			TransactionsModel transactions=new TransactionsModel();
-			transactions.setUserId(String.valueOf(repTransaction.getPaidToUserId().getUserId()));
-			transactions.setContext(repTransaction.getContext());
-			transactions.setName(userService.fetchUserName(repTransaction.getPaidToUserId().getUserId(),
-					repTransaction.getPaidToUserId().getRole()));
-			transactions.setPaidAmount(repTransaction.getPaidAmount());
-			transactions.setTransactionId(repTransaction.getTransactionId());
-			transactions.setUpiId(repTransaction.getUpiId());
-			transactionsList.add(transactions);
+		if(repTransactionList!=null) {
+			for(Transactions repTransaction:repTransactionList) {
+				TransactionsModel transactions=new TransactionsModel();
+				transactions.setUserId(String.valueOf(repTransaction.getPaidToUserId().getUserId()));
+				transactions.setContext(repTransaction.getContext());
+				transactions.setName(userService.fetchUserName(repTransaction.getPaidToUserId().getUserId(),
+						repTransaction.getPaidToUserId().getRole()));
+				transactions.setPaidAmount(repTransaction.getPaidAmount());
+				transactions.setTransactionId(repTransaction.getTransactionId());
+				transactions.setUpiId(repTransaction.getUpiId());
+				transactionsList.add(transactions);
+			}
+	
 		}
 		System.out.println(transactionsList);
 		return transactionsList;
 	}
-	
-	
 
+	public ReferralActivityAnalytics fetchReferralDataAnalytics() {
+		// TODO Auto-generated method stub
+		ReferralActivityAnalytics referralAnalytics=new ReferralActivityAnalytics();
+	    List<ReferralActivity> referredUsers=repReferralActivity.findAllLinkedinActivities();
+	    referralAnalytics.setReferralLinkedinCount(referredUsers.size());
+	    referredUsers=repReferralActivity.findAllMailActivities();
+	    referralAnalytics.setReferralMailCount(referredUsers.size());
+	    referredUsers=repReferralActivity.findAllWhatsappActivities();
+	    referralAnalytics.setReferralWhatsappCount(referredUsers.size());
+	    System.out.println("Referral Analytics "+ referralAnalytics);
+		return referralAnalytics;
+	}
+	
 }

@@ -4,7 +4,7 @@ export class FGCredits{
 
     public context:String;
 
-    public balance:String;
+    public amount:Number;
 
     public type:String;
     

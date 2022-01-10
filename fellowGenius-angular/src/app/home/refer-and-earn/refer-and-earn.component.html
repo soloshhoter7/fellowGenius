@@ -292,6 +292,8 @@ Refer your friend today and when they complete their 1st session with a FellowGe
       <div class="Referal__dashbrd white__bg">
         <div class="sec__title">
           <h2>Referral Dashboard</h2>
+          <div style="display:flex">
+          <!-- casback credit box  starts -->
           <div *ngIf="CashbackInfo.totalCashback; else hideCashbackInfo">
           <a
                 href="javascript:void(0)"
@@ -340,13 +342,11 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                       <div class="body-message">
                         <h4>Cashback Info</h4>
 
-                        <div class="refer_code border_box">
-                          <div class="box_title">
+                        
 
-                            <h4> Cashback Info</h4>
+                            
     
-                            <div class="refer_code border_box">
-                              <div class="box_title">
+                            
                                 <div class="referal__table">
                                   <div class="table-responsive">
                                     <table class="table">
@@ -366,22 +366,20 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                                           </td>
                                           <td class="fld_email">{{cashback.referredUserName}}</td>
                                           <td class="fld_email">{{cashback.context}}</td>
-                                          <td class="fld_email">{{cashback.balance}}</td>
+                                          <td class="fld_email">{{cashback.amount}}</td>
                                         </tr>
                                         
                                       </tbody>
                                     </table>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
+                              
 
 
                             Total Cashback Earned :- {{CashbackInfo.totalCashback}} <br/>
                             Redeemed Cashback :- {{CashbackInfo.redeemedCashback}}  <br/>
                             Remaining Cashback :- {{CashbackInfo.remainingCashback}}
-                          </div>
-                        </div>
+                          
 
                       </div>
                     </div>
@@ -390,6 +388,8 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                 </div>
               </div>
               <!--Cashback Modal Ends-->
+              <!-- cashback credit box ends -->
+              <!-- FG credit box starts -->
             <div *ngIf="creditsTableInfo.length==0;else showCreditModal">
               <div class="credit__box">
                 <img src="../../../assets/images/credits-icon.svg" alt="#" />
@@ -438,37 +438,40 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                         <div class="modal-body">
                           <div class="body-message">
                             <h4> FG Credits Transaction Info</h4>
-    
-                            <div class="refer_code border_box">
-                              <div class="box_title">
-                                <div class="referal__table">
-                                  <div class="table-responsive">
-                                    <table class="table">
-                                      <thead>
-                                        <tr>
-                                          <th class="fld_name">Date</th>
-                                          <th class="fld_email">Context</th>
-                                          <th class="fld_status">Balance</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        
-                                        <tr *ngFor="let credits of creditsTableInfo">
-                                          <td class="fld_name">
-                                            <div class="nme_style">{{credits.date}}</div>
-                                          </td>
-                                          <td class="fld_email">{{credits.context}}</td>
-                                          <td class="fld_email">{{credits.type }} {{credits.balance}}</td>
-                                          
-                                        </tr>
-                                        
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
+                            
+                            
+                            <div class="referal__table">
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th class="fld_name">Date</th>
+                                      <th class="fld_email">Context</th>
+                                      <th class="fld_status">Type</th>
+                                      <th class="fld_status">Amount</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    
+                                    <tr *ngFor="let credits of creditsTableInfo ; let i =index" >
+                                      <td class="fld_name">
+                                        <div class="nme_style">{{credits.date}}</div>
+                                      </td>
+                                      <td class="fld_email">{{credits.context}}</td>
+                                      <td class="fld_status">{{credits.type}}</td>
+                                      <td class="fld_status">
+                                         {{credits.amount}}
+                                      </td>
+                                    </tr>
+                                    
+                                  </tbody>
+                                </table>
                               </div>
-                            </div>
-    
+                            
+                          </div>
+
+
+                                
                           </div>
                         </div>
                       </div>
@@ -476,10 +479,12 @@ Refer your friend today and when they complete their 1st session with a FellowGe
                     </div>
                   </div>
                   <!--Credits Table Modal Ends-->
+
+
+                  <!-- FG Credit box ends -->
+                </div>
         </div>
-        <div *ngIf="0; ">
-          <p>Refer your friends to see their status here</p>
-        </div>
+        
        <div *ngIf="userReferralInfoList.length; else hideReferralInfoList"> 
         <div class="referal__table">
           <div class="table-responsive">
@@ -493,14 +498,20 @@ Refer your friend today and when they complete their 1st session with a FellowGe
               </thead>
               <tbody>
                 
-                <tr *ngFor="let refInfo of userReferralInfoList">
+                <tr *ngFor="let refInfo of userReferralInfoList ; let i =index" >
                   <td class="fld_name">
                     <div class="nme_style">{{refInfo.name}}</div>
                   </td>
                   <td class="fld_email">{{refInfo.email}}</td>
                   <td class="fld_status">
                     <div class="td_btn">
-                      <a href="" class="table_btn green_btn">{{refInfo.status}}</a>
+                      <div style="display:flex">
+                        <div class="referral_status_btn" [id]=returnStatusId(i)
+                        [class]=getClass(refInfo.status,i)
+                        
+                        >{{refInfo.status}}</div>
+                      </div>
+                      
                     </div>
                   </td>
                 </tr>

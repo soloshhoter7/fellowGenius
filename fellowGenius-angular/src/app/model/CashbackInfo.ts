@@ -4,7 +4,7 @@ export class CashbackInfo{
 
     public context:String;
 
-    public balance:String;
+    public amount:Number;
 
     public referredUsername:String;
     

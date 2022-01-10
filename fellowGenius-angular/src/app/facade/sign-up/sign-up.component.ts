@@ -69,6 +69,7 @@ export class SignUpComponent implements OnInit {
   timeOut: boolean = true;
   showExpertCode:boolean = false;
   showPassword:boolean=false;
+  referActivity: string;
   // ---------- patterns --------------------------------
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,12}$';
   passwordPattern =
@@ -104,11 +105,15 @@ export class SignUpComponent implements OnInit {
     this.expert_userId = this.cookieService.get('expert_userId');
     this.expert_domain = this.cookieService.get('expert_domain');
     this.googleSDK();
+    
     if(this.route.snapshot.queryParams.pt==undefined){
       this.showExpertCode=false;
+      this.referActivity='NO';
     }else{
       this.showExpertCode=true;
+      this.referActivity=this.route.snapshot.queryParams.pt;
     }
+    console.log(`Refer Activity is ${this.referActivity}`);
   }
   togglePassword(){
     this.showPassword=!this.showPassword;
@@ -311,6 +316,7 @@ export class SignUpComponent implements OnInit {
         console.log(otp, this.verificationOtp);
         if (bcrypt.compareSync(otp, this.verificationOtp)) {
           console.log('otp matched !');
+          this.registrationModel.referActivity=this.referActivity;
           this.authService.onSignUp(this.registrationModel);
 
           this.authService.getAuthStatusListener().subscribe((res) => {

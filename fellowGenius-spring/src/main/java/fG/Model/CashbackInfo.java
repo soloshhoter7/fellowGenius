@@ -6,7 +6,7 @@ public class CashbackInfo {
 	
 	private String context;
 	
-	private String balance;
+	private int amount;
 	
 	private String referredUserName;
 
@@ -15,11 +15,11 @@ public class CashbackInfo {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CashbackInfo(String date, String context, String balance, String referredUserName) {
+	public CashbackInfo(String date, String context, int amount, String referredUserName) {
 		super();
 		this.date = date;
 		this.context = context;
-		this.balance = balance;
+		this.amount = amount;
 		this.referredUserName = referredUserName;
 	}
 
@@ -39,12 +39,12 @@ public class CashbackInfo {
 		this.context = context;
 	}
 
-	public String getBalance() {
-		return balance;
+	public int getAmount() {
+		return amount;
 	}
 
-	public void setBalance(String balance) {
-		this.balance = balance;
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 	public String getReferredUserName() {
@@ -57,7 +57,7 @@ public class CashbackInfo {
 
 	@Override
 	public String toString() {
-		return "CashbackInfo [date=" + date + ", context=" + context + ", balance=" + balance + ", referredUserName="
+		return "CashbackInfo [date=" + date + ", context=" + context + ", amount=" + amount + ", referredUserName="
 				+ referredUserName + "]";
 	}
 	

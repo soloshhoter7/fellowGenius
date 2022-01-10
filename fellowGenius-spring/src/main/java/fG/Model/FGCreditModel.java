@@ -6,14 +6,21 @@ public class FGCreditModel {
 	
 	private String context;
 	
-	private String balance;
+	private Integer amount;
 	
-	// + or -
 	private String type;
 
 	public FGCreditModel() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public FGCreditModel(String date, String context, Integer amount, String type) {
+		super();
+		this.date = date;
+		this.context = context;
+		this.amount = amount;
+		this.type = type;
 	}
 
 	public String getDate() {
@@ -32,12 +39,12 @@ public class FGCreditModel {
 		this.context = context;
 	}
 
-	public String getBalance() {
-		return balance;
+	public Integer getAmount() {
+		return amount;
 	}
 
-	public void setBalance(String balance) {
-		this.balance = balance;
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
 
 	public String getType() {
@@ -50,9 +57,7 @@ public class FGCreditModel {
 
 	@Override
 	public String toString() {
-		return "FGCreditModel [date=" + date + ", context=" + context + ", balance=" + balance + ", type=" + type + "]";
+		return "FGCreditModel [date=" + date + ", context=" + context + ", amount=" + amount + ", type=" + type + "]";
 	}
-	
-	
 	
 }

@@ -32,7 +32,7 @@ public class Cashback {
 	
 	private String context;
 
-	private String balance;
+	private int amount;
 	
 	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "bId", referencedColumnName = "bId", nullable = false)
@@ -43,15 +43,14 @@ public class Cashback {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Cashback(Integer id, Users user, String context, String balance, BookingDetails bookingDetails) {
+	public Cashback(Integer id, Users user, String context, int amount, BookingDetails bookingDetails) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.context = context;
-		this.balance = balance;
+		this.amount = amount;
 		this.bookingDetails = bookingDetails;
 	}
-
 
 	public Integer getId() {
 		return id;
@@ -77,12 +76,12 @@ public class Cashback {
 		this.context = context;
 	}
 
-	public String getBalance() {
-		return balance;
+	public int getAmount() {
+		return amount;
 	}
 
-	public void setBalance(String balance) {
-		this.balance = balance;
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 	public BookingDetails getBookingDetails() {
@@ -100,8 +99,8 @@ public class Cashback {
 	@Override
 	public String toString() {
 		return "Cashback [id=" + id + ", user=" + user + ", cashbackDate=" + cashbackDate + ", context=" + context
-				+ ", balance=" + balance + ", bookingDetails=" + bookingDetails + "]";
+				+ ", amount=" + amount + ", bookingDetails=" + bookingDetails + "]";
 	}
 
-
+	
 }

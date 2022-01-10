@@ -79,6 +79,29 @@
           </h3>
         </div>
       </div>
+
+
+      <div class="total__list white__bg">
+        <h2>Referral Activity Details</h2>
+        <angular2csv
+          [data]="signUpData"
+          class="download-button"
+          filename="Sign Up Data"
+          [options]="signUpDataOptions"
+          style="display: flex; margin: 10px; margin-left: 0"
+        ></angular2csv>
+        <div style="margin-bottom: 10px">
+          <!-- <h3>Daily SignUp : {{ userAnalytics.dailySignUpCount }}</h3> -->
+          <google-chart #chart
+   [title]="titleReferralTracker"
+   [type]="typeReferralTracker"
+   [data]="dataReferralTracker"
+   [options]="optionsReferralTracker"
+   [width]="ReferralTrackerWidth"
+   [height]="ReferralTrackerHeight">
+</google-chart>
+        </div>
+    </div>
     
   </div>
 </div>

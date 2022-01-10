@@ -248,7 +248,8 @@ public class MeetingService {
 				FGCredits credits=new FGCredits();
 				credits.setUser(repUsers.idExists(learner.getSid()));
 				credits.setBookingDetails(meetingBooked);
-				credits.setBalance("+"+referralCredit.getValue());
+				credits.setType("DEPOSIT");
+				credits.setAmount(Integer.valueOf(referralCredit.getValue()));
 				credits.setContext("Added "+referralCredit.getValue()+" FG for signing up via refer code");
 				repFGCredits.save(credits);
 				System.out.println("Credit Info : "+credits);
@@ -267,7 +268,8 @@ public class MeetingService {
 				
 				credits.setUser(repUsers.idExists(learner.getSid()));
 				credits.setBookingDetails(meetingBooked);
-				credits.setBalance("-"+creditsUsed);
+				credits.setType("WITHDRAW");
+				credits.setAmount(creditsUsed);
 				credits.setContext("Withdrawn "+creditsUsed+" FG for setting up meeting via refer code");
 				repFGCredits.save(credits);
 				System.out.println("Credit Info : "+credits);
@@ -303,7 +305,8 @@ public class MeetingService {
 		}
 	}
 
-	@Scheduled(cron = "0 10 19 1/1 * *")
+
+	@Scheduled(cron = "0 12 22 1/1 * *")
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<String> last2DatesInString = new ArrayList<String>();
@@ -370,8 +373,8 @@ public class MeetingService {
 									Cashback cashback=new Cashback();
 									cashback.setUser(ur.getUser());
 									cashback.setBookingDetails(b);
-									cashback.setBalance(String.valueOf(referralAmount));
-									cashback.setContext("Added Rs. "+String.valueOf(referralAmount)+" cashback as your referral completed meeting");
+									cashback.setAmount(referralAmount);
+									cashback.setContext("Added Rs. "+referralAmount+" cashback as your referral completed meeting");
 									System.out.println("Cashback Info ");
 									repCashback.save(cashback);
 									

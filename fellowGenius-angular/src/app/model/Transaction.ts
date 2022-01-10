@@ -7,8 +7,6 @@ export class Transaction{
 
     public totalAmount:Number;
 
-    public sumPaidAmount:Number;
-
     public remainingAmount:Number;
 
     public paidAmount:Number;

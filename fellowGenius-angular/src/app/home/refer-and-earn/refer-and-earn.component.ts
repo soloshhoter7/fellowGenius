@@ -31,7 +31,6 @@ export class ReferAndEarnComponent implements OnInit {
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
     private referralService: ReferralService
-
   ) {}
   referCode: any = '';
   userId: any = '';
@@ -170,6 +169,60 @@ export class ReferAndEarnComponent implements OnInit {
     )
   }
 
+  getColor(status){
+    switch(status){
+      case 'Meeting Completed':
+        return '#416a59';  
+      case 'Meeting Setup':
+        return '#f5eec2'; 
+      case 'Registered':
+        return '#8dc63f';
+      case 'Offer Expired':
+        return '#FF2D58'; 
+    }
+  }
+
+  getTextColor(status){
+    switch(status){
+      case 'Meeting Completed':
+        return '#FFFFFF !important';  
+      case 'Meeting Setup':
+        return '#000000'; 
+      case 'Registered':
+        return '#000000';
+      case 'Offer Expired':
+        return '#FFFFFF'; 
+    }
+  }
+
+  getClass(status,i){
+    let id='status_'+i;
+    if(status=='Meeting Completed'){
+      //let element=document.getElementById(id).style.color='#00000';
+      
+      return 'meetingCompleted';
+    }else if(status=='Meeting Setup'){
+      return 'meetingSetup';
+    }else if(status=='Registered'){
+      return 'registered';
+    }else if(status=='Offer Expired'){
+      return 'offerExpired';
+    }
+    // switch(status){
+    //   case 'Meeting Completed':
+          
+    //   case 'Meeting Setup':
+         
+    //   case 'Registered':
+        
+    //   case 'Offer Expired':
+        
+    // }
+  }
+
+  returnStatusId(i){
+    return "status_"+i;
+  }
   getReferCode() {
     if (this.referCode === '') {
       this.referCode = this.referCode.concat('FG');
@@ -257,30 +310,30 @@ Joining Link : -  ${this.linkedinURL}
 
   shareLinkedIn() {
     //this.copyLinkedinText();
-    $(".close-linkedin").click();
+    $('.close-linkedin').click();
     Swal.fire({
       title: 'Connect Linkedin Community to FellowGenius',
-      text: "Paste the text that we have copied for you and share via Post or direct message.",
+      text: 'Paste the text that we have copied for you and share via Post or direct message.',
       icon: 'info',
       showCancelButton: false,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Great'
+      confirmButtonText: 'Yes, Great',
     }).then((result) => {
       if (result.isConfirmed) {
         let linkedinURL = 'https://fellowgenius.com/';
-    let url = 'https://mail.google.com/mail/u/0/#inbox';
-    console.log(linkedinURL);
-    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${linkedinURL}`;
-    console.log('Hello from hello linkedin');
-    window.open(shareUrl, '_blank');  
+        let url = 'https://mail.google.com/mail/u/0/#inbox';
+        console.log(linkedinURL);
+        const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${linkedinURL}`;
+        console.log('Hello from hello linkedin');
+        window.open(shareUrl, '_blank');
       }
-    })
-    
+    });
   }
 
   shareWhatsapp() {
     const whatsappLink = this.getWhatsappMsgLink();
+    console.log(whatsappLink);
     window.open(whatsappLink, '_blank');
   }
 
@@ -312,7 +365,12 @@ ${siteurl}
     if (this.deviceType === 'Laptop') {
       whatsappLink = `https://web.whatsapp.com/send?text=${encmsg}`;
     } else if (this.deviceType === 'Mobile') {
-      whatsappLink = `https://wa.me/?text=${encmsg}`;
+      const mobileMessage=`Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
+`;
+      let encMobilemsg=encodeURI(mobileMessage);
+      encMobilemsg=encMobilemsg+'http%3A%2F%2Flocalhost%3A4200%2F%23%2Fsign-up%3Fpt%3DWA';
+      console.log(encMobilemsg);
+      whatsappLink = `https://wa.me/?text=${encMobilemsg}`;
     } else {
       console.log('Sorry something went wrong');
     }
@@ -328,9 +386,9 @@ ${siteurl}
   }
 
   sendMail() {
-    if(this.emailsArray.length==0){
+    if (this.emailsArray.length == 0) {
       this.snackBar.open('No email adresses added !', 'close', this.config);
-      $(".close-whatsapp").click();
+      $('.close-whatsapp').click();
       return;
     }
     console.log(this.emailsArray);
@@ -346,21 +404,18 @@ ${siteurl}
         }
       });
     //mat snackbar
-    $(".close-whatsapp").click();
-    Swal.fire('Congratulations','Mail Sent successfully!','success');
-    
+    $('.close-whatsapp').click();
+    Swal.fire('Congratulations', 'Mail Sent successfully!', 'success');
   }
 
-  extractInitialsOfFullName(fullName:String){
-    let result="";
+  extractInitialsOfFullName(fullName: String) {
+    let result = '';
     const nameArray = fullName.split(' ');
-      for (let name of nameArray) {
-        const initials: string = name.substring(0, 1);
-        result = result.concat(initials.toUpperCase());
-      }
+    for (let name of nameArray) {
+      const initials: string = name.substring(0, 1);
+      result = result.concat(initials.toUpperCase());
+    }
 
     return result;
   }
-
-
 }

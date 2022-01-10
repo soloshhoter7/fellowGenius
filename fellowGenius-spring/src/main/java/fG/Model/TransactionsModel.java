@@ -8,9 +8,7 @@ public class TransactionsModel {
 	
 	private String context;
 	
-	private double totalAmount;
-	
-	private double sumPaidAmount;
+	private double totalAmount;  
 	
 	private double remainingAmount;
 	
@@ -25,19 +23,19 @@ public class TransactionsModel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TransactionsModel(String userId, String name, String context, double totalAmount, double sumPaidAmount,
-			double remainingAmount, double paidAmount, String upiId, String transactionId) {
+	public TransactionsModel(String userId, String name, String context, double totalAmount, double remainingAmount,
+			double paidAmount, String upiId, String transactionId) {
 		super();
 		this.userId = userId;
 		this.name = name;
 		this.context = context;
 		this.totalAmount = totalAmount;
-		this.sumPaidAmount = sumPaidAmount;
 		this.remainingAmount = remainingAmount;
 		this.paidAmount = paidAmount;
 		this.upiId = upiId;
 		this.transactionId = transactionId;
 	}
+
 
 	public String getUserId() {
 		return userId;
@@ -71,13 +69,6 @@ public class TransactionsModel {
 		this.totalAmount = totalAmount;
 	}
 
-	public double getSumPaidAmount() {
-		return sumPaidAmount;
-	}
-
-	public void setSumPaidAmount(double sumPaidAmount) {
-		this.sumPaidAmount = sumPaidAmount;
-	}
 
 	public double getRemainingAmount() {
 		return remainingAmount;
@@ -111,12 +102,6 @@ public class TransactionsModel {
 		this.transactionId = transactionId;
 	}
 
-	@Override
-	public String toString() {
-		return "TransactionsModel [userId=" + userId + ", name=" + name + ", context=" + context + ", totalAmount="
-				+ totalAmount + ", sumPaidAmount=" + sumPaidAmount + ", remainingAmount=" + remainingAmount
-				+ ", paidAmount=" + paidAmount + ", upiId=" + upiId + ", transactionId=" + transactionId + "]";
-	}
-
+	
 		
 }

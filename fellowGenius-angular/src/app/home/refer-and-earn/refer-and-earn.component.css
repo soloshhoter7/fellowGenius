@@ -1,4 +1,25 @@
 /* --------------------Referral css----------------------------- */
+
+.table_btn{
+    color: unset !important;
+}
+
+.referral_status_btn{
+    min-height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 12px 30px;
+    font-weight: 500;
+    transition: .2s all;
+    border: none;
+    
+}
+
+table td.fld_status .td_btn .referral_status_btn {
+    width: 180px;
+}
 .Referal__dashbrd .sec__title p {
     color: #B5B3B3;
 }
@@ -13,9 +34,43 @@
 table th.fld_status, table td.fld_status {
     width: 160px;
 }
-table .td_btn .red_btn, table .td_btn .red_btn:hover {
+table .td_btn .red_btn, table .td_btn .red_btn{
     background-color: #FF2D58;
-    color: #fff !important;
+
+}
+
+.dashboard__Panel table td .table_btn .modified-css{
+    
+    min-height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 12px 30px;
+    font-weight: 500;
+    transition: .2s all;
+    border: none;
+    
+}
+
+.meetingCompleted{
+    background-color: #416a59 !important;
+    color:#FFFFFF !important;
+}
+
+.meetingSetup{
+    background-color: #f5eec2 !important;
+    color:#000000 !important;
+}
+
+.registered{
+    background-color: #8dc63f !important;
+    color:#000000 !important;
+}
+
+.offerExpired{
+    background-color: #FF2D58 !important;
+    color:#FFFFFF !important;
 }
 table td.fld_status .td_btn {
     justify-content: flex-start;
@@ -434,7 +489,7 @@ table td.fld_status .td_btn .table_btn {
 		top: 30px;
 	}
 	table td.fld_status .td_btn .table_btn {
-	    width: 110px;
+	    width: 155px;
 	}
 	table th.fld_status, table td.fld_status {
 	    width: 110px;
@@ -464,6 +519,25 @@ table td.fld_status .td_btn .table_btn {
 		padding: 7px;
 	}
   
+    .Referal__dashbrd .sec__title{
+		padding-right: 0;
+	}
+	.Referal__dashbrd .sec__title .credit__box {
+	    width: 120px;
+	    position: relative;
+        margin: 10px 5px 10px 5px;
+        border: 1px solid lightgray;
+	}
+
+    .Referal__dashbrd .sec__title .cashback__box {
+    
+        right: 0px !important;
+        width: 125px !important;
+        margin: 10px 5px 10px 5px;
+        border: 1px solid lightgray;
+    }
+
+
 }
 
 /* Modal Styling */

@@ -15,6 +15,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { LocationStrategy } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { C } from '@angular/cdk/keycodes';
+import { WindowRefService } from 'src/app/service/window-ref.service';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -69,6 +70,7 @@ export class StudentDashboardComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    window.scroll(0, 0);
     this.preventBackButton();
     if (window.innerWidth <= 800) {
       this.studentChartWidth = '320';
@@ -287,7 +289,7 @@ export class StudentDashboardComponent implements OnInit {
       var bDate = b.dateOfMeeting.split('/')[0];
       var bHour = b.startTimeHour;
       var bMinute = b.startTimeMinute;
- 
+
       return (
         new Date(aYear, aMonth, aDate, aHour, aMinute, 0, 0).valueOf() -
         new Date(bYear, bMonth, bDate, bHour, bMinute, 0, 0).valueOf()
@@ -521,7 +523,7 @@ export class StudentDashboardComponent implements OnInit {
           .fetchBookingStatus(myBooking.bid)
           .subscribe((res: any) => {
             console.log(res.status);
-            if (res.status == 'Pending'||res.status=='Accepted') {
+            if (res.status == 'Pending' || res.status == 'Accepted') {
               this.httpService
                 .deleteMyBooking(myBooking.bid)
                 .subscribe((response: any) => {

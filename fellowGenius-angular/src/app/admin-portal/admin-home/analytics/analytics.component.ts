@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ReferralActivityAnalytics } from 'src/app/model/referralActivityAnalytics';
 import { UserActivityAnalytics } from 'src/app/model/userActivityAnalytics';
 import { ActivityTimeDetails, UserData } from 'src/app/model/UserData';
 import { HttpService } from 'src/app/service/http.service';
@@ -9,7 +10,8 @@ import { HttpService } from 'src/app/service/http.service';
   styleUrls: ['./analytics.component.css'],
 })
 export class AnalyticsComponent implements OnInit {
-  constructor(private httpService: HttpService) {}
+    constructor(private httpService: HttpService) {}
+
   userAnalytics: UserActivityAnalytics;
   userData: UserData[] = [];
   loginData: ActivityTimeDetails[] = [];
@@ -67,6 +69,17 @@ export class AnalyticsComponent implements OnInit {
     removeNewLines: true,
     keys: ['userId', 'fullName', 'role', 'signUpTime', 'referralCode'],
   };
+  refferalDataOptions={
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalseparator: '.',
+    showLabels: false,
+    headers:['User Id','Full Name','Reffered By','Expert Code','Platform Type','Joined Time'],
+    title: 'Reffered Data',
+    useBom:false,
+    removeNewLines: true,
+    keys:['userId','fullName','referredBy','expertCode','platformType','JoinedTime'],
+  }
   meetingDataOptions = {
     fieldSeparator: ',',
     quoteStrings: '"',
@@ -123,43 +136,75 @@ export class AnalyticsComponent implements OnInit {
       'isRescheduled'
     ],
   };
+  referralAnalytics:ReferralActivityAnalytics;
+  //google chart data
+  titleReferralTracker = 'Referral Activity Tracker Chart';  
+  typeReferralTracker= 'PieChart';  
+  dataReferralTracker = [];  
+  columnNames = ['Name', 'Percentage'];  
+  optionsReferralTracker = {  colors: ['#FA0F0F', '#19ADEC', '#17E447'], is3D: true    
+  };  
+  ReferralTrackerWidth = 500;  
+  ReferralTrackerHeight = 300; 
 
   ngOnInit(): void {
     this.downloadUserData();
     this.downloadLoginData();
     this.downloadSignUpData();
     this.downloadMeetingData();
-    this.fetchAnalytics();
+    this.fetchUserAnalytics();
+    this.fetchReferralAnalytics();
   }
 
-  fetchAnalytics() {
+  fetchUserAnalytics() {
     this.httpService.fetchUserAnalytics().subscribe((res) => {
       this.userAnalytics = res;
       console.log(this.userAnalytics);
     });
   }
+
+  fetchReferralAnalytics(){
+    this.httpService.fetchReferralAnalytics().subscribe((res)=>{
+      this.referralAnalytics=res;
+      console.log(this.referralAnalytics);
+
+      this.dataReferralTracker=[ 
+     ['Linkedin', this.referralAnalytics.referralLinkedinCount],  
+     ['Mail', this.referralAnalytics.referralMailCount],
+     ['Whatsapp',this.referralAnalytics.referralWhatsappCount]  
+      ]
+    })
+  }
+
   downloadUserData() {
     this.httpService.fetchAllUserData().subscribe((res: any) => {
       this.userData = res;
       console.log(this.userData);
     });
   }
+
   downloadLoginData() {
     this.httpService.fetchAllLoginData().subscribe((res: any) => {
       this.loginData = res;
       console.log(this.loginData);
     });
   }
+
   downloadSignUpData() {
     this.httpService.fetchAllSignUpData().subscribe((res: any) => {
       this.signUpData = res;
       console.log(this.signUpData);
     });
   }
+
   downloadMeetingData() {
     this.httpService.fetchAllMeetingsData().subscribe((res: any) => {
       this.meetingData = res;
       console.log(this.meetingData);
     });
+  }
+
+  downloadReferralData(){
+    console.log('Inside the download referral data');
   }
 }

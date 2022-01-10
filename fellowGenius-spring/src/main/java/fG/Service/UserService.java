@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +33,7 @@ import fG.Entity.FeaturedExperts;
 import fG.Entity.LearningAreas;
 import fG.Entity.Notification;
 import fG.Entity.PendingTutorProfileDetails;
+import fG.Entity.ReferralActivity;
 import fG.Entity.ScheduleData;
 import fG.Entity.SocialLogin;
 import fG.Entity.StudentLogin;
@@ -54,6 +54,7 @@ import fG.Model.Category;
 import fG.Model.FGCreditModel;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.NotificationModel;
+import fG.Model.ReferralActivityAnalytics;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
@@ -78,6 +79,7 @@ import fG.Repository.repositoryFGCredits;
 import fG.Repository.repositoryFeaturedExperts;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositoryPendingTutorProfileDetails;
+import fG.Repository.repositoryReferralActivity;
 import fG.Repository.repositorySocialLogin;
 import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
@@ -168,6 +170,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	repositoryUserReferrals repUserReferrals;
+	
+	@Autowired
+	repositoryReferralActivity repReferralActivity;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -572,6 +577,7 @@ public class UserService implements UserDetailsService {
 					if(isValidFormatForReferralCode(user.getExpertCode())) {
 						System.out.println("Inside valid format");
 						updateReferralCompleted(parseReferralCode(user.getExpertCode()),user);
+						saveReferralActivity(user,registrationModel.getReferActivity());
 					}
 				}
 				return true;
@@ -625,6 +631,34 @@ public class UserService implements UserDetailsService {
 		}
 	}
 	
+	private void saveReferralActivity(Users user, String referActivityType) {
+		// TODO Auto-generated method stub
+		System.out.println("Refer Activity Type "+ referActivityType);
+		String referType=referActivityType.trim();
+		System.out.println(referActivityType.equals("LI"));
+		System.out.println(referType.equals("LI"));
+		if(!referActivityType.equals("NO")) {
+			ReferralActivity referralActivity=new ReferralActivity();
+			referralActivity.setUserId(user);
+			
+			if(referActivityType.equals("MA")) {
+				referralActivity.setType("MAIL");
+			}else if(referActivityType.equals("LI")) {
+				System.out.println("Inside the linkedin method");
+				referralActivity.setType("LINKEDIN");
+			}else if(referActivityType.equals("WA")){
+				referralActivity.setType("WHATSAPP");
+			}else {
+				
+			}
+			System.out.println("Refer Activity Object :"+referralActivity);
+			repReferralActivity.save(referralActivity);
+			System.out.println(referralActivity);
+		}else {
+			System.out.println("User has not come via refer URLs");
+		}
+	}
+
 	void updateReferralCompleted(String userId,Users user){
 		if(userId!=null&&userId!="") {
 			System.out.println(repUserReferrals.findByUserId(Integer.valueOf(userId)));
@@ -643,6 +677,8 @@ public class UserService implements UserDetailsService {
 			System.out.println("completed till here");
 			System.out.println("User referral here");
 			repUserReferrals.save(ur);
+			
+			
 		}
 		
 	}
@@ -1846,27 +1882,21 @@ public class UserService implements UserDetailsService {
 		// TODO Auto-generated method stub
 		List<FGCredits> creditList=repFGCredit.findByUserId(Integer.valueOf(userId));
 		ArrayList<FGCreditModel> creditModelList=new ArrayList<FGCreditModel>();
-		if(creditList==null) {
+		if(creditList!=null) {
 			
-		}else {
+		
 		
 		for(FGCredits credit:creditList) {
 			
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			FGCreditModel creditModel=new FGCreditModel();
 			creditModel.setDate(formatter.format(credit.getCreditDate()));
-			String balance=credit.getBalance();
 			
-			if(balance.substring(0, 1).equals("+")) {
-				creditModel.setType("+");
-				
-			}else {
-				creditModel.setType("-");
-			}
+			Integer amount=credit.getAmount();
 			
-			String amount=balance.substring(1);
+			creditModel.setType(credit.getType());
 			
-			creditModel.setBalance(amount);
+			creditModel.setAmount(amount);
 			
 			creditModel.setContext(credit.getContext());
 			
@@ -1893,7 +1923,7 @@ public class UserService implements UserDetailsService {
 			
 			cashbackModel.setContext(cashback.getContext());
 			
-		    cashbackModel.setBalance(cashback.getBalance());
+		    cashbackModel.setAmount(cashback.getAmount());
 		    
 		    System.out.println("Cashback Model "+cashbackModel);
 		    
@@ -1901,6 +1931,8 @@ public class UserService implements UserDetailsService {
 		}
 		return cashbackList;
 	}
+
+	
 
 	
 }
