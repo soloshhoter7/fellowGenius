@@ -292,6 +292,7 @@ public class Dao {
 	public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) {
 		TutorAvailabilityScheduleModel tutScheduleModel = new TutorAvailabilityScheduleModel();
 		ArrayList<ScheduleData> availableSchedules = new ArrayList<ScheduleData>();
+		System.out.println("HEYYY THEREEE");
 		TutorAvailabilitySchedule Schedule = repTutorSchedule.idExist(tid);
 		if (Schedule.getAllAvailabilitySchedule() != null) {
 			for (String schd : Schedule.getAllAvailabilitySchedule()) {

@@ -1,11 +1,13 @@
 package fG.Entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
 
-public class ScheduleData {
+public class ScheduleData implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public Integer Id;
 	public String Subject;
 	public String comments;

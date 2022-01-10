@@ -1,11 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {
-  appRoutes,
-  AppRoutingModule,
-  routerOptions,
-} from './app-routing.module';
+import { appRoutes, AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { NgxAgoraModule } from 'ngx-agora';
@@ -228,7 +224,7 @@ import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info
     MatDatepickerModule,
     MatNativeDateModule,
     MatMomentDateModule,
-    RouterModule.forRoot(appRoutes, routerOptions),
+    RouterModule.forRoot(appRoutes, { useHash: false }),
     Angular2CsvModule,
   ],
   entryComponents: [WelcomeComponent],

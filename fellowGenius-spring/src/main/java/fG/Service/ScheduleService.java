@@ -314,7 +314,8 @@ public class ScheduleService {
 									validDatesAccCount.add(formatter.format(addDaysToDate(startTimeSchedule, i)));
 								}
 								System.out.println("valid dates acc to count : " + validDatesAccCount);
-							} else if (frequency.equals("WEEKLY")) {
+							} 
+							else if (frequency.equals("WEEKLY")) {
 								ArrayList<String> byDays = breakByDayInRecurrenceRule(byDayCon);
 								System.out.println(byDays);
 								String d = getDayFromDate(formatter.format(startTimeSchedule));
@@ -344,7 +345,10 @@ public class ScheduleService {
 								System.out.println("valid dates acc to count : " + validDatesAccCount);
 								
 							}
-							lastDate = formatter.parse(validDatesAccCount.get(validDatesAccCount.size() - 1));
+							if(validDatesAccCount.size()>0) {
+								lastDate = formatter.parse(validDatesAccCount.get(validDatesAccCount.size() - 1));
+							}
+							
 							System.out.println("CONSTRAINT IS COUNT");
 							if (maxDate.getTime() > lastDate.getTime()) {
 								maxDate = lastDate;

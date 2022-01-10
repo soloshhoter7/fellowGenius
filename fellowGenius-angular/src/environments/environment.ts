@@ -25,22 +25,22 @@ export const environment = {
   //   messagingSenderId: "229275089793",
   //   appId: "1:229275089793:web:b63947fb4fb8f7538ac680"
   // },
-  firebaseConfig : {
-    apiKey: "AIzaSyCQpuz0dF9wNmoy06aEMq6jbZ1XJds5urY",
-    authDomain: "fellowgenius-d6054.firebaseapp.com",
-    projectId: "fellowgenius-d6054",
-    storageBucket: "fellowgenius-d6054.appspot.com",
-    messagingSenderId: "21597779006",
-    appId: "1:21597779006:web:ff6152cf475979871a8d6f",
-    measurementId: "G-PYQ5YQT27J"
+  firebaseConfig: {
+    apiKey: 'AIzaSyCQpuz0dF9wNmoy06aEMq6jbZ1XJds5urY',
+    authDomain: 'fellowgenius-d6054.firebaseapp.com',
+    projectId: 'fellowgenius-d6054',
+    storageBucket: 'fellowgenius-d6054.appspot.com',
+    messagingSenderId: '21597779006',
+    appId: '1:21597779006:web:ff6152cf475979871a8d6f',
+    measurementId: 'G-PYQ5YQT27J',
   },
   //razorpay payment client
   RAZORPAY_KEY_ID: 'rzp_test_B1W7ile7wVdDl1',
   // RAZORPAY_KEY_ID: 'rzp_live_MhUQ4PE6mDs80d',
-  
+
   //backendUrl
   BACKEND_URL: 'http://localhost:8080',
-  FRONTEND_PREFIX:'http://localhost:4200/#/'
+  FRONTEND_PREFIX: 'http://localhost:4200',
 };
 
 /*

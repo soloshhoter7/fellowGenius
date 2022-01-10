@@ -904,6 +904,7 @@ public class UserService implements UserDetailsService {
 			tutorModel.setLastLogin(returnLastLoginTime(tutProfileDetails.getTid()));
 			ArrayList<ScheduleTime> schedule = getTutorTimeAvailabilityTimeArray(
 					tutProfileDetails.getBookingId().toString());
+//			ArrayList<ScheduleTime> schedule = new ArrayList<ScheduleTime>();
 			if (schedule != null && schedule.size() != 0) {
 				tutorModel.setIsWeeklyCalendarUpdated(true);
 			} else {

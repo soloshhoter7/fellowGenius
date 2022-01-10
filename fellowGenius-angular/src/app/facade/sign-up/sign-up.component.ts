@@ -47,7 +47,7 @@ export class SignUpComponent implements OnInit {
     private socialService: SocialService,
     private zone: NgZone,
     private authService: AuthService,
-    private route:ActivatedRoute
+    private route: ActivatedRoute
   ) {}
   // --- parent child relationships ------------
   @ViewChild('loginRef', { static: true })
@@ -67,10 +67,10 @@ export class SignUpComponent implements OnInit {
   emailValid = false;
   hide: boolean = true;
   timeOut: boolean = true;
-  showExpertCode:boolean = false;
-  showPassword:boolean=false;
+  showExpertCode: boolean = false;
+  showPassword: boolean = false;
   // ---------- patterns --------------------------------
-  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,12}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,12}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
 
@@ -99,19 +99,19 @@ export class SignUpComponent implements OnInit {
   };
   //--------------------------------------------------------
   ngOnInit() {
-    window.scroll(0,0);
+    window.scroll(0, 0);
     this.prev_route = this.cookieService.get('prev');
     this.expert_userId = this.cookieService.get('expert_userId');
     this.expert_domain = this.cookieService.get('expert_domain');
     this.googleSDK();
-    if(this.route.snapshot.queryParams.pt==undefined){
-      this.showExpertCode=false;
-    }else{
-      this.showExpertCode=true;
+    if (this.route.snapshot.queryParams.pt == undefined) {
+      this.showExpertCode = false;
+    } else {
+      this.showExpertCode = true;
     }
   }
-  togglePassword(){
-    this.showPassword=!this.showPassword;
+  togglePassword() {
+    this.showPassword = !this.showPassword;
     console.log(this.showPassword);
   }
   goToPreviousUrl() {
@@ -145,23 +145,20 @@ export class SignUpComponent implements OnInit {
   otpChange() {
     console.log('input changes');
   }
-  onDigitInput(event){
-
+  onDigitInput(event) {
     let element;
     if (event.code !== 'Backspace')
-         element = event.srcElement.nextElementSibling;
- 
-     if (event.code === 'Backspace')
-         element = event.srcElement.previousElementSibling;
- 
-     if(element == null)
-         return;
-     else
-         element.focus();
- }
+      element = event.srcElement.nextElementSibling;
+
+    if (event.code === 'Backspace')
+      element = event.srcElement.previousElementSibling;
+
+    if (element == null) return;
+    else element.focus();
+  }
   seePassword() {
     console.log(this.hide);
-    
+
     $('.toggle-password').each(function (index) {
       $(this).on('click', function () {
         $(this).toggleClass('fa-eye fa-eye-slash');
@@ -173,8 +170,6 @@ export class SignUpComponent implements OnInit {
         }
       });
     });
-    
-    
   }
   toSignUpPage() {
     this.router.navigate(['sign-up']);
@@ -186,12 +181,12 @@ export class SignUpComponent implements OnInit {
   toHome() {
     this.router.navigate(['home']);
   }
-  openNewTab(val){
+  openNewTab(val) {
     const url = this.router.serializeUrl(
       this.router.createUrlTree(['terms-and-conditions'])
     );
     // console.log(url);
-    window.open(url,'_blank')
+    window.open(url, '_blank');
   }
   openThankYouPage() {
     const dialogConfig = new MatDialogConfig();
@@ -232,16 +227,6 @@ export class SignUpComponent implements OnInit {
   appendOtp(form: NgForm) {
     console.log(form);
     let otp: string = '';
-    // if (
-    //   !form.value.otp_1digit ||
-    //   !form.value.otp_2digit ||
-    //   !form.value.otp_3digit ||
-    //   !form.value.otp_4digit ||
-    //   !form.value.otp_5digit ||
-    //   !form.value.otp_6digit
-    // ) {
-    //   return null;
-    // }
     let otp_1digit = form.value.otp_1digit;
     let otp_2digit = form.value.otp_2digit;
     let otp_3digit = form.value.otp_3digit;
@@ -264,7 +249,7 @@ export class SignUpComponent implements OnInit {
       this.registrationModel.email = form.value.email;
       this.registrationModel.password = form.value.password;
       this.registrationModel.contact = form.value.contact;
-      this.registrationModel.expertCode = form.value.expertCode
+      this.registrationModel.expertCode = form.value.expertCode;
       this.registrationModel.role = 'Learner';
       this.httpClient
         .checkUser(this.registrationModel.email)
@@ -313,15 +298,16 @@ export class SignUpComponent implements OnInit {
           this.authService.onSignUp(this.registrationModel);
 
           this.authService.getAuthStatusListener().subscribe((res) => {
-            if (res == false) {
-              this.snackBar.open(
-                'registration not successful ! email already exists !',
-                'close',
-                this.config
-              );
-              this.incorrectLoginDetails = true;
-              this.dialogRef.closeAll();
-            } else if (res == true) {
+            // if (res == false) {
+            //   this.snackBar.open(
+            //     'registration not successful ! email already exists !',
+            //     'close',
+            //     this.config
+            //   );
+            //   this.incorrectLoginDetails = true;
+            //   this.dialogRef.closeAll();
+            // } else
+            if (res == true) {
               if (this.loginService.getLoginType() == 'Learner') {
                 if (this.prev_route != '') {
                   this.goToPreviousUrl();

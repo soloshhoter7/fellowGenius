@@ -19,13 +19,12 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.ico", "src/assets", "src/Web.config"],
             "styles": [
-              
-              "node_modules/select2/dist/css/select2.min.css", 
+              "node_modules/select2/dist/css/select2.min.css",
               "node_modules/select2/dist/js/select2.min.js",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-          
+
               "./src/styles.css",
               "./src/assets/css/mediaqueries.css",
               "src/assets/css/owl.theme.default.min.css",
@@ -41,7 +40,7 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/popper.js/dist/popper.min.js",
               "src/assets/js/bootstrap.bundle.min.js",
-              
+
               "node_modules/cropperjs/dist/cropper.min.js",
               "src/assets/js/owl.carousel.js"
             ]

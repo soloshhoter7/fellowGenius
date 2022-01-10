@@ -50,10 +50,6 @@ import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.co
 import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
 import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
 // const routes:Routes=[];
-export const routerOptions: ExtraOptions = {
-  anchorScrolling: 'enabled',
-  useHash: true,
-};
 export const appRoutes: Routes = [
   //post login
   {
@@ -81,7 +77,16 @@ export const appRoutes: Routes = [
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'view-tutors', component: ExpertProfileComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'sign-up', component: SignUpComponent },
+  {
+    path: 'sign-up',
+    component: SignUpComponent,
+    data: {
+      metadata: {
+        title: 'Sign Up',
+        description: 'Sign Up on Fellowgenius',
+      },
+    },
+  },
   { path: 'sign-up-expert', component: SignUpExpertComponent },
   { path: 'meeting/:id', component: MeetingComponent },
   { path: 'test', component: TestComponent },
@@ -106,9 +111,9 @@ export const appRoutes: Routes = [
           { path: 'verify-expert', component: VerifyExpertsComponent },
           { path: 'experts', component: ExpertsComponent },
           { path: 'expert-profile', component: PendingExpertProfileComponent },
-          { path: 'app-info',component: AppInfoComponent },
-          {path:'transactions-info',component: TransactionsInfoComponent },
-          {path:'referrals-info',component: ReferralsInfoComponent },
+          { path: 'app-info', component: AppInfoComponent },
+          { path: 'transactions-info', component: TransactionsInfoComponent },
+          { path: 'referrals-info', component: ReferralsInfoComponent },
         ],
       },
     ],
@@ -128,7 +133,7 @@ export const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, routerOptions)],
+  imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
