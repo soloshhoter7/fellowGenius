@@ -25,7 +25,7 @@ import { NotificationModel } from '../model/notification';
 import { environment } from 'src/environments/environment';
 import { AppInfo } from '../model/AppInfo';
 import { UserActivityAnalytics } from '../model/userActivityAnalytics';
-import { ActivityTimeDetails, UserData } from '../model/UserData';
+import { ActivityTimeDetails, ReferralActivityDetails, UserData } from '../model/UserData';
 import { UserReferralsInfo } from '../model/userReferralsInfo';
 import { adminReferralInfo } from '../model/adminReferralInfo';
 import { Transaction } from '../model/Transaction';
@@ -959,6 +959,12 @@ export class HttpService {
   fetchReferralAnalytics(): Observable<ReferralActivityAnalytics> {
     return this.http.get<ReferralActivityAnalytics>(
       this.backendUrl + '/fellowGenius/Admin/fetchReferralDataAnalytics'
+    );
+  }
+
+  fetchAllReferralData(): Observable<ReferralActivityDetails[]> {
+    return this.http.get<ReferralActivityDetails[]>(
+      this.backendUrl + '/fellowGenius/Admin/fetchAllReferralData'
     );
   }
 

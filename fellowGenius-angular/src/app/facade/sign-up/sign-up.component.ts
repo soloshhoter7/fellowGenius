@@ -109,12 +109,12 @@ export class SignUpComponent implements OnInit {
     this.expert_domain = this.cookieService.get('expert_domain');
     this.googleSDK();
 
-    if (this.route.snapshot.queryParams.pt == undefined) {
-      this.showExpertCode = false;
-      this.referActivity = 'NO';
-    } else {
+    if (this.route.snapshot.queryParams.pt=='WA'||this.route.snapshot.queryParams.pt=='MA'||this.route.snapshot.queryParams.pt=='LI') {
       this.showExpertCode = true;
       this.referActivity = this.route.snapshot.queryParams.pt;
+    } else {
+      this.showExpertCode = false;
+      this.referActivity = 'NO';
     }
     console.log(`Refer Activity is ${this.referActivity}`);
   }

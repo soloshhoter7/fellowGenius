@@ -5,7 +5,7 @@ export class Transaction{
 
     public context:String;
 
-    public totalAmount:Number;
+    public totalPaidAmount:Number;
 
     public remainingAmount:Number;
 

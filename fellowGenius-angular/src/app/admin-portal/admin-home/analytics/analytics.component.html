@@ -84,14 +84,15 @@
       <div class="total__list white__bg">
         <h2>Referral Activity Details</h2>
         <angular2csv
-          [data]="signUpData"
+          [data]="referralData"
           class="download-button"
-          filename="Sign Up Data"
-          [options]="signUpDataOptions"
+          filename="Referral Data"
+          [options]="refferalDataOptions"
           style="display: flex; margin: 10px; margin-left: 0"
         ></angular2csv>
         <div style="margin-bottom: 10px">
           <!-- <h3>Daily SignUp : {{ userAnalytics.dailySignUpCount }}</h3> -->
+          <div *ngIf="!disableReferralAnalytics; else noReferralAnalytics">
           <google-chart #chart
    [title]="titleReferralTracker"
    [type]="typeReferralTracker"
@@ -100,6 +101,10 @@
    [width]="ReferralTrackerWidth"
    [height]="ReferralTrackerHeight">
 </google-chart>
+</div>
+<ng-template #noReferralAnalytics>
+  No referral tracker data to display
+</ng-template>
         </div>
     </div>
     

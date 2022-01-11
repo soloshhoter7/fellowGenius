@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReferralActivityAnalytics } from 'src/app/model/referralActivityAnalytics';
 import { UserActivityAnalytics } from 'src/app/model/userActivityAnalytics';
-import { ActivityTimeDetails, UserData } from 'src/app/model/UserData';
+import { ActivityTimeDetails, UserData,ReferralActivityDetails } from 'src/app/model/UserData';
 import { HttpService } from 'src/app/service/http.service';
 
 @Component({
@@ -69,17 +69,7 @@ export class AnalyticsComponent implements OnInit {
     removeNewLines: true,
     keys: ['userId', 'fullName', 'role', 'signUpTime', 'referralCode'],
   };
-  refferalDataOptions={
-    fieldSeparator: ',',
-    quoteStrings: '"',
-    decimalseparator: '.',
-    showLabels: false,
-    headers:['User Id','Full Name','Reffered By','Expert Code','Platform Type','Joined Time'],
-    title: 'Reffered Data',
-    useBom:false,
-    removeNewLines: true,
-    keys:['userId','fullName','referredBy','expertCode','platformType','JoinedTime'],
-  }
+  
   meetingDataOptions = {
     fieldSeparator: ',',
     quoteStrings: '"',
@@ -136,7 +126,21 @@ export class AnalyticsComponent implements OnInit {
       'isRescheduled'
     ],
   };
+
+  referralData:ReferralActivityDetails[]=[];
+  refferalDataOptions={
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalseparator: '.',
+    showLabels: false,
+    headers:['User Id','Full Name','Reffered By','Expert Code','Joined Time','Platform Type'],
+    title: 'Reffered Data',
+    useBom:false,
+    removeNewLines: true,
+    keys:['userId','fullName','referredBy','expertCode','JoinedTime','Platform Type'],
+  }
   referralAnalytics:ReferralActivityAnalytics;
+  disableReferralAnalytics:boolean=true;
   //google chart data
   titleReferralTracker = 'Referral Activity Tracker Chart';  
   typeReferralTracker= 'PieChart';  
@@ -152,6 +156,7 @@ export class AnalyticsComponent implements OnInit {
     this.downloadLoginData();
     this.downloadSignUpData();
     this.downloadMeetingData();
+    this.downloadReferralData();
     this.fetchUserAnalytics();
     this.fetchReferralAnalytics();
   }
@@ -173,6 +178,8 @@ export class AnalyticsComponent implements OnInit {
      ['Mail', this.referralAnalytics.referralMailCount],
      ['Whatsapp',this.referralAnalytics.referralWhatsappCount]  
       ]
+
+      this.disableReferralAnalytics=false;
     })
   }
 
@@ -206,5 +213,10 @@ export class AnalyticsComponent implements OnInit {
 
   downloadReferralData(){
     console.log('Inside the download referral data');
+    this.httpService.fetchAllReferralData().subscribe((res: any)=> {
+      console.log('Referral excel data: '+res);
+      this.referralData=res;
+      console.log('Referral Data '+this.referralData);
+    })
   }
 }
