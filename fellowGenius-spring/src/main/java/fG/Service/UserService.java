@@ -1832,7 +1832,7 @@ public class UserService implements UserDetailsService {
 			upiId=tpd.getUpiId();
 		}
 		
-		if(upiId==""||upiId==null) {
+		if(upiId.equals("")||upiId==null) {
 			upiId="NOT_AVAILABLE";
 		}
 		
@@ -1870,9 +1870,10 @@ public class UserService implements UserDetailsService {
 			cashback.setRemainingCashback(0.0);
 			cashback.setRedeemedCashback(0.0);
 		}else {
-			cashback.setTotalCashback((double)userReferral.getPaymentDue());
-			cashback.setRemainingCashback(adminService.remainingAmount(user));
-			cashback.setRedeemedCashback(cashback.getTotalCashback()-cashback.getRemainingCashback());
+			
+			cashback.setRemainingCashback((double)userReferral.getPaymentDue());
+			cashback.setRedeemedCashback(adminService.getTotalPaidAmount(user));
+			cashback.setTotalCashback(cashback.getRedeemedCashback()+cashback.getRemainingCashback());
 		}
 		
 		System.out.println(cashback);

@@ -20,6 +20,7 @@ import fG.Model.BookingDetailsModel;
 import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.ReferralActivityAnalytics;
+import fG.Model.ReferralDataModel;
 import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.UserActivityAnalytics;
@@ -192,11 +193,16 @@ public class AdminController {
 	
 		
 	//fetching all referralActivity info for excel sheet
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/fetchAllReferralData")
+	public ArrayList<ReferralDataModel> fetchAllReferralData() {
+		return adminService.fetchAllReferralData();
+	}
 	
 	//fetching referral data Analytics
 	@PreAuthorize("hasAuthority('Admin')")
 	@RequestMapping(value = "/fetchReferralDataAnalytics")
-	public ReferralActivityAnalytics fetchReferralData()  {
+	public ReferralActivityAnalytics fetchReferralAnalytics()  {
 		return adminService.fetchReferralDataAnalytics();	
 	}
 	

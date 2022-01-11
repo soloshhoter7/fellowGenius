@@ -15,3 +15,12 @@ export class ActivityTimeDetails{
     signUpTime:string;
     referralCode:string;
 }
+
+export class ReferralActivityDetails{
+    userId:string;
+    fullName:string;
+    referredUser:string;
+    expertCode:string;
+    signUpTime:string;
+    platformType:string;
+}
