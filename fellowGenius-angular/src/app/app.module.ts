@@ -116,6 +116,7 @@ import { VoiceCallComponent } from './voice-call/voice-call.component';
 import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.component';
 import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
 import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
+import { expertisePriceValidator } from './custom-directives/expertisePriceValidator.directive';
 
 @NgModule({
   declarations: [
@@ -150,6 +151,7 @@ import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info
     SessionNotesComponent,
     RecordingsComponent,
     dobValidator,
+    expertisePriceValidator,
     ImagePreloadDirective,
     ExpertProfileComponent,
     NavBarComponent,

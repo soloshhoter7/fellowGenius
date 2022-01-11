@@ -67,10 +67,10 @@ export class StudentProfileComponent implements OnInit {
     verticalPosition: 'top',
     panelClass: ['snackbar'],
   };
-  invalidPicture:boolean = false;
-  pictureInfo:boolean = true;
-  emptyProfilePicture
-  userDob:any;
+  invalidPicture: boolean = false;
+  pictureInfo: boolean = true;
+  emptyProfilePicture;
+  userDob: any;
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -80,9 +80,9 @@ export class StudentProfileComponent implements OnInit {
     this.index = 1;
     // this.openNav();
     // this.disableSub = true;
-    console.log("hello"+this.studentService.getStudentProfileDetails());
+    console.log('hello' + this.studentService.getStudentProfileDetails());
     this.studentProfile = this.studentService.getStudentProfileDetails();
-    this.userDob=this.formatDateFromDB();
+    this.userDob = this.formatDateFromDB();
     console.log(this.userDob);
     if (this.studentProfile.profilePictureUrl != null) {
       this.profilePictureUrl = this.studentProfile.profilePictureUrl;
@@ -93,11 +93,11 @@ export class StudentProfileComponent implements OnInit {
     this.handleRefresh();
   }
 
-  formatDateFromString(dateString){
+  formatDateFromString(dateString) {
     //  Convert a "dd/MM/yyyy" string into a Date object
-    let d = dateString.split("/");
+    let d = dateString.split('/');
     let dat = new Date(d[2] + '/' + d[1] + '/' + d[0]);
-    return dat;    
+    return dat;
   }
 
   private _filter(value: string): string[] {
@@ -153,27 +153,38 @@ export class StudentProfileComponent implements OnInit {
   //   }
   // }
 
-  formatDateFromDB(){
+  formatDateFromDB() {
     console.log(this.studentProfile);
-    if(this.studentProfile.dateOfBirth==null||this.studentProfile.dateOfBirth==undefined){
-      this.userDob='';
-    }else{
-      this.userDob=this.formatDateFromString(this.studentProfile.dateOfBirth);
+    if (
+      this.studentProfile.dateOfBirth == null ||
+      this.studentProfile.dateOfBirth == undefined
+    ) {
+      this.userDob = '';
+    } else {
+      this.userDob = this.formatDateFromString(this.studentProfile.dateOfBirth);
     }
-    
+
     return this.userDob;
   }
-  
-  formatDobFromMoment(momentDate: any){
-     console.log(momentDate);
-     let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
-     return formattedDate;
-   }
+
+  formatDobFromMoment(momentDate: any) {
+    let momentObject;
+    if (momentDate._isAMomentObject == true) {
+      momentObject = momentDate;
+    } else {
+      let date: Date = new Date(momentDate);
+      momentObject = moment(date);
+    }
+    let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
+    return formattedDate;
+  }
 
   saveStudentProfile(form: NgForm) {
     this.studentProfile.contact = form.value.contact;
-    this.studentProfile.dateOfBirth = this.formatDobFromMoment(form.value.userDob);
-    console.log("Saving dob" + this.studentProfile.dateOfBirth);
+    this.studentProfile.dateOfBirth = this.formatDobFromMoment(
+      form.value.userDob
+    );
+    console.log('Saving dob' + this.studentProfile.dateOfBirth);
     this.studentProfile.fullName = form.value.fullName;
     this.studentProfile.linkedInProfile = form.value.linkedInProfile;
     this.studentProfile.learningAreas = this.learningAreas;
@@ -182,7 +193,7 @@ export class StudentProfileComponent implements OnInit {
     this.studentProfile.highestQualification = form.value.highestQualification;
     this.studentProfile.currentOrganisation = form.value.currentOrganisation;
     this.studentProfile.currentDesignation = form.value.currentDesignation;
-    this.studentProfile.upiID = form.value.upiID
+    this.studentProfile.upiID = form.value.upiID;
     console.log(this.studentProfile);
     if (this.learningAreasDuplicacyCheck(this.learningAreas)) {
       this.httpService
@@ -332,9 +343,9 @@ export class StudentProfileComponent implements OnInit {
     if (!this.studentProfile.sid) {
       setTimeout(() => {
         this.studentProfile = this.studentService.getStudentProfileDetails();
-        this.userDob=this.formatDateFromDB();
-    
-    console.log(this.userDob);
+        this.userDob = this.formatDateFromDB();
+
+        console.log(this.userDob);
         if (this.studentProfile.profilePictureUrl != null) {
           this.profilePictureUrl = this.studentProfile.profilePictureUrl;
         }

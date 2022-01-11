@@ -40,15 +40,15 @@ export class WelcomeComponent implements OnInit {
   socialLoginName;
   role = 'Learner';
   hide: boolean = true;
-  password:string = ' ';
-  showExpertCode:boolean = false;
-  data =  new AppData('');
-    // ---------- patterns --------------------------------
-    mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
-    passwordPattern =
-      '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  password: string = ' ';
+  showExpertCode: boolean = false;
+  data = new AppData('');
+  // ---------- patterns --------------------------------
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  referCodePattern = '^FG22[A-Z]{2}[\\d]{4}$';
 
-      
   ngOnInit() {
     if (this.loginService.getLoginType()) {
       this.loginType = this.loginService.getLoginType();
@@ -73,15 +73,20 @@ export class WelcomeComponent implements OnInit {
     // this.role = form.value.role;
     console.log(this.role);
     console.log(this.data.name);
-    console.log(this.expertCode)
-    if ((this.role == 'Learner' || this.role == 'Expert')&&(this.data.name!=null)) {
-      
+    console.log(this.expertCode);
+    if (
+      (this.role == 'Learner' || this.role == 'Expert') &&
+      this.data.name != null
+    ) {
       let dialogData = {
-        role:this.role,
-        password:this.data.name,
-        expertCode:this.expertCode
+        role: this.role,
+        password: this.data.name,
+        expertCode: this.expertCode,
       };
       this.dialogRef.close(dialogData);
     }
+  }
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

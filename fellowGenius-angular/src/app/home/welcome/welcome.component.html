@@ -11,7 +11,7 @@
         </div>
         <div class="access_field_box">
           <div class="access_header">
-            <a href="" class="back_button"
+            <a href="javascript:;" class="back_button" (click)="closeDialog()"
               ><img src="../../../assets/images/arrow-grey.svg" alt="#"
             /></a>
             <a href="" class="accs_logo"
@@ -75,10 +75,17 @@
                     name="expCode"
                     ngModel
                     [(ngModel)]="expertCode"
+                    [pattern]="referCodePattern"
                     class="form-control"
                     maxlength="50"
                     placeholder="Enter Expert Code"
+                    #expCode="ngModel"
                   />
+                  <span
+                        class="help-block"
+                        *ngIf="!expCode.valid && expCode.touched"
+                        >Invalid Expert Code</span
+                      >
                 </div>
                 <button type="button" class="button form_Btn" (click)="toDashboard()" [disabled]="!password.valid">Sign up</button>
               </form>

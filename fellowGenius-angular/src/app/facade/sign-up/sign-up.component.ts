@@ -29,6 +29,7 @@ import { tutorAvailabilitySchedule } from 'src/app/model/tutorAvailabilitySchedu
 import { SocialService } from 'src/app/service/social.service';
 import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 import { AuthService } from 'src/app/service/auth.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -74,6 +75,7 @@ export class SignUpComponent implements OnInit {
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,12}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  referCodePattern = '^FG22[A-Z]{2}[\\d]{4}$';
 
   //  ----------- data fields ------------------------------
   verificationOtp;
@@ -98,7 +100,8 @@ export class SignUpComponent implements OnInit {
     horizontalPosition: 'center',
     verticalPosition: 'top',
   };
-  //--------------------------------------------------------
+  //---------------------- subscriptions ------------------
+  signUpSuccessfulSubscription: Subscription;
   ngOnInit() {
     window.scroll(0, 0);
     this.prev_route = this.cookieService.get('prev');
@@ -198,29 +201,37 @@ export class SignUpComponent implements OnInit {
     dialogConfig.disableClose = true;
     const dialogRef = this.dialogRef.open(WelcomeComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
-      this.role = data.role;
-      this.registrationModel.role = 'Learner';
-      this.registrationModel.password = data.password;
-      this.registrationModel.expertCode = data.expertCode;
-      this.authService.saveSocialLogin(this.registrationModel);
-      this.authService.getAuthStatusListener().subscribe((res) => {
-        if (res == true) {
-          if (this.loginService.getLoginType() == 'Learner') {
-            if (this.prev_route != '') {
-              this.goToPreviousUrl();
-            } else {
-              this.snackBar.open(
-                'You have successfully Signed up',
-                'close',
-                this.config
-              );
-              this.toFacadePage();
+      if (data != null) {
+        this.role = data.role;
+        this.registrationModel.role = 'Learner';
+        this.registrationModel.password = data.password;
+        this.registrationModel.expertCode = data.expertCode;
+        this.authService.saveSocialLogin(this.registrationModel);
+
+        this.signUpSuccessfulSubscription = this.authService
+          .getAuthStatusListener()
+          .subscribe((res) => {
+            if (res == true) {
+              if (this.loginService.getLoginType() == 'Learner') {
+                if (this.prev_route != '') {
+                  this.goToPreviousUrl();
+                } else {
+                  this.snackBar.open(
+                    'You have successfully Signed up',
+                    'close',
+                    this.config
+                  );
+                  this.signUpSuccessfulSubscription.unsubscribe();
+                  this.toFacadePage();
+                }
+              } else if (this.loginService.getLoginType() == 'Expert') {
+                this.toHome();
+              }
             }
-          } else if (this.loginService.getLoginType() == 'Expert') {
-            this.toHome();
-          }
-        }
-      });
+          });
+      } else {
+        this.isLoading = false;
+      }
     });
   }
   openTermsAndConditions() {
@@ -304,33 +315,36 @@ export class SignUpComponent implements OnInit {
           this.registrationModel.referActivity = this.referActivity;
           this.authService.onSignUp(this.registrationModel);
 
-          this.authService.getAuthStatusListener().subscribe((res) => {
-            // if (res == false) {
-            //   this.snackBar.open(
-            //     'registration not successful ! email already exists !',
-            //     'close',
-            //     this.config
-            //   );
-            //   this.incorrectLoginDetails = true;
-            //   this.dialogRef.closeAll();
-            // } else
-            if (res == true) {
-              if (this.loginService.getLoginType() == 'Learner') {
-                if (this.prev_route != '') {
-                  this.goToPreviousUrl();
-                } else {
-                  this.snackBar.open(
-                    'You have successfully signed up',
-                    'close',
-                    this.config
-                  );
-                  this.toFacadePage();
+          this.signUpSuccessfulSubscription = this.authService
+            .getAuthStatusListener()
+            .subscribe((res) => {
+              // if (res == false) {
+              //   this.snackBar.open(
+              //     'registration not successful ! email already exists !',
+              //     'close',
+              //     this.config
+              //   );
+              //   this.incorrectLoginDetails = true;
+              //   this.dialogRef.closeAll();
+              // } else
+              if (res == true) {
+                if (this.loginService.getLoginType() == 'Learner') {
+                  if (this.prev_route != '') {
+                    this.goToPreviousUrl();
+                  } else {
+                    this.snackBar.open(
+                      'You have successfully signed up',
+                      'close',
+                      this.config
+                    );
+                    this.signUpSuccessfulSubscription.unsubscribe();
+                    this.toFacadePage();
+                  }
+                } else if (this.loginService.getLoginType() == 'Expert') {
+                  this.toHome();
                 }
-              } else if (this.loginService.getLoginType() == 'Expert') {
-                this.toHome();
               }
-            }
-          });
+            });
         } else {
           this.wrongOtp = true;
         }

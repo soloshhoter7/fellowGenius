@@ -150,7 +150,6 @@ public class MeetingService {
 		bkModel.setStartTimeHour(booking.getStartTimeHour());
 		bkModel.setStartTimeMinute(booking.getStartTimeMinute());
 		bkModel.setStudentId(booking.getStudentId());
-		bkModel.setTutorId(booking.getTutorId());
 		bkModel.setStudentName(booking.getStudentName());
 		bkModel.setTutorName(booking.getTutorName());
 		bkModel.setApprovalStatus(booking.getApprovalStatus());
@@ -306,7 +305,7 @@ public class MeetingService {
 	}
 
 
-	@Scheduled(cron = "0 12 22 1/1 * *")
+	@Scheduled(cron = "0 38 22 1/1 * *")
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<String> last2DatesInString = new ArrayList<String>();

@@ -10,9 +10,9 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { HttpService } from 'src/app/service/http.service';
 import { UserReferralsInfo } from 'src/app/model/UserReferralsInfo';
 import { ReferralService } from 'src/app/service/referral.service';
-import {environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { CashbackEarned } from 'src/app/model/CashbackEarned';
 import { FGCredits } from 'src/app/model/FGCredits';
 import { CashbackInfo } from 'src/app/model/CashbackInfo';
@@ -34,8 +34,8 @@ export class ReferAndEarnComponent implements OnInit {
   ) {}
   referCode: any = '';
   userId: any = '';
-  FGCredits:Number;
-  CashbackInfo:CashbackEarned;
+  FGCredits: Number;
+  CashbackInfo: CashbackEarned;
   fullName: any = '';
   userEmail: any;
   //email chips variable
@@ -47,8 +47,8 @@ export class ReferAndEarnComponent implements OnInit {
   isLoading = false;
   linkSent = false;
   userReferralInfoList: UserReferralsInfo[] = [];
-  creditsTableInfo: FGCredits[]=[]
-  cashbackTableInfo: CashbackInfo[]=[]
+  creditsTableInfo: FGCredits[] = [];
+  cashbackTableInfo: CashbackInfo[] = [];
   //SHARE DATA VARIABLES
   wSize = 'width=600,height=460';
   title = 'share';
@@ -56,7 +56,7 @@ export class ReferAndEarnComponent implements OnInit {
   siteURL = environment.FRONTEND_PREFIX;
   deviceType: string = '';
 
-  linkedinURL = environment.FRONTEND_PREFIX+'sign-up?pt=LI';
+  linkedinURL = environment.FRONTEND_PREFIX + 'sign-up?pt=LI';
   config: MatSnackBarConfig = {
     duration: 5000,
     horizontalPosition: 'center',
@@ -116,13 +116,14 @@ export class ReferAndEarnComponent implements OnInit {
   }
   initialiseFGCredits() {
     this.httpService.getFGCreditsOfUser(this.userId).subscribe(
-      (res)=>{
+      (res) => {
         console.log(res);
-        this.FGCredits=res;
-    },(err)=>{
-      console.log(err);
-
-    })
+        this.FGCredits = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   getUserId() {
@@ -138,90 +139,84 @@ export class ReferAndEarnComponent implements OnInit {
     );
   }
 
-  initialiseCashbackInfo(){
-    this.httpService.getCashbackEarnedOfUser(this.userId).subscribe(
-      (res)=>{
-        console.log(res);
-        this.CashbackInfo=res;
-        if(this.CashbackInfo.totalCashback>0){
-          this.initialiseCashbackTableInfo();
-        }
+  initialiseCashbackInfo() {
+    this.httpService.getCashbackEarnedOfUser(this.userId).subscribe((res) => {
+      console.log(res);
+      this.CashbackInfo = res;
+      if (this.CashbackInfo.totalCashback > 0) {
+        this.initialiseCashbackTableInfo();
       }
-    );
+    });
   }
 
-  initialiseCashbackTableInfo(){
-    this.httpService.getCashbackTableOfUser(this.userId).subscribe(
-      (res)=>{
-        console.log(res);
-        this.cashbackTableInfo=res;
-      }
-    )
-  }
-  
-  initialiseFGCreditsTableInfo(){
-    this.httpService.getFGCreditsTableOfUser(this.userId).subscribe(
-      (res)=>{
-        console.log(res);
-        this.creditsTableInfo=res;
-        console.log("Credits Table Info "+ this.creditsTableInfo);
-      }
-    )
+  initialiseCashbackTableInfo() {
+    this.httpService.getCashbackTableOfUser(this.userId).subscribe((res) => {
+      console.log(res);
+      this.cashbackTableInfo = res;
+    });
   }
 
-  getColor(status){
-    switch(status){
+  initialiseFGCreditsTableInfo() {
+    this.httpService.getFGCreditsTableOfUser(this.userId).subscribe((res) => {
+      console.log(res);
+      this.creditsTableInfo = res;
+      console.log('Credits Table Info ' + this.creditsTableInfo);
+    });
+  }
+
+  getColor(status) {
+    switch (status) {
       case 'Meeting Completed':
-        return '#416a59';  
+        return '#416a59';
       case 'Meeting Setup':
-        return '#f5eec2'; 
+        return '#f5eec2';
       case 'Registered':
         return '#8dc63f';
       case 'Offer Expired':
-        return '#FF2D58'; 
+        return '#FF2D58';
     }
   }
 
-  getTextColor(status){
-    switch(status){
+  getTextColor(status) {
+    switch (status) {
       case 'Meeting Completed':
-        return '#FFFFFF !important';  
+        return '#FFFFFF !important';
       case 'Meeting Setup':
-        return '#000000'; 
+        return '#000000';
       case 'Registered':
         return '#000000';
       case 'Offer Expired':
-        return '#FFFFFF'; 
+        return '#FFFFFF';
     }
   }
 
-  getClass(status,i){
-    let id='status_'+i;
-    if(status=='Meeting Completed'){
+  getClass(status, i) {
+    let id = 'status_' + i;
+    if (status == 'Meeting Completed') {
       //let element=document.getElementById(id).style.color='#00000';
-      
+
       return 'meetingCompleted';
-    }else if(status=='Meeting Setup'){
+    } else if (status == 'Meeting Setup') {
       return 'meetingSetup';
-    }else if(status=='Registered'){
+    } else if (status == 'Registered') {
       return 'registered';
-    }else if(status=='Offer Expired'){
+    } else if (status == 'Offer Expired') {
       return 'offerExpired';
     }
     // switch(status){
     //   case 'Meeting Completed':
-          
+
     //   case 'Meeting Setup':
-         
+
     //   case 'Registered':
-        
+
     //   case 'Offer Expired':
-        
+
     // }
   }
 
-  returnStatusId(i){
-    return "status_"+i;
+  returnStatusId(i) {
+    return 'status_' + i;
   }
   getReferCode() {
     if (this.referCode === '') {
@@ -321,7 +316,7 @@ Joining Link : -  ${this.linkedinURL}
       confirmButtonText: 'Yes, Great',
     }).then((result) => {
       if (result.isConfirmed) {
-        let linkedinURL = 'https://fellowgenius.com/';
+        let linkedinURL = 'https://fellowgenius.com/sign-up';
         let url = 'https://mail.google.com/mail/u/0/#inbox';
         console.log(linkedinURL);
         const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${linkedinURL}`;
@@ -355,7 +350,7 @@ Joining Link : -  ${this.linkedinURL}
   }
 
   getWhatsappMsgLink() {
-    const siteurl = environment.FRONTEND_PREFIX+'sign-up?pt=WA';
+    const siteurl = environment.FRONTEND_PREFIX + 'sign-up?pt=WA';
     const message = `Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
 ${siteurl}
     `;
@@ -365,10 +360,12 @@ ${siteurl}
     if (this.deviceType === 'Laptop') {
       whatsappLink = `https://web.whatsapp.com/send?text=${encmsg}`;
     } else if (this.deviceType === 'Mobile') {
-      const mobileMessage=`Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
+      const mobileMessage = `Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
 `;
-      let encMobilemsg=encodeURI(mobileMessage);
-      encMobilemsg=encMobilemsg+'http%3A%2F%2Flocalhost%3A4200%2F%23%2Fsign-up%3Fpt%3DWA';
+      let encMobilemsg = encodeURI(mobileMessage);
+      encMobilemsg =
+        encMobilemsg +
+        'http%3A%2F%2Flocalhost%3A4200%2F%23%2Fsign-up%3Fpt%3DWA';
       console.log(encMobilemsg);
       whatsappLink = `https://wa.me/?text=${encMobilemsg}`;
     } else {

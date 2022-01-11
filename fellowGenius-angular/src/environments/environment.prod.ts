@@ -27,5 +27,5 @@ export const environment = {
 
   //backend url for production build
   BACKEND_URL: 'https://backend.fellowgenius.com',
-  FRONTEND_PREFIX: 'https://fellowgenius.com',
+  FRONTEND_PREFIX: 'https://fellowgenius.com/',
 };

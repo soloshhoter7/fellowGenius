@@ -572,7 +572,6 @@ public class UserService implements UserDetailsService {
 				repUserActivity.save(userActivity);
 				
 				if(user.getExpertCode()!=null) {
-					
 					System.out.println("User expert code: "+user.getExpertCode());
 					if(isValidFormatForReferralCode(user.getExpertCode())) {
 						System.out.println("Inside valid format");
