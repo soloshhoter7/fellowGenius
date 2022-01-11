@@ -11,6 +11,7 @@
           </div>
           <div class="referal__table">
             <div class="table-responsive">
+              <div *ngIf="pendingTransactions.length!=0; else noPendingTransactions">
               <table class="table">
                 <thead>
                   <tr>
@@ -31,21 +32,22 @@
                     </td>
                     <td class="fld_email">{{pendingTransaction.name}}</td>
                     <td class="fld_email">{{pendingTransaction.context}}</td>
-                    <td class="fld_email">{{pendingTransaction.totalAmount}}</td>
-                    <td class="fld_email">{{pendingTransaction.sumPaidAmount}}</td>
+                    <td class="fld_email">{{pendingTransaction.totalPaidAmount+pendingTransaction.remainingAmount}}</td>
+                    <td class="fld_email">{{pendingTransaction.totalPaidAmount}}</td>
                     <td class="fld_email">{{pendingTransaction.remainingAmount}}</td>
                     <td class="fld_email">{{pendingTransaction.upiId}}</td>
                     <td class="fld_status" >
                       <div class="td_btn" style="justify-content: left;">
-                        <button
-                        [disabled]="isUpiIdNotAvailable(pendingTransaction)"
-                        class="table_btn connect_btn">
                         <a href="javascript:void(0)"
                         href="#{{pendingTransaction.userId}}"
                         data-toggle="modal">
+                        <button
+                        [disabled]="isUpiIdNotAvailable(pendingTransaction)"
+                        class="table_btn connect_btn">
                         Pay
-                        </a>
+                        
                         </button>
+                        </a>
                       </div>
                     </td>
 
@@ -96,7 +98,7 @@
                             />
                             </div>
                           </div>
-                          <div class="row">
+                          <div class="row" style="margin-top:10px;">
                             <div class="col-md-4">
                               Transaction ID
                             </div>
@@ -155,6 +157,10 @@
                 </tbody>
               </table>
             </div>
+            <ng-template #noPendingTransactions>
+              No pending transactions to display
+            </ng-template>
+            </div>
           </div>
 
           <!-- pending transaction table ends -->
@@ -167,6 +173,7 @@
           <!--previous transaction table starts -->
           <div class="referal__table">
             <div class="table-responsive">
+              <div *ngIf="previousTransactions.length!=0; else noPreviousTransactions">
               <table class="table">
                 <thead>
                   <tr>
@@ -197,6 +204,10 @@
                   
                 </tbody>
               </table>
+            </div>
+            <ng-template #noPreviousTransactions>
+              No previous transactions
+            </ng-template>
             </div>
           </div>
 
