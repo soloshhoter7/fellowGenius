@@ -9,8 +9,8 @@
                 <div class="col-12 col-md-2">
                     <h3>Referrer Details</h3>
                 </div>
-                <div class="col-12 col-md-6">
-  {{ReferralInfo.referrerInfo.userId}}         {{ReferralInfo.referrerInfo.fullName}}       {{ReferralInfo.referrerInfo.email}}    
+                <div class="col-12 col-md-5">
+  {{ReferralInfo.referrerInfo.userId}}  {{ReferralInfo.referrerInfo.fullName}}  {{ReferralInfo.referrerInfo.email}}    
                     <!-- Textbox -->
                     <!-- <div class="row">
                       <div class="col-md-2">
@@ -24,24 +24,34 @@
                       </div>
                     </div> -->
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-3">
                   <button   
                   class="button form_Btn"
                   >
-                  Amount:- {{ReferralInfo.referrerPaymentDue}}
+                  Payment Due:- {{ReferralInfo.referrerPaymentDue}}
+                </button>
+                </div>
+
+                <div class="col-12 col-md-2">
+                  <button id="{{ReferralInfo.referrerInfo.userId}}3"
+                  class="button form_Btn"
+                  (click)="showReferralInfo(ReferralInfo.referrerInfo.userId)"
+                  
+                  >
+                  View Details
                 </button>
                 </div>
             </div>
             
           </div>
-
+          <div id="{{ReferralInfo.referrerInfo.userId}}" style="display:none">
             <!-- Accordion card -->
   <div class="card">
 
     <!-- Card header -->
     <div class="card-header" role="tab" id="headingTwo2">
       <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" 
-      href="#{{ReferralInfo.referrerInfo.userId}}"
+      href="#{{ReferralInfo.referrerInfo.userId}}2"
         aria-expanded="false" aria-controls="collapseTwo2">
         <h5 class="mb-0">
          User Referred Details  <i class="fas fa-angle-down rotate-icon"></i>
@@ -50,7 +60,7 @@
     </div>
 
     <!-- Card body -->
-    <div id="{{ReferralInfo.referrerInfo.userId}}" 
+    <div id="{{ReferralInfo.referrerInfo.userId}}2" 
     class="collapse" role="tabpanel" aria-labelledby="headingTwo2"
       data-parent="#accordionEx">
       <div class="card-body">
@@ -146,12 +156,12 @@
                       </td>
                     <td class="fld_name">
                       <div class="nme_style">
-      {{meetingsSetup.startTimeHour}}:{{meetingsSetup.startTimeMinute}}-{{meetingsSetup.endTimeHour}}:{{meetingsSetup.endTimeMinute}} (Duration:- {{meetingsSetup.duration}} minutes)
+      {{meetingsSetup.startTimeHour}}:{{meetingsSetup.startTimeMinute}}-{{meetingsSetup.endTimeHour}}:{{meetingsSetup.endTimeMinute}} (Duration:- {{meetingsSetup.duration}} minutes) {{meetingsSetup.dateOfMeeting}}
                       </div>
                     </td>
                     <td class="fld_email">{{meetingsSetup.amount}}</td>
                     <td class="fld_status">
-                      {{meetingsSetup.dateOfMeeting}}
+                      {{meetingsSetup.creationTime}}
                     </td>
                   </tr>
 
@@ -217,12 +227,12 @@
                       </td>
                     <td class="fld_name">
                       <div class="nme_style">
-      {{meetingsCompleted.startTimeHour}}:{{meetingsCompleted.startTimeMinute}}-{{meetingsCompleted.endTimeHour}}:{{meetingsCompleted.endTimeMinute}} (Duration:- {{meetingsCompleted.duration}} minutes)
+      {{meetingsCompleted.startTimeHour}}:{{meetingsCompleted.startTimeMinute}}-{{meetingsCompleted.endTimeHour}}:{{meetingsCompleted.endTimeMinute}} (Duration:- {{meetingsCompleted.duration}} minutes) {{meetingsCompleted.dateOfMeeting}}
                       </div>
                     </td>
                     <td class="fld_email">{{meetingsCompleted.amount}}</td>
                     <td class="fld_status">
-                      {{meetingsCompleted.dateOfMeeting}}
+                      {{meetingsCompleted.creationTime}}
                     </td>
                   </tr>
 
@@ -242,6 +252,8 @@
 
   </div>
          
+
+</div>
           
          
         </div>

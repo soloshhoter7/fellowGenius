@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,12 @@ public class MailService {
 	String senderEmail;
 	@Value("${senderPassword}")
 	String senderPassword;
+	
 	@Value("${rootUrl}")
 	String rootUrl;
+	
+	@Autowired
+	private Environment env;
 
 	static Properties props;
 	static Session session;
@@ -89,8 +94,7 @@ public class MailService {
 	void sendVerificationEmail(String email, String otp) {
 		InitiateMailService("registration@fellowgenius.com");
 		String from ="registration@fellowgenius.com";
-		String to = email;
-		
+		String to = email;		
 		if (session == null) {
 			System.out.println("SESSION IS NULL");
 		}
@@ -584,15 +588,17 @@ public class MailService {
 					+ "          <img src='cid:logoImage' style=\"width: 90px\" />\r\n" + "        </div>\r\n"
 					+ "        <div style=\"width: 100%; display: inline-block\">\r\n"
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Below text sent to email adresses you referred</p><br />\r\n"
-					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hello there</p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hi there,</p>\r\n"
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-					+ "            Thinking about how to get an expert's advice on your ongoing project. Use the referral code below and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.\r\n"
-					+ "<br />\r\n"
+					+ "           Are you looking for expert advice for your on-going project at work? Join the FellowGenius community and connect with experts across domains for help and support.</p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "			  To make learning more rewarding, use the referral code below while signing up and earn rewards worth INR 200 when you complete your 1st session with a FellowGenius expert.</p>\r\n"
+					+ "			 <br />	"		
 					+ " <div style=\"width: 94%; background-color: #F7F7F7; display: inline-block; padding: 8px; text-align: center; border-radius: 15px; font-size: 40px; font-weight: 400; color: #202124; letter-spacing: 2px;\">"
 					+ referCode + "</div> <br />\r\n"
-					+ "            Enter the refer code by clicking the link below.\r\n" + "          </p>\r\n"
+					
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-					+ "            <a href=\"" + directUrl + "\">Joining Link</a>\r\n" + "          </p>\r\n"
+					+ "          Click <a href=\"" + directUrl + "\">here</a>\r\n" + " to sign up now.  </p>\r\n"
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
 					+ "            <br />"
 					+ "Regards,<br />Team FellowGenius\r\n" + "          </p>\r\n"
@@ -635,15 +641,17 @@ public class MailService {
 					+ "        <div style=\"width: 100%; display: inline-block; margin-bottom: 20px\">\r\n"
 					+ "          <img src='cid:logoImage' style=\"width: 90px\" />\r\n" + "        </div>\r\n"
 					+ "        <div style=\"width: 100%; display: inline-block\">\r\n"
-					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hello there</p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">Hi There,</p>\r\n"
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-					+ "            Thinking about how to get an expert's advice on your ongoing project. Use the referral code below and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.\r\n"
-					+ "<br />\r\n"
+					+ "           Are you looking for expert advice for your on-going project at work? Join the FellowGenius community and connect with experts across domains for help and support.</p>\r\n"
+					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
+					+ "			  To make learning more rewarding, use the referral code below while signing up and earn rewards worth INR 200 when you complete your 1st session with a FellowGenius expert.</p>\r\n"
+					+ "			 <br />	"		
 					+ " <div style=\"width: 94%; background-color: #F7F7F7; display: inline-block; padding: 8px; text-align: center; border-radius: 15px; font-size: 40px; font-weight: 400; color: #202124; letter-spacing: 2px;\">"
 					+ referCode + "</div> <br />\r\n"
-					+ "            Enter the refer code by clicking the link below.\r\n" + "          </p>\r\n"
+					
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
-					+ "            <a href=\"" + directUrl + "\">Joining Link</a>\r\n" + "          </p>\r\n"
+					+ "          Click <a href=\"" + directUrl + "\">here</a>\r\n" + " to sign up now.  </p>\r\n"
 					+ "          <p style=\"font-size: 14px; line-height: 1.75; color: #313745\">\r\n"
 					+ "            <br />"
 					+ "Regards,<br />Team FellowGenius\r\n" + "          </p>\r\n"
@@ -677,9 +685,10 @@ public class MailService {
 		});
 		boolean result=true;
 		
-		System.out.println(users);
-		System.out.println(referCode);
-		System.out.println(referrerEmail);
+		String directUrl=rootUrl+"sign-up?pt=MA";
+		
+		System.out.println(directUrl);
+		
 		//send email to all user one by one
 		Users userObj=repUsers.emailExist(referrerEmail);
 		System.out.println(userObj.toString());
@@ -696,8 +705,8 @@ public class MailService {
 				result=false;
 			}
 			for(String user:users) {
-				String directUrl = "https://fellowgenius.com/#/sign-up?pt=MA";
-				System.out.println(directUrl);
+				
+				
 				String to = user;
 				ReferInviteMail(from, to, senderFullName, referCode, directUrl);
 			}

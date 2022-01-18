@@ -14,7 +14,8 @@ import { NgForm } from '@angular/forms';
 export class TransactionsInfoComponent implements OnInit {
   pendingTransactions:Transaction[]=[];
   previousTransactions:Transaction[]=[];
-
+  totalPayableUser:number;
+  totalPayableAmount:number=0;
   constructor(private httpService: HttpService,
               private adminService:AdminService,
               private snackBar:MatSnackBar) { }
@@ -25,12 +26,17 @@ export class TransactionsInfoComponent implements OnInit {
     this.initialisePreviousTransactions();
   }
 
+  
+
   initialisePendingTransactions(){
     this.adminService.fetchPendingTransactionsList();
+    this.totalPayableAmount=0;
     this.adminService.pendingTransactionsChanged.subscribe(
       (pendingTransactionsList:Transaction[]) =>{
         this.pendingTransactions = pendingTransactionsList;
         console.log('pending transaction list: ',this.pendingTransactions);
+        this.totalPayableAmount=0;
+        this.calculateTotalPendingAmountAndUsers();
       }
     )
   }
@@ -43,6 +49,14 @@ export class TransactionsInfoComponent implements OnInit {
         console.log('previous transaction list: ',this.previousTransactions);
       }
     )
+    }
+
+    calculateTotalPendingAmountAndUsers(){
+      this.totalPayableUser=this.pendingTransactions.length;
+      for(let pendingTransaction of this.pendingTransactions){
+        this.totalPayableAmount=this.totalPayableAmount+ pendingTransaction.remainingAmount;
+      }
+      console.log("Users info "+this.totalPayableUser+" "+ this.totalPayableAmount);
     }
 
   isUpiIdNotAvailable(transaction:Transaction){

@@ -94,6 +94,7 @@
                       <label class="">Phone Number*</label>
                       <input
                         type="text"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                         id="contact"
                         class="form-control"
                         ngModel
@@ -195,12 +196,12 @@
                       href="javascript:;"
                       (click)="showExpertCode=!showExpertCode"
                       style="color: #8dc63f; cursor: pointer;margin-top: 10px;"
-                      >Have a Refer code?</a
+                      >Have a Referral code?</a
                     >
                   </div>
                   <div class="col-12" *ngIf="showExpertCode">
                     <div class="form-group">
-                      <label class="">Refer Code</label>
+                      <!-- <label class="">Refer Code</label> -->
                       <input
                         type="text"
                         id="expertCode"
@@ -211,12 +212,12 @@
                         [pattern]="referCodePattern"
                         #expertCode="ngModel"
                         maxlength="50"
-                        placeholder="Enter Expert Code"
+                        placeholder="Enter Referral Code"
                       />
                       <span
                         class="help-block"
                         *ngIf="!expertCode.valid && expertCode.touched"
-                        >Invalid Expert Code</span
+                        >Invalid Referral Code</span
                       >
                     </div>
                   </div>

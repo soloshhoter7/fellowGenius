@@ -388,6 +388,7 @@
           #dobdp
         >
         </mat-datepicker>
+        
       </div>
       <span
                             *ngIf="dob.errors?.invalidDob && dob.touched"
@@ -446,6 +447,7 @@
                           <label class="">Phone Number*</label>
                           <input
                             type="text"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                             class="form-control"
                             placeholder="Phone number"
                             id="contact"

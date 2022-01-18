@@ -570,3 +570,8 @@ width: 124px;
 .text-font-size{
     font-size:15px;
 }
+
+.hyperlink-text{
+    font-weight: bold;
+    text-decoration: underline;
+}
