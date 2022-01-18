@@ -5,11 +5,11 @@ export class Transaction{
 
     public context:String;
 
-    public totalPaidAmount:Number;
+    public totalPaidAmount:number;
 
-    public remainingAmount:Number;
+    public remainingAmount:number;
 
-    public paidAmount:Number;
+    public paidAmount:number;
 
     public upiId:String;
 

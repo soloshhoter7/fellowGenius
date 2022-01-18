@@ -137,7 +137,7 @@ export class AnalyticsComponent implements OnInit {
     title: 'Reffered Data',
     useBom:false,
     removeNewLines: true,
-    keys:['userId','fullName','referredBy','expertCode','JoinedTime','Platform Type'],
+    keys:['userId','fullName','referredUser','expertCode','signUpTime','platformType'],
   }
   referralAnalytics:ReferralActivityAnalytics;
   disableReferralAnalytics:boolean=true;

@@ -254,7 +254,17 @@ export class ReferAndEarnComponent implements OnInit {
 Joining Link : -  ${this.linkedinURL}      
 
     `;
-    this.clipboard.copy(linkedInMsg);
+
+let linkedinMsgNew=`Looking for expert advice for your on-going project at work? Join the FellowGenius community and connect with experts across domains for help and support. 
+To make learning more rewarding, use the referral code below while signing up and earn rewards worth INR 200 when you complete your 1st session with a FellowGenius expert.
+    
+${this.referCode}
+    
+Click ${this.linkedinURL} to sign up now.
+    
+Regards, 
+Team FellowGenius`;
+    this.clipboard.copy(linkedinMsgNew);
     console.log('Inside copy method');
 
     //mat snackbar
@@ -359,16 +369,29 @@ Joining Link : -  ${this.linkedinURL}
     const message = `Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
 ${siteurl}
     `;
-    let encmsg = encodeURI(message);
+
+    let WhatsappMsgNew=`Looking for expert advice for your on-going project at work? Join the FellowGenius community and connect with experts across domains for help and support. 
+To make learning more rewarding, use the referral code below while signing up and earn rewards worth INR 200 when you complete your 1st session with a FellowGenius expert.
+    
+${this.referCode}
+    
+Click ${siteurl} to sign up now.
+    
+Regards, 
+Team FellowGenius`;
+//let imageURL='https://wonderfulengineering.com/wp-content/uploads/2016/01/nature-wallpapers-38.jpg';
+//let imageMsg='https://web.whatsapp.com/send?text='+encodeURIComponent(imageURL);
+    let encmsg = encodeURI(WhatsappMsgNew);
     console.log(encmsg);
     var whatsappLink = '';
     if (this.deviceType === 'Laptop') {
+      //whatsappLink=imageMsg;
       whatsappLink = `https://web.whatsapp.com/send?text=${encmsg}`;
     } else if (this.deviceType === 'Mobile') {
       const mobileMessage=`Thinking about how to get an expert's advice on your ongoing project. Use my referral code ${this.referCode} and complete your 1st session with a FellowGenius expert to earn rewards worth INR 250.Hurry, join the FellowGenius community now!!
 `;
-      let encMobilemsg=encodeURI(mobileMessage);
-      encMobilemsg=encMobilemsg+'http%3A%2F%2Flocalhost%3A4200%2F%23%2Fsign-up%3Fpt%3DWA';
+      let encMobilemsg=encodeURI(WhatsappMsgNew);
+    //  encMobilemsg=encMobilemsg+'http%3A%2F%2Flocalhost%3A4200%2F%23%2Fsign-up%3Fpt%3DWA';
       console.log(encMobilemsg);
       whatsappLink = `https://wa.me/?text=${encMobilemsg}`;
     } else {

@@ -40,7 +40,7 @@ export const environment = {
 
   //backendUrl
   BACKEND_URL: 'http://localhost:8080',
-  FRONTEND_PREFIX: 'http://localhost:4200',
+  FRONTEND_PREFIX: 'http://localhost:4200/',
 };
 
 /*
