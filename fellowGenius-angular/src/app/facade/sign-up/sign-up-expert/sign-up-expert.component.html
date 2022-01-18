@@ -1,41 +1,25 @@
 <body>
-  <div
-    *ngIf="isLoading"
-    style="
+  <div *ngIf="isLoading" style="
       text-align: center;
       margin-top: 20%;
       margin-left: auto;
       margin-right: auto;
-    "
-  >
+    ">
     <app-loading></app-loading>
     <p style="margin: 1rem; font-size: large">Signing you up..</p>
   </div>
 
   <div [class]="!isLoading ? '' : 'hideBlock'">
-    <div
-      class="access_page wi_full"
-      [class]="choosePassword ? '' : 'hideBlock'"
-    >
+    <div class="access_page wi_full" [class]="choosePassword ? '' : 'hideBlock'">
       <div class="container">
         <div class="page_wrapper">
           <div class="access_icon_box">
-            <img
-              src="../../../assets/images/login-clip.svg"
-              alt="#"
-              class="graphic_style"
-            />
+            <img src="../../../assets/images/login-clip.svg" alt="#" class="graphic_style" />
           </div>
           <div class="access_field_box">
             <div class="access_header">
-              <a href="" class="back_button"
-                ><img src="../../../assets/images/arrow-grey.svg" alt="#"
-              /></a>
-              <a href="" class="accs_logo"
-                ><img
-                  src="../../../assets/images/fellow genius logo.svg"
-                  alt="#"
-              /></a>
+              <a href="" class="back_button"><img src="../../../assets/images/arrow-grey.svg" alt="#" /></a>
+              <a href="" class="accs_logo"><img src="../../../assets/images/fellow genius logo.svg" alt="#" /></a>
             </div>
             <div class="access_data">
               <div class="content_wrapper">
@@ -43,13 +27,8 @@
                 <div class="tagline">Please enter your new password</div>
                 <div class="error_message" *ngIf="invalidChoosePassword">
                   <div class="msg_wrap">
-                    <img
-                      src="../../../assets/images/required-error.svg"
-                      alt="#"
-                      class="erro_icon"
-                    />
-                    <span
-                      ><strong>Error</strong>Password could not be set
+                    <img src="../../../assets/images/required-error.svg" alt="#" class="erro_icon" />
+                    <span><strong>Error</strong>Password could not be set
                     </span>
                   </div>
                 </div>
@@ -57,47 +36,25 @@
                   <div class="form-group">
                     <label class="">New Password</label>
                     <div class="password_wrap">
-                      <input
-                        id="password-new"
-                        [type]="showPassword ? 'text' : 'password'"
-                        name="password-new"
-                        [(ngModel)]="newPassword"
-                        class="form-control"
-                        placeholder="Enter your new password"
-                        [pattern]="passwordPattern"
-                        minlength="8"
-                        maxlength="20"
-                        #password="ngModel"
-                      />
-                      <span
-                        (click)="togglePasswords()"
-                        class="fa fa-fw field-icon toggle-password"
-                        [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
-                      ></span>
+                      <input id="password-new" [type]="showPassword ? 'text' : 'password'" name="password-new"
+                        [(ngModel)]="newPassword" class="form-control" placeholder="Enter your new password"
+                        [pattern]="passwordPattern" minlength="8" maxlength="20" #password="ngModel" />
+                      <span (click)="togglePasswords()" class="fa fa-fw field-icon toggle-password"
+                        [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "></span>
                     </div>
                     <div class="col-12" style="margin-bottom: 10px">
-                      <span
-                        class="help-block"
-                        *ngIf="
+                      <span class="help-block" *ngIf="
                           password.invalid &&
                           (password.dirty || password.touched)
-                        "
-                        style="color: grey; font-size: smaller"
-                        >Your password must be a minimum of 8 characters long
+                        " style="color: grey; font-size: smaller">Your password must be a minimum of 8 characters long
                         and should contain atleast<br />
                         One uppercase letter (A-Z)<br />
                         One lowercase letter (a-z)<br />
                         One number (0-9)<br />
-                        One special character (@, #,&, %)</span
-                      >
+                        One special character (@, #,&, %)</span>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    class="button form_Btn"
-                    (click)="saveNewPassword()"
-                    [disabled]="!newPassword"
-                  >
+                  <button type="button" class="button form_Btn" (click)="saveNewPassword()" [disabled]="!newPassword">
                     Save new Password
                   </button>
                 </form>
@@ -109,26 +66,15 @@
       </div>
     </div>
     <div [class]="!choosePassword ? '' : 'hideBlock'">
-      <div
-        class="access_page wi_full"
-        [class]="verifyEmail && !registeredExpert ? '' : 'hideBlock'"
-      >
+      <div class="access_page wi_full" [class]="verifyEmail && !registeredExpert ? '' : 'hideBlock'">
         <div class="container">
           <div class="page_wrapper">
             <div class="access_icon_box">
-              <img
-                src="../../../assets/images/email-verification-clip.svg"
-                alt="#"
-                class="graphic_style"
-              />
+              <img src="../../../assets/images/email-verification-clip.svg" alt="#" class="graphic_style" />
             </div>
             <div class="access_field_box">
               <div class="access_header">
-                <a href="" class="accs_logo"
-                  ><img
-                    src="../../../assets/images/fellow genius logo.svg"
-                    alt="#"
-                /></a>
+                <a href="" class="accs_logo"><img src="../../../assets/images/fellow genius logo.svg" alt="#" /></a>
               </div>
               <div class="access_data">
                 <div class="content_wrapper">
@@ -139,84 +85,20 @@
                   <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
                   <form (ngSubmit)="verifyEmailOtp(o)" #o="ngForm">
                     <div class="eml_vrfctn form-group">
-                      <input
-                        type="text"
-                        id="otp_1digit"
-                        name="otp_1digit"
-                        #digit1
-                        ngModel
-                        maxlength="1"
-                        class="verfcn_box"
-                        (keyup)="onDigitInput($event)"
-                        placeholder="_"
-                        required
-                      />
-                      <input
-                        type="text"
-                        id="otp_2digit"
-                        name="otp_2digit"
-                        #digit2
-                        ngModel
-                        maxlength="1"
-                        class="verfcn_box"
-                        (keyup)="onDigitInput($event)"
-                        placeholder="_"
-                        required
-                      />
-                      <input
-                        type="text"
-                        id="otp_3digit"
-                        name="otp_3digit"
-                        ngModel
-                        #digit3
-                        maxlength="1"
-                        class="verfcn_box"
-                        (keyup)="onDigitInput($event)"
-                        placeholder="_"
-                        required
-                      />
-                      <input
-                        type="text"
-                        id="otp_4digit"
-                        name="otp_4digit"
-                        ngModel
-                        maxlength="1"
-                        #digit4
-                        class="verfcn_box"
-                        (keyup)="onDigitInput($event)"
-                        placeholder="_"
-                        required
-                      />
-                      <input
-                        type="text"
-                        id="otp_5digit"
-                        name="otp_5digit"
-                        ngModel
-                        maxlength="1"
-                        #digit5
-                        class="verfcn_box"
-                        (keyup)="onDigitInput($event)"
-                        placeholder="_"
-                        required
-                      />
-                      <input
-                        type="text"
-                        id="otp_6digit"
-                        name="otp_6digit"
-                        ngModel
-                        maxlength="1"
-                        #digit6
-                        class="verfcn_box"
-                        (keyup)="onDigitInput($event)"
-                        placeholder="_"
-                        required
-                      />
+                      <input type="text" id="otp_1digit" name="otp_1digit" #digit1 ngModel maxlength="1"
+                        class="verfcn_box" (keyup)="onDigitInput($event)" placeholder="_" required />
+                      <input type="text" id="otp_2digit" name="otp_2digit" #digit2 ngModel maxlength="1"
+                        class="verfcn_box" (keyup)="onDigitInput($event)" placeholder="_" required />
+                      <input type="text" id="otp_3digit" name="otp_3digit" ngModel #digit3 maxlength="1"
+                        class="verfcn_box" (keyup)="onDigitInput($event)" placeholder="_" required />
+                      <input type="text" id="otp_4digit" name="otp_4digit" ngModel maxlength="1" #digit4
+                        class="verfcn_box" (keyup)="onDigitInput($event)" placeholder="_" required />
+                      <input type="text" id="otp_5digit" name="otp_5digit" ngModel maxlength="1" #digit5
+                        class="verfcn_box" (keyup)="onDigitInput($event)" placeholder="_" required />
+                      <input type="text" id="otp_6digit" name="otp_6digit" ngModel maxlength="1" #digit6
+                        class="verfcn_box" (keyup)="onDigitInput($event)" placeholder="_" required />
                     </div>
-                    <button
-                      type="submit"
-                      class="button form_Btn"
-                      [disabled]="o.invalid"
-                    >
+                    <button type="submit" class="button form_Btn" [disabled]="o.invalid">
                       Verify Account
                     </button>
                   </form>
@@ -226,29 +108,16 @@
           </div>
         </div>
       </div>
-      <div
-        class="access_page wi_full"
-        [class]="registeredExpert && !verifyEmail ? '' : 'hideBlock'"
-      >
+      <div class="access_page wi_full" [class]="registeredExpert && !verifyEmail ? '' : 'hideBlock'">
         <div class="container">
           <div class="page_wrapper">
             <div class="access_icon_box">
-              <img
-                src="../../../../assets/images/password-reset-clip.svg"
-                alt="#"
-                class="graphic_style"
-              />
+              <img src="../../../../assets/images/password-reset-clip.svg" alt="#" class="graphic_style" />
             </div>
             <div class="access_field_box">
               <div class="access_header">
-                <a href="" class="back_button"
-                  ><img src="../../../../assets/images/arrow-grey.svg" alt="#"
-                /></a>
-                <a href="" class="accs_logo"
-                  ><img
-                    src="../../../../assets/images/fellow genius logo.svg"
-                    alt="#"
-                /></a>
+                <a href="" class="back_button"><img src="../../../../assets/images/arrow-grey.svg" alt="#" /></a>
+                <a href="" class="accs_logo"><img src="../../../../assets/images/fellow genius logo.svg" alt="#" /></a>
               </div>
               <div class="access_data">
                 <div class="content_wrapper">
@@ -258,11 +127,7 @@
                     within 48 working hours.
                   </div>
                   <form>
-                    <button
-                      type="button"
-                      class="button form_Btn"
-                      (click)="toFacade()"
-                    >
+                    <button type="button" class="button form_Btn" (click)="toFacade()">
                       Back to Home
                     </button>
                   </form>
@@ -274,67 +139,38 @@
         </div>
       </div>
 
-      <div
-        class="access_page expert_signup wi_full"
-        [class]="!registeredExpert && !verifyEmail ? '' : 'hideBlock'"
-      >
+      <div class="access_page expert_signup wi_full" [class]="!registeredExpert && !verifyEmail ? '' : 'hideBlock'">
         <div class="container">
           <div class="page_wrapper">
             <div class="access_field_box">
               <div class="access_header access_header_signup_web">
                 <div style="display: flex; align-items: center">
-                  <a
-                    href="#"
-                    class="register_btn hdr_btn"
-                    data-bs-toggle="tooltip"
-                    data-placement="bottom"
-                    title="Home"
-                  >
-                    <img
-                      src="../../assets/images/breadcrumb-home.svg"
-                      alt="#"
-                      style="width: 50px"
-                    />
+                  <a href="#" class="register_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom"
+                    title="Home">
+                    <img src="../../assets/images/breadcrumb-home.svg" alt="#" style="width: 50px" />
                   </a>
                 </div>
                 <h1>Sign up <strong>as an Expert</strong></h1>
 
-                <a href="" class="accs_logo"
-                  ><img src="../assets/images/fellow genius logo.svg" alt="#"
-                /></a>
+                <a href="" class="accs_logo"><img src="../assets/images/fellow genius logo.svg" alt="#" /></a>
               </div>
 
               <div class="access_header access_header_signup_mobile" style="display:none">
                 <div style="display: flex; ">
-                  <a
-                    href="#"
-                    class="register_btn hdr_btn"
-                    data-bs-toggle="tooltip"
-                    data-placement="bottom"
-                    title="Home"
-                  >
-                    <img
-                      src="../../assets/images/breadcrumb-home.svg"
-                      alt="#"
-                      style="width: 50px"
-                    />
+                  <a href="#" class="register_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom"
+                    title="Home">
+                    <img src="../../assets/images/breadcrumb-home.svg" alt="#" style="width: 50px" />
                   </a>
 
-                  <a href="" class="accs_logo"
-                  ><img src="../assets/images/fellow genius logo.svg" alt="#" class="logo-ml-100"
-                /></a>
+                  <a href="" class="accs_logo"><img src="../assets/images/fellow genius logo.svg" alt="#"
+                      class="logo-ml-100" /></a>
                 </div>
-                <h1 class="h1-pt-15"
-                >Sign up <strong>as an Expert</strong></h1>
+                <h1 class="h1-pt-15">Sign up <strong>as an Expert</strong></h1>
 
-                
+
               </div>
               <div class="access_data">
-                <form
-                  class="form-mt-0"
-                  (ngSubmit)="saveExpertBasicProfile(basicProfile)"
-                  #basicProfile="ngForm"
-                >
+                <form class="form-mt-0" (ngSubmit)="saveExpertBasicProfile(basicProfile)" #basicProfile="ngForm">
                   <div class="fields_box">
                     <div class="row">
                       <div class="col-12">
@@ -343,235 +179,85 @@
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">Full Name*</label>
-                          <input
-                            type="text"
-                            id="fullName"
-                            name="fullName"
-                            ngModel
-                            class="form-control"
-                            required
-                            #fullName="ngModel"
-                            maxlength="50"
-                            placeholder="Full Name"
-                          />
-                          <span
-                            class="help-block"
-                            *ngIf="!fullName.valid && fullName.touched"
-                            >Invalid Name</span
-                          >
+                          <input type="text" id="fullName" name="fullName" ngModel class="form-control" required
+                            #fullName="ngModel" maxlength="50" placeholder="Full Name" />
+                          <span class="help-block" *ngIf="!fullName.valid && fullName.touched">Invalid Name</span>
                         </div>
                       </div>
 
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">Date of Birth (DD/MM/YY)* </label>
-       <div style="display:flex">
-        <input
-        appDateFormatDdmmyyyy
-          class="form-control"
-          matInput
-          placeholder="Date of Birth"
-          [matDatepicker]="dobdp"
-          id="dob"
-          name="dob"
-          ngModel
-          #dob="ngModel"
-          dobValidator
-          required
-        />
-        <mat-datepicker-toggle
-          class="dob-mat-datepicker"
-          matSuffix
-          [for]="dobdp"
-        ></mat-datepicker-toggle>
-        <mat-datepicker
-          #dobdp
-        >
-        </mat-datepicker>
-      </div>
-      <span
-                            *ngIf="dob.errors?.invalidDob && dob.touched"
-                            
-                            class="help-block"
-                            >Invalid date of birth</span
-                          >
-
-                          <!-- <input
-                            matInput
-                            [matDatepicker]="picker"
-                             type="date"
-                            id="dob"
-                            name="dob"
-                            ngModel
-                            class="form-control"
-                            dobValidator
-                            required
-                            #dob="ngModel"
-                          /> -->
-                          <!-- <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                          ></mat-datepicker-toggle>
-                          <mat-datepicker #picker></mat-datepicker> -->
+                          <div style="display:flex">
+                            <input appDateFormatDdmmyyyy class="form-control" matInput placeholder="Date of Birth"
+                              [matDatepicker]="dobdp" id="dob" name="dob" ngModel #dob="ngModel" dobValidator
+                              required />
+                            <mat-datepicker-toggle class="dob-mat-datepicker" matSuffix [for]="dobdp">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #dobdp>
+                            </mat-datepicker>
+                          </div>
+                          <span *ngIf="dob.errors?.invalidDob && dob.touched" class="help-block">Invalid date of
+                            birth</span>
                         </div>
                       </div>
 
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">E-Mail*</label>
-                          <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            ngModel
-                            class="form-control"
-                            required
-                            email
-                            #email="ngModel"
-                            maxlength="64"
+                          <input type="email" id="email" name="email" ngModel class="form-control" required email
+                            #email="ngModel" maxlength="64"
                             pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-                            placeholder="Enter Email"
-                          />
-                          <span
-                            *ngIf="
+                            placeholder="Enter Email" />
+                          <span *ngIf="
                               (!email.valid && email.touched) || emailValid
-                            "
-                            class="help-block"
-                            >Invalid email</span
-                          >
+                            " class="help-block">Invalid email</span>
                         </div>
                       </div>
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">Phone Number*</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Phone number"
-                            id="contact"
-                            ngModel
-                            name="contact"
-                            required
-                            [pattern]="mobNumberPattern"
-                            #contact="ngModel"
-                          />
-                          <span
-                            *ngIf="!contact.valid && contact.touched"
-                            class="help-block"
-                            >Invalid phone number</span
-                          >
+                          <input type="text" class="form-control" placeholder="Phone number" id="contact" ngModel
+                            name="contact" required [pattern]="mobNumberPattern" #contact="ngModel" />
+                          <span *ngIf="!contact.valid && contact.touched" class="help-block">Invalid phone number</span>
                         </div>
                       </div>
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">LinkedIn Profile*</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="LinkedIn Profile link"
-                            name="linkedInProfile"
-                            id="linkedInProfile"
-                            maxlength="100"
-                            ngModel
-                            required
-                            #linkedInProfile="ngModel"
-                          />
-                          <span
-                            class="help-block"
-                            *ngIf="
+                          <input type="text" class="form-control" placeholder="LinkedIn Profile link"
+                            name="linkedInProfile" id="linkedInProfile" maxlength="100" ngModel required
+                            #linkedInProfile="ngModel" />
+                          <span class="help-block" *ngIf="
                               !linkedInProfile.valid && linkedInProfile.touched
-                            "
-                            >Invalid linkedIn profile</span
-                          >
+                            ">Invalid linkedIn profile</span>
                         </div>
                       </div>
+
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">UPI ID</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Enter UPI ID"
-                            name="upiID"
-                            id="upiID"
-                            maxlength="30"
-                            ngModel
-                            #upiID="ngModel"
-                          />
-                          <span
-                            class="help-block"
-                            *ngIf="!upiID.valid && upiID.touched"
-                            >Invalid UPI id</span
-                          >
+                          <input type="text" class="form-control" placeholder="Enter UPI ID" name="upiID" id="upiID"
+                            maxlength="30" ngModel #upiID="ngModel" />
+                          <span class="help-block" *ngIf="!upiID.valid && upiID.touched">Invalid UPI id</span>
                           <div>
-                            <span
-                              class="help-block"
-                              style="color: grey; font-size: smaller"
-                              >UPI ID is necessary for processing your
-                              payments</span
-                            >
+                            <span class="help-block" style="color: grey; font-size: smaller">UPI ID is necessary for
+                              processing your
+                              payments</span>
                           </div>
                         </div>
                       </div>
                       <div class="col-12 col-md-6">
                         <div class="form-group">
                           <label class="">GST Number</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Enter GST Number (if applicable)"
-                            name="gst"
-                            id="gst"
-                            maxlength="60"
-                            ngModel
-                            #gstNumber="ngModel"
-                          />
-                          <span
-                            class="help-block"
-                            *ngIf="!gstNumber.valid && gstNumber.touched"
-                            >Invalid GST Number</span
-                          >
+                          <input type="text" class="form-control" placeholder="Enter GST Number (if applicable)"
+                            name="gst" id="gst" maxlength="60" ngModel #gstNumber="ngModel" />
+                          <span class="help-block" *ngIf="!gstNumber.valid && gstNumber.touched">Invalid GST
+                            Number</span>
                         </div>
                       </div>
-                      <!-- <div class="col-12 col-md-6">
-                      <div class="form-group">
-                        <label class="">Password*</label>
-                        <div class="password_wrap">
-                          <input
-                            id="password-field"
-                            type="password"
-                            class="form-control"
-                            name="password"
-                            ngModel
-                            required
-                            [pattern]="passwordPattern"
-                            minlength="8"
-                            maxlength="20"
-                            #password="ngModel"
-                            placeholder="Enter password"
-                          />
-                          <span
-                            toggle="#password-field"
-                            class="fa fa-fw fa-eye field-icon toggle-password"
-                          ></span>
-                        </div>
-                        <span
-                          class="help-block"
-                          *ngIf="
-                            password.invalid &&
-                            (password.dirty || password.touched)
-                          "
-                          style="color: grey; font-size: smaller"
-                          >Your password must be a minimum of 8 characters long.
-                          Your PW must contain at least one uppercase letter
-                          (A-Z), one lowercase (a-z), one number (0-9), and one
-                          special character (@, #,&, %).</span
-                        >
-                      </div>
-                    </div> -->
                     </div>
                   </div>
-
                   <div class="fields_box" id="domainBox">
                     <div class="row">
                       <div class="col-12">
@@ -580,34 +266,19 @@
                       <div class="col-12">
                         <div class="form-group Prc__Pr__Hr">
                           <label class="">Price per Hour (INR)*</label>
-                          <input
-                            type="number"
-                            class="form-control"
-                            name="price"
-                            required
-                            pattern="^[1-9]\d*$"
-                            placeholder="Enter price per hour (INR) "
-                            [(ngModel)]="tutorProfileDetails.price1"
-                            #expertisePrice="ngModel"
-                            (ngModelChange)="onPercentChange($event)"
-                          />
+                          <input type="number" class="form-control" name="price" required pattern="^[1-9]\d*$"
+                            placeholder="Enter price per hour (INR) " [(ngModel)]="tutorProfileDetails.price1"
+                            #expertisePrice="ngModel" (ngModelChange)="onPercentChange($event)" />
                           <div>
-                            <span
-                              class="help-block"
-                              style="color: grey; font-size: smaller"
-                              >The price you enter here is inclusive of GST @18%
+                            <span class="help-block" style="color: grey; font-size: smaller">The price you enter here is
+                              inclusive of GST @18%
                               and FellowGenius platform fee. The per session
                               amount payable will be reflected in the expert
-                              profile upon confirmation</span
-                            >
-                          </div>                
-                          <span
-                            class="help-block"
-                            *ngIf="
+                              profile upon confirmation</span>
+                          </div>
+                          <span class="help-block" *ngIf="
                               !expertisePrice.valid && expertisePrice.touched
-                            "
-                            >Invalid Price per hour !</span
-                          >
+                            ">Invalid Price per hour !</span>
                           <!-- <div
                             class="pph__detail"
                             *ngIf="
@@ -631,10 +302,7 @@
                               <span class="">₹ {{ commission }}</span>
                             </div>
                           </div> -->
-                          <div
-                            *ngIf="pricePerHourError"
-                            style="color: red; margin-top: 10px"
-                          >
+                          <div *ngIf="pricePerHourError" style="color: red; margin-top: 10px">
                             Please enter your price per hour first !
                           </div>
                         </div>
@@ -644,10 +312,7 @@
                           <div class="col-12">
                             <h4>Add Domain</h4>
                           </div>
-                          <div
-                            *ngIf="duplicateExpertiseArea"
-                            style="color: red; margin-top: 10px"
-                          >
+                          <div *ngIf="duplicateExpertiseArea" style="color: red; margin-top: 10px">
                             Expertise already exists !
                           </div>
 
@@ -657,44 +322,24 @@
                           <div class="col-12 col-md-6" id="categoryDropDown">
                             <div class="form-group">
                               <label class="">Choose Domain*</label>
-                              <select
-                                class="select2 form-control"
-                                id="chooseCategory"
-                                name="categoryName"
-                                data-placeholder="Choose Domain"
-                                ngModel
-                              >
+                              <select class="select2 form-control" id="chooseCategory" name="categoryName"
+                                data-placeholder="Choose Domain" ngModel>
                                 <option value=""></option>
-                                <option
-                                  *ngFor="let categ of categories"
-                                  [value]="categ.category"
-                                >
+                                <option *ngFor="let categ of categories" [value]="categ.category">
                                   {{ categ.category }}
                                 </option>
                                 <option value="Others">Others</option>
                               </select>
                             </div>
                           </div>
-                          <div
-                            class="col-12 col-md-6"
-                            id="subCategoryDropDown"
-                            [class.hideBlock]="showTextDomain"
-                          >
+                          <div class="col-12 col-md-6" id="subCategoryDropDown" [class.hideBlock]="showTextDomain">
                             <div class="form-group">
                               <label class="">Choose Topic*</label>
 
-                              <select
-                                class="select2 form-control"
-                                id="chooseSubCategory"
-                                name="subCategoryName"
-                                data-placeholder="Choose Topic"
-                                ngModel
-                              >
+                              <select class="select2 form-control" id="chooseSubCategory" name="subCategoryName"
+                                data-placeholder="Choose Topic" ngModel>
                                 <option value=""></option>
-                                <option
-                                  *ngFor="let sc of filteredSubCategories"
-                                  [value]="sc.subCategory"
-                                >
+                                <option *ngFor="let sc of filteredSubCategories" [value]="sc.subCategory">
                                   {{ sc.subCategory }}
                                 </option>
                                 <option value="Others">Others</option>
@@ -705,55 +350,30 @@
                             <div class="col-12 col-md-6" *ngIf="showTextDomain">
                               <div class="form-group">
                                 <label class="">Enter Domain*</label>
-                                <input
-                                  type="text"
-                                  id="textDomain"
-                                  name="textDomain"
-                                  ngModel
-                                  class="form-control"
-                                  maxlength="64"
-                                  [(ngModel)]="textDomain"
-                                  placeholder="Enter Domain name"
-                                />
+                                <input type="text" id="textDomain" name="textDomain" ngModel class="form-control"
+                                  maxlength="64" [(ngModel)]="textDomain" placeholder="Enter Domain name" />
                               </div>
                             </div>
                             <div class="col-12 col-md-6" *ngIf="showTextTopic">
                               <div class="form-group">
                                 <label class="">Enter topic*</label>
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  placeholder="Enter Topic name"
-                                  id="textTopic"
-                                  name="textTopic"
-                                  maxlength="64"
-                                  ngModel
-                                  [(ngModel)]="textTopic"
-                                />
+                                <input type="text" class="form-control" placeholder="Enter Topic name" id="textTopic"
+                                  name="textTopic" maxlength="64" ngModel [(ngModel)]="textTopic" />
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="reptr___btn">
-                        <a
-                          class="add_RBtn"
-                          type="button"
-                          (click)="saveExpertise()"
-                          ><img
-                            src="../assets/images/add-repeater.svg"
-                            alt="add"
-                          />Save</a
-                        >
+                        <a class="add_RBtn" type="button" (click)="saveExpertise()"><img
+                            src="../assets/images/add-repeater.svg" alt="add" />Save</a>
                       </div>
-                      
+
                       <div *ngIf="expertises.length">
                         <div class="col-12">
                           <h4>Domains</h4>
                         </div>
-                        <div
-                          *ngFor="let expertise of expertises; let i = index"
-                        >
+                        <div *ngFor="let expertise of expertises; let i = index">
                           <div class="field_repeater">
                             <div class="row">
                               <div class="col-12 col-md-5">
@@ -770,19 +390,10 @@
                                   }}</span>
                                 </div>
                               </div>
-                              <div
-                                class="col-12 col-md-1"
-                                style="padding-top: 5px"
-                              >
+                              <div class="col-12 col-md-1" style="padding-top: 5px">
                                 <div class="reptr___btn">
-                                  <a
-                                    href="JavaScript:Void(0);"
-                                    (click)="deleteExpertise(i)"
-                                    class="delet_RBtn"
-                                    ><img
-                                      src="../assets/images/delete-repeater.svg"
-                                      alt="delete"
-                                  /></a>
+                                  <a href="JavaScript:Void(0);" (click)="deleteExpertise(i)" class="delet_RBtn"><img
+                                      src="../assets/images/delete-repeater.svg" alt="delete" /></a>
                                 </div>
                               </div>
                             </div>
@@ -796,12 +407,9 @@
                           ><span style="color: red;">*</span> 
                           Please click on save to save atleast 1 domain</span
                         > -->
-                        <br/>
-                        <span
-                          class="help-block"
-                          style="color:black; font-size: 20px"
-                          ><span style="color: red;">*</span> Please select Others option to add a domain or topic not listed in the drop down menu</span
-                        >
+                        <br />
+                        <span class="help-block" style="color:black; font-size: 20px"><span style="color: red;">*</span>
+                          Please select Others option to add a domain or topic not listed in the drop down menu</span>
                       </div>
                     </div>
                   </div>
@@ -813,107 +421,64 @@
                       <div class="col-12">
                         <div class="form-group">
                           <label class="">Total Years of Experience*</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="yearsOfExperience"
-                            name="yearsOfExperience"
-                            ngModel
-                            required
-                            pattern="^[1-9]\d*$"
-                            [ngModel]="tutorProfileDetails.yearsOfExperience"
-                            class="form-control"
-                            #yearsOfExperience="ngModel"
-                            placeholder="Enter Total Years of experience"
-                          />
-                          <span
-                            class="help-block"
-                            *ngIf="
+                          <input type="text" class="form-control" id="yearsOfExperience" name="yearsOfExperience"
+                            ngModel required pattern="^[1-9]\d*$" [ngModel]="tutorProfileDetails.yearsOfExperience"
+                            class="form-control" #yearsOfExperience="ngModel"
+                            placeholder="Enter Total Years of experience" />
+                          <span class="help-block" *ngIf="
                               !yearsOfExperience.valid &&
                               yearsOfExperience.touched
-                            "
-                            >Invalid years of experience</span
-                          >
+                            ">Invalid years of experience</span>
                         </div>
                       </div>
                       <div>
                         <div class="col-12">
                           <h4 *ngIf="prevArrangedOrganisations.length==0">Organisation</h4>
-      
+
                         </div>
                         <div class="field_repeater">
                           <div class="row">
                             <div class="col-12 col-md-6">
                               <div class="form-group">
                                 <label class="">Current Organisation</label>
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="currentOrganisation"
-                                  name="currentOrganisation"
-                                  ngModel
-                                  [(ngModel)]="
+                                <input type="text" class="form-control" id="currentOrganisation"
+                                  name="currentOrganisation" ngModel [(ngModel)]="
                                     tutorProfileDetails.currentOrganisation
-                                  "
-                                  #currentOrganisation="ngModel"
-                                  maxlength="50"
-                                  placeholder="Enter Current Organisation"
-                                />
-                                <span
-                                  class="help-block"
-                                  *ngIf="
+                                  " #currentOrganisation="ngModel" maxlength="50"
+                                  placeholder="Enter Current Organisation" />
+                                <span class="help-block" *ngIf="
                                     !currentOrganisation.valid &&
                                     currentOrganisation.touched
-                                  "
-                                  >Invalid organisation</span
-                                >
+                                  ">Invalid organisation</span>
                               </div>
                             </div>
                             <div class="col-12 col-md-6">
                               <div class="form-group">
                                 <label class="">Title/Designation</label>
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="currentDesination"
-                                  name="currentDesignation"
+                                <input type="text" class="form-control" id="currentDesination" name="currentDesignation"
                                   [(ngModel)]="
                                     tutorProfileDetails.currentDesignation
-                                  "
-                                  #currentDesignation="ngModel"
-                                  maxlength="50"
-                                  placeholder="Enter Title/Designation"
-                                />
-                                <span
-                                  class="help-block"
-                                  *ngIf="
+                                  " #currentDesignation="ngModel" maxlength="50"
+                                  placeholder="Enter Title/Designation" />
+                                <span class="help-block" *ngIf="
                                     !currentDesignation.valid &&
                                     currentDesignation.touched
-                                  "
-                                  >Invalid Designation</span
-                                >
+                                  ">Invalid Designation</span>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div>
-
-                          <label style="font-weight: 600;"  *ngIf="prevArrangedOrganisations.length!=0">Previous Organisation</label>
-                        
-                        
-                        <!-- <h4 *ngIf="prevArrangedOrganisations.length!=0">Previous Organisations</h4> -->
-                        <div
-                          class="field_repeater"
-                          *ngFor="
+                        <label style="font-weight: 600;" *ngIf="prevArrangedOrganisations.length!=0">Previous
+                          Organisation</label>
+                        <div class="field_repeater" *ngFor="
                             let organisation of prevArrangedOrganisations;
                             let i = index
-                          "
-                        >
+                          ">
                           <div class="row">
-                            <div class="col-12 col-md-5">
+                            <div class="col-12 col-md-6">
                               <div class="form-group">
-                                <!-- <label class="">Organisation</label> -->
                                 <span class="form-control">{{
                                   organisation.organisation
                                 }}</span>
@@ -921,94 +486,95 @@
                             </div>
                             <div class="col-12 col-md-5">
                               <div class="form-group">
-                                <!-- <label class="">Title/Designation</label> -->
                                 <span class="form-control">{{
                                   organisation.designation
                                 }}</span>
                               </div>
                             </div>
-                            <div
-                              class="col-12 col-md-1"
-                              style="padding-top: 5px"
-                            >
+                            <div class="col-12 col-md-1 remove_btn add_margin_bottom">
                               <div class="reptr___btn">
-                                <a
-                                  href="JavaScript:;"
-                                  class="delet_RBtn"
-                                  (click)="deleteOrganisation(i)"
-                                  ><img
-                                    src="../assets/images/delete-repeater.svg"
-                                    alt="delete"
-                                /></a>
+                                <a href="JavaScript:;" class="delet_RBtn" (click)="deleteOrganisation(i)"><img
+                                    src="../assets/images/delete-repeater.svg" alt="delete" /></a>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="reptr___btn" style="margin-top: 15px;" *ngIf="!showEditPreviousOrganisations">
-                        <a
-                          href="JavaScript:;"
-                          class="add_RBtn"
-                          (click)="togglePreviousOrganisationsView()"
-                          ><img
-                            src="../assets/images/add-repeater.svg"
-                            alt="add"
-                          />Add More</a
-                        >
+                        <a href="JavaScript:;" class="add_RBtn" (click)="togglePreviousOrganisationsView()"><img
+                            src="../assets/images/add-repeater.svg" alt="add" />Add More</a>
                       </div>
-                      <div *ngIf="showEditPreviousOrganisations">
+                      <!-- <div *ngIf="showEditPreviousOrganisations">
                         <div>
                           <div class="field_repeater">
                             <div class="row">
                               <div class="col-12 col-md-6">
                                 <div class="form-group">
                                   <label class="">Previous Organisation</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    name="prevOrganisation"
-                                    placeholder="Enter Organisation name"
-                                    [(ngModel)]="inputOrganisation"
-                                  />
+                                  <input type="text" class="form-control" name="prevOrganisation"
+                                    placeholder="Enter Organisation name" [(ngModel)]="inputOrganisation" />
                                 </div>
-                                <div
-                                  *ngIf="duplicatePreviousOrganisation"
-                                  class="help-block"
-                                >
+                                <div *ngIf="duplicatePreviousOrganisation" class="help-block">
                                   Organisation already exists !
                                 </div>
-                                <div
-                                  *ngIf="invalidOrganisationDetails"
-                                  class="help-block"
-                                >
+                                <div *ngIf="invalidOrganisationDetails" class="help-block">
                                   One or more fields is empty !
                                 </div>
                               </div>
                               <div class="col-12 col-md-6">
                                 <div class="form-group">
                                   <label class="">Title/Designation</label>
-                                  <input
-                                    type="text"
-                                    class="form-control"
-                                    name="prevDesignation"
-                                    placeholder="Enter Title/Designation"
-                                    [(ngModel)]="inputDesignation"
-                                  />
+                                  <input type="text" class="form-control" name="prevDesignation"
+                                    placeholder="Enter Title/Designation" [(ngModel)]="inputDesignation" />
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="reptr___btn">
-                          <a
-                            href="JavaScript:;"
-                            class="add_RBtn"
-                            (click)="addOrganisation()"
-                            ><img
-                              src="../assets/images/add-repeater.svg"
-                              alt="add"
-                            />Add</a
-                          >
+                          <a href="JavaScript:;" class="add_RBtn" (click)="addOrganisation()"><img
+                              src="../assets/images/add-repeater.svg" alt="add" />Add</a>
+                        </div>
+                      </div> -->
+                      <div *ngIf="showEditPreviousOrganisations">
+                        <div>
+                          <div class="field_repeater">
+                            <div class="row">
+                              <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                  <label class="" *ngIf="prevArrangedOrganisations.length==0">Previous
+                                    Organisation</label>
+                                  <input type="text" class="form-control" name="prevOrganisation"
+                                    placeholder="Enter Organisation name" [(ngModel)]="inputOrganisation" />
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-5">
+                                <div class="form-group">
+                                  <label class="" *ngIf="prevArrangedOrganisations.length==0">Title/Designation</label>
+                                  <input type="text" class="form-control" name="prevDesignation"
+                                    placeholder="Enter Title/Designation" [(ngModel)]="inputDesignation" />
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-1 remove_btn"
+                                [class.add_margin_bottom]="prevArrangedOrganisations.length!=0">
+                                <div class="reptr___btn">
+                                  <a href="JavaScript:;" class="delet_RBtn"
+                                    (click)="togglePreviousOrganisationsView()"><img
+                                      src="../assets/images/delete-repeater.svg" alt="delete" /></a>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="duplicatePreviousOrganisation" class="help-block">
+                              Organisation already exists !
+                            </div>
+                            <div *ngIf="invalidOrganisationDetails" class="help-block">
+                              One or more fields is empty !
+                            </div>
+                          </div>
+                        </div>
+                        <div class="reptr___btn">
+                          <a href="JavaScript:;" class="add_RBtn" (click)="addOrganisation()"><img
+                              src="../assets/images/add-repeater.svg" alt="add" />Add More</a>
                         </div>
                       </div>
                     </div>
@@ -1020,22 +586,13 @@
                       </div>
                       <div class="col-12">
                         <div class="form-group">
-                          <textarea
-                            style="padding-top: 10px"
-                            class="form-control"
-                            id="description"
-                            rows="3"
-                            name="description"
-                            maxlength="250"
-                            [ngModel]="tutorProfileDetails.description"
+                          <textarea style="padding-top: 10px" class="form-control" id="description" rows="3"
+                            name="description" maxlength="250" [ngModel]="tutorProfileDetails.description"
                             placeholder="Provide more information about your credentials"
-                            #tutorProfileDescription
-                          ></textarea>
-                          <span class="setLength"
-                            >{{
+                            #tutorProfileDescription></textarea>
+                          <span class="setLength">{{
                               tutorProfileDescription.value.length
-                            }}/250</span
-                          >
+                            }}/250</span>
                         </div>
                       </div>
                     </div>
@@ -1045,19 +602,13 @@
                       <div class="col-12">
                         <h2>Education</h2>
                       </div>
-                      <div
-                        *ngIf="emptyEducationDetails"
-                        style="color: red; margin-top: 10px"
-                      >
+                      <div *ngIf="emptyEducationDetails" style="color: red; margin-top: 10px">
                         Add atleast one educational qualification !
                       </div>
-                      <div
-                        class="field_repeater"
-                        *ngFor="
+                      <div class="field_repeater" *ngFor="
                           let education of educationQualifications;
                           let i = index
-                        "
-                      >
+                        ">
                         <div class="row">
                           <div class="col-12 col-md-11">
                             <div class="form-group">
@@ -1068,14 +619,8 @@
 
                           <div class="col-12 col-md-1" style="padding-top: 5px">
                             <div class="reptr___btn">
-                              <a
-                                href="JavaScript:;"
-                                class="delet_RBtn"
-                                (click)="deleteEducation(i)"
-                                ><img
-                                  src="../assets/images/delete-repeater.svg"
-                                  alt="delete"
-                              /></a>
+                              <a href="JavaScript:;" class="delet_RBtn" (click)="deleteEducation(i)"><img
+                                  src="../assets/images/delete-repeater.svg" alt="delete" /></a>
                             </div>
 
                           </div>
@@ -1089,25 +634,15 @@
                           <div class="col-12 col-md-6">
                             <div class="form-group">
                               <label class="">University / College*</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="institute"
-                                [(ngModel)]="inputInstitute"
-                                placeholder="Enter University / College"
-                              />
+                              <input type="text" class="form-control" name="institute" [(ngModel)]="inputInstitute"
+                                placeholder="Enter University / College" />
                             </div>
                           </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
                               <label class="">Degree and speciality*</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="degree"
-                                [(ngModel)]="inputEducation"
-                                placeholder="Enter Degree"
-                              />
+                              <input type="text" class="form-control" name="degree" [(ngModel)]="inputEducation"
+                                placeholder="Enter Degree" />
                             </div>
                           </div>
                           <div class="col-12">
@@ -1122,69 +657,37 @@
                                 #completionDate="ngModel"
                               /> -->
                               <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
-                                <div style="display:flex">
-                              
-                               
-                                <input
-                                  appDateFormatMMYYYY
-                                  class="form-control"
-                                  placeholder="Choose Month and Year"
-                                  matInput
-                                  [min]="minDate"
-                                  [max]="maxDate"
-                                  [matDatepicker]="dp"
-                                  [formControl]="inputCompletionDate"
-                                />
-                                <mat-datepicker-toggle
-                                class="dob-mat-datepicker"
-                                  matSuffix
-                                  [for]="dp"
-                                ></mat-datepicker-toggle>
-                                <mat-datepicker
-                                  #dp
-                                  startView="multi-year"
-                                  (yearSelected)="chosenYearHandler($event)"
+                              <div style="display:flex">
+
+
+                                <input appDateFormatMMYYYY class="form-control" placeholder="Choose Month and Year"
+                                  matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp"
+                                  [formControl]="inputCompletionDate" />
+                                <mat-datepicker-toggle class="dob-mat-datepicker" matSuffix [for]="dp">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
                                   (monthSelected)="
                                     chosenMonthHandler($event, dp)
-                                  "
-                                  panelClass="example-month-picker"
-                                >
+                                  " panelClass="example-month-picker">
                                 </mat-datepicker>
-                              
 
-                              <span
-                                class="help-block"
-                                *ngIf="invalidCompletionDate"
-                                >Invalid Completion Date</span
-                              >
+
+                                <span class="help-block" *ngIf="invalidCompletionDate">Invalid Completion Date</span>
 
                               </div>
                             </div>
                           </div>
-                          <div
-                            *ngIf="duplicateEducationArea"
-                            style="color: red; margin-top: 10px"
-                          >
+                          <div *ngIf="duplicateEducationArea" style="color: red; margin-top: 10px">
                             Educational Qualification already exists !
                           </div>
-                          <div
-                            *ngIf="invalidEducationDetails"
-                            style="color: red; margin-top: 10px"
-                          >
+                          <div *ngIf="invalidEducationDetails" style="color: red; margin-top: 10px">
                             One or more fields is empty !
                           </div>
                         </div>
                       </div>
                       <div class="reptr___btn">
-                        <a
-                          href="JavaScript:;"
-                          (click)="addEducation()"
-                          class="add_RBtn"
-                          ><img
-                            src="../assets/images/add-repeater.svg"
-                            alt="add"
-                          />Save</a
-                        >
+                        <a href="JavaScript:;" (click)="addEducation()" class="add_RBtn"><img
+                            src="../assets/images/add-repeater.svg" alt="add" />Add More</a>
                       </div>
                       <div *ngIf="expertises.length==0">
                         <!-- <span
@@ -1194,8 +697,8 @@
                           <span style="color: red;">*</span> 
                           Please click on save to save atleast 1 education</span
                         > -->
-                        <br/>
-                        
+                        <br />
+
                       </div>
                     </div>
                   </div>
@@ -1207,11 +710,7 @@
                       <div class="col-12">
                         <div class="profile_upload">
                           <div class="img__contain">
-                            <img
-                              id="img__profile"
-                              [src]="profilePictureUrl"
-                              alt="image"
-                            />
+                            <img id="img__profile" [src]="profilePictureUrl" alt="image" />
                           </div>
                           <!-- <div class="input-group">
                           <div class="custom-file">
@@ -1228,82 +727,52 @@
                           </div>
                         </div> -->
                           <div class="form-group">
-                            <input
-                              #profilePicture
-                              hidden="true"
-                              type="file"
-                              accept=".jpg,.png,.jpeg"
-                              onclick="this.value=null"
-                              (change)="profilePictureChange($event)"
-                              required
-                            />
+                            <input #profilePicture hidden="true" type="file" accept=".jpg,.png,.jpeg"
+                              onclick="this.value=null" (change)="profilePictureChange($event)" required />
 
-                            <button
-                              class="btn"
-                              (click)="profilePicture.click()"
-                              style="
+                            <button class="btn" (click)="profilePicture.click()" style="
                                 margin-top: 10px;
                                 height: 50px;
                                 position: relative;
-                              "
-                            >
+                              ">
                               <span *ngIf="!isLoading3">Upload</span>
-                              <div
-                                class="tickMark"
-                                *ngIf="profilePicUploadStatus"
-                              >
-                                <img
-                                  class="tickMarkImg"
-                                  src="../../../assets/icons/tick.png"
-                                />
+                              <div class="tickMark" *ngIf="profilePicUploadStatus">
+                                <img class="tickMarkImg" src="../../../assets/icons/tick.png" />
                               </div>
-                              <span
-                                *ngIf="isLoading3"
-                                class="loader"
-                                style="
+                              <span *ngIf="isLoading3" class="loader" style="
                                   text-align: center;
                                   z-index: 10;
                                   margin-right: 25px;
-                                "
-                              >
+                                ">
                                 <app-loader></app-loader>
                               </span>
                             </button>
                           </div>
-                          <div
-                            style="
+                          <div style="
                               margin: 5px;
                               margin-left: 0;
                               font-size: 14px;
                               font-weight: 600;
                               color: red;
-                            "
-                            *ngIf="emptyProfilePicture"
-                          >
+                            " *ngIf="emptyProfilePicture">
                             Please upload a profile picture !
                           </div>
-                          <div
-                            style="
+                          <div style="
                               margin: 5px;
                               margin-left: 0;
                               font-size: 14px;
                               font-weight: 600;
                               color: red;
-                            "
-                            *ngIf="invalidPicture"
-                          >
+                            " *ngIf="invalidPicture">
                             Please upload a valid Image !
                           </div>
-                          <div
-                            style="
+                          <div style="
                               margin: 10px;
                               margin-left: 0;
                               font-size: 14px;
                               font-weight: 600;
                               color: red;
-                            "
-                            *ngIf="pictureInfo"
-                          >
+                            " *ngIf="pictureInfo">
                             Max file size upto 3 MB in .jpg, .png or .jpeg
                             formats only
                           </div>
@@ -1312,42 +781,26 @@
                     </div>
                   </div>
 
-                  <div
-                    style="
+                  <div style="
                       margin: 10px;
                       margin-left: 0;
                       font-weight: 600;
                       color: red;
-                    "
-                  >
+                    ">
                     All the fields marked * are mandatory
                   </div>
                   <div>
-                    <span class="help-block" style="color: grey"
-                      >By submitting, you acknowledge that you have read and
+                    <span class="help-block" style="color: grey">By submitting, you acknowledge that you have read and
                       agreed to our
-                      <a
-                        routerLink="/terms-and-conditions"
-                        target="_blank"
-                        style="color: #8dc63f; cursor: pointer"
-                        >Terms and Conditions</a
-                      >
+                      <a routerLink="/terms-and-conditions" target="_blank"
+                        style="color: #8dc63f; cursor: pointer">Terms and Conditions</a>
                       and
-                      <a
-                        routerLink="/privacy-policy"
-                        target="_blank"
-                        style="color: #8dc63f; cursor: pointer"
-                        >Privacy Policy</a
-                      ></span
-                    >
+                      <a routerLink="/privacy-policy" target="_blank" style="color: #8dc63f; cursor: pointer">Privacy
+                        Policy</a></span>
                   </div>
                   <div class="signup_btnexp">
-                    <button
-                      type="submit"
-                      class="button form_Btn"
-                      style="margin-top: 10px"
-                      [disabled]="!basicProfile.valid"
-                    >
+                    <button type="submit" class="button form_Btn" style="margin-top: 10px"
+                      [disabled]="!basicProfile.valid">
                       Sign up as an Expert!
                     </button>
                   </div>
