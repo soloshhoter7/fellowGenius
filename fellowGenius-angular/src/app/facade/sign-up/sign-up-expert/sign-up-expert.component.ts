@@ -50,12 +50,10 @@ declare const window: any;
   selector: 'app-sign-up-expert',
   templateUrl: './sign-up-expert.component.html',
   styleUrls: ['./sign-up-expert.component.css'],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
-  ]
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SignUpExpertComponent implements OnInit {
-  dateOfBirth=new Date();
+  dateOfBirth = new Date();
   choosePassword;
   newPassword;
   loginEmail;
@@ -67,7 +65,7 @@ export class SignUpExpertComponent implements OnInit {
   isLoading = false;
   verificationOtp: any;
   wrongOtp: boolean;
-  showPassword:boolean=false;
+  showPassword: boolean = false;
 
   ngAfterViewInit() {
     togglePassword();
@@ -108,7 +106,7 @@ export class SignUpExpertComponent implements OnInit {
   duplicateEducationArea;
   verifyEmail = false;
   // mobNumberPattern = '^((\\+91-?)|0)?[0-9]{14}$';
-  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]{8,10}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
@@ -161,7 +159,7 @@ export class SignUpExpertComponent implements OnInit {
   showTextTopic: boolean = false;
   otherDomainSelected: boolean = false;
   otherTopicSelected: boolean = false;
-  showEditPreviousOrganisations:boolean = false;
+  showEditPreviousOrganisations: boolean = false;
   ngOnInit() {
     window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -238,8 +236,8 @@ export class SignUpExpertComponent implements OnInit {
     );
   }
 
-  togglePasswords(){
-    this.showPassword=!this.showPassword;
+  togglePasswords() {
+    this.showPassword = !this.showPassword;
   }
 
   public _filter(value: string): string[] {
@@ -249,17 +247,17 @@ export class SignUpExpertComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
-  togglePreviousOrganisationsView(){
-    this.showEditPreviousOrganisations=!this.showEditPreviousOrganisations;
+  togglePreviousOrganisationsView() {
+    this.showEditPreviousOrganisations = !this.showEditPreviousOrganisations;
   }
   selectOtherDomain() {
-    this.duplicateExpertiseArea=false;
+    this.duplicateExpertiseArea = false;
     this.showTextDomain = true;
     this.showTextTopic = true;
     this.otherDomainSelected = true;
   }
   selectOtherTopic() {
-    this.duplicateExpertiseArea=false;
+    this.duplicateExpertiseArea = false;
     console.log('selected other topic');
     if (this.selectedCategory) {
       this.showTextTopic = true;
@@ -302,7 +300,6 @@ export class SignUpExpertComponent implements OnInit {
     this.inputCompletionDate.setValue(ctrlValue);
     datepicker.close();
   }
-
 
   saveNewPassword() {
     this.isLoading = true;
@@ -501,11 +498,17 @@ export class SignUpExpertComponent implements OnInit {
     return this.educationQualifications[0].split(':')[0];
   }
 
-  formatDobFromMoment(momentDate: any){
-    // console.log(momentDate);
-     let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
-     return formattedDate;
-   }
+  formatDobFromMoment(momentDate: any) {
+    let momentObject;
+    if (momentDate._isAMomentObject == true) {
+      momentObject = momentDate;
+    } else {
+      let date: Date = new Date(momentDate);
+      momentObject = moment(date);
+    }
+    let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
+    return formattedDate;
+  }
 
   saveExpertBasicProfile(form: any) {
     if (this.expertises.length > 0) {
@@ -520,7 +523,9 @@ export class SignUpExpertComponent implements OnInit {
           this.isLoading = true;
 
           this.tutorProfileDetails.contact = form.value.contact;
-          this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(form.value.dob);
+          this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
+            form.value.dob
+          );
           console.log(this.tutorProfileDetails.dateOfBirth);
           this.tutorProfileDetails.email = form.value.email;
           this.tutorProfileDetails.educationalQualifications =
@@ -544,7 +549,7 @@ export class SignUpExpertComponent implements OnInit {
           this.tutorProfileDetails.description = form.value.description;
           this.tutorProfileDetails.speciality = form.value.speciality;
           this.tutorProfileDetails.upiID = form.value.upiID;
-          this.tutorProfileDetails.gst=form.value.gst;
+          this.tutorProfileDetails.gst = form.value.gst;
           console.log(this.tutorProfileDetails);
           this.httpService
             .checkUser(this.tutorProfileDetails.email)
@@ -568,7 +573,7 @@ export class SignUpExpertComponent implements OnInit {
                     this.verifyEmail = true;
                   });
               }
-            }); 
+            });
         } else {
           this.emptyProfilePicture = true;
           let el = document.getElementById('photoBox');

@@ -386,8 +386,14 @@ export class ProfileComponent implements OnInit {
     return this.educationQualifications[0].split(':')[0];
   }
   formatDobFromMoment(momentDate: any) {
-    console.log(momentDate);
-    let formattedDate = moment(momentDate._d).format('DD/MM/YYYY');
+    let momentObject;
+    if (momentDate._isAMomentObject == true) {
+      momentObject = momentDate;
+    } else {
+      let date: Date = new Date(momentDate);
+      momentObject = moment(date);
+    }
+    let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
     return formattedDate;
   }
   saveExpertBasicProfile(form: any) {

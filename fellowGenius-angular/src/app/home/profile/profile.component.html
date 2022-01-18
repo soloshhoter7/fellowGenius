@@ -334,15 +334,17 @@
                       class="form-control"
                       name="price"
                       required
+                      min="1"
                       placeholder="Enter price per hour"
                       [(ngModel)]="tutorProfileDetails.price1"
                       #expertisePrice="ngModel"
+                      expertPriceValidator
                       (ngModelChange)="onPercentChange($event)"
                     />
                     <span
                       class="help-block"
                       *ngIf="
-                        !expertisePrice.valid && expertisePrice.touched
+                        expertisePrice.errors?.invalidPrice && expertisePrice.touched
                       "
                       >Invalid Price per hour !</span
                     >

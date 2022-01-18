@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ReferralActivityAnalytics } from 'src/app/model/referralActivityAnalytics';
 import { UserActivityAnalytics } from 'src/app/model/userActivityAnalytics';
-import { ActivityTimeDetails, UserData,ReferralActivityDetails } from 'src/app/model/UserData';
+import {
+  ActivityTimeDetails,
+  UserData,
+  ReferralActivityDetails,
+} from 'src/app/model/UserData';
 import { HttpService } from 'src/app/service/http.service';
 
 @Component({
@@ -10,7 +14,7 @@ import { HttpService } from 'src/app/service/http.service';
   styleUrls: ['./analytics.component.css'],
 })
 export class AnalyticsComponent implements OnInit {
-    constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService) {}
 
   userAnalytics: UserActivityAnalytics;
   userData: UserData[] = [];
@@ -69,7 +73,7 @@ export class AnalyticsComponent implements OnInit {
     removeNewLines: true,
     keys: ['userId', 'fullName', 'role', 'signUpTime', 'referralCode'],
   };
-  
+
   meetingDataOptions = {
     fieldSeparator: ',',
     quoteStrings: '"',
@@ -96,7 +100,7 @@ export class AnalyticsComponent implements OnInit {
       'Payment Id',
       'Amount',
       'Status',
-      'isRescheduled'
+      'isRescheduled',
     ],
     showTitle: true,
     title: 'Meeting Details',
@@ -123,33 +127,42 @@ export class AnalyticsComponent implements OnInit {
       'razorpay_payment_id',
       'amount',
       'approvalStatus',
-      'isRescheduled'
+      'isRescheduled',
     ],
   };
 
-  referralData:ReferralActivityDetails[]=[];
-  refferalDataOptions={
+  referralData: ReferralActivityDetails[] = [];
+  refferalDataOptions = {
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalseparator: '.',
     showLabels: false,
-    headers:['User Id','Full Name','Reffered By','Expert Code','Joined Time','Platform Type'],
+    headers: [
+      'User Id',
+      'Full Name',
+      'Reffered By',
+      'Expert Code',
+      'Joined Time',
+      'Platform Type',
+    ],
     title: 'Reffered Data',
-    useBom:false,
+    useBom: false,
     removeNewLines: true,
     keys:['userId','fullName','referredUser','expertCode','signUpTime','platformType'],
   }
   referralAnalytics:ReferralActivityAnalytics;
   disableReferralAnalytics:boolean=true;
   //google chart data
-  titleReferralTracker = 'Referral Activity Tracker Chart';  
-  typeReferralTracker= 'PieChart';  
-  dataReferralTracker = [];  
-  columnNames = ['Name', 'Percentage'];  
-  optionsReferralTracker = {  colors: ['#FA0F0F', '#19ADEC', '#17E447'], is3D: true    
-  };  
-  ReferralTrackerWidth = 500;  
-  ReferralTrackerHeight = 300; 
+  titleReferralTracker = 'Referral Activity Tracker Chart';
+  typeReferralTracker = 'PieChart';
+  dataReferralTracker = [];
+  columnNames = ['Name', 'Percentage'];
+  optionsReferralTracker = {
+    colors: ['#FA0F0F', '#19ADEC', '#17E447'],
+    is3D: true,
+  };
+  ReferralTrackerWidth = 500;
+  ReferralTrackerHeight = 300;
 
   ngOnInit(): void {
     this.downloadUserData();
@@ -168,19 +181,19 @@ export class AnalyticsComponent implements OnInit {
     });
   }
 
-  fetchReferralAnalytics(){
-    this.httpService.fetchReferralAnalytics().subscribe((res)=>{
-      this.referralAnalytics=res;
+  fetchReferralAnalytics() {
+    this.httpService.fetchReferralAnalytics().subscribe((res) => {
+      this.referralAnalytics = res;
       console.log(this.referralAnalytics);
 
-      this.dataReferralTracker=[ 
-     ['Linkedin', this.referralAnalytics.referralLinkedinCount],  
-     ['Mail', this.referralAnalytics.referralMailCount],
-     ['Whatsapp',this.referralAnalytics.referralWhatsappCount]  
-      ]
+      this.dataReferralTracker = [
+        ['Linkedin', this.referralAnalytics.referralLinkedinCount],
+        ['Mail', this.referralAnalytics.referralMailCount],
+        ['Whatsapp', this.referralAnalytics.referralWhatsappCount],
+      ];
 
-      this.disableReferralAnalytics=false;
-    })
+      // this.disableReferralAnalytics=false;
+    });
   }
 
   downloadUserData() {
@@ -211,12 +224,12 @@ export class AnalyticsComponent implements OnInit {
     });
   }
 
-  downloadReferralData(){
+  downloadReferralData() {
     console.log('Inside the download referral data');
-    this.httpService.fetchAllReferralData().subscribe((res: any)=> {
-      console.log('Referral excel data: '+res);
-      this.referralData=res;
-      console.log('Referral Data '+this.referralData);
-    })
+    this.httpService.fetchAllReferralData().subscribe((res: any) => {
+      console.log('Referral excel data: ' + res);
+      this.referralData = res;
+      console.log('Referral Data ' + this.referralData);
+    });
   }
 }
