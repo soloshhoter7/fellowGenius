@@ -77,6 +77,8 @@ export class SignUpExpertComponent implements OnInit {
   pricePerHourError: boolean = false;
   minDate;
   maxDate;
+  minDobDate;
+  maxDobDate;
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -93,6 +95,8 @@ export class SignUpExpertComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 50, 0, 1);
     this.maxDate = new Date(currentYear + 2, 11, 31);
+    this.minDobDate=new Date(currentYear-70,0,1);
+    this.maxDobDate=new Date(currentYear-6,11,31);
     this.fillOptions();
   }
   invalidCompletionDate = false;
