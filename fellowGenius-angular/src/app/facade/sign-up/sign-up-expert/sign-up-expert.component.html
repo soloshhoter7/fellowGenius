@@ -364,12 +364,14 @@
 
                       <div class="col-12 col-md-6">
                         <div class="form-group">
-                          <label class="">Date of Birth (DD/MM/YY)* </label>
+                          <label class="">Date of Birth (DD/MM/YYYY)* </label>
        <div style="display:flex">
         <input
         appDateFormatDdmmyyyy
           class="form-control"
           matInput
+          disabled
+          oninput="this.value = this.value.replace(/[^~]/g, '').replace(/(\..*?)\..*/g, '$1');"
           placeholder="Date of Birth"
           [matDatepicker]="dobdp"
           id="dob"
@@ -447,7 +449,7 @@
                           <label class="">Phone Number*</label>
                           <input
                             type="text"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                            oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(\..*?)\..*/g, '$1');"
                             class="form-control"
                             placeholder="Phone number"
                             id="contact"

@@ -523,6 +523,7 @@ export class SignUpExpertComponent implements OnInit {
           this.isLoading = true;
 
           this.tutorProfileDetails.contact = form.value.contact;
+          console.log("User inputted DOB is "+ form.value.dob);
           this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
             form.value.dob
           );
