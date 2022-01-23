@@ -728,10 +728,24 @@ public class UserService implements UserDetailsService {
 		String initials="";
 		if(fullName.length()>1) {
 			String[] name = fullName.split("\\s+");
+			System.out.println("The name array is ");
 			for(String n:name) {
-				initials+=n.charAt(0);
+				System.out.print(n + " ");
 			}
+			if(name.length>2) { //TSK
+				initials+=name[0].charAt(0);
+				initials+=name[name.length-1].charAt(0);
+			}else if(name.length==1) { //TT
+				initials+=name[0].charAt(0);
+				initials+=name[0].charAt(0);
+			}else { //TK,SK or SS
+				for(String n:name) {
+					initials+=n.charAt(0);
+				}
+			}
+			
 		}
+		System.out.println("The initials are : "+ initials);
 		return initials;
 		
 	}

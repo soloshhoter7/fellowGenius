@@ -152,7 +152,7 @@ export class SignUpExpertComponent implements OnInit {
   invalidEducationDetails = false;
   jwtToken;
   invalidChoosePassword;
-  inputCompletionDate = new FormControl(moment());
+  inputCompletionDate = new FormControl('');
   textTopic = '';
   textDomain = '';
   showTextDomain: boolean = false;
@@ -509,8 +509,13 @@ export class SignUpExpertComponent implements OnInit {
     let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
     return formattedDate;
   }
-
+  autoSaveEnteredInformation() {
+    this.saveExpertise();
+    this.addOrganisation();
+    this.addEducation();
+  }
   saveExpertBasicProfile(form: any) {
+    this.autoSaveEnteredInformation();
     if (this.expertises.length > 0) {
       if (this.errorText) {
         this.errorText = '';
@@ -644,11 +649,12 @@ export class SignUpExpertComponent implements OnInit {
     return false;
   }
   organisationDuplicacyCheck(fields: any, item: string) {
+    console.log(item, fields);
     const arr = item.split('@');
 
     for (let i = 0; i < fields.length; i++) {
       const brr = fields[i].split('@');
-      if (arr[1] == brr[1]) {
+      if (arr[0] == brr[0] && arr[1] == brr[1]) {
         return true;
       }
     }
@@ -989,12 +995,19 @@ export class SignUpExpertComponent implements OnInit {
       if (this.invalidOrganisationDetails == true) {
         this.invalidOrganisationDetails = false;
       }
+      let orgString = this.inputDesignation + ' @ ' + this.inputOrganisation;
       if (
         !this.organisationDuplicacyCheck(
           this.previousOraganisations,
-          this.inputOrganisation
+          orgString
+        ) &&
+        !(
+          this.inputOrganisation ==
+            this.tutorProfileDetails.currentOrganisation &&
+          this.inputDesignation == this.tutorProfileDetails.currentDesignation
         )
       ) {
+        console.log('here');
         let org = {
           organisation: this.inputOrganisation,
           designation: this.inputDesignation,
@@ -1002,6 +1015,7 @@ export class SignUpExpertComponent implements OnInit {
         this.previousOraganisations.push(
           this.inputDesignation + ' @ ' + this.inputOrganisation
         );
+        console.log(this.previousOraganisations);
         this.prevArrangedOrganisations.push(org);
         this.inputOrganisation = '';
         this.inputDesignation = '';

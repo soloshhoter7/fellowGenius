@@ -26,4 +26,19 @@ export class ReferralsInfoComponent implements OnInit {
     )
   }
 
+  showReferralInfo(id:string){
+
+    console.log("Inside the view detail click "+ id);
+    const targetDiv=document.getElementById(id);
+    const targetButton=document.getElementById(id+"3");
+    console.log("Target Div is "+ targetDiv);
+    if (targetDiv.style.display !== "none") {
+      targetDiv.style.display = "none";
+      targetButton.innerHTML="View Details";
+    } else {
+      targetDiv.style.display = "block";
+      targetButton.innerHTML="Hide Details";
+    }
+  }
+
 }

@@ -109,6 +109,7 @@
                     <label class="">Phone Number*</label>
                     <input
                       type="text"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                       class="form-control"
                       placeholder="Phone number"
                       id="contact"
@@ -641,6 +642,7 @@
                     <label class="">Total Years of Experience*</label>
                     <input
                       type="text"
+                      oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                       class="form-control"
                       id="yearsOfExperience"
                       name="yearsOfExperience"

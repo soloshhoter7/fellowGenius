@@ -148,17 +148,10 @@ export class AnalyticsComponent implements OnInit {
     title: 'Reffered Data',
     useBom: false,
     removeNewLines: true,
-    keys: [
-      'userId',
-      'fullName',
-      'referredBy',
-      'expertCode',
-      'JoinedTime',
-      'Platform Type',
-    ],
-  };
-  referralAnalytics: ReferralActivityAnalytics;
-  disableReferralAnalytics: boolean = true;
+    keys:['userId','fullName','referredUser','expertCode','signUpTime','platformType'],
+  }
+  referralAnalytics:ReferralActivityAnalytics;
+  disableReferralAnalytics:boolean=true;
   //google chart data
   titleReferralTracker = 'Referral Activity Tracker Chart';
   typeReferralTracker = 'PieChart';

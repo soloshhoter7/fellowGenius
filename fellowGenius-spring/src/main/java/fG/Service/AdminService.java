@@ -57,7 +57,7 @@ public class AdminService {
 	}
 
 	public ArrayList<AdminReferralInfoModel> getAdminReferralInfo() {
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		// TODO Auto-generated method stub
 		ArrayList<AdminReferralInfoModel> adminReferralInfoList=
 				new ArrayList<AdminReferralInfoModel>();
@@ -116,7 +116,9 @@ public class AdminService {
 						meetingSetupInfoObject.setDuration(referredUsersMeetingSetup.getDuration());
 						meetingSetupInfoObject.setAmount(referredUsersMeetingSetup.getAmount());
 						meetingSetupInfoObject.setDateOfMeeting(referredUsersMeetingSetup.getDateOfMeeting());
+						meetingSetupInfoObject.setCreationTime(sdf.format(referredUsersMeetingSetup.getCreatedDate()));
 						meetingSetupInfoList.add(meetingSetupInfoObject);
+					
 					}
 
 				}
@@ -144,6 +146,7 @@ public class AdminService {
 					meetingCompletedInfoObject.setDuration(referredUsersMeetingCompleted.getDuration());
 					meetingCompletedInfoObject.setAmount(referredUsersMeetingCompleted.getAmount());
 					meetingCompletedInfoObject.setDateOfMeeting(referredUsersMeetingCompleted.getDateOfMeeting());
+					meetingCompletedInfoObject.setCreationTime(sdf.format(referredUsersMeetingCompleted.getCreatedDate()));
 					meetingCompletedInfoList.add(meetingCompletedInfoObject);
 					//System.out.println(meetingCompletedInfoObject);
 				}
