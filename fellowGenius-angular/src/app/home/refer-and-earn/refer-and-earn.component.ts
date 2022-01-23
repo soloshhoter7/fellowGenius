@@ -226,10 +226,28 @@ export class ReferAndEarnComponent implements OnInit {
         currentYear.toString().substring(2, 4)
       );
       const nameArray = this.fullName.split(' ');
-      for (let name of nameArray) {
-        const initials: string = name.substring(0, 1);
-        this.referCode = this.referCode.concat(initials.toUpperCase());
+      const newNameArray=[];
+      if(nameArray.length>2){ //TSK
+         newNameArray.push(nameArray[0]);
+         newNameArray.push(nameArray[nameArray.length-1]);
+         for(let name of newNameArray){
+          const initials: string = name.substring(0, 1);
+          this.referCode = this.referCode.concat(initials.toUpperCase());
+         }
+      }else if(nameArray.length==1){ //TT
+        newNameArray.push(nameArray[0]);
+        newNameArray.push(nameArray[0]);
+        for(let name of newNameArray){
+          const initials: string = name.substring(0, 1);
+          this.referCode = this.referCode.concat(initials.toUpperCase());
+         }
+      }else{
+        for (let name of nameArray) {
+          const initials: string = name.substring(0, 1);
+          this.referCode = this.referCode.concat(initials.toUpperCase());
+        } 
       }
+     
       const last4uid = this.userId.substring(this.userId.length - 4);
       this.referCode = this.referCode.concat(last4uid);
       console.log(this.referCode);

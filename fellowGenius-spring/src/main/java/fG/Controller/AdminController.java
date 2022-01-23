@@ -247,4 +247,10 @@ public class AdminController {
 	public ArrayList<TransactionsModel> fetchPreviousTransactions(){
 		return adminService.getPreviousTransactions();
 	}
+	
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/deleteUser")
+	public void deleteUser(String userId) {
+		service.deleteUser(userId);
+	}
 }

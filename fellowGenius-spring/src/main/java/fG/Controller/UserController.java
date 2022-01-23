@@ -339,7 +339,7 @@ public class UserController {
 	}
 	
 	//to fetch cashback table of user
-	@PreAuthorize("hasAuthority('Learner')")
+	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
 	@RequestMapping(value="/getCashbackTableOfUser",method=RequestMethod.GET)
 	public List<CashbackInfo> getCashbackTableOfUser(String userId){
 		return service.getCashbackTableOfUser(userId);

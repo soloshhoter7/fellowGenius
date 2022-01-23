@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -19,7 +18,7 @@ import {
 } from 'src/app/model/tutorProfileDetails';
 import { HttpService } from 'src/app/service/http.service';
 import { TutorService } from 'src/app/service/tutor.service';
-import { togglePassword, initiateSelect2 } from '../../assets/js/custom';
+import { togglePassword, initiateSelect2 } from 'src/assets/js/custom.js';
 import { UploadProfilePictureComponent } from '../facade/sign-up/upload-profile-picture/upload-profile-picture.component';
 import { NgZone } from '@angular/core';
 import { loginModel } from 'src/app/model/login';
@@ -41,7 +40,6 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment, Moment } from 'moment';
-import AgoraRTC from 'agora-rtc-sdk-ng';
 // const moment = _rollupMoment || _moment;
 const moment = _rollupMoment || _moment;
 // See the Moment.js docs for the meaning of these formats:
@@ -52,231 +50,1087 @@ declare const window: any;
   selector: 'app-test',
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.css'],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class TestComponent implements OnInit {
-  channelName: string = 'FG@123456';
-  appId: string = '45f3ee50e0fd491aa46bd17c05fc7073';
-  uid = '12345';
-  clientJoined: boolean = false;
-  // create Agora client
-client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-localTracks = {
-  videoTrack: null,
-  audioTrack: null
-};
-remoteUsers = {};
-// Agora client options
-options = {
-  appid: '',
-  channel: '',
-  uid: '',
-  token: ''
-};
+  dateOfBirth = new Date();
+  choosePassword;
+  newPassword;
+  loginEmail;
+  loginModel = new loginModel();
+  invalidOrganisationDetails: boolean;
+  emptyProfilePicture;
+  emptyEducationDetails = false;
+  registeredExpert = false;
+  isLoading = false;
+  verificationOtp: any;
+  wrongOtp: boolean;
+  showPassword: boolean = false;
 
-  mics = []; // all microphones devices you can use
-  cams = []; // all cameras devices you can use
-  currentMic; // the microphone you are using
-  currentCam; // the camera you are using
-
-  volumeAnimation;
-  localTrackAudioLevel = '0';
-  ngOnInit(): void {
-    console.log('options :', this.options);
-    $('#media-device-test').modal('show');
-    var urlParams = new URL(location.href).searchParams;
-    this.options.appid = this.appId;
-    this.options.channel = this.channelName;
-    this.options.token = urlParams.get('token');
-    this.options.uid = urlParams.get('uid');
-    this.mediaDeviceTest();
-    setInterval(() => {
-      this.localTrackAudioLevel = (
-        this.localTracks.audioTrack.getVolumeLevel() * 100
-      ).toFixed(2);
-    }, 100);
-    // this.volumeAnimation = requestAnimationFrame(this.setVolumeWave);
+  ngAfterViewInit() {
+    togglePassword();
+    initiateSelect2();
   }
-
-  async formJoinSubmit(){
-   console.log(this.options);
-    $("#join").attr("disabled", true);
-    $("#device-wrapper").css("display", "flex");
-    try {
-      this.options.appid = this.appId;
-      this.options.token = 'hello';
-      this.options.channel = this.channelName;
-      
-      await this.join();
-      if (this.options.token) {
-        $('#success-alert-with-token').css('display', 'block');
+  emailValid = false;
+  addExpertise = new expertise();
+  profileError: string;
+  pricePerHourError: boolean = false;
+  dobPattern="(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$";
+  minDate;
+  maxDate;
+  minDobDate;
+  maxDobDate;
+  constructor(
+    public cookieService: CookieService,
+    public tutorService: TutorService,
+    public httpService: HttpService,
+    public firebaseStorage: AngularFireStorage,
+    public snackBar: MatSnackBar,
+    private matDialog: MatDialog,
+    private router: Router,
+    private ngZone: NgZone,
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
+    private loginDetailsService: LoginDetailsService
+  ) {
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 50, 0, 1);
+    this.maxDate = new Date(currentYear + 2, 11, 31);
+    this.minDobDate=new Date(currentYear-70,0,1);
+    this.maxDobDate=new Date(currentYear-6,11,31);
+    
+    this.fillOptions();
+  }
+  invalidCompletionDate = false;
+  basic = true;
+  myControl = new FormControl();
+  errorText: string;
+  isLoading3: boolean = false;
+  profilePicUploadStatus: boolean;
+  duplicateExpertiseArea;
+  duplicatePreviousOrganisation;
+  duplicateEducationArea;
+  verifyEmail = false;
+  // mobNumberPattern = '^((\\+91-?)|0)?[0-9]{14}$';
+  mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  @ViewChild('basicProfile') basicProfile: FormGroupDirective;
+  config: MatSnackBarConfig = {
+    duration: 2000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top',
+  };
+  options: string[] = [];
+  //data fields
+  selectedExpertise;
+  expertises: expertise[] = [];
+  educationQualifications: string[] = [];
+  previousOraganisations: string[] = [];
+  prevArrangedOrganisations: any = [];
+  filteredOptions: Observable<string[]>;
+  inputOrganisation;
+  inputDesignation;
+  currentDesignation;
+  inputEducation;
+  // inputCompletionDate;
+  inputInstitute;
+  tutorProfile = new tutorProfile();
+  tutorProfileDetails = new tutorProfileDetails();
+  userId;
+  profilePictureUrl = '../assets/images/dummy-profile.svg';
+  uploadedProfilePicture: File = null;
+  priceForExpertise;
+  selectedValue;
+  categories: Category[] = [];
+  subCategories: Category[] = [];
+  filteredSubCategories: Category[] = [];
+  appInfo: AppInfo[] = [];
+  selectedCategory;
+  selectedCategoryCount = 1;
+  selectedSubCategory;
+  isSelectedSubCategory;
+  GSTValue;
+  commission;
+  actualEarning;
+  invalidPicture: boolean = false;
+  pictureInfo: boolean = true;
+  invalidEducationDetails = false;
+  jwtToken;
+  invalidChoosePassword;
+  inputCompletionDate = new FormControl(moment());
+  textTopic = '';
+  textDomain = '';
+  showTextDomain: boolean = false;
+  showTextTopic: boolean = false;
+  otherDomainSelected: boolean = false;
+  otherTopicSelected: boolean = false;
+  showEditPreviousOrganisations: boolean = false;
+  ngOnInit() {
+    window.scroll(0, 0);
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.jwtToken = params['token'];
+      if (this.jwtToken) {
+        this.choosePassword = true;
       } else {
-        $('#success-alert a').attr(
-          'href',
-          `index.html?appid=${this.options.appid}&channel=${this.options.channel}&token=${this.options.token}`
+        this.choosePassword = false;
+      }
+      // this.httpService
+      //   .fetchTutorProfileDetails(this.userId)
+      //   .subscribe((res) => {
+      //     this.teacherProfile = res;
+
+      //   });
+    });
+
+    let that = this;
+    window['angularComponentReference'] = {
+      component: this,
+      zone: this.ngZone,
+      loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
+      changeOtherDomain: () => this.selectOtherDomain(),
+      changeOtherTopic: () => this.selectOtherTopic(),
+      disableEditDomainView: () => this.disableEditDomainView(),
+    };
+    this.getAllCategories();
+    // this.getEarningAppInfo();
+    $('.select2').select2({
+      placeholder: {
+        id: '-1', // the value of the option
+        text: 'Select an option',
+      },
+    });
+
+    $('.select2').on('change', function () {
+      let value = $(this).val();
+      if (value && value != 'Others') {
+        this.selectedCategory = $(this).val();
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.loadAngularFunction($(this).val());
+        });
+      }
+    });
+
+    $('#chooseCategory').on('change', function () {
+      let value: string = $(this).val();
+      if (value == 'Others') {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.changeOtherDomain();
+        });
+      } else {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.disableEditDomainView();
+        });
+      }
+    });
+    $('#chooseSubCategory').on('change', function () {
+      let value = $(this).val();
+      if (value == 'Others') {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.changeOtherTopic();
+        });
+      } else {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.disableEditDomainView();
+        });
+      }
+    });
+
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+  }
+
+  togglePasswords() {
+    this.showPassword = !this.showPassword;
+  }
+
+  public _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+  togglePreviousOrganisationsView() {
+    this.showEditPreviousOrganisations = !this.showEditPreviousOrganisations;
+  }
+  selectOtherDomain() {
+    this.duplicateExpertiseArea = false;
+    this.showTextDomain = true;
+    this.showTextTopic = true;
+    this.otherDomainSelected = true;
+  }
+  selectOtherTopic() {
+    this.duplicateExpertiseArea = false;
+    console.log('selected other topic');
+    if (this.selectedCategory) {
+      this.showTextTopic = true;
+      this.otherTopicSelected = true;
+    } else {
+      this.errorText = 'Please choose a domain !';
+    }
+  }
+  disableEditDomainView() {
+    this.showTextDomain = false;
+    this.showTextTopic = false;
+    this.otherDomainSelected = false;
+    this.otherTopicSelected = false;
+    this.textDomain = '';
+    this.textTopic = '';
+  }
+  onDigitInput(event) {
+    let element;
+    if (event.code !== 'Backspace')
+      element = event.srcElement.nextElementSibling;
+
+    if (event.code === 'Backspace')
+      element = event.srcElement.previousElementSibling;
+
+    if (element == null) return;
+    else element.focus();
+  }
+  chosenYearHandler(normalizedYear: Moment) {
+    const ctrlValue = this.inputCompletionDate.value;
+    ctrlValue.year(normalizedYear.year());
+    this.inputCompletionDate.setValue(ctrlValue);
+  }
+
+  chosenMonthHandler(
+    normalizedMonth: Moment,
+    datepicker: MatDatepicker<Moment>
+  ) {
+    const ctrlValue = this.inputCompletionDate.value;
+    ctrlValue.month(normalizedMonth.month());
+    this.inputCompletionDate.setValue(ctrlValue);
+    datepicker.close();
+  }
+
+  saveNewPassword() {
+    this.isLoading = true;
+    this.httpService
+      .choosePassword(this.jwtToken, this.newPassword)
+      .subscribe((res: any) => {
+        if (res.response == 'password not changed' || res == null) {
+          this.isLoading = false;
+          this.invalidChoosePassword = true;
+        } else {
+          this.loginEmail = res.response;
+          this.loginModel.email = this.loginEmail;
+          this.loginModel.password = this.newPassword;
+          this.loginModel.method = bcrypt.hashSync('manual', 1);
+          this.authService.onLogin(this.loginModel);
+          this.authService.getAuthStatusListener().subscribe((res) => {
+            if (res == false) {
+              this.isLoading = false;
+              this.invalidChoosePassword = true;
+            } else if (res == true) {
+              if (this.loginDetailsService.getLoginType() == 'Learner') {
+                this.loginDetailsService.setTrType('sign-up');
+                this.toFacade();
+              } else if (this.loginDetailsService.getLoginType() == 'Expert') {
+                this.loginDetailsService.setTrType('sign-up');
+                this.toHome();
+              }
+            }
+          });
+        }
+      });
+  }
+  toFacade() {
+    this.router.navigate(['']);
+  }
+  toHome() {
+    this.router.navigate(['home']);
+  }
+  appendOtp(form: NgForm) {
+    let otp: string = '';
+    let otp_1digit = form.value.otp_1digit;
+    let otp_2digit = form.value.otp_2digit;
+    let otp_3digit = form.value.otp_3digit;
+    let otp_4digit = form.value.otp_4digit;
+    let otp_5digit = form.value.otp_5digit;
+    let otp_6digit = form.value.otp_6digit;
+    otp += otp_1digit.toString();
+    otp += otp_2digit.toString();
+    otp += otp_3digit.toString();
+    otp += otp_4digit.toString();
+    otp += otp_5digit.toString();
+    otp += otp_6digit.toString();
+
+    return otp;
+  }
+  verifyEmailOtp(form) {
+    this.isLoading = true;
+    let otp: string = this.appendOtp(form);
+
+    if (otp == null) {
+      this.isLoading = false;
+      this.wrongOtp = true;
+    } else {
+      if (bcrypt.compareSync(otp, this.verificationOtp)) {
+        this.httpService
+          .registerExpert(this.tutorProfileDetails)
+          .subscribe((res) => {
+            this.isLoading = false;
+            if (res == true) {
+              this.registeredExpert = true;
+              this.verifyEmail = false;
+            } else {
+              this.isLoading = false;
+              this.registeredExpert = false;
+              this.verifyEmail = false;
+              this.snackBar.open(
+                'Expert already Registered !',
+                'close',
+                this.config
+              );
+            }
+          });
+      } else {
+        this.isLoading = false;
+        this.wrongOtp = true;
+      }
+    }
+  }
+  getEarningAppInfo() {
+    this.httpService.getEarningAppInfo().subscribe((res) => {
+      this.appInfo = res;
+    });
+  }
+  onPercentChange(percent: number) {
+    let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
+    let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;
+
+    this.GSTValue = Math.abs(this.round(percent / gstMultiplier - percent));
+    this.commission = Math.abs(
+      this.round(
+        percent / gstMultiplier / commissionMultiplier - percent / gstMultiplier
+      )
+    );
+    this.actualEarning = Math.abs(
+      this.round(percent - this.GSTValue - this.commission)
+    );
+    // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
+    // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
+  }
+  round(num) {
+    var m = Number((Math.abs(num) * 100).toPrecision(15));
+    return (Math.round(m) / 100) * Math.sign(num);
+  }
+  fillOptions() {
+    this.httpService.getAllSubCategories().subscribe((res) => {
+      this.subCategories = res;
+      if (this.subCategories.length > 0) {
+        for (var i = 0; i < this.subCategories.length; i++) {
+          this.options.push(this.subCategories[i].subCategory);
+        }
+      }
+    });
+  }
+  checkDomainInList(val) {
+    for (let categ of this.categories) {
+      if (categ.category == val) {
+        return true;
+      }
+    }
+    return false;
+  }
+  filterSCfromCateg(val) {
+    if (val != 'Others') {
+      if (!this.selectedCategory || this.checkDomainInList(val)) {
+        this.selectedCategory = val;
+
+        this.filteredSubCategories = [];
+        this.filteredSubCategories = this.subCategories.filter(
+          (x) => x.category == this.selectedCategory
         );
-        $('#success-alert').css('display', 'block');
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      $('#leave').attr('disabled', false);
-    }
-  }
 
-  async join() {
-    // add event listener to play remote tracks when remote user publishs.
-    console.log('Inside the join method');
-    this.client.on('user-published', this.handleUserPublished);
-    this.client.on('user-unpublished', this.handleUserUnpublished);
-
-    // join a channel.
-    await this.client.join(this.options.appid, this.options.channel, 
-      this.options.token || null, this.options.uid || null);
-  
-    if (!this.localTracks.audioTrack || !this.localTracks.videoTrack) {
-      [this.localTracks.audioTrack, this.localTracks.videoTrack] =
-        await Promise.all([
-          // create local tracks, using microphone and camera
-          AgoraRTC.createMicrophoneAudioTrack({
-            microphoneId: this.currentMic.deviceId,
-          }),
-          AgoraRTC.createCameraVideoTrack({
-            cameraId: this.currentCam.deviceId,
-          }),
-        ]);
-    }
-
-    // play local video track
-    this.localTracks.videoTrack.play('local-player');
-    $('#local-player-name').text(`localVideo(${this.options.uid})`);
-
-    // publish local tracks to channel
-    await this.client.publish(Object.values(this.localTracks));
-    console.log('publish success');
-  }
-
-  async mediaDeviceTest() {
-    // create local tracks
-    [this.localTracks.audioTrack, this.localTracks.videoTrack] =
-      await Promise.all([
-        // create local tracks, using microphone and camera
-        AgoraRTC.createMicrophoneAudioTrack(),
-        AgoraRTC.createCameraVideoTrack(),
-      ]);
-
-    // play local track on device detect dialog
-    this.localTracks.videoTrack.play('pre-local-player');
-    // localTracks.audioTrack.play();
-
-    // get mics
-    this.mics = await AgoraRTC.getMicrophones();
-    this.currentMic = this.mics[0];
-    $('.mic-input').val(this.currentMic.label);
-    // this.mics.forEach((mic) => {
-    //   $('.mic-list').append(
-    //     `<a class="dropdown-item" href="#">${mic.label}</a>`
-    //   );
-    // });
-
-    // get cameras
-    this.cams = await AgoraRTC.getCameras();
-    this.currentCam = this.cams[0];
-    $('.cam-input').val(this.currentCam.label);
-    // this.cams.forEach((cam) => {
-    //   $('.cam-list').append(
-    //     `<a class="dropdown-item" (click)="">${cam.label}</a>`
-    //   );
-    // });
-  }
-
-  async leave() {
-    for (let trackName in this.localTracks) {
-      var track = this.localTracks[trackName];
-      if (track) {
-        track.stop();
-        track.close();
-        this.localTracks[trackName] = undefined;
+        this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+        if (this.selectedCategoryCount > 1) {
+          this.isSelectedSubCategory = true;
+        } else {
+          this.isSelectedSubCategory = false;
+        }
+        this.selectedCategoryCount++;
+      } else {
+        this.selectedSubCategory = val;
+        this.isSelectedSubCategory = true;
       }
     }
-
-    this.localTracks = { videoTrack: '', audioTrack: '' };
-
-    // remove remote users and player views
-    this.remoteUsers = {};
-    $('#remote-playerlist').html('');
-
-    // leave the channel
-    await this.client.leave();
-
-    $('#local-player-name').text('');
-    $('#join').attr('disabled', false);
-    $('#leave').attr('disabled', true);
-    $('#device-wrapper').css('display', 'none');
-    console.log('client leaves channel success');
+  }
+  getAllCategories() {
+    this.httpService.getAllCategories().subscribe((res) => {
+      let categories: Category[] = res;
+      if (categories.length > 0) {
+        for (var i = 0; i < categories.length; i++) {
+          let categ = new Category();
+          categ.category = categories[i].category;
+          this.categories.push(categ);
+          // this.selectedValue=this.categories[0].category;
+        }
+      }
+      this.httpService.getAllSubCategories().subscribe((res) => {
+        this.subCategories = res;
+        // this.selectedCategory=this.categories[0].category;
+      });
+    });
   }
 
-  async subscribe(user, mediaType) {
-    console.log('SUBSCRIBING');
-    const uid = user.uid;
-    // subscribe to a remote user
-    await this.client.subscribe(user, mediaType);
-    console.log('subscribe success');
-    if (mediaType === 'video') {
-      const player = $(`
-        <div id="player-wrapper-${uid}">
-          <p class="player-name">remoteUser(${uid})</p>
-          <div id="player-${uid}" class="player"></div>
-        </div>
-      `);
-      $('#remote-playerlist').append(player);
-      user.videoTrack.play(`player-${uid}`);
+  calculateProfileCompleted() {
+    let completeFields: number = 0;
+    let totalFields: number = 13;
+    if (this.tutorProfile.fullName != null) completeFields += 1;
+    if (this.tutorProfile.dateOfBirth != null) completeFields += 1;
+    if (this.tutorProfile.contact != null) completeFields += 1;
+    if (this.tutorProfileDetails.currentOrganisation != null)
+      completeFields += 1;
+    if (this.expertises.length > 0) completeFields += 1;
+    if (this.tutorProfileDetails.previousOrganisations.length > 0)
+      completeFields += 1;
+    if (this.tutorProfileDetails.institute != null) completeFields += 1;
+    if (this.tutorProfileDetails.educationalQualifications.length > 0)
+      completeFields += 1;
+    if (this.tutorProfileDetails.professionalSkills != null)
+      completeFields += 1;
+    if (this.tutorProfileDetails.yearsOfExperience != null) completeFields += 1;
+    if (this.tutorProfileDetails.description != null) completeFields += 1;
+    if (this.tutorProfileDetails.speciality != null) completeFields += 1;
+    if (this.tutorProfileDetails.linkedInProfile != null) completeFields += 1;
+    return this.round(completeFields / totalFields) * 100;
+  }
+  getInstitute() {
+    return this.educationQualifications[0].split(':')[0];
+  }
+
+  formatDobFromMoment(momentDate: any) {
+    let momentObject;
+    if (momentDate._isAMomentObject == true) {
+      momentObject = momentDate;
+    } else {
+      let date: Date = new Date(momentDate);
+      momentObject = moment(date);
     }
-    if (mediaType === 'audio') {
-      user.audioTrack.play();
+    let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
+    return formattedDate;
+  }
+
+  saveExpertBasicProfile(form: any) {
+    if (this.expertises.length > 0) {
+      if (this.errorText) {
+        this.errorText = '';
+      }
+      if (this.educationQualifications.length > 0) {
+        if (this.emptyEducationDetails == true)
+          this.emptyEducationDetails = false;
+        if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
+          // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
+          this.isLoading = true;
+
+          this.tutorProfileDetails.contact = form.value.contact;
+          console.log("User inputted DOB is "+ form.value.dob);
+
+          this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
+            form.value.dob
+          );
+          console.log(this.tutorProfileDetails.dateOfBirth);
+          this.tutorProfileDetails.email = form.value.email;
+          this.tutorProfileDetails.educationalQualifications =
+            this.educationQualifications;
+          this.tutorProfileDetails.professionalSkills =
+            form.value.professionalSkills;
+          this.tutorProfileDetails.fullName = form.value.fullName;
+          this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+          this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
+          this.tutorProfileDetails.institute = this.getInstitute();
+          this.tutorProfileDetails.areaOfExpertise = this.expertises;
+          this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+          this.tutorProfileDetails.yearsOfExperience =
+            form.value.yearsOfExperience;
+          this.tutorProfileDetails.currentOrganisation =
+            form.value.currentOrganisation;
+          this.tutorProfileDetails.currentDesignation =
+            form.value.currentDesignation;
+          this.tutorProfileDetails.previousOrganisations =
+            this.previousOraganisations;
+          this.tutorProfileDetails.description = form.value.description;
+          this.tutorProfileDetails.speciality = form.value.speciality;
+          this.tutorProfileDetails.upiID = form.value.upiID;
+          this.tutorProfileDetails.gst = form.value.gst;
+          console.log(this.tutorProfileDetails);
+          this.httpService
+            .checkUser(this.tutorProfileDetails.email)
+            .subscribe((res) => {
+              if (res == true) {
+                this.isLoading = false;
+                this.isLoading = false;
+                this.registeredExpert = false;
+                this.verifyEmail = false;
+                this.snackBar.open(
+                  'Email already Registered !',
+                  'close',
+                  this.config
+                );
+              } else {
+                this.httpService
+                  .verifyEmail(this.tutorProfileDetails.email)
+                  .subscribe((res) => {
+                    this.verificationOtp = res['response'];
+                    this.isLoading = false;
+                    this.verifyEmail = true;
+                  });
+              }
+            });
+        } else {
+          this.emptyProfilePicture = true;
+          let el = document.getElementById('photoBox');
+          el.scrollIntoView();
+        }
+      } else {
+        this.emptyEducationDetails = true;
+        let el = document.getElementById('educationBox');
+        el.scrollIntoView();
+      }
+    } else {
+      this.errorText = 'Enter atleast one area of Expertise !';
+      let el = document.getElementById('domainBox');
+      el.scrollIntoView();
     }
   }
 
-  handleUserPublished(user, mediaType) {
-    console.log('USER HAS PUBLISHED !');
-    const id = user.uid;
-    this.remoteUsers[id] = user;
-    this.subscribe(user, mediaType);
-  }
-
-  handleUserUnpublished(user, mediaType) {
-    if (mediaType === 'video') {
-      const id = user.uid;
-      delete this.remoteUsers[id];
-      $(`#player-wrapper-${id}`).remove();
+  saveExpertAdvancedProfile(form: any) {
+    if (this.tutorProfileDetails.profileCompleted >= 50) {
+      this.userId = this.cookieService.get('userId');
+      if (this.userId && this.expertises.length > 0) {
+        this.tutorProfileDetails.institute = form.value.Institute;
+        this.tutorProfileDetails.areaOfExpertise = this.expertises;
+        this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+        this.tutorProfileDetails.yearsOfExperience =
+          form.value.yearsOfExperience;
+        this.tutorProfileDetails.currentOrganisation =
+          form.value.currentOrganisation;
+        this.tutorProfileDetails.previousOrganisations =
+          this.previousOraganisations;
+        this.tutorProfileDetails.description = form.value.description;
+        this.tutorProfileDetails.speciality = form.value.speciality;
+        this.tutorProfileDetails.bookingId =
+          this.tutorService.getTutorProfileDetails().bookingId;
+        if (this.tutorProfileDetails.profileCompleted == 50) {
+          this.tutorProfileDetails.profileCompleted = 100;
+        }
+        this.httpService
+          .updateTutorProfileDetails(this.tutorProfileDetails)
+          .subscribe((res) => {
+            this.tutorService.setTutorProfileDetails(this.tutorProfileDetails);
+            this.snackBar.open(
+              'Information saved Successfully !',
+              'close',
+              this.config
+            );
+            this.router.navigate(['/home/tutor-dashboard']);
+          });
+      } else {
+        this.errorText = 'Enter atleast one area of Expertise !';
+      }
+    } else {
     }
   }
 
-  async switchCamera(label) {
-    console.log(label);
-    this.currentCam = this.cams.find((cam) => cam.label === label);
-    $('.cam-input').val(this.currentCam.label);
-    // switch device of local video track.
-    await this.localTracks.videoTrack.setDevice(this.currentCam.deviceId);
+  cancelForm() {
+    location.reload();
   }
+  duplicacyCheck(fields: any, item: string) {
+    const arr = item.split(':');
 
-  async switchMicrophone(label) {
-    console.log(label);
-    this.currentMic = this.mics.find((mic) => mic.label === label);
-    $('.mic-input').val(this.currentMic.label);
-    // switch device of local audio track.
-    await this.localTracks.audioTrack.setDevice(this.currentMic.deviceId);
+    for (let i = 0; i < fields.length; i++) {
+      const brr = fields[i].split(':');
+      if (arr[0] == brr[0]) {
+        return true;
+      }
+    }
+    return false;
   }
+  organisationDuplicacyCheck(fields: any, item: string) {
+    const arr = item.split('@');
 
-  // show real-time volume while adjusting device.
-  setVolumeWave() {
-    this.volumeAnimation = requestAnimationFrame(this.setVolumeWave);
-    $('.progress-bar').css(
-      'width',
-      this.localTracks.audioTrack.getVolumeLevel() * 100 + '%'
+    for (let i = 0; i < fields.length; i++) {
+      const brr = fields[i].split('@');
+      if (arr[1] == brr[1]) {
+        return true;
+      }
+    }
+    return false;
+  }
+  expertiseDuplicacyCheck(category, subcategory) {
+    for (let expertise of this.expertises) {
+      if (
+        expertise.category == category &&
+        expertise.subCategory == subcategory
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+  profilePictureChange(event) {
+    // this.profilePictureDisabled = true;
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    this.isLoading3 = true;
+
+    // this.profilePictureDisabled = true;
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    const fileSize = Math.round(this.uploadedProfilePicture.size / 1024);
+    const fileType = this.uploadedProfilePicture.type;
+
+    if (fileSize > 3072 || !fileType.includes('image')) {
+      this.invalidPicture = true;
+      this.isLoading3 = false;
+    } else {
+      this.invalidPicture = false;
+      const reader = new FileReader();
+      var imageSrc;
+      // var Image: File = evt.target.files[0];
+
+      if (event.target.files && event.target.files.length) {
+        this.uploadedProfilePicture = event.target.files[0];
+        reader.readAsDataURL(this.uploadedProfilePicture);
+        reader.onload = () => {
+          imageSrc = reader.result as string;
+          this.openDialog(imageSrc);
+        };
+      }
+    }
+
+    // this.uploadProfilePicture();
+  }
+  openDialog(imageSrc) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.data = {
+      image: this.uploadedProfilePicture,
+      imageSrc: imageSrc,
+    };
+    // this.dialog.open(UploadProfilePictureComponent, dialogConfig);
+    const dialogRef = this.matDialog.open(
+      UploadProfilePictureComponent,
+      dialogConfig
     );
-    $('.progress-bar').attr(
-      'aria-valuenow',
-      this.localTracks.audioTrack.getVolumeLevel() * 100
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data == null) {
+        this.isLoading3 = false;
+      } else {
+        var blob: Blob = this.b64toBlob(data, this.uploadedProfilePicture.type);
+        var image: File = new File([blob], this.uploadedProfilePicture.name, {
+          type: this.uploadedProfilePicture.type,
+          lastModified: Date.now(),
+        });
+        this.uploadedProfilePicture = image;
+        this.uploadProfilePicture();
+      }
+    });
+  }
+  b64toBlob(dataURI, fileType) {
+    var byteString = atob(dataURI.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: fileType });
+  }
+  profilePictureChangeCompleted(event) {
+    this.uploadedProfilePicture = <File>event.target.files[0];
+    var filePath = `tutor_profile_picture/${
+      this.uploadedProfilePicture
+    }_${new Date().getTime()}`;
+    const fileRef = this.firebaseStorage.ref(filePath);
+    this.firebaseStorage
+      .upload(filePath, this.uploadedProfilePicture)
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            var tutorProfileDetails: tutorProfileDetails =
+              this.tutorService.getTutorProfileDetails();
+            this.profilePictureUrl = url;
+            tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+            this.httpService
+              .editTutorProfileDetails(tutorProfileDetails)
+              .subscribe((res) => {
+                var tutProfile: tutorProfile =
+                  this.tutorService.getTutorDetials();
+                tutProfile.profilePictureUrl = this.profilePictureUrl;
+                this.httpService
+                  .editBasicProfile(tutProfile)
+                  .subscribe((res) => {
+                    this.tutorProfile.profilePictureUrl =
+                      this.profilePictureUrl;
+                    this.snackBar.open(
+                      'Image Uploaded successfully',
+                      'close',
+                      this.config
+                    );
+                  });
+              });
+          });
+        })
+      )
+      .subscribe();
+  }
+  //for uploading profile picture
+  uploadProfilePicture() {
+    var filePath = `tutor_profile_picture/${
+      this.uploadedProfilePicture
+    }_${new Date().getTime()}`;
+    const fileRef = this.firebaseStorage.ref(filePath);
+    this.firebaseStorage
+      .upload(filePath, this.uploadedProfilePicture)
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            this.profilePicUploadStatus = true;
+            this.isLoading3 = false;
+            this.pictureInfo = false;
+            if (this.emptyProfilePicture == true)
+              this.emptyProfilePicture = false;
+            this.profilePictureUrl = url;
+            this.snackBar.open(
+              'Image Uploaded successfully',
+              'close',
+              this.config
+            );
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  basicProfileToggle() {
+    this.basic = true;
+  }
+  advancedProfileToggle() {
+    if (this.tutorService.tutorProfileDetails.profileCompleted < 50) {
+      this.profileError = 'Complete basic profile first !';
+    } else {
+      this.basic = false;
+    }
+  }
+  findSubCategory(sc) {
+    let category;
+    if (sc) {
+      for (let i = 0; i < this.subCategories.length; i++) {
+        if (this.subCategories[i].subCategory == sc) {
+          return this.subCategories[i].category;
+        }
+      }
+    } else {
+      return null;
+    }
+  }
+  // saveExpertise() {
+  //   this.addExpertise = new expertise();
+  //   this.selectedSubCategory = this.selectedExpertise;
+  //   this.selectedCategory = this.findSubCategory(this.selectedSubCategory);
+  //   console.log(this.selectedCategory);
+  //   if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
+  //     this.addExpertise.category = this.selectedCategory;
+  //     this.addExpertise.subCategory = this.selectedSubCategory;
+  //     this.addExpertise.price = this.priceForExpertise;
+  //     this.expertises.push(this.addExpertise);
+  //     this.selectedExpertise = '';
+  //     this.priceForExpertise = '';
+
+  //     if (this.duplicateExpertiseArea == true) {
+  //       this.duplicateExpertiseArea = false;
+  //     }
+  //   } else {
+  //     this.duplicateExpertiseArea = true;
+  //     this.selectedExpertise = '';
+  //     this.priceForExpertise = '';
+  //   }
+  // }
+
+  // save expertise for multiple domains
+  saveExpertise() {
+    if (this.tutorProfileDetails.price1) {
+      this.pricePerHourError = false;
+    }
+    this.addExpertise = new expertise();
+    if (!this.otherDomainSelected && !this.otherTopicSelected) {
+      if (this.selectedSubCategory) {
+        this.errorText = '';
+        if (
+          !this.expertiseDuplicacyCheck(
+            this.selectedCategory,
+            this.selectedSubCategory
+          )
+        ) {
+          this.addExpertise.category = this.selectedCategory;
+          this.addExpertise.subCategory = this.selectedSubCategory;
+
+          if (this.tutorProfileDetails.price1 != null) {
+            this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+            this.expertises.push(this.addExpertise);
+            $('.select2').val('').trigger('change');
+            this.expertises.reverse();
+            this.selectedCategory = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
+            if (this.duplicateExpertiseArea == true) {
+              this.duplicateExpertiseArea = false;
+            }
+          } else {
+            this.pricePerHourError = true;
+          }
+        } else {
+          this.duplicateExpertiseArea = true;
+          this.selectedExpertise = '';
+          this.selectedSubCategory = '';
+          this.priceForExpertise = '';
+        }
+      } else {
+        this.errorText = 'Please add Topic !';
+      }
+    } else if (this.otherDomainSelected == true) {
+      if (this.textDomain == '' && this.textTopic == '') {
+        this.errorText = 'Please enter domain and topic name !';
+      } else if (this.textDomain == '') {
+        this.errorText = 'Please enter domain name !';
+      } else if (this.textTopic == '') {
+        this.errorText = 'Please enter topic name !';
+      } else if (this.textTopic != '' && this.textDomain != '') {
+        this.errorText = '';
+        if (!this.expertiseDuplicacyCheck(this.textDomain, this.textTopic)) {
+          this.addExpertise.category = this.textDomain;
+          this.addExpertise.subCategory = this.textTopic;
+          if (this.tutorProfileDetails.price1 != null) {
+            this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+            this.expertises.push(this.addExpertise);
+            $('.select2').val('').trigger('change');
+            this.expertises.reverse();
+            this.textDomain = '';
+            this.textTopic = '';
+            this.selectedCategory = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
+            this.showTextDomain = false;
+            this.showTextTopic = false;
+            this.otherDomainSelected = false;
+            this.otherTopicSelected = false;
+            if (this.duplicateExpertiseArea == true) {
+              this.duplicateExpertiseArea = false;
+            }
+          } else {
+            this.pricePerHourError = true;
+          }
+        } else {
+          this.duplicateExpertiseArea = true;
+          this.textDomain = '';
+          this.textTopic = '';
+          this.priceForExpertise = '';
+        }
+      }
+    } else if (this.otherTopicSelected == true) {
+      if (this.tutorProfileDetails.price1 != null) {
+        if (this.selectedCategory) {
+          if (this.textTopic != '') {
+            console.log(this.selectedCategory + ':' + this.textTopic);
+
+            this.errorText = '';
+            if (
+              !this.expertiseDuplicacyCheck(
+                this.selectedCategory,
+                this.textTopic
+              )
+            ) {
+              this.addExpertise.category = this.selectedCategory;
+              this.addExpertise.subCategory = this.textTopic;
+
+              this.addExpertise.price = parseInt(
+                this.tutorProfileDetails.price1
+              );
+              this.expertises.push(this.addExpertise);
+              $('.select2').val('').trigger('change');
+              this.expertises.reverse();
+              this.textDomain = '';
+              this.textTopic = '';
+              this.selectedCategory = '';
+              this.selectedSubCategory = '';
+              this.priceForExpertise = '';
+              this.showTextDomain = false;
+              this.showTextTopic = false;
+              this.otherDomainSelected = false;
+              this.otherTopicSelected = false;
+              if (this.duplicateExpertiseArea == true) {
+                this.duplicateExpertiseArea = false;
+              }
+            } else {
+              this.duplicateExpertiseArea = true;
+              this.textDomain = '';
+              this.textTopic = '';
+              this.priceForExpertise = '';
+            }
+          } else {
+            this.errorText = 'Please enter a topic name !';
+          }
+          console.log('we have a selected category !');
+        } else {
+          this.errorText = 'Please choose a domain !';
+        }
+      } else {
+        this.pricePerHourError = true;
+      }
+    }
+  }
+  deleteExpertise(index: any) {
+    var area = this.expertises[index];
+    if (confirm('Are you sure you want to delete ?')) {
+      this.expertises.splice(index, 1);
+    }
+  }
+
+  addOrganisation() {
+    if (this.inputOrganisation && this.inputDesignation) {
+      if (this.invalidOrganisationDetails == true) {
+        this.invalidOrganisationDetails = false;
+      }
+      if (
+        !this.organisationDuplicacyCheck(
+          this.previousOraganisations,
+          this.inputOrganisation
+        )
+      ) {
+        let org = {
+          organisation: this.inputOrganisation,
+          designation: this.inputDesignation,
+        };
+        this.previousOraganisations.push(
+          this.inputDesignation + ' @ ' + this.inputOrganisation
+        );
+        this.prevArrangedOrganisations.push(org);
+        this.inputOrganisation = '';
+        this.inputDesignation = '';
+        this.togglePreviousOrganisationsView();
+        if (this.duplicatePreviousOrganisation == true) {
+          this.duplicatePreviousOrganisation = false;
+        }
+      } else {
+        this.inputOrganisation = '';
+        this.inputDesignation = '';
+        this.duplicatePreviousOrganisation = true;
+      }
+    } else {
+      this.invalidOrganisationDetails = true;
+    }
+  }
+
+  deleteOrganisation(index: any) {
+    let organisation = this.prevArrangedOrganisations[index].organisation;
+    let designation = this.prevArrangedOrganisations[index].designation;
+    let orgDes: string = organisation + '&' + designation;
+    this.prevArrangedOrganisations.splice(index, 1);
+    this.previousOraganisations.splice(
+      this.previousOraganisations.indexOf(orgDes, 0),
+      1
     );
   }
+
+  getMonthYearString(val) {
+    let momentVariable = moment(val.value._d, 'YYYY-MM-DD');
+    return momentVariable.format('MMMM YYYY');
+  }
+  addEducation() {
+    if (
+      this.inputEducation &&
+      this.inputCompletionDate &&
+      this.inputInstitute
+    ) {
+      let dateString = this.getMonthYearString(this.inputCompletionDate);
+      console.log(dateString);
+      if (this.invalidEducationDetails == true) {
+        this.invalidEducationDetails = false;
+      }
+      if (this.invalidCompletionDate == true) {
+        this.invalidCompletionDate = false;
+      }
+      if (this.emptyEducationDetails == true)
+        this.emptyEducationDetails = false;
+      if (
+        !this.duplicacyCheck(
+          this.educationQualifications,
+          this.inputInstitute + ' : ' + this.inputEducation + ' : ' + dateString
+        )
+      ) {
+        this.educationQualifications.push(
+          this.inputInstitute + ' : ' + this.inputEducation + ' : ' + dateString
+        );
+        this.inputEducation = '';
+        this.inputCompletionDate = new FormControl(moment());
+        this.inputInstitute = '';
+        if (this.duplicateEducationArea == true) {
+          this.duplicateEducationArea = false;
+        }
+      } else {
+        this.inputEducation = '';
+        this.inputCompletionDate = new FormControl(moment());
+        this.inputInstitute = '';
+        this.duplicateEducationArea = true;
+      }
+    } else {
+      this.invalidEducationDetails = true;
+    }
+  }
+  deleteEducation(index: any) {
+    this.educationQualifications.splice(index, 1);
+  }
+
+  // public loadScript() {
+  //     var isFound = false;
+  //     var scripts = document.getElementsByTagName("script")
+  //     for (var i = 0; i < scripts.length; ++i) {
+  //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes("loader")) {
+  //             isFound = true;
+  //         }
+  //     }
+
+  //     if (!isFound) {
+  //         var dynamicScripts = ["https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js","https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js",
+  //         "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"];
+
+  //         for (var i = 0; i < dynamicScripts.length; i++) {
+  //             let node = document.createElement('script');
+  //             node.src = dynamicScripts [i];
+  //             node.type = 'text/javascript';
+  //             node.async = false;
+  //             node.charset = 'utf-8';
+  //             document.getElementsByTagName('head')[0].appendChild(node);
+  //         }
+
+  //     }
+  // }
+  // loadCSS(url) {
+  //   // Create link
+  //   let link:any = document.createElement('link');
+  //   link.href = url;
+  //   link.rel = 'stylesheet';
+  //   link.type = 'text/css';
+
+  //   let head = document.getElementsByTagName('head')[0];
+  //   let links = head.getElementsByTagName('link');
+  //   let style = head.getElementsByTagName('style')[0];
+
+  //   // Check if the same style sheet has been loaded already.
+  //   let isLoaded = false;
+  //   for (var i = 0; i < links.length; i++) {
+  //     var node = links[i];
+  //     if (node.href.indexOf(link.href) > -1) {
+  //       isLoaded = true;
+  //     }
+  //   }
+  //   if (isLoaded) return;
+  //   head.insertBefore(link, style);
+  // }
 }

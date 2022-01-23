@@ -552,7 +552,11 @@ public class UserService implements UserDetailsService {
 			studentProfile.setContact(registrationModel.getContact());
 			studentProfile.setEmail(registrationModel.getEmail());
 			studentProfile.setFullName(registrationModel.getFullName());
-			studentProfile.setExpertCode(registrationModel.getExpertCode());
+			//check if expert code is valid or not
+			
+			if(parseReferralCode(registrationModel.getExpertCode())!="") {
+				studentProfile.setExpertCode(registrationModel.getExpertCode());
+			}
 			studentProfile.setUpiID(registrationModel.getUpiId());
 			if (dao.saveStudentProfile(studentProfile)) {
 				System.out.println("Inside save student profile");
@@ -562,7 +566,11 @@ public class UserService implements UserDetailsService {
 				user.setUserId(studentProfile.getSid());
 				user.setRole("Learner");
 				user.setSocialId(encoder.encode("N/A"));
-				user.setExpertCode(registrationModel.getExpertCode());
+				//check if expert code is valid or not
+				if(parseReferralCode(registrationModel.getExpertCode())!="") {
+					user.setExpertCode(registrationModel.getExpertCode());
+				}
+				// user.setExpertCode(registrationModel.getExpertCode());
 				if (registrationModel.getSocialId() != null) {
 					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
 				}
@@ -702,7 +710,7 @@ public class UserService implements UserDetailsService {
 		if (refCode.length() > 4) 
 		{
 		    lastFourDigits = refCode.substring(refCode.length() - 4);
-		    rawInitials = refCode.substring(4,6);
+		    rawInitials = refCode.substring(4,6); 
 		} 
 		List<Users> matchingUsers = repUsers.findByLast4Digits(lastFourDigits);
 		Integer userId=0;
@@ -728,10 +736,24 @@ public class UserService implements UserDetailsService {
 		String initials="";
 		if(fullName.length()>1) {
 			String[] name = fullName.split("\\s+");
+			System.out.println("The name array is ");
 			for(String n:name) {
-				initials+=n.charAt(0);
+				System.out.print(n + " ");
 			}
+			if(name.length>2) { //TSK
+				initials+=name[0].charAt(0);
+				initials+=name[name.length-1].charAt(0);
+			}else if(name.length==1) { //TT
+				initials+=name[0].charAt(0);
+				initials+=name[0].charAt(0);
+			}else { //TK,SK or SS
+				for(String n:name) {
+					initials+=n.charAt(0);
+				}
+			}
+			
 		}
+		System.out.println("The initials are : "+ initials);
 		return initials;
 		
 	}
@@ -1931,6 +1953,13 @@ public class UserService implements UserDetailsService {
 		    cashbackList.add(cashbackModel);
 		}
 		return cashbackList;
+	}
+
+	public void deleteUser(String userId) {
+		
+		// TODO Auto-generated method stub
+		
+		
 	}
 
 	

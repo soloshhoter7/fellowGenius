@@ -185,14 +185,18 @@ export class AnalyticsComponent implements OnInit {
     this.httpService.fetchReferralAnalytics().subscribe((res) => {
       this.referralAnalytics = res;
       console.log(this.referralAnalytics);
+      
+      if(this.referralAnalytics!=null||this.referralAnalytics!=undefined) {
+        this.disableReferralAnalytics=false;
+        this.dataReferralTracker = [
+          ['Linkedin', this.referralAnalytics.referralLinkedinCount],
+          ['Mail', this.referralAnalytics.referralMailCount],
+          ['Whatsapp', this.referralAnalytics.referralWhatsappCount],
+        ];
+      }
+      
 
-      this.dataReferralTracker = [
-        ['Linkedin', this.referralAnalytics.referralLinkedinCount],
-        ['Mail', this.referralAnalytics.referralMailCount],
-        ['Whatsapp', this.referralAnalytics.referralWhatsappCount],
-      ];
-
-      // this.disableReferralAnalytics=false;
+      
     });
   }
 
