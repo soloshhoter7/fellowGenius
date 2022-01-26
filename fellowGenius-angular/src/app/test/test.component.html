@@ -1,185 +1,1365 @@
-
-  <div class="container-fluid banner">
-    <p class="banner-text">Recording Device Control</p>
-    <a style="color: rgb(255, 255, 255);fill: rgb(255, 255, 255);fill-rule: evenodd; position: absolute; right: 10px; top: 4px;"
-      class="Header-link " href="https://github.com/AgoraIO/API-Examples-Web/tree/main/Demo">
-      <svg class="octicon octicon-mark-github v-align-middle" height="32" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-    </a>
+<body>
+  <div
+    *ngIf="isLoading"
+    style="
+      text-align: center;
+      margin-top: 20%;
+      margin-left: auto;
+      margin-right: auto;
+    "
+  >
+    <app-loading></app-loading>
+    <p style="margin: 1rem; font-size: large">Signing you up..</p>
   </div>
 
-  <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Congratulations!</strong><span> You can invite others join this channel by click </span><a href="" target="_blank">here</a>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div id="success-alert-with-token" class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Congratulations!</strong><span> Joined room successfully. </span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  
-  <div class="container">
-    <form id="join-form" (onSubmit)="formJoinSubmit()">
-      <div class="row join-info-group">
-          <div class="col-sm">
-            <p class="join-info-text">AppID</p>
-            <input id="appid" 
-            name="appid"
-            type="text" 
-            placeholder="enter appid" 
-            [(ngModel)]="options.appid"
-            required>
-            <p class="tips">If you don`t know what is your appid, checkout <a href="https://docs.agora.io/en/Agora%20Platform/terms?platform=All%20Platforms#a-nameappidaapp-id">this</a></p>
+  <div [class]="!isLoading ? '' : 'hideBlock'">
+    <div
+      class="access_page wi_full"
+      [class]="choosePassword ? '' : 'hideBlock'"
+    >
+      <div class="container">
+        <div class="page_wrapper">
+          <div class="access_icon_box">
+            <img
+              src="../../../assets/images/login-clip.svg"
+              alt="#"
+              class="graphic_style"
+            />
           </div>
-          
-          <div class="col-sm">
-            <p class="join-info-text">Channel</p>
-            <input id="channel" 
-            name="channel"
-            type="text" 
-            placeholder="enter channel name" 
-            [(ngModel)]="options.channel"
-            required>
-            <p class="tips">If you don`t know what is your channel, checkout <a href="https://docs.agora.io/en/Agora%20Platform/terms?platform=All%20Platforms#channel">this</a></p>
-          </div>
-          <div class="col-sm">
-            <p class="join-info-text">User ID(optional)</p>
-            <input id="uid" 
-            name="uid"
-            type="text" 
-            onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" 
-            onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" 
-            [(ngModel)]="options.uid"
-            placeholder="Enter the user ID">
-          </div>
-      </div>
-
-      <div class="button-group">
-        <button id="join" type="submit" class="btn btn-primary btn-sm">Join</button>
-        <button id="leave" type="button" class="btn btn-primary btn-sm" disabled>Leave</button>
-      </div>
-    </form>
-
-    <!-- <div id="device-wrapper">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mics</button>
-          <div class="mic-list dropdown-menu">
-            <a *ngFor="let mic of mics" (click)="switchMicrophone(mic.label)" style="cursor: pointer;">{{mic.label}}</a>
-            <a>adfasf</a>
-          </div>
-        </div>
-        <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
-      </div>
-  
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
-          <div class="cam-list dropdown-menu">
-            <a *ngFor="let camera of cams" (click)="switchCamera(camera.label)">{{camera.label}}</a>
-          </div>
-        </div>
-        <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
-      </div>
-    </div> -->
-<br>
-<br>
-  <div class="container">
-            <h5 class="device-name">Microphone</h5>
-            <p id="device-intro">Produce sounds to check if the mic works.</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mics</button>
-                <div class="mic-list dropdown-menu">
-                  <ul>
-                    <li *ngFor="let mic of mics">
-                      <a  (click)="switchMicrophone(mic.label)" style="cursor: pointer;">{{mic.label}}</a>
-                    </li>
-                  </ul>
-                  
+          <div class="access_field_box">
+            <div class="access_header">
+              <a href="" class="back_button"
+                ><img src="../../../assets/images/arrow-grey.svg" alt="#"
+              /></a>
+              <a href="" class="accs_logo"
+                ><img
+                  src="../../../assets/images/fellow genius logo.svg"
+                  alt="#"
+              /></a>
+            </div>
+            <div class="access_data">
+              <div class="content_wrapper">
+                <h2>Choose Password</h2>
+                <div class="tagline">Please enter your new password</div>
+                <div class="error_message" *ngIf="invalidChoosePassword">
+                  <div class="msg_wrap">
+                    <img
+                      src="../../../assets/images/required-error.svg"
+                      alt="#"
+                      class="erro_icon"
+                    />
+                    <span
+                      ><strong>Error</strong>Password could not be set
+                    </span>
+                  </div>
                 </div>
+                <form>
+                  <div class="form-group">
+                    <label class="">New Password</label>
+                    <div class="password_wrap">
+                      <input
+                        id="password-new"
+                        [type]="showPassword ? 'text' : 'password'"
+                        name="password-new"
+                        [(ngModel)]="newPassword"
+                        class="form-control"
+                        placeholder="Enter your new password"
+                        [pattern]="passwordPattern"
+                        minlength="8"
+                        maxlength="20"
+                        #password="ngModel"
+                      />
+                      <span
+                        (click)="togglePasswords()"
+                        class="fa fa-fw field-icon toggle-password"
+                        [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
+                      ></span>
+                    </div>
+                    <div class="col-12" style="margin-bottom: 10px">
+                      <span
+                        class="help-block"
+                        *ngIf="
+                          password.invalid &&
+                          (password.dirty || password.touched)
+                        "
+                        style="color: grey; font-size: smaller"
+                        >Your password must be a minimum of 8 characters long
+                        and should contain atleast<br />
+                        One uppercase letter (A-Z)<br />
+                        One lowercase letter (a-z)<br />
+                        One number (0-9)<br />
+                        One special character (@, #,&, %)</span
+                      >
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="button form_Btn"
+                    (click)="saveNewPassword()"
+                    [disabled]="!newPassword"
+                  >
+                    Save new Password
+                  </button>
+                </form>
               </div>
-              <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
             </div>
-            <!-- <div class="progress">
-              
-              <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div> -->
-            <div>
-              Volume Level : {{localTrackAudioLevel}}
-            </div>
-            <h5 class="device-name">Camera</h5>
-            <p id="device-intro">Move in front of the camera to check if it works.</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
-                <div class="cam-list dropdown-menu">
-                  <a *ngFor="let camera of cams" (click)="switchCamera(camera.label)">{{camera.label}}</a>
-                </div>
-              </div>
-              <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
-            </div>
+            <div class="access_footer"></div>
           </div>
-    <div class="row video-group">
-      <div class="col">
-        <p id="local-player-name" class="player-name"></p>
-        <div id="local-player" class="player"></div>
-      </div>
-      <div class="w-100"></div>
-      <div class="col">
-        <div id="remote-playerlist"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="media-device-test" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal-label">Media Device Test</h5>
-        </div>
-        <div class="modal-body">
-          <div class="container">
-            <h5 class="device-name">Microphone</h5>
-            <p id="device-intro">Produce sounds to check if the mic works.</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mics</button>
-                <div class="mic-list dropdown-menu">
-                  <a *ngFor="let mic of mics" (click)="switchMicrophone(mic.label)" style="cursor: pointer;">{{mic.label}}</a>
-                </div>
-              </div>
-              <input type="text" class="mic-input form-control" aria-label="Text input with dropdown button" readonly>
-            </div>
-            <!-- <div class="progress">
-              
-              <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div> -->
-            <div>
-              Volume Level : {{localTrackAudioLevel}}
-            </div>
-            <h5 class="device-name">Camera</h5>
-            <p id="device-intro">Move in front of the camera to check if it works.</p>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cams</button>
-                <div class="cam-list dropdown-menu">
-                  <a *ngFor="let camera of cams" (click)="switchCamera(camera.label)">{{camera.label}}</a>
-                </div>
-              </div>
-              <input type="text" class="cam-input form-control" aria-label="Text input with dropdown button" readonly>
-            </div>
-            <div id="pre-local-player" class="player"></div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Finish</button>
         </div>
       </div>
     </div>
-  </div>
+    <div [class]="!choosePassword ? '' : 'hideBlock'">
+      <div
+        class="access_page wi_full"
+        [class]="verifyEmail && !registeredExpert ? '' : 'hideBlock'"
+      >
+        <div class="container">
+          <div class="page_wrapper">
+            <div class="access_icon_box">
+              <img
+                src="../../../assets/images/email-verification-clip.svg"
+                alt="#"
+                class="graphic_style"
+              />
+            </div>
+            <div class="access_field_box">
+              <div class="access_header">
+                <a href="" class="accs_logo"
+                  ><img
+                    src="../../../assets/images/fellow genius logo.svg"
+                    alt="#"
+                /></a>
+              </div>
+              <div class="access_data">
+                <div class="content_wrapper">
+                  <h2>Email Verification</h2>
+                  <div class="tagline">
+                    Enter the verification code sent to your email address
+                  </div>
+                  <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
+                  <form (ngSubmit)="verifyEmailOtp(o)" #o="ngForm">
+                    <div class="eml_vrfctn form-group">
+                      <input
+                        type="text"
+                        id="otp_1digit"
+                        name="otp_1digit"
+                        #digit1
+                        ngModel
+                        maxlength="1"
+                        class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
+                        placeholder="_"
+                        required
+                      />
+                      <input
+                        type="text"
+                        id="otp_2digit"
+                        name="otp_2digit"
+                        #digit2
+                        ngModel
+                        maxlength="1"
+                        class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
+                        placeholder="_"
+                        required
+                      />
+                      <input
+                        type="text"
+                        id="otp_3digit"
+                        name="otp_3digit"
+                        ngModel
+                        #digit3
+                        maxlength="1"
+                        class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
+                        placeholder="_"
+                        required
+                      />
+                      <input
+                        type="text"
+                        id="otp_4digit"
+                        name="otp_4digit"
+                        ngModel
+                        maxlength="1"
+                        #digit4
+                        class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
+                        placeholder="_"
+                        required
+                      />
+                      <input
+                        type="text"
+                        id="otp_5digit"
+                        name="otp_5digit"
+                        ngModel
+                        maxlength="1"
+                        #digit5
+                        class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
+                        placeholder="_"
+                        required
+                      />
+                      <input
+                        type="text"
+                        id="otp_6digit"
+                        name="otp_6digit"
+                        ngModel
+                        maxlength="1"
+                        #digit6
+                        class="verfcn_box"
+                        (keyup)="onDigitInput($event)"
+                        placeholder="_"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      class="button form_Btn"
+                      [disabled]="o.invalid"
+                    >
+                      Verify Account
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="access_page wi_full"
+        [class]="registeredExpert && !verifyEmail ? '' : 'hideBlock'"
+      >
+        <div class="container">
+          <div class="page_wrapper">
+            <div class="access_icon_box">
+              <img
+                src="../../../../assets/images/password-reset-clip.svg"
+                alt="#"
+                class="graphic_style"
+              />
+            </div>
+            <div class="access_field_box">
+              <div class="access_header">
+                <a href="" class="back_button"
+                  ><img src="../../../../assets/images/arrow-grey.svg" alt="#"
+                /></a>
+                <a href="" class="accs_logo"
+                  ><img
+                    src="../../../../assets/images/fellow genius logo.svg"
+                    alt="#"
+                /></a>
+              </div>
+              <div class="access_data">
+                <div class="content_wrapper">
+                  <h2>Thank you for showing interest in Fellow Genius</h2>
+                  <div class="tagline">
+                    We'll review the details provided by you and get back you
+                    within 48 working hours.
+                  </div>
+                  <form>
+                    <button
+                      type="button"
+                      class="button form_Btn"
+                      (click)="toFacade()"
+                    >
+                      Back to Home
+                    </button>
+                  </form>
+                </div>
+              </div>
+              <div class="access_footer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
- 
+      <div
+        class="access_page expert_signup wi_full"
+        [class]="!registeredExpert && !verifyEmail ? '' : 'hideBlock'"
+      >
+        <div class="container">
+          <div class="page_wrapper">
+            <div class="access_field_box">
+              <div class="access_header access_header_signup_web">
+                <div style="display: flex; align-items: center">
+                  <a
+                    href="#"
+                    class="register_btn hdr_btn"
+                    data-bs-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Home"
+                  >
+                    <img
+                      src="../../assets/images/breadcrumb-home.svg"
+                      alt="#"
+                      style="width: 50px"
+                    />
+                  </a>
+                </div>
+                <h1>Sign up <strong>as an Expert</strong></h1>
+
+                <a href="" class="accs_logo"
+                  ><img src="../assets/images/fellow genius logo.svg" alt="#"
+                /></a>
+              </div>
+
+              <div class="access_header access_header_signup_mobile" style="display:none">
+                <div style="display: flex; ">
+                  <a
+                    href="#"
+                    class="register_btn hdr_btn"
+                    data-bs-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Home"
+                  >
+                    <img
+                      src="../../assets/images/breadcrumb-home.svg"
+                      alt="#"
+                      style="width: 50px"
+                    />
+                  </a>
+
+                  <a href="" class="accs_logo"
+                  ><img src="../assets/images/fellow genius logo.svg" alt="#" class="logo-ml-100"
+                /></a>
+                </div>
+                <h1 class="h1-pt-15"
+                >Sign up <strong>as an Expert</strong></h1>
+
+                
+              </div>
+              <div class="access_data">
+                <form
+                  class="form-mt-0"
+                  (ngSubmit)="saveExpertBasicProfile(basicProfile)"
+                  #basicProfile="ngForm"
+                >
+                  <div class="fields_box">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2>Personal Information</h2>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">Full Name*</label>
+                          <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            ngModel
+                            class="form-control"
+                            required
+                            #fullName="ngModel"
+                            maxlength="50"
+                            placeholder="Full Name"
+                          />
+                          <span
+                            class="help-block"
+                            *ngIf="!fullName.valid && fullName.touched"
+                            >Invalid Name</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">Date of Birth (DD/MM/YYYY)* </label>
+       <div style="display:flex">
+        <input
+          appDateFormatDdmmyyyy
+          class="form-control"
+          matInput
+          [min]="minDobDate" 
+          [max]="maxDobDate"
+          placeholder="Date of Birth"
+          [matDatepicker]="dobdp"
+          id="dob"
+          name="dob"
+          ngModel
+          #dob="ngModel"
+          required
+        />
+        <mat-datepicker-toggle
+          class="dob-mat-datepicker"
+          matSuffix
+          [for]="dobdp"
+        ></mat-datepicker-toggle>
+        <mat-datepicker
+          #dobdp
+        >
+        </mat-datepicker>
+        
+      </div>
+      <span
+                            *ngIf="!dob.valid && dob.touched"
+                            
+                            class="help-block"
+                            >Invalid date of birth</span
+                          >
+
+                          <!-- <input
+                            matInput
+                            [matDatepicker]="picker"
+                             type="date"
+                            id="dob"
+                            name="dob"
+                            ngModel
+                            class="form-control"
+                            dobValidator
+                            required
+                            #dob="ngModel"
+                          /> -->
+                          <!-- <mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker> -->
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">E-Mail*</label>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            ngModel
+                            class="form-control"
+                            required
+                            email
+                            #email="ngModel"
+                            maxlength="64"
+                            pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+                            placeholder="Enter Email"
+                          />
+                          <span
+                            *ngIf="
+                              (!email.valid && email.touched) || emailValid
+                            "
+                            class="help-block"
+                            >Invalid email</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">Phone Number*</label>
+                          <input
+                            type="text"
+                            oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                            class="form-control"
+                            placeholder="Phone number"
+                            id="contact"
+                            ngModel
+                            name="contact"
+                            required
+                            [pattern]="mobNumberPattern"
+                            #contact="ngModel"
+                          />
+                          <span
+                            *ngIf="!contact.valid && contact.touched"
+                            class="help-block"
+                            >Invalid phone number</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">LinkedIn Profile*</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="LinkedIn Profile link"
+                            name="linkedInProfile"
+                            id="linkedInProfile"
+                            maxlength="100"
+                            ngModel
+                            required
+                            #linkedInProfile="ngModel"
+                          />
+                          <span
+                            class="help-block"
+                            *ngIf="
+                              !linkedInProfile.valid && linkedInProfile.touched
+                            "
+                            >Invalid linkedIn profile</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">UPI ID</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter UPI ID"
+                            name="upiID"
+                            id="upiID"
+                            maxlength="30"
+                            ngModel
+                            #upiID="ngModel"
+                          />
+                          <span
+                            class="help-block"
+                            *ngIf="!upiID.valid && upiID.touched"
+                            >Invalid UPI id</span
+                          >
+                          <div>
+                            <span
+                              class="help-block"
+                              style="color: grey; font-size: smaller"
+                              >UPI ID is necessary for processing your
+                              payments</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group">
+                          <label class="">GST Number</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter GST Number (if applicable)"
+                            name="gst"
+                            id="gst"
+                            maxlength="60"
+                            ngModel
+                            #gstNumber="ngModel"
+                          />
+                          <span
+                            class="help-block"
+                            *ngIf="!gstNumber.valid && gstNumber.touched"
+                            >Invalid GST Number</span
+                          >
+                        </div>
+                      </div>
+                      <!-- <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label class="">Password*</label>
+                        <div class="password_wrap">
+                          <input
+                            id="password-field"
+                            type="password"
+                            class="form-control"
+                            name="password"
+                            ngModel
+                            required
+                            [pattern]="passwordPattern"
+                            minlength="8"
+                            maxlength="20"
+                            #password="ngModel"
+                            placeholder="Enter password"
+                          />
+                          <span
+                            toggle="#password-field"
+                            class="fa fa-fw fa-eye field-icon toggle-password"
+                          ></span>
+                        </div>
+                        <span
+                          class="help-block"
+                          *ngIf="
+                            password.invalid &&
+                            (password.dirty || password.touched)
+                          "
+                          style="color: grey; font-size: smaller"
+                          >Your password must be a minimum of 8 characters long.
+                          Your PW must contain at least one uppercase letter
+                          (A-Z), one lowercase (a-z), one number (0-9), and one
+                          special character (@, #,&, %).</span
+                        >
+                      </div>
+                    </div> -->
+                    </div>
+                  </div>
+
+                  <div class="fields_box" id="domainBox">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2>Domain</h2>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group Prc__Pr__Hr">
+                          <label class="">Price per Hour (INR)*</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="price"
+                            required
+                            pattern="^[1-9]\d*$"
+                            placeholder="Enter price per hour (INR) "
+                            [(ngModel)]="tutorProfileDetails.price1"
+                            #expertisePrice="ngModel"
+                            (ngModelChange)="onPercentChange($event)"
+                          />
+                          <div>
+                            <span
+                              class="help-block"
+                              style="color: grey; font-size: smaller"
+                              >The price you enter here is inclusive of GST @18%
+                              and FellowGenius platform fee. The per session
+                              amount payable will be reflected in the expert
+                              profile upon confirmation</span
+                            >
+                          </div>                
+                          <span
+                            class="help-block"
+                            *ngIf="
+                              !expertisePrice.valid && expertisePrice.touched
+                            "
+                            >Invalid Price per hour !</span
+                          >
+                          <!-- <div
+                            class="pph__detail"
+                            *ngIf="
+                              expertisePrice.dirty && tutorProfileDetails.price1
+                            "
+                          >
+                            <div class="detail__list">
+                              <span class="green_txt"
+                                >Actual Earning per hour</span
+                              >
+                              <span class="green_txt"
+                                >₹ {{ actualEarning }}</span
+                              >
+                            </div>
+                            <div class="detail__list">
+                              <span class="">GST charges</span>
+                              <span class="">₹ {{ GSTValue }}</span>
+                            </div>
+                            <div class="detail__list">
+                              <span class="">Platform fees</span>
+                              <span class="">₹ {{ commission }}</span>
+                            </div>
+                          </div> -->
+                          <div
+                            *ngIf="pricePerHourError"
+                            style="color: red; margin-top: 10px"
+                          >
+                            Please enter your price per hour first !
+                          </div>
+                        </div>
+                      </div>
+                      <div class="field_repeater">
+                        <div class="row">
+                          <div class="col-12">
+                            <h4>Add Domain</h4>
+                          </div>
+                          <div
+                            *ngIf="duplicateExpertiseArea"
+                            style="color: red; margin-top: 10px"
+                          >
+                            Expertise already exists !
+                          </div>
+
+                          <p class="errorText" *ngIf="errorText">
+                            {{ errorText }}
+                          </p>
+                          <div class="col-12 col-md-6" id="categoryDropDown">
+                            <div class="form-group">
+                              <label class="">Choose Domain*</label>
+                              <select
+                                class="select2 form-control"
+                                id="chooseCategory"
+                                name="categoryName"
+                                data-placeholder="Choose Domain"
+                                ngModel
+                              >
+                                <option value=""></option>
+                                <option
+                                  *ngFor="let categ of categories"
+                                  [value]="categ.category"
+                                >
+                                  {{ categ.category }}
+                                </option>
+                                <option value="Others">Others</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div
+                            class="col-12 col-md-6"
+                            id="subCategoryDropDown"
+                            [class.hideBlock]="showTextDomain"
+                          >
+                            <div class="form-group">
+                              <label class="">Choose Topic*</label>
+
+                              <select
+                                class="select2 form-control"
+                                id="chooseSubCategory"
+                                name="subCategoryName"
+                                data-placeholder="Choose Topic"
+                                ngModel
+                              >
+                                <option value=""></option>
+                                <option
+                                  *ngFor="let sc of filteredSubCategories"
+                                  [value]="sc.subCategory"
+                                >
+                                  {{ sc.subCategory }}
+                                </option>
+                                <option value="Others">Others</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 col-md-6" *ngIf="showTextDomain">
+                              <div class="form-group">
+                                <label class="">Enter Domain*</label>
+                                <input
+                                  type="text"
+                                  id="textDomain"
+                                  name="textDomain"
+                                  ngModel
+                                  class="form-control"
+                                  maxlength="64"
+                                  [(ngModel)]="textDomain"
+                                  placeholder="Enter Domain name"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6" *ngIf="showTextTopic">
+                              <div class="form-group">
+                                <label class="">Enter topic*</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  placeholder="Enter Topic name"
+                                  id="textTopic"
+                                  name="textTopic"
+                                  maxlength="64"
+                                  ngModel
+                                  [(ngModel)]="textTopic"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="reptr___btn">
+                        <a
+                          class="add_RBtn"
+                          type="button"
+                          (click)="saveExpertise()"
+                          ><img
+                            src="../assets/images/add-repeater.svg"
+                            alt="add"
+                          />Save</a
+                        >
+                      </div>
+                      
+                      <div *ngIf="expertises.length">
+                        <div class="col-12">
+                          <h4>Domains</h4>
+                        </div>
+                        <div
+                          *ngFor="let expertise of expertises; let i = index"
+                        >
+                          <div class="field_repeater">
+                            <div class="row">
+                              <div class="col-12 col-md-5">
+                                <div class="form-group">
+                                  <span class="form-control">{{
+                                    expertise.category
+                                  }}</span>
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-5">
+                                <div class="form-group">
+                                  <span class="form-control">{{
+                                    expertise.subCategory
+                                  }}</span>
+                                </div>
+                              </div>
+                              <div
+                                class="col-12 col-md-1"
+                                style="padding-top: 5px"
+                              >
+                                <div class="reptr___btn">
+                                  <a
+                                    href="JavaScript:Void(0);"
+                                    (click)="deleteExpertise(i)"
+                                    class="delet_RBtn"
+                                    ><img
+                                      src="../assets/images/delete-repeater.svg"
+                                      alt="delete"
+                                  /></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="expertises.length==0">
+                        <!-- <span
+                          class="help-block"
+                          style="color:black; font-size: 20px"
+                          ><span style="color: red;">*</span> 
+                          Please click on save to save atleast 1 domain</span
+                        > -->
+                        <br/>
+                        <span
+                          class="help-block"
+                          style="color:black; font-size: 20px"
+                          ><span style="color: red;">*</span> Please select Others option to add a domain or topic not listed in the drop down menu</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="fields_box">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2>Work Experience</h2>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="">Total Years of Experience*</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="yearsOfExperience"
+                            name="yearsOfExperience"
+                            ngModel
+                            required
+                            pattern="^[1-9]\d*$"
+                            [ngModel]="tutorProfileDetails.yearsOfExperience"
+                            class="form-control"
+                            #yearsOfExperience="ngModel"
+                            placeholder="Enter Total Years of experience"
+                          />
+                          <span
+                            class="help-block"
+                            *ngIf="
+                              !yearsOfExperience.valid &&
+                              yearsOfExperience.touched
+                            "
+                            >Invalid years of experience</span
+                          >
+                        </div>
+                      </div>
+                      <div>
+                        <div class="col-12">
+                          <h4 *ngIf="prevArrangedOrganisations.length==0">Organisation</h4>
+      
+                        </div>
+                        <div class="field_repeater">
+                          <div class="row">
+                            <div class="col-12 col-md-6">
+                              <div class="form-group">
+                                <label class="">Current Organisation</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="currentOrganisation"
+                                  name="currentOrganisation"
+                                  ngModel
+                                  [(ngModel)]="
+                                    tutorProfileDetails.currentOrganisation
+                                  "
+                                  #currentOrganisation="ngModel"
+                                  maxlength="50"
+                                  placeholder="Enter Current Organisation"
+                                />
+                                <span
+                                  class="help-block"
+                                  *ngIf="
+                                    !currentOrganisation.valid &&
+                                    currentOrganisation.touched
+                                  "
+                                  >Invalid organisation</span
+                                >
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                              <div class="form-group">
+                                <label class="">Title/Designation</label>
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="currentDesination"
+                                  name="currentDesignation"
+                                  [(ngModel)]="
+                                    tutorProfileDetails.currentDesignation
+                                  "
+                                  #currentDesignation="ngModel"
+                                  maxlength="50"
+                                  placeholder="Enter Title/Designation"
+                                />
+                                <span
+                                  class="help-block"
+                                  *ngIf="
+                                    !currentDesignation.valid &&
+                                    currentDesignation.touched
+                                  "
+                                  >Invalid Designation</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+
+                          <label style="font-weight: 600;"  *ngIf="prevArrangedOrganisations.length!=0">Previous Organisation</label>
+                        
+                        
+                        <!-- <h4 *ngIf="prevArrangedOrganisations.length!=0">Previous Organisations</h4> -->
+                        <div
+                          class="field_repeater"
+                          *ngFor="
+                            let organisation of prevArrangedOrganisations;
+                            let i = index
+                          "
+                        >
+                          <div class="row">
+                            <div class="col-12 col-md-5">
+                              <div class="form-group">
+                                <!-- <label class="">Organisation</label> -->
+                                <span class="form-control">{{
+                                  organisation.organisation
+                                }}</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-5">
+                              <div class="form-group">
+                                <!-- <label class="">Title/Designation</label> -->
+                                <span class="form-control">{{
+                                  organisation.designation
+                                }}</span>
+                              </div>
+                            </div>
+                            <div
+                              class="col-12 col-md-1"
+                              style="padding-top: 5px"
+                            >
+                              <div class="reptr___btn">
+                                <a
+                                  href="JavaScript:;"
+                                  class="delet_RBtn"
+                                  (click)="deleteOrganisation(i)"
+                                  ><img
+                                    src="../assets/images/delete-repeater.svg"
+                                    alt="delete"
+                                /></a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="reptr___btn" style="margin-top: 15px;" *ngIf="!showEditPreviousOrganisations">
+                        <a
+                          href="JavaScript:;"
+                          class="add_RBtn"
+                          (click)="togglePreviousOrganisationsView()"
+                          ><img
+                            src="../assets/images/add-repeater.svg"
+                            alt="add"
+                          />Add More</a
+                        >
+                      </div>
+                      <div *ngIf="showEditPreviousOrganisations">
+                        <div>
+                          <div class="field_repeater">
+                            <div class="row">
+                              <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                  <label class="">Previous Organisation</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    name="prevOrganisation"
+                                    placeholder="Enter Organisation name"
+                                    [(ngModel)]="inputOrganisation"
+                                  />
+                                </div>
+                                <div
+                                  *ngIf="duplicatePreviousOrganisation"
+                                  class="help-block"
+                                >
+                                  Organisation already exists !
+                                </div>
+                                <div
+                                  *ngIf="invalidOrganisationDetails"
+                                  class="help-block"
+                                >
+                                  One or more fields is empty !
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                  <label class="">Title/Designation</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    name="prevDesignation"
+                                    placeholder="Enter Title/Designation"
+                                    [(ngModel)]="inputDesignation"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="reptr___btn">
+                          <a
+                            href="JavaScript:;"
+                            class="add_RBtn"
+                            (click)="addOrganisation()"
+                            ><img
+                              src="../assets/images/add-repeater.svg"
+                              alt="add"
+                            />Add</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="fields_box">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2>About</h2>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group">
+                          <textarea
+                            style="padding-top: 10px"
+                            class="form-control"
+                            id="description"
+                            rows="3"
+                            name="description"
+                            maxlength="250"
+                            [ngModel]="tutorProfileDetails.description"
+                            placeholder="Provide more information about your credentials"
+                            #tutorProfileDescription
+                          ></textarea>
+                          <span class="setLength"
+                            >{{
+                              tutorProfileDescription.value.length
+                            }}/250</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="fields_box" id="educationBox">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2>Education</h2>
+                      </div>
+                      <div
+                        *ngIf="emptyEducationDetails"
+                        style="color: red; margin-top: 10px"
+                      >
+                        Add atleast one educational qualification !
+                      </div>
+                      <div
+                        class="field_repeater"
+                        *ngFor="
+                          let education of educationQualifications;
+                          let i = index
+                        "
+                      >
+                        <div class="row">
+                          <div class="col-12 col-md-11">
+                            <div class="form-group">
+                              <!-- <label class="">Organisation</label> -->
+                              <span class="form-control">{{ education }}</span>
+                            </div>
+                          </div>
+
+                          <div class="col-12 col-md-1" style="padding-top: 5px">
+                            <div class="reptr___btn">
+                              <a
+                                href="JavaScript:;"
+                                class="delet_RBtn"
+                                (click)="deleteEducation(i)"
+                                ><img
+                                  src="../assets/images/delete-repeater.svg"
+                                  alt="delete"
+                              /></a>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="field_repeater">
+                        <div class="row">
+                          <div class="col-12" style="margin-top: 15px">
+                            <h4>Add Education</h4>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label class="">University / College*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="institute"
+                                [(ngModel)]="inputInstitute"
+                                placeholder="Enter University / College"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label class="">Degree and speciality*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="degree"
+                                [(ngModel)]="inputEducation"
+                                placeholder="Enter Degree"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-group">
+                              <label class="">Completion Date*</label>
+                              <!-- <input
+                                type="date"
+                                class="form-control"
+                                name="completionDate"
+                                [(ngModel)]="inputCompletionDate"
+                                placeholder="Enter Completion Date"
+                                #completionDate="ngModel"
+                              /> -->
+                              <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
+                                <div style="display:flex">
+                              
+                               
+                                <input
+                                  appDateFormatMMYYYY
+                                  class="form-control"
+                                  placeholder="Choose Month and Year"
+                                  matInput
+                                  [min]="minDate"
+                                  [max]="maxDate"
+                                  [matDatepicker]="dp"
+                                  [formControl]="inputCompletionDate"
+                                />
+                                <mat-datepicker-toggle
+                                class="dob-mat-datepicker"
+                                  matSuffix
+                                  [for]="dp"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker
+                                  #dp
+                                  startView="multi-year"
+                                  (yearSelected)="chosenYearHandler($event)"
+                                  (monthSelected)="
+                                    chosenMonthHandler($event, dp)
+                                  "
+                                  panelClass="example-month-picker"
+                                >
+                                </mat-datepicker>
+                              
+
+                              <span
+                                class="help-block"
+                                *ngIf="invalidCompletionDate"
+                                >Invalid Completion Date</span
+                              >
+
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            *ngIf="duplicateEducationArea"
+                            style="color: red; margin-top: 10px"
+                          >
+                            Educational Qualification already exists !
+                          </div>
+                          <div
+                            *ngIf="invalidEducationDetails"
+                            style="color: red; margin-top: 10px"
+                          >
+                            One or more fields is empty !
+                          </div>
+                        </div>
+                      </div>
+                      <div class="reptr___btn">
+                        <a
+                          href="JavaScript:;"
+                          (click)="addEducation()"
+                          class="add_RBtn"
+                          ><img
+                            src="../assets/images/add-repeater.svg"
+                            alt="add"
+                          />Save</a
+                        >
+                      </div>
+                      <div *ngIf="expertises.length==0">
+                        <!-- <span
+                          class="help-block"
+                          style="color:black; font-size: 20px"
+                          >
+                          <span style="color: red;">*</span> 
+                          Please click on save to save atleast 1 education</span
+                        > -->
+                        <br/>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="fields_box" id="photoBox">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2>Photo<sup style="font-size: x-large">*</sup></h2>
+                      </div>
+                      <div class="col-12">
+                        <div class="profile_upload">
+                          <div class="img__contain">
+                            <img
+                              id="img__profile"
+                              [src]="profilePictureUrl"
+                              alt="image"
+                            />
+                          </div>
+                          <!-- <div class="input-group">
+                          <div class="custom-file">
+                            <input
+                              type="file"
+                              id="inputGroupProfile"
+                              class="imgInp custom-file-input"
+                            />
+                            <label
+                              class="custom-file-label"
+                              for="inputGroupProfile"
+                              >Choose file</label
+                            >
+                          </div>
+                        </div> -->
+                          <div class="form-group">
+                            <input
+                              #profilePicture
+                              hidden="true"
+                              type="file"
+                              accept=".jpg,.png,.jpeg"
+                              onclick="this.value=null"
+                              (change)="profilePictureChange($event)"
+                              required
+                            />
+
+                            <button
+                              class="btn"
+                              (click)="profilePicture.click()"
+                              style="
+                                margin-top: 10px;
+                                height: 50px;
+                                position: relative;
+                              "
+                            >
+                              <span *ngIf="!isLoading3">Upload</span>
+                              <div
+                                class="tickMark"
+                                *ngIf="profilePicUploadStatus"
+                              >
+                                <img
+                                  class="tickMarkImg"
+                                  src="../../../assets/icons/tick.png"
+                                />
+                              </div>
+                              <span
+                                *ngIf="isLoading3"
+                                class="loader"
+                                style="
+                                  text-align: center;
+                                  z-index: 10;
+                                  margin-right: 25px;
+                                "
+                              >
+                                <app-loader></app-loader>
+                              </span>
+                            </button>
+                          </div>
+                          <div
+                            style="
+                              margin: 5px;
+                              margin-left: 0;
+                              font-size: 14px;
+                              font-weight: 600;
+                              color: red;
+                            "
+                            *ngIf="emptyProfilePicture"
+                          >
+                            Please upload a profile picture !
+                          </div>
+                          <div
+                            style="
+                              margin: 5px;
+                              margin-left: 0;
+                              font-size: 14px;
+                              font-weight: 600;
+                              color: red;
+                            "
+                            *ngIf="invalidPicture"
+                          >
+                            Please upload a valid Image !
+                          </div>
+                          <div
+                            style="
+                              margin: 10px;
+                              margin-left: 0;
+                              font-size: 14px;
+                              font-weight: 600;
+                              color: red;
+                            "
+                            *ngIf="pictureInfo"
+                          >
+                            Max file size upto 3 MB in .jpg, .png or .jpeg
+                            formats only
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style="
+                      margin: 10px;
+                      margin-left: 0;
+                      font-weight: 600;
+                      color: red;
+                    "
+                  >
+                    All the fields marked * are mandatory
+                  </div>
+                  <div>
+                    <span class="help-block" style="color: grey"
+                      >By submitting, you acknowledge that you have read and
+                      agreed to our
+                      <a
+                        routerLink="/terms-and-conditions"
+                        target="_blank"
+                        style="color: #8dc63f; cursor: pointer"
+                        >Terms and Conditions</a
+                      >
+                      and
+                      <a
+                        routerLink="/privacy-policy"
+                        target="_blank"
+                        style="color: #8dc63f; cursor: pointer"
+                        >Privacy Policy</a
+                      ></span
+                    >
+                  </div>
+                  <div class="signup_btnexp">
+                    <button
+                      type="submit"
+                      class="button form_Btn"
+                      style="margin-top: 10px"
+                      [disabled]="!basicProfile.valid"
+                    >
+                      Sign up as an Expert!
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

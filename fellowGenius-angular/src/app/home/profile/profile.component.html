@@ -17,8 +17,10 @@
         </ul>
       </div>
       <div class="profile__TabContent">
-        <form (ngSubmit)="saveExpertBasicProfile(basicProfile)"
-        #basicProfile="ngForm">
+        <form
+          (ngSubmit)="saveExpertBasicProfile(basicProfile)"
+          #basicProfile="ngForm"
+        >
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="Tab__1">
               <div class="row">
@@ -45,7 +47,7 @@
                   </div>
                 </div>
 
-             <!--   <div class="col-12 col-md-6">
+                <!--   <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label class="">Date of Birth*</label>
                     <input
@@ -69,47 +71,41 @@
 
                 <div class="col-12 col-md-6">
                   <div class="form-group">
-                    <label class="">Date of Birth (DD/MM/YY)* </label>
- <div style="display:flex">
-  <input
-    appDateFormatDdmmyyyy
-    class="form-control"
-    matInput
-    placeholder="Date of Birth"
-    [matDatepicker]="dobdp"
-    id="userDob"
-    name="userDob"
-    [(ngModel)]="userDob" 
-    #dob="ngModel"
-    dobValidator
-  />
-  <mat-datepicker-toggle
-    matSuffix
-    [for]="dobdp"
-  ></mat-datepicker-toggle>
-  <mat-datepicker
-    #dobdp
-    
-  >
-  </mat-datepicker>
-</div>
-<span
+                    <label class="">Date of Birth (DD/MM/YYYY)* </label>
+                    <div style="display: flex">
+                      <input
+                        appDateFormatDdmmyyyy
+                        class="form-control"
+                        oninput="this.value = this.value.replace(/[^~]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                        matInput
+                        placeholder="Date of Birth"
+                        [matDatepicker]="dobdp"
+                        id="userDob"
+                        name="userDob"
+                        [(ngModel)]="userDob"
+                        #dob="ngModel"
+                        dobValidator
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="dobdp"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #dobdp> </mat-datepicker>
+                    </div>
+                    <span
                       *ngIf="dob.errors?.invalidDob && dob.touched"
                       class="help-block"
                       >Invalid date of birth</span
                     >
-
-                   
                   </div>
                 </div>
 
-              
                 <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label class="">Phone Number*</label>
                     <input
                       type="text"
-                      oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                      oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(\..*?)\..*/g, '$1');"
                       class="form-control"
                       placeholder="Phone number"
                       id="contact"
@@ -144,9 +140,7 @@
                     />
                     <span
                       class="help-block"
-                      *ngIf="
-                        !linkedInProfile.valid && linkedInProfile.touched
-                      "
+                      *ngIf="!linkedInProfile.valid && linkedInProfile.touched"
                       >Invalid linkedIn profile</span
                     >
                   </div>
@@ -172,12 +166,8 @@
                     <div>
                       <span
                         class="help-block"
-                        style="
-                          color: grey;
-                          font-size: smaller;
-                        "
-                        >UPI ID is necessary for processing your
-                        payments</span
+                        style="color: grey; font-size: smaller"
+                        >UPI ID is necessary for processing your payments</span
                       >
                     </div>
                   </div>
@@ -205,7 +195,13 @@
                 </div>
                 <div class="col-12">
                   <div class="form__btn">
-                    <button type="submit" [disabled]="!basicProfile.valid" class="button save__btn">Save</button>
+                    <button
+                      type="submit"
+                      [disabled]="!basicProfile.valid"
+                      class="button save__btn"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
@@ -257,10 +253,7 @@
                         "
                       >
                         <span *ngIf="!isLoading3">Upload</span>
-                        <div
-                          class="tickMark"
-                          *ngIf="profilePicUploadStatus"
-                        >
+                        <div class="tickMark" *ngIf="profilePicUploadStatus">
                           <img
                             class="tickMarkImg"
                             src="../../../assets/icons/tick.png"
@@ -313,13 +306,20 @@
                       "
                       *ngIf="pictureInfo"
                     >
-                    Max file size upto 3 Mb in .jpg, .png or .jpeg formats only
+                      Max file size upto 3 Mb in .jpg, .png or .jpeg formats
+                      only
                     </div>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="form__btn">
-                    <button type="submit" [disabled]="!basicProfile.valid" class="button save__btn">Save</button>
+                    <button
+                      type="submit"
+                      [disabled]="!basicProfile.valid"
+                      class="button save__btn"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
@@ -344,23 +344,15 @@
                     <span
                       class="help-block"
                       *ngIf="
-                        expertisePrice.errors?.invalidPrice && expertisePrice.touched
+                        expertisePrice.errors?.invalidPrice &&
+                        expertisePrice.touched
                       "
                       >Invalid Price per hour !</span
                     >
-                    <div
-                      class="pph__detail"
-                      *ngIf="
-                        tutorProfileDetails.price1
-                      "
-                    >
+                    <div class="pph__detail" *ngIf="tutorProfileDetails.price1">
                       <div class="detail__list">
-                        <span class="green_txt"
-                          >Earnings</span
-                        >
-                        <span class="green_txt"
-                          >₹ {{ actualEarning }}</span
-                        >
+                        <span class="green_txt">Earnings</span>
+                        <span class="green_txt">₹ {{ actualEarning }}</span>
                       </div>
                       <div class="detail__list">
                         <span class="">Platform Fee</span>
@@ -383,9 +375,7 @@
                   <div class="col-12">
                     <h4>Domains</h4>
                   </div>
-                  <div
-                    *ngFor="let expertise of expertises; let i = index"
-                  >
+                  <div *ngFor="let expertise of expertises; let i = index">
                     <div class="field_repeater">
                       <div class="row">
                         <div class="col-12 col-md-5">
@@ -402,10 +392,7 @@
                             }}</span>
                           </div>
                         </div>
-                        <div
-                          class="col-12 col-md-1"
-                          style="padding-top: 5px"
-                        >
+                        <div class="col-12 col-md-1" style="padding-top: 5px">
                           <div class="reptr___btn">
                             <a
                               href="JavaScript:Void(0);"
@@ -414,7 +401,7 @@
                               ><img
                                 src="../assets/images/delete-repeater.svg"
                                 alt="delete"
-                                style="margin-bottom: 10px;"
+                                style="margin-bottom: 10px"
                             /></a>
                           </div>
                         </div>
@@ -448,7 +435,7 @@
                           data-placeholder="Choose Domain"
                           ngModel
                         >
-                        <option value=""></option>
+                          <option value=""></option>
                           <option
                             *ngFor="let categ of categories"
                             [value]="categ.category"
@@ -469,7 +456,7 @@
                           (change)="onTopicChange($event.target.value)"
                           ngModel
                         >
-                        <option value=""></option>
+                          <option value=""></option>
                           <option
                             *ngFor="let sc of filteredSubCategories"
                             [value]="sc.subCategory"
@@ -482,10 +469,7 @@
                   </div>
                 </div>
                 <div class="reptr___btn">
-                  <a
-                    class="add_RBtn"
-                    type="button"
-                    (click)="saveExpertise()"
+                  <a class="add_RBtn" type="button" (click)="saveExpertise()"
                     ><img
                       src="../assets/images/add-repeater.svg"
                       alt="add"
@@ -494,7 +478,13 @@
                 </div>
                 <div class="col-12">
                   <div class="form__btn">
-                    <button type="submit" [disabled]="!basicProfile.valid" class="button save__btn">Save</button>
+                    <button
+                      type="submit"
+                      [disabled]="!basicProfile.valid"
+                      class="button save__btn"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
@@ -533,7 +523,7 @@
                               ><img
                                 src="../assets/images/delete-repeater.svg"
                                 alt="delete"
-                                style="margin-bottom: 10px;"
+                                style="margin-bottom: 10px"
                             /></a>
                           </div>
                         </div>
@@ -565,7 +555,7 @@
                             />
                           </div>
                         </div>
-                        <div class="col-12 ">
+                        <div class="col-12">
                           <div class="form-group">
                             <label class="">Completion Date*</label>
                             <!-- <input
@@ -577,23 +567,30 @@
                               #completionDate="ngModel"
                             /> -->
                             <!-- <input type="text" name="completionDate" [(ngModel)]="inputCompletionDate" class="datepicker form-control" placeholder="Enter completion date" #completionDate="ngModel"> -->
-                              <div style="display:flex">
-                            
+                            <div style="display: flex">
                               <input
-                              appDateFormatMMYYYY
-                              class="form-control"
-                               matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp" [formControl]="inputCompletionDate">
-                              <mat-datepicker-toggle 
-                              
-                              matSuffix [for]="dp"></mat-datepicker-toggle>
-                              <mat-datepicker #dp
-                                              startView="multi-year"
-                                              (yearSelected)="chosenYearHandler($event)"
-                                              (monthSelected)="chosenMonthHandler($event, dp)"
-                                              panelClass="example-month-picker">
+                                appDateFormatMMYYYY
+                                class="form-control"
+                                matInput
+                                [min]="minDate"
+                                [max]="maxDate"
+                                [matDatepicker]="dp"
+                                [formControl]="inputCompletionDate"
+                              />
+                              <mat-datepicker-toggle
+                                matSuffix
+                                [for]="dp"
+                              ></mat-datepicker-toggle>
+                              <mat-datepicker
+                                #dp
+                                startView="multi-year"
+                                (yearSelected)="chosenYearHandler($event)"
+                                (monthSelected)="chosenMonthHandler($event, dp)"
+                                panelClass="example-month-picker"
+                              >
                               </mat-datepicker>
                             </div>
-                         
+
                             <span
                               class="help-block"
                               *ngIf="invalidCompletionDate"
@@ -630,7 +627,13 @@
                 </div>
                 <div class="col-12">
                   <div class="form__btn">
-                    <button type="submit" [disabled]="!basicProfile.valid" class="button save__btn">Save</button>
+                    <button
+                      type="submit"
+                      [disabled]="!basicProfile.valid"
+                      class="button save__btn"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
@@ -656,8 +659,7 @@
                     <span
                       class="help-block"
                       *ngIf="
-                        !yearsOfExperience.valid &&
-                        yearsOfExperience.touched
+                        !yearsOfExperience.valid && yearsOfExperience.touched
                       "
                       >Invalid years of experience</span
                     >
@@ -703,9 +705,7 @@
                             class="form-control"
                             id="currentDesination"
                             name="currentDesignation"
-                            [(ngModel)]="
-                              tutorProfileDetails.currentDesignation
-                            "
+                            [(ngModel)]="tutorProfileDetails.currentDesignation"
                             #currentDesignation="ngModel"
                             maxlength="50"
                             placeholder="Enter Title/Designation"
@@ -739,16 +739,11 @@
                       <div class="col-12 col-md-10">
                         <div class="form-group">
                           <!-- <label class="">Organisation</label> -->
-                          <span class="form-control">{{
-                            organisation
-                          }}</span>
+                          <span class="form-control">{{ organisation }}</span>
                         </div>
                       </div>
-                     
-                      <div
-                        class="col-12 col-md-1"
-                        style="padding-top: 5px"
-                      >
+
+                      <div class="col-12 col-md-1" style="padding-top: 5px">
                         <div class="reptr___btn">
                           <a
                             href="JavaScript:;"
@@ -757,7 +752,7 @@
                             ><img
                               src="../assets/images/delete-repeater.svg"
                               alt="delete"
-                              style="margin-bottom: 10px;"
+                              style="margin-bottom: 10px"
                           /></a>
                         </div>
                       </div>
@@ -823,7 +818,7 @@
                     <div class="col-12">
                       <h4>About</h4>
                     </div>
-                    <div class="col-12 ">
+                    <div class="col-12">
                       <div class="form-group">
                         <textarea
                           style="padding-top: 10px"
@@ -837,9 +832,7 @@
                           #tutorProfileDescription
                         ></textarea>
                         <span class="setLength"
-                          >{{
-                            tutorProfileDescription.value.length
-                          }}/250</span
+                          >{{ tutorProfileDescription.value.length }}/250</span
                         >
                       </div>
                     </div>
@@ -865,12 +858,17 @@
                 </div>
                 <div class="col-12">
                   <div class="form__btn">
-                    <button type="submit" [disabled]="!basicProfile.valid" class="button save__btn">Save</button>
+                    <button
+                      type="submit"
+                      [disabled]="!basicProfile.valid"
+                      class="button save__btn"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-            
           </div>
         </form>
       </div>
