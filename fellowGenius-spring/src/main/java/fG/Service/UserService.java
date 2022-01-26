@@ -554,7 +554,7 @@ public class UserService implements UserDetailsService {
 			studentProfile.setFullName(registrationModel.getFullName());
 			//check if expert code is valid or not
 			
-			if(parseReferralCode(registrationModel.getExpertCode())!="") {
+			if(parseReferralCode(registrationModel.getExpertCode())!=""||registrationModel.getExpertCode()!=null) {
 				studentProfile.setExpertCode(registrationModel.getExpertCode());
 			}
 			studentProfile.setUpiID(registrationModel.getUpiId());
@@ -707,6 +707,9 @@ public class UserService implements UserDetailsService {
 				//substring containing last 4 characters
 		String rawInitials = "";
 		String userInitials="";
+		if(refCode!=null) {
+			
+		
 		if (refCode.length() > 4) 
 		{
 		    lastFourDigits = refCode.substring(refCode.length() - 4);
@@ -728,6 +731,7 @@ public class UserService implements UserDetailsService {
 					 return user.getUserId().toString();
 				}
 			}
+		}
 		}
 		return "";
 		
@@ -1725,7 +1729,10 @@ public class UserService implements UserDetailsService {
 						long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
 						if (diffInHours >= 24) {
 //							experts.add(tut);
+							sch.setNoScheduleNotificationTime(now);
+							repTutorAvailabilitySchedule.save(sch);
 							mailService.sendExpertNoScheduleNotification(tut);
+							
 						} else {
 							System.out.println("less than 24 hours !");
 						}

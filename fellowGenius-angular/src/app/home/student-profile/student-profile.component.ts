@@ -1,8 +1,8 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { StudentProfileModel } from 'src/app/model/studentProfile';
 import { StudentService } from 'src/app/service/student.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { NgForm } from '@angular/forms';
+import { FormGroupDirective, NgForm } from '@angular/forms';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -34,14 +34,16 @@ export class StudentProfileComponent implements OnInit {
     private home: HomeComponent
   ) {
     const currentYear = new Date().getFullYear();
-    this.dobStartDate = new Date(currentYear - 60, 0, 1);
-    this.dobEndDate = new Date(currentYear - 6, 11, 31);
+    this.minDobDate = new Date(currentYear - 70, 0, 1);
+    this.maxDobDate = new Date(currentYear - 6, 11, 31);
   }
-  dobStartDate: Date;
-  dobEndDate: Date;
+  minDobDate: Date;
+  maxDobDate: Date;
+  @ViewChild('basicProfile') basicProfile: FormGroupDirective;
   isLoading3: boolean = false;
   profilePicUploadStatus: boolean;
   duplicateArea;
+  basic=true;
   config: MatSnackBarConfig = {
     duration: 2000,
     horizontalPosition: 'center',
@@ -71,6 +73,7 @@ export class StudentProfileComponent implements OnInit {
   pictureInfo: boolean = true;
   emptyProfilePicture;
   userDob: any;
+  
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -91,6 +94,10 @@ export class StudentProfileComponent implements OnInit {
       this.learningAreas = this.studentProfile.learningAreas;
     }
     this.handleRefresh();
+  }
+
+  basicProfileToggle() {
+    this.basic = true;
   }
 
   formatDateFromString(dateString) {
