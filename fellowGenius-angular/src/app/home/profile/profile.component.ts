@@ -96,8 +96,8 @@ export class ProfileComponent implements OnInit {
     const currentYear = new Date().getFullYear();
     this.minDate = new Date(currentYear - 50, 0, 1);
     this.maxDate = new Date(currentYear + 2, 11, 31);
-    this.dobStartDate = new Date(currentYear - 60, 0, 1);
-    this.dobEndDate = new Date(currentYear - 6, 11, 31);
+    this.minDobDate = new Date(currentYear - 60, 0, 1);
+    this.maxDobDate = new Date(currentYear - 6, 11, 31);
     this.fillOptions();
   }
 
@@ -112,8 +112,8 @@ export class ProfileComponent implements OnInit {
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
-  dobStartDate: Date;
-  dobEndDate: Date;
+  minDobDate: Date;
+  maxDobDate: Date;
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
   config: MatSnackBarConfig = {
     duration: 2000,

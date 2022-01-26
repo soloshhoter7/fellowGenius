@@ -47,28 +47,6 @@
                   </div>
                 </div>
 
-                <!--   <div class="col-12 col-md-6">
-                  <div class="form-group">
-                    <label class="">Date of Birth*</label>
-                    <input
-                      type="date"
-                      id="dob"
-                      name="dob"
-                      ngModel
-                      class="form-control"
-                      [ngModel]="tutorProfile.dateOfBirth"
-                      dobValidator
-                      required
-                      #dob="ngModel"
-                    />
-                    <span
-                      *ngIf="dob.errors?.invalidDob && dob.touched"
-                      class="help-block"
-                      >Invalid date of birth</span
-                    >
-                  </div>
-                </div> -->
-
                 <div class="col-12 col-md-6">
                   <div class="form-group">
                     <label class="">Date of Birth (DD/MM/YYYY)* </label>
@@ -76,15 +54,16 @@
                       <input
                         appDateFormatDdmmyyyy
                         class="form-control"
-                        oninput="this.value = this.value.replace(/[^~]/g, '').replace(/(\..*?)\..*/g, '$1');"
                         matInput
                         placeholder="Date of Birth"
                         [matDatepicker]="dobdp"
                         id="userDob"
                         name="userDob"
+                        [min]="minDobDate"
+                        [max]="maxDobDate"
                         [(ngModel)]="userDob"
                         #dob="ngModel"
-                        dobValidator
+                        required
                       />
                       <mat-datepicker-toggle
                         matSuffix
@@ -92,9 +71,7 @@
                       ></mat-datepicker-toggle>
                       <mat-datepicker #dobdp> </mat-datepicker>
                     </div>
-                    <span
-                      *ngIf="dob.errors?.invalidDob && dob.touched"
-                      class="help-block"
+                    <span *ngIf="!dob.valid && dob.touched" class="help-block"
                       >Invalid date of birth</span
                     >
                   </div>
