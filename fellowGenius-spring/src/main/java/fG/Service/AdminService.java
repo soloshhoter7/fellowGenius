@@ -1,16 +1,23 @@
 package fG.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fG.Entity.BookingDetails;
 import fG.Entity.ReferralActivity;
 import fG.Entity.Transactions;
+import fG.Entity.TutorAvailabilitySchedule;
+import fG.Entity.TutorProfile;
+import fG.Entity.TutorProfileDetails;
 import fG.Entity.UserReferrals;
 import fG.Entity.Users;
 import fG.Model.AdminReferralInfoModel;
@@ -24,6 +31,9 @@ import fG.Model.TutorProfileModel;
 import fG.Model.UserReferralInfoModel;
 import fG.Repository.repositoryReferralActivity;
 import fG.Repository.repositoryTransactions;
+import fG.Repository.repositoryTutorAvailabilitySchedule;
+import fG.Repository.repositoryTutorProfile;
+import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryUserReferrals;
 import fG.Repository.repositoryUsers;
 
@@ -44,6 +54,18 @@ public class AdminService {
 	
 	@Autowired
 	repositoryReferralActivity repReferralActivity;
+	
+	@Autowired
+	repositoryTutorProfile repTutorProfile;
+	
+	@Autowired
+	repositoryTutorProfileDetails repTutorProfileDetails;
+	
+	@Autowired
+	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
+	
+	@Autowired
+    MailService mailService;
 
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
 		TutorProfileDetailsModel tut = new TutorProfileDetailsModel();
@@ -309,6 +331,54 @@ public class AdminService {
 		return referralDataList;
 	}
 
+	//will run at 23:10 every Sunday
+	@Scheduled(cron = "0 10 23 * * 0")
+	public void notifyAllExpertsWithNoWeeklySchedule() throws ParseException {
+		
+		List<TutorProfile> tutors=repTutorProfile.findAll();
+		
+		List<Integer> tidList=new ArrayList<>();
+		for(TutorProfile tutor:tutors) {
+			tidList.add(tutor.getTid());
+		}
+		
+		for(int tid:tidList) {
+			TutorProfileDetails exp = repTutorProfileDetails.bookingIdExist(tid);
+			TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+			String date = sdf.format(new Date());
+			// todayDate string
+			Date now = sdf.parse(date);
+			if (exp != null) {
+				TutorProfile tut = repTutorProfile.idExist(exp.getTid());
+				if (!userService.checkIfExpertHasSchedule(tid)) {
+					TutorAvailabilitySchedule sch = repTutorAvailabilitySchedule.idExist(tid);
+					if (sch != null) {
+						Date lastNotificationTime = sch.getNoScheduleNotificationTime();
+						if (lastNotificationTime == null) {
+							sch.setNoScheduleNotificationTime(now);
+							repTutorAvailabilitySchedule.save(sch);
+//							experts.add(tut);
+							mailService.sendExpertNoScheduleNotification(tut);
+						} else {
+							long duration = now.getTime() - lastNotificationTime.getTime();
+							long diffInDays = TimeUnit.MILLISECONDS.toDays(duration);
+							if (diffInDays >= 6) {
+//								experts.add(tut);
+								mailService.sendExpertNoScheduleNotification(tut);
+							} else {
+								System.out.println("less than 7 days !");
+							}
+						}
+					}
+
+				}
+
+			}
+
+		}
+	}
 	
 	
 }
