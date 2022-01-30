@@ -163,6 +163,8 @@ export class SignUpExpertComponent implements OnInit {
   showTextTopic: boolean = false;
   otherDomainSelected: boolean = false;
   otherTopicSelected: boolean = false;
+  topicNotSelected: boolean = false;
+  domainNotSelected: boolean = false;
   showEditPreviousOrganisations: boolean = false;
   ngOnInit() {
     window.scroll(0, 0);
@@ -211,6 +213,7 @@ export class SignUpExpertComponent implements OnInit {
 
     $('#chooseCategory').on('change', function () {
       let value: string = $(this).val();
+      console.log('choosen domain :', value);
       if (value == 'Others') {
         window.angularComponentReference.zone.run(() => {
           window.angularComponentReference.changeOtherDomain();
@@ -223,6 +226,7 @@ export class SignUpExpertComponent implements OnInit {
     });
     $('#chooseSubCategory').on('change', function () {
       let value = $(this).val();
+      console.log('choosen topic :', value);
       if (value == 'Others') {
         window.angularComponentReference.zone.run(() => {
           window.angularComponentReference.changeOtherTopic();
@@ -277,6 +281,8 @@ export class SignUpExpertComponent implements OnInit {
     this.otherTopicSelected = false;
     this.textDomain = '';
     this.textTopic = '';
+    console.log(this.selectedCategory);
+    console.log(this.selectedSubCategory);
   }
   onDigitInput(event) {
     let element;
@@ -397,22 +403,6 @@ export class SignUpExpertComponent implements OnInit {
       this.appInfo = res;
     });
   }
-  onPercentChange(percent: number) {
-    let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
-    let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;
-
-    this.GSTValue = Math.abs(this.round(percent / gstMultiplier - percent));
-    this.commission = Math.abs(
-      this.round(
-        percent / gstMultiplier / commissionMultiplier - percent / gstMultiplier
-      )
-    );
-    this.actualEarning = Math.abs(
-      this.round(percent - this.GSTValue - this.commission)
-    );
-    // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
-    // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
-  }
   round(num) {
     var m = Number((Math.abs(num) * 100).toPrecision(15));
     return (Math.round(m) / 100) * Math.sign(num);
@@ -445,7 +435,7 @@ export class SignUpExpertComponent implements OnInit {
           (x) => x.category == this.selectedCategory
         );
 
-        this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+        // this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
         if (this.selectedCategoryCount > 1) {
           this.isSelectedSubCategory = true;
         } else {
@@ -513,91 +503,117 @@ export class SignUpExpertComponent implements OnInit {
     let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
     return formattedDate;
   }
-  autoSaveEnteredInformation() {
+  autoSaveEnteredInformation(): boolean {
+    //auto save all the information for expertise, organisation, education
     this.saveExpertise();
     this.addOrganisation();
     this.addEducation();
+    //check for all the errors
+    // if (
+    //   this.duplicateExpertiseArea ||
+    //   this.pricePerHourError ||
+    //   this.topicNotSelected ||
+    //   this.domainNotSelected
+    // ) {
+    //   let el = document.getElementById('domainBox');
+    //   el.scrollIntoView();
+    //   return false;
+    // } else if (
+    //   this.invalidOrganisationDetails ||
+    //   this.duplicatePreviousOrganisation
+    // ) {
+    //   let el = document.getElementById('workBox');
+    //   el.scrollIntoView();
+    //   return false;
+    // } else if (this.invalidEducationDetails || this.duplicateEducationArea) {
+    //   let el = document.getElementById('educationBox');
+    //   el.scrollIntoView();
+    //   return false;
+    // }
+    return true;
   }
   saveExpertBasicProfile(form: any) {
-    this.autoSaveEnteredInformation();
-    if (this.expertises.length > 0) {
-      if (this.errorText) {
-        this.errorText = '';
-      }
-      if (this.educationQualifications.length > 0) {
-        if (this.emptyEducationDetails == true)
-          this.emptyEducationDetails = false;
-        if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
-          // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
-          this.isLoading = true;
+    if (this.autoSaveEnteredInformation()) {
+      if (this.expertises.length > 0) {
+        if (this.errorText) {
+          this.errorText = '';
+        }
+        if (this.educationQualifications.length > 0) {
+          if (this.emptyEducationDetails == true)
+            this.emptyEducationDetails = false;
+          if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
+            // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
+            this.isLoading = true;
 
-          this.tutorProfileDetails.contact = form.value.contact;
-          console.log('User inputted DOB is ' + form.value.dob);
-          this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
-            form.value.dob
-          );
-          console.log(this.tutorProfileDetails.dateOfBirth);
-          this.tutorProfileDetails.email = form.value.email;
-          this.tutorProfileDetails.educationalQualifications =
-            this.educationQualifications;
-          this.tutorProfileDetails.professionalSkills =
-            form.value.professionalSkills;
-          this.tutorProfileDetails.fullName = form.value.fullName;
-          this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
-          this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
-          this.tutorProfileDetails.institute = this.getInstitute();
-          this.tutorProfileDetails.areaOfExpertise = this.expertises;
-          this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
-          this.tutorProfileDetails.yearsOfExperience =
-            form.value.yearsOfExperience;
-          this.tutorProfileDetails.currentOrganisation =
-            form.value.currentOrganisation;
-          this.tutorProfileDetails.currentDesignation =
-            form.value.currentDesignation;
-          this.tutorProfileDetails.previousOrganisations =
-            this.previousOraganisations;
-          this.tutorProfileDetails.description = form.value.description;
-          this.tutorProfileDetails.speciality = form.value.speciality;
-          this.tutorProfileDetails.upiID = form.value.upiID;
-          this.tutorProfileDetails.gst = form.value.gst;
-          console.log(this.tutorProfileDetails);
-          this.httpService
-            .checkUser(this.tutorProfileDetails.email)
-            .subscribe((res) => {
-              if (res == true) {
-                this.isLoading = false;
-                this.isLoading = false;
-                this.registeredExpert = false;
-                this.verifyEmail = false;
-                this.snackBar.open(
-                  'Email already Registered !',
-                  'close',
-                  this.config
-                );
-              } else {
-                this.httpService
-                  .verifyEmail(this.tutorProfileDetails.email)
-                  .subscribe((res) => {
-                    this.verificationOtp = res['response'];
-                    this.isLoading = false;
-                    this.verifyEmail = true;
-                  });
-              }
-            });
+            this.tutorProfileDetails.contact = form.value.contact;
+            console.log('User inputted DOB is ' + form.value.dob);
+            this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
+              form.value.dob
+            );
+            console.log(this.tutorProfileDetails.dateOfBirth);
+            this.tutorProfileDetails.email = form.value.email;
+            this.tutorProfileDetails.educationalQualifications =
+              this.educationQualifications;
+            this.tutorProfileDetails.professionalSkills =
+              form.value.professionalSkills;
+            this.tutorProfileDetails.fullName = form.value.fullName;
+            this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+            this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
+            this.tutorProfileDetails.institute = this.getInstitute();
+            this.tutorProfileDetails.areaOfExpertise = this.expertises;
+            this.tutorProfileDetails.linkedInProfile =
+              form.value.linkedInProfile;
+            this.tutorProfileDetails.yearsOfExperience =
+              form.value.yearsOfExperience;
+            this.tutorProfileDetails.currentOrganisation =
+              form.value.currentOrganisation;
+            this.tutorProfileDetails.currentDesignation =
+              form.value.currentDesignation;
+            this.tutorProfileDetails.previousOrganisations =
+              this.previousOraganisations;
+            this.tutorProfileDetails.description = form.value.description;
+            this.tutorProfileDetails.speciality = form.value.speciality;
+            this.tutorProfileDetails.upiID = form.value.upiID;
+            this.tutorProfileDetails.gst = form.value.gst;
+            console.log(this.tutorProfileDetails);
+            this.httpService
+              .checkUser(this.tutorProfileDetails.email)
+              .subscribe((res) => {
+                if (res == true) {
+                  this.isLoading = false;
+                  this.isLoading = false;
+                  this.registeredExpert = false;
+                  this.verifyEmail = false;
+                  this.snackBar.open(
+                    'Email already Registered !',
+                    'close',
+                    this.config
+                  );
+                } else {
+                  this.httpService
+                    .verifyEmail(this.tutorProfileDetails.email)
+                    .subscribe((res) => {
+                      this.verificationOtp = res['response'];
+                      this.isLoading = false;
+                      this.verifyEmail = true;
+                    });
+                }
+              });
+          } else {
+            this.emptyProfilePicture = true;
+            let el = document.getElementById('photoBox');
+            el.scrollIntoView();
+          }
         } else {
-          this.emptyProfilePicture = true;
-          let el = document.getElementById('photoBox');
+          this.emptyEducationDetails = true;
+          let el = document.getElementById('educationBox');
           el.scrollIntoView();
         }
       } else {
-        this.emptyEducationDetails = true;
-        let el = document.getElementById('educationBox');
+        this.errorText = 'Enter atleast one area of Expertise !';
+        let el = document.getElementById('domainBox');
         el.scrollIntoView();
       }
-    } else {
-      this.errorText = 'Enter atleast one area of Expertise !';
-      let el = document.getElementById('domainBox');
-      el.scrollIntoView();
     }
   }
 
@@ -644,10 +660,9 @@ export class SignUpExpertComponent implements OnInit {
   }
   duplicacyCheck(fields: any, item: string) {
     const arr = item.split(':');
-
     for (let i = 0; i < fields.length; i++) {
       const brr = fields[i].split(':');
-      if (arr[0] == brr[0]) {
+      if (arr[1] == brr[1]) {
         return true;
       }
     }
@@ -833,28 +848,6 @@ export class SignUpExpertComponent implements OnInit {
       return null;
     }
   }
-  // saveExpertise() {
-  //   this.addExpertise = new expertise();
-  //   this.selectedSubCategory = this.selectedExpertise;
-  //   this.selectedCategory = this.findSubCategory(this.selectedSubCategory);
-  //   console.log(this.selectedCategory);
-  //   if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
-  //     this.addExpertise.category = this.selectedCategory;
-  //     this.addExpertise.subCategory = this.selectedSubCategory;
-  //     this.addExpertise.price = this.priceForExpertise;
-  //     this.expertises.push(this.addExpertise);
-  //     this.selectedExpertise = '';
-  //     this.priceForExpertise = '';
-
-  //     if (this.duplicateExpertiseArea == true) {
-  //       this.duplicateExpertiseArea = false;
-  //     }
-  //   } else {
-  //     this.duplicateExpertiseArea = true;
-  //     this.selectedExpertise = '';
-  //     this.priceForExpertise = '';
-  //   }
-  // }
 
   // save expertise for multiple domains
   saveExpertise() {
@@ -863,48 +856,60 @@ export class SignUpExpertComponent implements OnInit {
     }
     this.addExpertise = new expertise();
     if (!this.otherDomainSelected && !this.otherTopicSelected) {
-      if (this.selectedSubCategory) {
-        this.errorText = '';
-        if (
-          !this.expertiseDuplicacyCheck(
-            this.selectedCategory,
-            this.selectedSubCategory
-          )
-        ) {
-          this.addExpertise.category = this.selectedCategory;
-          this.addExpertise.subCategory = this.selectedSubCategory;
+      if (this.selectedCategory != '' && this.selectedCategory != null) {
+        if (this.selectedSubCategory) {
+          this.topicNotSelected = false;
+          this.errorText = '';
+          if (
+            !this.expertiseDuplicacyCheck(
+              this.selectedCategory,
+              this.selectedSubCategory
+            )
+          ) {
+            this.addExpertise.category = this.selectedCategory;
+            this.addExpertise.subCategory = this.selectedSubCategory;
 
-          if (this.tutorProfileDetails.price1 != null) {
-            this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
-            this.expertises.push(this.addExpertise);
-            $('.select2').val('').trigger('change');
-            this.expertises.reverse();
-            this.selectedCategory = '';
-            this.selectedSubCategory = '';
-            this.priceForExpertise = '';
-            if (this.duplicateExpertiseArea == true) {
-              this.duplicateExpertiseArea = false;
+            if (this.tutorProfileDetails.price1 != null) {
+              this.addExpertise.price = parseInt(
+                this.tutorProfileDetails.price1
+              );
+              this.expertises.push(this.addExpertise);
+              $('.select2').val('').trigger('change');
+              this.expertises.reverse();
+              this.selectedCategory = '';
+              this.selectedSubCategory = '';
+              this.priceForExpertise = '';
+              if (this.duplicateExpertiseArea == true) {
+                this.duplicateExpertiseArea = false;
+              }
+            } else {
+              this.pricePerHourError = true;
             }
           } else {
-            this.pricePerHourError = true;
+            this.duplicateExpertiseArea = true;
+            this.selectedExpertise = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
           }
         } else {
-          this.duplicateExpertiseArea = true;
-          this.selectedExpertise = '';
-          this.selectedSubCategory = '';
-          this.priceForExpertise = '';
+          this.topicNotSelected = true;
+          this.errorText = 'Please add Topic !';
         }
-      } else {
-        this.errorText = 'Please add Topic !';
       }
     } else if (this.otherDomainSelected == true) {
       if (this.textDomain == '' && this.textTopic == '') {
+        this.topicNotSelected = true;
+        this.domainNotSelected = true;
         this.errorText = 'Please enter domain and topic name !';
       } else if (this.textDomain == '') {
+        this.domainNotSelected = true;
         this.errorText = 'Please enter domain name !';
       } else if (this.textTopic == '') {
+        this.topicNotSelected = true;
         this.errorText = 'Please enter topic name !';
       } else if (this.textTopic != '' && this.textDomain != '') {
+        this.domainNotSelected = false;
+        this.topicNotSelected = false;
         this.errorText = '';
         if (!this.expertiseDuplicacyCheck(this.textDomain, this.textTopic)) {
           this.addExpertise.category = this.textDomain;
@@ -939,9 +944,10 @@ export class SignUpExpertComponent implements OnInit {
     } else if (this.otherTopicSelected == true) {
       if (this.tutorProfileDetails.price1 != null) {
         if (this.selectedCategory) {
+          this.domainNotSelected = false;
           if (this.textTopic != '') {
             console.log(this.selectedCategory + ':' + this.textTopic);
-
+            this.topicNotSelected = false;
             this.errorText = '';
             if (
               !this.expertiseDuplicacyCheck(
@@ -978,10 +984,12 @@ export class SignUpExpertComponent implements OnInit {
             }
           } else {
             this.errorText = 'Please enter a topic name !';
+            this.topicNotSelected = true;
           }
           console.log('we have a selected category !');
         } else {
           this.errorText = 'Please choose a domain !';
+          this.domainNotSelected = true;
         }
       } else {
         this.pricePerHourError = true;
@@ -1034,7 +1042,7 @@ export class SignUpExpertComponent implements OnInit {
         this.duplicatePreviousOrganisation = true;
       }
     } else {
-      this.invalidOrganisationDetails = true;
+      // this.invalidOrganisationDetails = true;
     }
   }
 
@@ -1097,51 +1105,4 @@ export class SignUpExpertComponent implements OnInit {
   deleteEducation(index: any) {
     this.educationQualifications.splice(index, 1);
   }
-
-  // public loadScript() {
-  //     var isFound = false;
-  //     var scripts = document.getElementsByTagName("script")
-  //     for (var i = 0; i < scripts.length; ++i) {
-  //         if (scripts[i].getAttribute('src') != null && scripts[i].getAttribute('src').includes("loader")) {
-  //             isFound = true;
-  //         }
-  //     }
-
-  //     if (!isFound) {
-  //         var dynamicScripts = ["https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js","https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js",
-  //         "https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"];
-
-  //         for (var i = 0; i < dynamicScripts.length; i++) {
-  //             let node = document.createElement('script');
-  //             node.src = dynamicScripts [i];
-  //             node.type = 'text/javascript';
-  //             node.async = false;
-  //             node.charset = 'utf-8';
-  //             document.getElementsByTagName('head')[0].appendChild(node);
-  //         }
-
-  //     }
-  // }
-  // loadCSS(url) {
-  //   // Create link
-  //   let link:any = document.createElement('link');
-  //   link.href = url;
-  //   link.rel = 'stylesheet';
-  //   link.type = 'text/css';
-
-  //   let head = document.getElementsByTagName('head')[0];
-  //   let links = head.getElementsByTagName('link');
-  //   let style = head.getElementsByTagName('style')[0];
-
-  //   // Check if the same style sheet has been loaded already.
-  //   let isLoaded = false;
-  //   for (var i = 0; i < links.length; i++) {
-  //     var node = links[i];
-  //     if (node.href.indexOf(link.href) > -1) {
-  //       isLoaded = true;
-  //     }
-  //   }
-  //   if (isLoaded) return;
-  //   head.insertBefore(link, style);
-  // }
 }

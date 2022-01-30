@@ -590,7 +590,6 @@
                             placeholder="Enter price per hour (INR) "
                             [(ngModel)]="tutorProfileDetails.price1"
                             #expertisePrice="ngModel"
-                            (ngModelChange)="onPercentChange($event)"
                           />
                           <div>
                             <span
@@ -786,7 +785,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="fields_box">
+                  <div class="fields_box" id="workBox">
                     <div class="row">
                       <div class="col-12">
                         <h2>Work Experience</h2>
