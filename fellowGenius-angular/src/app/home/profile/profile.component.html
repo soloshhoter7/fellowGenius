@@ -321,7 +321,7 @@
                     <span
                       class="help-block"
                       *ngIf="
-                        expertisePrice.errors?.invalidPrice &&
+                        !expertisePrice.valid &&
                         expertisePrice.touched
                       "
                       >Invalid Price per hour !</span

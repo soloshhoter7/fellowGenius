@@ -61,6 +61,7 @@ export class SignUpComponent implements OnInit {
   wrongOtp = false;
   showInput: boolean = true;
   verifyEmail: boolean = false;
+  resendEmailMessage: boolean= false;
   incorrectLoginDetails = false;
   termsAndConditionsChecked = false;
   termsAndConditionsError: string;
@@ -87,6 +88,12 @@ export class SignUpComponent implements OnInit {
   prev_route;
   expert_userId;
   expert_domain;
+  otp_1digit: any;
+  otp_2digit: any;
+  otp_3digit: any;
+  otp_4digit: any;
+  otp_5digit: any;
+  otp_6digit: any;
   // --------------- models ---------------------------------
   registrationModel = new registrationModel();
   loginModel = new loginModel();
@@ -159,7 +166,7 @@ export class SignUpComponent implements OnInit {
       element = event.srcElement.nextElementSibling;
 
     if (event.code === 'Backspace')
-      element = event.srcElement.previousElementSibling;
+     element = event.srcElement.previousElementSibling;
 
     if (element == null) return;
     else element.focus();
@@ -240,6 +247,29 @@ export class SignUpComponent implements OnInit {
       height: 'auto',
     });
   }
+  splitOtp(form:NgForm){
+    console.log("Inside the split function");
+    console.log("Copy pasted OTP is "+ form.value.otp_1digit);
+    let num = form.value.otp_1digit;
+    let otp_array = [];
+   while(num){
+      const last = num % 10;
+      otp_array.unshift(last);
+      num = Math.floor(num / 10);
+   };
+   console.log("OTP Array is "+otp_array);
+
+  if(otp_array.length==6){
+    this.otp_1digit=otp_array[0];
+    this.otp_2digit=otp_array[1];
+    this.otp_3digit=otp_array[2];
+    this.otp_4digit=otp_array[3];
+    this.otp_5digit=otp_array[4];
+    this.otp_6digit=otp_array[5];
+  }
+
+  }
+  
   appendOtp(form: NgForm) {
     console.log(form);
     let otp: string = '';
@@ -257,6 +287,44 @@ export class SignUpComponent implements OnInit {
     otp += otp_6digit.toString();
     console.log(otp);
     return otp;
+  }
+  onResend(){
+    this.isLoading=true;
+    this.httpClient
+        .checkUser(this.registrationModel.email)
+        .subscribe((res) => {
+          if (!res == true) {
+            setTimeout(() => {
+              if (this.timeOut == true) {
+                this.emailValid = true;
+                this.isLoading = false;
+                this.showInput = true;
+              }
+            }, 25000);
+            this.httpClient
+              .verifyEmail(this.registrationModel.email)
+              .subscribe((res) => {
+                this.verificationOtp = res['response'];
+
+                this.timeOut = false;
+                this.verifyEmail = true;
+                this.resendEmailMessage=true;
+                this.isLoading = false;
+                this.showInput = false;
+              });
+          } else {
+            this.timeOut = false;
+            // this.verifyEmail = true;
+            this.isLoading = false;
+            // this.showInput = false;
+            this.snackBar.open(
+              'You are already registered. Please Login.',
+              'close',
+              this.config
+            );
+            this.router.navigate(['login']);
+          }
+        });
   }
   onSignUp(form: NgForm) {
     if (this.verifyEmail == false) {

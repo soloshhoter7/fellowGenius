@@ -240,6 +240,19 @@ export class SignUpExpertComponent implements OnInit {
     );
   }
 
+  checkForNumbers(form:any){
+    let regExp = /^\d+$/;
+    let yoe=form.value.yearsOfExperience;
+    //console.log("Years of experience is "+yoe);
+    if(yoe==" "||yoe==undefined){
+      return true;
+    }else{
+    let hasNumbers = regExp.test(yoe.trim());
+    //console.log(hasNumbers + ", it is a number");
+    return hasNumbers;
+    }
+  }
+
   togglePasswords() {
     this.showPassword = !this.showPassword;
   }
@@ -260,6 +273,8 @@ export class SignUpExpertComponent implements OnInit {
     this.showTextTopic = true;
     this.otherDomainSelected = true;
   }
+
+
   selectOtherTopic() {
     this.duplicateExpertiseArea = false;
     console.log('selected other topic');

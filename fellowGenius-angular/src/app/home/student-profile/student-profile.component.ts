@@ -73,7 +73,7 @@ export class StudentProfileComponent implements OnInit {
   pictureInfo: boolean = true;
   emptyProfilePicture;
   userDob: any;
-  
+  invalidArea: boolean = false;
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -128,9 +128,18 @@ export class StudentProfileComponent implements OnInit {
     location.reload();
   }
   addLearningArea() {
+    if(this.invalidArea==true){
+      this.invalidArea=false;
+    }
     if (!this.duplicacyCheck(this.learningAreas, this.learningArea)) {
-      this.learningAreas.push(this.learningArea);
-      this.learningArea = '';
+ 
+      if(this.validLearningArea(this.learningArea)){
+        this.learningAreas.push(this.learningArea);
+        this.learningArea = '';
+      }else{
+        this.invalidArea=true;
+      }
+      
       if (this.duplicateArea == true) {
         this.duplicateArea = false;
       }
@@ -159,6 +168,19 @@ export class StudentProfileComponent implements OnInit {
   //     this.openNav();
   //   }
   // }
+
+  checkForNumbers(form:any){
+    let regExp = /^\d+$/;
+    let yoe=form.value.yearsOfExperience;
+    //console.log("Years of experience is "+yoe);
+    if(yoe==" "||yoe==undefined){
+      return true;
+    }else{
+    let hasNumbers = regExp.test(yoe.trim());
+    //console.log(hasNumbers + ", it is a number");
+    return hasNumbers;
+    }
+  }  
 
   formatDateFromDB() {
     console.log(this.studentProfile);
@@ -234,6 +256,15 @@ export class StudentProfileComponent implements OnInit {
 
   duplicacyCheck(fields: string[], item: string) {
     return fields.includes(item);
+  }
+
+  validLearningArea(item: string){
+    let validLearningAreas=[];
+    this.filteredOptions.subscribe(option=>{
+      validLearningAreas=option;
+      console.log("Valid Learning Areas is "+validLearningAreas);
+    })
+    return validLearningAreas.includes(item);
   }
   profilePictureChange(event) {
     // this.profilePictureDisabled = true;

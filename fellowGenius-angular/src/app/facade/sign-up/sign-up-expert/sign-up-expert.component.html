@@ -801,7 +801,6 @@
                             name="yearsOfExperience"
                             ngModel
                             required
-                            pattern="^[1-9]\d*$"
                             [ngModel]="tutorProfileDetails.yearsOfExperience"
                             class="form-control"
                             #yearsOfExperience="ngModel"
@@ -814,6 +813,13 @@
                               yearsOfExperience.touched
                             "
                             >Invalid years of experience</span
+                          >
+                          <span
+                            class="help-block"
+                            *ngIf="
+                              !checkForNumbers(basicProfile)&&yearsOfExperience.touched
+                            "
+                            >Please Enter a numeric value only</span
                           >
                         </div>
                       </div>
@@ -1336,7 +1342,7 @@
                       type="submit"
                       class="button form_Btn"
                       style="margin-top: 10px"
-                      [disabled]="!basicProfile.valid"
+                      [disabled]="!basicProfile.valid||!checkForNumbers(basicProfile)"
                     >
                       Sign up as an Expert!
                     </button>

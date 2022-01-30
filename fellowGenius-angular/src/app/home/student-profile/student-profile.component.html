@@ -344,6 +344,13 @@
                           "
                           >Invalid years of experience</span
                         >
+                        <span
+                        class="help-block"
+                        *ngIf="
+                          !checkForNumbers(learnerProfile)&&yearsOfExperience.touched
+                        "
+                        >Please Enter a numeric value only</span
+                      >
                       </div>
                     </div>
                     <div class="col-12 col-md-6">
@@ -424,7 +431,7 @@
                     <div class="col-12">
                       <div class="form__btn">
                         <button type="submit" 
-                        
+                        [disabled]="!checkForNumbers(learnerProfile)" 
                         class="button save__btn">Save</button>
                       </div>
                     </div>
@@ -532,7 +539,10 @@
                             class="help-block" >
                               Duplicate learning area !
                             </div>
-                            
+                          <div *ngIf="invalidArea"
+                            class="help-block">
+                            Invalid learning area ! Please select from the options
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -541,7 +551,7 @@
                     <div class="col-12">
                       <div class="form__btn">
                         <button type="submit" 
-                       
+                       [disabled]="!learningAreas.length"
                         class="button save__btn">Save</button>
                       </div>
                     </div>

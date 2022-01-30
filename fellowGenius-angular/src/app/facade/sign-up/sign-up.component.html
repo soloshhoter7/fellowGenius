@@ -292,25 +292,33 @@
             <div class="content_wrapper">
               <h2>Email Verification</h2>
               <div class="tagline">
-                Enter the verification code sent to your email address
+                Enter the verification code sent to your email address <span style="color:#8DC63F;">{{registrationModel.email}}</span>
               </div>
-              <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
+              <!-- <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span> -->
+              <div class="error_message" *ngIf="wrongOtp">
+                <div class="msg_wrap">
+                  <img src="../../../assets/images/required-error.svg" alt="#" class="erro_icon">
+                  <span><strong>Error</strong>Invalid OTP </span>
+                </div>
+              </div>
               <form (ngSubmit)="onSignUp(o)" #o="ngForm">
                 <div class="eml_vrfctn form-group">
                   <input
-                    type="text"
+                    type="number"
                     id="otp_1digit"
                     name="otp_1digit"
                     #digit1
                     ngModel
                     maxlength="1"
+                    (change)="splitOtp(o)"
                     class="verfcn_box"
                     (keyup)="onDigitInput($event)"
                     placeholder="_"
+                    [ngModel]=" otp_1digit"
                     required
                   />
                   <input
-                    type="text"
+                    type="number"
                     id="otp_2digit"
                     name="otp_2digit"
                     #digit2
@@ -319,10 +327,11 @@
                     class="verfcn_box"
                     (keyup)="onDigitInput($event)"
                     placeholder="_"
+                    [ngModel]=" otp_2digit"
                     required
                   />
                   <input
-                    type="text"
+                    type="number"
                     id="otp_3digit"
                     name="otp_3digit"
                     ngModel
@@ -331,10 +340,11 @@
                     class="verfcn_box"
                     (keyup)="onDigitInput($event)"
                     placeholder="_"
+                    [ngModel]=" otp_3digit"
                     required
                   />
                   <input
-                    type="text"
+                    type="number"
                     id="otp_4digit"
                     name="otp_4digit"
                     ngModel
@@ -343,10 +353,11 @@
                     class="verfcn_box"
                     (keyup)="onDigitInput($event)"
                     placeholder="_"
+                    [ngModel]=" otp_4digit"
                     required
                   />
                   <input
-                    type="text"
+                    type="number"
                     id="otp_5digit"
                     name="otp_5digit"
                     ngModel
@@ -355,10 +366,11 @@
                     class="verfcn_box"
                     (keyup)="onDigitInput($event)"
                     placeholder="_"
+                    [ngModel]=" otp_5digit"
                     required
                   />
                   <input
-                    type="text"
+                    type="number"
                     id="otp_6digit"
                     name="otp_6digit"
                     ngModel
@@ -367,9 +379,11 @@
                     class="verfcn_box"
                     (keyup)="onDigitInput($event)"
                     placeholder="_"
+                    [ngModel]=" otp_6digit"
                     required
                   />
                 </div>
+                <span *ngIf="resendEmailMessage" class="help-block" style="color:#8DC63F; margin-bottom:10px"> &#10004; A new OTP has been sent to your email</span>
                 <button
                   type="submit"
                   class="button form_Btn"
@@ -381,7 +395,9 @@
             </div>
           </div>
           <div class="access_footer">
-            <p>Didn't receive code? <a href="">Resend</a></p>
+            <p>Didn't receive code? <a 
+              href="javascript:void(0);"
+              (click)="onResend()">Resend</a></p>
           </div>
         </div>
       </div>
