@@ -21,6 +21,7 @@ import fG.Model.Category;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.ReferralActivityAnalytics;
 import fG.Model.ReferralDataModel;
+import fG.Model.ResponseModel;
 import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.UserActivityAnalytics;
@@ -252,5 +253,11 @@ public class AdminController {
 	@RequestMapping(value="/deleteUser")
 	public void deleteUser(String userId) {
 		service.deleteUser(userId);
+	}
+	
+	@PreAuthorize("hasAuthority('Admin')")
+	@RequestMapping(value="/sendExpertVerficationMail")
+	public ResponseModel sendExpertVerificationMail(String userId) {
+		return adminService.sendExpertVerificationMail(userId);
 	}
 }

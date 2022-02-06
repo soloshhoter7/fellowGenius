@@ -1,0 +1,77 @@
+<div>
+  <a
+    class="user-dropdown-icon setng_btn hdr_btns"
+    href="javascript:;"
+    role="button"
+    aria-haspopup="true"
+    aria-expanded="false"
+    (click)="menuToggle()"
+    ><img [src]="profilePictureUrl" loading="eager"
+  /></a>
+  <div class="action">
+    <!-- <div class="profile" (click)="menuToggle()">
+              <img src="../../assets/images/amanGarg.jpg" />
+            </div> -->
+    <div class="menu">
+      <h3>
+        {{ fullName }}<br /><span>{{ loginType }}</span>
+      </h3>
+      <ul>
+        <!-- <li>
+                        <img
+                          src="../../assets/images/user.png"
+                          alt="user_icon"
+                        /><a href="#">My Profile</a>
+                      </li> -->
+        <li *ngIf="parent == 'pre_login'">
+          <img src="../../assets/images/dashboard.png" alt="dashboard" /><a
+            href="javascript:;"
+            (click)="toDashboard()"
+            >Dashboard</a
+          >
+        </li>
+        <li>
+          <img src="../../assets/images/log-out.png" alt="log_out" /><a
+            href="javascript:;"
+            (click)="onSignOut()"
+            >Sign out</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- <ul class="dropdown-menu" aria-labelledby="settingDropdown">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      *ngIf="loginService.getLoginType() == 'Learner'"
+                      ><i
+                        style="margin-right: 5px"
+                        class="far fa-user-circle"
+                      ></i
+                      >{{ studentService.getStudentProfileDetails().fullName }}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      *ngIf="loginService.getLoginType() == 'Expert'"
+                      ><i class="far fa-user-circle"></i>
+                      {{ tutorService.getTutorDetials().fullName }}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="javascript:;"
+                      (click)="toDashboard()"
+                      ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" (click)="onSignOut()"
+                      ><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a
+                    >
+                  </li>
+                </ul> -->
+</div>

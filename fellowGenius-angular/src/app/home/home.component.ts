@@ -51,19 +51,30 @@ export class HomeComponent implements OnInit {
   overlay;
   screenHeight: number;
   screenWidth: number;
-  notificationCount=0;
+  notificationCount = 0;
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   options: string[] = [
-    'Tools','Marketing','Content','Project Management','Sales','E-comm','Industry Consulation','Strategy','Finance','HR','Operations','IT Support'
-   ];
+    'Tools',
+    'Marketing',
+    'Content',
+    'Project Management',
+    'Sales',
+    'E-comm',
+    'Industry Consulation',
+    'Strategy',
+    'Finance',
+    'HR',
+    'Operations',
+    'IT Support',
+  ];
   subject;
   fullName;
   filteredOptions: Observable<string[]>;
   myControl = new FormControl();
   selectedSubject;
   toggleNavigation: boolean = false;
-  notifications:NotificationModel[]=[];
-  showNotifications:boolean=false;
+  notifications: NotificationModel[] = [];
+  showNotifications: boolean = false;
   constructor(
     public router: Router,
     public meetingService: MeetingService,
@@ -76,12 +87,13 @@ export class HomeComponent implements OnInit {
     private cookieService: CookieService,
     private breakpointObserver: BreakpointObserver,
     private locationStrategy: LocationStrategy,
-    private notificationService:NotificationService,
-    private authService:AuthService
+    private notificationService: NotificationService,
+    private authService: AuthService
   ) {
     this.getScreenSize();
   }
   index: Number;
+  cName = 'post_login';
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
     this.screenHeight = window.innerHeight;
@@ -95,22 +107,25 @@ export class HomeComponent implements OnInit {
     // }
 
     if (this.isTokenValid()) {
-      console.log('heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
       this.loginType = this.loginService.getLoginType();
-      console.log(this.loginType)
+      console.log(this.loginType);
       if (
         this.loginType &&
         this.loginType == 'Learner' &&
         this.studentService.getStudentProfileDetails().fullName != null
       ) {
         this.studentProfile = this.studentServce.getStudentProfileDetails();
-        if (this.studentServce.getStudentProfileDetails().profilePictureUrl == null) {
-          this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
+        if (
+          this.studentServce.getStudentProfileDetails().profilePictureUrl ==
+          null
+        ) {
+          this.studentServce.getStudentProfileDetails().profilePictureUrl =
+            this.profilePictureUrl;
         }
         this.calculateStudentProfilePercentage();
 
-        this.fullName=this.studentProfile.fullName;
-        this.profilePictureUrl= this.studentProfile.profilePictureUrl;
+        this.fullName = this.studentProfile.fullName;
+        this.profilePictureUrl = this.studentProfile.profilePictureUrl;
         this.router.navigate(['home/student-dashboard']);
         // if (this.loginService.getTrType() == 'signUp') {
         //   this.dialog.open(WelcomeComponent, {
@@ -123,13 +138,13 @@ export class HomeComponent implements OnInit {
         this.loginType == 'Expert' &&
         this.tutorService.getTutorDetials().fullName != null
       ) {
-        console.log('here')
+        console.log('here');
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
-    
 
-        if(this.tutorService.getTutorDetials().profilePictureUrl == null){
-          this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl
+        if (this.tutorService.getTutorDetials().profilePictureUrl == null) {
+          this.tutorService.getTutorDetials().profilePictureUrl =
+            this.profilePictureUrl;
         }
         if (
           this.tutorService.getPersonalAvailabilitySchedule().isAvailable ==
@@ -139,23 +154,23 @@ export class HomeComponent implements OnInit {
         } else {
           this.checked = false;
         }
-        this.profilePictureUrl= this.tutorService.getTutorDetials().profilePictureUrl
-        this.fullName=this.tutorProfile.fullName;
-        console.log(this.fullName)
+        this.profilePictureUrl =
+          this.tutorService.getTutorDetials().profilePictureUrl;
+        this.fullName = this.tutorProfile.fullName;
+        console.log(this.fullName);
         // this.dashboardUrl = '/home/tutorDashboard';
         let prev_route = this.cookieService.get('prev');
         this.cookieService.delete('prev');
-        if(prev_route=='/home/tutor-schedule'){
+        if (prev_route == '/home/tutor-schedule') {
           console.log('heyyyyyyyyyyyy');
           this.router.navigate([prev_route]);
-        }else{
+        } else {
           this.router.navigate(['home/tutor-dashboard']);
         }
-    
-        
+
         console.log(this.loginService.getTrType());
         if (this.loginService.getTrType() == 'sign-up') {
-          console.log('sigggnnn uppp')
+          console.log('sigggnnn uppp');
           this.router.navigate(['home/tutor-schedule']);
         }
       } else {
@@ -163,34 +178,38 @@ export class HomeComponent implements OnInit {
       }
       this.initialiseNotifications();
     } else {
-      console.log('router - url :'+this.router.url);
+      console.log('router - url :' + this.router.url);
       this.router.navigate(['login']);
-      if(this.router.url == '/home/tutor-schedule'){
-        console.log('mai bola heyy')
-        this.cookieService.set("prev","/home/tutor-schedule");
-      }else{
-        this.cookieService.set("prev","home");
+      if (this.router.url == '/home/tutor-schedule') {
+        console.log('mai bola heyy');
+        this.cookieService.set('prev', '/home/tutor-schedule');
+      } else {
+        this.cookieService.set('prev', 'home');
       }
-      
     }
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );
   }
-  initialiseNotifications(){
+  initialiseNotifications() {
     this.notificationService.fetchNotification();
-    this.notificationService.notificationsChanged.subscribe((notifs:NotificationModel[])=>{
-      this.notifications=notifs;
-    })
+    this.notificationService.notificationsChanged.subscribe(
+      (notifs: NotificationModel[]) => {
+        this.notifications = notifs;
+      }
+    );
   }
-  displayNotifications(){
-    this.showNotifications=!this.showNotifications;
+  displayNotifications() {
+    this.showNotifications = !this.showNotifications;
   }
-  getNotificationCount(){
+  getNotificationCount() {
     return this.notificationService.getNotificationCount();
   }
-  
+  menuToggle() {
+    let toggleMenu = document.querySelector('.menu');
+    toggleMenu.classList.toggle('active');
+  }
   toFacade() {
     this.router.navigate(['']);
   }
@@ -342,16 +361,20 @@ export class HomeComponent implements OnInit {
 
       this.httpService.getStudentDetails(this.userId).subscribe((res) => {
         this.studentProfile = res;
-       console.log('user has logged in')
+        console.log('user has logged in');
         this.calculateStudentProfilePercentage();
         this.studentService.setStudentProfileDetails(this.studentProfile);
-        if (this.studentServce.getStudentProfileDetails().profilePictureUrl == null) {
-          this.studentServce.getStudentProfileDetails().profilePictureUrl = this.profilePictureUrl
+        if (
+          this.studentServce.getStudentProfileDetails().profilePictureUrl ==
+          null
+        ) {
+          this.studentServce.getStudentProfileDetails().profilePictureUrl =
+            this.profilePictureUrl;
         }
         this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
           this.studentService.setStudentBookings(res);
-          this.fullName=this.studentProfile.fullName;
-          this.profilePictureUrl= this.studentProfile.profilePictureUrl
+          this.fullName = this.studentProfile.fullName;
+          this.profilePictureUrl = this.studentProfile.profilePictureUrl;
           // this.router.navigate([ 'home/student-dashboard' ]);
         });
         this.initialiseNotifications();
@@ -374,24 +397,28 @@ export class HomeComponent implements OnInit {
             // if (this.tutorProfileDetails.profilePictureUrl != null) {
             //   this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
             // }
-        if(this.tutorService.getTutorDetials().profilePictureUrl == null){
-          this.tutorService.getTutorDetials().profilePictureUrl = this.profilePictureUrl;
-        }
+            if (this.tutorService.getTutorDetials().profilePictureUrl == null) {
+              this.tutorService.getTutorDetials().profilePictureUrl =
+                this.profilePictureUrl;
+            }
             this.tutorService.setTutorProfileDetails(res);
             // this.subject = this.tutorProfileDetails.educationalQualifications[0];
-            this.httpService.getScheduleData(this.tutorProfile.bookingId).subscribe((res) => {
-              this.tutorService.setPersonalAvailabilitySchedule(res);
-              if (
-                this.tutorService.getPersonalAvailabilitySchedule()
-                  .isAvailable == 'yes'
-              ) {
-                this.checked = true;
-              } else {
-                this.checked = false;
-              }
-            });
-            this.fullName=this.tutorProfile.fullName
-            this.profilePictureUrl= this.tutorService.getTutorDetials().profilePictureUrl;
+            this.httpService
+              .getScheduleData(this.tutorProfile.bookingId)
+              .subscribe((res) => {
+                this.tutorService.setPersonalAvailabilitySchedule(res);
+                if (
+                  this.tutorService.getPersonalAvailabilitySchedule()
+                    .isAvailable == 'yes'
+                ) {
+                  this.checked = true;
+                } else {
+                  this.checked = false;
+                }
+              });
+            this.fullName = this.tutorProfile.fullName;
+            this.profilePictureUrl =
+              this.tutorService.getTutorDetials().profilePictureUrl;
             this.initialiseNotifications();
           });
       });

@@ -22,10 +22,9 @@ import { Subject } from 'rxjs';
 import { NotificationService } from './notification.service';
 import * as bcrypt from 'bcryptjs';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   constructor(
     private router: Router,
     private loginDetailsService: LoginDetailsService,
@@ -33,12 +32,12 @@ export class AuthService {
     private studentService: StudentService,
     private tutorService: TutorService,
     private cookieService: CookieService,
-    private webSocketService:WebSocketService,
-    private notificationService:NotificationService
-  ) { }
-  
+    private webSocketService: WebSocketService,
+    private notificationService: NotificationService
+  ) {}
+
   private authStatusListener = new Subject<boolean>();
-  private isAuthenticated:boolean;
+  private isAuthenticated: boolean;
   private userId;
   socialLogin = new socialLogin();
   auth2: any;
@@ -55,7 +54,7 @@ export class AuthService {
   tutorAvailabilitySchedule = new tutorAvailabilitySchedule();
   incorrectLoginDetails: boolean = false;
   errorText: string;
-  
+
   loginType;
   loginModel = new loginModel();
   verificationOtp;
@@ -63,7 +62,7 @@ export class AuthService {
   minDate: string;
   role;
 
-  getUserId(){
+  getUserId() {
     return this.userId;
   }
   isTokenValid() {
@@ -84,7 +83,7 @@ export class AuthService {
     if (date === undefined) return false;
     return !(date.valueOf() > new Date().valueOf());
   }
-  
+
   getTokenExpirationDate(token: string): Date {
     const decoded = JwtDecode(token);
     if (decoded['exp'] === undefined) return null;
@@ -101,17 +100,17 @@ export class AuthService {
     this.router.navigate(['']);
   }
 
-  getAuthStatusListener(){
+  getAuthStatusListener() {
     return this.authStatusListener.asObservable();
   }
-  getIsAuth(){
+  getIsAuth() {
     return this.isAuthenticated;
   }
-  autoAuthUser(){
-    console.log('called')
-    if(this.isTokenValid()){
+  autoAuthUser() {
+    console.log('called');
+    if (this.isTokenValid()) {
       this.userId = this.cookieService.get('userId');
-      if(JwtDecode(this.cookieService.get('token'))['sub']==this.userId){
+      if (JwtDecode(this.cookieService.get('token'))['sub'] == this.userId) {
         if (JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Learner') {
           this.loginType = 'Learner';
           this.loginDetailsService.setTrType('login');
@@ -119,17 +118,19 @@ export class AuthService {
           this.httpService.getStudentDetails(this.userId).subscribe((res) => {
             this.studentProfile = res;
             console.log(res);
-            console.log('learner o auth!')
+            console.log('learner o auth!');
             console.log(this.studentProfile.profilePictureUrl);
             this.studentService.setStudentProfileDetails(this.studentProfile);
-            this.httpService.getStudentSchedule(this.userId).subscribe((res) => {
-              this.studentService.setStudentBookings(res);
-              this.isAuthenticated=true;
-              this.authStatusListener.next(true);
-              this.webSocketService.connectToUserWebSocket(this.userId);
-              this.notificationService.fetchNotification();
-              // this.router.navigate([ 'home/student-dashboard' ]);
-            });
+            this.httpService
+              .getStudentSchedule(this.userId)
+              .subscribe((res) => {
+                this.studentService.setStudentBookings(res);
+                this.isAuthenticated = true;
+                this.authStatusListener.next(true);
+                this.webSocketService.connectToUserWebSocket(this.userId);
+                this.notificationService.fetchNotification();
+                // this.router.navigate([ 'home/student-dashboard' ]);
+              });
           });
         } else if (
           JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Expert'
@@ -137,8 +138,9 @@ export class AuthService {
           this.loginType = 'Expert';
           this.loginDetailsService.setTrType('login');
           this.loginDetailsService.setLoginType(this.loginType);
-    
+
           this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+            console.log('fetching expert profile');
             this.tutorProfile = res;
             this.tutorService.setTutorDetails(this.tutorProfile);
             this.httpService
@@ -146,32 +148,37 @@ export class AuthService {
               .subscribe((res) => {
                 this.tutorProfileDetails = res;
                 this.tutorService.setTutorProfileDetails(res);
-                this.httpService.getScheduleData(this.tutorProfileDetails.bookingId).subscribe((res) => {
-                  this.tutorService.setPersonalAvailabilitySchedule(res);
-                  this.isAuthenticated=true;
-                  this.authStatusListener.next(true);
-                  this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
-                  this.notificationService.fetchNotification();
-                });
+                this.httpService
+                  .getScheduleData(this.tutorProfileDetails.bookingId)
+                  .subscribe((res) => {
+                    this.tutorService.setPersonalAvailabilitySchedule(res);
+                    this.isAuthenticated = true;
+                    this.authStatusListener.next(true);
+                    this.webSocketService.connectToUserWebSocket(
+                      this.tutorProfile.bookingId
+                    );
+                    this.notificationService.fetchNotification();
+                  });
               });
           });
-        }else if(JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Admin'){
-          console.log('it is an admin')
+        } else if (
+          JwtDecode(this.cookieService.get('token'))['ROLE'] == 'Admin'
+        ) {
+          console.log('it is an admin');
           this.loginType = 'Admin';
           this.loginDetailsService.setTrType('login');
           this.loginDetailsService.setLoginType(this.loginType);
-          this.isAuthenticated=true;
+          this.isAuthenticated = true;
           this.authStatusListener.next(true);
         }
       }
-    }else{
-      console.log('user is not authenticated :auth service')
-      this.isAuthenticated=false;
+    } else {
+      console.log('user is not authenticated :auth service');
+      this.isAuthenticated = false;
       this.authStatusListener.next(false);
     }
-    
   }
-  onLogin(loginModel:loginModel) {
+  onLogin(loginModel: loginModel) {
     this.httpService.checkLogin(loginModel).subscribe((res) => {
       console.log(res);
       if (res['response'] != 'false') {
@@ -191,7 +198,7 @@ export class AuthService {
                 this.studentService.setStudentBookings(res);
                 this.isLoading = false;
                 this.webSocketService.connectToUserWebSocket(this.userId);
-                this.isAuthenticated =true;
+                this.isAuthenticated = true;
                 this.authStatusListener.next(true);
                 this.notificationService.fetchNotification();
                 // this.router.navigate(['home']);
@@ -219,9 +226,11 @@ export class AuthService {
                     this.loginDetailsService.setTrType('login');
                     this.loginDetailsService.setLoginType('Expert');
                     this.isLoading = false;
-                    this.isAuthenticated=true;
+                    this.isAuthenticated = true;
                     this.authStatusListener.next(true);
-                    this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                    this.webSocketService.connectToUserWebSocket(
+                      this.tutorProfile.bookingId
+                    );
                     this.notificationService.fetchNotification();
                     // this.router.navigate(['/home']);
                     // this.toFacade();
@@ -231,92 +240,82 @@ export class AuthService {
         }
         // this.webSocketService.connectToUserWebSocket(this.userId);
       } else {
-      this.authStatusListener.next(false);
-      this.isAuthenticated=false;
+        this.authStatusListener.next(false);
+        this.isAuthenticated = false;
       }
     });
   }
-  onSignOut(){
+  onSignOut() {
     this.cookieService.delete('token');
     this.cookieService.delete('userId');
     this.loginDetailsService.setLoginType(null);
     this.loginDetailsService.setTrType(null);
-    this.isAuthenticated=false;
+    this.isAuthenticated = false;
     this.authStatusListener.next(false);
     this.router.navigate(['']);
   }
-  onSignUp(registrationModel){
-    this.httpService
-          .registerUser(registrationModel)
-          .subscribe((res) => {
-            if (res == true) {
-              this.loginModel.email = registrationModel.email;
-              this.loginModel.password = registrationModel.password;
-              this.loginModel.method= bcrypt.hashSync("manual", 1);
-              // for logging in once registration is done
-             
-              this.httpService.checkLogin(this.loginModel).subscribe((res) => {
-                this.cookieService.set('token', res['response']);
-                this.cookieService.set(
-                  'userId',
-                  JwtDecode(res['response'])['sub']
-                );
-                this.userId = this.cookieService.get('userId');
+  onSignUp(registrationModel) {
+    this.httpService.registerUser(registrationModel).subscribe((res) => {
+      if (res == true) {
+        this.loginModel.email = registrationModel.email;
+        this.loginModel.password = registrationModel.password;
+        this.loginModel.method = bcrypt.hashSync('manual', 1);
+        // for logging in once registration is done
 
-                if (registrationModel.role == 'Learner') {
+        this.httpService.checkLogin(this.loginModel).subscribe((res) => {
+          this.cookieService.set('token', res['response']);
+          this.cookieService.set('userId', JwtDecode(res['response'])['sub']);
+          this.userId = this.cookieService.get('userId');
+
+          if (registrationModel.role == 'Learner') {
+            this.httpService.getStudentDetails(this.userId).subscribe((res) => {
+              this.studentProfile = res;
+              this.studentService.setStudentProfileDetails(this.studentProfile);
+              this.loginDetailsService.setLoginType('Learner');
+              this.loginDetailsService.setTrType('signUp');
+              this.isAuthenticated = true;
+              this.authStatusListener.next(true);
+              this.webSocketService.connectToUserWebSocket(this.userId);
+              this.notificationService.fetchNotification();
+              // this.router.navigate(['home']);
+              // this.toFacade();
+            });
+          } else if (registrationModel.role == 'Expert') {
+            this.httpService.getTutorDetails(this.userId).subscribe((res) => {
+              this.tutorProfile = res;
+              this.tutorService.setTutorDetails(this.tutorProfile);
+
+              this.httpService
+                .getTutorProfileDetails(this.tutorProfile.tid)
+                .subscribe((res) => {
+                  this.tutorService.setTutorProfileDetails(res);
                   this.httpService
-                    .getStudentDetails(this.userId)
+                    .getScheduleData(this.tutorProfile.bookingId)
                     .subscribe((res) => {
-                      this.studentProfile = res;
-                      this.studentService.setStudentProfileDetails(
-                        this.studentProfile
+                      this.tutorAvailabilitySchedule = res;
+                      this.tutorService.setPersonalAvailabilitySchedule(
+                        this.tutorAvailabilitySchedule
                       );
-                      this.loginDetailsService.setLoginType('Learner');
-                      this.loginDetailsService.setTrType('signUp');
-                      this.isAuthenticated=true;
+                      this.loginDetailsService.setLoginType('Expert');
+                      this.loginDetailsService.setTrType('sign-up');
+                      this.isAuthenticated = true;
                       this.authStatusListener.next(true);
-                      this.webSocketService.connectToUserWebSocket(this.userId);
+                      this.webSocketService.connectToUserWebSocket(
+                        this.tutorProfile.bookingId
+                      );
                       this.notificationService.fetchNotification();
                       // this.router.navigate(['home']);
                       // this.toFacade();
                     });
-                } else if (registrationModel.role == 'Expert') {
-                  this.httpService
-                    .getTutorDetails(this.userId)
-                    .subscribe((res) => {
-                      this.tutorProfile = res;
-                      this.tutorService.setTutorDetails(this.tutorProfile);
-
-                      this.httpService
-                        .getTutorProfileDetails(this.tutorProfile.tid)
-                        .subscribe((res) => {
-                          this.tutorService.setTutorProfileDetails(res);
-                          this.httpService
-                            .getScheduleData(this.tutorProfile.bookingId)
-                            .subscribe((res) => {
-                              this.tutorAvailabilitySchedule = res;
-                              this.tutorService.setPersonalAvailabilitySchedule(
-                                this.tutorAvailabilitySchedule
-                              );
-                              this.loginDetailsService.setLoginType('Expert');
-                              this.loginDetailsService.setTrType('sign-up');
-                              this.isAuthenticated=true;
-                              this.authStatusListener.next(true);
-                              this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
-                              this.notificationService.fetchNotification();
-                              // this.router.navigate(['home']);
-                              // this.toFacade();
-                        
-                            });
-                        });
-                    });
-                }
-              });
-            } else if (res == false) {
-              this.authStatusListener.next(false);
-              this.isAuthenticated=false;
-            }
-          });
+                });
+            });
+          }
+        });
+      } else if (res == false) {
+        this.authStatusListener.next(false);
+        this.isAuthenticated = false;
+      }
+    });
   }
   saveSocialLogin(registrationModel) {
     console.log(registrationModel);
@@ -325,7 +324,7 @@ export class AuthService {
         console.log(res);
         this.loginModel.email = registrationModel.email;
         this.loginModel.password = registrationModel.socialId;
-        this.loginModel.method= bcrypt.hashSync("social", 1);
+        this.loginModel.method = bcrypt.hashSync('social', 1);
         // for logging in once registration is done
         this.httpService.checkLogin(this.loginModel).subscribe((res) => {
           console.log(res);
@@ -339,7 +338,7 @@ export class AuthService {
               this.studentService.setStudentProfileDetails(this.studentProfile);
               this.loginDetailsService.setLoginType('Learner');
               this.loginDetailsService.setTrType('signUp');
-              this.isAuthenticated=true;
+              this.isAuthenticated = true;
               this.authStatusListener.next(true);
               this.webSocketService.connectToUserWebSocket(this.userId);
               this.notificationService.fetchNotification();
@@ -363,9 +362,11 @@ export class AuthService {
                       );
                       this.loginDetailsService.setLoginType('Expert');
                       this.loginDetailsService.setTrType('signUp');
-                      this.isAuthenticated=true;
+                      this.isAuthenticated = true;
                       this.authStatusListener.next(true);
-                      this.webSocketService.connectToUserWebSocket(this.tutorProfile.bookingId);
+                      this.webSocketService.connectToUserWebSocket(
+                        this.tutorProfile.bookingId
+                      );
                       this.notificationService.fetchNotification();
                       // this.router.navigate(['home']);
                       // this.toFacade();
@@ -374,12 +375,11 @@ export class AuthService {
             });
           }
         });
-      }else{
+      } else {
         console.log(res);
-        this.isAuthenticated=false;
+        this.isAuthenticated = false;
         this.authStatusListener.next(false);
       }
     });
   }
-
 }

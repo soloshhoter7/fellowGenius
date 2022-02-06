@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import fG.Entity.BookingDetails;
@@ -25,6 +26,7 @@ import fG.Model.BookingDetailsModel;
 import fG.Model.ReferralActivityAnalytics;
 import fG.Model.ReferralDataModel;
 import fG.Model.ReferrerInfoModel;
+import fG.Model.ResponseModel;
 import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
@@ -66,6 +68,9 @@ public class AdminService {
 	
 	@Autowired
     MailService mailService;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
 		TutorProfileDetailsModel tut = new TutorProfileDetailsModel();
@@ -379,6 +384,16 @@ public class AdminService {
 
 		}
 	}
-	
+
+	public ResponseModel sendExpertVerificationMail(String userId) {
+		Users user = repUsers.idExists(Integer.valueOf(userId));
+
+		if(user!=null&&encoder.matches("N/A", user.getPassword())) {
+			mailService.sendVerifiedMail(user.getEmail());
+			return new ResponseModel("Mail sent");
+		}else {
+			return new ResponseModel("User already set the password");
+		}
+	}
 	
 }

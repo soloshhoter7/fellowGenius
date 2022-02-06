@@ -3,6 +3,7 @@ package fG.Controller;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -55,13 +58,12 @@ public class UserController {
 	@ResponseBody
 	public ResponseModel expertChoosePassword(@RequestBody String body) throws ParseException {
 		JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
-		System.out.println(jsonObject.get("token").getAsString());
 		String token = jsonObject.get("token").getAsString();
 		String password = jsonObject.get("password").getAsString();
+		String userId = jwtUtil.Auth0ExtractClaim(token, "userId");
 		if (token != null) {
-			String userId = jwtUtil.extractUsername(token);
 			return service.expertChoosePassword(userId, password);
-		} else {
+		}else {
 			return null;
 		}
 	}

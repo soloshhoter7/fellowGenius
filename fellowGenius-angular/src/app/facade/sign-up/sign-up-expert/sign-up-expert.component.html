@@ -96,7 +96,7 @@
                     type="button"
                     class="button form_Btn"
                     (click)="saveNewPassword()"
-                    [disabled]="!newPassword"
+                    [disabled]="!newPassword || password.invalid"
                   >
                     Save new Password
                   </button>

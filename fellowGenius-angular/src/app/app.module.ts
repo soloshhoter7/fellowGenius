@@ -117,6 +117,7 @@ import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.co
 import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
 import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
 import { expertisePriceValidator } from './custom-directives/expertisePriceValidator.directive';
+import { UserDropdownComponent } from './nav-bar/user-dropdown/user-dropdown.component';
 
 @NgModule({
   declarations: [
@@ -194,6 +195,7 @@ import { expertisePriceValidator } from './custom-directives/expertisePriceValid
     AppInfoComponent,
     TransactionsInfoComponent,
     ReferralsInfoComponent,
+    UserDropdownComponent,
   ],
   imports: [
     NoopAnimationsModule,

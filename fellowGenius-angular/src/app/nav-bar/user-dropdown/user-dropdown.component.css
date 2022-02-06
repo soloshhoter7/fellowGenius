@@ -1,14 +1,9 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-body {
-  background-color: #ffccbc;
-  height: 100vh;
+.user-dropdown-icon {
+  padding: 5px;
 }
 .action {
-  position: fixed;
-  top: 20px;
+  position: absolute;
+  top: 0;
   right: 30px;
 }
 .action .profile {
@@ -38,9 +33,10 @@ body {
   width: 200px;
   box-sizing: 0 5px 25px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
-  transition: 0.5s;
+  /* transition: 0.5s; */
   visibility: hidden;
   opacity: 0;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .action .menu.active {
   top: 80px;
@@ -51,7 +47,7 @@ body {
   content: "";
   position: absolute;
   top: -5px;
-  right: 28px;
+  right: 15px;
   width: 20px;
   height: 20px;
   background: #fff;
@@ -70,7 +66,7 @@ body {
 .action .menu h3 span {
   font-size: 14px;
   color: #cecece;
-  font-weight: 400;
+  font-weight: 500;
 }
 .action .menu ul li {
   list-style: none;
@@ -83,7 +79,7 @@ body {
   max-width: 20px;
   margin-right: 10px;
   opacity: 0.5;
-  transition: 0.5s;
+  /* transition: 0.5s; */
 }
 .action .menu ul li:hover img {
   opacity: 1;
@@ -93,9 +89,15 @@ body {
   text-decoration: none;
   color: #555;
   font-weight: 500;
-  transition: 0.5s;
+  /* transition: 0.5s; */
 }
 
 .action .menu ul li:hover a {
-  color: #ff5d94;
+  color: #ec008c;
+}
+@media screen and (min-width: 500px) {
+  .user-dropdown-icon {
+    width: 50px !important;
+    height: 50px !important;
+  }
 }

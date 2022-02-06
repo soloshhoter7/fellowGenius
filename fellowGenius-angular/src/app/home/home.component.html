@@ -26,31 +26,7 @@
         />
       </a>
     </div>
-    <div>
-      <a
-        class="setng_btn hdr_btns"
-        data-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-haspopup="true"
-        aria-expanded="false"
-        ><img [src]="profilePictureUrl"
-      /></a>
-      <ul class="dropdown-menu" aria-labelledby="settingDropdown">
-        <li>
-          <a class="dropdown-item"
-            ><i style="margin-right: 5px" class="far fa-user-circle"></i
-            >{{ fullName }}
-          </a>
-        </li>
-
-        <li>
-          <a class="dropdown-item" href="#" (click)="onSignOut()"
-            ><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a
-          >
-        </li>
-      </ul>
-    </div>
+    <app-user-dropdown [parent]="cName"></app-user-dropdown>
   </div>
 </header>
 

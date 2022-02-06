@@ -170,6 +170,7 @@ export class SignUpExpertComponent implements OnInit {
     window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
       this.jwtToken = params['token'];
+      console.log(this.authService.isTokenExpired(this.jwtToken));
       if (this.jwtToken) {
         this.choosePassword = true;
       } else {

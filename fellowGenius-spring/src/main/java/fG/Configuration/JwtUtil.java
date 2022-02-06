@@ -14,6 +14,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
@@ -54,7 +57,23 @@ public class JwtUtil {
 	  Map<String,Object> claims = new HashMap<>();
 	  return createToken(claims,userid,role);
   }
- 
+  public Boolean checkTokenIfExpired(String token) {
+	  DecodedJWT jwt = JWT.decode(token);
+		if( jwt.getExpiresAt().before(new Date())) {
+		    return true;
+		}else {
+			return false;
+		}
+  }
+  public String Auth0ExtractClaim(String token,String claim) {
+	  DecodedJWT jwt = JWT.decode(token);
+	  System.out.println(jwt.getClaims());
+	  if(claim.equals("userId")) {
+		  return jwt.getClaim("sub").asString(); 
+	  }else {
+		  return jwt.getClaim(claim).asString();
+	  }  
+  }
   private String createToken(Map<String,Object> claims,String subject,String role) {
 	  return Jwts.builder()
 			  .setClaims(claims)

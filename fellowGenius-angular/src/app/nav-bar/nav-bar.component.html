@@ -6,90 +6,107 @@
           ><img src="../../assets/images/fellow genius logo.svg" alt="logo"
         /></a>
         <ul class="nav navbar-nav">
-         
-       
-          <a href="" class="register_btn hdr_btn" style="margin-right: 10px;" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up" >
-            <img src="../../assets/images/breadcrumb-home.svg" alt="#" style="width: auto;" >
+          <a
+            href=""
+            class="register_btn hdr_btn"
+            style="margin-right: 10px"
+            data-bs-toggle="tooltip"
+            data-placement="bottom"
+            title="Sign Up"
+          >
+            <img
+              src="../../assets/images/breadcrumb-home.svg"
+              alt="#"
+              style="width: auto"
+            />
             <small>Home</small>
           </a>
-          <div *ngIf="loginService.getLoginType() == null" style="display: flex;">
-  
-            <a href="javascript:;" (click)="toLoginPage()" class="login_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Login">
-              <img src="../../assets/images/header-icon-1.svg" alt="#">
+          <div
+            *ngIf="loginService.getLoginType() == null"
+            style="display: flex"
+          >
+            <a
+              href="javascript:;"
+              (click)="toLoginPage()"
+              class="login_btn hdr_btn"
+              data-bs-toggle="tooltip"
+              data-placement="bottom"
+              title="Login"
+            >
+              <img src="../../assets/images/header-icon-1.svg" alt="#" />
               <small>Login</small>
             </a>
             <!-- <a href="javascript:;" (click)="openRegisterPopUp()" class="register_btn hdr_btn" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up">
               <img src="../../assets/images/header-icon-2.svg" alt="#">
               <small>Sign Up</small>
             </a> -->
-            <a href="#Signup__Popup" class="register_btn hdr_btn" data-toggle="modal" data-bs-toggle="tooltip" data-placement="bottom" title="Sign Up">
-              <img src="../../assets/images/header-icon-2.svg" alt="#">
+            <a
+              href="#Signup__Popup"
+              class="register_btn hdr_btn"
+              data-toggle="modal"
+              data-bs-toggle="tooltip"
+              data-placement="bottom"
+              title="Sign Up"
+            >
+              <img src="../../assets/images/header-icon-2.svg" alt="#" />
               <small>Sign Up</small>
             </a>
           </div>
-          
-          <div *ngIf="loginService.getLoginType() != null" style="margin-left: 20px;">
-            <div>
-              <a
-                class="dropdown-toggle user_profile"
-                data-toggle="dropdown"
-                href="#"
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-                ><i class="fas fa-user-circle"></i
-              ></a>
-              <ul class="dropdown-menu" aria-labelledby="settingDropdown">
-                <li>
-                  <a class="dropdown-item" *ngIf="loginService.getLoginType() == 'Learner'"
-                    ><i style="margin-right: 5px;" class="far fa-user-circle"></i>{{ studentService.getStudentProfileDetails().fullName }} </a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" *ngIf="loginService.getLoginType() == 'Expert'"
-                    ><i class="far fa-user-circle"></i> {{ tutorService.getTutorDetials().fullName }} </a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:;" (click)="toDashboard()"
-                    ><i class="fas fa-tachometer-alt"></i> Dashboard</a
-                  >
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" (click)="onSignOut()"
-                    ><i class="fas fa-sign-out-alt fa-fw"></i> Log Out</a
-                  >
-                </li>
-              </ul>
+
+          <header>
+            <div
+              *ngIf="loginService.getLoginType() != null"
+              class="page_btns"
+              style="margin-left: 20px"
+            >
+              <app-user-dropdown [parent]="cName"></app-user-dropdown>
             </div>
-          </div>
-          
+          </header>
         </ul>
       </div>
     </nav>
-  </header>   
+  </header>
   <div class="modal fade" id="Signup__Popup" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0">
-            <div class="modal-body">
-                <button type="button" id="closePopUpButton" class="close" style="border: none;" data-dismiss="modal" aria-label="Close">
-                  <img src="../../assets/images/close-modal.svg" alt="#">
-                </button>
-                <div class="Signup_form_box">
-        <h2>Sign up as</h2>
-        <div class="signUP__btns">
-          <a href="javascript:;" (click)="signUpRouting('sign-up-expert')" class="sgn_ppup_btn Exprt__btn">
-            <span class="btn__Icon"><img src="../../assets/images/SExpert-Icon.svg"></span>
-            <span>Expert</span>
-          </a>
-          <a href="javascript:;" (click)="signUpRouting('sign-up')" class="sgn_ppup_btn lrnr__btn">
-            <span class="btn__Icon"><img src="../../assets/images/SLearner-icon.svg"></span>
-            <span>Learner</span>
-          </a>
+      <div class="modal-content border-0">
+        <div class="modal-body">
+          <button
+            type="button"
+            id="closePopUpButton"
+            class="close"
+            style="border: none"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../assets/images/close-modal.svg" alt="#" />
+          </button>
+          <div class="Signup_form_box">
+            <h2>Sign up as</h2>
+            <div class="signUP__btns">
+              <a
+                href="javascript:;"
+                (click)="signUpRouting('sign-up-expert')"
+                class="sgn_ppup_btn Exprt__btn"
+              >
+                <span class="btn__Icon"
+                  ><img src="../../assets/images/SExpert-Icon.svg"
+                /></span>
+                <span>Expert</span>
+              </a>
+              <a
+                href="javascript:;"
+                (click)="signUpRouting('sign-up')"
+                class="sgn_ppup_btn lrnr__btn"
+              >
+                <span class="btn__Icon"
+                  ><img src="../../assets/images/SLearner-icon.svg"
+                /></span>
+                <span>Learner</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-     </div>
-        </div>
     </div>
-</div>
+  </div>
 </body>
