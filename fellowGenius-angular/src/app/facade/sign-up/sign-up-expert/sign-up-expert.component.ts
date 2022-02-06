@@ -79,6 +79,7 @@ export class SignUpExpertComponent implements OnInit {
   maxDate;
   minDobDate;
   maxDobDate;
+
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -166,6 +167,13 @@ export class SignUpExpertComponent implements OnInit {
   topicNotSelected: boolean = false;
   domainNotSelected: boolean = false;
   showEditPreviousOrganisations: boolean = false;
+
+  //------------- otpJSON---------------------------
+  otpJSON={
+    "email":this.tutorProfileDetails.email,
+    "verificationOtp":""
+  }
+  enableOtpPage: boolean=false;
   ngOnInit() {
     window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -242,6 +250,19 @@ export class SignUpExpertComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value))
     );
+  }
+
+  checkForNumbers(form:any){
+    let regExp = /^\d+$/;
+    let yoe=form.value.yearsOfExperience;
+    //console.log("Years of experience is "+yoe);
+    if(yoe==" "||yoe==undefined){
+      return true;
+    }else{
+    let hasNumbers = regExp.test(yoe.trim());
+    //console.log(hasNumbers + ", it is a number");
+    return hasNumbers;
+    }
   }
 
   togglePasswords() {
@@ -345,36 +366,20 @@ export class SignUpExpertComponent implements OnInit {
   toFacade() {
     this.router.navigate(['']);
   }
+
   toHome() {
     this.router.navigate(['home']);
   }
-  appendOtp(form: NgForm) {
-    let otp: string = '';
-    let otp_1digit = form.value.otp_1digit;
-    let otp_2digit = form.value.otp_2digit;
-    let otp_3digit = form.value.otp_3digit;
-    let otp_4digit = form.value.otp_4digit;
-    let otp_5digit = form.value.otp_5digit;
-    let otp_6digit = form.value.otp_6digit;
-    otp += otp_1digit.toString();
-    otp += otp_2digit.toString();
-    otp += otp_3digit.toString();
-    otp += otp_4digit.toString();
-    otp += otp_5digit.toString();
-    otp += otp_6digit.toString();
 
-    return otp;
+  onOutput(verifyEmail:boolean){
+    console.log("Inside the output method with verify email "+ verifyEmail);
+    this.enableOtpPage=false;
+    this.onVerifyEmail();
   }
-  verifyEmailOtp(form) {
-    this.isLoading = true;
-    let otp: string = this.appendOtp(form);
 
-    if (otp == null) {
-      this.isLoading = false;
-      this.wrongOtp = true;
-    } else {
-      if (bcrypt.compareSync(otp, this.verificationOtp)) {
-        this.httpService
+  onVerifyEmail(){
+    this.isLoading=true;
+    this.httpService
           .registerExpert(this.tutorProfileDetails)
           .subscribe((res) => {
             this.isLoading = false;
@@ -392,21 +397,38 @@ export class SignUpExpertComponent implements OnInit {
               );
             }
           });
-      } else {
-        this.isLoading = false;
-        this.wrongOtp = true;
-      }
-    }
   }
+
+  appendOtp(form: NgForm) {
+    let otp: string = '';
+    let otp_1digit = form.value.otp_1digit;
+    let otp_2digit = form.value.otp_2digit;
+    let otp_3digit = form.value.otp_3digit;
+    let otp_4digit = form.value.otp_4digit;
+    let otp_5digit = form.value.otp_5digit;
+    let otp_6digit = form.value.otp_6digit;
+    otp += otp_1digit.toString();
+    otp += otp_2digit.toString();
+    otp += otp_3digit.toString();
+    otp += otp_4digit.toString();
+    otp += otp_5digit.toString();
+    otp += otp_6digit.toString();
+
+    return otp;
+  }
+  
+
   getEarningAppInfo() {
     this.httpService.getEarningAppInfo().subscribe((res) => {
       this.appInfo = res;
     });
   }
+
   round(num) {
     var m = Number((Math.abs(num) * 100).toPrecision(15));
     return (Math.round(m) / 100) * Math.sign(num);
   }
+
   fillOptions() {
     this.httpService.getAllSubCategories().subscribe((res) => {
       this.subCategories = res;
@@ -417,6 +439,7 @@ export class SignUpExpertComponent implements OnInit {
       }
     });
   }
+
   checkDomainInList(val) {
     for (let categ of this.categories) {
       if (categ.category == val) {
@@ -425,6 +448,7 @@ export class SignUpExpertComponent implements OnInit {
     }
     return false;
   }
+  
   filterSCfromCateg(val) {
     if (val != 'Others') {
       if (!this.selectedCategory || this.checkDomainInList(val)) {
@@ -594,6 +618,10 @@ export class SignUpExpertComponent implements OnInit {
                     .verifyEmail(this.tutorProfileDetails.email)
                     .subscribe((res) => {
                       this.verificationOtp = res['response'];
+
+                      this.otpJSON.verificationOtp=this.verificationOtp;
+                      this.otpJSON.email=this.tutorProfileDetails.email;
+                      this.enableOtpPage=true;
                       this.isLoading = false;
                       this.verifyEmail = true;
                     });

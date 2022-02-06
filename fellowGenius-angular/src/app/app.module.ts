@@ -117,6 +117,8 @@ import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.co
 import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
 import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
 import { expertisePriceValidator } from './custom-directives/expertisePriceValidator.directive';
+import { OtpComponent } from './facade/sign-up/otp/otp.component';
+import { NgOtpInputModule } from  'ng-otp-input';
 
 @NgModule({
   declarations: [
@@ -194,6 +196,7 @@ import { expertisePriceValidator } from './custom-directives/expertisePriceValid
     AppInfoComponent,
     TransactionsInfoComponent,
     ReferralsInfoComponent,
+    OtpComponent,
   ],
   imports: [
     NoopAnimationsModule,
@@ -228,6 +231,7 @@ import { expertisePriceValidator } from './custom-directives/expertisePriceValid
     MatMomentDateModule,
     RouterModule.forRoot(appRoutes, { useHash: false }),
     Angular2CsvModule,
+    NgOtpInputModule
   ],
   entryComponents: [WelcomeComponent],
   providers: [

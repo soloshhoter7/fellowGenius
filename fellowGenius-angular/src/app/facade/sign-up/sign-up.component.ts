@@ -61,6 +61,7 @@ export class SignUpComponent implements OnInit {
   wrongOtp = false;
   showInput: boolean = true;
   verifyEmail: boolean = false;
+  resendEmailMessage: boolean= false;
   incorrectLoginDetails = false;
   termsAndConditionsChecked = false;
   termsAndConditionsError: string;
@@ -70,6 +71,7 @@ export class SignUpComponent implements OnInit {
   timeOut: boolean = true;
   showExpertCode: boolean = false;
   showPassword: boolean = false;
+  enableOTPPage: boolean=false;
   referActivity: string;
   // ---------- patterns --------------------------------
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,12}$';
@@ -87,6 +89,7 @@ export class SignUpComponent implements OnInit {
   prev_route;
   expert_userId;
   expert_domain;
+
   // --------------- models ---------------------------------
   registrationModel = new registrationModel();
   loginModel = new loginModel();
@@ -94,6 +97,11 @@ export class SignUpComponent implements OnInit {
   socialLogin = new socialLogin();
   tutorProfile = new tutorProfile();
   tutorAvailabilitySchedule: tutorAvailabilitySchedule;
+  //------------- otpJSON---------------------------
+  otpJSON={
+    "email":this.registrationModel.email,
+    "verificationOtp":""    
+  }
   //---------------- configurations ----------------------
   config: MatSnackBarConfig = {
     duration: 5000,
@@ -153,18 +161,9 @@ export class SignUpComponent implements OnInit {
   otpChange() {
     console.log('input changes');
   }
-  onDigitInput(event) {
-    let element;
-    if (event.code !== 'Backspace')
-      element = event.srcElement.nextElementSibling;
 
-    if (event.code === 'Backspace')
-      element = event.srcElement.previousElementSibling;
-
-    if (element == null) return;
-    else element.focus();
-  }
   seePassword() {
+
     console.log(this.hide);
 
     $('.toggle-password').each(function (index) {
@@ -240,96 +239,30 @@ export class SignUpComponent implements OnInit {
       height: 'auto',
     });
   }
-  appendOtp(form: NgForm) {
-    console.log(form);
-    let otp: string = '';
-    let otp_1digit = form.value.otp_1digit;
-    let otp_2digit = form.value.otp_2digit;
-    let otp_3digit = form.value.otp_3digit;
-    let otp_4digit = form.value.otp_4digit;
-    let otp_5digit = form.value.otp_5digit;
-    let otp_6digit = form.value.otp_6digit;
-    otp += otp_1digit.toString();
-    otp += otp_2digit.toString();
-    otp += otp_3digit.toString();
-    otp += otp_4digit.toString();
-    otp += otp_5digit.toString();
-    otp += otp_6digit.toString();
-    console.log(otp);
-    return otp;
-  }
-  onSignUp(form: NgForm) {
-    if (this.verifyEmail == false) {
-      this.isLoading = true;
-      this.registrationModel.fullName = form.value.fullName;
-      this.registrationModel.email = form.value.email;
-      this.registrationModel.password = form.value.password;
-      this.registrationModel.contact = form.value.contact;
-      this.registrationModel.expertCode = form.value.expertCode;
-      this.registrationModel.upiId = form.value.upiId;
-      this.registrationModel.role = 'Learner';
-      this.httpClient
-        .checkUser(this.registrationModel.email)
-        .subscribe((res) => {
-          if (!res == true) {
-            setTimeout(() => {
-              if (this.timeOut == true) {
-                this.emailValid = true;
-                this.isLoading = false;
-                this.showInput = true;
-              }
-            }, 25000);
-            this.httpClient
-              .verifyEmail(this.registrationModel.email)
-              .subscribe((res) => {
-                this.verificationOtp = res['response'];
 
-                this.timeOut = false;
-                this.verifyEmail = true;
-                this.isLoading = false;
-                this.showInput = false;
-              });
-          } else {
-            this.timeOut = false;
-            // this.verifyEmail = true;
-            this.isLoading = false;
-            // this.showInput = false;
-            this.snackBar.open(
-              'You are already registered. Please Login.',
-              'close',
-              this.config
-            );
-            this.router.navigate(['login']);
-          }
-        });
-    } else {
-      console.log('in otp region');
-      let otp: string = this.appendOtp(form);
-      console.log(otp);
-      if (otp == null) {
-        this.wrongOtp = true;
-      } else {
-        console.log(otp, this.verificationOtp);
-        if (bcrypt.compareSync(otp, this.verificationOtp)) {
-          console.log('otp matched !');
-          this.registrationModel.referActivity = this.referActivity;
-          this.authService.onSignUp(this.registrationModel);
+  onOutput(verifyEmail: boolean){
+    console.log("Inside the output method with verify email "+ verifyEmail);
+    this.verifyEmail=verifyEmail;
+    this.enableOTPPage=false;
+    this.onVerifyEmail(this.verifyEmail);
+  }
+
+  onVerifyEmail(emailVerify:boolean){
+    if(emailVerify == true){
+      this.isLoading=true;
+      this.authService.onSignUp(this.registrationModel);
 
           this.signUpSuccessfulSubscription = this.authService
             .getAuthStatusListener()
             .subscribe((res) => {
-              // if (res == false) {
-              //   this.snackBar.open(
-              //     'registration not successful ! email already exists !',
-              //     'close',
-              //     this.config
-              //   );
-              //   this.incorrectLoginDetails = true;
-              //   this.dialogRef.closeAll();
-              // } else
+             
               if (res == true) {
+                console.log("Inside the subscription");
                 if (this.loginService.getLoginType() == 'Learner') {
+                  console.log("Inside the learner")
+                  this.isLoading=false;
                   if (this.prev_route != '') {
+                    console.log("prev route is "+ this.prev_route);
                     this.goToPreviousUrl();
                   } else {
                     this.snackBar.open(
@@ -345,10 +278,60 @@ export class SignUpComponent implements OnInit {
                 }
               }
             });
-        } else {
-          this.wrongOtp = true;
-        }
-      }
+    }
+  }
+  
+  onSignUp(form: NgForm) {
+    if (this.verifyEmail == false) {
+      this.isLoading = true;
+      this.registrationModel.fullName = form.value.fullName;
+      this.registrationModel.email = form.value.email;
+      this.registrationModel.password = form.value.password;
+      this.registrationModel.contact = form.value.contact;
+      this.registrationModel.expertCode = form.value.expertCode;
+      this.registrationModel.upiId = form.value.upiId;
+      this.registrationModel.role = 'Learner';
+      this.registrationModel.referActivity=this.referActivity;
+      this.httpClient
+        .checkUser(this.registrationModel.email)
+        .subscribe((res) => {
+          if (!res == true) {
+            setTimeout(() => {
+              if (this.timeOut == true) {
+                this.emailValid = true;
+                this.isLoading = false;
+                this.showInput = true;
+              }
+            }, 25000);
+            this.httpClient
+              .verifyEmail(this.registrationModel.email)
+              .subscribe((res) => {
+                this.verificationOtp = res['response'];
+                this.otpJSON.email=this.registrationModel.email;
+                this.otpJSON.verificationOtp=this.verificationOtp;
+                console.log("OTP JSON- registration email is "+ this.otpJSON.email );
+                console.log("OTP JSON- verification otp is "+ this.otpJSON.verificationOtp);
+              
+                this.timeOut = false;
+                this.verifyEmail = true;
+                this.isLoading = false;
+                this.showInput = false;
+
+                this.enableOTPPage=true;
+              });
+          } else {
+            this.timeOut = false;
+            // this.verifyEmail = true;
+            this.isLoading = false;
+            // this.showInput = false;
+            this.snackBar.open(
+              'You are already registered. Please Login.',
+              'close',
+              this.config
+            );
+            this.router.navigate(['login']);
+          }
+        });
     }
   }
 

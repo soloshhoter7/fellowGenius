@@ -83,6 +83,14 @@ export class ProfileComponent implements OnInit {
   emptyEducationDetails: boolean;
   minDate;
   maxDate;
+  domainNotSelected: boolean;
+  topicNotSelected: boolean;
+  textTopic: string;
+  textDomain: string;
+  otherTopicSelected: boolean;
+  otherDomainSelected: boolean;
+  showTextTopic: boolean;
+  showTextDomain: boolean;
   constructor(
     public cookieService: CookieService,
     public tutorService: TutorService,
@@ -731,40 +739,145 @@ export class ProfileComponent implements OnInit {
       this.pricePerHourError = false;
     }
     this.addExpertise = new expertise();
+    if (!this.otherDomainSelected && !this.otherTopicSelected) {
+      if (this.selectedCategory != '' && this.selectedCategory != null) {
+        if (this.selectedSubCategory) {
+          this.topicNotSelected = false;
+          this.errorText = '';
+          if (
+            !this.expertiseDuplicacyCheck(
+              this.selectedCategory,
+              this.selectedSubCategory
+            )
+          ) {
+            this.addExpertise.category = this.selectedCategory;
+            this.addExpertise.subCategory = this.selectedSubCategory;
 
-    if (this.selectedSubCategory) {
-      this.errorText = '';
-      if (
-        !this.expertiseDuplicacyCheck(
-          this.selectedCategory,
-          this.selectedSubCategory
-        )
-      ) {
-        this.addExpertise.category = this.selectedCategory;
-        this.addExpertise.subCategory = this.selectedSubCategory;
-
-        if (this.tutorProfileDetails.price1 != null) {
-          this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
-          this.expertises.push(this.addExpertise);
-          $('.select2').val('').trigger('change');
-          this.expertises.reverse();
-          this.selectedCategory = '';
-          this.selectedSubCategory = '';
-          this.priceForExpertise = '';
-          if (this.duplicateExpertiseArea == true) {
-            this.duplicateExpertiseArea = false;
+            if (this.tutorProfileDetails.price1 != null) {
+              this.addExpertise.price = parseInt(
+                this.tutorProfileDetails.price1
+              );
+              this.expertises.push(this.addExpertise);
+              $('.select2').val('').trigger('change');
+              this.expertises.reverse();
+              this.selectedCategory = '';
+              this.selectedSubCategory = '';
+              this.priceForExpertise = '';
+              if (this.duplicateExpertiseArea == true) {
+                this.duplicateExpertiseArea = false;
+              }
+            } else {
+              this.pricePerHourError = true;
+            }
+          } else {
+            this.duplicateExpertiseArea = true;
+            this.selectedExpertise = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
           }
         } else {
-          this.pricePerHourError = true;
+          this.topicNotSelected = true;
+          this.errorText = 'Please add Topic !';
+        }
+      }
+    } else if (this.otherDomainSelected == true) {
+      if (this.textDomain == '' && this.textTopic == '') {
+        this.topicNotSelected = true;
+        this.domainNotSelected = true;
+        this.errorText = 'Please enter domain and topic name !';
+      } else if (this.textDomain == '') {
+        this.domainNotSelected = true;
+        this.errorText = 'Please enter domain name !';
+      } else if (this.textTopic == '') {
+        this.topicNotSelected = true;
+        this.errorText = 'Please enter topic name !';
+      } else if (this.textTopic != '' && this.textDomain != '') {
+        this.domainNotSelected = false;
+        this.topicNotSelected = false;
+        this.errorText = '';
+        if (!this.expertiseDuplicacyCheck(this.textDomain, this.textTopic)) {
+          this.addExpertise.category = this.textDomain;
+          this.addExpertise.subCategory = this.textTopic;
+          if (this.tutorProfileDetails.price1 != null) {
+            this.addExpertise.price = parseInt(this.tutorProfileDetails.price1);
+            this.expertises.push(this.addExpertise);
+            $('.select2').val('').trigger('change');
+            this.expertises.reverse();
+            this.textDomain = '';
+            this.textTopic = '';
+            this.selectedCategory = '';
+            this.selectedSubCategory = '';
+            this.priceForExpertise = '';
+            this.showTextDomain = false;
+            this.showTextTopic = false;
+            this.otherDomainSelected = false;
+            this.otherTopicSelected = false;
+            if (this.duplicateExpertiseArea == true) {
+              this.duplicateExpertiseArea = false;
+            }
+          } else {
+            this.pricePerHourError = true;
+          }
+        } else {
+          this.duplicateExpertiseArea = true;
+          this.textDomain = '';
+          this.textTopic = '';
+          this.priceForExpertise = '';
+        }
+      }
+    } else if (this.otherTopicSelected == true) {
+      if (this.tutorProfileDetails.price1 != null) {
+        if (this.selectedCategory) {
+          this.domainNotSelected = false;
+          if (this.textTopic != '') {
+            console.log(this.selectedCategory + ':' + this.textTopic);
+            this.topicNotSelected = false;
+            this.errorText = '';
+            if (
+              !this.expertiseDuplicacyCheck(
+                this.selectedCategory,
+                this.textTopic
+              )
+            ) {
+              this.addExpertise.category = this.selectedCategory;
+              this.addExpertise.subCategory = this.textTopic;
+
+              this.addExpertise.price = parseInt(
+                this.tutorProfileDetails.price1
+              );
+              this.expertises.push(this.addExpertise);
+              $('.select2').val('').trigger('change');
+              this.expertises.reverse();
+              this.textDomain = '';
+              this.textTopic = '';
+              this.selectedCategory = '';
+              this.selectedSubCategory = '';
+              this.priceForExpertise = '';
+              this.showTextDomain = false;
+              this.showTextTopic = false;
+              this.otherDomainSelected = false;
+              this.otherTopicSelected = false;
+              if (this.duplicateExpertiseArea == true) {
+                this.duplicateExpertiseArea = false;
+              }
+            } else {
+              this.duplicateExpertiseArea = true;
+              this.textDomain = '';
+              this.textTopic = '';
+              this.priceForExpertise = '';
+            }
+          } else {
+            this.errorText = 'Please enter a topic name !';
+            this.topicNotSelected = true;
+          }
+          console.log('we have a selected category !');
+        } else {
+          this.errorText = 'Please choose a domain !';
+          this.domainNotSelected = true;
         }
       } else {
-        this.duplicateExpertiseArea = true;
-        this.selectedExpertise = '';
-        this.selectedSubCategory = '';
-        this.priceForExpertise = '';
+        this.pricePerHourError = true;
       }
-    } else {
-      this.errorText = 'Please add Topic !';
     }
   }
 
