@@ -263,6 +263,7 @@
           </div>
           <div class="access_footer">
             <p>
+           
               Already have an Account ? <a routerLink="/login">Log in</a
               ><span>or</span
               ><a style="color: #8dc63f" routerLink="/sign-up-expert"
@@ -273,118 +274,9 @@
         </div>
       </div>
     </div>
-    <div class="container" [class]="verifyEmail ? '' : 'hideBlock'">
-      <div class="page_wrapper">
-        <div class="access_icon_box">
-          <img
-            src="../../../assets/images/email-verification-clip.svg"
-            alt="#"
-            class="graphic_style"
-          />
-        </div>
-        <div class="access_field_box">
-          <div class="access_header">
-            <a href="" class="accs_logo"
-              ><img src="../../../assets/images/fellow genius logo.svg" alt="#"
-            /></a>
-          </div>
-          <div class="access_data">
-            <div class="content_wrapper">
-              <h2>Email Verification</h2>
-              <div class="tagline">
-                Enter the verification code sent to your email address
-              </div>
-              <span *ngIf="wrongOtp" class="help-block">Invalid OTP</span>
-              <form (ngSubmit)="onSignUp(o)" #o="ngForm">
-                <div class="eml_vrfctn form-group">
-                  <input
-                    type="text"
-                    id="otp_1digit"
-                    name="otp_1digit"
-                    #digit1
-                    ngModel
-                    maxlength="1"
-                    class="verfcn_box"
-                    (keyup)="onDigitInput($event)"
-                    placeholder="_"
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="otp_2digit"
-                    name="otp_2digit"
-                    #digit2
-                    ngModel
-                    maxlength="1"
-                    class="verfcn_box"
-                    (keyup)="onDigitInput($event)"
-                    placeholder="_"
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="otp_3digit"
-                    name="otp_3digit"
-                    ngModel
-                    #digit3
-                    maxlength="1"
-                    class="verfcn_box"
-                    (keyup)="onDigitInput($event)"
-                    placeholder="_"
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="otp_4digit"
-                    name="otp_4digit"
-                    ngModel
-                    maxlength="1"
-                    #digit4
-                    class="verfcn_box"
-                    (keyup)="onDigitInput($event)"
-                    placeholder="_"
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="otp_5digit"
-                    name="otp_5digit"
-                    ngModel
-                    maxlength="1"
-                    #digit5
-                    class="verfcn_box"
-                    (keyup)="onDigitInput($event)"
-                    placeholder="_"
-                    required
-                  />
-                  <input
-                    type="text"
-                    id="otp_6digit"
-                    name="otp_6digit"
-                    ngModel
-                    maxlength="1"
-                    #digit6
-                    class="verfcn_box"
-                    (keyup)="onDigitInput($event)"
-                    placeholder="_"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  class="button form_Btn"
-                  [disabled]="o.invalid"
-                >
-                  Verify Account
-                </button>
-              </form>
-            </div>
-          </div>
-          <div class="access_footer">
-            <p>Didn't receive code? <a href="">Resend</a></p>
-          </div>
-        </div>
-      </div>
+    <div *ngIf="enableOTPPage">
+      <app-otp [otpJSON]="otpJSON" (emailVerify)="onOutput($event)"></app-otp> 
     </div>
+    
   </div>
 </body>

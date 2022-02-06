@@ -118,6 +118,7 @@ import { TransactionsInfoComponent } from './admin-portal/admin-home/transaction
 import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
 import { expertisePriceValidator } from './custom-directives/expertisePriceValidator.directive';
 import { UserDropdownComponent } from './nav-bar/user-dropdown/user-dropdown.component';
+import { OtpComponent } from './facade/sign-up/otp/otp.component';
 
 @NgModule({
   declarations: [
@@ -196,6 +197,7 @@ import { UserDropdownComponent } from './nav-bar/user-dropdown/user-dropdown.com
     TransactionsInfoComponent,
     ReferralsInfoComponent,
     UserDropdownComponent,
+    OtpComponent,
   ],
   imports: [
     NoopAnimationsModule,
