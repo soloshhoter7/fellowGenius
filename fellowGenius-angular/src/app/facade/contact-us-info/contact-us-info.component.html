@@ -41,45 +41,97 @@
 	                    <div class="sec_title text-center">
 	                        <h2>Send Us a Message</h2>
 	                    </div>
-                        <form (ngSubmit)="formSubmit()">
+                        <form (ngSubmit)="onSubmit(t)" #t="ngForm">
                             <div class="row">
                                 <div class="col-12 col-lg-6">
                                     <div class="form-group">
                                         <input 
                                         type="text" 
-                                        name="name"
-                                        [(ngModel)]="contact.name" 
+                                        name="fullName"
+                                        id="fullName"
+                                        ngModel
                                         class="form-control" 
-                                        placeholder="Your Name">
+                                        required
+                                        #fullName="ngModel"
+                                        placeholder="Your Name"
+                                        maxlength="50"
+                                        [pattern]="fullNamePattern"
+                                        />
+                                        
+                                        <span
+                        class="help-block"
+                        *ngIf="!fullName.valid && fullName.touched"
+                        >Invalid Name</span
+                      >
                                     </div>
                                     <div class="form-group">
-                                        <input 
-                                        type="email" 
-                                        name="email" 
-                                        class="form-control" 
-                                        [(ngModel)]="contact.email"
-                                        placeholder="Your E-Mail">
+                                        <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        ngModel
+                        class="form-control"
+                        required
+                        email
+                        #email="ngModel"
+                        maxlength="64"
+                        [pattern]="emailPattern"
+                        placeholder="Enter Email"
+                      />
+                      <span
+                        *ngIf="(!email.valid && email.touched) "
+                        class="help-block"
+                        >Invalid email</span
+                      >
                                     </div>
                                     <div class="form-group">
-                                        <input 
-                                        type="text" 
-                                        name="phone" 
+                                        <input
+                                        type="text"
+                                        oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                                        id="contact"
                                         class="form-control"
-                                        [(ngModel)]="contact.phone" 
-                                        placeholder="Your Phone Number">
+                                        ngModel
+                                        name="contact"
+                                        required
+                                        [pattern]="mobNumberPattern"
+                                        #contact="ngModel"
+                                        placeholder="Enter phone number"
+                                      />
+                                      <span
+                                        *ngIf="!contact.valid && contact.touched"
+                                        class="help-block"
+                                        >Invalid number</span
+                                      >
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-6">
                                     <div class="form-group">
                                         <textarea 
                                         class="form-control" 
+                                        required
                                         cols="3"
+                                        id="message"
                                         name="message"
-                                        [(ngModel)]="contact.message" 
-                                        placeholder="Your Message"></textarea>
+                                        ngModel
+                                        #message="ngModel"
+                                        maxlength="250" 
+                                        placeholder="Your Message"
+                                        >
+                                    </textarea>
+                                    <span class="setLength"
+                            >{{
+                              message.value.length
+                            }}/250</span
+                          >
                                     </div>
                                     <div class="form-group">
-                                        <input type="submit" name="Submit" class="submit_btn" value="Submit">
+                                        <button type="submit" 
+                                        name="Submit" 
+                                        class="submit_btn" 
+                                        [disabled]="!t.valid"
+                                        >
+                                        Submit
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -7,6 +7,7 @@ export class SearchExpertProfileService {
 
   constructor() { }
   createExpertString(result:any,subject,limit){
+    console.log("Inside the search expert profile service ");
     let elementsLeft=false;
     let filteredArray =  result.areaOfExpertise.filter(
       (x) => x.category == subject
@@ -30,6 +31,7 @@ export class SearchExpertProfileService {
         expertise+=' ...';
       } 
     }
+    console.log(expertise);
     return expertise;
   }
 }

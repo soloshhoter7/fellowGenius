@@ -148,7 +148,7 @@ export class SearchResultsComponent implements OnInit {
   }
  
   fetchTutorList() {
-  
+    console.log("Inside the fetch tutor list");
     this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
       this.searchResults=[];
       this.filteredArray=[];
@@ -156,6 +156,8 @@ export class SearchResultsComponent implements OnInit {
       this.isLoading=false;
       this.expertsCount=this.searchResults.length
     });
+
+    console.log(this.searchResults)
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
@@ -206,6 +208,7 @@ export class SearchResultsComponent implements OnInit {
     }
   }
   showFilters() {
+    console.log('Inside filters');
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.data = {
@@ -252,14 +255,21 @@ export class SearchResultsComponent implements OnInit {
           });
       }
     });
+    console.log(this.filteredArray);
   }
 
   toLoginPage() {
     this.router.navigate(['login']);
   }
+
   createExpertString(result:any){
-    return this.searchExpertProfileService.createExpertString(result,this.selectedSubject,50);
+    console.log("Length is :"+ this.searchResults.length);
+    console.log("Inside the main function")
+    console.log(this.searchResults);
+     return this.searchExpertProfileService.createExpertString(result,this.selectedSubject,50);
+  // return "hello"
   }
+
   viewProfile(profile: tutorProfileDetails) {
     this.profileService.setProfile(profile);
     this.router.navigate(['view-tutors'], {

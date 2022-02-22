@@ -74,8 +74,13 @@
                         class="fa fa-fw field-icon toggle-password"
                         [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
                       ></span>
+                      <span
+                      class="help-block"
+                      *ngIf="!password.valid && password.touched"
+                      >Invalid Password</span>
                     </div>
                     <div class="col-12" style="margin-bottom: 10px">
+                      
                       <span
                         class="help-block"
                         *ngIf="
@@ -243,6 +248,7 @@
                             #fullName="ngModel"
                             maxlength="50"
                             placeholder="Full Name"
+                            [pattern]="fullNamePattern"
                           />
                           <span
                             class="help-block"
@@ -363,6 +369,7 @@
                             ngModel
                             required
                             #linkedInProfile="ngModel"
+                            [pattern]="linkedinProfilePattern"
                           />
                           <span
                             class="help-block"
@@ -382,9 +389,10 @@
                             placeholder="Enter UPI ID"
                             name="upiID"
                             id="upiID"
-                            maxlength="30"
+                            maxlength="50"
                             ngModel
                             #upiID="ngModel"
+                            [pattern]="upiIdPattern"
                           />
                           <span
                             class="help-block"
@@ -554,6 +562,8 @@
                                 name="subCategoryName"
                                 data-placeholder="Choose Topic"
                                 ngModel
+                                [pattern]="domainPattern"
+                                maxlength="64"
                               >
                                 <option value=""></option>
                                 <option
@@ -579,12 +589,13 @@
                                   maxlength="64"
                                   [(ngModel)]="textDomain"
                                   placeholder="Enter Domain name"
+                                  [pattern]="domainPattern"
                                 />
                               </div>
                             </div>
                             <div class="col-12 col-md-6" *ngIf="showTextTopic">
                               <div class="form-group">
-                                <label class="">Enter topic*</label>
+                                <label class="">Enter Topic*</label>
                                 <input
                                   type="text"
                                   class="form-control"
@@ -594,6 +605,7 @@
                                   maxlength="64"
                                   ngModel
                                   [(ngModel)]="textTopic"
+                                  [pattern]="domainPattern"
                                 />
                               </div>
                             </div>
@@ -691,6 +703,7 @@
                             class="form-control"
                             #yearsOfExperience="ngModel"
                             placeholder="Enter Total Years of experience"
+                            maxlength="10"
                           />
                           <span
                             class="help-block"
@@ -977,6 +990,7 @@
                                 name="institute"
                                 [(ngModel)]="inputInstitute"
                                 placeholder="Enter University / College"
+                                maxlength="50"
                               />
                             </div>
                           </div>
@@ -989,6 +1003,7 @@
                                 name="degree"
                                 [(ngModel)]="inputEducation"
                                 placeholder="Enter Degree"
+                                maxlength="50"
                               />
                             </div>
                           </div>
@@ -1032,12 +1047,14 @@
                                 >
                                 </mat-datepicker>
 
-                                <span
+                              </div>
+                              <span
                                   class="help-block"
-                                  *ngIf="invalidCompletionDate"
+                                  *ngIf="invalidCompletionDate || 
+                                  ( !inputCompletionDate.valid &&
+                                  inputCompletionDate.touched) || !inputCompletionDate.value"
                                   >Invalid Completion Date</span
                                 >
-                              </div>
                             </div>
                           </div>
                           <div

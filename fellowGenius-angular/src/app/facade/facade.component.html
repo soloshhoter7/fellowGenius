@@ -11,10 +11,17 @@
 						<p> Interact with experts of your choice in just a click</p>
 						<form (ngSubmit)="displaySelectedSubjects()"> 
 							<div class="serach_field" style="position: relative;">
-								<input type="search" class="form-control domain_srch" placeholder="Find Experts by Domain" [formControl]="myControl"
+								<input type="search" class="form-control domain_srch" 
+								#trigger="matAutocompleteTrigger"
+								(keydown.Space)="$event.target.blur(); trigger.closePanel()"
+								placeholder="Find Experts by Domain" [formControl]="myControl"
 								[matAutocomplete]="auto"
+								maxlength="64"
 								[(ngModel)]="selectedSubject" />
-								<mat-autocomplete #auto="matAutocomplete" (optionSelected)='optionSelected($event.option.value)' autoActiveFirstOption>
+								<mat-autocomplete #auto="matAutocomplete" 
+								(optionSelected)='optionSelected($event.option.value)' 
+								autoActiveFirstOption
+								>
 									<mat-option
 									  *ngFor="let option of filteredOptions | async"
 									  [value]="option"
@@ -270,9 +277,11 @@
 							<div class="expert-carousel owl-carousel owl-theme">
 								<div class="item" *ngFor="let slide of slidesStore">
 									<div class="item_wrap" >
+										<a href="javascript:;" (click)="viewProfile(slide)">
 										<img [src]="slide.imageUrl" alt="#">
 										<h5>{{slide.name}}</h5>
-										<small>{{slide.domain}}</small>			
+										<small>{{slide.domain}}</small>
+										</a>			
 									</div>
 								</div>
 							</div>
