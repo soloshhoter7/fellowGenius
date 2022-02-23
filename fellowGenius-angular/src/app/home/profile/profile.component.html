@@ -575,10 +575,12 @@
                             </div>
 
                             <span
-                              class="help-block"
-                              *ngIf="invalidCompletionDate"
-                              >Invalid Completion Date</span
-                            >
+                                  class="help-block"
+                                  *ngIf="invalidCompletionDate || 
+                                  ( !inputCompletionDate.valid &&
+                                  inputCompletionDate.touched) || !inputCompletionDate.value"
+                                  >Invalid Completion Date</span
+                                >
                           </div>
                         </div>
                         <div
