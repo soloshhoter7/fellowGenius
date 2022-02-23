@@ -339,7 +339,7 @@ export class ProfileComponent implements OnInit {
         (x) => x.category == this.selectedCategory
       );
 
-      this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+      // this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
       if (this.selectedCategoryCount > 1) {
         this.isSelectedSubCategory = true;
       } else {

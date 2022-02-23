@@ -19,13 +19,14 @@ export class StudentService {
   private approvedList: bookingDetails[] = [];
   private liveMeetingList: bookingDetails[] = [];
   private upcomingMeetingList: bookingDetails[] = [];
-  private completedMeetings:bookingDetails[]=[];
+  private completedMeetings: bookingDetails[] = [];
   approvedBookingsChanged = new Subject<bookingDetails[]>();
   bookingsChanged = new Subject<bookingDetails[]>();
   liveMeetingsChanged = new Subject<bookingDetails[]>();
   upcomingMeetingsChanged = new Subject<bookingDetails[]>();
   completedMeetingsChanged = new Subject<bookingDetails[]>();
   studentProfileChanged = new Subject<StudentProfileModel>();
+  profilePictureUrl = '../../../assets/images/default-user-image.png';
 
   constructor(
     private httpService: HttpService,
@@ -150,31 +151,33 @@ export class StudentService {
   fetchUpcomingMeetings() {
     if (this.loginService.getLoginType() == 'Learner') {
       if (this.studentProfile.sid) {
-        this.upcomingMeetingList=[];
+        this.upcomingMeetingList = [];
         this.httpService
           .findStudentBookings(this.studentProfile.sid)
           .subscribe((res) => {
             this.setUpcomingBookings(res);
           });
-          this.httpService
-        .fetchApprovedMeetings(this.studentProfile.sid)
-        .subscribe((res) => {
-          this.setUpcomingBookings(res);
-        });
         this.httpService
-        .fetchLiveMeetingsStudent(this.studentProfile.sid)
-        .subscribe((res) => {
-          this.setUpcomingBookings(res);
-        });
+          .fetchApprovedMeetings(this.studentProfile.sid)
+          .subscribe((res) => {
+            this.setUpcomingBookings(res);
+          });
+        this.httpService
+          .fetchLiveMeetingsStudent(this.studentProfile.sid)
+          .subscribe((res) => {
+            this.setUpcomingBookings(res);
+          });
       }
     }
   }
-  fetchCompletedMeetings(){
-    if(this.loginService.getLoginType()=='Learner'){
-      if(this.studentProfile.sid){
-        this.httpService.fetchLearnerCompletedMeetings(this.studentProfile.sid).subscribe((res)=>{
-          this.setCompletedMeetings(res);
-        })
+  fetchCompletedMeetings() {
+    if (this.loginService.getLoginType() == 'Learner') {
+      if (this.studentProfile.sid) {
+        this.httpService
+          .fetchLearnerCompletedMeetings(this.studentProfile.sid)
+          .subscribe((res) => {
+            this.setCompletedMeetings(res);
+          });
       }
     }
   }

@@ -110,9 +110,10 @@
     </div>
     <div [class]="!choosePassword ? '' : 'hideBlock'">
       <div class="access_page wi_full" *ngIf="enableOtpPage">
-        <app-otp [otpJSON]="otpJSON" (emailVerify)="onOutput($event)" > </app-otp> 
+        <app-otp [otpJSON]="otpJSON" (emailVerify)="onOutput($event)">
+        </app-otp>
       </div>
-      
+
       <div
         class="access_page wi_full"
         [class]="registeredExpert && !verifyEmail ? '' : 'hideBlock'"
@@ -703,7 +704,8 @@
                           <span
                             class="help-block"
                             *ngIf="
-                              !checkForNumbers(basicProfile)&&yearsOfExperience.touched
+                              !checkForNumbers(basicProfile) &&
+                              yearsOfExperience.touched
                             "
                             >Please Enter a numeric value only</span
                           >
@@ -1228,7 +1230,9 @@
                       type="submit"
                       class="button form_Btn"
                       style="margin-top: 10px"
-                      [disabled]="!basicProfile.valid||!checkForNumbers(basicProfile)"
+                      [disabled]="
+                        !basicProfile.valid || !checkForNumbers(basicProfile)
+                      "
                     >
                       Sign up as an Expert!
                     </button>

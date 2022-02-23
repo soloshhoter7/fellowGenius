@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -31,7 +31,13 @@ export class UserDropdownComponent implements OnInit {
     public tutorService: TutorService,
     private authService: AuthService
   ) {}
-
+  //to close the user dropdown if clicked outside
+  @HostListener('document:click', ['$event']) onDocumentClick(event) {
+    let toggleMenu = document.querySelector('.menu');
+    if (toggleMenu.classList.contains('active')) {
+      this.menuToggle();
+    }
+  }
   ngOnInit(): void {
     console.log(this.parent);
     this.loginType = this.loginService.getLoginType();
@@ -64,6 +70,7 @@ export class UserDropdownComponent implements OnInit {
       }
     });
   }
+  //populate the details inside user dropdown
   setDetails() {
     if (this.loginType == 'Learner') {
       this.studentProfile = this.studentService.getStudentProfileDetails();
@@ -100,8 +107,10 @@ export class UserDropdownComponent implements OnInit {
       this.router.navigate(['admin/home']);
     }
   }
+  //toggle the visibility of user dropdown
   menuToggle() {
     let toggleMenu = document.querySelector('.menu');
     toggleMenu.classList.toggle('active');
+    event.stopPropagation();
   }
 }
