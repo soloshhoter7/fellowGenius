@@ -106,7 +106,7 @@ export class SignUpExpertComponent implements OnInit {
   errorText: string;
   isLoading3: boolean = false;
   profilePicUploadStatus: boolean;
-  duplicateExpertiseArea;
+  duplicateExpertiseArea: boolean = false;
   duplicatePreviousOrganisation;
   duplicateEducationArea;
   verifyEmail = false;
@@ -176,11 +176,11 @@ export class SignUpExpertComponent implements OnInit {
   showEditPreviousOrganisations: boolean = false;
 
   //------------- otpJSON---------------------------
-  otpJSON={
-    "email":this.tutorProfileDetails.email,
-    "verificationOtp":""
-  }
-  enableOtpPage: boolean=false;
+  otpJSON = {
+    email: this.tutorProfileDetails.email,
+    verificationOtp: '',
+  };
+  enableOtpPage: boolean = false;
   ngOnInit() {
     window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -191,15 +191,8 @@ export class SignUpExpertComponent implements OnInit {
       } else {
         this.choosePassword = false;
       }
-      // this.httpService
-      //   .fetchTutorProfileDetails(this.userId)
-      //   .subscribe((res) => {
-      //     this.teacherProfile = res;
-
-      //   });
     });
 
-    let that = this;
     window['angularComponentReference'] = {
       component: this,
       zone: this.ngZone,
@@ -260,16 +253,16 @@ export class SignUpExpertComponent implements OnInit {
     );
   }
 
-  checkForNumbers(form:any){
+  checkForNumbers(form: any) {
     let regExp = /^\d+$/;
-    let yoe=form.value.yearsOfExperience;
+    let yoe = form.value.yearsOfExperience;
     //console.log("Years of experience is "+yoe);
-    if(yoe==" "||yoe==undefined){
+    if (yoe == ' ' || yoe == undefined) {
       return true;
-    }else{
-    let hasNumbers = regExp.test(yoe.trim());
-    //console.log(hasNumbers + ", it is a number");
-    return hasNumbers;
+    } else {
+      let hasNumbers = regExp.test(yoe.trim());
+      //console.log(hasNumbers + ", it is a number");
+      return hasNumbers;
     }
   }
 
@@ -379,32 +372,32 @@ export class SignUpExpertComponent implements OnInit {
     this.router.navigate(['home']);
   }
 
-  onOutput(verifyEmail:boolean){
-    console.log("Inside the output method with verify email "+ verifyEmail);
-    this.enableOtpPage=false;
+  onOutput(verifyEmail: boolean) {
+    console.log('Inside the output method with verify email ' + verifyEmail);
+    this.enableOtpPage = false;
     this.onVerifyEmail();
   }
 
-  onVerifyEmail(){
-    this.isLoading=true;
+  onVerifyEmail() {
+    this.isLoading = true;
     this.httpService
-          .registerExpert(this.tutorProfileDetails)
-          .subscribe((res) => {
-            this.isLoading = false;
-            if (res == true) {
-              this.registeredExpert = true;
-              this.verifyEmail = false;
-            } else {
-              this.isLoading = false;
-              this.registeredExpert = false;
-              this.verifyEmail = false;
-              this.snackBar.open(
-                'Expert already Registered !',
-                'close',
-                this.config
-              );
-            }
-          });
+      .registerExpert(this.tutorProfileDetails)
+      .subscribe((res) => {
+        this.isLoading = false;
+        if (res == true) {
+          this.registeredExpert = true;
+          this.verifyEmail = false;
+        } else {
+          this.isLoading = false;
+          this.registeredExpert = false;
+          this.verifyEmail = false;
+          this.snackBar.open(
+            'Expert already Registered !',
+            'close',
+            this.config
+          );
+        }
+      });
   }
 
   appendOtp(form: NgForm) {
@@ -424,7 +417,6 @@ export class SignUpExpertComponent implements OnInit {
 
     return otp;
   }
-  
 
   getEarningAppInfo() {
     this.httpService.getEarningAppInfo().subscribe((res) => {
@@ -456,7 +448,7 @@ export class SignUpExpertComponent implements OnInit {
     }
     return false;
   }
-  
+
   filterSCfromCateg(val) {
     if (val != 'Others') {
       if (!this.selectedCategory || this.checkDomainInList(val)) {
@@ -535,121 +527,96 @@ export class SignUpExpertComponent implements OnInit {
     let formattedDate = moment(momentObject._d).format('DD/MM/YYYY');
     return formattedDate;
   }
-  autoSaveEnteredInformation(): boolean {
+  autoSaveEnteredInformation() {
     //auto save all the information for expertise, organisation, education
     this.saveExpertise();
     this.addOrganisation();
     this.addEducation();
-    //check for all the errors
-    // if (
-    //   this.duplicateExpertiseArea ||
-    //   this.pricePerHourError ||
-    //   this.topicNotSelected ||
-    //   this.domainNotSelected
-    // ) {
-    //   let el = document.getElementById('domainBox');
-    //   el.scrollIntoView();
-    //   return false;
-    // } else if (
-    //   this.invalidOrganisationDetails ||
-    //   this.duplicatePreviousOrganisation
-    // ) {
-    //   let el = document.getElementById('workBox');
-    //   el.scrollIntoView();
-    //   return false;
-    // } else if (this.invalidEducationDetails || this.duplicateEducationArea) {
-    //   let el = document.getElementById('educationBox');
-    //   el.scrollIntoView();
-    //   return false;
-    // }
-    return true;
   }
   saveExpertBasicProfile(form: any) {
-    if (this.autoSaveEnteredInformation()) {
-      if (this.expertises.length > 0) {
-        if (this.errorText) {
-          this.errorText = '';
-        }
-        if (this.educationQualifications.length > 0) {
-          if (this.emptyEducationDetails == true)
-            this.emptyEducationDetails = false;
-          if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
-            // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
-            this.isLoading = true;
+    this.autoSaveEnteredInformation();
+    if (this.expertises.length > 0) {
+      if (this.errorText) {
+        this.errorText = '';
+      }
+      if (this.educationQualifications.length > 0) {
+        if (this.emptyEducationDetails == true)
+          this.emptyEducationDetails = false;
+        if (this.profilePictureUrl != '../assets/images/dummy-profile.svg') {
+          // if (this.emptyProfilePicture == false) this.emptyProfilePicture = true;
+          this.isLoading = true;
 
-            this.tutorProfileDetails.contact = form.value.contact;
-            console.log('User inputted DOB is ' + form.value.dob);
-            this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
-              form.value.dob
-            );
-            console.log(this.tutorProfileDetails.dateOfBirth);
-            this.tutorProfileDetails.email = form.value.email;
-            this.tutorProfileDetails.educationalQualifications =
-              this.educationQualifications;
-            this.tutorProfileDetails.professionalSkills =
-              form.value.professionalSkills;
-            this.tutorProfileDetails.fullName = form.value.fullName;
-            this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
-            this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
-            this.tutorProfileDetails.institute = this.getInstitute();
-            this.tutorProfileDetails.areaOfExpertise = this.expertises;
-            this.tutorProfileDetails.linkedInProfile =
-              form.value.linkedInProfile;
-            this.tutorProfileDetails.yearsOfExperience =
-              form.value.yearsOfExperience;
-            this.tutorProfileDetails.currentOrganisation =
-              form.value.currentOrganisation;
-            this.tutorProfileDetails.currentDesignation =
-              form.value.currentDesignation;
-            this.tutorProfileDetails.previousOrganisations =
-              this.previousOraganisations;
-            this.tutorProfileDetails.description = form.value.description;
-            this.tutorProfileDetails.speciality = form.value.speciality;
-            this.tutorProfileDetails.upiID = form.value.upiID;
-            this.tutorProfileDetails.gst = form.value.gst;
-            console.log(this.tutorProfileDetails);
-            this.httpService
-              .checkUser(this.tutorProfileDetails.email)
-              .subscribe((res) => {
-                if (res == true) {
-                  this.isLoading = false;
-                  this.isLoading = false;
-                  this.registeredExpert = false;
-                  this.verifyEmail = false;
-                  this.snackBar.open(
-                    'Email already Registered !',
-                    'close',
-                    this.config
-                  );
-                } else {
-                  this.httpService
-                    .verifyEmail(this.tutorProfileDetails.email)
-                    .subscribe((res) => {
-                      this.verificationOtp = res['response'];
+          this.tutorProfileDetails.contact = form.value.contact;
+          console.log('User inputted DOB is ' + form.value.dob);
+          this.tutorProfileDetails.dateOfBirth = this.formatDobFromMoment(
+            form.value.dob
+          );
+          console.log(this.tutorProfileDetails.dateOfBirth);
+          this.tutorProfileDetails.email = form.value.email;
+          this.tutorProfileDetails.educationalQualifications =
+            this.educationQualifications;
+          this.tutorProfileDetails.professionalSkills =
+            form.value.professionalSkills;
+          this.tutorProfileDetails.fullName = form.value.fullName;
+          this.tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
+          this.tutorProfileDetails.bookingId = this.tutorProfile.bookingId;
+          this.tutorProfileDetails.institute = this.getInstitute();
+          this.tutorProfileDetails.areaOfExpertise = this.expertises;
+          this.tutorProfileDetails.linkedInProfile = form.value.linkedInProfile;
+          this.tutorProfileDetails.yearsOfExperience =
+            form.value.yearsOfExperience;
+          this.tutorProfileDetails.currentOrganisation =
+            form.value.currentOrganisation;
+          this.tutorProfileDetails.currentDesignation =
+            form.value.currentDesignation;
+          this.tutorProfileDetails.previousOrganisations =
+            this.previousOraganisations;
+          this.tutorProfileDetails.description = form.value.description;
+          this.tutorProfileDetails.speciality = form.value.speciality;
+          this.tutorProfileDetails.upiID = form.value.upiID;
+          this.tutorProfileDetails.gst = form.value.gst;
+          console.log(this.tutorProfileDetails);
+          this.httpService
+            .checkUser(this.tutorProfileDetails.email)
+            .subscribe((res) => {
+              if (res == true) {
+                this.isLoading = false;
+                this.isLoading = false;
+                this.registeredExpert = false;
+                this.verifyEmail = false;
+                this.snackBar.open(
+                  'Email already Registered !',
+                  'close',
+                  this.config
+                );
+              } else {
+                this.httpService
+                  .verifyEmail(this.tutorProfileDetails.email)
+                  .subscribe((res) => {
+                    this.verificationOtp = res['response'];
 
-                      this.otpJSON.verificationOtp=this.verificationOtp;
-                      this.otpJSON.email=this.tutorProfileDetails.email;
-                      this.enableOtpPage=true;
-                      this.isLoading = false;
-                      this.verifyEmail = true;
-                    });
-                }
-              });
-          } else {
-            this.emptyProfilePicture = true;
-            let el = document.getElementById('photoBox');
-            el.scrollIntoView();
-          }
+                    this.otpJSON.verificationOtp = this.verificationOtp;
+                    this.otpJSON.email = this.tutorProfileDetails.email;
+                    this.enableOtpPage = true;
+                    this.isLoading = false;
+                    this.verifyEmail = true;
+                  });
+              }
+            });
         } else {
-          this.emptyEducationDetails = true;
-          let el = document.getElementById('educationBox');
+          this.emptyProfilePicture = true;
+          let el = document.getElementById('photoBox');
           el.scrollIntoView();
         }
       } else {
-        this.errorText = 'Enter atleast one area of Expertise !';
-        let el = document.getElementById('domainBox');
+        this.emptyEducationDetails = true;
+        let el = document.getElementById('educationBox');
         el.scrollIntoView();
       }
+    } else {
+      this.errorText = 'Enter atleast one area of Expertise !';
+      let el = document.getElementById('domainBox');
+      el.scrollIntoView();
     }
   }
 
@@ -1069,7 +1036,7 @@ export class SignUpExpertComponent implements OnInit {
         this.prevArrangedOrganisations.push(org);
         this.inputOrganisation = '';
         this.inputDesignation = '';
-        this.togglePreviousOrganisationsView();
+        // this.togglePreviousOrganisationsView();
         if (this.duplicatePreviousOrganisation == true) {
           this.duplicatePreviousOrganisation = false;
         }

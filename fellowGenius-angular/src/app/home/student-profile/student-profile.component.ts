@@ -43,7 +43,7 @@ export class StudentProfileComponent implements OnInit {
   isLoading3: boolean = false;
   profilePicUploadStatus: boolean;
   duplicateArea;
-  basic=true;
+  basic = true;
   config: MatSnackBarConfig = {
     duration: 2000,
     horizontalPosition: 'center',
@@ -134,18 +134,17 @@ export class StudentProfileComponent implements OnInit {
     location.reload();
   }
   addLearningArea() {
-    if(this.invalidArea==true){
-      this.invalidArea=false;
+    if (this.invalidArea == true) {
+      this.invalidArea = false;
     }
     if (!this.duplicacyCheck(this.learningAreas, this.learningArea)) {
- 
-      if(this.validLearningArea(this.learningArea)){
+      if (this.validLearningArea(this.learningArea)) {
         this.learningAreas.push(this.learningArea);
         this.learningArea = '';
-      }else{
-        this.invalidArea=true;
+      } else {
+        this.invalidArea = true;
       }
-      
+
       if (this.duplicateArea == true) {
         this.duplicateArea = false;
       }
@@ -175,18 +174,18 @@ export class StudentProfileComponent implements OnInit {
   //   }
   // }
 
-  checkForNumbers(form:any){
+  checkForNumbers(form: any) {
     let regExp = /^\d+$/;
-    let yoe=form.value.yearsOfExperience;
+    let yoe = form.value.yearsOfExperience;
     //console.log("Years of experience is "+yoe);
-    if(yoe==" "||yoe==undefined){
+    if (yoe == ' ' || yoe == undefined) {
       return true;
-    }else{
-    let hasNumbers = regExp.test(yoe.trim());
-    //console.log(hasNumbers + ", it is a number");
-    return hasNumbers;
+    } else {
+      let hasNumbers = regExp.test(yoe.trim());
+      //console.log(hasNumbers + ", it is a number");
+      return hasNumbers;
     }
-  }  
+  }
 
   formatDateFromDB() {
     console.log(this.studentProfile);
@@ -242,7 +241,8 @@ export class StudentProfileComponent implements OnInit {
               'close',
               this.config
             );
-            // this.router.navigate(['/home/student-dashboard']);
+            this.studentService.studentProfile.profilePictureUrl =
+              this.studentProfile.profilePictureUrl;
           });
         });
     } else {
@@ -264,18 +264,22 @@ export class StudentProfileComponent implements OnInit {
     return fields.includes(item);
   }
 
-  validLearningArea(item: string){
-    let validLearningAreas=[];
-    this.filteredOptions.subscribe(option=>{
-      validLearningAreas=option;
-      console.log("Valid Learning Areas is "+validLearningAreas);
-    })
+  validLearningArea(item: string) {
+    let validLearningAreas = [];
+    this.filteredOptions.subscribe((option) => {
+      validLearningAreas = option;
+      console.log('Valid Learning Areas is ' + validLearningAreas);
+    });
+
+
     return validLearningAreas.includes(item);
   }
   profilePictureChange(event) {
     // this.profilePictureDisabled = true;
     this.uploadedProfilePicture = <File>event.target.files[0];
     this.isLoading3 = true;
+
+
 
     // this.profilePictureDisabled = true;
     this.uploadedProfilePicture = <File>event.target.files[0];

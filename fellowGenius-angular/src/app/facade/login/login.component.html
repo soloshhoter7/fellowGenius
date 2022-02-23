@@ -1,81 +1,134 @@
 <div
-*ngIf="isLoading"
-style="width: max-content; margin: auto; padding-top: 35vh;text-align: center;"
+  *ngIf="isLoading"
+  style="
+    width: max-content;
+    margin: auto;
+    padding-top: 35vh;
+    text-align: center;
+  "
 >
-<app-loading></app-loading>
-<p style="margin:1rem;font-size: large;">Signing in..</p>
+  <app-loading></app-loading>
+  <p style="margin: 1rem; font-size: large">Signing in..</p>
 </div>
 
 <div class="access_page wi_full" [class]="hideContainer">
   <div class="container">
     <div class="page_wrapper">
       <div class="access_icon_box">
-        <img src="../../../assets/images/login-clip.svg" alt="#" class="graphic_style">
+        <img
+          src="../../../assets/images/login-clip.svg"
+          alt="#"
+          class="graphic_style"
+        />
       </div>
       <div class="access_field_box">
         <div class="access_header">
-          <a href="#" data-bs-toggle="tooltip" data-placement="bottom" title="Home" class="register_btn hdr_btn"><img src="../../assets/images/breadcrumb-home.svg" alt="#" style="width: 50px;">
+          <a
+            href="#"
+            data-bs-toggle="tooltip"
+            data-placement="bottom"
+            title="Home"
+            class="register_btn hdr_btn"
+            ><img
+              src="../../assets/images/breadcrumb-home.svg"
+              alt="#"
+              style="width: 50px"
+            />
           </a>
           <a href="" class="accs_logo"
             ><img src="../../../assets/images/fellow genius logo.svg" alt="#"
           /></a>
         </div>
-              <div class="access_data">
-                  <div class="content_wrapper">
-                      <h2>Log in</h2>
-                      <div class="tagline"></div>
-                      <div class="error_message" *ngIf="incorrectLoginDetails">
-                        <div class="msg_wrap">
-                          <img src="../../../assets/images/required-error.svg" alt="#" class="erro_icon">
-                          <span><strong>Error</strong>{{errorText}}</span>
-                        </div>
-                      </div>
-                      <form (ngSubmit)="onLogin(l)" #l="ngForm">
-                          <div class="form-group">
-                              <label class="">E-Mail</label>
-                              <input type="email" id="email" ngModel name="email" required email #email="ngModel" maxlength="64" class="form-control">
-                              <span
-                        class="help-block"
-                        *ngIf="!email.valid && email.touched"
-                        >Invalid Email</span>
-                          </div>
-                          <div class="form-group">
-                              <label class="">Password</label>
-                              <div class="password_wrap" >
-                                <input 
-                                [type]="showPassword ? 'text' : 'password' "
-                                id="password-field"  
-                                class="form-control" 
-                                name="password" 
-                                ngModel 
-                                required 
-                                #password="ngModel" 
-                                maxLength="40" 
-                                
-                                />
-                                <span
-                                (click)="togglePassword()"
-                          class="fa fa-fw field-icon toggle-password"
-                          [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash' "
-                        ></span>
-                        <span
-                        class="help-block"
-                        *ngIf="!password.valid && password.touched"
-                        >Invalid Password</span>
-                              </div>
-                             
-                              <a routerLink="/reset-password" class="frgt_pwd" (click)="toResetPassword()">Forgot Password ?</a>
-                          </div>
-                          <button type="submit" [disabled]="!l.valid" class="button form_Btn">Login</button>
-                          <div class="sepratr_login">Easy login with</div>
-                          <button type="button" class="button google_Btn" (click)="prepareLoginButton()" #googleSignUp><i class="fab fa-google"></i>Google</button>
-                      </form>
-                  </div>
+        <div class="access_data">
+          <div class="content_wrapper">
+            <h2>Log in</h2>
+            <div class="tagline"></div>
+            <div class="error_message" *ngIf="incorrectLoginDetails">
+              <div class="msg_wrap">
+                <img
+                  src="../../../assets/images/required-error.svg"
+                  alt="#"
+                  class="erro_icon"
+                />
+                <span><strong>Error</strong>{{ errorText }}</span>
               </div>
+            </div>
+            <form (ngSubmit)="onLogin(l)" #l="ngForm">
+              <div class="form-group">
+                <label class="">E-Mail</label>
+                <input
+                  type="email"
+                  id="email"
+                  ngModel
+                  name="email"
+                  required
+                  email
+                  #email="ngModel"
+                  maxlength="64"
+                  class="form-control"
+                />
+                <span class="help-block" *ngIf="!email.valid && email.touched"
+                  >Invalid Email</span
+                >
+              </div>
+              <div class="form-group">
+                <label class="">Password</label>
+                <div class="password_wrap">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    id="password-field"
+                    class="form-control"
+                    name="password"
+                    ngModel
+                    required
+                    #password="ngModel"
+                    maxLength="40"
+                  />
+                  <span
+                    (click)="togglePassword()"
+                    class="fa fa-fw field-icon toggle-password"
+                    [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                  ></span>
+                  <span
+                    class="help-block"
+                    *ngIf="!password.valid && password.touched"
+                    >Invalid Password</span
+                  >
+                </div>
+
+                <a
+                  routerLink="/reset-password"
+                  class="frgt_pwd"
+                  (click)="toResetPassword()"
+                  >Forgot Password ?</a
+                >
+              </div>
+              <button
+                type="submit"
+                [disabled]="!l.valid"
+                class="button form_Btn"
+              >
+                Login
+              </button>
+              <div class="sepratr_login">Easy login with</div>
+              <button
+                type="button"
+                class="button google_Btn"
+                (click)="prepareLoginButton()"
+                #googleSignUp
+              >
+                <i class="fab fa-google"></i>Google
+              </button>
+            </form>
+          </div>
+        </div>
         <div class="access_footer">
-                  <p>Don't have an account yet? <a href="javascript:;" routerLink="/sign-up">Create an account</a></p>         
-              </div>
+          <p>
+            Don't have an account yet?
+            <a href="javascript:;" routerLink="/sign-up">Create an account</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
-</div> 
+</div>

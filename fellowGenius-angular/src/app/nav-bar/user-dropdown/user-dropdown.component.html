@@ -6,9 +6,38 @@
     aria-haspopup="true"
     aria-expanded="false"
     (click)="menuToggle()"
-    ><img [src]="profilePictureUrl" loading="eager"
-  /></a>
-  <div class="action">
+  >
+    <img
+      *ngIf="
+        studentService.getStudentProfileDetails().profilePictureUrl == null &&
+        tutorService.getTutorDetials().profilePictureUrl == null
+      "
+      [src]="profilePictureUrl"
+      loading="eager"
+    />
+    <img
+      *ngIf="
+        loginType == 'Learner' &&
+        studentService.getStudentProfileDetails().profilePictureUrl != null
+      "
+      [src]="studentService.getStudentProfileDetails().profilePictureUrl"
+      loading="eager"
+    />
+    <img
+      *ngIf="
+        loginType == 'Expert' &&
+        tutorService.getTutorDetials().profilePictureUrl != null
+      "
+      [src]="tutorService.getTutorDetials().profilePictureUrl"
+      loading="eager"
+    />
+    <img
+      *ngIf="loginType == 'Admin'"
+      [src]="profilePictureUrl"
+      loading="eager"
+    />
+  </a>
+  <div class="action" (click)="$event.stopPropagation()">
     <!-- <div class="profile" (click)="menuToggle()">
               <img src="../../assets/images/amanGarg.jpg" />
             </div> -->

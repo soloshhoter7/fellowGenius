@@ -166,17 +166,17 @@ export class ProfileComponent implements OnInit {
 
   //************ PATTERN            */
   fullNamePattern = '[a-zA-Z ]*$';
-  upiIdPattern= "[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}";
-  linkedinProfilePattern=
-  "^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|\/)";
-  domainPattern="[a-zA-Z0-9. ]*$";
-  
+  upiIdPattern = '[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}';
+  linkedinProfilePattern =
+    '^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|/)';
+  domainPattern = '[a-zA-Z0-9. ]*$';
+
   ngOnInit() {
     window['angularComponentReference'] = {
       component: this,
       zone: this.ngZone,
       loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
-      disableEditDomainView: () => this.disableEditDomainView()
+      disableEditDomainView: () => this.disableEditDomainView(),
     };
     this.getAllCategories();
 
@@ -758,7 +758,7 @@ export class ProfileComponent implements OnInit {
       return null;
     }
   }
-  
+
   // save expertise for multiple domains
   saveExpertise() {
     if (this.tutorProfileDetails.price1) {
@@ -802,7 +802,7 @@ export class ProfileComponent implements OnInit {
             this.priceForExpertise = '';
           }
         } else {
-          console.log("Inside topic not selected")
+          console.log('Inside topic not selected');
           this.topicNotSelected = true;
           this.errorText = 'Please add Topic !';
         }
