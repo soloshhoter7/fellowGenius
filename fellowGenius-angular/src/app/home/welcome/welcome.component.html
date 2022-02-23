@@ -26,7 +26,7 @@
               </div>
               <form>
                 <div class="form-group">
-                  <label class="">New Password</label>
+                  <label class="">New Password*</label>
                   <div class="password_wrap">
                     <input
                       id="password-new"
@@ -46,29 +46,44 @@
                       class="fa fa-fw fa-eye field-icon toggle-password"
                     ></span>
                     <span
-                      class="help-block"
-                      *ngIf="
-                        password.invalid && (password.dirty || password.touched)
-                      "
-                      >Your password must be a minimum of 8 characters long and
-                      should contain atleast<br />
-                      One uppercase letter (A-Z)<br />
-                      One lowercase letter (a-z)<br />
-                      One number (0-9)<br />
-                      One special character (@, #,&, %)</span
-                    >
+                        class="help-block"
+                        *ngIf="!password.valid && password.touched"
+                        >Invalid Password</span>
+                        <br/>
+                    
                   </div>
                 </div>
+
+                <div class="col-12" style="margin-bottom: 10px;">
+                         
+                  <span
+                    class="help-block"
+                    *ngIf="
+                      password.invalid && (password.dirty || password.touched)
+                    "
+                    style="
+                      color: grey;
+                      font-size: smaller;
+                    "
+                    >Your password must be a minimum of 8 characters long and
+                    should contain atleast<br />
+                    One uppercase letter (A-Z)<br />
+                    One lowercase letter (a-z)<br />
+                    One number (0-9)<br />
+                    One special character (@, #,&, %)</span
+                  >
+                </div>
+                
                 <div style="margin-bottom: 10px;">
                   <a
                       href="javascript:;"
                       (click)="showExpertCode=!showExpertCode"
                       style="color: #8dc63f; cursor: pointer;margin-top: 10px;"
-                      >Have an Expert Code?</a
+                      >Have a Referral Code?</a
                     >
                 </div>
                 <div class="form-group" *ngIf="showExpertCode">
-                  <label class="">Expert Code</label>
+                  <!-- <label class="">Referral Code</label> -->
                   <input
                     type="text"
                     id="expCode"
@@ -78,13 +93,13 @@
                     [pattern]="referCodePattern"
                     class="form-control"
                     maxlength="50"
-                    placeholder="Enter Expert Code"
+                    placeholder="Enter Referral Code"
                     #expCode="ngModel"
                   />
                   <span
                         class="help-block"
                         *ngIf="!expCode.valid && expCode.touched"
-                        >Invalid Expert Code</span
+                        >Invalid Referral Code</span
                       >
                 </div>
                 <button type="button" class="button form_Btn" (click)="toDashboard()" [disabled]="!password.valid">Sign up</button>

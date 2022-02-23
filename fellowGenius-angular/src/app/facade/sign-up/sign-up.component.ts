@@ -73,12 +73,17 @@ export class SignUpComponent implements OnInit {
   showPassword: boolean = false;
   enableOTPPage: boolean=false;
   referActivity: string;
+
   // ---------- patterns --------------------------------
+  fullNamePattern = '[a-zA-Z ]*$';
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,12}$';
+  emailPattern=
+"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  upiIdPattern= "[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}";
   referCodePattern = '^FG22[A-Z]{2}[\\d]{4}$';
-
+ 
   //  ----------- data fields ------------------------------
   verificationOtp;
   maxDate: string;

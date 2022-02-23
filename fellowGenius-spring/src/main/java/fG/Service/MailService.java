@@ -24,6 +24,7 @@ import fG.Entity.BookingDetails;
 import fG.Entity.StudentProfile;
 import fG.Entity.TutorProfile;
 import fG.Entity.Users;
+import fG.Model.ContactUsModel;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryUsers;
@@ -899,5 +900,62 @@ public class MailService {
 //	  msg.Subject = "Some subject";
 //	  client.Send(msg);
 //	}
+	public boolean sendContactUsMail(ContactUsModel contactUsModel) {
+		
+		InitiateMailService("support@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
+		
+		try {
+			MimeMessage message = new MimeMessage(session);
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+			helper.setFrom(from);
+			
+			String to=from;
+			helper.setTo(to);
+			
+			helper.setSubject("FellowGenius Contact Us Message Notification !");
+			String mailContent = "<html>\r\n" + "<head>   \r\n" + "    <style>\r\n" + "   \r\n" + "    </style>\r\n"
+					+ "</head>\r\n" + "<body>\r\n"
+					+ "    <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n"
+					+ "        <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n"
+					+ "            <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n"
+					+ "                <img src='cid:logoImage' style=\"width: 90px;\">\r\n"
+					+ "            </div>\r\n"
+					+ "            <div style=\"width: 100%; display: inline-block;\">\r\n"
+					+ "                <h1 style=\"color: #202124; font-size: 22px; font-weight: 400;\">Contact us Message.</h1>\r\n"
+					+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Hi Admin"
+					+ "</p>\r\n"
+					+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">You have a new Message! Please view the full details of the message mentioned below.</p>\r\n"
+					+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\"> Name - " + contactUsModel.getName() 
+					+ "<br> Email - " + contactUsModel.getEmail() 
+					+ "<br> Contact - " + contactUsModel.getPhone() 
+					+ "<br> Message - " + contactUsModel.getMessage()
+					+ "</p>\r\n"
+					
+					+ "                <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Have a good Day!<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
+					+ "                <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
+					+ "                <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
+					+ "            </div>\r\n" + "        </div>\r\n" + "    </div>\r\n" + "</body>\r\n"
+					+ "</html>";
+
+			helper.setText(mailContent, true);
+			ClassPathResource resource = new ClassPathResource("logo.png");
+			helper.addInline("logoImage", resource);
+			Transport.send(message);
+
+			
+			
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return true;
+	}
 
 }

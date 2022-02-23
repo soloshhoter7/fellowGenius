@@ -38,6 +38,7 @@
                       maxlength="50"
                       placeholder="Full Name"
                       [ngModel]="tutorProfile.fullName"
+                      [pattern]="fullNamePattern"
                     />
                     <span
                       class="help-block"
@@ -114,6 +115,7 @@
                       ngModel
                       required
                       #linkedInProfile="ngModel"
+                      [pattern]="linkedinProfilePattern"
                     />
                     <span
                       class="help-block"
@@ -130,10 +132,12 @@
                       class="form-control"
                       placeholder="Enter UPI ID"
                       name="upiID"
-                      maxlength="30"
                       [ngModel]="tutorProfileDetails.upiID"
                       ngModel
                       #upiID="ngModel"
+                      [pattern]="upiIdPattern"
+                      minlength="5"
+                      maxlength="50"
                     />
                     <span
                       class="help-block"
@@ -517,6 +521,7 @@
                               name="institute"
                               [(ngModel)]="inputInstitute"
                               placeholder="Enter University / College"
+                              [pattern]="domainPattern"
                             />
                           </div>
                         </div>
@@ -529,6 +534,7 @@
                               name="degree"
                               [(ngModel)]="inputEducation"
                               placeholder="Enter Degree"
+                              [pattern]="domainPattern"
                             />
                           </div>
                         </div>
@@ -628,6 +634,7 @@
                       name="yearsOfExperience"
                       ngModel
                       required
+                      maxlength="10"
                       [ngModel]="tutorProfileDetails.yearsOfExperience"
                       class="form-control"
                       #yearsOfExperience="ngModel"
@@ -663,6 +670,7 @@
                             #currentOrganisation="ngModel"
                             maxlength="50"
                             placeholder="Enter Current Organisation"
+                            [pattern]="domainPattern"
                           />
                           <span
                             class="help-block"
@@ -686,6 +694,7 @@
                             #currentDesignation="ngModel"
                             maxlength="50"
                             placeholder="Enter Title/Designation"
+                            [pattern]="domainPattern"
                           />
                           <span
                             class="help-block"
@@ -749,6 +758,7 @@
                             name="prevOrganisation"
                             placeholder="Enter Organisation name"
                             [(ngModel)]="inputOrganisation"
+                            [pattern]="domainPattern"
                           />
                         </div>
                         <div
@@ -773,6 +783,7 @@
                             name="prevDesignation"
                             placeholder="Enter Title/Designation"
                             [(ngModel)]="inputDesignation"
+                            [pattern]="domainPattern"
                           />
                         </div>
                       </div>
