@@ -48,7 +48,7 @@ export class WelcomeComponent implements OnInit {
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   referCodePattern = '^FG22[A-Z]{2}[\\d]{4}$';
-
+  
   ngOnInit() {
     if (this.loginService.getLoginType()) {
       this.loginType = this.loginService.getLoginType();

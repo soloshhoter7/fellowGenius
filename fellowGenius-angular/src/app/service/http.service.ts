@@ -968,4 +968,11 @@ export class HttpService {
     );
   }
 
+  saveContactusDetails(contact:any):Observable<Object>{
+    return this.http.post(
+      this.backendUrl + '/fellowGenius/saveContactUsMessage',
+      contact
+    );
+  }
+
 }

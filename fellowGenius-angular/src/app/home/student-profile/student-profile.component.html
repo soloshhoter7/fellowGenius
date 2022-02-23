@@ -46,6 +46,7 @@
                           maxlength="50"
                           [ngModel]="studentProfile.fullName"
                           autofocus
+                          [pattern]="fullNamePattern"
                         />
                         <span
                           class="help-block"
@@ -132,6 +133,7 @@
                           name="linkedInProfile"
                           [ngModel]="studentProfile.linkedInProfile"
                           placeholder="Enter your linkedIn Profile link"
+                          [pattern]="linkedinProfilePattern"
                           #linkedInProfile="ngModel"
                         />
                         <span *ngIf="!linkedInProfile.valid && linkedInProfile.touched" class="help-block"
@@ -147,10 +149,12 @@
                           class="form-control"
                           placeholder="Enter UPI ID"
                           name="upiID"
-                          maxlength="30"
                           [ngModel]="studentProfile.upiID"
                           ngModel
                           #upiID="ngModel"
+                          [pattern]="upiIdPattern"
+                          minlength="5"
+                          maxlength="50"
                         />
                         <span
                           class="help-block"
@@ -330,7 +334,7 @@
                           id="yearsOfExperience"
                           name="yearsOfExperience"
                           ngModel
-                       
+                          maxlength="10"
                           [ngModel]="studentProfile.yearsOfExperience"
                           class="form-control"
                           #yearsOfExperience="ngModel"

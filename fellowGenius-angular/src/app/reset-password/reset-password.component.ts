@@ -40,6 +40,8 @@ export class ResetPasswordComponent implements OnInit {
   incorrectEmail: boolean;
   passwordError='';
   linkSent = false;
+  emailPattern=
+"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
   mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';

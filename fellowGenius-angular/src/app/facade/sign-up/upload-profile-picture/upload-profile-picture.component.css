@@ -2,3 +2,19 @@
   width: auto;
   height: 70%;
 }
+
+@media only screen and (max-width:767px){
+
+  .modal-size{
+    padding:20px;
+    width: 280px !important;
+    height: 200px !important;
+  }
+
+}
+
+.modal-size{
+  padding:20px;
+  width:500px;
+  height:500px
+}

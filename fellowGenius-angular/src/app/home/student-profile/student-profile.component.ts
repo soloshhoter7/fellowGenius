@@ -60,9 +60,7 @@ export class StudentProfileComponent implements OnInit {
   learningAreas: string[] = [];
   profilePictureUrl = '../../../assets/images/default-user-image.png';
   uploadedProfilePicture: File = null;
-  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
-  passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+ 
   snackBarConfig: MatSnackBarConfig = {
     duration: 15000,
     horizontalPosition: 'center',
@@ -74,6 +72,14 @@ export class StudentProfileComponent implements OnInit {
   emptyProfilePicture;
   userDob: any;
   invalidArea: boolean = false;
+
+  //************ PATTERN            */
+  fullNamePattern = '[a-zA-Z ]*$';
+  upiIdPattern= "[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}";
+  linkedinProfilePattern="^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|\/)";
+  mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  passwordPattern =
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(

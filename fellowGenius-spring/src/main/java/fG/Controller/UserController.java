@@ -3,7 +3,6 @@ package fG.Controller;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import fG.Configuration.JwtUtil;
-import fG.Entity.FGCredits;
 import fG.Entity.TutorProfileDetails;
 import fG.Model.AppInfoModel;
 import fG.Model.CashbackEarned;
 import fG.Model.CashbackInfo;
 import fG.Model.Category;
+import fG.Model.ContactUsModel;
 import fG.Model.FGCreditModel;
 import fG.Model.FiltersApplied;
 import fG.Model.NotificationModel;
@@ -63,22 +60,23 @@ public class UserController {
 		String userId = jwtUtil.Auth0ExtractClaim(token, "userId");
 		if (token != null) {
 			return service.expertChoosePassword(userId, password);
-		}else {
+		} else {
 			return null;
 		}
 	}
-	
+
 	// for getting student details after login
 	@RequestMapping(value = "/registerUser")
 	public boolean saveUserProfile(@RequestBody registrationModel registrationModel) {
 		System.out.println(registrationModel);
 		return service.saveUserProfile(registrationModel);
 	}
-	
-	@RequestMapping(value="/blankApi")
+
+	@RequestMapping(value = "/blankApi")
 	public boolean hitBlankApi() {
 		return service.getReferralInformation();
 	}
+
 //	// for getting student details after login
 //		@RequestMapping(value = "/sendDiwaliMail")
 //		public boolean sendDiwalimail() {
@@ -147,17 +145,17 @@ public class UserController {
 	public boolean sendResetLink(String email) {
 		return service.sendResetLink(email);
 	}
-	
-	@RequestMapping(value="/sendReferInviteMail",method=RequestMethod.GET)
+
+	@RequestMapping(value = "/sendReferInviteMail", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean sendReferInviteMail(String[] users,String referCode,String senderEmail) {
+	public boolean sendReferInviteMail(String[] users, String referCode, String senderEmail) {
 		System.out.println("Users array:- ");
-		for(String user:users) {
+		for (String user : users) {
 			System.out.println(user);
 		}
-		System.out.println("Refer code:- "+ referCode);
-		System.out.println("sender name:- "+senderEmail);
-		return service.sendReferInviteMail(users,referCode,senderEmail);
+		System.out.println("Refer code:- " + referCode);
+		System.out.println("sender name:- " + senderEmail);
+		return service.sendReferInviteMail(users, referCode, senderEmail);
 	}
 
 	@RequestMapping(value = "/updatePassword")
@@ -182,7 +180,7 @@ public class UserController {
 	public List<Category> getAllSubCategories() {
 		return service.getAllSubCategories();
 	}
-	
+
 	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert') ")
 	@RequestMapping(value = "/fetchNotifications", method = RequestMethod.GET)
 	public List<NotificationModel> fetchNotifications(String userId) {
@@ -299,52 +297,59 @@ public class UserController {
 		ArrayList<TutorProfileDetails> topTutors = service.fetchTopTutorList(subject);
 		return topTutors;
 	}
-	
+
 	@PreAuthorize("hasAuthority('Expert') ")
 	@RequestMapping(value = "/getEarningsAppInfo", method = RequestMethod.GET)
 	public List<AppInfoModel> getEarningAppInfo() {
 		return service.getEarningAppInfo();
 	}
-	
+
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
-	@RequestMapping(value="/getRedeemedCreditPercentage",method=RequestMethod.GET)
+	@RequestMapping(value = "/getRedeemedCreditPercentage", method = RequestMethod.GET)
 	public AppInfoModel getRedeemedCreditAppInfo() {
 		return service.getRedeemedCreditAppInfo();
 	}
-	
-	//to fetch user referral info
+
+	// to fetch user referral info
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
-	@RequestMapping(value="/getUserReferralInfo",method = RequestMethod.GET)
-	public List<UserReferralInfoModel> getUserReferralInfo(String userId) throws ParseException{
+	@RequestMapping(value = "/getUserReferralInfo", method = RequestMethod.GET)
+	public List<UserReferralInfoModel> getUserReferralInfo(String userId) throws ParseException {
 		return service.getUserReferralInformationEvents(userId);
 	}
-	
-	//to fetch fgCredits of user
+
+	// to fetch fgCredits of user
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
-	@RequestMapping(value="/getFGCreditsOfUser",method = RequestMethod.GET)
+	@RequestMapping(value = "/getFGCreditsOfUser", method = RequestMethod.GET)
 	public Integer getFGCreditsOfUser(String userId) {
 		return service.getFGCreditsOfUser(userId);
 	}
-	
-	//to fetch FG Credits Table of user
+
+	// to fetch FG Credits Table of user
 	@PreAuthorize("hasAuthority('Learner')")
-	@RequestMapping(value="/getFGCreditsTableOfUser",method=RequestMethod.GET)
-	public List<FGCreditModel> getFGCreditsTableOfUser(String userId){
+	@RequestMapping(value = "/getFGCreditsTableOfUser", method = RequestMethod.GET)
+	public List<FGCreditModel> getFGCreditsTableOfUser(String userId) {
 		return service.getFGCreditsTableOfUser(userId);
 	}
-	
-	//to fetch cashback info of user
+
+	// to fetch cashback info of user
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
-	@RequestMapping(value="/getCashbackEarnedOfUser",method = RequestMethod.GET)
+	@RequestMapping(value = "/getCashbackEarnedOfUser", method = RequestMethod.GET)
 	public CashbackEarned getCashbackEarnedOfUser(String userId) {
 		return service.getCashbackEarnedInfo(userId);
 	}
-	
-	//to fetch cashback table of user
+
+	// to fetch cashback table of user
 	@PreAuthorize("hasAuthority('Expert') or hasAuthority('Learner')")
-	@RequestMapping(value="/getCashbackTableOfUser",method=RequestMethod.GET)
-	public List<CashbackInfo> getCashbackTableOfUser(String userId){
+	@RequestMapping(value = "/getCashbackTableOfUser", method = RequestMethod.GET)
+	public List<CashbackInfo> getCashbackTableOfUser(String userId) {
 		return service.getCashbackTableOfUser(userId);
 	}
-	
+
+	// for save contact us details
+	@RequestMapping(value = "/saveContactUsMessage")
+	public boolean saveContactUsMessage(@RequestBody ContactUsModel contactUsModel) {
+		System.out.println("Contact us model is :- " + contactUsModel);
+		return mailService.sendContactUsMail(contactUsModel);
+	}
+
 }

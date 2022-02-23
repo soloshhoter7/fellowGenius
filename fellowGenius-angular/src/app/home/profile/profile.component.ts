@@ -164,24 +164,59 @@ export class ProfileComponent implements OnInit {
   prevArrangedOrganisations: any = [];
   userDob: any;
 
+  //************ PATTERN            */
+  fullNamePattern = '[a-zA-Z ]*$';
+  upiIdPattern = '[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}';
+  linkedinProfilePattern =
+    '^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|/)';
+  domainPattern = '[a-zA-Z0-9. ]*$';
+
   ngOnInit() {
     window['angularComponentReference'] = {
       component: this,
       zone: this.ngZone,
       loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
+      disableEditDomainView: () => this.disableEditDomainView(),
     };
     this.getAllCategories();
 
     $('.select2').select2({});
     $('.select2').on('change', function () {
       this.selectedCategory = $(this).val();
-
       window.angularComponentReference.zone.run(() => {
         window.angularComponentReference.loadAngularFunction($(this).val());
       });
       // this.filteredSubCategories = [];
       // this.filteredSubCategories = this.subCategories.filter(x=>x.category==this.selectedCategory)
     });
+
+    $('#chooseCategory').on('change', function () {
+      let value: string = $(this).val();
+      console.log('choosen domain :', value);
+      if (value == 'Others') {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.changeOtherDomain();
+        });
+      } else {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.disableEditDomainView();
+        });
+      }
+    });
+    $('#chooseSubCategory').on('change', function () {
+      let value = $(this).val();
+      console.log('choosen topic :', value);
+      if (value == 'Others') {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.changeOtherTopic();
+        });
+      } else {
+        window.angularComponentReference.zone.run(() => {
+          window.angularComponentReference.disableEditDomainView();
+        });
+      }
+    });
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
@@ -236,6 +271,17 @@ export class ProfileComponent implements OnInit {
         this.getEarningAppInfo();
       }, 1000);
     }
+  }
+
+  disableEditDomainView() {
+    this.showTextDomain = false;
+    this.showTextTopic = false;
+    this.otherDomainSelected = false;
+    this.otherTopicSelected = false;
+    this.textDomain = '';
+    this.textTopic = '';
+    console.log(this.selectedCategory);
+    console.log(this.selectedSubCategory);
   }
 
   formatDateFromString(dateString) {
@@ -331,24 +377,26 @@ export class ProfileComponent implements OnInit {
     return false;
   }
   filterSCfromCateg(val) {
-    if (!this.selectedCategory || this.checkDomainInList(val)) {
-      this.selectedCategory = val;
+    if (val != 'Others') {
+      if (!this.selectedCategory || this.checkDomainInList(val)) {
+        this.selectedCategory = val;
 
-      this.filteredSubCategories = [];
-      this.filteredSubCategories = this.subCategories.filter(
-        (x) => x.category == this.selectedCategory
-      );
+        this.filteredSubCategories = [];
+        this.filteredSubCategories = this.subCategories.filter(
+          (x) => x.category == this.selectedCategory
+        );
 
-      // this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
-      if (this.selectedCategoryCount > 1) {
-        this.isSelectedSubCategory = true;
+        // this.selectedSubCategory = this.filteredSubCategories[0].subCategory;
+        if (this.selectedCategoryCount > 1) {
+          this.isSelectedSubCategory = true;
+        } else {
+          this.isSelectedSubCategory = false;
+        }
+        this.selectedCategoryCount++;
       } else {
-        this.isSelectedSubCategory = false;
+        this.selectedSubCategory = val;
+        this.isSelectedSubCategory = true;
       }
-      this.selectedCategoryCount++;
-    } else {
-      this.selectedSubCategory = val;
-      this.isSelectedSubCategory = true;
     }
   }
   getAllCategories() {
@@ -710,28 +758,6 @@ export class ProfileComponent implements OnInit {
       return null;
     }
   }
-  // saveExpertise() {
-  //   this.addExpertise = new expertise();
-  //   this.selectedSubCategory = this.selectedExpertise;
-  //   this.selectedCategory = this.findSubCategory(this.selectedSubCategory);
-  //   console.log(this.selectedCategory);
-  //   if (!this.expertiseDuplicacyCheck(this.selectedCategory,this.selectedSubCategory)) {
-  //     this.addExpertise.category = this.selectedCategory;
-  //     this.addExpertise.subCategory = this.selectedSubCategory;
-  //     this.addExpertise.price = this.priceForExpertise;
-  //     this.expertises.push(this.addExpertise);
-  //     this.selectedExpertise = '';
-  //     this.priceForExpertise = '';
-
-  //     if (this.duplicateExpertiseArea == true) {
-  //       this.duplicateExpertiseArea = false;
-  //     }
-  //   } else {
-  //     this.duplicateExpertiseArea = true;
-  //     this.selectedExpertise = '';
-  //     this.priceForExpertise = '';
-  //   }
-  // }
 
   // save expertise for multiple domains
   saveExpertise() {
@@ -776,6 +802,7 @@ export class ProfileComponent implements OnInit {
             this.priceForExpertise = '';
           }
         } else {
+          console.log('Inside topic not selected');
           this.topicNotSelected = true;
           this.errorText = 'Please add Topic !';
         }

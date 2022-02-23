@@ -1,28 +1,27 @@
-<body>
-  <div class="action">
-    <div class="profile" (click)="menuToggle()">
-      <img src="../../assets/images/amanGarg.jpg" />
-    </div>
-    <div class="menu">
-      <h3>Shubham Sharma<br /><span>Expert</span></h3>
-      <ul>
-        <li>
-          <img src="../../assets/images/user.png" alt="user_icon" /><a href="#"
-            >My Profile</a
-          >
-        </li>
-        <li>
-          <img src="../../assets/images/dashboard.png" alt="dashboard" /><a
-            href="#"
-            >Dashboard</a
-          >
-        </li>
-        <li>
-          <img src="../../assets/images/log-out.png" alt="log_out" /><a href="#"
-            >Sign out</a
-          >
-        </li>
-      </ul>
-    </div>
-  </div>
-</body>
+<h1>On Demand Consulting</h1>
+
+						<p> Interact with experts of your choice in just a click</p>
+						<button (click)="trigger.closePanel()">Close panel test</button>
+						<form (ngSubmit)="displaySelectedSubjects()"> 
+							<div class="serach_field" style="position: relative;">
+								<input type="search" class="form-control domain_srch"
+								#trigger="matAutocompleteTrigger"
+								(keydown.Space)="$event.target.blur(); trigger.closePanel()"
+								 placeholder="Find Experts by Domain" [formControl]="myControl"
+								[matAutocomplete]="auto"
+								[(ngModel)]="selectedSubject" />
+								<mat-autocomplete #auto="matAutocomplete" 
+								(optionSelected)='optionSelected($event.option.value)' 
+								autoActiveFirstOption
+								>
+									<mat-option
+									  *ngFor="let option of filteredOptions | async"
+									  [value]="option"
+									>
+									  {{ option }}
+									</mat-option>
+								  </mat-autocomplete>
+								  
+							</div>
+							
+						</form>

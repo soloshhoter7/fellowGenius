@@ -110,10 +110,17 @@ export class SignUpExpertComponent implements OnInit {
   duplicatePreviousOrganisation;
   duplicateEducationArea;
   verifyEmail = false;
-  // mobNumberPattern = '^((\\+91-?)|0)?[0-9]{14}$';
+  
+  //*****************PATTERN************************************  
+  fullNamePattern = '[a-zA-Z ]*$';
+  emailPattern=
+  "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
   passwordPattern =
     '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+  upiIdPattern= "[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}";
+  linkedinProfilePattern="^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|\/)";
+  domainPattern='[a-zA-Z0-9. ]*$'
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
   config: MatSnackBarConfig = {
     duration: 2000,
@@ -888,6 +895,7 @@ export class SignUpExpertComponent implements OnInit {
             this.priceForExpertise = '';
           }
         } else {
+          console.log("Inside topic not selected")
           this.topicNotSelected = true;
           this.errorText = 'Please add Topic !';
         }
@@ -1058,11 +1066,14 @@ export class SignUpExpertComponent implements OnInit {
     return momentVariable.format('MMMM YYYY');
   }
   addEducation() {
+    console.log("Inside the add education");
+    console.log(this.inputCompletionDate);
     if (
       this.inputEducation &&
       this.inputCompletionDate &&
       this.inputInstitute
     ) {
+      
       let dateString = this.getMonthYearString(this.inputCompletionDate);
       console.log(dateString);
       if (this.invalidEducationDetails == true) {

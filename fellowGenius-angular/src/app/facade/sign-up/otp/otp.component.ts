@@ -21,6 +21,7 @@ export class OtpComponent implements OnInit {
  
   resendEmailMessage: boolean;
   resendText="";
+  resendServer: boolean=true;
   resendTimer: boolean=false;
   resendTimerSubscription: Subscription
   resendCount=0;
@@ -276,7 +277,21 @@ outputVerifyEmail(verifyEmail: boolean) {
   onResend(){
     
     if(this.resendTimer){ //timer is running
-      this.hideTimerMessage=false;
+      if(this.resendCount<3){
+        this.hideTimerMessage=false;
+      }else{
+        this.hideTimerMessage=true;
+        this.resendTimer=false;
+
+        this.otpErrorText='Resend OTP count limit excedeed';
+
+        this.otpErrorBoolean=true;
+
+        setTimeout(()=>
+        this.otpErrorBoolean=false
+        ,5000)
+
+      }   
 
     
     }else if(!this.resendTimer){ //timer is not running.
@@ -291,24 +306,42 @@ outputVerifyEmail(verifyEmail: boolean) {
         ,5000)
 
       }else{
-        this.httpClient
-        .verifyEmail(this.email)
-        .subscribe((res) => {
-          this.verificationOtp = res['response'];
-          this.resendCount++;
-          
-          this.verifyEmail = false;
-          this.resendEmailMessage=true;
-          this.isLoading = false;
-          this.showInput = false;
+        
+        this.snackBar.open(
+          `OTP is being sent` ,
+          'close',
+          this.config
+        );
 
-          setTimeout(()=>{
-            this.resendEmailMessage=false;
-            this.startTimer();
-          },5000)
-
-          
-        });
+        
+        if(this.resendServer){
+          this.resendServer=false;
+          console.log("Inside the if of resend Server : "+this.resendServer);
+          this.httpClient
+          .verifyEmail(this.email)
+          .subscribe((res) => {
+            this.verificationOtp = res['response'];
+            this.resendCount++;
+            
+            this.verifyEmail = false;
+            this.resendEmailMessage=true;
+            this.isLoading = false;
+            this.showInput = false;
+  
+            
+            setTimeout(()=>{
+              this.resendEmailMessage=false;
+              if(this.resendCount<3){
+                this.startTimer();
+              }
+             
+            },5000)
+  
+            
+           
+          });
+        }
+       
       }
          
     }
@@ -339,6 +372,8 @@ outputVerifyEmail(verifyEmail: boolean) {
 
                   console.log("Hide new OTP message "+ this.hideNewOtpMessage);
 
+                  this.resendServer=true;
+                  console.log("Resend server message is "+ this.resendServer);
                 }
               });
           }

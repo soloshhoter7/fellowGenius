@@ -109,7 +109,8 @@ export class FacadeComponent implements OnInit {
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632597827378?alt=media&token=76adf521-fc64-430d-85b8-d02cac72d0aa',
       name: 'Ruchir Thakkar',
       specialisation: 'PIET - B.tech[CSE]',
-      subject:'',
+      bookingId:'856477123',
+      subject:'Personal Development',
       domain:'Personal Finance',
       studentsCount: 50,
       sessionsCount: 98,
@@ -122,6 +123,8 @@ export class FacadeComponent implements OnInit {
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632218586352?alt=media&token=78a15381-7bbf-455f-96e0-57c1a8cdceb2',
       name: 'Ritam Dasgupta',
       specialisation: 'PIET - B.tech[CSE]',
+      bookingId:'436358417',
+      subject:'Sales and Business Development',
       domain:'International Sales',
       studentsCount: 50,
       sessionsCount: 98,
@@ -135,6 +138,8 @@ export class FacadeComponent implements OnInit {
       name: 'Vikas Dabas',
       domain:'Product Management',
       specialisation: 'PIET - B.tech[CSE]',
+      bookingId:'689659791',
+      subject:'Marketing',
       review:
         'As an expert, it was an awesome experience being part of this platform. ',
       studentsCount: 30,
@@ -147,6 +152,8 @@ export class FacadeComponent implements OnInit {
       name: 'Paawan juneja',
       domain:'Talent Acquisition',
       specialisation: 'PIET - B.tech[CSE]',
+      bookingId:'629517290',
+      subject:'HR',
       review:
         'I loved the experience of teaching here and the quality functionality.',
       studentsCount: 21,
@@ -158,6 +165,8 @@ export class FacadeComponent implements OnInit {
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632124416978?alt=media&token=ebc11fdc-e4f2-4e3f-afb5-afb35717ee23',
       name: 'Rajdeep Singh Kang',
       specialisation: 'PIET - B.tech[CSE]',
+      bookingId:'147288034',
+      subject:'Programming and Technology',
       domain:'Website Development',
       studentsCount: 50,
       sessionsCount: 98,
@@ -170,6 +179,8 @@ export class FacadeComponent implements OnInit {
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1632637731432?alt=media&token=51b3fad3-05f7-47ba-8ec9-8671992b9b84',
       name: 'Sayantika Bose',
       specialisation: 'PIET - B.tech[CSE]',
+      bookingId:'502762418',
+      subject:'Personal Development',
       domain:'Wellness and Life Coaching',
       studentsCount: 50,
       sessionsCount: 98,
@@ -182,6 +193,8 @@ export class FacadeComponent implements OnInit {
       imageUrl: 'https://firebasestorage.googleapis.com/v0/b/fellowgenius-15c87.appspot.com/o/tutor_profile_picture%2F%5Bobject%20File%5D_1631989579407?alt=media&token=65d14c69-78c4-4dc9-949a-49b0f501b8ca',
       name: 'Rahul Garg',
       specialisation: 'PIET - B.tech[CSE]',
+      bookingId:'818444318',
+      subject:'Competitive Exam Preparation',
       domain:'GATE/GRE/JEE',
       studentsCount: 50,
       sessionsCount: 98,
@@ -252,13 +265,17 @@ export class FacadeComponent implements OnInit {
     );
   }
   optionSelected(val){
+    console.log("Inside option selected");
+    console.log(val);
     this.router.navigate(['search-results'], {
       queryParams: { subject: val },
     });
   }
   displaySelectedSubjects() {
+    console.log("Inside display selected subject");
     console.log(this.selectedSubject);
     if (this.selectedSubject) {
+      console.log("Inside route")
       this.router.navigate(['search-results'], {
         queryParams: { subject: this.selectedSubject },
       });
@@ -278,6 +295,14 @@ export class FacadeComponent implements OnInit {
         queryParams: { section: evt },
       });
   }
+
+  viewProfile(expert: any) {
+   // this.profileService.setProfile(profile);
+    this.router.navigate(['view-tutors'], {
+      queryParams: { page: expert.bookingId,subject:expert.subject },
+    });
+}
+
   onSignUp() {
     this.router.navigate(['sign-up']);
   }
