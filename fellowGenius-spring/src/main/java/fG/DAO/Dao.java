@@ -182,16 +182,17 @@ public class Dao {
 		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();
 		CategoryList categ = repCategory.findCategory(subject);
 		System.out.println("categ : "+categ);
-		List<ExpertiseAreas> areas = repExpertiseAreas.searchByCategoryId(categ.getCategoryId());
-		System.out.println(areas);
-		if(areas!=null) {
-			for(ExpertiseAreas results:areas) {
-				if(!tutors.contains(results.getUserId())) {
-					tutors.add(results.getUserId());
+		if(categ!=null) {
+			List<ExpertiseAreas> areas = repExpertiseAreas.searchByCategoryId(categ.getCategoryId());
+			System.out.println(areas);
+			if(areas!=null) {
+				for(ExpertiseAreas results:areas) {
+					if(!tutors.contains(results.getUserId())) {
+						tutors.add(results.getUserId());
+					}
 				}
-			}
+			}	
 		}
-
 //		return repTutorProfileDetails.findAllTutors();
 		return tutors;
 	}

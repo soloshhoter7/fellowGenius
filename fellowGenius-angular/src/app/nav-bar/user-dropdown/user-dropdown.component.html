@@ -10,7 +10,8 @@
     <img
       *ngIf="
         studentService.getStudentProfileDetails().profilePictureUrl == null &&
-        tutorService.getTutorDetials().profilePictureUrl == null
+        tutorService.getTutorDetials().profilePictureUrl == null &&
+        loginType != 'Admin'
       "
       [src]="profilePictureUrl"
       loading="eager"
@@ -42,7 +43,27 @@
               <img src="../../assets/images/amanGarg.jpg" />
             </div> -->
     <div class="menu">
-      <h3>
+      <h3
+        *ngIf="
+          loginType == 'Learner' &&
+          studentService.getStudentProfileDetails().fullName != null
+        "
+      >
+        {{ studentService.getStudentProfileDetails().fullName }}<br /><span>{{
+          loginType
+        }}</span>
+      </h3>
+      <h3
+        *ngIf="
+          loginType == 'Expert' &&
+          tutorService.getTutorDetials().fullName != null
+        "
+      >
+        {{ tutorService.getTutorDetials().fullName }}<br /><span>{{
+          loginType
+        }}</span>
+      </h3>
+      <h3 *ngIf="loginType == 'Admin'">
         {{ fullName }}<br /><span>{{ loginType }}</span>
       </h3>
       <ul>

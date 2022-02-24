@@ -144,11 +144,11 @@ public class AppService {
 		subCategories.put("Programming and Technology", "Software QA and Testing");
 
 		
-		subCategories.put("New and Emerging technology", "IoT");
-		subCategories.put("New and Emerging technology", "Blockchain");
-		subCategories.put("New and Emerging technology", "ML & AI");
-		subCategories.put("New and Emerging technology", "RPA");
-		subCategories.put("New and Emerging technology", "Fintech");
+		subCategories.put("New and Emerging technologies", "IoT");
+		subCategories.put("New and Emerging technologies", "Blockchain");
+		subCategories.put("New and Emerging technologies", "ML & AI");
+		subCategories.put("New and Emerging technologies", "RPA");
+		subCategories.put("New and Emerging technologies", "Fintech");
 
 		
 		subCategories.put("Software Tools", "MS Office Suite");

@@ -29,13 +29,13 @@ export class SearchResultsComponent implements OnInit {
   subjects: string[];
   selectedSubject;
   // arrayToShow: tutorProfileDetails[];
-  isLoading:boolean =true;
+  isLoading: boolean = true;
   subjectFiltersApplied = [];
   priceFiltersApplied = [];
   ratingFilterApplied = [];
   deletionElementFinder = [];
   elementsToBeDeleted = [];
-  expertsCount=0;
+  expertsCount = 0;
   callSearchBySubject: boolean;
   callSearchByPrice: boolean;
   findFromSearchResult: boolean;
@@ -45,7 +45,7 @@ export class SearchResultsComponent implements OnInit {
   screenWidth: number;
   showMobileFilterView: boolean;
   showMobileFilterButton: boolean = false;
-  subCategories:Category[]=[];
+  subCategories: Category[] = [];
   constructor(
     private router: Router,
     private httpService: HttpService,
@@ -54,16 +54,16 @@ export class SearchResultsComponent implements OnInit {
     private matDialog: MatDialog,
     private ngZone: NgZone,
     private activatedRoute: ActivatedRoute,
-    private searchExpertProfileService:SearchExpertProfileService
+    private searchExpertProfileService: SearchExpertProfileService
   ) {
     this.allFiltersApplied = new filtersApplied();
   }
 
   ngOnInit(): void {
-    window.scroll(0,0);
+    window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
       this.selectedSubject = params['subject'];
-      this.allFiltersApplied.domain=this.selectedSubject;
+      this.allFiltersApplied.domain = this.selectedSubject;
       // this.filteredArray = this.searchResults;
       this.fetchTutorList();
       this.getSubCategories();
@@ -74,16 +74,16 @@ export class SearchResultsComponent implements OnInit {
       doSearchBySubject: (evt: any) => this.searchBySubject(evt),
       doSearchByPrice: (evt: any) => this.searchByPrice(evt),
       doSearchByRating: (evt: any) => this.searchByRatings(evt),
-      doSort:(evt:any)=> this.sort(evt)
+      doSort: (evt: any) => this.sort(evt),
     };
     initiateSelect2();
     $('#subjectFilter').on('change', function () {
       // this.selectedCategory = $(this).val();
-      console.log('hey')
+      console.log('hey');
 
       window.angularComponentReference.zone.run(() => {
         let val = $(this).val();
-        if(val!=null){
+        if (val != null) {
           window.angularComponentReference.doSearchBySubject(val);
         }
       });
@@ -92,12 +92,11 @@ export class SearchResultsComponent implements OnInit {
     });
     $('#priceFilter').on('change', function () {
       // this.selectedCategory = $(this).val();
-      console.log('hey price')
+      console.log('hey price');
 
-     
       window.angularComponentReference.zone.run(() => {
         let val = $(this).val();
-        if(val!=null){
+        if (val != null) {
           window.angularComponentReference.doSearchByPrice(val);
         }
       });
@@ -106,33 +105,31 @@ export class SearchResultsComponent implements OnInit {
     });
     $('#ratingFilter').on('change', function () {
       // this.selectedCategory = $(this).val();
-      console.log('hey rating')
+      console.log('hey rating');
 
-   
       window.angularComponentReference.zone.run(() => {
-         let val = $(this).val();
-        if(val!=null){
+        let val = $(this).val();
+        if (val != null) {
           window.angularComponentReference.doSearchByRating(val);
-        };
+        }
       });
       // // this.filteredSubCategories = [];
       // // this.filteredSubCategories = this.subCategories.filter(x=>x.category==this.selectedCategory)
     });
     $('#sortExpert').on('change', function () {
       // this.selectedCategory = $(this).val();
-      console.log('hey sort')
+      console.log('hey sort');
 
-   
       window.angularComponentReference.zone.run(() => {
-         let val = $(this).val();
-        if(val!=null){
+        let val = $(this).val();
+        if (val != null) {
           window.angularComponentReference.doSort(val);
-        };
+        }
       });
       // // this.filteredSubCategories = [];
       // // this.filteredSubCategories = this.subCategories.filter(x=>x.category==this.selectedCategory)
     });
-    
+
     if (window.screen.width <= 500) {
       this.showMobileFilterButton = true;
       this.showMobileFilterView = true;
@@ -144,36 +141,38 @@ export class SearchResultsComponent implements OnInit {
     this.callSearchBySubject = false;
     this.callSearchByPrice = false;
     this.findFromSearchResult = false;
-    this.findFromFilterSearch = false;    
+    this.findFromFilterSearch = false;
   }
- 
+
   fetchTutorList() {
-    console.log("Inside the fetch tutor list");
+    console.log('Inside the fetch tutor list');
     this.httpService.getTutorList(this.selectedSubject).subscribe((req) => {
-      this.searchResults=[];
-      this.filteredArray=[];
+      this.searchResults = [];
+      this.filteredArray = [];
       this.searchResults = req;
-      this.isLoading=false;
-      this.expertsCount=this.searchResults.length
+      console.log('search results ->', this.searchResults);
+      this.isLoading = false;
+      this.expertsCount = this.searchResults.length;
     });
 
-    console.log(this.searchResults)
+    console.log(this.searchResults);
   }
 
   // searchResults = [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ];
   onSignUp() {
     this.router.navigate(['sign-up']);
   }
-  getSubCategories(){
-    if(this.selectedSubject!=null){
-      this.httpService.getSubCategories(this.selectedSubject).subscribe((res)=>{
-        this.subCategories=res;
-      });
-  }
-    
+  getSubCategories() {
+    if (this.selectedSubject != null) {
+      this.httpService
+        .getSubCategories(this.selectedSubject)
+        .subscribe((res) => {
+          this.subCategories = res;
+        });
+    }
   }
   checkFilters() {
-    var subjectFiltersLength,ratingFiltersLength,priceFiltersLength;
+    var subjectFiltersLength, ratingFiltersLength, priceFiltersLength;
     if (this.allFiltersApplied) {
       if (this.allFiltersApplied.subjects) {
         if (this.allFiltersApplied.subjects.length != 0) {
@@ -197,13 +196,13 @@ export class SearchResultsComponent implements OnInit {
         }
       }
 
-      if(subjectFiltersLength||priceFiltersLength||ratingFiltersLength){
+      if (subjectFiltersLength || priceFiltersLength || ratingFiltersLength) {
         return true;
-      }else{
+      } else {
         return false;
       }
-    }else{
-      console.log('no filters')
+    } else {
+      console.log('no filters');
       return false;
     }
   }
@@ -262,18 +261,22 @@ export class SearchResultsComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  createExpertString(result:any){
-    console.log("Length is :"+ this.searchResults.length);
-    console.log("Inside the main function")
+  createExpertString(result: any) {
+    console.log('Length is :' + this.searchResults.length);
+    console.log('Inside the main function');
     console.log(this.searchResults);
-     return this.searchExpertProfileService.createExpertString(result,this.selectedSubject,50);
-  // return "hello"
+    return this.searchExpertProfileService.createExpertString(
+      result,
+      this.selectedSubject,
+      50
+    );
+    // return "hello"
   }
 
   viewProfile(profile: tutorProfileDetails) {
     this.profileService.setProfile(profile);
     this.router.navigate(['view-tutors'], {
-      queryParams: { page: profile.bookingId,subject:this.selectedSubject },
+      queryParams: { page: profile.bookingId, subject: this.selectedSubject },
     });
   }
 
@@ -283,7 +286,7 @@ export class SearchResultsComponent implements OnInit {
   // 		width: '70vw'
   // 	});
   // }
- 
+
   subjectContains(subject) {
     // var subject = $event.target.value;
     return this.subjectFiltersApplied.includes(subject);
@@ -316,7 +319,6 @@ export class SearchResultsComponent implements OnInit {
 
   deletePrice(price) {
     if (this.priceFiltersApplied.includes(price)) {
-      
       this.priceFiltersApplied.splice(
         this.priceFiltersApplied.indexOf(price),
         1
@@ -327,7 +329,7 @@ export class SearchResultsComponent implements OnInit {
       );
       this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
         this.filteredArray = [];
-        
+
         this.filteredArray = res;
         this.calculateFilteredExpertsCount();
       });
@@ -351,19 +353,21 @@ export class SearchResultsComponent implements OnInit {
       });
     }
   }
-  calculateFilteredExpertsCount(){
-    let filterCount= this.allFiltersApplied.subjects.length+this.allFiltersApplied.price.length+this.allFiltersApplied.ratings.length;
-    if(filterCount!=0){
-      this.expertsCount=this.filteredArray.length;
-    }else if(filterCount==0){
-      this.expertsCount=this.searchResults.length;
+  calculateFilteredExpertsCount() {
+    let filterCount =
+      this.allFiltersApplied.subjects.length +
+      this.allFiltersApplied.price.length +
+      this.allFiltersApplied.ratings.length;
+    if (filterCount != 0) {
+      this.expertsCount = this.filteredArray.length;
+    } else if (filterCount == 0) {
+      this.expertsCount = this.searchResults.length;
     }
-    
   }
   searchBySubject(evt) {
     var subject = evt;
     console.log(subject);
-    if(subject!=null){
+    if (subject != null) {
       if (this.subjectFiltersApplied.length == 0) {
         this.subjectFiltersApplied.push(subject);
         this.allFiltersApplied.subjects.push(subject);
@@ -391,18 +395,17 @@ export class SearchResultsComponent implements OnInit {
         this.filteredArray = [];
         this.filteredArray = res;
         $('#subjectFilter').val('defaultSubject').trigger('change');
-        this.expertsCount=this.filteredArray.length;
+        this.expertsCount = this.filteredArray.length;
       });
     }
-    
   }
 
   searchByPrice(evt) {
-    console.log('called')
+    console.log('called');
     var price = evt;
-    if(price!=null){
-      console.log('called')
-     
+    if (price != null) {
+      console.log('called');
+
       if (this.priceFiltersApplied.length == 0) {
         this.priceFiltersApplied.push(price);
         this.allFiltersApplied.price.push(price);
@@ -426,53 +429,50 @@ export class SearchResultsComponent implements OnInit {
           this.allFiltersApplied.show = true;
         }
       }
-      console.log(this.allFiltersApplied)
+      console.log(this.allFiltersApplied);
       this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
         this.filteredArray = [];
         this.filteredArray = res;
         $('#priceFilter').val('defaultPrice').trigger('change');
-       
-        this.expertsCount=this.filteredArray.length;
+
+        this.expertsCount = this.filteredArray.length;
       });
     }
-    
   }
 
   searchByRatings(evt) {
-  
     var ratings = evt;
-    if(ratings!=null){
-if (this.ratingFilterApplied.length == 0) {
-      this.ratingFilterApplied.push(ratings);
-      this.allFiltersApplied.ratings.push(ratings * 20);
-      this.allFiltersApplied.show = true;
-    } else {
-      if (this.checkFiltersApplied(this.ratingFilterApplied, ratings)) {
-        this.ratingFilterApplied.splice(
-          this.ratingFilterApplied.indexOf(ratings),
-          1
-        );
-        this.allFiltersApplied.ratings.splice(
-          this.allFiltersApplied.ratings.indexOf(ratings * 20),
-          1
-        );
-        if (this.allFiltersApplied.ratings.length == 0) {
-          this.allFiltersApplied.show = false;
-        }
-      } else {
+    if (ratings != null) {
+      if (this.ratingFilterApplied.length == 0) {
         this.ratingFilterApplied.push(ratings);
         this.allFiltersApplied.ratings.push(ratings * 20);
         this.allFiltersApplied.show = true;
+      } else {
+        if (this.checkFiltersApplied(this.ratingFilterApplied, ratings)) {
+          this.ratingFilterApplied.splice(
+            this.ratingFilterApplied.indexOf(ratings),
+            1
+          );
+          this.allFiltersApplied.ratings.splice(
+            this.allFiltersApplied.ratings.indexOf(ratings * 20),
+            1
+          );
+          if (this.allFiltersApplied.ratings.length == 0) {
+            this.allFiltersApplied.show = false;
+          }
+        } else {
+          this.ratingFilterApplied.push(ratings);
+          this.allFiltersApplied.ratings.push(ratings * 20);
+          this.allFiltersApplied.show = true;
+        }
       }
+      this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
+        this.filteredArray = [];
+        this.filteredArray = res;
+        $('#ratingFilter').val('defaultRating').trigger('change');
+        this.expertsCount = this.filteredArray.length;
+      });
     }
-    this.httpService.applyFilters(this.allFiltersApplied).subscribe((res) => {
-      this.filteredArray = [];
-      this.filteredArray = res;
-      $('#ratingFilter').val('defaultRating').trigger('change');
-      this.expertsCount=this.filteredArray.length;
-    });
-    }
-    
   }
 
   removeOrNot(areaOfExpertise, subjectFiltersApplied, eventTarget) {
@@ -518,7 +518,6 @@ if (this.ratingFilterApplied.length == 0) {
   }
 
   sort(evt) {
-   
     if (
       this.allFiltersApplied.price.length == 0 &&
       this.allFiltersApplied.ratings.length == 0 &&
@@ -528,20 +527,20 @@ if (this.ratingFilterApplied.length == 0) {
         this.searchResults.sort((a, b) => Number(a.price1) - Number(b.price1));
       } else if (evt.localeCompare('priceHighToLow') == 0) {
         this.searchResults.sort((a, b) => Number(b.price1) - Number(a.price1));
-      } else if (evt.localeCompare('ratingLowToHigh') == 0){
-        this.searchResults.sort((a,b) => a.rating - b.rating);
-      } else if (evt.localeCompare('ratingHighToLow') == 0){
-        this.searchResults.sort((a,b) => b.rating - a.rating);
+      } else if (evt.localeCompare('ratingLowToHigh') == 0) {
+        this.searchResults.sort((a, b) => a.rating - b.rating);
+      } else if (evt.localeCompare('ratingHighToLow') == 0) {
+        this.searchResults.sort((a, b) => b.rating - a.rating);
       }
     } else {
       if (evt.localeCompare('priceLowToHigh') == 0) {
         this.filteredArray.sort((a, b) => Number(a.price1) - Number(b.price1));
       } else if (evt.localeCompare('priceHighToLow') == 0) {
         this.filteredArray.sort((a, b) => Number(b.price1) - Number(a.price1));
-      } else if (evt.localeCompare('ratingLowToHigh') == 0){
-        this.filteredArray.sort((a,b) => a.rating - b.rating);
-      } else if (evt.localeCompare('ratingHighToLow') == 0){
-        this.filteredArray.sort((a,b) => b.rating - a.rating);
+      } else if (evt.localeCompare('ratingLowToHigh') == 0) {
+        this.filteredArray.sort((a, b) => a.rating - b.rating);
+      } else if (evt.localeCompare('ratingHighToLow') == 0) {
+        this.filteredArray.sort((a, b) => b.rating - a.rating);
       }
     }
   }
