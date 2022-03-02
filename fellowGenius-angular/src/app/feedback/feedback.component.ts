@@ -99,24 +99,55 @@ export class FeedbackComponent implements OnInit {
   }
 
   onChangeLearnerLike($event){
-    const id = $event.target.value;
+    var id = $event.target.value;
     const isChecked = $event.target.checked;
-
+    
+    if(isChecked){
+      var index=this.learner_dislikes.findIndex(t=> t.name == id);
+    
+    if(index!=-1){
+      this.learner_dislikes.splice(this.learner_dislikes.findIndex(t=> t.name == id),1);
+    }
+    }else{
+      var json=this.learner_likes.find(t=>t.name == id);
+      json.checked=false;
+      
+      this.learner_dislikes.splice(json.id-1,0,json);
+    }
+    
+   
+    console.log(this.learner_dislikes);
     this.learner_likes = this.learner_likes.map((d) => {
       if (d.id == id) {
         d.checked = isChecked;
-    
+
         return d;
       }
       
       return d;
     });
+
+    
     console.log(this.learner_likes);
   }
 
   onChangeLearnerDislike($event){
     const id = $event.target.value;
     const isChecked = $event.target.checked;
+
+    if(isChecked){
+      var index=this.learner_likes.findIndex(t=> t.name == id);
+    
+    if(index!=-1){
+      this.learner_likes.splice(this.learner_likes.findIndex(t=> t.name == id),1);
+    }
+    }else{
+      var json=this.learner_dislikes.find(t=>t.name == id);
+      json.checked=false;
+      
+      this.learner_likes.splice(json.id-1,0,json);
+    }
+   
 
     this.learner_dislikes = this.learner_dislikes.map((d) => {
       if (d.id == id) {
@@ -127,12 +158,26 @@ export class FeedbackComponent implements OnInit {
       
       return d;
     });
+    
     console.log(this.learner_dislikes);
   }
 
   onChangeExpertLike($event){
     const id = $event.target.value;
     const isChecked = $event.target.checked;
+
+    if(isChecked){
+      var index=this.expert_dislikes.findIndex(t=> t.name == id);
+    
+    if(index!=-1){
+      this.expert_dislikes.splice(this.expert_dislikes.findIndex(t=> t.name == id),1);
+    }
+    }else{
+      var json=this.expert_likes.find(t=>t.name == id);
+      json.checked=false;
+      
+      this.expert_dislikes.splice(json.id-1,0,json);
+    }
 
     this.expert_likes = this.expert_likes.map((d) => {
       if (d.id == id) {
@@ -143,12 +188,27 @@ export class FeedbackComponent implements OnInit {
       
       return d;
     });
+
     console.log(this.expert_likes);
   }
 
   onChangeExpertDislike($event){
     const id = $event.target.value;
     const isChecked = $event.target.checked;
+
+    if(isChecked){
+      var index=this.expert_likes.findIndex(t=> t.name == id);
+    
+    if(index!=-1){
+      this.expert_likes.splice(this.expert_likes.findIndex(t=> t.name == id),1);
+    }
+    }else{
+      var json=this.expert_dislikes.find(t=>t.name == id);
+      json.checked=false;
+      
+      this.expert_likes.splice(json.id-1,0,json);
+    }
+   
 
     this.expert_dislikes = this.expert_dislikes.map((d) => {
       if (d.id == id) {
@@ -171,7 +231,7 @@ export class FeedbackComponent implements OnInit {
  
 
 class Likes{
-  id:Number;
+  id:number;
   name:String;
   checked:Boolean
 }
