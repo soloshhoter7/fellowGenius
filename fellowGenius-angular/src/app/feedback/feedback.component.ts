@@ -98,67 +98,62 @@ export class FeedbackComponent implements OnInit {
       
   }
 
-  onChangeLearnerLike($event){
-    const id = $event.target.value;
-    const isChecked = $event.target.checked;
-
-    this.learner_likes = this.learner_likes.map((d) => {
-      if (d.id == id) {
-        d.checked = isChecked;
+  onFeedbackUpdations(isChecked: boolean,id: string,first_array: Likes[],second_array: Likes[]){
+    if(isChecked){
+      var index=second_array.findIndex(t=> t.name == id);
     
+    if(index!=-1){
+      second_array.splice(second_array.findIndex(t=> t.name == id),1);
+    }
+    }else{
+      var json=first_array.find(t=>t.name == id);
+      json.checked=false;
+      
+      second_array.splice(json.id-1,0,json);
+    }
+    
+  //  console.log(second_array);
+    
+    first_array = first_array.map((d) => {
+      if (d.name == id) {
+        d.checked = isChecked;
+
         return d;
       }
       
       return d;
     });
+
+  }
+  
+  onChangeLearnerLike($event){
+    
+    this.onFeedbackUpdations(
+      $event.target.checked,$event.target.value,this.learner_likes,this.learner_dislikes);
+    
     console.log(this.learner_likes);
   }
 
   onChangeLearnerDislike($event){
-    const id = $event.target.value;
-    const isChecked = $event.target.checked;
 
-    this.learner_dislikes = this.learner_dislikes.map((d) => {
-      if (d.id == id) {
-        d.checked = isChecked;
-    
-        return d;
-      }
-      
-      return d;
-    });
+    this.onFeedbackUpdations(
+      $event.target.checked,$event.target.value,this.learner_dislikes,this.learner_likes);
     console.log(this.learner_dislikes);
   }
 
   onChangeExpertLike($event){
-    const id = $event.target.value;
-    const isChecked = $event.target.checked;
 
-    this.expert_likes = this.expert_likes.map((d) => {
-      if (d.id == id) {
-        d.checked = isChecked;
-    
-        return d;
-      }
-      
-      return d;
-    });
+    this.onFeedbackUpdations(
+      $event.target.checked,$event.target.value,this.expert_likes,this.expert_dislikes);
+
     console.log(this.expert_likes);
   }
 
   onChangeExpertDislike($event){
-    const id = $event.target.value;
-    const isChecked = $event.target.checked;
 
-    this.expert_dislikes = this.expert_dislikes.map((d) => {
-      if (d.id == id) {
-        d.checked = isChecked;
-    
-        return d;
-      }
-      
-      return d;
-    });
+    this.onFeedbackUpdations(
+      $event.target.checked,$event.target.value,this.expert_dislikes,this.expert_likes);
+
     console.log(this.expert_dislikes);
   }
 
@@ -171,7 +166,7 @@ export class FeedbackComponent implements OnInit {
  
 
 class Likes{
-  id:Number;
+  id:number;
   name:String;
   checked:Boolean
 }
