@@ -58,6 +58,7 @@
                         ({{ element.duration }} minutes)
                       </td>
                       
+                      
                       <td class="fld_action">
                         <button
                           class="Modal__BTn"
@@ -71,8 +72,19 @@
                           <button
                             class="table_btn connect_btn"
                             (click)="
+                              generateInvoice(element)
+                            "
+                            style="margin-right: 30px;"
+                          >
+                            Invoice
+                          </button>
+
+                          <button
+                            class="table_btn connect_btn"
+                            (click)="
                               connectAgain(element.tutorId, element.domain)
                             "
+                            style="margin-left: 30px"
                           >
                             Connect Again
                           </button>
@@ -83,9 +95,7 @@
                 </table>
                 <p *ngIf="previousMeetings.length == 0">No previous meetings</p>
               </div>
-              <!-- <div class="btn_block">
-                              <a href="" class="button know_more">Know More</a>
-                          </div> -->
+              
             </div>
           </div>
           <div role="tabpanel" class="tab-pane active" id="upcoming_meetings">
@@ -385,6 +395,17 @@
                 "
                 >Connect Again</a
               >
+
+            </div>
+            <div class="detail__list">
+              <a
+                class="Dtl__Btn connect_btn"
+                (click)="
+                generateInvoice(selectedCompletedMeeting)
+                "
+                >Invoice</a
+              >
+              
             </div>
           </div>
         </div>

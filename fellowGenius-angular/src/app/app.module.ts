@@ -119,6 +119,7 @@ import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info
 import { expertisePriceValidator } from './custom-directives/expertisePriceValidator.directive';
 import { UserDropdownComponent } from './nav-bar/user-dropdown/user-dropdown.component';
 import { OtpComponent } from './facade/sign-up/otp/otp.component';
+import { SessionComponent } from './home/session/session.component';
 
 @NgModule({
   declarations: [
@@ -198,6 +199,7 @@ import { OtpComponent } from './facade/sign-up/otp/otp.component';
     ReferralsInfoComponent,
     UserDropdownComponent,
     OtpComponent,
+    SessionComponent,
   ],
   imports: [
     NoopAnimationsModule,

@@ -780,6 +780,7 @@ export class SignUpExpertComponent implements OnInit {
             var tutorProfileDetails: tutorProfileDetails =
               this.tutorService.getTutorProfileDetails();
             this.profilePictureUrl = url;
+            console.log('Profile picture url is '+ url);
             tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
             this.httpService
               .editTutorProfileDetails(tutorProfileDetails)
@@ -816,6 +817,7 @@ export class SignUpExpertComponent implements OnInit {
       .pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
+            console.log('Upload profile picture url is '+ url);
             this.profilePicUploadStatus = true;
             this.isLoading3 = false;
             this.pictureInfo = false;

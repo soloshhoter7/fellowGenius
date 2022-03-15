@@ -1,0 +1,157 @@
+<div class="page-content dashboard__Panel">
+  <div class="wrapper">
+    <div class="dashboard_page">
+
+      <div class="meet__Tabs" style="margin-bottom: 100px">
+        <ul class="nav nav-tabs" role="tablist">
+          <li>
+            <a href="#previous_meetings" 
+            role="tab" 
+            data-toggle="tab"
+            class="active"
+              >Previous Meetings</a
+            >
+          </li>
+        </ul>
+        <div class="tab-content">
+
+          <div role="tabpanel" 
+          class="tab-pane active" 
+          id="previous_meetings">
+
+            <div class="upcoming__meeting white__bg">
+              <h3>Previous Meetings</h3>
+              <div
+                class="table-responsive"                
+              >
+                <table
+                  class="table"
+                  *ngIf="previousMeetingList.length != 0 "
+                >
+                  <thead>
+                    <tr>
+                      <th class="fld_name">NAME</th>
+                      <th class="fld_domain">DOMAIN</th>
+                      <th class="fld_topic">Topic</th>
+                      <th class="fld_dTme">DATE & TIME</th>
+                      <th class="fld_action">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let element of previousMeetingList">
+                      <td class="fld_name">
+                        <div class="nme_style">
+                          <span
+                            ><img
+                              src="../../../assets/images/default-user-image.png"
+                              alt="#" /></span
+                          >{{element.studentName}}
+                        </div>
+                      </td>
+                      <td class="fld_domain">{{ element.domain }}</td>
+                      <td class="fld_topic">{{ element.subject }}</td>
+                      <td class="fld_dTme">
+                        {{ element.dateOfMeeting }} at
+                        {{ element.startTimeHour }}:{{
+                          element.startTimeMinute | zero
+                        }}
+                        - {{ element.endTimeHour }}:{{
+                          element.endTimeMinute | zero
+                        }}
+                        ({{ element.duration }} minutes)
+                      </td>
+
+                      <td class="fld_action">
+                        <button
+                        class="Modal__BTn"
+                        (click)="setSelectedCompletedMeeting(element)"
+                        data-toggle="modal"
+                        data-target="#Popup__previousSess"
+                      >
+                        <i class="fas fa-angle-right"></i>
+                      </button>
+                      </td>
+                      
+                    </tr>
+                    
+                  </tbody>
+                </table>
+                <div *ngIf="previousMeetingList != null ">
+                  <span
+                    *ngIf="
+                      previousMeetingList.length == 0 
+                    "
+                    >No previous Meetings</span
+                  >
+                </div>
+                <!-- <div class="btn_block">
+                  <a href="" class="button know_more">Know More</a>
+                </div> -->
+              </div>
+            </div>
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade detail_modal" id="Popup__previousSess">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 bg-transparent">
+        <div class="modal-body p-0">
+          <button
+            type="button"
+            id="closePopUpButton"
+            style="border: none; width: 30px; height: 30px"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="detail_wrapper">
+            <h1>Previous Session Details</h1>
+            <div class="Detail__Content">
+              <div class="detail__list">
+                <div class="Dtl__label">NAME</div>
+                <div class="Dtl__txt">
+                  {{selectedCompletedMeeting.studentName}}
+                </div>
+              </div>
+              <div class="detail__list">
+                <div class="Dtl__label">DOMAIN</div>
+                <div class="Dtl__txt">{{ selectedCompletedMeeting.domain }}</div>
+              </div>
+              <div class="detail__list">
+                <div class="Dtl__label">Topic</div>
+                <div class="Dtl__txt">{{ selectedCompletedMeeting.subject }}</div>
+              </div>
+              <div class="detail__list">
+                <div class="Dtl__label">DATE & TIME</div>
+                <div class="Dtl__txt">
+                  {{ selectedCompletedMeeting.dateOfMeeting }} at
+                  {{ selectedCompletedMeeting.startTimeHour }}:{{
+                    selectedCompletedMeeting.startTimeMinute | zero
+                  }}
+                  - {{ selectedCompletedMeeting.endTimeHour }}:{{
+                    selectedCompletedMeeting.endTimeMinute | zero
+                  }}
+                  ({{ selectedCompletedMeeting.duration }} minutes)
+                </div>
+              </div>
+              <div class="detail__list">
+                <div class="Dtl__label">Status</div>
+                <div class="Dtl__txt">
+                  {{ selectedCompletedMeeting.approvalStatus }}
+                </div>
+              </div>
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
