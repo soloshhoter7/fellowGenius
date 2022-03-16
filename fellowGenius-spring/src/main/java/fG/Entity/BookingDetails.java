@@ -57,6 +57,8 @@ public class BookingDetails implements Serializable{
 	  Date learnerJoinTime;
 	  Date expertLeavingTime;
 	  Date learnerLeavingTime;
+	  boolean isLearnerFeedbackDone = false;
+	  boolean isExpertFeedbackDone = false;
 	  String expertCode;
 	  @CreationTimestamp
 		@CreatedDate
