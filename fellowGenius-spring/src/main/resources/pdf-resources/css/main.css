@@ -1,0 +1,41 @@
+.top_rw{ background-color:#f4f4f4; }
+	.td_w{ }
+	button{ padding:5px 10px; font-size:14px;}
+    .invoice-box {
+        max-width: 890px;
+        margin: auto;
+        padding:10px;
+        border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+        font-size: 14px;
+        line-height: 24px;
+        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        color: #555;
+    }
+
+	.table-bill  {
+  border: 1px solid black;
+  border-collapse: collapse;
+   }
+   .th-bill{
+	border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.td-bill {
+  border: 1px solid black;
+  border-collapse: collapse;
+   }
+	
+    .table-bill .th-grey{
+        background-color: lightgray;
+    }
+
+    .table-payment td{
+        text-align: right;
+    }
+    
+    .text-top-right{
+		vertical-align: top;
+		text-align: right;
+}

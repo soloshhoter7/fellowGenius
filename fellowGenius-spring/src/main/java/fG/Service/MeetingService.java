@@ -1,5 +1,8 @@
 package fG.Service;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -11,12 +14,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
+import com.lowagie.text.DocumentException;
 
 import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
@@ -36,7 +44,6 @@ import fG.Model.KeyValueModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
-import fG.Model.UserReferralInfoModel;
 import fG.Repository.repositoryAppInfo;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryCashback;
@@ -70,6 +77,9 @@ public class MeetingService {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	PdfService pdfService;
 
 	@Autowired
 	repositoryBooking repBooking;
@@ -849,11 +859,17 @@ public class MeetingService {
 	}
 
 	public List<?> findTutorCompletedBookings(String tid) {
-		return repBooking.fetchCompletedBookingExpert(Integer.valueOf(tid));
+		
+		List<BookingDetails> tutorCompletedMeetingsList=repBooking.fetchCompletedBookingExpert(Integer.valueOf(tid));
+	
+		return tutorCompletedMeetingsList;
 	}
 
 	public List<?> findStudentCompletedBookings(String sid) {
-		return repBooking.fetchCompletedBookingStudent(Integer.valueOf(sid));
+	
+		List<BookingDetails> studentCompletedMeetingsList=repBooking.fetchCompletedBookingStudent(Integer.valueOf(sid));
+	
+		return studentCompletedMeetingsList;
 	}
 
 	public void meetingMemberJoined(String meetingId, String userId) throws ParseException {
@@ -895,5 +911,27 @@ public class MeetingService {
 			}
 			repBooking.save(booking);
 		}
+	}
+
+	public Resource generateInvoice(BookingDetailsModel booking,HttpServletRequest request) 
+			throws DocumentException, IOException{
+		
+		try {
+            Path file = Paths.get(pdfService.generatePdf(booking).getAbsolutePath());
+            System.out.println(file);
+            Resource resource = new UrlResource(file.toUri());
+            
+            if (resource.exists()) {
+                return resource;
+            } else {
+               System.out.println("Resource not found");
+            }
+            
+        } catch (DocumentException | IOException ex) {
+        	System.out.println("Exception and resource not found");
+            ex.printStackTrace();
+        }
+		
+		return null;
 	}
 }

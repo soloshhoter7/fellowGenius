@@ -21,11 +21,12 @@ L10n.load({
   },
 });
 @Component({
-  selector: 'app-tutor-dashboard',
-  templateUrl: './tutor-dashboard.component.html',
-  styleUrls: ['./tutor-dashboard.component.css'],
+  selector: 'app-session',
+  templateUrl: './session.component.html',
+  styleUrls: ['./session.component.css']
 })
-export class TutorDashboardComponent implements OnInit {
+
+export class SessionComponent implements OnInit {
   public now: Date = new Date();
   isRescheduleLoading: boolean;
   emptyPreviousMeetings: boolean;
@@ -103,6 +104,7 @@ export class TutorDashboardComponent implements OnInit {
   meetingList: bookingDetails[] = [];
   previousMeetingList: bookingDetails[]=[];
   liveMeetingList: bookingDetails[] = [];
+  selectedCompletedMeeting=new  bookingDetails();
   hostMeeting = new meetingDetails();
   tutorProfileDetails: tutorProfileDetails;
   completeProfile = true;
@@ -187,6 +189,8 @@ export class TutorDashboardComponent implements OnInit {
         }
       }
     );
+
+    console.log('previous meeting list: ');
     console.log(this.previousMeetingList);
   }
   initialisePendingRequests() {
@@ -311,6 +315,9 @@ export class TutorDashboardComponent implements OnInit {
     );
   }
 
+  setSelectedCompletedMeeting(booking: bookingDetails) {
+    this.selectedCompletedMeeting = booking;
+  }
   //for denying bookings
   denyBooking(booking: bookingDetails) {
     booking.approvalStatus = 'Rejected';
@@ -715,3 +722,6 @@ export class TutorDashboardComponent implements OnInit {
     });
   }
 }
+
+
+

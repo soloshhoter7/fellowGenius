@@ -20,6 +20,8 @@ export class TutorService {
   tutorLogin = new tutorLoginModel();
   tutorProfileDetailsChanged = new Subject<tutorProfileDetails>();
   editVariable: string;
+  completedMeetings: bookingDetails[];
+  completedMeetingsChanged=new Subject<bookingDetails[]>();
 
 //tutor dashboard stuff
   tutorList: tutorProfileDetails[];
@@ -75,6 +77,14 @@ export class TutorService {
     this.bookingList = bookings;
     this.bookingsChanged.next(this.bookingList.slice());
   }
+
+  setCompletedMeetings(booking: bookingDetails[]) {
+    this.completedMeetings = booking; 
+    this.completedMeetingsChanged.next(this.completedMeetings.slice());
+  }
+  getCompletedMeetings() {
+    return this.completedMeetings.slice();
+  }
   manipulateMeetingSchedule() {
     for (let schedule of this.getPersonalAvailabilitySchedule()
       .allMeetingsSchedule) {
@@ -101,5 +111,18 @@ export class TutorService {
           this.setBookings(res);
         });
       }
+  }
+
+  fetchTutorCompletedMeetings(){
+    
+    if(this.loginService.getLoginType() == 'Expert'){
+     
+      this.httpService.
+      fetchExpertCompletedMeetings(this.getTutorDetials().bookingId)
+      .subscribe((res) => {
+       
+        this.setCompletedMeetings(res);
+      })
+    }
   }
 }

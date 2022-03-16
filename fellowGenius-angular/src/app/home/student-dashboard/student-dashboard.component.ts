@@ -16,6 +16,7 @@ import { LocationStrategy } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { C } from '@angular/cdk/keycodes';
 import { WindowRefService } from 'src/app/service/window-ref.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -224,6 +225,34 @@ export class StudentDashboardComponent implements OnInit {
     );
   }
 
+  generateInvoice(booking: bookingDetails){
+
+  this.httpService.generateInvoice(booking).subscribe(
+      (data: Blob) => {
+        
+        var file = new Blob([data], { type: 'application/pdf' })
+        
+        var fileURL = URL.createObjectURL(file);
+  
+  // if you want to open PDF in new tab
+        window.open(fileURL); 
+        var a         = document.createElement('a');
+        a.href        = fileURL; 
+        a.target      = '_blank';
+        a.download    = 'fg-invoice.pdf';
+        document.body.appendChild(a);
+        a.click();
+      },
+      (error) => {
+        console.log('getPDF error: ',error);
+      }
+    )
+
+    this.snackBar.open(
+      'Invoice generated successfully',
+      'close',this.config);
+  }
+  
   intialiseStudentApprovedBookings() {
     this.studentService.fetchApprovedStudentMeetings();
     this.studentService.approvedBookingsChanged.subscribe(
