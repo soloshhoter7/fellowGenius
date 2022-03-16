@@ -21,6 +21,7 @@ import { MeetingComponent } from './home/meeting/meeting.component';
 import { ProfileComponent } from './home/profile/profile.component';
 import { RecordingsComponent } from './home/recordings/recordings.component';
 import { tutorScheduleComponent } from './home/schedule/schedule.component';
+import { SessionComponent } from './home/session/session.component'; 
 import { SessionNotesComponent } from './home/session-notes/session-notes.component';
 import { StudentBookingComponent } from './home/student-booking/student-booking.component';
 import { StudentDashboardComponent } from './home/student-dashboard/student-dashboard.component';
@@ -63,6 +64,7 @@ export const appRoutes: Routes = [
       { path: 'bookings', component: BookingsComponent },
       { path: 'student-bookings', component: StudentBookingComponent },
       { path: 'tutor-schedule', component: tutorScheduleComponent },
+      { path: 'tutor-session' , component: SessionComponent },
       { path: 'session-notes', component: SessionNotesComponent },
       { path: 'recordings', component: RecordingsComponent },
       { path: 'knowledge-base', component: KnowledgeBaseComponent },

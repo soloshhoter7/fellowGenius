@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StudentProfileModel } from '../model/studentProfile';
 import { Observable } from 'rxjs';
 import { StudentLoginModel } from '../model/studentLoginModel';
@@ -33,10 +33,12 @@ import { CashbackEarned } from '../model/CashbackEarned';
 import { FGCredits } from '../model/FGCredits';
 import { CashbackInfo } from '../model/CashbackInfo';
 import { ReferralActivityAnalytics } from '../model/referralActivityAnalytics';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
+  
   constructor(private http: HttpClient) {}
   backendUrl = environment.BACKEND_URL;
   filters: filtersApplied;
@@ -378,8 +380,9 @@ export class HttpService {
   }
 
   fetchExpertCompletedMeetings(tid: number) {
+    console.log("Inside fetchExpert method of http service with tid " + tid);
     return this.http.get<bookingDetails[]>(
-      this.backendUrl + './fellowGenius/meeting/findTutorCompletedBookings',
+      this.backendUrl + '/fellowGenius/meeting/findTutorCompletedBookings',
       {
         params: {
           tid: tid.toString(),
@@ -502,6 +505,28 @@ export class HttpService {
       this.backendUrl + '/fellowGenius/meeting/updateRescheduledBooking',
       booking
     );
+  }
+
+  //generate invoice of booking
+  generateInvoice(booking:bookingDetails): Observable<Blob> {
+    let headerOptions = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/pdf',
+      
+      //   'Accept': 'application/octet-stream', // for excel file
+  });
+    //let requestOptions = { headers: headerOptions, responseType: 'blob' as 'blob' };
+   
+    return this.http.post<Blob>(
+      this.backendUrl+'/fellowGenius/meeting/generateInvoiceOfBooking', 
+      booking,
+      {
+        headers: headerOptions, responseType:'blob' as 'json'}).pipe(map(
+        (response) => {
+            return response;
+        },
+        (error) => {console.log(error.json());} 
+    ));
   }
 
   requestToReschedule(bid: number): Observable<Object> {

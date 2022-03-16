@@ -89,6 +89,18 @@
           <span class="menu_txt">Profile</span>
         </a>
       </li>
+      <li class="list-item" *ngIf="loginType == 'Expert'">
+        <a
+          href="javascript:;"
+          class="menu_item"
+          routerLinkActive="active"
+          routerLink="/home/tutor-session"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <img src="../../assets/images/session-icon.svg" class="mnu_icn" />
+          <span class="menu_txt">Session</span>
+        </a>
+      </li>
       <li class="list-item menu_item active" *ngIf="loginType == 'Learner'">
         <a
           href="javascript:;"

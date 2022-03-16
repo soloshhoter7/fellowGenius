@@ -1,16 +1,24 @@
 package fG.Controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lowagie.text.DocumentException;
 
 import fG.Configuration.JwtUtil;
 import fG.Entity.BookingDetails;
@@ -110,11 +118,46 @@ public class MeetingController {
 		return meetingService.updateRescheduledBooking(booking);
 	}
 
+	//generate invoice for booking
+	@PreAuthorize("hasAuthority('Learner')")
+	@RequestMapping(value="/generateInvoiceOfBooking")
+	@ResponseBody
+	public ResponseEntity<Resource> generateInvoiceOfBooking
+	(@RequestBody BookingDetailsModel booking,HttpServletRequest request) throws ParseException{
+		System.out.println("Inside generateInvoice of Booking method of meeting controller");
+		System.out.println(booking);
+		
+		
+		try {
+			Resource resource = meetingService.generateInvoice(booking, request);
+	        String contentType = null;
+	        try {
+	            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+	        } catch (IOException ex) {
+	        }
+	        // Fallback to the default content type if type could not be determined
+	        if(contentType == null) {
+	            contentType = "application/octet-stream";
+	        }
+	        return ResponseEntity.ok()
+	                .contentType(MediaType.parseMediaType(contentType))
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+	                .body(resource);
+		}catch (DocumentException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+		
+		return null;
+	}
+	
 	// for finding tutor pending Bookingss
 	@PreAuthorize("hasAuthority('Expert')")
 	@RequestMapping(value = "/findTutorBookings", produces = { "application/json" })
 	@ResponseBody
 	public List<?> findTutorBookings(String tid) throws ParseException {
+		System.out.println("Inside findTutorBookings method of MeetingController");
 		return meetingService.findTutorBookings(tid);
 	}
 
@@ -122,6 +165,7 @@ public class MeetingController {
 	@RequestMapping(value = "/findTutorCompletedBookings", produces = { "application/json" })
 	@ResponseBody
 	public List<?> findTutorCompletedBookings(String tid) throws ParseException {
+		System.out.println("Inside findTutorCompletedBookings method of MeetingController");
 		return meetingService.findTutorCompletedBookings(tid);
 	}
 
