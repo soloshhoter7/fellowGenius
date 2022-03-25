@@ -1,10 +1,6 @@
 package fG.Model;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class FeaturedExpertsModel {
 	String name;
 	Integer expertId;

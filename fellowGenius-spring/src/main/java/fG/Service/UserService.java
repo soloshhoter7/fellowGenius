@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import fG.Mapper.BookingDetailsMapper;
+import fG.Mapper.TutorProfileDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -97,6 +99,12 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	Dao dao;
+
+	@Autowired
+	TutorProfileDetailsMapper tutorProfileDetailsMapper;
+
+	@Autowired
+	BookingDetailsMapper bookingDetailsMapper;
 
 	@Autowired
 	MeetingDao meetingDao;
@@ -1024,14 +1032,14 @@ public class UserService implements UserDetailsService {
 		if (!subject.equals("*")) {
 			tutList = dao.getTutorList(subject);
 			for (TutorProfileDetails tutProfileDetails : tutList) {
-				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+				TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 				tutorModel.setTid(null);
 				tutListModel.add(tutorModel);
 			}
 		} else {
 			tutList = repTutorProfileDetails.findAll();
 			for (TutorProfileDetails tutProfileDetails : tutList) {
-				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+				TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 				tutListModel.add(tutorModel);
 			}
 		}
@@ -1043,7 +1051,7 @@ public class UserService implements UserDetailsService {
 		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
 		tutList = repTutorProfileDetails.findAll();
 		for (TutorProfileDetails tutProfileDetails : tutList) {
-			TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+			TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 			tutorModel.setLastLogin(returnLastLoginTime(tutProfileDetails.getTid()));
 			ArrayList<ScheduleTime> schedule = getTutorTimeAvailabilityTimeArray(
 					tutProfileDetails.getBookingId().toString());
@@ -1083,7 +1091,7 @@ public class UserService implements UserDetailsService {
 	// getting tutor profile details with tutor bookingId
 	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(Integer bookingId) {
 		TutorProfileDetails tutProfileDetails = dao.fetchTutorProfileDetailsByBookingId(bookingId);
-		TutorProfileDetailsModel tutProfileDetailsModel = copyTutorProfileDetails(tutProfileDetails);
+		TutorProfileDetailsModel tutProfileDetailsModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 		tutProfileDetailsModel.setTid(null);
 		return tutProfileDetailsModel;
 	}
@@ -1091,7 +1099,7 @@ public class UserService implements UserDetailsService {
 	// getting tutor profile details with tid
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
 		TutorProfileDetails tutProfileDetails = dao.getTutorProfileDetails(tid);
-		return copyTutorProfileDetails(tutProfileDetails);
+		return tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 	}
 
 	// from copying content of tutorProfileDetails entity to model
@@ -1273,7 +1281,7 @@ public class UserService implements UserDetailsService {
 		List<TutorProfileDetails> tutors = dao.fetchAllLinkedTutors(userId);
 		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 		for (TutorProfileDetails tutor : tutors) {
-			tutorsModel.add(copyTutorProfileDetails(tutor));
+			tutorsModel.add(tutorProfileDetailsMapper.EntityToDto(tutor));
 		}
 		return tutorsModel;
 
@@ -1292,7 +1300,7 @@ public class UserService implements UserDetailsService {
 		} else {
 			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 			for (TutorProfileDetails tutor : tutors) {
-				tutorsModel.add(copyTutorProfileDetails(tutor));
+				tutorsModel.add(tutorProfileDetailsMapper.EntityToDto(tutor));
 			}
 			return tutorsModel;
 		}
@@ -1827,7 +1835,7 @@ public class UserService implements UserDetailsService {
 		if (allBookings != null) {
 			for (BookingDetails bk : allBookings) {
 				BookingDetailsModel bkm = new BookingDetailsModel();
-				bkm = meetingService.copyBookingDetailsToBookingDetailsModel(bk);
+				bkm = bookingDetailsMapper.EntityToDto(bk);
 				allBookingsModel.add(bkm);
 			}
 			Collections.sort(allBookingsModel, new Comparator<BookingDetailsModel>() {

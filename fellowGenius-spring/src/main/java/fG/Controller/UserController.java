@@ -65,6 +65,7 @@ public class UserController {
 		}
 	}
 
+
 	// for getting student details after login
 	@RequestMapping(value = "/registerUser")
 	public boolean saveUserProfile(@RequestBody registrationModel registrationModel) {

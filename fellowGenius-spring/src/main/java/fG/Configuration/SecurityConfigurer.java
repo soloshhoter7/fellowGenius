@@ -91,6 +91,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter implements 
 		.antMatchers("/fellowGenius/getAllCategories").permitAll()
 		.antMatchers("/fellowGenius/getAllCategories").permitAll()
 		.antMatchers("/fellowGenius/**").permitAll()
+		.antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**")
+        .permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
