@@ -1,0 +1,163 @@
+<div class="page-content dashboard__Panel">
+    <div class="wrapper">
+      <div class="total__list white__bg">
+        <div>
+          <h3>Create Event</h3>
+          
+        </div>
+        <div>
+          <div style="margin-bottom: 10px">
+            <form (ngSubmit)="onCreateEvent(t)" #t="ngForm">
+            <div class="row"  style="margin-bottom: 10px;">
+                <div class="col-12 col-md-3">
+                    <h3>Event Title</h3>
+                </div>
+                <div class="col-12 col-md-6">
+                    <!-- Textbox -->
+                    <input
+                        type="text"
+                        id="eventTitle"
+                        name="eventTitle"
+                        ngModel
+                        class="form-control"
+                        #eventTitle=ngModel
+                        required
+                        maxlength="50"
+                    />
+                </div>
+                <div class="col-12 col-md-3">
+                  
+                </div>
+            </div>
+            <div class="row"  style="margin-bottom: 10px;">
+              <div class="col-12 col-md-3">
+                  <h3>Event Description</h3>
+              </div>
+              <div class="col-12 col-md-6">
+                  <!-- Textbox -->
+                  <input
+                      type="textarea"
+                      rows="10"
+                      id="eventDescription"
+                      name="eventDescription"
+                      ngModel
+                      class="form-control"
+                      #eventDescription=ngModel
+                      required
+                      
+                  />
+              </div>
+              <div class="col-12 col-md-3">
+                
+              </div>
+          </div>
+
+          <div class="row"  style="margin-bottom: 10px;">
+            <div class="col-12 col-md-3">
+                <h3>Event Start Time</h3>
+            </div>
+            <div class="col-12 col-md-6">
+                <!-- Textbox -->
+                <input
+                    type="text"
+                    id="eventStartTime"
+                    name="eventStartTime"
+                    ngModel
+                    class="form-control"
+                    #eventStartTime=ngModel
+                    required
+                    
+                />
+            </div>
+            <div class="col-12 col-md-3">
+              
+            </div>
+        </div>
+
+
+        <div class="row"  style="margin-bottom: 10px;">
+          <div class="col-12 col-md-3">
+              <h3>Event End Time</h3>
+          </div>
+          <div class="col-12 col-md-6">
+              <!-- Textbox -->
+              <input
+                  type="text"
+                  id="eventEndTime"
+                  name="eventEndTime"
+                  ngModel
+                  class="form-control"
+                  #eventTitle=ngModel
+                  required
+                  
+              />
+          </div>
+          <div class="col-12 col-md-3">
+            
+          </div>
+      </div>
+
+
+      <div class="row"  style="margin-bottom: 10px;">
+        <div class="col-12 col-md-3">
+            <h3>Event Link</h3>
+        </div>
+        <div class="col-12 col-md-6">
+            <!-- Textbox -->
+            <input
+                type="text"
+                id="eventLink"
+                name="eventLink"
+                ngModel
+                class="form-control"
+                #eventLink=ngModel
+                required
+                
+            />
+        </div>
+        <div class="col-12 col-md-3">
+          
+        </div>
+    </div>
+
+
+    <div class="row"  style="margin-bottom: 10px;">
+      <div class="col-12 col-md-3">
+          <h3>Event Password</h3>
+      </div>
+      <div class="col-12 col-md-6">
+          <!-- Textbox -->
+          <input
+              type="text"
+              id="eventPassword"
+              name="eventPassword"
+              ngModel
+              class="form-control"
+              #eventTitle=ngModel
+              required
+              
+          />
+      </div>
+      <div class="col-12 col-md-3">
+        
+      </div>
+  </div>
+
+  <button
+                            type="submit"
+                            [disabled]="!t.valid"
+                            
+                            class="button btn_mdl"
+                          >
+                            Create Event
+                          </button>
+            </form>
+            
+          </div>
+        </div>
+
+
+        </div>
+              
+    </div>
+  </div>

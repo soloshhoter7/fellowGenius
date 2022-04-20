@@ -1,15 +1,16 @@
 package fG;
 
-import java.util.Date;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+
+import fG.Configuration.SwaggerConfiguration;
 
 @SpringBootApplication
+@Import(SwaggerConfiguration.class)
 public class FellowGeniusApplication {
 	
 	public static void main(String[] args) {

@@ -120,6 +120,9 @@ import { expertisePriceValidator } from './custom-directives/expertisePriceValid
 import { UserDropdownComponent } from './nav-bar/user-dropdown/user-dropdown.component';
 import { OtpComponent } from './facade/sign-up/otp/otp.component';
 import { SessionComponent } from './home/session/session.component';
+import { EventsDashboardComponent } from './facade/events-dashboard/events-dashboard.component';
+import { AdminEventsComponent } from './admin-portal/admin-home/admin-events/admin-events.component';
+
 
 @NgModule({
   declarations: [
@@ -200,8 +203,11 @@ import { SessionComponent } from './home/session/session.component';
     UserDropdownComponent,
     OtpComponent,
     SessionComponent,
+    EventsDashboardComponent,
+    AdminEventsComponent,
   ],
   imports: [
+  
     NoopAnimationsModule,
     MatInputModule,
     MatRadioModule,
