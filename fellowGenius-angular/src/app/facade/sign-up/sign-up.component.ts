@@ -57,6 +57,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('googleSignUp', { static: true })
   googleSignUp: ElementRef;
   // --- booleans ----------------------------
+  isEventBook=false;
   isLoading: boolean;
   wrongOtp = false;
   showInput: boolean = true;
@@ -94,7 +95,7 @@ export class SignUpComponent implements OnInit {
   prev_route;
   expert_userId;
   expert_domain;
-
+  event_id;
   // --------------- models ---------------------------------
   registrationModel = new registrationModel();
   loginModel = new loginModel();
@@ -130,6 +131,13 @@ export class SignUpComponent implements OnInit {
       this.referActivity = 'NO';
     }
     console.log(`Refer Activity is ${this.referActivity}`);
+
+    if(this.route.snapshot.queryParams.event!=undefined){
+      this.event_id=this.route.snapshot.queryParams.event;
+      console.log(`Event id is ${this.event_id}`);
+      this.isEventBook=true;
+    }
+
   }
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -276,6 +284,30 @@ export class SignUpComponent implements OnInit {
                       this.config
                     );
                     this.signUpSuccessfulSubscription.unsubscribe();
+
+                    //register for event
+                    if(this.isEventBook){
+
+                      this.httpClient.addUserToEvent(this.registrationModel.email,this.event_id)
+                      .subscribe((res)=>{
+                        if(res){
+                          this.snackBar.open(
+                            'You have registered for event',
+                            'close',
+                            this.config
+                          );
+                          console.log('event Booked success ');
+                          
+                        }else{
+                          this.snackBar.open(
+                            'Some Internal error',
+                            'close',
+                            this.config
+                          )
+                        }
+                      })
+
+                    }
                     this.toFacadePage();
                   }
                 } else if (this.loginService.getLoginType() == 'Expert') {
