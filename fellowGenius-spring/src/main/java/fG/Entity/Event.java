@@ -21,7 +21,7 @@ public class Event {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "eventId",length = 16,updatable = false, nullable = false)
+    @Column(name = "eventId",length=16,updatable = false, nullable = false)
     private UUID eventId;
 
     @Enumerated(EnumType.STRING)
