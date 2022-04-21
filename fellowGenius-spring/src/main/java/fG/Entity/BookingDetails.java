@@ -63,12 +63,28 @@ public class BookingDetails implements Serializable{
 		@Temporal(TemporalType.TIMESTAMP)
 		@Column(name="created_date")
 		Date createdDate;
+
+	  String couponCode;
+
 	public String getTutorProfilePictureUrl() {
 		return tutorProfilePictureUrl;
 	}
 	public void setTutorProfilePictureUrl(String tutorProfilePictureUrl) {
 		this.tutorProfilePictureUrl = tutorProfilePictureUrl;
 	}
+
+	public void setPaidAmount(Integer paidAmount) {
+		this.paidAmount = paidAmount;
+	}
+
+	public String getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+
 	public String getSubject() {
 		return Subject;
 	}

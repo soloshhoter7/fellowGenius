@@ -35,17 +35,17 @@ public abstract class EventMapper {
     public abstract EventModel EntityToDto(Event event);
 
     @Named("parseDate")
-    public Date parseDate(String eventStartTime){
+    public Date parseDate(String stringDate){
 
         SimpleDateFormat dateformat= new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-        Date startDate=null;
+        Date date=null;
         try {
-            startDate= dateformat.parse(eventStartTime);
-            System.out.println(startDate);
+            date= dateformat.parse(stringDate);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return startDate;
+        return date;
     }
 
     @Named("parseDateToString")
