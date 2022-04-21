@@ -13,8 +13,8 @@ import java.util.UUID;
 public interface repositoryCoupon extends JpaRepository<Coupon, UUID> {
     @Query(value = "SELECT * FROM coupon WHERE start_date < now() AND end_date > now()  AND coupon_eligible_consumers=?1",
             nativeQuery = true)
-    List<Coupon> findValidSelectiveCoupons(String eligibleConsumers);
+    List<Coupon> findCouponsByConsumers(String eligibleConsumers);
 
-    @Query(value="select * from coupon where coupon_eligible_consumers=?1",nativeQuery = true)
-    List<Coupon> findAllCoupons(String eligibleConsumers);
+    @Query(value="SELECT * from coupon where code=?1",nativeQuery = true)
+    Coupon couponCodeExists(String couponCode);
 }

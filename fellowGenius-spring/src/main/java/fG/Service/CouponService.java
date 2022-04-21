@@ -33,16 +33,14 @@ public class CouponService {
     @Autowired
     private repositoryStudentProfile repStudentProfile;
 
-
     @Autowired
     private repositoryCouponCondition repositoryCouponCondition;
-    public Coupon createCoupon(CouponPayload couponPayload) {
+    public CouponResponse createCoupon(CouponPayload couponPayload) {
 
-        System.out.println(couponPayload);
         Coupon coupon=PayloadToEntity(couponPayload);
-
-         repCoupon.save(coupon);
-        return coupon;
+         Coupon savedCoupon=repCoupon.save(coupon);
+         CouponResponse couponResponse=couponToDto(savedCoupon);
+        return couponResponse;
     }
 
     public Coupon PayloadToEntity(CouponPayload couponPayload){
@@ -52,15 +50,11 @@ public class CouponService {
         coupon.setStartDate(StringToDate(couponPayload.getStartDate()));
         coupon.setEndDate(StringToDate(couponPayload.getEndDate()));
         coupon.setHost(couponPayload.getHost());
-        //coupon.setPrivilegesJSON(couponPayload.getCouponPrivilegesJSON());
+
 
         List<CouponPrivileges> couponPrivilegesList=couponPayload.getCouponPrivileges();
 
-        String couponPrivilegesString=new Gson().toJson(couponPrivilegesList);
-        System.out.println("coupon privileges list");
-        System.out.println(couponPrivilegesString);
-
-        coupon.setPrivilegesJSON(couponPrivilegesString);
+        coupon.setPrivilegesJSON(new Gson().toJson(couponPrivilegesList));
 
         CouponConditionPayload[] couponConditionModelList=couponPayload.getCouponConditions();
         List<CouponCondition> couponConditionList=new ArrayList<>();
@@ -78,8 +72,6 @@ public class CouponService {
 
         coupon.setCouponConsumersCount(0);
 
-        System.out.println("Entity");
-        System.out.println(coupon);
         return coupon;
     }
 
@@ -100,7 +92,7 @@ public class CouponService {
 
         List<CouponResponse> couponResponses=new ArrayList<>();
 
-        List<Coupon> couponsListsAll=repCoupon.findAllCoupons(CouponEligibleConsumers.ALL.toString());
+        List<Coupon> couponsListsAll=repCoupon.findCouponsByConsumers(CouponEligibleConsumers.ALL.toString());
 
         couponResponses=couponsListsAll.stream().map(this::couponToDto).collect(Collectors.toList());
         return couponResponses;
@@ -111,10 +103,8 @@ public class CouponService {
         List<Coupon> couponsList=new ArrayList<>();
 
         List<CouponResponse> couponResponses=new ArrayList<>();
-        Date currentDate=new Date();
 
-       List<Coupon> couponsListValidSelective=repCoupon.findValidSelectiveCoupons(CouponEligibleConsumers.SELECTIVE.toString());
-
+       List<Coupon> couponsListValidSelective=repCoupon.findCouponsByConsumers(CouponEligibleConsumers.SELECTIVE.toString());
 
         for(Coupon coupon: couponsListValidSelective){
 
@@ -130,7 +120,6 @@ public class CouponService {
                                 //check if no of bookings is equal to value given
 
                                 StudentProfile studentProfile=repStudentProfile.idExist(Integer.valueOf(userId));
-                                //System.out.println(studentProfile);
 
                                 if(studentProfile.getLessonCompleted()>Integer.valueOf(couponCondition.getValue())){
                                     flag=false;
@@ -163,7 +152,7 @@ public class CouponService {
         return couponResponse;
     }
 
-    public boolean incrementConsumerCount(String couponId){
+    public void incrementConsumerCount(String couponId){
 
         Coupon coupon=repCoupon.findById(UUID.fromString(couponId)).get();
 
@@ -171,6 +160,6 @@ public class CouponService {
             coupon.setCouponConsumersCount(coupon.getCouponConsumersCount()+1);
             repCoupon.save(coupon);
         }
-        return true;
+
     }
 }

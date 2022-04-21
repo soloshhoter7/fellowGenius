@@ -1,6 +1,6 @@
 package fG.Controller;
 
-import fG.Entity.Coupon;
+
 import fG.Model.CouponPayload;
 import fG.Model.CouponResponse;
 import fG.Service.CouponService;
@@ -17,9 +17,9 @@ public class CouponController {
     private CouponService couponService;
 
     @PostMapping(value="/create")
-    public Coupon CreateCoupon(@RequestBody CouponPayload couponPayload){
-        Coupon coupon=couponService.createCoupon(couponPayload);
-        return coupon;
+    public CouponResponse CreateCoupon(@RequestBody CouponPayload couponPayload){
+        return couponService.createCoupon(couponPayload);
+
     }
 
     @GetMapping(value = "/fetchAllCoupons")
@@ -32,10 +32,5 @@ public class CouponController {
         return couponService.fetchSelectiveCoupons(userId);
     }
 
-
-    @GetMapping(value="/incrementConsumerCount")
-    public boolean updateConsumerCount(String couponId){
-        return couponService.incrementConsumerCount(couponId);
-    }
 
 }

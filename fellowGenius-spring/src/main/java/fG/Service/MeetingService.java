@@ -16,6 +16,8 @@ import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fG.Entity.*;
+import fG.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -28,32 +30,12 @@ import com.lowagie.text.DocumentException;
 
 import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
-import fG.Entity.AppInfo;
-import fG.Entity.BookingDetails;
-import fG.Entity.Cashback;
-import fG.Entity.FGCredits;
-import fG.Entity.Notification;
-import fG.Entity.ScheduleData;
-import fG.Entity.StudentProfile;
-import fG.Entity.TutorProfileDetails;
-import fG.Entity.UserReferrals;
-import fG.Entity.Users;
 import fG.Model.BookingDetailsModel;
 import fG.Model.EarningDataModel;
 import fG.Model.KeyValueModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.TutorAvailabilityScheduleModel;
-import fG.Repository.repositoryAppInfo;
-import fG.Repository.repositoryBooking;
-import fG.Repository.repositoryCashback;
-import fG.Repository.repositoryFGCredits;
-import fG.Repository.repositoryNotification;
-import fG.Repository.repositoryStudentProfile;
-import fG.Repository.repositoryTutorAvailabilitySchedule;
-import fG.Repository.repositoryTutorProfileDetails;
-import fG.Repository.repositoryUserReferrals;
-import fG.Repository.repositoryUsers;
 
 @Service
 public class MeetingService {
@@ -80,6 +62,12 @@ public class MeetingService {
 	
 	@Autowired
 	PdfService pdfService;
+
+	@Autowired
+	CouponService couponService;
+
+	@Autowired
+	repositoryCoupon repCoupon;
 
 	@Autowired
 	repositoryBooking repBooking;
@@ -240,7 +228,15 @@ public class MeetingService {
 			}
 		}
 		meetingBooked = meetingDao.saveBooking(booking);
-		
+
+		//check for coupon code.
+		if(meetingBooked!=null){
+
+			Coupon coupon=repCoupon.couponCodeExists(meetingBooked.getCouponCode());
+			if(coupon!=null){
+				couponService.incrementConsumerCount(coupon.getCouponId().toString());
+			}
+		}
 //		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
 		if (meetingBooked!=null) {
 			StudentProfile learner = repStudentProfile.idExist(booking.getStudentId());
