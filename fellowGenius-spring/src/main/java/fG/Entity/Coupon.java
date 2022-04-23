@@ -48,7 +48,7 @@ public class Coupon {
 
     private String privilegesJSON;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<CouponCondition> couponCondition=new ArrayList<>();
 

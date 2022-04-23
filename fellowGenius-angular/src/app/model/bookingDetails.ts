@@ -24,6 +24,7 @@ export class bookingDetails {
   public amount: number;
   public paidAmount: number;
   public tutorProfilePictureUrl: string;
+  public code:string;
   creationTime;
   razorpay_payment_id;
   razorpay_order_id;

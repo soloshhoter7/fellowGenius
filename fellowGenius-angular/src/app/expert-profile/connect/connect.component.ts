@@ -25,6 +25,7 @@ import { Schedule } from '@syncfusion/ej2-schedule';
 import { AppInfo } from 'src/app/model/AppInfo';
 import Swal from 'sweetalert2';
 import { CookieService } from 'ngx-cookie-service';
+import { CouponResponse } from 'src/app/model/CouponResponse';
 @Component({
   selector: 'app-connect',
   templateUrl: './connect.component.html',
@@ -112,12 +113,14 @@ export class ConnectComponent implements OnInit {
   totalPrice = 0;
   totalAmount:number;
   payableAmount = 0;
+  reducedAmount=0;
   processingPayment: boolean;
   paymentResponse: any = {};
   duration;
   selectedDomain;
   showExpertCode: boolean = false;
   expertCode: string;
+  isCouponEligible: boolean=false;
   isCreditEligible: boolean=false;
   isCreditApplied: boolean=false;
   maxFGCreditRedeemed: number;
@@ -126,6 +129,7 @@ export class ConnectComponent implements OnInit {
   appInfo:AppInfo;
   revisedAmount: number;
   remainingFGCredit: number;
+  coupons: CouponResponse[];
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -204,6 +208,18 @@ export class ConnectComponent implements OnInit {
       this.signedIn = false;
     }
    // this.calculateMaxRedeemedFGCredit();
+
+  
+   
+   this.httpService.fetchSelectiveCoupons(this.loggedUserId).subscribe(
+     (res)=>{
+       this.coupons=res;
+
+       if(this.coupons.length>0){
+         this.isCouponEligible=true;
+       }
+     }
+   )
   }
 
   getUserId() {
@@ -342,6 +358,8 @@ export class ConnectComponent implements OnInit {
     );
     console.log(this.bookingDetails.duration);
     this.calculatePrice();
+
+    
   }
   initPay(payableAmount : number): void {
     this.rzp = new this.winRef.nativeWindow['Razorpay'](
@@ -407,7 +425,15 @@ export class ConnectComponent implements OnInit {
     this.payableAmount =
       (this.bookingDetails.duration / 60) *
       parseInt(this.teacherProfile.price1);
-      this.calculateMaxRedeemedFGCredit();
+
+      console.log('Dynamic price '+ this.payableAmount);
+    
+      for(let i=0;i<this.coupons.length;i++){
+        if(this.coupons[i].couponApplied){
+          this.onAppliedFGCoupon(i);
+        }
+      }
+      //this.calculateMaxRedeemedFGCredit();
   }
 
   calculateMaxRedeemedFGCredit(){
@@ -454,6 +480,38 @@ export class ConnectComponent implements OnInit {
     //   this.totalAmount=this.payableAmount;
     //   this.payableAmount=this.totalAmount-this.FGCredit;
     // }
+  }
+
+  onAppliedFGCoupon(couponIndex: number){
+    console.log("Inside the on applied");
+
+   var coupon=this.coupons[couponIndex];
+       this.reducedAmount=0;
+    this.totalAmount=this.payableAmount;
+    const privileges = JSON.parse(coupon.privilegesJSON);
+    
+    for(let privilege of privileges){
+      if(privilege.couponPrivilegesType==="TIME"){
+        this.reducedAmount+=(parseInt(this.teacherProfile.price1)*parseInt(privilege.value))/60;
+      }
+      else{ //AMOUNT
+        this.reducedAmount+=parseInt(privilege.value);
+      }
+    }
+    
+     console.log('Reduced Amount is '+ this.reducedAmount);
+     this.payableAmount=this.totalAmount-this.reducedAmount;
+    coupon.couponApplied=true;
+    console.log(this.coupons);
+    
+  }
+
+  onRemoveFGCoupon(coupon: CouponResponse){
+      this.payableAmount=this.totalAmount;
+      this.reducedAmount=0;
+      const index=this.coupons.findIndex((obj => obj.couponId == coupon.couponId));
+      this.coupons[index].couponApplied=false;
+      console.log(this.coupons);
   }
 
   onAppliedFGCredit(){
@@ -558,6 +616,11 @@ export class ConnectComponent implements OnInit {
     console.log(this.selectedDomain);
     this.bookingDetails.domain = this.selectedDomain;
     this.processingPayment = false;
+    for(let coupon of this.coupons){
+      if(coupon.couponApplied){
+        this.bookingDetails.code=coupon.code;
+      }
+    }
     console.log(this.bookingDetails);
     // this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
     //   console.log('is bookind valid ->', res);
@@ -571,7 +634,11 @@ export class ConnectComponent implements OnInit {
     // });
     this.isLoading = true;
     console.log("here "+ this.payableAmount);
-    this.initPay(this.payableAmount);
+
+    if(this.payableAmount>0){
+      this.initPay(this.payableAmount);
+    }
+    
   }
 
   closeNav() {

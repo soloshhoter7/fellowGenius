@@ -14,6 +14,10 @@
     border-top: 4px solid #8dc63f;
 }
 
+.fw-300{
+    font-weight: 300;
+}
+
 .hr-dashed{
     border-top: 4px dotted #8dc63f;
 }

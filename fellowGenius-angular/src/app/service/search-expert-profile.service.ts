@@ -7,13 +7,13 @@ import { Injectable } from '@angular/core';
 export class SearchExpertProfileService {
   constructor() {}
   createExpertString(result: any, subject, limit) {
-    console.log('Inside the search expert profile service ');
+   // console.log('Inside the search expert profile service ');
     let elementsLeft = false;
-    console.log(result, subject, limit);
+   // console.log(result, subject, limit);
     let filteredArray = result.areaOfExpertise.filter((x) => {
       if (x.category == subject) return x;
     });
-    console.log('filtered Array ->', filteredArray);
+   // console.log('filtered Array ->', filteredArray);
     let expertise: string = '';
     for (let i = 0; i < filteredArray.length; i++) {
       if (filteredArray[i].category == subject) {
@@ -35,7 +35,7 @@ export class SearchExpertProfileService {
         expertise += ' ...';
       }
     }
-    console.log(expertise);
+   // console.log(expertise);
     return expertise;
   }
 }

@@ -36,10 +36,13 @@ public class CouponService {
     @Autowired
     private repositoryCouponCondition repositoryCouponCondition;
     public CouponResponse createCoupon(CouponPayload couponPayload) {
-
+        CouponResponse couponResponse=new CouponResponse();
         Coupon coupon=PayloadToEntity(couponPayload);
-         Coupon savedCoupon=repCoupon.save(coupon);
-         CouponResponse couponResponse=couponToDto(savedCoupon);
+        if(repCoupon.couponCodeExists(coupon.getCode())==null){
+            Coupon savedCoupon=repCoupon.save(coupon);
+            couponResponse=couponToDto(savedCoupon);
+        }
+
         return couponResponse;
     }
 
@@ -162,4 +165,14 @@ public class CouponService {
         }
 
     }
+
+    public void deleteCouponById(String couponId) {
+
+        Coupon coupon=repCoupon.findById(UUID.fromString(couponId)).get();
+
+        if(coupon!=null){
+            repCoupon.delete(coupon);
+        }
+    }
+
 }
