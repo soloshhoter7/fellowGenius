@@ -203,6 +203,7 @@ public class MeetingService {
 		booking.setDomain(bookingModel.getDomain());
 		booking.setAmount(bookingModel.getAmount());
 		booking.setPaidamount(bookingModel.getPaidAmount());
+		booking.setCouponCode(bookingModel.getCouponCode());
 		booking.setRating(0);
 		booking.setTutorProfilePictureUrl(bookingModel.getTutorProfilePictureUrl());
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
@@ -261,7 +262,7 @@ public class MeetingService {
 			}
 			
 			// if user has paid some amount by FG Credit
-			if(bookingModel.getAmount()-bookingModel.getPaidAmount()>0) {
+			if(bookingModel.getAmount()-bookingModel.getPaidAmount()>0 && bookingModel.getCouponCode()==null) {
 				Integer creditsUsed=bookingModel.getAmount()-bookingModel.getPaidAmount();
 				Users user=repUsers.idExists(learner.getSid());
 				user.setCredits(user.getCredits()-creditsUsed);

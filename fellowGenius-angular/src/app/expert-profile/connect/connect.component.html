@@ -403,18 +403,23 @@
               </div>
             </div>
           </ng-template> -->
-          <div class="col-12" *ngIf="payableAmount>0">
+          <div class="col-12">
             <button
               style="width: 100%; margin-top: 15px;"
               class="button proceed_btn"
               (click)="onBooking()"
               [disabled]="!bookingDetails.subject||noSchedule"
             >
+             <span *ngIf="payableAmount>0; else continueBooking">
               Proceed to Payment (₹{{ payableAmount }})
+             </span> 
+             <ng-template #continueBooking>
+               <span>Continue Booking</span>
+             </ng-template>
             </button>
           </div>
 
-          <div class="col-12" *ngIf="payableAmount==0">
+          <!-- <div class="col-12" *ngIf="payableAmount==0">
             <button
               style="width: 100%; margin-top: 15px;"
               class="button proceed_btn"
@@ -423,7 +428,7 @@
             >
               Continue Booking
             </button>
-          </div>
+          </div> -->
         </div>
       </form>
     </div>

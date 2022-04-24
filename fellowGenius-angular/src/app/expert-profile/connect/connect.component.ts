@@ -147,7 +147,7 @@ export class ConnectComponent implements OnInit {
     private cookieService:CookieService
   ) {}
   ngOnInit(): void {
-    console.log('Entered heree');
+   
     
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['page'];
@@ -165,15 +165,15 @@ export class ConnectComponent implements OnInit {
     this.startDisabled = true;
     this.endDisabled = true;
     this.teacherProfile = this.profileService.getProfile();
-    //console.log(this.teacherProfile);
+    
     this.loggedUserId=this.getUserId();
     console.log('Logged in User Id: '+this.loggedUserId);
     
     if (this.loginService.getLoginType() == 'Learner') {
-      console.log('here');
+     
       
       this.signedIn = true;
-      console.log(this.signedIn);
+     
       this.httpService.getTutorIsAvailable(this.userId).subscribe((res) => {
         if (res == true) {
           this.isTutorAvailable = true;
@@ -183,15 +183,15 @@ export class ConnectComponent implements OnInit {
             .getTutorTimeAvailabilityTimeArray(this.userId)
             .subscribe((res) => {
               this.ScheduleTime = res;
-              console.log(res);
+              
               if (this.ScheduleTime.length == 0) {
-                console.log('notified expert for no schedule!');
+                
                 this.httpService
                   .notifyExpertNoSchedule(
                     this.teacherProfile.bookingId.toString()
                   )
                   .subscribe((res) => {
-                    console.log(res);
+                   
                   });
               }
               this.selectedDate = this.scheduleDates[0];
@@ -208,18 +208,19 @@ export class ConnectComponent implements OnInit {
       this.signedIn = false;
     }
    // this.calculateMaxRedeemedFGCredit();
+    this.fetchSelectiveCoupon();
+  }
 
-  
-   
-   this.httpService.fetchSelectiveCoupons(this.loggedUserId).subscribe(
-     (res)=>{
-       this.coupons=res;
-
-       if(this.coupons.length>0){
-         this.isCouponEligible=true;
-       }
-     }
-   )
+  fetchSelectiveCoupon(){
+    this.httpService.fetchSelectiveCoupons(this.loggedUserId).subscribe(
+      (res)=>{
+        this.coupons=res;
+ 
+        if(this.coupons.length>0){
+          this.isCouponEligible=true;
+        }
+      }
+    )
   }
 
   getUserId() {
@@ -227,7 +228,7 @@ export class ConnectComponent implements OnInit {
   }
 
   onAddCredit(form: NgForm){
-    console.log(form.value.redeemedFGCredit);
+    
     
     if(form.value.redeemedFGCredit>this.maxFGCreditRedeemed){
       this.FGCreditRedeemed=this.maxFGCreditRedeemed;
@@ -235,7 +236,7 @@ export class ConnectComponent implements OnInit {
       this.FGCreditRedeemed=form.value.redeemedFGCredit;
     }
 
-    console.log('Redeemed FG Credit '+ this.FGCreditRedeemed);
+   
 
     //call http
     this.isCreditApplied=!this.isCreditApplied;
@@ -246,20 +247,18 @@ export class ConnectComponent implements OnInit {
     this.payableAmount= this.payableAmount-this.FGCreditRedeemed;
   }
   dateChange() {
-    console.log('date change');
-    console.log(this.selectedDate);
+   
     if (this.selectedDate.hasElements == false) {
       this.noSchedule = true;
     } else if (this.selectedDate.hasElements == true) {
-      console.log('selected date elements : ')
-      console.log(this.selectedDate.hasElements);
+      
       this.noSchedule = false;
       this.fillSlots('start');
     }
   }
   startSlotChange() {
     this.endSlots = [];
-    console.log('start slot value is :' + this.startTimeValue);
+  
     let time: ScheduleTime =
       this.ScheduleTime[
         this.ScheduleTime.indexOf(this.startSlots[this.startTimeValue])
@@ -300,17 +299,17 @@ export class ConnectComponent implements OnInit {
       this.startSlots = [];
       this.endSlots = [];
       let selectedFrame: number = 0;
-      // console.log('fill slots called')
+      
       for (let time of this.ScheduleTime) {
         let frame: number = time.frame;
         if (time.date == this.selectedDate.date) {
-          // console.log('date matched')
+          
           let elLeftInFrame = this.returnNextFrameSlots(
             this.ScheduleTime,
             frame,
             time
           ).length;
-          console.log('element left in frame :'+frame+'is :'+elLeftInFrame)
+         
           if (elLeftInFrame !=0) {
             this.startSlots.push(time);
           }
@@ -328,11 +327,11 @@ export class ConnectComponent implements OnInit {
         time.frame,
         time
       );
-      console.log('remaining slots: ',remainingSlots)
+     
       for (let slot of remainingSlots) {
         this.endSlots.push(slot);
       }
-      console.log('end slots :', this.endSlots);
+     
       // this.startSlots.pop();
       this.dynamicPrice();
     }
@@ -343,7 +342,7 @@ export class ConnectComponent implements OnInit {
       this.startSlots[this.startTimeValue]
     );
     endIndex = this.ScheduleTime.indexOf(this.endSlots[this.endTimeValue]);
-    console.log(startIndex, endIndex);
+   
     this.st.sh = this.ScheduleTime[startIndex].hours;
     this.st.sm = this.ScheduleTime[startIndex].minutes;
     this.et.eh = this.ScheduleTime[endIndex].hours;
@@ -356,7 +355,7 @@ export class ConnectComponent implements OnInit {
       this.et.eh,
       this.et.em
     );
-    console.log(this.bookingDetails.duration);
+   
     this.calculatePrice();
 
     
@@ -370,13 +369,7 @@ export class ConnectComponent implements OnInit {
 
   preparePaymentDetails(payableAmount:number) {
     var ref = this;
-     if(this.isCreditApplied){
-       console.log("Total amount : "+ this.totalAmount);
-       console.log("Paid amount : "+ this.payableAmount );
-     }else{
-       console.log("Total amount :  "+ this.payableAmount);
-       console.log("Paid amount : "+this.payableAmount);
-     }
+     
     
     return {
       key: environment.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
@@ -468,9 +461,7 @@ export class ConnectComponent implements OnInit {
       if(this.isCreditApplied){
         this.totalAmount=this.payableAmount;
         this.payableAmount=this.totalAmount-this.FGCredit;
-        console.log("Total amount :- "+this.totalAmount);
-        console.log("FG Credit :- "+this.FGCredit);
-        console.log("Payable amount :- "+this.payableAmount);
+       
       }
     })
  //if time slot changes
@@ -483,7 +474,7 @@ export class ConnectComponent implements OnInit {
   }
 
   onAppliedFGCoupon(couponIndex: number){
-    console.log("Inside the on applied");
+   
 
    var coupon=this.coupons[couponIndex];
        this.reducedAmount=0;
@@ -499,10 +490,10 @@ export class ConnectComponent implements OnInit {
       }
     }
     
-     console.log('Reduced Amount is '+ this.reducedAmount);
+    
      this.payableAmount=this.totalAmount-this.reducedAmount;
     coupon.couponApplied=true;
-    console.log(this.coupons);
+   
     
   }
 
@@ -511,25 +502,25 @@ export class ConnectComponent implements OnInit {
       this.reducedAmount=0;
       const index=this.coupons.findIndex((obj => obj.couponId == coupon.couponId));
       this.coupons[index].couponApplied=false;
-      console.log(this.coupons);
+     
   }
 
   onAppliedFGCredit(){
-    console.log("Applied FG Credit clicked");
+   
     this.totalAmount=this.payableAmount;
     this.payableAmount=this.totalAmount-this.FGCredit;
     this.isCreditApplied=!this.isCreditApplied;
   }
 
   onRemoveFGCredit(){
-    console.log("Remove FG Credit clicked");
+    
     this.payableAmount=this.totalAmount;
     this.isCreditApplied=!this.isCreditApplied;
   }
 
   createBooking(res: any) {
     if (this.paymentSuccessful) {
-      console.log('payment response', res);
+     
       this.bookingDetails.razorpay_payment_id = res.razorpay_payment_id;
       this.bookingDetails.razorpay_order_id = res.razorpay_order_id;
       this.bookingDetails.razorpay_signature = res.razorpay_signature;
@@ -541,43 +532,54 @@ export class ConnectComponent implements OnInit {
         this.bookingDetails.amount=this.payableAmount;
         this.bookingDetails.paidAmount=this.payableAmount;
       }
+
+      for(let i=0;i<this.coupons.length;i++){
+        if(this.coupons[i].couponApplied){
+          this.bookingDetails.amount=this.totalAmount;
+          this.bookingDetails.paidAmount=this.payableAmount;
+        }
+     }      
       
       console.log(this.bookingDetails);
-      this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
-        if (res == true) {
-          this.isLoading = false;
-          let data = JSON.stringify({
-            entityType: '1',
-            entityTypeId: '11',
-            actorId: this.bookingDetails.studentId,
-            notifierId: this.bookingDetails.tutorId,
-            pictureUrl: this.studentService.studentProfile.profilePictureUrl,
-            readStatus: false,
-          });
-          this.webSocket.sendAppointmentNotfication(
-            data,
-            this.bookingDetails.tutorId.toString()
-          );
-          this.snackBar.open(
-            'Booking submitted successfully !',
-            'close',
-            this.config
-          );
-          this.dialogRef.closeAll();
-          this.router.navigate(['home/student-dashboard']);
-        }
-      });
+      this.createBookingService();
     }
   }
 
+  createBookingService(){
+    this.httpService.saveBooking(this.bookingDetails).subscribe((res) => {
+      if (res == true) {
+        this.isLoading = false;
+        let data = JSON.stringify({
+          entityType: '1',
+          entityTypeId: '11',
+          actorId: this.bookingDetails.studentId,
+          notifierId: this.bookingDetails.tutorId,
+          pictureUrl: this.studentService.studentProfile.profilePictureUrl,
+          readStatus: false,
+        });
+        this.webSocket.sendAppointmentNotfication(
+          data,
+          this.bookingDetails.tutorId.toString()
+        );
+        this.snackBar.open(
+          'Booking submitted successfully !',
+          'close',
+          this.config
+        );
+        this.dialogRef.closeAll();
+        this.router.navigate(['home/student-dashboard']);
+      }
+    });
+  }
+
   onBooking() {
-    console.log("newlly updated amount : "+ this.payableAmount);
+    
     var startIndex, endIndex;
     startIndex = this.ScheduleTime.indexOf(
       this.startSlots[this.startTimeValue]
     );
     endIndex = this.ScheduleTime.indexOf(this.endSlots[this.endTimeValue]);
-    console.log(startIndex, endIndex);
+   
     // this.timeSelector(this.startSlots[this.startTimeValue], startIndex);
     // this.timeSelector(this.endSlots[this.endTimeValue], endIndex);
     this.st.sh = this.ScheduleTime[startIndex].hours;
@@ -613,12 +615,12 @@ export class ConnectComponent implements OnInit {
     this.bookingDetails.expertCode = this.expertCode;
    // this.calculatePrice();
     this.findDomain(this.bookingDetails.subject);
-    console.log(this.selectedDomain);
+   
     this.bookingDetails.domain = this.selectedDomain;
     this.processingPayment = false;
     for(let coupon of this.coupons){
       if(coupon.couponApplied){
-        this.bookingDetails.code=coupon.code;
+        this.bookingDetails.couponCode=coupon.code;
       }
     }
     console.log(this.bookingDetails);
@@ -633,10 +635,20 @@ export class ConnectComponent implements OnInit {
     //   }
     // });
     this.isLoading = true;
-    console.log("here "+ this.payableAmount);
+    
 
     if(this.payableAmount>0){
       this.initPay(this.payableAmount);
+    }else{
+      for(let i=0;i<this.coupons.length;i++){
+        if(this.coupons[i].couponApplied){
+          this.bookingDetails.amount=this.totalAmount;
+          this.bookingDetails.paidAmount=this.payableAmount;
+        }
+     }      
+      
+      console.log(this.bookingDetails);
+      this.createBookingService();
     }
     
   }
