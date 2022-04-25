@@ -17,4 +17,5 @@ public interface repositoryCoupon extends JpaRepository<Coupon, UUID> {
 
     @Query(value="SELECT * from coupon where code=?1",nativeQuery = true)
     Coupon couponCodeExists(String couponCode);
+
 }

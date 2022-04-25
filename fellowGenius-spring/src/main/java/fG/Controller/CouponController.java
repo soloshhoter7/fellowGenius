@@ -32,5 +32,8 @@ public class CouponController {
         return couponService.fetchSelectiveCoupons(userId);
     }
 
-
+    @DeleteMapping(value="/deleteCoupon")
+    public void deleteCoupon(String couponId){
+        couponService.deleteCouponById(couponId);
+    }
 }

@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import fG.Entity.Coupon;
 import fG.Entity.CouponCondition;
 import fG.Entity.Event;
-import fG.Model.CouponConditionPayload;
-import fG.Model.CouponPayload;
-import fG.Model.CouponPrivileges;
-import fG.Model.EventModel;
+import fG.Model.*;
 import fG.Repository.repositoryCouponCondition;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,13 +25,19 @@ public abstract class CouponMapper {
     @Autowired
     private repositoryCouponCondition repositoryCouponCondition;
 
-//    @Mapping(target = "code",source = "couponCode")
-//    @Mapping(target = "startDate",source = "startDate",qualifiedByName = "parseDate")
-//    @Mapping(target = "endDate",source = "endDate",qualifiedByName = "parseDate")
-//    @Mapping(target = "couponCondition",source = "couponConditions",qualifiedByName = "parseCouponConditions")
-//    @Mapping(target="couponConsumersCount",defaultValue = "0")
+    @Mapping(target = "code",source = "couponCode")
+    @Mapping(target = "startDate",source = "startDate",qualifiedByName = "parseDate")
+    @Mapping(target = "endDate",source = "endDate",qualifiedByName = "parseDate")
+    @Mapping(target = "privilegesJSON",source = "couponPrivileges",qualifiedByName = "JSONToString")
+    @Mapping(target = "couponCondition",source = "couponConditions",qualifiedByName = "parseCouponConditions")
+    @Mapping(target="couponConsumersCount",source="consumersCount",defaultValue = "0")
     public abstract Coupon DtoToEntity(CouponPayload couponDto);
 
+    @Named("JSONToString")
+    public String JSONToString(List<CouponPrivileges> couponPrivileges){
+
+        return new Gson().toJson(couponPrivileges);
+    }
     @Named("parseDate")
     public Date parseDate(String stringDate){
 
@@ -70,11 +73,7 @@ public abstract class CouponMapper {
         return couponConditionList;
     }
 
-    @Named("JSONToString")
-    public String JSONToString(CouponPrivileges couponPrivileges){
 
-        return new Gson().toJson(couponPrivileges);
-    }
 
     @Named("StringToUUID")
     public UUID stringToUUID(String eventId){
@@ -87,4 +86,7 @@ public abstract class CouponMapper {
         String eventId=eventID.toString();
         return eventId;
     }
+
+
+
 }

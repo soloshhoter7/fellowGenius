@@ -30,4 +30,6 @@ public class CouponPayload {
 
     private CouponEligibleConsumers couponEligibleConsumers;
 
+    private int consumersCount;
+
 }

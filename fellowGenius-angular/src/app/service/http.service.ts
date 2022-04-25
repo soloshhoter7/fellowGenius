@@ -35,6 +35,7 @@ import { CashbackInfo } from '../model/CashbackInfo';
 import { ReferralActivityAnalytics } from '../model/referralActivityAnalytics';
 import { map } from 'rxjs/operators';
 import { Event } from '../model/Event';
+import { CouponResponse } from '../model/CouponResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -1024,6 +1025,19 @@ export class HttpService {
       this.backendUrl+'/fellowGenius/event/save',
       event
     );
+  }
+
+  //coupon controllers
+
+  fetchSelectiveCoupons(userId: string): Observable<CouponResponse[]>{
+    return this.http.get<CouponResponse[]>(
+      this.backendUrl + '/fellowGenius/coupon/fetchSelectiveCoupons',
+      {
+        params: {
+         userId: userId
+        }
+      } 
+    )
   }
 
 }
