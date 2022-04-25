@@ -34,6 +34,7 @@ import { FGCredits } from '../model/FGCredits';
 import { CashbackInfo } from '../model/CashbackInfo';
 import { ReferralActivityAnalytics } from '../model/referralActivityAnalytics';
 import { map } from 'rxjs/operators';
+import { Event } from '../model/Event';
 @Injectable({
   providedIn: 'root',
 })
@@ -997,6 +998,31 @@ export class HttpService {
     return this.http.post(
       this.backendUrl + '/fellowGenius/saveContactUsMessage',
       contact
+    );
+  }
+
+  addUserToEvent(userEmail:string,eventId:string):Observable<Object>{
+    return this.http.get(
+      this.backendUrl+'/fellowGenius/event/addParticipant',
+      {
+        params: {
+         email:userEmail,
+         eventId:eventId
+        }
+      } 
+    );
+  }
+
+  getUpcomingEvents():Observable<Event[]>{
+    return this.http.get<Event[]>(
+      this.backendUrl+'/fellowGenius/event/upcomingEvents'
+    );
+  }
+
+  saveEvents(event:Event):Observable<Event>{
+    return this.http.post<Event>(
+      this.backendUrl+'/fellowGenius/event/save',
+      event
     );
   }
 

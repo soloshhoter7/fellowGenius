@@ -50,6 +50,9 @@ import { VoiceCallComponent } from './voice-call/voice-call.component';
 import { AppInfoComponent } from './admin-portal/admin-home/app-info/app-info.component';
 import { TransactionsInfoComponent } from './admin-portal/admin-home/transactions-info/transactions-info.component';
 import { ReferralsInfoComponent } from './admin-portal/admin-home/referrals-info/referrals-info.component';
+import { EventsDashboardComponent } from './facade/events-dashboard/events-dashboard.component';
+import { AdminEventsComponent } from './admin-portal/admin-home/admin-events/admin-events.component';
+
 // const routes:Routes=[];
 export const appRoutes: Routes = [
   //post login
@@ -78,6 +81,7 @@ export const appRoutes: Routes = [
   { path: 'how-it-works', component: HowItWorksComponent },
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'view-tutors', component: ExpertProfileComponent },
+  { path:'events',component: EventsDashboardComponent},
   { path: 'login', component: LoginComponent },
   {
     path: 'sign-up',
@@ -116,6 +120,7 @@ export const appRoutes: Routes = [
           { path: 'app-info', component: AppInfoComponent },
           { path: 'transactions-info', component: TransactionsInfoComponent },
           { path: 'referrals-info', component: ReferralsInfoComponent },
+          { path: 'events',component: AdminEventsComponent}
         ],
       },
     ],

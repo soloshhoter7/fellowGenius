@@ -143,6 +143,8 @@ export class ConnectComponent implements OnInit {
     private cookieService:CookieService
   ) {}
   ngOnInit(): void {
+    console.log('Entered heree');
+    
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['page'];
       this.httpService

@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import fG.Mapper.BookingDetailsMapper;
+import fG.Mapper.TutorProfileDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -97,6 +99,12 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	Dao dao;
+
+	@Autowired
+	TutorProfileDetailsMapper tutorProfileDetailsMapper;
+
+	@Autowired
+	BookingDetailsMapper bookingDetailsMapper;
 
 	@Autowired
 	MeetingDao meetingDao;
@@ -1024,14 +1032,16 @@ public class UserService implements UserDetailsService {
 		if (!subject.equals("*")) {
 			tutList = dao.getTutorList(subject);
 			for (TutorProfileDetails tutProfileDetails : tutList) {
-				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+				TutorProfileDetailsModel tutorModel=tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
+				//TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 				tutorModel.setTid(null);
 				tutListModel.add(tutorModel);
 			}
 		} else {
 			tutList = repTutorProfileDetails.findAll();
 			for (TutorProfileDetails tutProfileDetails : tutList) {
-				TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+				//TutorProfileDetailsModel tutorModel=copyTutorProfileDetails(tutProfileDetails);
+				TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 				tutListModel.add(tutorModel);
 			}
 		}
@@ -1043,7 +1053,8 @@ public class UserService implements UserDetailsService {
 		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
 		tutList = repTutorProfileDetails.findAll();
 		for (TutorProfileDetails tutProfileDetails : tutList) {
-			TutorProfileDetailsModel tutorModel = copyTutorProfileDetails(tutProfileDetails);
+			//TutorProfileDetailsModel tutorModel=copyTutorProfileDetails(tutProfileDetails);
+			TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 			tutorModel.setLastLogin(returnLastLoginTime(tutProfileDetails.getTid()));
 			ArrayList<ScheduleTime> schedule = getTutorTimeAvailabilityTimeArray(
 					tutProfileDetails.getBookingId().toString());
@@ -1083,7 +1094,8 @@ public class UserService implements UserDetailsService {
 	// getting tutor profile details with tutor bookingId
 	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(Integer bookingId) {
 		TutorProfileDetails tutProfileDetails = dao.fetchTutorProfileDetailsByBookingId(bookingId);
-		TutorProfileDetailsModel tutProfileDetailsModel = copyTutorProfileDetails(tutProfileDetails);
+		//TutorProfileDetailsModel tutProfileDetailsModel=copyTutorProfileDetails(tutProfileDetails);
+		TutorProfileDetailsModel tutProfileDetailsModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 		tutProfileDetailsModel.setTid(null);
 		return tutProfileDetailsModel;
 	}
@@ -1091,7 +1103,7 @@ public class UserService implements UserDetailsService {
 	// getting tutor profile details with tid
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
 		TutorProfileDetails tutProfileDetails = dao.getTutorProfileDetails(tid);
-		return copyTutorProfileDetails(tutProfileDetails);
+		return tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 	}
 
 	// from copying content of tutorProfileDetails entity to model
@@ -1273,7 +1285,7 @@ public class UserService implements UserDetailsService {
 		List<TutorProfileDetails> tutors = dao.fetchAllLinkedTutors(userId);
 		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 		for (TutorProfileDetails tutor : tutors) {
-			tutorsModel.add(copyTutorProfileDetails(tutor));
+			tutorsModel.add(tutorProfileDetailsMapper.EntityToDto(tutor));
 		}
 		return tutorsModel;
 
@@ -1292,7 +1304,7 @@ public class UserService implements UserDetailsService {
 		} else {
 			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 			for (TutorProfileDetails tutor : tutors) {
-				tutorsModel.add(copyTutorProfileDetails(tutor));
+				tutorsModel.add(tutorProfileDetailsMapper.EntityToDto(tutor));
 			}
 			return tutorsModel;
 		}
@@ -1827,7 +1839,7 @@ public class UserService implements UserDetailsService {
 		if (allBookings != null) {
 			for (BookingDetails bk : allBookings) {
 				BookingDetailsModel bkm = new BookingDetailsModel();
-				bkm = meetingService.copyBookingDetailsToBookingDetailsModel(bk);
+				bkm = copyBookingDetailsToBookingDetailsModel(bk);
 				allBookingsModel.add(bkm);
 			}
 			Collections.sort(allBookingsModel, new Comparator<BookingDetailsModel>() {
@@ -1847,7 +1859,53 @@ public class UserService implements UserDetailsService {
 		}
 		return allBookingsModel;
 	}
-	
+
+	public BookingDetailsModel copyBookingDetailsToBookingDetailsModel(BookingDetails booking) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		BookingDetailsModel bkModel = new BookingDetailsModel();
+		bkModel.setBid(booking.getBid());
+		bkModel.setDateOfMeeting(booking.getDateOfMeeting());
+		bkModel.setDescription(booking.getDescription());
+		bkModel.setDuration(booking.getDuration());
+		bkModel.setEndTimeHour(booking.getEndTimeHour());
+		bkModel.setEndTimeMinute(booking.getEndTimeMinute());
+		bkModel.setMeetingId(booking.getMeetingId());
+		bkModel.setStartTimeHour(booking.getStartTimeHour());
+		bkModel.setStartTimeMinute(booking.getStartTimeMinute());
+		bkModel.setStudentId(booking.getStudentId());
+		bkModel.setStudentName(booking.getStudentName());
+		bkModel.setTutorName(booking.getTutorName());
+		bkModel.setApprovalStatus(booking.getApprovalStatus());
+		bkModel.setBookingCase(booking.getBookingCase());
+		bkModel.setSubject(booking.getSubject());
+		bkModel.setDomain(booking.getDomain());
+		bkModel.setAmount(booking.getAmount());
+		bkModel.setPaidAmount(booking.getPaidAmount());
+		bkModel.setTutorProfilePictureUrl(booking.getTutorProfilePictureUrl());
+		bkModel.setCreationTime(sdf.format(booking.getCreatedDate()));
+		String start = booking.getStartTimeHour() + ":" + booking.getStartTimeMinute();
+		String end = booking.getEndTimeHour() + ":" + booking.getEndTimeMinute();
+		bkModel.setStartTime(start);
+		bkModel.setEndTime(end);
+		if (booking.getExpertJoinTime() != null) {
+			bkModel.setExpertJoinTime(sdf.format(booking.getExpertJoinTime()));
+		}
+		if (booking.getExpertLeavingTime() != null) {
+			bkModel.setExpertLeavingTime(sdf.format(booking.getExpertLeavingTime()));
+		}
+		if (booking.getLearnerJoinTime() != null) {
+			bkModel.setLearnerJoinTime(sdf.format(booking.getLearnerJoinTime()));
+		}
+		if (booking.getLearnerLeavingTime() != null) {
+			bkModel.setLearnerLeavingTime(sdf.format(booking.getLearnerLeavingTime()));
+		}
+
+		bkModel.setExpertCode(booking.getExpertCode());
+		bkModel.setRazorpay_payment_id(booking.getRazorpay_payment_id());
+		bkModel.setIsRescheduled(booking.getIsRescheduled());
+		return bkModel;
+	}
+
 	
 	//fetch upi id from user
 	public String fetchUpiId(Users user) {
