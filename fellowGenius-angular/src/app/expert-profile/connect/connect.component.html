@@ -128,8 +128,87 @@
               </div>
             </div>
           </div>
+
+          <div *ngIf="isCouponEligible && bookingDetails.subject&& !noSchedule">
+            <div class="col-12" style="margin-bottom: 15px;">
+              <h5>Apply FG Coupons</h5>
+              <div *ngFor="let coupon of coupons;let i=index">
+                <div *ngIf="!coupon.couponApplied">
+                <div class="row">
+                  <div class="col-9">
+                    {{coupon.code}}
+                    <p class="fw-300">{{coupon.description}}</p>
+                  </div>
+                  <div class="col-3 align-right">
+                    <a href="javascript:;"
+                    (click)="onAppliedFGCoupon(i)"
+                    class="col-green">
+                    Apply
+                  </a>
+                  </div>
+                </div>
+                </div>
+
+                <div *ngIf="coupon.couponApplied">
+                  <div class="row">
+                    <div class="col-9">
+                      {{coupon.code}} Applied
+                    </div>
+                    <div class="col-3 align-right">
+                      <a href="javascript:;"
+                      (click)="onRemoveFGCoupon(coupon)"
+                      class="col-green">
+                      Remove
+                    </a>
+                    </div>
+                  </div>                  
+                </div>
+
+                <div class="col-12">
+                  <div *ngIf="coupon.couponApplied">
+      
+                    <hr class="hr-bold">
+                    <h5>Payment Summary</h5>
+                    <div class="row">
+                      <div class="col-9">
+                        Total Amount:-
+                      </div>
+                      <div class="col-3 align-right">
+                        ₹{{totalAmount}}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-9">
+                        Coupon Discount:-
+                      </div>
+                      <div class="col-3 align-right">
+                        -₹{{reducedAmount}}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        ( {{coupon.code}} Applied)
+                      </div>
+                    </div>
+                    <hr class="hr-dashed">
+                    <div class="row">
+                      <div class="col-9">
+                        Payable Amount:-
+                      </div>
+                      <div class="col-3 align-right">
+                        ₹{{payableAmount}}
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+
+              </div>
+
+              
+            </div>
+          </div>
           <!-- <div *ngIf="isCreditEligible"> -->
-            <div >
+            <div *ngIf="isCreditEligible && bookingDetails.subject&& !noSchedule">
           <div class="col-12" style="margin-bottom: 15px;">
             <h5>Redeem FG Credits</h5>
             <div *ngIf="!isCreditApplied">
@@ -324,16 +403,32 @@
               </div>
             </div>
           </ng-template> -->
-          <div class="col-12" >
+          <div class="col-12">
             <button
               style="width: 100%; margin-top: 15px;"
               class="button proceed_btn"
               (click)="onBooking()"
               [disabled]="!bookingDetails.subject||noSchedule"
             >
+             <span *ngIf="payableAmount>0; else continueBooking">
               Proceed to Payment (₹{{ payableAmount }})
+             </span> 
+             <ng-template #continueBooking>
+               <span>Continue Booking</span>
+             </ng-template>
             </button>
           </div>
+
+          <!-- <div class="col-12" *ngIf="payableAmount==0">
+            <button
+              style="width: 100%; margin-top: 15px;"
+              class="button proceed_btn"
+              (click)="onBooking()"
+              [disabled]="!bookingDetails.subject||noSchedule"
+            >
+              Continue Booking
+            </button>
+          </div> -->
         </div>
       </form>
     </div>
