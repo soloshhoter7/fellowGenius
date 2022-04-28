@@ -175,7 +175,8 @@ export class SignUpExpertComponent implements OnInit {
   topicNotSelected: boolean = false;
   domainNotSelected: boolean = false;
   showEditPreviousOrganisations: boolean = false;
-
+  rejectedFileUpload:boolean=false;
+  uploadProgress:Observable<number>;
   //------------- otpJSON---------------------------
   otpJSON = {
     email: this.tutorProfileDetails.email,
@@ -708,7 +709,8 @@ export class SignUpExpertComponent implements OnInit {
     const fileSize = Math.round(this.uploadedProfilePicture.size / 1024);
     const fileType = this.uploadedProfilePicture.type;
 
-    if (fileSize > 3072 || !fileType.includes('image')) {
+    // if (fileSize > 3072 || !fileType.includes('image')) {
+      if (fileSize > 3072 || !fileType.includes('image')) {
       this.invalidPicture = true;
       this.isLoading3 = false;
     } else {
@@ -765,59 +767,23 @@ export class SignUpExpertComponent implements OnInit {
     }
     return new Blob([ab], { type: fileType });
   }
-  profilePictureChangeCompleted(event) {
-    this.uploadedProfilePicture = <File>event.target.files[0];
-    var filePath = `tutor_profile_picture/${
-      this.uploadedProfilePicture
-    }_${new Date().getTime()}`;
-    const fileRef = this.firebaseStorage.ref(filePath);
-    this.firebaseStorage
-      .upload(filePath, this.uploadedProfilePicture)
-      .snapshotChanges()
-      .pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe((url) => {
-            var tutorProfileDetails: tutorProfileDetails =
-              this.tutorService.getTutorProfileDetails();
-            this.profilePictureUrl = url;
-            console.log('Profile picture url is '+ url);
-            tutorProfileDetails.profilePictureUrl = this.profilePictureUrl;
-            this.httpService
-              .editTutorProfileDetails(tutorProfileDetails)
-              .subscribe((res) => {
-                var tutProfile: tutorProfile =
-                  this.tutorService.getTutorDetials();
-                tutProfile.profilePictureUrl = this.profilePictureUrl;
-                this.httpService
-                  .editBasicProfile(tutProfile)
-                  .subscribe((res) => {
-                    this.tutorProfile.profilePictureUrl =
-                      this.profilePictureUrl;
-                    this.snackBar.open(
-                      'Image Uploaded successfully',
-                      'close',
-                      this.config
-                    );
-                  });
-              });
-          });
-        })
-      )
-      .subscribe();
-  }
+  
   //for uploading profile picture
   uploadProfilePicture() {
+    this.profilePicUploadStatus=false;
     var filePath = `tutor_profile_picture/${
       this.uploadedProfilePicture
     }_${new Date().getTime()}`;
     const fileRef = this.firebaseStorage.ref(filePath);
-    this.firebaseStorage
-      .upload(filePath, this.uploadedProfilePicture)
+    const uploadTask = this.firebaseStorage.upload(filePath,this.uploadedProfilePicture);
+    this.firebaseStorage.storage.setMaxUploadRetryTime(5000);
+    uploadTask
       .snapshotChanges()
       .pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
-            console.log('Upload profile picture url is '+ url);
+            this.rejectedFileUpload=false;
+            this.uploadProgress=null;
             this.profilePicUploadStatus = true;
             this.isLoading3 = false;
             this.pictureInfo = false;
@@ -829,10 +795,25 @@ export class SignUpExpertComponent implements OnInit {
               'close',
               this.config
             );
+          },(error)=>{
+            this.isLoading3=false;
+            this.rejectedFileUpload=true;
+            this.uploadProgress=null;
+            console.log('problem while uploading profile picture !')
+            console.log(error);
           });
         })
       )
       .subscribe();
+      this.uploadProgress = uploadTask.percentageChanges();
+      console.log('percent upload -> ',this.uploadProgress);
+      uploadTask.catch((error)=>{
+        this.rejectedFileUpload=true;
+        this.uploadProgress=null;
+        console.log('error while uploading');
+        this.isLoading3=false;
+        console.log(error);
+      })
   }
 
   basicProfileToggle() {

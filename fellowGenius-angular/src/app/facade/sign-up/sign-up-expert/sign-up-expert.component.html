@@ -1137,39 +1137,48 @@
                               (change)="profilePictureChange($event)"
                               required
                             />
-
-                            <button
-                              class="btn"
-                              type="button"
-                              (click)="profilePicture.click()"
-                              style="
-                                margin-top: 10px;
-                                height: 50px;
-                                position: relative;
-                              "
-                            >
-                              <span *ngIf="!isLoading3">Upload</span>
+                            <div>
                               <div
-                                class="tickMark"
-                                *ngIf="profilePicUploadStatus"
-                              >
-                                <img
-                                  class="tickMarkImg"
-                                  src="../../../assets/icons/tick.png"
-                                />
-                              </div>
-                              <span
-                                *ngIf="isLoading3"
-                                class="loader"
+                              class="tickMark"
+                              *ngIf="profilePicUploadStatus"
+                            >
+                              <img
+                                class="tickMarkImg"
+                                src="../../../assets/icons/tick.png"
+                              />
+                            </div>
+                              <button
+                                class="btn"
+                                type="button"
+                                (click)="profilePicture.click()"
                                 style="
-                                  text-align: center;
-                                  z-index: 10;
-                                  margin-right: 25px;
+                                  margin-top: 10px;
+                                  height: 50px;
+                                  position: relative;
+                                  overflow: hidden;
                                 "
                               >
-                                <app-loader></app-loader>
-                              </span>
-                            </button>
+                                <span *ngIf="!isLoading3">Upload</span>
+                                
+                                <span
+                                  *ngIf="isLoading3"
+                                  class="loader"
+                                  style="
+                                    text-align: center;
+                                    z-index: 10;
+                                    margin-right: 25px;
+                                  "
+                                >
+                                  <app-loader></app-loader>
+                                </span>
+                                <div *ngIf="uploadProgress | async as progress ">
+                                  <span class="progress-bar" [ngStyle]="{ 'width': progress + '%' }"></span>
+                                </div>
+  
+                              </button>
+                            </div>
+                           
+                          
                           </div>
                           <div
                             style="
@@ -1182,6 +1191,18 @@
                             *ngIf="emptyProfilePicture"
                           >
                             Please upload a profile picture !
+                          </div>
+                          <div
+                            style="
+                              margin: 5px;
+                              margin-left: 0;
+                              font-size: 14px;
+                              font-weight: 600;
+                              color: red;
+                            "
+                            *ngIf="rejectedFileUpload"
+                          >
+                            Error was encountered while uploading the image. Please try again !
                           </div>
                           <div
                             style="

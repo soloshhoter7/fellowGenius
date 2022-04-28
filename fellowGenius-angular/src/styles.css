@@ -4642,8 +4642,9 @@ input.ng-invalid.ng-touched {
     position: absolute;
     height: 0;
     padding: 0;
-    right: -10px;
-    top: 5px;
+    top: 10px;
+    left: 106px;
+    z-index: 1;
   }
   
   .tickMarkImg {

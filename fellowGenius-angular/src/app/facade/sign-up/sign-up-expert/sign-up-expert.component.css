@@ -20,7 +20,14 @@
     margin-top: 0px !important;
   }
 }
-
+.progress-bar{
+  width: 100%;
+  background-color: #ec008c; 
+  height: 5px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
 ::ng-deep .mat-icon-button {
   color: #8dc63f !important;
 }
