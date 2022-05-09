@@ -36,6 +36,7 @@ import { ReferralActivityAnalytics } from '../model/referralActivityAnalytics';
 import { map } from 'rxjs/operators';
 import { Event } from '../model/Event';
 import { CouponResponse } from '../model/CouponResponse';
+import { isThisMonth } from 'date-fns';
 @Injectable({
   providedIn: 'root',
 })
@@ -1002,12 +1003,24 @@ export class HttpService {
     );
   }
 
-  addUserToEvent(userEmail:string,eventId:string):Observable<Object>{
+  addUserToEvent(userId:string,eventId:string):Observable<Object>{
     return this.http.get(
       this.backendUrl+'/fellowGenius/event/addParticipant',
       {
         params: {
-         email:userEmail,
+         userId:userId,
+         eventId:eventId
+        }
+      } 
+    );
+  }
+
+  checkUserForEvent(userId:string,eventId:string):Observable<Object>{
+    return this.http.get(
+      this.backendUrl+'/fellowGenius/event/checkParticipant',
+      {
+        params: {
+         userId:userId,
          eventId:eventId
         }
       } 
@@ -1022,10 +1035,22 @@ export class HttpService {
 
   saveEvents(event:Event):Observable<Event>{
     return this.http.post<Event>(
-      this.backendUrl+'/fellowGenius/event/save',
+      this.backendUrl+'/fellowGenius/event/saveEvent',
       event
     );
   }
+
+  getEvent(eventId: string): Observable<Event>{
+    return this.http.get<Event>(
+      this.backendUrl+'/fellowGenius/event/getEvent',{
+        params: {
+          eventId:eventId
+         }
+      }
+    )
+  }
+
+  
 
   //coupon controllers
 

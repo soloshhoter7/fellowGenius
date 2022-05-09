@@ -122,6 +122,7 @@ import { OtpComponent } from './facade/sign-up/otp/otp.component';
 import { SessionComponent } from './home/session/session.component';
 import { EventsDashboardComponent } from './facade/events-dashboard/events-dashboard.component';
 import { AdminEventsComponent } from './admin-portal/admin-home/admin-events/admin-events.component';
+import { EventDetailComponent } from './facade/events-dashboard/event-detail/event-detail.component';
 
 
 @NgModule({
@@ -205,6 +206,7 @@ import { AdminEventsComponent } from './admin-portal/admin-home/admin-events/adm
     SessionComponent,
     EventsDashboardComponent,
     AdminEventsComponent,
+    EventDetailComponent,
   ],
   imports: [
   
