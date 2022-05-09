@@ -36,6 +36,7 @@ import { ReferralActivityAnalytics } from '../model/referralActivityAnalytics';
 import { map } from 'rxjs/operators';
 import { Event } from '../model/Event';
 import { CouponResponse } from '../model/CouponResponse';
+import { FeedbackModel } from '../model/feedback';
 @Injectable({
   providedIn: 'root',
 })
@@ -103,25 +104,6 @@ export class HttpService {
     );
   }
 
-  // save ratings and review to backend
-  giveFeedback(
-    meetingId: any,
-    rating: number,
-    review: string,
-    tid: number
-  ): Observable<Object> {
-    return this.http.get(
-      this.backendUrl + '/fellowGenius/meeting/saveTutorRatings',
-      {
-        params: {
-          meetingId: meetingId,
-          rating: rating.toString(),
-          reviewText: review,
-          tid: tid.toString(),
-        },
-      }
-    );
-  }
   fetchBookingDetailsWithMeetingId(meetingId): Observable<bookingDetails> {
     return this.http.get<bookingDetails>(
       this.backendUrl + '/fellowGenius/meeting/fetchBookingDetailsWithId',
@@ -1039,5 +1021,18 @@ export class HttpService {
       } 
     )
   }
-
+  saveFeedback(feedback:FeedbackModel): Observable<Object> {
+    return this.http.post(
+      this.backendUrl + '/fellowGenius/updatePassword',
+      feedback
+    );
+  }
+  isFeedbackEligible(meetingId,userId):Observable<Object>{
+    return this.http.get<Object>(this.backendUrl+'/fellowgenius/meeting/isFeedbackEleigible',{
+      params:{
+        meetingId:meetingId,
+        userId:userId
+      }
+    })
+  }
 }

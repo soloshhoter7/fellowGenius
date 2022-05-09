@@ -108,24 +108,7 @@ export class StudentDashboardComponent implements OnInit {
       history.pushState(null, null, location.href);
     });
   }
-  saveRating(profile: any, rating: any) {
-    var meetingId = profile.meetingId;
-    var review = ' ';
-    var tid = profile.tutorId;
-    this.httpService
-      .giveFeedback(meetingId, rating, review, tid)
-      .subscribe((res) => {
-        this.pendingReviewList.splice(
-          this.pendingReviewList.indexOf(profile),
-          1
-        );
-        this.snackBar.open(
-          'Feedback submitted successfully',
-          'close',
-          this.config
-        );
-      });
-  }
+
   viewPendingRequests() {
     this.viewPending = !this.viewPending;
   }
@@ -293,15 +276,6 @@ export class StudentDashboardComponent implements OnInit {
     });
   }
 
-  giveFeedback(profile) {
-    var meetingId = profile.meetingId;
-    var rating = 80;
-    var review = 'You are a god teacher';
-    var tid = profile.tutorId;
-    this.httpService
-      .giveFeedback(meetingId, rating, review, tid)
-      .subscribe((res) => {});
-  }
 
   sortMeetings(meetingList) {
     meetingList.sort(function (a, b) {
