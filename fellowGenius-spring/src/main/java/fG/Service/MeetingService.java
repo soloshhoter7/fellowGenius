@@ -16,7 +16,9 @@ import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.gson.Gson;
 import fG.Entity.*;
+import fG.Model.*;
 import fG.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -30,12 +32,6 @@ import com.lowagie.text.DocumentException;
 
 import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
-import fG.Model.BookingDetailsModel;
-import fG.Model.EarningDataModel;
-import fG.Model.KeyValueModel;
-import fG.Model.ResponseModel;
-import fG.Model.ScheduleTime;
-import fG.Model.TutorAvailabilityScheduleModel;
 
 @Service
 public class MeetingService {
@@ -202,7 +198,7 @@ public class MeetingService {
 		booking.setSubject(bookingModel.getSubject());
 		booking.setDomain(bookingModel.getDomain());
 		booking.setAmount(bookingModel.getAmount());
-		booking.setPaidamount(bookingModel.getPaidAmount());
+		booking.setPaidAmount(bookingModel.getPaidAmount());
 		booking.setCouponCode(bookingModel.getCouponCode());
 		booking.setRating(0);
 		booking.setTutorProfilePictureUrl(bookingModel.getTutorProfilePictureUrl());
@@ -930,5 +926,37 @@ public class MeetingService {
         }
 		
 		return null;
+	}
+
+	public boolean isFeedbackSubmitted(String meetingId,String userId) {
+		BookingDetails bookingDetails = repBooking.meetingIdExists(meetingId);
+		if(bookingDetails!=null){
+			if(bookingDetails.getStudentId().equals(Integer.valueOf(userId))&&bookingDetails.getLearnerJoinTime()!=null){
+				return bookingDetails.isLearnerFeedbackDone();
+			}
+			if(bookingDetails.getTutorId().equals(Integer.valueOf(userId))&&bookingDetails.getExpertJoinTime()!=null){
+				return bookingDetails.isLearnerFeedbackDone();
+			}
+		}
+		return false;
+	}
+
+	public void saveFeedback(BookingFeedbackModel feedbackModel) {
+		Integer userId = Integer.valueOf(feedbackModel.getUserId());
+		String role = feedbackModel.getRole();
+		feedbackModel.setTime(new Date());
+		BookingDetails bookingDetails = repBooking.meetingIdExists(feedbackModel.getBookingId());
+		if(bookingDetails!=null){
+			if(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& !bookingDetails.isLearnerFeedbackDone()){
+				bookingDetails.setLearnerFeedBack(new Gson().toJson(feedbackModel));
+				bookingDetails.setLearnerFeedbackDone(true);
+				repBooking.save(bookingDetails);
+			}
+			if(bookingDetails.getTutorId().equals(userId)&&role.equals("Expert")&& !bookingDetails.isExpertFeedbackDone()){
+				bookingDetails.setExpertFeedback(new Gson().toJson(feedbackModel));
+				bookingDetails.setExpertFeedbackDone(true);
+				repBooking.save(bookingDetails);
+			}
+		}
 	}
 }

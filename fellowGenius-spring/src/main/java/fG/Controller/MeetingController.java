@@ -7,29 +7,20 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fG.Model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lowagie.text.DocumentException;
 
 import fG.Configuration.JwtUtil;
 import fG.Entity.BookingDetails;
 import fG.Entity.ScheduleData;
-import fG.Model.AuthenticationResponse;
-import fG.Model.BookingDetailsModel;
-import fG.Model.BookingStatus;
-import fG.Model.EarningDataModel;
-import fG.Model.ResponseModel;
-import fG.Model.ScheduleTime;
-import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Service.MeetingService;
 import fG.Service.UserService;
 
@@ -368,4 +359,19 @@ public class MeetingController {
 			throws ParseException {
 		meetingService.checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date);
 	}
+
+	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+	@GetMapping(value="/isFeedbackEleigible")
+	@ResponseBody
+	public ResponseEntity isFeedbackEligible(String meetingId,String userId){
+		return  ResponseEntity.ok(!meetingService.isFeedbackSubmitted(meetingId,userId));
+	}
+
+	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+	@PostMapping(value = "/saveFeedback")
+	@ResponseBody
+	public void saveFeedBack(@RequestBody BookingFeedbackModel feedbackModel){
+	 	meetingService.saveFeedback(feedbackModel);
+	}
+
 }

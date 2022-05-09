@@ -1,6 +1,7 @@
 package fG.Model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -12,10 +13,10 @@ import lombok.ToString;
 @ToString
 public class BookingFeedbackModel {
 
-	Integer bookingId;
-	Integer expertId;
-	Integer learnerId;
+	String bookingId;
+	String userId;
 	String role;
+	Date time;
 	Integer rating;
 	List<String> likes = new ArrayList<>();
 	List<String> disLikes = new ArrayList<>();
