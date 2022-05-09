@@ -12,26 +12,44 @@ import java.util.List;
 @RequestMapping("/fellowGenius/event")
 public class EventController {
 
-    @Autowired
-    EventService eventService;
+	@Autowired
+	EventService eventService;
 
-    @RequestMapping(value="/save")
-    public EventModel saveEvent(@RequestBody EventModel eventModel){
-        return eventService.saveEvent(eventModel);
-    }
+	@PostMapping(value = "/saveEvent")
+	public EventModel saveEvent(@RequestBody EventModel eventModel) {
+		return eventService.saveEvent(eventModel);
+	}
 
-    @RequestMapping(value="/upcomingEvents")
-    public List<EventModel> getUpcomingEventsList(){
-        return eventService.getUpcomingEvents();
-    }
+	@GetMapping(value = "/upcomingEvents")
+	public List<EventModel> getUpcomingEventsList() {
+		return eventService.getUpcomingEvents();
+	}
 
-    @RequestMapping(value="/getAllEvents")
-    public List<EventModel> getAllEventsList(){
-        return eventService.getAllEvents();
-    }
-    @RequestMapping(value="/addParticipant")
-    @ResponseBody
-    public boolean addParticipant(String email,String eventId){
-        return eventService.addParticipant(email,eventId);
-    }
+	@GetMapping(value = "/getAllEvents")
+	public List<EventModel> getAllEventsList() {
+		return eventService.getAllEvents();
+	}
+	
+	@GetMapping(value="/addHost")
+	@ResponseBody
+	public boolean addHost(String userId,String eventId) {
+		return eventService.addHost(userId, eventId);
+	}
+
+	@GetMapping(value = "/addParticipant")
+	@ResponseBody
+	public boolean addParticipant(String userId, String eventId) {
+		return eventService.addParticipant(userId, eventId);
+	}
+
+	@GetMapping(value = "/getEvent")
+	public EventModel getEventById(String eventId) {
+		return eventService.getEventById(eventId);
+	}
+	
+	@GetMapping(value="/checkParticipant")
+	@ResponseBody
+	public boolean checkParticipant(String userId,String eventId) {
+		return eventService.checkParticipant(userId,eventId);
+	}
 }

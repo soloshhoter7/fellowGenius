@@ -74,6 +74,7 @@ export class SignUpComponent implements OnInit {
   showPassword: boolean = false;
   enableOTPPage: boolean=false;
   referActivity: string;
+  isEvent: boolean=false;
 
   // ---------- patterns --------------------------------
   fullNamePattern = '[a-zA-Z ]*$';
@@ -132,8 +133,9 @@ export class SignUpComponent implements OnInit {
     }
     console.log(`Refer Activity is ${this.referActivity}`);
 
-    if(this.route.snapshot.queryParams.event!=undefined){
-      this.event_id=this.route.snapshot.queryParams.event;
+    if(this.route.snapshot.queryParams.eventId!=undefined){
+      this.event_id=this.route.snapshot.queryParams.eventId;
+      this.isEvent=true;
       console.log(`Event id is ${this.event_id}`);
       this.isEventBook=true;
     }
@@ -287,8 +289,8 @@ export class SignUpComponent implements OnInit {
 
                     //register for event
                     if(this.isEventBook){
-
-                      this.httpClient.addUserToEvent(this.registrationModel.email,this.event_id)
+                      var userId=this.getUserId();
+                      this.httpClient.addUserToEvent(userId,this.event_id)
                       .subscribe((res)=>{
                         if(res){
                           this.snackBar.open(
@@ -316,6 +318,10 @@ export class SignUpComponent implements OnInit {
               }
             });
     }
+  }
+
+  getUserId() {
+    return this.cookieService.get('userId');
   }
   
   onSignUp(form: NgForm) {
