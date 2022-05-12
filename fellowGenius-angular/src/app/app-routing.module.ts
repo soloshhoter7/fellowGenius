@@ -12,7 +12,7 @@ import { HowItWorksComponent } from './facade/how-it-works/how-it-works.componen
 import { LoginComponent } from './facade/login/login.component';
 import { ContactUsInfoComponent } from './facade/contact-us-info/contact-us-info.component';
 import { SignUpComponent } from './facade/sign-up/sign-up.component';
-
+import { EventDetailComponent } from './facade/events-dashboard/event-detail/event-detail.component';
 import { BookingsComponent } from './home/bookings/bookings.component';
 import { TutorDashboardComponent } from './home/dashboard/tutor-dashboard.component';
 import { HomeComponent } from './home/home.component';
@@ -82,6 +82,7 @@ export const appRoutes: Routes = [
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'view-tutors', component: ExpertProfileComponent },
   { path:'events',component: EventsDashboardComponent},
+  { path: 'view-event',component: EventDetailComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'sign-up',

@@ -205,23 +205,14 @@ public class MeetingService {
 		booking.setRazorpay_order_id(bookingModel.getRazorpay_order_id());
 		booking.setRazorpay_payment_id(bookingModel.getRazorpay_payment_id());
 		booking.setRazorpay_signature(bookingModel.getRazorpay_signature());
-		String message = "New appointment request";
-		System.out.println("booking==>" + booking);
 		StudentProfile sp = repStudentProfile.idExist(booking.getStudentId());
 		if (sp.getLessonCompleted() == 0) {
 			AppInfo thresholdCost = repAppInfo.keyExist("ReferralMeetingCost");
 			AppInfo thresholdTime = repAppInfo.keyExist("ReferralExpirationTime");
 			Integer diffInTime = findDaysFromRegistration(booking.getStudentId(), new Date());
-			System.out.println("Threshold cost:"+thresholdCost);
-			System.out.println("Threshold time:"+thresholdTime);
-			System.out.println("Difference in time from sign up:"+diffInTime);
-			System.out.println(("booking amount:"+booking.getAmount()));
-			if (booking.getAmount() >= Integer.valueOf(thresholdCost.getValue())
+			if (booking.getPaidAmount() >= Integer.valueOf(thresholdCost.getValue())
 					&& diffInTime <= Integer.valueOf(thresholdTime.getValue())) {
 				booking.setExpertCode(getReferralCodeFromUser(booking.getStudentId()));
-				
-				
-				
 			}
 		}
 		meetingBooked = meetingDao.saveBooking(booking);

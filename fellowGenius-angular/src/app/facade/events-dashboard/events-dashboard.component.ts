@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Event } from 'src/app/model/Event';
 import { HttpService } from 'src/app/service/http.service';
-
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-events-dashboard',
   templateUrl: './events-dashboard.component.html',
@@ -10,7 +10,8 @@ import { HttpService } from 'src/app/service/http.service';
 export class EventsDashboardComponent implements OnInit {
 
   upcomingEvents:Event[];
-  constructor(private httpClient: HttpService) { }
+  constructor(private httpClient: HttpService,
+    private router: Router) { }
 
   ngOnInit(): void {
 
@@ -32,7 +33,12 @@ export class EventsDashboardComponent implements OnInit {
     )
 
     
-    
+  }
+
+  viewEventDetail(upcomingEvent: Event){
+    this.router.navigate(['view-event'], {
+      queryParams: { eventId: upcomingEvent.eventId},
+    })
   }
 
 }
