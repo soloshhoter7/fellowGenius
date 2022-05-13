@@ -9,6 +9,7 @@ import {
   tutorProfileDetails,
 } from 'src/app/model/tutorProfileDetails';
 import { FiltersDialogComponent } from 'src/app/search-results/filters-dialog/filters-dialog.component';
+import { AdminService } from 'src/app/service/admin.service';
 import { HttpService } from 'src/app/service/http.service';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { ProfileService } from 'src/app/service/profile.service';
@@ -112,7 +113,8 @@ export class ExpertsComponent implements OnInit {
     private matDialog: MatDialog,
     private ngZone: NgZone,
     private activatedRoute: ActivatedRoute,
-    private snackBar:MatSnackBar
+    private snackBar:MatSnackBar,
+    private adminService:AdminService
   ) {
     initiate();
     this.allFiltersApplied = new filtersApplied();
@@ -332,6 +334,7 @@ export class ExpertsComponent implements OnInit {
       this.filteredArray = [];
       
       this.searchResults = req;
+      this.adminService.setExpertsList(req);
       console.log(this.searchResults);
       this.filterExpertsWithNoSchedule();
       this.isLoading = false;
