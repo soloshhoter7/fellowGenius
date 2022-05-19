@@ -163,7 +163,17 @@ export class SignUpComponent implements OnInit {
             subject: this.expert_domain,
           },
         });
-      } else if (this.prev_route == 'home') {
+      } else if(this.prev_route == 'view-event'){
+        this.cookieService.delete('prev');
+        this.cookieService.delete('event_id');
+       
+        
+        this.router.navigate(['view-event'],
+        {
+          queryParams: { eventId: this.event_id},
+        })
+      } 
+       else if (this.prev_route == 'home') {
         this.cookieService.delete('prev');
         this.router.navigate(['home']);
       } else {

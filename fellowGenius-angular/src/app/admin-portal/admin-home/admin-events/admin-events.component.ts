@@ -66,9 +66,9 @@ export class AdminEventsComponent implements OnInit {
     
     this.event.eventTitle=form.value.eventTitle;
     this.event.eventDescription=form.value.eventDescription;
-    this.event.eventStartTime=moment.utc(form.value.eventStartTime).local()
+    this.event.eventStartTime=moment(form.value.eventStartTime).local()
     .format("DD/MM/YYYY HH:MM:SS");
-    this.event.eventEndTime=moment.utc(form.value.eventEndTime).local()
+    this.event.eventEndTime=moment(form.value.eventEndTime).local()
     .format("DD/MM/YYYY HH:MM:SS");
     this.event.eventLink=form.value.eventLink;
     this.event.eventPassword=form.value.eventPassword;
@@ -87,6 +87,8 @@ export class AdminEventsComponent implements OnInit {
         console.log('Event saved successfully');
         this.snackbar.open('Event created successfully','close',this.config);
       }
+
+    
     )
     
   }

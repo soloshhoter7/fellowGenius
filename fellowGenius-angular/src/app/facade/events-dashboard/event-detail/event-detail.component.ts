@@ -45,13 +45,13 @@ export class EventDetailComponent implements OnInit {
       this.httpService.getEvent(this.eventId).subscribe((res)=>{
         this.event=res;
         this.expertBookingId=this.event.hostUserId;
+        this.expertDomain=this.event.eventDomain;
         console.log(this.event);
         this.httpService.fetchBookingTutorProfileDetails(this.event.hostUserId).subscribe((res)=>{
           console.log(res);
           this.expertName=res.fullName;
           this.expertDescription=res.description;
           this.expertProfilePictureUrl=res.profilePictureUrl;
-          this.expertDomain = res.areaOfExpertise[0].category;
           this.checkUserForTheEvent();
         })
       })
@@ -60,7 +60,7 @@ export class EventDetailComponent implements OnInit {
 
   viewProfile() {
     this.router.navigate(['view-tutors'], {
-      queryParams: { page: this.event.hostUserId, subject: this.expertDomain },
+      queryParams: { page: this.event.hostUserId, subject: this.expertDomain,eventId: this.eventId },
     });
   }
   checkUserForTheEvent(){

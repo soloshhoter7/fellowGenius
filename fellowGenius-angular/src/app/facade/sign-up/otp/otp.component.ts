@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { registrationModel } from 'src/app/model/registration';
 import { HttpService } from 'src/app/service/http.service';
 import * as bcrypt from 'bcryptjs';
@@ -36,7 +36,8 @@ export class OtpComponent implements OnInit {
     private router: Router,
     private httpClient: HttpService,
     private cookieService: CookieService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
   ) { }
 
   registrationModel = new registrationModel();
@@ -62,7 +63,7 @@ outputVerifyEmail(verifyEmail: boolean) {
   prev_route;
   expert_userId;
   expert_domain;
-
+  eventId;
   otp_1digit: any;
   otp_2digit: any;
   otp_3digit: any;
@@ -81,9 +82,21 @@ outputVerifyEmail(verifyEmail: boolean) {
 };
 
   ngOnInit(): void {
+    if(this.route.snapshot.queryParams.eventId!=undefined){
+      this.eventId=this.route.snapshot.queryParams.eventId;
+      console.log('Event id logged here');
+      console.log(this.eventId);
+    }
     this.prev_route = this.cookieService.get('prev');
+    console.log('Prev route logged here');
+    console.log(this.prev_route);
     this.expert_userId = this.cookieService.get('expert_userId');
     this.expert_domain = this.cookieService.get('expert_domain');
+    this.eventId=this.cookieService.get('event_id');
+    console.log('Event id from cookies');
+    console.log(this.eventId);
+    
+    
     console.log('OTP JSON ');
     console.log(this.otpJSON);
     this.email=this.otpJSON.email;
@@ -210,7 +223,17 @@ outputVerifyEmail(verifyEmail: boolean) {
             subject: this.expert_domain,
           },
         });
-      } else if (this.prev_route == 'home') {
+      } else if(this.prev_route == 'view-event'){
+        this.cookieService.delete('prev');
+        this.cookieService.delete('event_id');
+        
+        
+        this.router.navigate(['view-event'],
+        {
+          queryParams: { eventId: this.eventId},
+        })
+      } 
+      else if (this.prev_route == 'home') {
         this.cookieService.delete('prev');
         this.router.navigate(['home']);
       } else {
