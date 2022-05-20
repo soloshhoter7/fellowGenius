@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { CookieService } from 'ngx-cookie-service';
 import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+
 @Component({
   selector: 'app-event-detail',
   templateUrl: './event-detail.component.html',
@@ -27,7 +28,7 @@ export class EventDetailComponent implements OnInit {
       horizontalPosition: 'center',
       verticalPosition: 'top',
       panelClass: ['snackbar'],
-    }; 
+    };
 
     eventId: any;
     event=new Event();
@@ -39,15 +40,20 @@ export class EventDetailComponent implements OnInit {
     expertDescription='';
     expertBookingId='';
     expertDomain='';
+    eventStartDate: any;
+
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.eventId= params['eventId'];
       this.httpService.getEvent(this.eventId).subscribe((res)=>{
-        this.event=res;
-        this.expertBookingId=this.event.hostUserId;
-        this.expertDomain=this.event.eventDomain;
-        console.log(this.event);
-        this.httpService.fetchBookingTutorProfileDetails(this.event.hostUserId).subscribe((res)=>{
+      this.event=res;
+      this.expertBookingId=this.event.hostUserId;
+      this.expertDomain=this.event.eventDomain;
+      console.log(this.event);
+        
+      this.eventStartDate= this.setDateTime(this.event.eventStartTime)
+        
+      this.httpService.fetchBookingTutorProfileDetails(this.event.hostUserId).subscribe((res)=>{
           console.log(res);
           this.expertName=res.fullName;
           this.expertDescription=res.description;
@@ -55,7 +61,15 @@ export class EventDetailComponent implements OnInit {
           this.checkUserForTheEvent();
         })
       })
+      
     });
+  }
+
+  setDateTime(dateTime) {
+    const [date, time] = dateTime.split(" ");
+    const [DD, MM, YYYY] = date.split("/");
+    const [h, m, s] = time.split(":");
+    return new Date(YYYY, MM - 1, DD, h, m, s);
   }
 
   viewProfile() {

@@ -7,12 +7,12 @@
                     <div class="row time_hours">
                         <div class="col-12 col-sm-6">
                             <img src="../../../assets/images/calendar-icon.svg">
-                            <p>When: 22.05.2022</p>
+                            <p>When: {{eventStartDate | date }}</p>
                         </div>
 
                         <div class="col-12 col-sm-6">
                             <img src="../../../assets/images/time-icon.svg">
-                            <p>Hour: 12:00 am</p>
+                            <p>Hour: {{eventStartDate | date:'shortTime' }}</p>
                         </div>
 
                     </div>
@@ -20,7 +20,7 @@
                     <div class="banner_content">
                         <h1>{{event.eventTitle}}</h1>
                         <p>{{event.eventDescription}}</p>
-                        <button class="button signUp_btn"
+                        <button class="button signUp_btn register-btn-mb"
                         [disabled]="isBooked"
                         (click)="saveUserToEvent()">
                         <span *ngIf="isBooked; else registerEvent">
