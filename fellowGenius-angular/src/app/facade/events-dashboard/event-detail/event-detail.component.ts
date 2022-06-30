@@ -49,12 +49,12 @@ export class EventDetailComponent implements OnInit {
       this.event=res;
       this.expertBookingId=this.event.hostUserId;
       this.expertDomain=this.event.eventDomain;
-      console.log(this.event);
+      
         
       this.eventStartDate= this.setDateTime(this.event.eventStartTime)
         
       this.httpService.fetchBookingTutorProfileDetails(this.event.hostUserId).subscribe((res)=>{
-          console.log(res);
+          
           this.expertName=res.fullName;
           this.expertDescription=res.description;
           this.expertProfilePictureUrl=res.profilePictureUrl;
@@ -92,7 +92,7 @@ export class EventDetailComponent implements OnInit {
     }
   }
   saveUserToEvent(){
-    console.log('here');
+    
 
     if(this.loginService.getLoginType()=='Learner'){
      var userId=this.getUserId();

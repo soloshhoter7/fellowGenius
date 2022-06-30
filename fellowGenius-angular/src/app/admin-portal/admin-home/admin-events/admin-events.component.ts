@@ -46,13 +46,12 @@ export class AdminEventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.expertsList=this.adminService.getExpertsList();
-    console.log("Tutors list");
-    console.log(this.expertsList);
+    
   }
 
   changeTopics(expertName: any){
     this.topicsList=[]; //empty the topics list
-    //console.log("Inside change topic");
+    
     var expertises=this.expertsList.find((expert)=> expert.fullName===expertName)
     .areaOfExpertise;
     for(let i=0;i<expertises.length;i++){
@@ -61,8 +60,7 @@ export class AdminEventsComponent implements OnInit {
   }
 
   onCreateEvent(form: NgForm){
-    console.log(form);
-    console.log(form.value.eventTitle);
+    
     
     this.event.eventTitle=form.value.eventTitle;
     this.event.eventDescription=form.value.eventDescription;
@@ -72,19 +70,16 @@ export class AdminEventsComponent implements OnInit {
     .format("DD/MM/YYYY HH:MM:SS");
     this.event.eventLink=form.value.eventLink;
     this.event.eventPassword=form.value.eventPassword;
-    var selectedHost=form.value.eventHost;
-    console.log(selectedHost);
+    
     var index=this.expertsList.findIndex((expert)=>expert.fullName===form.value.eventHost);
-    console.log(index);
+    
     this.event.hostUserId=this.expertsList[index].tid.toString();
     this.event.eventDomain=form.value.eventDomain;
-    console.log('Event is ');
-    console.log(this.event);
+    
 
     this.httpService.saveEvents(this.event).subscribe(
       (res)=>{
-        console.log(res);
-        console.log('Event saved successfully');
+       
         this.snackbar.open('Event created successfully','close',this.config);
       }
 

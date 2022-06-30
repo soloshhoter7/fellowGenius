@@ -9,6 +9,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Subscription,interval, Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { tutorProfileDetails } from 'src/app/model/tutorProfileDetails';
+import { PrevRouteService } from 'src/app/service/prev-route.service';
 @Component({
   selector: 'app-otp',
   templateUrl: './otp.component.html',
@@ -34,6 +35,7 @@ export class OtpComponent implements OnInit {
   registeredExpert: boolean;
   constructor(
     private router: Router,
+    private prevRouteService:PrevRouteService,
     private httpClient: HttpService,
     private cookieService: CookieService,
     private snackBar: MatSnackBar,
@@ -203,44 +205,6 @@ outputVerifyEmail(verifyEmail: boolean) {
     }
     
     
-  }
-
-  goToPreviousUrl() {
-    if (this.prev_route != '') {
-      this.snackBar.open(
-        'You have successfully signed up',
-        'close',
-        this.config
-      );
-      console.log(this.prev_route);
-      if (this.prev_route == 'view-tutors') {
-        this.cookieService.delete('prev');
-        this.cookieService.delete('expert_userId');
-        this.cookieService.delete('expert_domain');
-        this.router.navigate(['view-tutors'], {
-          queryParams: {
-            page: this.expert_userId,
-            subject: this.expert_domain,
-          },
-        });
-      } else if(this.prev_route == 'view-event'){
-        this.cookieService.delete('prev');
-        this.cookieService.delete('event_id');
-        
-        
-        this.router.navigate(['view-event'],
-        {
-          queryParams: { eventId: this.eventId},
-        })
-      } 
-      else if (this.prev_route == 'home') {
-        this.cookieService.delete('prev');
-        this.router.navigate(['home']);
-      } else {
-        this.cookieService.delete('prev');
-        this.router.navigate([this.prev_route]);
-      }
-    }
   }
 
   

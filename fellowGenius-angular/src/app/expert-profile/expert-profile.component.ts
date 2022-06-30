@@ -116,7 +116,7 @@ export class ExpertProfileComponent implements OnInit {
       this.selectedDomain = params['subject'];
       this.eventId=params['eventId'];
       if(this.eventId){
-        console.log('Inside webinar redirect');
+       
         this.isWebinarRedirect=true;
       }
       if(this.loginService.getLoginType()!='Learner'&&!this.isWebinarRedirect){
@@ -133,7 +133,7 @@ export class ExpertProfileComponent implements OnInit {
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           if(this.teacherProfile.description!=null&&this.teacherProfile.description!=''){
-            console.log('here')
+            
             this.makeTabActive("about_nav","TAb_1");
           }else{
             document.getElementById("about_li").style.display="none";
