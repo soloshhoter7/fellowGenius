@@ -7,19 +7,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
 import fG.Entity.*;
+import fG.Enum.TaskDefinitonType;
 import fG.Model.*;
 import fG.Repository.*;
+import fG.Utils.MiscellaneousUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -32,6 +29,8 @@ import com.lowagie.text.DocumentException;
 
 import fG.DAO.Dao;
 import fG.DAO.MeetingDao;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 public class MeetingService {
@@ -91,7 +90,17 @@ public class MeetingService {
 
 	@Autowired
 	repositoryUserReferrals repUserReferral;
-	
+
+	@Autowired
+	MiscellaneousUtils miscUtils;
+
+	@Autowired
+	TaskDefinitionBean taskDefinitionBean;
+
+	@Autowired
+	SchedulerService taskSchedulerService;
+
+	private UUID uuid;
 	
 	public void saveNotification(JsonObject msg) {
 		Notification notification = new Notification(msg.get("entityType").getAsInt(),
@@ -219,14 +228,20 @@ public class MeetingService {
 
 		//check for coupon code.
 		if(meetingBooked!=null){
-
+			//create completion check job
+			String[] dateParts = booking.getDateOfMeeting().split("/");
+			TaskDefinition taskDefinition = new TaskDefinition();
+			taskDefinition.setData(booking.getMeetingId());
+			taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
+			taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute(),0));
+			taskSchedulerService.scheduleATask(uuid.randomUUID().toString(),taskDefinitionBean,taskDefinition.getCronExpression());
+			//check for coupon code.
 			Coupon coupon=repCoupon.couponCodeExists(meetingBooked.getCouponCode());
 			if(coupon!=null){
 				couponService.incrementConsumerCount(coupon.getCouponId().toString());
 			}
-		}
 //		sendMeetingNotificationWebSocket((bookingModel.getTutorId()).toString(),message);
-		if (meetingBooked!=null) {
+
 			StudentProfile learner = repStudentProfile.idExist(booking.getStudentId());
 			if(learner.getLessonCompleted()==0&&meetingBooked.getExpertCode()!=null) {
 				
@@ -268,8 +283,8 @@ public class MeetingService {
 				System.out.println("Credit Info : "+credits);
 			}
 			
-			Integer learnerSessionCompleted = learner.getLessonCompleted()+1;
-			learner.setLessonCompleted(learnerSessionCompleted);
+//			Integer learnerSessionCompleted = learner.getLessonCompleted()+1;
+//			learner.setLessonCompleted(learnerSessionCompleted);
 			repStudentProfile.save(learner);
 			
 			sendNotificationTutor(bookingModel.getTutorId(), booking);
@@ -431,7 +446,7 @@ public class MeetingService {
 		Integer tid = booking.getTutorId();
 		TutorProfileDetails expert = repTutorProfileDetails.bookingIdExist(tid);
 		if (expert != null && approvalStatus.equals("Accepted")) {
-			expert.setLessonCompleted(expert.getLessonCompleted() + 1);
+//			expert.setLessonCompleted(expert.getLessonCompleted() + 1);
 			expert.setEarning(expert.getEarning() + booking.getAmount());
 			repTutorProfileDetails.save(expert);
 		}

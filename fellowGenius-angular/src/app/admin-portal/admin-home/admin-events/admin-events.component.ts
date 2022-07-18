@@ -22,7 +22,8 @@ export class AdminEventsComponent implements OnInit {
     eventPassword: '',
     eventVenue: 'ONLINE',
     eventStatus: 'UPCOMING',
-    bannerUrl: ''
+    bannerUrl: '',
+    hostUserId:''
   };
   constructor(private httpService: HttpService) { }
 
