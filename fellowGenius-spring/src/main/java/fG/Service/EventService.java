@@ -25,13 +25,10 @@ public class EventService {
     @Autowired
     private repositoryUsers repUsers;
     public EventModel saveEvent(EventModel eventDto){
-        System.out.println(eventDto);
         Event event=eventMapper.DtoToEntity(eventDto);
-
         Event savedEvent=repEvent.save(event);
         EventModel savedEventModel=eventMapper.EntityToDto(savedEvent);
-        System.out.println(savedEventModel);
-        return savedEventModel;
+        return eventDto;
     }
 
 

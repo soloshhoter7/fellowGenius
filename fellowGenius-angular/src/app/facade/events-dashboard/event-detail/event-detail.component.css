@@ -1,0 +1,33 @@
+@media only screen and (max-width: 575px) {
+
+    .register-btn-mb{
+        margin-bottom: 20px;
+    }
+
+    .time_hours{
+    border: none;
+    padding: 10px;
+    margin-bottom: 20px
+    }
+
+    .time_hours .col-12.col-sm-6 {
+        padding: 0px;
+    }
+    .time_hours .col-12.col-sm-6:nth-child(1) {
+        margin-bottom: 10px;
+        position: relative;
+    }
+    .time_hours .col-12.col-sm-6:nth-child(1):before {
+        
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: 0px;
+        background-color: #a8a8a8;
+        right: 20px;
+       
+    }
+
+
+
+}

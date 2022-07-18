@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { bookingDetails } from 'src/app/model/bookingDetails';
 import { ReferralActivityAnalytics } from 'src/app/model/referralActivityAnalytics';
 import { UserActivityAnalytics } from 'src/app/model/userActivityAnalytics';
 import {
@@ -20,7 +21,7 @@ export class AnalyticsComponent implements OnInit {
   userData: UserData[] = [];
   loginData: ActivityTimeDetails[] = [];
   signUpData: ActivityTimeDetails[] = [];
-  meetingData: ActivityTimeDetails[] = [];
+  meetingData: bookingDetails[] = [];
   options = {
     fieldSeparator: ',',
     quoteStrings: '"',
@@ -217,6 +218,9 @@ export class AnalyticsComponent implements OnInit {
   downloadSignUpData() {
     this.httpService.fetchAllSignUpData().subscribe((res: any) => {
       this.signUpData = res;
+      this.signUpData.sort(function(a,b){
+        return new Date(b.signUpTime).getTime()-new Date(a.signUpTime).getTime();
+      })
       console.log(this.signUpData);
     });
   }
@@ -224,6 +228,12 @@ export class AnalyticsComponent implements OnInit {
   downloadMeetingData() {
     this.httpService.fetchAllMeetingsData().subscribe((res: any) => {
       this.meetingData = res;
+      console.log('Meeting Data')
+      console.log(this.meetingData);
+      
+      this.meetingData.sort(function(a,b){
+        return new Date(b.creationTime).getTime()-new Date(a.creationTime).getTime();
+      })
       console.log(this.meetingData);
     });
   }

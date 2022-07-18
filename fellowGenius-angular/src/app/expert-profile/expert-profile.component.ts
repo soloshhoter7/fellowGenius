@@ -36,6 +36,7 @@ export class ExpertProfileComponent implements OnInit {
   endDisabled: boolean;
   isTutorAvailable: boolean;
   isLoading: boolean = false;
+  isWebinarRedirect: boolean=false;
   teacherProfile = new tutorProfileDetails();
   meetingDetails = new meetingDetails();
   bookingDetails = new bookingDetails();
@@ -90,6 +91,7 @@ export class ExpertProfileComponent implements OnInit {
   profilePictureUrl = '../../assets/images/default-user-image.png';
   previousUrl
   selectedDomain;
+  eventId;
   selectedSubject: any;
   constructor(
     public profileService: ProfileService,
@@ -112,10 +114,18 @@ export class ExpertProfileComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['page'];
       this.selectedDomain = params['subject'];
-      if(this.loginService.getLoginType()!='Learner'){
+      this.eventId=params['eventId'];
+      if(this.eventId){
+       
+        this.isWebinarRedirect=true;
+      }
+      if(this.loginService.getLoginType()!='Learner'&&!this.isWebinarRedirect){
         this.cookieService.set("prev","view-tutors");
         this.cookieService.set("expert_userId",this.userId);
         this.cookieService.set("expert_domain",this.selectedDomain);
+      }else{
+        this.cookieService.set("prev","view-event");
+        this.cookieService.set("event_id",this.eventId);
       }
       this.httpService
         .fetchBookingTutorProfileDetails(this.userId)
@@ -123,7 +133,7 @@ export class ExpertProfileComponent implements OnInit {
           this.teacherProfile = res;
           this.profilePictureUrl = this.teacherProfile.profilePictureUrl;
           if(this.teacherProfile.description!=null&&this.teacherProfile.description!=''){
-            console.log('here')
+            
             this.makeTabActive("about_nav","TAb_1");
           }else{
             document.getElementById("about_li").style.display="none";

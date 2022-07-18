@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Transaction } from '../model/Transaction';
+import { tutorProfileDetails } from '../model/tutorProfileDetails';
 import { HttpService } from './http.service';
 
 
@@ -18,6 +19,8 @@ export class AdminService {
 
   private previousTransactionsList:Transaction[]=[];
   previousTransactionsChanged=new Subject<Transaction[]>();
+
+  expertsList: tutorProfileDetails[];
 
   getPendingTransactionsList(){
     return this.pendingTransactionsList.slice();
@@ -52,4 +55,14 @@ export class AdminService {
       }
     )
   }
+
+  setExpertsList(expertList:tutorProfileDetails[]){
+    this.expertsList=expertList; 
+  }
+
+  getExpertsList(){
+    return this.expertsList;
+  }
+
+  
 }
