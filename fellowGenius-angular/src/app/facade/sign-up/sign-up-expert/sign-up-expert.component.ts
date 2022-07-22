@@ -117,7 +117,7 @@ export class SignUpExpertComponent implements OnInit {
     "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   upiIdPattern = '[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}';
   linkedinProfilePattern =
     '^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|/)';
