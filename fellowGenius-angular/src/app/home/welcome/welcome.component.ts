@@ -46,7 +46,7 @@ export class WelcomeComponent implements OnInit {
   // ---------- patterns --------------------------------
   mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   referCodePattern = '^FG22[A-Z]{2}[\\d]{4}$';
   
   ngOnInit() {

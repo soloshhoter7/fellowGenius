@@ -79,7 +79,7 @@ export class StudentProfileComponent implements OnInit {
   linkedinProfilePattern="^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|\/)";
   mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   ngOnInit(): void {
     this.fillOptions();
     this.filteredOptions = this.myControl.valueChanges.pipe(
