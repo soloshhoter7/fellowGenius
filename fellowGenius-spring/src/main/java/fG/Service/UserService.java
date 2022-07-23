@@ -1829,6 +1829,8 @@ public class UserService implements UserDetailsService {
 			});
 			Collections.reverse(signUpData);
 		}
+		System.out.println("Sign up data here ");
+		System.out.println(signUpData);
 		return signUpData;
 	}
 	//fetching all previous meeting data
@@ -1846,8 +1848,8 @@ public class UserService implements UserDetailsService {
 				@Override
 				public int compare(BookingDetailsModel o1, BookingDetailsModel o2) {
 					try {
-						return (int) sdf.parse(o1.getCreationTime()).getTime()
-								- (int) sdf.parse(o2.getCreationTime()).getTime();
+						return (int) sdf.parse(o2.getCreationTime()).getTime()
+								- (int) sdf.parse(o1.getCreationTime()).getTime();
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1855,7 +1857,7 @@ public class UserService implements UserDetailsService {
 					return 0;
 				}
 			});
-			Collections.reverse(allBookingsModel);
+
 		}
 		return allBookingsModel;
 	}

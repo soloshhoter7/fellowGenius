@@ -11,4 +11,5 @@ export class Event{
     public eventStatus:string;
     public bannerUrl:string;
     public hostUserId:string;
+    public eventDomain:string;
 }

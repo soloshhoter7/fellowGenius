@@ -180,6 +180,7 @@ public class AdminController {
 	public ArrayList<UserActivityModel> fetchAllLoginData(){
 		return service.fetchAllLoginData();	
 	}
+
 	@PreAuthorize("hasAuthority('Admin')")
 	@RequestMapping(value = "/fetchAllSignUpData")
 	public ArrayList<UserActivityModel> fetchAllSignUpData() throws NumberFormatException, ParseException {

@@ -54,10 +54,11 @@ public class Event {
 
     private String bannerUrl;
 
+    private String eventDomain;
     public Event() {
     }
 
-    public Event(UUID eventId, EventType eventType, Date eventStartTime, Date eventEndTime, List<Users> participants, String eventTitle, String eventDescription, String eventLink, String eventPassword, String eventVenue, List<Users> hosts, EventStatus eventStatus, String bannerUrl) {
+    public Event(UUID eventId, EventType eventType, Date eventStartTime, Date eventEndTime, List<Users> participants, String eventTitle, String eventDescription, String eventLink, String eventPassword, String eventVenue, List<Users> hosts, EventStatus eventStatus, String bannerUrl, String eventDomain) {
         this.eventId = eventId;
         this.eventType = eventType;
         this.eventStartTime = eventStartTime;
@@ -71,6 +72,7 @@ public class Event {
         this.hosts = hosts;
         this.eventStatus = eventStatus;
         this.bannerUrl = bannerUrl;
+        this.eventDomain = eventDomain;
     }
 
     public UUID getEventId() {
@@ -177,6 +179,14 @@ public class Event {
         this.bannerUrl = bannerUrl;
     }
 
+    public String getEventDomain() {
+        return eventDomain;
+    }
+
+    public void setEventDomain(String eventDomain) {
+        this.eventDomain = eventDomain;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -193,7 +203,7 @@ public class Event {
                 ", hosts=" + hosts +
                 ", eventStatus=" + eventStatus +
                 ", bannerUrl='" + bannerUrl + '\'' +
+                ", eventDomain='" + eventDomain + '\'' +
                 '}';
     }
-
 }

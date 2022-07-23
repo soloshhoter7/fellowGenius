@@ -43,11 +43,9 @@ public class EventModel {
 
     private String hostUserId;
 
+    private String eventDomain;
 
-    public EventModel() {
-    }
-
-    public EventModel(String eventId, EventType eventType, String eventStartTime, String eventEndTime, List<Users> participants, String eventTitle, String eventDescription, String eventLink, String eventPassword, String eventVenue, List<Users> hosts, EventStatus eventStatus, String bannerUrl) {
+    public EventModel(String eventId, EventType eventType, String eventStartTime, String eventEndTime, String eventTitle, String eventDescription, String eventLink, String eventPassword, String eventVenue, EventStatus eventStatus, String bannerUrl, String hostUserId, String eventDomain) {
         this.eventId = eventId;
         this.eventType = eventType;
         this.eventStartTime = eventStartTime;
@@ -59,5 +57,12 @@ public class EventModel {
         this.eventVenue = eventVenue;
         this.eventStatus = eventStatus;
         this.bannerUrl = bannerUrl;
+        this.hostUserId = hostUserId;
+        this.eventDomain = eventDomain;
     }
+
+    public EventModel() {
+    }
+
+
 }

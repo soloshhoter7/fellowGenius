@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { BookingsComponent } from './home/bookings/bookings.component';
-import {
+import { 
   BrowserAnimationsModule,
   NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
@@ -123,7 +123,7 @@ import { SessionComponent } from './home/session/session.component';
 import { EventsDashboardComponent } from './facade/events-dashboard/events-dashboard.component';
 import { AdminEventsComponent } from './admin-portal/admin-home/admin-events/admin-events.component';
 import { EventDetailComponent } from './facade/events-dashboard/event-detail/event-detail.component';
-import { DateTimePickerModule, TimePickerModule } from '@syncfusion/ej2-angular-calendars';
+
 
 
 @NgModule({
@@ -214,7 +214,6 @@ import { DateTimePickerModule, TimePickerModule } from '@syncfusion/ej2-angular-
     NoopAnimationsModule,
     MatInputModule,
     MatRadioModule,
-    TimePickerModule,
     BrowserModule,
     AppRoutingModule,
     NgxAgoraModule.forRoot({ AppID: environment.agora.appId }),

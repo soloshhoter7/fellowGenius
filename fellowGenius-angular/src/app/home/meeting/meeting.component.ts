@@ -586,6 +586,7 @@ export class MeetingComponent implements OnInit {
     this.assignLocalStreamHandlers(this.localStream);
     let localStreamId: string = this.localStream.getId().toString();
     this.initLocalStream(() => {
+      console.log('trying to publish local stream !')
       this.publish(this.localStream);
       this.localStreams.push(localStreamId);
     });
@@ -790,14 +791,18 @@ export class MeetingComponent implements OnInit {
         !this.localMicStreams.includes(id.toString())
       ) {
         console.log('remote stream is not local stream');
-        this.client.subscribe(
-          stream,
-          { audio: true, video: true },
-          (err) => {}
-        );
+        // this.client.subscribe(
+        //   stream,
+        //   { audio: true, video: true },
+        //   (err) => {}
+        // );
+        this.client.subscribe(stream,{audio:false,video:true},(err)=>{
+          console.log('remote stream subscribing failed !',err);
+        })
+        
       }
     });
-
+    // this.client.on(ClientEvent.)
     this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
       console.log('remote stream subscribed');
       const stream = evt.stream as Stream;

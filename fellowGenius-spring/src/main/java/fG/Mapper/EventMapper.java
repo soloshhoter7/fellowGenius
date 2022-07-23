@@ -4,6 +4,7 @@ import fG.Entity.Event;
 import fG.Entity.Users;
 import fG.Model.EventModel;
 import fG.Repository.repositoryTutorProfileDetails;
+import fG.Repository.repositoryUsers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,18 +29,21 @@ public abstract class EventMapper {
     @Autowired
     private repositoryTutorProfileDetails repTutorProfileDetails;
 
+    @Autowired
+    private repositoryUsers repUsers;
+
     @Mapping(target = "eventStartTime",source = "eventStartTime",qualifiedByName = "parseDate")
     @Mapping(target = "eventEndTime",source="eventEndTime",qualifiedByName = "parseDate")
     @Mapping(target = "eventType",expression = "java(fG.Enum.EventType.WEBINAR)")
     @Mapping(target = "eventStatus",expression = "java(fG.Enum.EventStatus.UPCOMING)")
     @Mapping(target="eventId",source = "eventId",qualifiedByName = "StringToUUID")
+    @Mapping(target="hosts",source = "hostUserId",qualifiedByName = "getHostEntity")
     public abstract Event DtoToEntity(EventModel eventDto);
 
     @Mapping(target = "eventStartTime",source = "eventStartTime",qualifiedByName = "parseDateToString")
     @Mapping(target = "eventEndTime",source="eventEndTime",qualifiedByName = "parseDateToString")
     @Mapping(target="eventId",source = "eventId",qualifiedByName = "UUIDToString")
     @Mapping(target="hostUserId",source ="hosts",qualifiedByName = "setHostId")
-
     public abstract EventModel EntityToDto(Event event);
 
     @Named("parseDate")
@@ -54,6 +59,15 @@ public abstract class EventMapper {
         }
         return date;
     }
+
+    @Named("getHostEntity")
+    public List<Users> getHostEntity(String hostUserId){
+        List<Users> userHostList=new ArrayList<>();
+        Users host=repUsers.idExists(Integer.parseInt(hostUserId));
+        userHostList.add(host);
+        return userHostList;
+    }
+
     @Named("setHostId")
     public String setHostId(List<Users> hosts){
         if(hosts.size()>0){

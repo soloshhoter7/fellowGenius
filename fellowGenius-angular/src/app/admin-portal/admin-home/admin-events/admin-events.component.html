@@ -59,7 +59,7 @@
             <div class="col-12 col-md-6">
                 <!-- Textbox -->
                 <input
-                    type="text"
+                    type="datetime-local"
                     id="eventStartTime"
                     name="eventStartTime"
                     ngModel
@@ -82,7 +82,7 @@
           <div class="col-12 col-md-6">
               <!-- Textbox -->
               <input
-                  type="text"
+                  type="dateTime-local"
                   id="eventEndTime"
                   name="eventEndTime"
                   ngModel
@@ -96,6 +96,68 @@
             
           </div>
       </div>
+
+      <div class="row"  style="margin-bottom: 10px;">
+        <div class="col-12 col-md-3">
+            <h3>Event Host</h3>
+        </div>
+        <div class="col-12 col-md-6">
+            <!-- Textbox -->
+            <div class="form-group">
+                
+                <select
+                  class="select2 form-control"
+                  id="eventHost"
+                  name="eventHost"
+                  data-placeholder="Choose Host *"
+                  ngModel
+                  (change)="changeTopics($event.target.value)"
+                >
+                  <option
+                    *ngFor="let expert of expertsList"
+                    [value]="expert.fullName"
+                  >
+                    {{ expert.fullName }}
+                  </option>
+                  
+                </select>
+              </div>
+        </div>
+        <div class="col-12 col-md-3">
+          
+        </div>
+    </div>
+
+    <div class="row"  style="margin-bottom: 10px;">
+      <div class="col-12 col-md-3">
+          <h3>Event Domain</h3>
+      </div>
+      <div class="col-12 col-md-6">
+          <!-- Textbox -->
+          <div class="form-group">
+              
+              <select
+                class="select2 form-control"
+                id="eventDomain"
+                name="eventDomain"
+                data-placeholder="Choose Domain *"
+                ngModel
+                
+              >
+                <option
+                  *ngFor="let topic of topicsList"
+                  [value]="topic"
+                >
+                  {{ topic }}
+                </option>
+                
+              </select>
+            </div>
+      </div>
+      <div class="col-12 col-md-3">
+        
+      </div>
+  </div>
 
 
       <div class="row"  style="margin-bottom: 10px;">
@@ -142,6 +204,8 @@
         
       </div>
   </div>
+
+  
 
   <button
                             type="submit"

@@ -30,6 +30,7 @@ import { SocialService } from 'src/app/service/social.service';
 import { WelcomeComponent } from 'src/app/home/welcome/welcome.component';
 import { AuthService } from 'src/app/service/auth.service';
 import { Subscription } from 'rxjs';
+import { PrevRouteService } from 'src/app/service/prev-route.service';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -38,6 +39,7 @@ import { Subscription } from 'rxjs';
 export class SignUpComponent implements OnInit {
   constructor(
     private router: Router,
+    private prevRouteService: PrevRouteService,
     private httpClient: HttpService,
     private studentService: StudentService,
     private tutorService: TutorService,
@@ -82,7 +84,7 @@ export class SignUpComponent implements OnInit {
   emailPattern=
 "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   upiIdPattern= "[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}";
   referCodePattern = '^FG22[A-Z]{2}[\\d]{4}$';
  
@@ -145,34 +147,7 @@ export class SignUpComponent implements OnInit {
     this.showPassword = !this.showPassword;
     console.log(this.showPassword);
   }
-  goToPreviousUrl() {
-    if (this.prev_route != '') {
-      this.snackBar.open(
-        'You have successfully signed up',
-        'close',
-        this.config
-      );
-      console.log(this.prev_route);
-      if (this.prev_route == 'view-tutors') {
-        this.cookieService.delete('prev');
-        this.cookieService.delete('expert_userId');
-        this.cookieService.delete('expert_domain');
-        this.router.navigate(['view-tutors'], {
-          queryParams: {
-            page: this.expert_userId,
-            subject: this.expert_domain,
-          },
-        });
-      } else if (this.prev_route == 'home') {
-        this.cookieService.delete('prev');
-        this.router.navigate(['home']);
-      } else {
-        this.cookieService.delete('prev');
-        this.router.navigate([this.prev_route]);
-      }
-    }
-  }
-
+  
   otpChange() {
     console.log('input changes');
   }
@@ -228,7 +203,8 @@ export class SignUpComponent implements OnInit {
             if (res == true) {
               if (this.loginService.getLoginType() == 'Learner') {
                 if (this.prev_route != '') {
-                  this.goToPreviousUrl();
+                  this.prevRouteService.goToPreviousUrl(
+                    this.prev_route,this.expert_userId,this.expert_domain,this.event_id);
                 } else {
                   this.snackBar.open(
                     'You have successfully Signed up',
@@ -278,7 +254,8 @@ export class SignUpComponent implements OnInit {
                   this.isLoading=false;
                   if (this.prev_route != '') {
                     console.log("prev route is "+ this.prev_route);
-                    this.goToPreviousUrl();
+                    this.prevRouteService.goToPreviousUrl(
+                      this.prev_route,this.expert_userId,this.expert_domain,this.event_id);
                   } else {
                     this.snackBar.open(
                       'You have successfully signed up',
