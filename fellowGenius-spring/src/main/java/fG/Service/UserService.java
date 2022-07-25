@@ -1818,8 +1818,8 @@ public class UserService implements UserDetailsService {
 				@Override
 				public int compare(UserActivityModel o1, UserActivityModel o2) {
 					try {
-						return (int) sdf.parse(o1.getSignUpTime()).getTime()
-								- (int) sdf.parse(o2.getSignUpTime()).getTime();
+						return (int) sdf.parse(o2.getSignUpTime()).getTime()
+								- (int) sdf.parse(o1.getSignUpTime()).getTime();
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1827,7 +1827,7 @@ public class UserService implements UserDetailsService {
 					return 0;
 				}
 			});
-			Collections.reverse(signUpData);
+
 		}
 		System.out.println("Sign up data here ");
 		System.out.println(signUpData);

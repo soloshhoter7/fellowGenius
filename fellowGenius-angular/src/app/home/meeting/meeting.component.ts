@@ -24,12 +24,7 @@ import {
   NgxAgoraService,
   Stream,
   AgoraClient,
-  ClientEvent,
-  StreamEvent,
-  LocalStreamStats,
-  RemoteStreamStats,
-  StreamStats,
-  MediaDeviceInfo,
+  StreamEvent
 } from 'ngx-agora';
 import * as SockJS from 'sockjs-client';
 import { timer, Subscription, interval } from 'rxjs';
@@ -40,8 +35,6 @@ import { bookingDetails } from 'src/app/model/bookingDetails';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MessageModel } from 'src/app/model/message';
-import { WebSocketService } from 'src/app/service/web-socket.service';
-import { DataSource } from '@angular/cdk/collections';
 import { LocationStrategy } from '@angular/common';
 import { LoginDetailsService } from 'src/app/service/login-details.service';
 import { HttpService } from 'src/app/service/http.service';
@@ -50,20 +43,15 @@ import * as jwt_decode from 'jwt-decode';
 import { StudentService } from 'src/app/service/student.service';
 import { TutorService } from 'src/app/service/tutor.service';
 import { environment } from 'src/environments/environment';
-import { stringify } from '@angular/compiler/src/util';
 import { AuthService } from 'src/app/service/auth.service';
-import { isThisISOWeek } from 'date-fns';
 import * as moment from 'moment';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   MatDialog,
   MatDialogConfig,
-  MatDialogRef,
 } from '@angular/material/dialog';
 import { MediaAccessDialogComponent } from './media-access-dialog/media-access-dialog.component';
-import { setTime } from '@syncfusion/ej2-schedule';
-import { timeStamp } from 'console';
 import { VoiceCallService } from './voice-call/voice-call.service';
+import AgoraRTC, { IMicrophoneAudioTrack, ICameraVideoTrack, IAgoraRTCClient, ILocalVideoTrack } from 'agora-rtc-sdk-ng';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -178,7 +166,6 @@ export class MeetingComponent implements OnInit {
   private screenStream: Stream;
   private preLocalStream: Stream;
   private preLocalMicStream: Stream;
-  private micStream: Stream;
   private uid: number;
   private sid: number;
   private mid: number;
@@ -238,6 +225,39 @@ export class MeetingComponent implements OnInit {
   localAudioLevelSubscription: Subscription;
   remoteAudioLevelSubscription: Subscription;
   dialogConfig = new MatDialogConfig();
+  //----------------------------- version upgraded variables------------------
+  rtc = {
+    client: null,
+    screenClient:null,
+    remoteClient: null,
+    remoteScreenClient:null,
+    localTracks : {
+      videoTrack: null,
+      audioTrack: null,
+      screenTrack:null
+    },
+    remoteTracks : {
+      videoTrack: null,
+      audioTrack: null,
+      screenTrack:null
+    }
+  };
+  localTrackAudioLevel: string = '0';
+  selectedMicrophoneId;
+  options = {
+    appid: '45f3ee50e0fd491aa46bd17c05fc7073',
+    channel: 'FG@123456',
+    uid: null,
+    token: null,
+  };
+  AppId = environment.agora.appId;
+  mics = [];
+  cams = [];
+  currentMic;
+  currentCam;
+  
+  connectionState = 'NOT INITIALIZED';
+  //-----------------------------------------------------------------------------
   @HostListener('')
   @HostListener('window:resize', ['$event'])
   getScreenSize(event?) {
@@ -402,23 +422,26 @@ export class MeetingComponent implements OnInit {
 
       if (this.loginService.getLoginType() != null) {
         // creating user client
-        this.client = this.ngxAgoraService.createClient({
-          mode: 'rtc',
-          codec: 'vp8',
-        });
-
-        //assigning client handlers
-        this.assignClientHandlers(this);
+        this.rtc.client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+        console.log('CLIENT CREATED !');
+        console.log('APP ID :' + this.AppId);
+        this.assignClientHandlers();
         //getting user devices info
 
         if (this.mediaAccessAllowed == true) {
-          this.getDevicesInfo();
+          this.getMediaDevicesInfo();
         }
         //initialising premeeting streams
         this.initialisePreMeetingStreams();
       }
     }
   }
+  //   async getMediaDevicesInfo() {
+  //   this.mics = await AgoraRTC.getMicrophones();
+  //   this.currentMic = this.mics[0];
+  //   this.cams = await AgoraRTC.getCameras();
+  //   this.currentCam = this.cams[0];
+  // }
   initialisePreMeetingStreams() {
     if (this.preLocalStream != null) {
       this.preLocalStream.stop();
@@ -428,7 +451,7 @@ export class MeetingComponent implements OnInit {
       this.preLocalMicStream.stop();
       this.preLocalMicStream.close();
     }
-    this.getDevicesInfo();
+    this.getMediaDevicesInfo();
     setTimeout(() => {
       //creating pre local stream(cam) and pre local mic stream
       this.preLocalStream = this.ngxAgoraService.createStream({
@@ -461,7 +484,7 @@ export class MeetingComponent implements OnInit {
       this.assignPreLocalMicStreamHandlers(this.preLocalMicStream);
       this.checkIfNoDevicesAllowed();
       if (this.mediaAccessAllowed == true) {
-        this.getDevicesInfo();
+        this.getMediaDevicesInfo();
       }
     }, 1000);
   }
@@ -523,7 +546,7 @@ export class MeetingComponent implements OnInit {
     }
   }
 
-  initialiseInMeeting() {
+initialiseInMeeting() {
     if (
       !document.getElementById('meeting-body').classList.contains('no-remote')
     ) {
@@ -534,80 +557,234 @@ export class MeetingComponent implements OnInit {
     this.subscription1 = interval(1000).subscribe((x) => {
       this.limitStream2();
     });
-
-    this.getDevicesInfo();
-
-    this.join(() => {
+    this.getMediaDevicesInfo();
+    this.join(this.meetingId,this.userId).then(()=>{
       console.log('CAMERA_CLIENT_JOINED');
-      this.voiceCallService
-        .startBasicCall(this.meetingId, this.uid)
+      this.startBasicCall()
         .then(() => {
           this.isLoading = false;
-          this.initialiseStreams();
         });
     });
   }
-  initialiseStreams() {
-    // case 1 mic on video on
-    if (this.localVideoOn && this.localMicOn) {
-      this.startLocalStream();
-      // this.startMicStream();
-    }
-    //case 2 mic on video off
-    else if (this.localMicOn && !this.localVideoOn) {
-      // this.startMicStream();
-    }
-    //case 3 mic off video on
-    else if (!this.localMicOn && this.localVideoOn) {
-      this.startLocalStream();
-      this.voiceCallService.muteAudioTrack();
-      // this.startMicStream();
-      // this.localStream.unmuteAudio();
-    }
-    //case 4 mic off video off
-    else {
-      this.voiceCallService.muteAudioTrack();
-      // this.startMicStream();
-    }
+// --------------------- version upgraded functions----------------
+async initLocalCameraCall(){
+  if(!this.rtc.localTracks.videoTrack){
+    //create camera video track
+    [this.rtc.localTracks.videoTrack]= await Promise.all([
+      AgoraRTC.createCameraVideoTrack({
+        cameraId: this.currentCam.deviceId,
+      }),
+    ]);
   }
-  //----------------------------- Stream start and stop functions---------------------------------------------
-  startLocalStream() {
-    console.log('starting local stream!');
-    if (this.localStreams.length > 0) {
-      this.removeLocalStream();
-    }
-    this.localStream = this.ngxAgoraService.createStream({
-      streamID: this.uid,
-      audio: false,
-      video: true,
-      screen: false,
-    });
-    this.localStream.setVideoProfile('720p_2');
-    this.assignLocalStreamHandlers(this.localStream);
-    let localStreamId: string = this.localStream.getId().toString();
-    this.initLocalStream(() => {
-      console.log('trying to publish local stream !')
-      this.publish(this.localStream);
-      this.localStreams.push(localStreamId);
-    });
+  this.rtc.localTracks.videoTrack.play("agora_local");
+  this.publish('video');
+}
+async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
+  [this.rtc.localTracks.audioTrack] = await Promise.all([
+    // create local tracks, using microphone and camera
+    AgoraRTC.createMicrophoneAudioTrack({
+      microphoneId: this.currentMic.deviceId,
+    }),
+  ]);
+  this.publish('audio');
+  setInterval(() => {
+    let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
+    this.localTrackAudioLevel = audioTrack
+      .getVolumeLevel()
+      .toFixed(2)
+      .toString();
+  }, 100);
+}}
+
+  async startBasicCall(){
+    //create a basic video stream 
+    console.log('STARTING BASIC CALL !');
+    this.initLocalVoiceCall();
+    this.initLocalCameraCall();
   }
 
-  removeLocalStream() {
-    if (this.localStream != null) {
-      if (this.localStream.isPlaying()) {
-        this.unPublish(this.localStream);
-        this.localStreams = [];
-        this.localStream.muteVideo();
-        this.localStream.stop();
-        this.localStream.close();
+  async publish(type) {
+  
+    console.log('trying to publish',this.rtc.localTracks)
+    if (type=='audio'&&this.rtc.localTracks != null && this.rtc.localTracks.audioTrack != null) {
+      await this.rtc.client
+        .publish(this.rtc.localTracks.audioTrack)
+        .then(() => {
+          console.log('MICROPHONE TRACK PUBLISHED SUCCESSFULLY');
+        })
+        .catch((e) => {
+          console.log('MICROPHONE TRACK PUBLISHING FAILED !');
+          console.log(e);
+          setTimeout(() => {
+            this.publish('audio');
+          }, 500);
+        });
+    }
+
+    if(type=='video'&&this.rtc.localTracks !=null && this.rtc.localTracks.videoTrack!=null){
+      await this.rtc.client
+      .publish(this.rtc.localTracks.videoTrack)
+      .then(()=>{
+        console.log('CAMERA TRACK PUBLISHED SUCCESSFULLY');
+      })
+      .catch((e)=>{
+        console.log('CAMERA TRACK PUBLISHING FAILED');
+        console.log(e);
+          setTimeout(() => {
+            this.publish('video');
+          }, 500);
+      })
+    }
+  }
+async switchCamera(label) {
+    console.log(label);
+    this.currentCam = this.cams.find((cam) => cam.label === label);
+    // switch device of local video track.
+    await this.rtc.localTracks.videoTrack.setDevice(this.currentCam.deviceId);
+  }
+
+async switchMicrophone(label) {
+    console.log(label);
+    this.currentMic = this.mics.find((mic) => mic.label === label);
+    // switch device of local audio track.
+    await this.rtc.localTracks.audioTrack.setDevice(this.currentMic.deviceId);
+  }
+async subscribe(user, mediaType) {
+      // subscribe to a remote user
+      await this.rtc.client.subscribe(user, mediaType);
+      console.log('subscribe success');
+      if (mediaType === 'audio') {
+        console.log('SUBSCRIBED SOUND IS PLAYING !');
+        user.audioTrack.play();
+      }else if(mediaType === 'video'){
+        console.log('SUBSCRIBED VIDEO IS PLAYING !');
+        if(user.uid==this.remoteUserId+2){
+          console.log('remote stream is screen share and subscribed !');
+          this.enableScreenShareView();
+          let screenTrack = this.rtc.remoteTracks.screenTrack=user.videoTrack;
+          this.screenRemoteCalls.push(screenTrack);
+          setTimeout(()=>{
+            screenTrack.play(this.screenCallId);
+          },1000)
+        }else{
+          console.log('remote stream is camera stream and subscribed!');
+          let id = user.uid;
+          this.remoteCalls.push(id);
+          
+          console.log('REMOTE VIDEO STREAM');
+          setTimeout(() => {
+            user.videoTrack.play("remote-playerlist");  
+            let videoId = 'video' + id;
+            var vid: any = document.getElementById(videoId);
+            setTimeout(() => {
+              console.log('HEIGHT :' + vid.videoHeight);
+              console.log('WIDTH :' + vid.videoWidth);
+              this.remoteVideoWidth = vid.videoWidth;
+              this.remoteVideoHeight = vid.videoHeight;
+              if (!this.isMobile) {
+                if (this.remoteVideoWidth < 500) {
+                  let remoteVideoDiv = document.getElementById(id);
+                  remoteVideoDiv.style['left'] = 'unset';
+                  remoteVideoDiv.style['width'] = '40%';
+                  // remoteVideoDiv.style['top'] = 'unset';
+                }
+              } else if (this.isMobile) {
+                if (this.remoteVideoWidth > 450) {
+                  let remoteVideoDiv = document.getElementById(id);
+                  remoteVideoDiv.style['top'] = 'unset';
+                  remoteVideoDiv.style['height'] = '75%';
+                }
+              }
+            }, 1000);
+          }, 1000);
+        }
       }
-    }
   }
 
-  closeLocalVideo(stream: Stream) {
-    stream.stop();
-    stream.close();
+  async getMediaDevicesInfo() {
+    this.mics = await AgoraRTC.getMicrophones();
+    this.currentMic = this.mics[0];
+    this.cams = await AgoraRTC.getCameras();
+    this.currentCam = this.cams[0];
   }
+
+  assignClientHandlers() {
+    console.log('Initialising client handlers')
+    let client: IAgoraRTCClient = this.rtc.client;
+    client.on('user-published', async (user, mediaType) => {
+      console.log('MEDIA TYPE IS :'+ mediaType);
+      const id = user.uid;
+      if(user.uid == this.remoteUserId){
+        this.rtc.remoteClient = user;
+        this.subscribe(user, mediaType);
+      }else if(user.uid== this.remoteUserId+2){
+        this.rtc.remoteScreenClient = user;
+        this.subscribe(user, mediaType);
+      }
+    });
+    client.on('user-unpublished', (user, mediaType) => {
+      if (mediaType === 'video') {
+        const id = user.uid;
+        this.rtc.remoteClient=null;
+      }
+    });
+    client.on('connection-state-change', (curState, revState, reason) => {
+      this.connectionState = curState;
+      console.log('CONNECTION STATE CHANGED :', curState, revState, reason);
+      // if (this.connectionState == 'DISCONNECTED') {
+      //   this.meetingComponent.endCall();
+      // }
+    });
+    client.on('user-joined',(user)=>{
+      console.log('USER JOINED !!');
+      if(!this.rtc.screenClient || user.uid!=this.rtc.screenClient.uid){
+        this.peerOnline=true;
+        this.enableRemoteJoinedView();
+        console.log('enabling remote joined view')
+      }
+    });
+    client.on('user-left',(user)=>{
+      console.log('USER LEFT !');
+      if(user.uid==this.remoteUserId+2){
+        this.screenRemoteCalls=[];
+        this.rtc.remoteTracks.screenTrack=null;
+        this.disableScreenShareView();
+      }else if(user.uid!=this.userId+2){
+        this.peerOnline=false;
+        this.enableNoRemoteView();
+      }
+    });
+    AgoraRTC.onMicrophoneChanged = async (changedDevice) => {
+      await this.getMediaDevicesInfo();
+    };
+  }
+  //------------------------------------------------------------
+  // initialiseStreams() {
+  //   // case 1 mic on video on
+  //   if (this.localVideoOn && this.localMicOn) {
+  //     this.startLocalStream();
+  //     // this.startMicStream();
+  //   }
+  //   //case 2 mic on video off
+  //   else if (this.localMicOn && !this.localVideoOn) {
+  //     // this.startMicStream();
+  //   }
+  //   //case 3 mic off video on
+  //   else if (!this.localMicOn && this.localVideoOn) {
+  //     this.startLocalStream();
+  //     this.voiceCallService.muteAudioTrack();
+  //     // this.startMicStream();
+  //     // this.localStream.unmuteAudio();
+  //   }
+  //   //case 4 mic off video off
+  //   else {
+  //     this.voiceCallService.muteAudioTrack();
+  //     // this.startMicStream();
+  //   }
+  // }
+  //----------------------------- Stream start and stop functions---------------------------------------------
+  
+
 
   //route user to login page if not authenticated
   redirectUser() {
@@ -756,207 +933,11 @@ export class MeetingComponent implements OnInit {
   }
   //---------------------------------------------------------------------------------------------------
   //---------------------------------------------- client Handlers -------------------------------------------------------------
-  // normal client handler
-  private assignClientHandlers(that): void {
-    this.client.on(ClientEvent.RecordingDeviceChanged, (evt) => {
-      if (this.meetingState == 'in-meeting') {
-        if (this.localMicOn) {
-          this.snackbar.open('Microphone muted !', 'close', this.config);
-          this.muteAudio();
-        }
-      }
-    });
-    this.client.on(ClientEvent.LocalStreamPublished, (evt) => {
-      console.log('local stream published @');
-      this.isLocalCamStreamPublished = true;
-      this.isLoading = false;
-    });
 
-    this.client.on(ClientEvent.Error, (error) => {
-      if (error.reason === 'DYNAMIC_KEY_TIMEOUT') {
-        this.client.renewChannelKey(
-          '',
-          () => (renewError) =>
-            console.error('Renew channel key failed: ', renewError)
-        );
-      }
-    });
-
-    this.client.on(ClientEvent.RemoteStreamAdded, (evt) => {
-      console.log('remote stream added');
-      const stream = evt.stream as Stream;
-      var id = stream.getId();
-      if (
-        !this.localStreams.includes(id.toString()) &&
-        !this.localMicStreams.includes(id.toString())
-      ) {
-        console.log('remote stream is not local stream');
-        // this.client.subscribe(
-        //   stream,
-        //   { audio: true, video: true },
-        //   (err) => {}
-        // );
-        this.client.subscribe(stream,{audio:false,video:true},(err)=>{
-          console.log('remote stream subscribing failed !',err);
-        })
-        
-      }
-    });
-    // this.client.on(ClientEvent.)
-    this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
-      console.log('remote stream subscribed');
-      const stream = evt.stream as Stream;
-      const id = this.getRemoteId(stream);
-      const idt = stream.getId();
-      if (idt == this.remoteUserId + 2) {
-        console.log('remote stream is screen share and subscribed!');
-        this.screenRemoteCalls.push(id);
-        this.enableScreenShareView();
-        setTimeout(() => stream.play(id), 1000);
-      } else if (idt == this.remoteUserId + 10) {
-      } else {
-        if (!this.remoteCalls.length) {
-          console.log('remote stream is camera stream and subscribed!');
-          this.remoteCalls.push(id);
-          console.log('REMOTE VIDEO STREAM');
-          setTimeout(() => {
-            stream.play(id);
-            let videoId = 'video' + idt;
-            var vid: any = document.getElementById(videoId);
-            setTimeout(() => {
-              console.log('HEIGHT :' + vid.videoHeight);
-              console.log('WIDTH :' + vid.videoWidth);
-              this.remoteVideoWidth = vid.videoWidth;
-              this.remoteVideoHeight = vid.videoHeight;
-              if (!this.isMobile) {
-                if (this.remoteVideoWidth < 500) {
-                  let remoteVideoDiv = document.getElementById(id);
-                  remoteVideoDiv.style['left'] = 'unset';
-                  remoteVideoDiv.style['width'] = '40%';
-                  // remoteVideoDiv.style['top'] = 'unset';
-                }
-              } else if (this.isMobile) {
-                if (this.remoteVideoWidth > 450) {
-                  let remoteVideoDiv = document.getElementById(id);
-                  remoteVideoDiv.style['top'] = 'unset';
-                  remoteVideoDiv.style['height'] = '75%';
-                }
-              }
-            }, 1000);
-          }, 1000);
-        }
-      }
-    });
-
-    this.client.on(ClientEvent.RemoteStreamRemoved, (evt) => {
-      console.log('stream removed ', evt);
-      const stream = evt.stream as Stream;
-      const id = this.getRemoteId(stream);
-      const idt = stream.getId();
-      if (idt == this.remoteUserId) {
-        if (stream) {
-          stream.stop();
-          this.remoteCalls = [];
-          console.log('remote camera stream is removed ');
-        }
-      } else if (idt == this.remoteUserId + 10) {
-      } else if (idt == this.remoteUserId + 2) {
-        this.disableScreenShareView();
-        console.log('remote stream is screen share and remvoed!');
-        this.screenRemoteCalls = [];
-        stream.stop();
-        stream.close();
-      }
-    });
-    this.client.on(ClientEvent.RemoveVideoMuted, (evt) => {
-      this.remoteVideoMute = true;
-    });
-    this.client.on(ClientEvent.RemoteVideoUnmuted, (evt) => {
-      this.remoteVideoMute = false;
-    });
-    this.client.on(ClientEvent.PeerLeave, (evt) => {
-      // this.peerOnline=false;
-      const stream = evt.stream as Stream;
-      if (stream) {
-        console.log('peeeerrr leftttt !!!', evt);
-        stream.stop();
-        this.peerOnline = false;
-        this.enableNoRemoteView();
-        if (this.localScreenStreams.length == 0) {
-          this.screenRemoteCalls = [];
-          this.disableScreenShareView();
-        }
-        // this.endCall();
-        this.remoteCalls = this.remoteCalls.filter(
-          (call) => call !== `${this.getRemoteId(stream)}`
-        );
-      } else {
-        console.log('peeeerrr leftt?');
-        console.log(evt);
-        if (
-          evt.uid != this.remoteUserId + 2 &&
-          evt.uid != this.userId &&
-          evt.uid != this.userId + 2
-        ) {
-          this.peerOnline = false;
-          console.log('screen stream', this.localScreenStreams.length);
-          if (this.localScreenStreams.length == 0) {
-            this.screenRemoteCalls = [];
-            this.disableScreenShareView();
-          }
-          this.enableNoRemoteView();
-        }
-      }
-      // this.endCall();
-    });
-
-    this.client.on(ClientEvent.PeerOnline, (evt) => {
-      console.log('peer is onlineeeee', evt);
-      console.log(parseInt(this.remoteUserId) + 2);
-      // console.log(remoteScreenId)
-      if (
-        evt.uid != this.userId &&
-        evt.uid != this.userId + 2 &&
-        evt.uid != this.userId + 10
-      ) {
-        this.peerOnline = true;
-        this.enableRemoteJoinedView();
-      }
-    });
-  }
-
-  // screen client Handlers
-  private assignScreenClientHandlers(): void {
-    this.screenClient.on(ClientEvent.LocalStreamPublished, (evt) => {});
-    this.screenClient.on(ClientEvent.RemoteStreamRemoved, (evt) => {
-      console.log('screen share removed');
-    });
-  }
-  private getRemoteId(stream: Stream): string {
-    if (stream != null) {
-      return `agora_remote-${stream.getId()}`;
-    }
-  }
   //----------------------------------------------------------------------------------------------------------
   //--------------------------------------stream Handlers----------------------------------------------------
 
-  // local camera stream handlers
-  private assignLocalStreamHandlers(stream: Stream): void {
-    //the user has allowed the media access to the camera
-    stream.on(StreamEvent.MediaAccessAllowed, () => {
-      console.log('Media access allowed !');
-      this.mediaAccessAllowed = true;
-      this.camAccessAllowed = true;
-      this.getDevicesInfo();
-    });
 
-    // The user has denied access to the camera
-    stream.on(StreamEvent.MediaAccessDenied, () => {
-      this.mediaAccessAllowed = false;
-      this.camAccessAllowed = false;
-      console.log('media access denied !');
-    });
-  }
 
   //Pre local Camera stream Handlers
   private assignPreLocalStreamHandlers(stream: Stream): void {
@@ -968,7 +949,7 @@ export class MeetingComponent implements OnInit {
       if (this.mediaAccessPopUpDialogRef != null) {
         this.dialog.closeAll();
       }
-      this.getDevicesInfo();
+      this.getMediaDevicesInfo();
     });
 
     // The user has denied access to the camera
@@ -990,7 +971,7 @@ export class MeetingComponent implements OnInit {
       if (this.mediaAccessPopUpDialogRef != null) {
         this.dialog.closeAll();
       }
-      this.getDevicesInfo();
+      this.getMediaDevicesInfo();
     });
 
     // The user has denied access to the camera.
@@ -1001,31 +982,25 @@ export class MeetingComponent implements OnInit {
     });
   }
   //Screen Stream Handlers
-  private assignScreenStreamHandlers(stream: Stream): void {
-    stream.on(StreamEvent.ScreenSharingStopped, () => {
-      console.log('SCREEN STREAM HAS BEEN STOPPED !');
-      this.screenShare();
+  private assignLocalStreamHandlers(stream: Stream): void {
+    //the user has allowed the media access to the camera
+    stream.on(StreamEvent.MediaAccessAllowed, () => {
+      console.log('Media access allowed !');
+      this.mediaAccessAllowed = true;
+      this.camAccessAllowed = true;
+      this.getMediaDevicesInfo();
+    });
+
+    // The user has denied access to the camera
+    stream.on(StreamEvent.MediaAccessDenied, () => {
+      this.mediaAccessAllowed = false;
+      this.camAccessAllowed = false;
+      console.log('media access denied !');
     });
   }
-
   //------------------------------------------------------------------------------------------------------------
   //------------------------------init functions for streams ---------------------------------------------------
   //In meeting camera Stream init
-  private initLocalStream(onSuccess?: () => any): void {
-    this.localStream.init(
-      () => {
-        this.localStream.play(this.localCallId);
-        if (onSuccess) {
-          this.isLocalStreamPlaying = true;
-          onSuccess();
-        }
-      },
-      (err) => {
-        console.error('getUserMedia failed', err);
-        this.mediaAccessAllowed = false;
-      }
-    );
-  }
 
   //Pre meeting Camera Stream init
   private initPreMeetingLocalStream(onSuccess?: () => any): void {
@@ -1064,81 +1039,23 @@ export class MeetingComponent implements OnInit {
     );
   }
   //Screen Stream Init
-  private initScreenStream(onSuccess?: () => any): void {
-    this.screenStream.init(
-      () => {
-        this.screenStream.play(this.localScreenCallId);
-        if (onSuccess) {
-          onSuccess();
-        }
-      },
-      (err) => {
-        console.error('getUserMedia  failed', err);
-        this.disableScreenShareView();
-        this.localScreenStreams = [];
-        this.hostScreenShareStatus = false;
-      }
-    );
-  }
+
 
   //-----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------join and publish functions----------------------------------------------
   //camera client join with uid
-  join(
-    onSuccess?: (uid: number | string) => void,
-    onFailure?: (error: Error) => void
-  ): void {
-    this.client.join(
-      null,
-      this.meetingService.getMeeting().roomName,
-      this.meeting.userId,
-      onSuccess,
-      onFailure
-    );
-  }
-  //camera client publish local camera stream
-  publish(stream: Stream): void {
-    console.log('TRYING TO PUBLISH LOCAL STREAM');
-    console.log(stream.getId().toString());
-    this.client.publish(stream, (err) => {
-      console.log('ERR OCCURRED WHILE PUBLISHING THE STREAM');
-      console.log(err);
+ async join(meetingId,userId){
+    await this.rtc.client.join(this.AppId,meetingId, null,userId).then(() => {
+      console.log('CLIENT JOINED !');
     });
-  }
-  //camera client unpublish local camera stream
-  unPublish(stream: Stream): void {
-    if (this.client != null) {
-      this.client.unpublish(stream, (err) => {});
-      this.isLocalCamStreamPublished = false;
-    }
-  }
+}
 
   //screen client join with sid : (uid+2)
-  screenJoin(
-    onSuccess?: (sid: number | string) => void,
-    onFailure?: (error: Error) => void
-  ): void {
-    this.localStreams.push(this.sid.toString());
-    this.screenClient.join(
-      null,
-      this.meetingService.getMeeting().roomName,
-      this.sid,
-      onSuccess,
-      onFailure
-    );
-  }
-  //screen client publish local screen stream
-  screenPublish(): void {
-    this.screenClient.publish(this.screenStream, (err) => {
-      console.log('ERROR WHILE PUBLISHING SCREEN STREAM', err);
+  async screenClientJoin(meetingId,userId){
+    await this.rtc.screenClient.join(this.AppId,meetingId, null,userId).then(() => {
+      console.log('SCREEN CLIENT JOINED !');
     });
-  }
-  //screen client un-publish local screen stream
-  screenUnpublish(): void {
-    this.screenClient.unpublish(this.screenStream, (err) => {
-      console.log('ERROR WHILE UN-PUBLISHING SCREEN STREAM', err);
-    });
-  }
+}
   // ------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------- control button functions --------------------------------------------
   stopStream() {
@@ -1213,6 +1130,10 @@ export class MeetingComponent implements OnInit {
       this.router.navigate(['home/student-dashboard']);
     }
   }
+  closeLocalVideo(stream: Stream) {
+    stream.stop();
+    stream.close();
+  }
   preMeetingMuteVideo() {
     if (this.muteHostVideoStatus == 'mute host video') {
       this.localVideoOn = false;
@@ -1280,79 +1201,72 @@ export class MeetingComponent implements OnInit {
     }
   }
   muteVideo() {
+    let videoTrack:ICameraVideoTrack = this.rtc.localTracks.videoTrack;
     if (this.muteHostVideoStatus == 'mute host video') {
       this.localVideoOn = false;
-      this.removeLocalStream();
+      videoTrack.setEnabled(false);
+      document.getElementById("agora_local").style.display='none';
       this.muteHostVideoStatus = 'unmute host video';
     } else if (this.muteHostVideoStatus == 'unmute host video') {
       this.localVideoOn = true;
-      if (this.localStream != null) {
-        let localStreamId: string = this.localStream.getId().toString();
-        if (!this.localStreams.includes(localStreamId)) {
-          this.startLocalStream();
-        } else {
-          this.removeLocalStream();
-          this.startLocalStream();
-        }
-      } else {
-        this.removeLocalStream();
-        this.startLocalStream();
-      }
+      videoTrack.setEnabled(true);
+      document.getElementById("agora_local").style.display='block';
       this.muteHostVideoStatus = 'mute host video';
     }
   }
 
   muteAudio() {
+    let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
     if (this.muteHostAudioStatus == 'mute host mic') {
       this.localMicOn = false;
-      this.voiceCallService.muteAudioTrack();
+      audioTrack.setEnabled(false);
       this.muteHostAudioStatus = 'unmute host mic';
     } else {
       this.localMicOn = true;
-      this.voiceCallService.unmuteAudioTrack();
+      audioTrack.setEnabled(true);
       this.muteHostAudioStatus = 'mute host mic';
     }
   }
   screenShare() {
     if (this.hostScreenShareStatus == false) {
       this.hostScreenShareStatus = true;
-      // this.hostVideo = false;
       this.shareScreen();
     } else {
       this.disableScreenShareView();
       this.hostScreenShareStatus = false;
-      this.screenStream.stop();
-      this.screenClient.unpublish(this.screenStream, (err) => {});
-      this.screenClient.leave();
-      this.screenStream.close();
-      this.localStreams = [];
+      let screenClient:IAgoraRTCClient = this.rtc.screenClient;
+      let screenShareVideo:ILocalVideoTrack = this.rtc.localTracks.screenTrack; 
+      screenClient.unpublish(this.rtc.localTracks.screenTrack);
+      screenClient.leave();
+      screenShareVideo.close();
+      screenShareVideo.stop();
+      this.rtc.localTracks.screenTrack = null;
     }
   }
-  shareScreen() {
+  async shareScreen() {
     // if (this.meetingService.getMeeting().role == 'host') {
     this.enableScreenShareView();
-    this.screenClient = this.ngxAgoraService.createClient({
+    this.rtc.screenClient = AgoraRTC.createClient({
       mode: 'rtc',
       codec: 'h264',
     });
-    this.assignScreenClientHandlers();
-    this.screenStream = this.ngxAgoraService.createStream({
-      streamID: this.uid,
-      audio: false,
-      video: false,
-      screen: true,
-    });
-    this.sid = this.userId + 2;
-    console.log(this.userId, this.sid);
-    this.assignScreenStreamHandlers(this.screenStream);
-    let localScreenStreamId: string = this.screenStream.getId().toString();
-    this.localScreenStreams.push(localScreenStreamId);
-    this.initScreenStream(() => {
-      this.screenJoin(
-        (sid) => this.screenPublish(),
-        (error) => console.error(error)
-      );
-    });
+    this.screenClientJoin(this.meetingId,this.userId+2);
+    let screenStream:ILocalVideoTrack = this.rtc.localTracks.screenTrack = await AgoraRTC.createScreenVideoTrack({
+      encoderConfig: {
+        frameRate: 15,
+        height: 720,
+        width: 1280
+      },
+    },"disable");
+    this.assignScreenTrackHandlers(screenStream);
+    this.rtc.localTracks.screenTrack.play(this.localScreenCallId);
+    this.rtc.screenClient.publish(this.rtc.localTracks.screenTrack).publish();
+  }
+  assignScreenTrackHandlers(screenTrack:ILocalVideoTrack){
+    screenTrack.on("track-ended",()=>{
+      console.log('SCREEN STREAM HAS BEEN STOPPED !');
+      this.screenShare();
+    })
   }
   openChatWindow() {
     if (this.chatOpen == false) {
@@ -1390,11 +1304,6 @@ export class MeetingComponent implements OnInit {
             msg.fileName = res.message.fileName;
             msg.fileType = res.message.fileType;
             that.scrollToBottom();
-            // if(msg.senderId!=this.senderId && this.openChat==false){
-            //   this.newMessageNotification=true;
-            // }
-            // console.log('message ->' + msg);
-            // console.log(msg.senderId);
             if (msg.senderId != that.meeting.userId && that.chatOpen == false) {
               that.newMessageNotification = true;
             }
@@ -1534,43 +1443,7 @@ export class MeetingComponent implements OnInit {
   }
   // -------------------------------------------Device Utility Functions----------------------------------------
 
-  //get devices info
-  getDevicesInfo() {
-    this.client.getCameras((devices: MediaDeviceInfo[]) => {
-      console.log('camera devices : ', devices);
-      this.activeVideoDeviceName = devices[0].label;
-    });
-    this.client.getPlayoutDevices((devices: MediaDeviceInfo[]) => {
-      console.log('audio output devices : ', devices);
-      let defaultAudioOutputDevice: string = this.getDefaultDeviceName(devices);
-      let defaultAudioOutputDeviceId: string = this.getDefaultDeviceId(devices);
-      if (
-        defaultAudioOutputDevice &&
-        defaultAudioOutputDevice != '' &&
-        defaultAudioOutputDeviceId &&
-        defaultAudioOutputDeviceId != ''
-      ) {
-        this.activeAudioOutputDeviceId = defaultAudioOutputDeviceId;
-        this.activeAudioOutputDeviceName = defaultAudioOutputDevice;
-        this.defaultAudioOutputDeviceId = defaultAudioOutputDeviceId;
-        this.defaultAudioOutputDeviceName = defaultAudioOutputDevice;
-      }
-    });
-    this.client.getRecordingDevices((devices: MediaDeviceInfo[]) => {
-      console.log('audio input devices : ', devices);
-      let defaultAudioInputDevice: string = this.getDefaultDeviceName(devices);
-      let defaultAudioInputDeviceId: string = this.getDefaultDeviceId(devices);
-      if (
-        defaultAudioInputDevice &&
-        defaultAudioInputDevice != '' &&
-        defaultAudioInputDeviceId &&
-        defaultAudioInputDeviceId != ''
-      ) {
-        this.activeAudioInputDeviceId = defaultAudioInputDeviceId;
-        this.activeAudioInputDeviceName = defaultAudioInputDevice;
-      }
-    });
-  }
+
   //getting default device name out of list of connected devices
   getDefaultDeviceName(devices) {
     let deviceGroupId: string = '';
@@ -1673,74 +1546,6 @@ export class MeetingComponent implements OnInit {
       }
     } else {
       console.log('NO REMOTE STREAM PRESENT !');
-    }
-  }
-  changeOutputDevice(stream: Stream) {
-    console.log('CHANGE OUTPUT DEVICE !');
-    if (this.remoteMicStreams.length > 0) {
-      // let stream: Stream = this.remoteMicStreams[0];
-      if (stream.isPlaying()) {
-        console.log('REMOTE VIDEO ON :' + stream.isVideoOn());
-        console.log('REMOTE AUDIO ON :' + stream.isAudioOn());
-        console.log('REMOTE STREAM VIDEO ENABLED :' + stream.videoEnabled);
-        this.getDevicesInfo();
-        setTimeout(() => {
-          console.log(
-            'DEFAULT OUTPUT DEVICE NAME :',
-            this.defaultAudioOutputDeviceName
-          );
-          console.log(
-            'DEFAULT OUTPUT DEVICE ID :',
-            this.defaultAudioOutputDeviceId
-          );
-          if (this.defaultAudioOutputDeviceId != null) {
-            stream.setAudioOutput(
-              this.defaultAudioOutputDeviceId,
-              () => {
-                console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
-                console.log('TRYING TO RESUME THE STREAM');
-                console.log(
-                  stream.resume().then(() => {
-                    console.log('STREAM RESUMED SUCCESSFULLY !');
-                  })
-                );
-              },
-              (err) => {
-                console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
-              }
-            );
-            stream.resume();
-          } else {
-            console.log('OUTPUT DEVICE ID IS NULL !');
-          }
-        }, 1000);
-      }
-    } else {
-      console.log('REMOTE STREAMS ARE NULL !');
-    }
-  }
-  setAudioOutputDevice() {
-    console.log(this.inputAudioOutputDeviceId);
-    if (
-      this.inputAudioOutputDeviceId != null &&
-      this.remoteMicStreams.length > 0
-    ) {
-      let stream: Stream = this.remoteMicStreams[0];
-      stream.setAudioOutput(
-        this.inputAudioOutputDeviceId,
-        () => {
-          console.log('AUDIO DEVICE CHANGED SUCCESSFULLY !');
-          console.log('TRYING TO RESUME THE STREAM');
-          console.log(
-            stream.resume().then(() => {
-              console.log('STREAM RESUMED SUCCESSFULLY !');
-            })
-          );
-        },
-        (err) => {
-          console.log('AUDIO DEVICE CHANGE NOT SUCCESSFUL !', err);
-        }
-      );
     }
   }
   openDialog(title) {

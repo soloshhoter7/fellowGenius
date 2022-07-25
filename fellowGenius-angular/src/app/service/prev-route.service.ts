@@ -40,8 +40,6 @@ export class PrevRouteService {
       } else if(prev_route == 'view-event'){
         this.cookieService.delete('prev');
         this.cookieService.delete('event_id');
-       
-        
         this.router.navigate(['view-event'],
         {
           queryParams: { eventId: event_id},

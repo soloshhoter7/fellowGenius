@@ -1,27 +1,14 @@
-<h1>On Demand Consulting</h1>
-
-						<p> Interact with experts of your choice in just a click</p>
-						<button (click)="trigger.closePanel()">Close panel test</button>
-						<form (ngSubmit)="displaySelectedSubjects()"> 
-							<div class="serach_field" style="position: relative;">
-								<input type="search" class="form-control domain_srch"
-								#trigger="matAutocompleteTrigger"
-								(keydown.Space)="$event.target.blur(); trigger.closePanel()"
-								 placeholder="Find Experts by Domain" [formControl]="myControl"
-								[matAutocomplete]="auto"
-								[(ngModel)]="selectedSubject" />
-								<mat-autocomplete #auto="matAutocomplete" 
-								(optionSelected)='optionSelected($event.option.value)' 
-								autoActiveFirstOption
-								>
-									<mat-option
-									  *ngFor="let option of filteredOptions | async"
-									  [value]="option"
-									>
-									  {{ option }}
-									</mat-option>
-								  </mat-autocomplete>
-								  
-							</div>
-							
-						</form>
+<div class="row video-group">
+    <div class="col">
+      <p id="local-player-name" class="player-name"></p>
+      <div id="local-player" class="player"></div>
+    </div>
+    <button (click)="muteCamera()">Mute Camera</button>
+    <br>
+    <button (click)="unmuteCamera()">Unmute Camera</button>
+    <div class="w-100"></div>
+    <div class="col">
+        <p id="remote-player-name " class="player-name"></p>
+      <div id="remote-playerlist" class="player"></div>
+    </div>
+  </div>

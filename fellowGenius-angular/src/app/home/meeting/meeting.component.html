@@ -443,7 +443,6 @@
                 <div class="screen-share-window">
                   <div [id]="localScreenCallId" class="screen"></div>
                   <div
-                    *ngFor="let screenCallId of screenRemoteCalls"
                     [id]="screenCallId"
                     class="screen"
                   ></div>
@@ -473,8 +472,7 @@
                       person
                     </span>
                     <div
-                      *ngFor="let callId of remoteCalls"
-                      [id]="callId"
+                      id="remote-playerlist"
                       class="remote-video-play"
                     ></div>
                     <div

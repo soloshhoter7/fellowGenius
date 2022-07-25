@@ -44,7 +44,7 @@ export class ResetPasswordComponent implements OnInit {
 "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
   mobNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   ngOnInit(): void {
     this.seePassword();
     this.activatedRoute.queryParams.subscribe((params) => {

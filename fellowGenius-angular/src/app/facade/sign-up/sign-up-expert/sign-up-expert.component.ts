@@ -117,7 +117,7 @@ export class SignUpExpertComponent implements OnInit {
     "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   upiIdPattern = '[a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64}';
   linkedinProfilePattern =
     '^https://www.linkedin.com/($|[a-zA-Z0-9.\\-_]{1,10}/)[a-zA-Z0-9.\\-_]{2,256}($|/)';
@@ -187,72 +187,72 @@ export class SignUpExpertComponent implements OnInit {
     window.scroll(0, 0);
     this.activatedRoute.queryParams.subscribe((params) => {
       this.jwtToken = params['token'];
-      console.log(this.authService.isTokenExpired(this.jwtToken));
+      console.log('is token Expired',this.authService.isTokenExpired(this.jwtToken));
       if (this.jwtToken) {
         this.choosePassword = true;
       } else {
+        console.log('executing this part !');
         this.choosePassword = false;
+        window['angularComponentReference'] = {
+          component: this,
+          zone: this.ngZone,
+          loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
+          changeOtherDomain: () => this.selectOtherDomain(),
+          changeOtherTopic: () => this.selectOtherTopic(),
+          disableEditDomainView: () => this.disableEditDomainView(),
+        };
+        this.getAllCategories();
+        // this.getEarningAppInfo();
+        $('.select2').select2({
+          placeholder: {
+            id: '-1', // the value of the option
+            text: 'Select an option',
+          },
+        });
+    
+        $('.select2').on('change', function () {
+          let value = $(this).val();
+          if (value && value != 'Others') {
+            this.selectedCategory = $(this).val();
+            window.angularComponentReference.zone.run(() => {
+              window.angularComponentReference.loadAngularFunction($(this).val());
+            });
+          }
+        });
+    
+        $('#chooseCategory').on('change', function () {
+          let value: string = $(this).val();
+          console.log('choosen domain :', value);
+          if (value == 'Others') {
+            window.angularComponentReference.zone.run(() => {
+              window.angularComponentReference.changeOtherDomain();
+            });
+          } else {
+            window.angularComponentReference.zone.run(() => {
+              window.angularComponentReference.disableEditDomainView();
+            });
+          }
+        });
+        $('#chooseSubCategory').on('change', function () {
+          let value = $(this).val();
+          console.log('choosen topic :', value);
+          if (value == 'Others') {
+            window.angularComponentReference.zone.run(() => {
+              window.angularComponentReference.changeOtherTopic();
+            });
+          } else {
+            window.angularComponentReference.zone.run(() => {
+              window.angularComponentReference.disableEditDomainView();
+            });
+          }
+        });
+    
+        this.filteredOptions = this.myControl.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._filter(value))
+        );
       }
     });
-
-    window['angularComponentReference'] = {
-      component: this,
-      zone: this.ngZone,
-      loadAngularFunction: (evt: any) => this.filterSCfromCateg(evt),
-      changeOtherDomain: () => this.selectOtherDomain(),
-      changeOtherTopic: () => this.selectOtherTopic(),
-      disableEditDomainView: () => this.disableEditDomainView(),
-    };
-    this.getAllCategories();
-    // this.getEarningAppInfo();
-    $('.select2').select2({
-      placeholder: {
-        id: '-1', // the value of the option
-        text: 'Select an option',
-      },
-    });
-
-    $('.select2').on('change', function () {
-      let value = $(this).val();
-      if (value && value != 'Others') {
-        this.selectedCategory = $(this).val();
-        window.angularComponentReference.zone.run(() => {
-          window.angularComponentReference.loadAngularFunction($(this).val());
-        });
-      }
-    });
-
-    $('#chooseCategory').on('change', function () {
-      let value: string = $(this).val();
-      console.log('choosen domain :', value);
-      if (value == 'Others') {
-        window.angularComponentReference.zone.run(() => {
-          window.angularComponentReference.changeOtherDomain();
-        });
-      } else {
-        window.angularComponentReference.zone.run(() => {
-          window.angularComponentReference.disableEditDomainView();
-        });
-      }
-    });
-    $('#chooseSubCategory').on('change', function () {
-      let value = $(this).val();
-      console.log('choosen topic :', value);
-      if (value == 'Others') {
-        window.angularComponentReference.zone.run(() => {
-          window.angularComponentReference.changeOtherTopic();
-        });
-      } else {
-        window.angularComponentReference.zone.run(() => {
-          window.angularComponentReference.disableEditDomainView();
-        });
-      }
-    });
-
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filter(value))
-    );
   }
 
   checkForNumbers(form: any) {

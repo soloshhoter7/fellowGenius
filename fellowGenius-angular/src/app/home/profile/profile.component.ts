@@ -119,7 +119,7 @@ export class ProfileComponent implements OnInit {
   duplicateEducationArea;
   mobNumberPattern = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]{8,10}$';
   passwordPattern =
-    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$';
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$';
   minDobDate: Date;
   maxDobDate: Date;
   @ViewChild('basicProfile') basicProfile: FormGroupDirective;
