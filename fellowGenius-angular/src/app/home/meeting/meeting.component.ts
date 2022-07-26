@@ -558,6 +558,8 @@ initialiseInMeeting() {
       this.limitStream2();
     });
     this.getMediaDevicesInfo();
+    console.log('is Camera On :',this.localVideoOn);
+    console.log('is Mic On :',this.localMicOn);
     this.join(this.meetingId,this.userId).then(()=>{
       console.log('CAMERA_CLIENT_JOINED');
       this.startBasicCall()
@@ -576,8 +578,14 @@ async initLocalCameraCall(){
       }),
     ]);
   }
-  this.rtc.localTracks.videoTrack.play("agora_local");
-  this.publish('video');
+  this.publish('video').then(()=>{
+    this.rtc.localTracks.videoTrack.play("agora_local");
+    console.log('is Camera On :',this.localVideoOn);
+    if(!this.localVideoOn){
+      console.log('is Camera On executed')
+      this.muteVideo();
+    }
+  });
 }
 async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
   [this.rtc.localTracks.audioTrack] = await Promise.all([
@@ -586,8 +594,12 @@ async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
       microphoneId: this.currentMic.deviceId,
     }),
   ]);
-  this.publish('audio');
-  setInterval(() => {
+  this.publish('audio').then(()=>{
+    if(!this.localMicOn){
+      this.muteAudio();
+    }
+  });
+   setInterval(() => {
     let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
     this.localTrackAudioLevel = audioTrack
       .getVolumeLevel()
@@ -1066,11 +1078,16 @@ async subscribe(user, mediaType) {
   endCall() {
     //closing all screen sharing streams if any
 
-    if (this.screenStream != null) {
-      this.localScreenStreams = [];
-      this.screenStream.stop();
-      this.screenClient.leave();
-      this.screenStream.close();
+    if (this.rtc.localTracks.screenTrack != null) {
+      let screenTrack:ILocalVideoTrack =this.rtc.localTracks.screenTrack;
+      if(this.rtc.screenClient!=null){
+        this.rtc.screenClient.unpublish(screenTrack);
+        this.rtc.screenClient.leave();
+        this.rtc.screenClient = null;
+      }
+      screenTrack.stop();
+      screenTrack.close();
+      this.rtc.localTracks.screenTrack = null;
     }
     //unpublishing the cam stream
     if (this.preLocalStream != null) {
@@ -1081,29 +1098,27 @@ async subscribe(user, mediaType) {
       this.preLocalMicStream.stop();
       this.preLocalMicStream.close();
     }
-    if (this.localStream != null) {
-      this.client.unpublish(this.localStream, (err) => {});
+    if (this.rtc.localTracks.videoTrack!=null) {
+      let cameraTrack:ICameraVideoTrack = this.rtc.localTracks.videoTrack;
+      this.rtc.client.unpublish(cameraTrack);
+      cameraTrack.stop();
+      cameraTrack.close();
+      this.rtc.localTracks.videoTrack=null;
     }
 
     //unpublishing the mic stream
-    if (this.localMicStream != null) {
-      this.micClient.unpublish(this.localMicStream, (err) => {});
+    if (this.rtc.localTracks.audioTrack != null) {
+      let audioTrack:IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
+      this.rtc.client.unpublish(audioTrack);
+      audioTrack.stop();
+      audioTrack.close();
+      this.rtc.localTracks.audioTrack = null;
     }
 
     //leaving client from channel
-    if (this.client != null) {
-      this.client.leave();
-    }
-    //leaving mic client from service
-    this.voiceCallService.leaveCall();
-
-    if (this.screenClient != null) {
-      this.screenClient.leave();
-    }
-    //closing all cam streams
-    if (this.localStream != null) {
-      this.localStream.stop();
-      this.localStream.close();
+    if (this.rtc.client != null) {
+      this.rtc.client.leave();
+      this.rtc.client = null;
     }
 
     //updating member check out in db
@@ -1201,6 +1216,8 @@ async subscribe(user, mediaType) {
     }
   }
   muteVideo() {
+    console.log(this.localVideoOn);
+    console.log(this.muteHostVideoStatus);
     let videoTrack:ICameraVideoTrack = this.rtc.localTracks.videoTrack;
     if (this.muteHostVideoStatus == 'mute host video') {
       this.localVideoOn = false;

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -85,7 +86,7 @@ public class JwtUtil {
 			  .compact();
   }
   
-  public Boolean validateToken(String token,UserDetails userDetails) {
+  public Boolean validateToken(String token, @NotNull UserDetails userDetails) {
 	  final String username = extractUsername(token);
 	  return (username.equals(userDetails.getUsername())&& !isTokenExpired(token));
   }

@@ -54,6 +54,7 @@ public class UserController {
 	@RequestMapping(value = "/expertChoosePassword")
 	@ResponseBody
 	public ResponseModel expertChoosePassword(@RequestBody String body) throws ParseException {
+
 		JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
 		String token = jsonObject.get("token").getAsString();
 		String password = jsonObject.get("password").getAsString();

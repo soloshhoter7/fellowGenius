@@ -230,11 +230,11 @@ public class MeetingService {
 		if(meetingBooked!=null){
 			//create completion check job
 			String[] dateParts = booking.getDateOfMeeting().split("/");
-			TaskDefinition taskDefinition = new TaskDefinition();
-			taskDefinition.setData(booking.getMeetingId());
-			taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
-			taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute(),0));
-			taskSchedulerService.scheduleATask(uuid.randomUUID().toString(),taskDefinitionBean,taskDefinition.getCronExpression());
+//			TaskDefinition taskDefinition = new TaskDefinition();
+//			taskDefinition.setData(booking.getMeetingId());
+//			taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
+//			taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute(),0));
+//			taskSchedulerService.scheduleATask(uuid.randomUUID().toString(),taskDefinitionBean,taskDefinition.getCronExpression());
 			//check for coupon code.
 			Coupon coupon=repCoupon.couponCodeExists(meetingBooked.getCouponCode());
 			if(coupon!=null){
