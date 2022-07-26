@@ -253,8 +253,10 @@ export class MeetingComponent implements OnInit {
   AppId = environment.agora.appId;
   mics = [];
   cams = [];
-  currentMic;
-  currentCam;
+  playBackDevices = [];
+  currentMic:MediaDeviceInfo;
+  currentCam:MediaDeviceInfo;
+  currentOutputDevice:MediaDeviceInfo;
   
   connectionState = 'NOT INITIALIZED';
   //-----------------------------------------------------------------------------
@@ -578,14 +580,13 @@ async initLocalCameraCall(){
       }),
     ]);
   }
-  this.publish('video').then(()=>{
-    this.rtc.localTracks.videoTrack.play("agora_local");
-    console.log('is Camera On :',this.localVideoOn);
-    if(!this.localVideoOn){
-      console.log('is Camera On executed')
-      this.muteVideo();
-    }
-  });
+  this.rtc.localTracks.videoTrack.play("agora_local");
+  this.publish('video');
+
+  //method to check if in premeeting camera was off or not
+  this.preMeetingCameraOff();
+
+  console.log("Video status is "+ this.muteHostVideoStatus);
 }
 async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
   [this.rtc.localTracks.audioTrack] = await Promise.all([
@@ -594,18 +595,19 @@ async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
       microphoneId: this.currentMic.deviceId,
     }),
   ]);
-  this.publish('audio').then(()=>{
-    if(!this.localMicOn){
-      this.muteAudio();
-    }
-  });
-   setInterval(() => {
+  this.publish('audio');
+
+   //method to check if in premeeting mic was off or not
+  this.preMeetingMicOff();
+  setInterval(() => {
     let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
     this.localTrackAudioLevel = audioTrack
       .getVolumeLevel()
       .toFixed(2)
       .toString();
   }, 100);
+
+  console.log("Audio status is "+ this.muteHostAudioStatus);
 }}
 
   async startBasicCall(){
@@ -613,6 +615,7 @@ async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
     console.log('STARTING BASIC CALL !');
     this.initLocalVoiceCall();
     this.initLocalCameraCall();
+
   }
 
   async publish(type) {
@@ -718,6 +721,8 @@ async subscribe(user, mediaType) {
     this.currentMic = this.mics[0];
     this.cams = await AgoraRTC.getCameras();
     this.currentCam = this.cams[0];
+    this.playBackDevices = await AgoraRTC.getPlaybackDevices();
+    this.currentOutputDevice = this.playBackDevices[0];
   }
 
   assignClientHandlers() {
@@ -1215,6 +1220,16 @@ async subscribe(user, mediaType) {
       }, 4000);
     }
   }
+
+  preMeetingCameraOff(){
+    let videoTrack:ICameraVideoTrack=this.rtc.localTracks.videoTrack;
+
+    if(this.muteHostVideoStatus == 'unmute host video'){
+      this.localVideoOn = false;
+      videoTrack.setEnabled(false);
+      document.getElementById("agora_local").style.display='none';
+    }
+  }
   muteVideo() {
     console.log(this.localVideoOn);
     console.log(this.muteHostVideoStatus);
@@ -1229,6 +1244,15 @@ async subscribe(user, mediaType) {
       videoTrack.setEnabled(true);
       document.getElementById("agora_local").style.display='block';
       this.muteHostVideoStatus = 'mute host video';
+    }
+  }
+
+  preMeetingMicOff(){
+    let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
+
+    if (this.muteHostAudioStatus == 'unmute host mic') {
+      this.localMicOn = false;
+      audioTrack.setEnabled(false);
     }
   }
 

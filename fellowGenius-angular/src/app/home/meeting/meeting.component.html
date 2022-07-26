@@ -60,13 +60,12 @@
             <div *ngIf="mediaAccessAllowed == true">
               <hr />
               Video Recording Device :
-              <span *ngIf="camAccessAllowed">{{ activeVideoDeviceName }}</span>
+              <span *ngIf="camAccessAllowed">{{ currentCam.label }}</span>
               <span *ngIf="!camAccessAllowed">Camera is off</span> <br />
-              Audio Output Device : {{ activeAudioOutputDeviceName }}<br />
-              Default Audio Output Device : {{ defaultAudioOutputDeviceName }}<br />
+              Default Audio Output Device : {{ currentOutputDevice.label }}<br />
               Audio Input Device :
               <span *ngIf="micAccessAllowed">{{
-                activeAudioInputDeviceName
+                currentMic.label
               }}</span>
               <span *ngIf="!micAccessAllowed">Microphone is off</span>
             </div>
