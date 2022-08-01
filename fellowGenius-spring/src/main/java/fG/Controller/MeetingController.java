@@ -63,6 +63,12 @@ public class MeetingController {
 		return meetingService.deleteMyBooking(bookingId);
 	}
 
+	@RequestMapping(value="/deleteBooking")
+	@ResponseBody
+	public ResponseModel deleteBooking(String bid) throws ParseException{
+		Integer bookingId = Integer.valueOf(bid);
+		return meetingService.deleteBooking(bookingId);
+	}
 	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
 	@RequestMapping(value = "/deleteBookingFromUrl")
 	@ResponseBody

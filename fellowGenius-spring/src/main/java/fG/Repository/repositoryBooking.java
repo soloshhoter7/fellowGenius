@@ -66,6 +66,11 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Modifying
 	@Query(value = "UPDATE booking_details SET approval_status='cancelled' WHERE bid=?1", nativeQuery = true)
 	Integer deleteMyBooking(Integer bookingId);
+
+	@Transactional
+	@Modifying
+	@Query(value="DELETE FROM booking_details WHERE bid=?1",nativeQuery = true)
+	void deleteBooking(Integer bookingId);
 	
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1", nativeQuery=true)
 	List<BookingDetails> fetchAllLinkedTutors(Integer userId);

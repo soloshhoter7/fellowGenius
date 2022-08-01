@@ -45,15 +45,15 @@ CIN U74999DL2020PTC365351
                     </tr>
                     <tr>
                         <td style="padding-right: 100px;">Invoice Date</td>
-                        <td><b>:FG/2021/004</b></td>
+                        <td th:text="${bookingInvoice.dateOfMeeting}"></td>
                     </tr>
                     <tr>
                         <td style="padding-right: 100px;">Terms</td>
-                        <td><b>:Due on Reciept</b></td>
+                        <td th:text="${bookingInvoice.dateOfMeeting}"></td>
                     </tr>
                     <tr>
                         <td style="padding-right: 100px;">Due Date</td>
-                        <td><b>:12/11/2021</b></td>
+                        <td th:text="${bookingInvoice.dateOfMeeting}"></td>
                     </tr>
                 </table>
               </td>
@@ -74,10 +74,10 @@ CIN U74999DL2020PTC365351
         <hr />
         <div class="row" >
             <div class="col-12">
-                <p><b>Bill To: </b> Mr. Tejpal Singh</p>
+                <p><b>Bill To: </b> <span th:text="${bookingInvoice.learnerName}"></span></p>
                 <hr/>
                 
-                <p><b>Subject: </b> Consulting Session</p>
+                <p><b>Subject: </b> <span th:text="${bookingInvoice.subject}"></span></p>
                
                 <hr/>
                 <table class="table-bill">
@@ -85,8 +85,8 @@ CIN U74999DL2020PTC365351
                         <th rowspan="2" class="th-grey th-bill">Item Description</th>
                         <th rowspan="2" class="th-grey th-bill">HSN/SAC</th>
                         <th rowspan="2" class="th-grey th-bill">Rate</th>
-                        <th colspan="2" class="th-grey th-bill">CGST</th>
-                        <th colspan="2" class="th-grey th-bill">SGST</th>
+                        <th colspan="2" class="th-grey th-bill">Commission</th>
+                        <th colspan="2" class="th-grey th-bill">GST</th>
                         <th rowspan="2" class="th-grey th-bill">Amount</th>
                     </tr>
                     <tr>
@@ -96,14 +96,14 @@ CIN U74999DL2020PTC365351
                         <th	class="th-grey th-bill">Amt</th>
                     </tr>
                     <tr>
-                        <td class="td-bill">Marketing- Graphics and Design with Amit Jaurwal</td>
+                        <td class="td-bill"> <span th:text="${bookingInvoice.subject}"></span> with <span th:text="${bookingInvoice.expertName}"></span> </td>
                         <td  class="td-bill">999294</td>
-                        <td  class="td-bill">450.00</td>
-                        <td  class="td-bill">9%</td>
-                        <td  class="td-bill">17.16</td>
-                        <td  class="td-bill">9%</td>
-                        <td  class="td-bill">17.16</td>
-                        <td  class="td-bill">225.00</td>
+                        <td  class="td-bill">3000.00</td>
+                        <td  class="td-bill">12.5%</td>
+                        <td  class="td-bill">282.49</td>
+                        <td  class="td-bill">18%</td>
+                        <td  class="td-bill">457.63</td>
+                        <td  class="td-bill">2259.88</td>
                     </tr>
                 </table>
             </div>
@@ -114,29 +114,29 @@ CIN U74999DL2020PTC365351
            		<tr>
            			<td>
            				<p>Total In Words</p>
-                <p><b>Indian Rupee Two Hundred Twenty-Five Only</b></p>
+                <p><b>Indian Rupee Two Thousand Five Hundred Sixty Only</b></p>
                 <br/>
                 
-                Thanks for your busines. For any query contact us at <br/>
+                Thanks for your business. For any query contact us at <br/>
                 support@fellowgenius.com or +91-9899197950
            			</td>
            			<td>
            			<table class="table-payment">
                     <tr>
                         <td style="padding-right: 150px;">Sub Total</td>
-                        <td><b>225.00</b></td>
+                        <td><b>2259.88</b></td>
                     </tr>
                     <tr>
-                        <td style="padding-right: 150px;">CGST9 (9%)</td>
-                        <td><b>17.16</b></td>
+                        <td style="padding-right: 150px;">Commission (12.5%)</td>
+                        <td><b>282.49</b></td>
                     </tr>
                     <tr>
-                        <td style="padding-right: 150px;">SGST9 (9%)</td>
-                        <td><b>17.16</b></td>
+                        <td style="padding-right: 150px;">GST (18%)</td>
+                        <td><b>457.63</b></td>
                     </tr>
                     <tr>
                         <td style="padding-right: 150px;">Total</td>
-                        <td><b>259.32</b></td>
+                        <td><b>3000.00</b></td>
                     </tr>
                 </table>	
            			</td>
