@@ -48,6 +48,5 @@ public class BookingDetailsModel {
   String learnerLeavingTime;
   String couponCode;
 
-
   	
 }
