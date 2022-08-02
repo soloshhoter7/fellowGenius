@@ -129,7 +129,7 @@ export class ConnectComponent implements OnInit {
   appInfo:AppInfo;
   revisedAmount: number;
   remainingFGCredit: number;
-  coupons: CouponResponse[];
+  coupons: CouponResponse[]=[];
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -618,12 +618,17 @@ export class ConnectComponent implements OnInit {
    
     this.bookingDetails.domain = this.selectedDomain;
     this.processingPayment = false;
-    for(let coupon of this.coupons){
-      if(coupon.couponApplied){
-        this.bookingDetails.couponCode=coupon.code;
+    console.log('Coupons are ');
+    console.log(this.coupons);
+    if(this.coupons.length>0){
+      for(let coupon of this.coupons){
+        if(coupon.couponApplied){
+          this.bookingDetails.couponCode=coupon.code;
+        }
       }
+      console.log(this.bookingDetails);  
     }
-    console.log(this.bookingDetails);
+    
     // this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
     //   console.log('is bookind valid ->', res);
     //   if (res) {
