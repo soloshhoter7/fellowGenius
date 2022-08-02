@@ -360,17 +360,19 @@ public class MeetingController {
 		meetingService.checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date);
 	}
 
-	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
-	@GetMapping(value="/isFeedbackEleigible")
+//	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+	@GetMapping(value="/isFeedbackEligible")
 	@ResponseBody
-	public ResponseEntity isFeedbackEligible(String meetingId,String userId){
+	public ResponseEntity isFeedbackEligible(@RequestParam String meetingId,String userId){
+		System.out.println(!meetingService.isFeedbackSubmitted(meetingId,userId));
 		return  ResponseEntity.ok(!meetingService.isFeedbackSubmitted(meetingId,userId));
 	}
 
-	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
+//	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
 	@PostMapping(value = "/saveFeedback")
 	@ResponseBody
 	public void saveFeedBack(@RequestBody BookingFeedbackModel feedbackModel){
+		System.out.println("feedback Model:"+feedbackModel);
 	 	meetingService.saveFeedback(feedbackModel);
 	}
 

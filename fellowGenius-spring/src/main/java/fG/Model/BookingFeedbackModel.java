@@ -19,7 +19,7 @@ public class BookingFeedbackModel {
 	Date time;
 	Integer rating;
 	List<String> likes = new ArrayList<>();
-	List<String> disLikes = new ArrayList<>();
+	List<String> dislikes = new ArrayList<>();
 	String review;
 
 }

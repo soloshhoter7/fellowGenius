@@ -20,12 +20,7 @@ import {
 import * as Stomp from 'stompjs';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
-import {
-  NgxAgoraService,
-  Stream,
-  AgoraClient,
-  StreamEvent
-} from 'ngx-agora';
+import { NgxAgoraService, Stream, AgoraClient, StreamEvent } from 'ngx-agora';
 import * as SockJS from 'sockjs-client';
 import { timer, Subscription, interval } from 'rxjs';
 import { MeetingService } from 'src/app/service/meeting.service';
@@ -45,13 +40,17 @@ import { TutorService } from 'src/app/service/tutor.service';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/service/auth.service';
 import * as moment from 'moment';
-import {
-  MatDialog,
-  MatDialogConfig,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef, MatDialogState } from '@angular/material/dialog';
 import { MediaAccessDialogComponent } from './media-access-dialog/media-access-dialog.component';
 import { VoiceCallService } from './voice-call/voice-call.service';
-import AgoraRTC, { IMicrophoneAudioTrack, ICameraVideoTrack, IAgoraRTCClient, ILocalVideoTrack } from 'agora-rtc-sdk-ng';
+import AgoraRTC, {
+  IMicrophoneAudioTrack,
+  ICameraVideoTrack,
+  IAgoraRTCClient,
+  ILocalVideoTrack,
+} from 'agora-rtc-sdk-ng';
+import { FeedbackDialogComponent } from './feedback-dialog/feedback-dialog.component';
+import { FeedbackModel } from 'src/app/model/feedback';
 const numbers = timer(3000, 1000);
 
 @Component({
@@ -60,6 +59,7 @@ const numbers = timer(3000, 1000);
   styleUrls: ['./meeting.component.css'],
 })
 export class MeetingComponent implements OnInit {
+  feedbackDialogRef: MatDialogRef<FeedbackDialogComponent>;
   constructor(
     private ngxAgoraService: NgxAgoraService,
     private meetingService: MeetingService,
@@ -228,19 +228,19 @@ export class MeetingComponent implements OnInit {
   //----------------------------- version upgraded variables------------------
   rtc = {
     client: null,
-    screenClient:null,
+    screenClient: null,
     remoteClient: null,
-    remoteScreenClient:null,
-    localTracks : {
+    remoteScreenClient: null,
+    localTracks: {
       videoTrack: null,
       audioTrack: null,
-      screenTrack:null
+      screenTrack: null,
     },
-    remoteTracks : {
+    remoteTracks: {
       videoTrack: null,
       audioTrack: null,
-      screenTrack:null
-    }
+      screenTrack: null,
+    },
   };
   localTrackAudioLevel: string = '0';
   selectedMicrophoneId;
@@ -254,10 +254,10 @@ export class MeetingComponent implements OnInit {
   mics = [];
   cams = [];
   playBackDevices = [];
-  currentMic:MediaDeviceInfo;
-  currentCam:MediaDeviceInfo;
-  currentOutputDevice:MediaDeviceInfo;
-  
+  currentMic: MediaDeviceInfo;
+  currentCam: MediaDeviceInfo;
+  currentOutputDevice: MediaDeviceInfo;
+
   connectionState = 'NOT INITIALIZED';
   //-----------------------------------------------------------------------------
   @HostListener('')
@@ -355,6 +355,7 @@ export class MeetingComponent implements OnInit {
   ngOnDestroy() {
     console.log('NG ON DESTROY CALLED !');
     this.meetingState = '';
+    console.log('end call 2');
     this.endCall();
   }
 
@@ -386,6 +387,8 @@ export class MeetingComponent implements OnInit {
         this.remoteUserId = this.bookingDetails.tutorId;
         //if user refreshes the page update then update member leaving time
         this.meetingMemberLeft(this.meetingId, this.userId);
+        console.log('feedback dialog 1');
+        this.openFeedbackDialog();
       } else if (this.loginService.getLoginType() == 'Expert') {
         console.log('USER IS EXPERT');
         if (this.tutorService.getTutorDetials().profilePictureUrl != null) {
@@ -397,6 +400,8 @@ export class MeetingComponent implements OnInit {
         this.userId = this.tutorService.getTutorDetials().bookingId;
         this.remoteUserId = this.bookingDetails.studentId;
         this.meetingMemberLeft(this.meetingId, this.userId);
+        console.log('feedback dialog 1');
+        this.openFeedbackDialog();
       }
       console.log(this.userName, this.userEmail, this.userId);
       if (
@@ -548,7 +553,7 @@ export class MeetingComponent implements OnInit {
     }
   }
 
-initialiseInMeeting() {
+  initialiseInMeeting() {
     if (
       !document.getElementById('meeting-body').classList.contains('no-remote')
     ) {
@@ -560,68 +565,63 @@ initialiseInMeeting() {
       this.limitStream2();
     });
     this.getMediaDevicesInfo();
-    console.log('is Camera On :',this.localVideoOn);
-    console.log('is Mic On :',this.localMicOn);
-    this.join(this.meetingId,this.userId).then(()=>{
+    console.log('is Camera On :', this.localVideoOn);
+    console.log('is Mic On :', this.localMicOn);
+    this.join(this.meetingId, this.userId).then(() => {
       console.log('CAMERA_CLIENT_JOINED');
-      this.startBasicCall()
-        .then(() => {
-          this.isLoading = false;
-        });
+      this.startBasicCall().then(() => {
+        this.isLoading = false;
+      });
     });
   }
-// --------------------- version upgraded functions----------------
-async initLocalCameraCall(){
-  if(!this.rtc.localTracks.videoTrack){
-    //create camera video track
-    [this.rtc.localTracks.videoTrack]= await Promise.all([
-      AgoraRTC.createCameraVideoTrack({
-        cameraId: this.currentCam.deviceId,
-      }),
-    ]);
+  // --------------------- version upgraded functions----------------
+  async initLocalCameraCall() {
+    if (!this.rtc.localTracks.videoTrack) {
+      //create camera video track
+      [this.rtc.localTracks.videoTrack] = await Promise.all([
+        AgoraRTC.createCameraVideoTrack({
+          cameraId: this.currentCam.deviceId,
+        }),
+      ]);
+    }
+    this.rtc.localTracks.videoTrack.play('agora_local');
+    this.publish('video');
+
+    //method to check if in premeeting camera was off or not
+    this.preMeetingCameraOff();
+
+    console.log('Video status is ' + this.muteHostVideoStatus);
   }
-  this.rtc.localTracks.videoTrack.play("agora_local");
-  this.publish('video');
+  async initLocalVoiceCall() {
+    if (!this.rtc.localTracks.audioTrack) {
+      [this.rtc.localTracks.audioTrack] = await Promise.all([
+        // create local tracks, using microphone and camera
+        AgoraRTC.createMicrophoneAudioTrack({
+          microphoneId: this.currentMic.deviceId,
+        }),
+      ]);
+      this.publish('audio');
 
-  //method to check if in premeeting camera was off or not
-  this.preMeetingCameraOff();
+      //method to check if in premeeting mic was off or not
+      this.preMeetingMicOff();
+      console.log('Audio status is ' + this.muteHostAudioStatus);
+    }
+  }
 
-  console.log("Video status is "+ this.muteHostVideoStatus);
-}
-async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
-  [this.rtc.localTracks.audioTrack] = await Promise.all([
-    // create local tracks, using microphone and camera
-    AgoraRTC.createMicrophoneAudioTrack({
-      microphoneId: this.currentMic.deviceId,
-    }),
-  ]);
-  this.publish('audio');
-
-   //method to check if in premeeting mic was off or not
-  this.preMeetingMicOff();
-  setInterval(() => {
-    let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
-    this.localTrackAudioLevel = audioTrack
-      .getVolumeLevel()
-      .toFixed(2)
-      .toString();
-  }, 100);
-
-  console.log("Audio status is "+ this.muteHostAudioStatus);
-}}
-
-  async startBasicCall(){
-    //create a basic video stream 
+  async startBasicCall() {
+    //create a basic video stream
     console.log('STARTING BASIC CALL !');
     this.initLocalVoiceCall();
     this.initLocalCameraCall();
-
   }
 
   async publish(type) {
-  
-    console.log('trying to publish',this.rtc.localTracks)
-    if (type=='audio'&&this.rtc.localTracks != null && this.rtc.localTracks.audioTrack != null) {
+    console.log('trying to publish', this.rtc.localTracks);
+    if (
+      type == 'audio' &&
+      this.rtc.localTracks != null &&
+      this.rtc.localTracks.audioTrack != null
+    ) {
       await this.rtc.client
         .publish(this.rtc.localTracks.audioTrack)
         .then(() => {
@@ -636,84 +636,88 @@ async initLocalVoiceCall(){ if (!this.rtc.localTracks.audioTrack) {
         });
     }
 
-    if(type=='video'&&this.rtc.localTracks !=null && this.rtc.localTracks.videoTrack!=null){
+    if (
+      type == 'video' &&
+      this.rtc.localTracks != null &&
+      this.rtc.localTracks.videoTrack != null
+    ) {
       await this.rtc.client
-      .publish(this.rtc.localTracks.videoTrack)
-      .then(()=>{
-        console.log('CAMERA TRACK PUBLISHED SUCCESSFULLY');
-      })
-      .catch((e)=>{
-        console.log('CAMERA TRACK PUBLISHING FAILED');
-        console.log(e);
+        .publish(this.rtc.localTracks.videoTrack)
+        .then(() => {
+          console.log('CAMERA TRACK PUBLISHED SUCCESSFULLY');
+        })
+        .catch((e) => {
+          console.log('CAMERA TRACK PUBLISHING FAILED');
+          console.log(e);
           setTimeout(() => {
             this.publish('video');
           }, 500);
-      })
+        });
     }
   }
-async switchCamera(label) {
+  async switchCamera(label) {
     console.log(label);
     this.currentCam = this.cams.find((cam) => cam.label === label);
     // switch device of local video track.
     await this.rtc.localTracks.videoTrack.setDevice(this.currentCam.deviceId);
   }
 
-async switchMicrophone(label) {
+  async switchMicrophone(label) {
     console.log(label);
     this.currentMic = this.mics.find((mic) => mic.label === label);
     // switch device of local audio track.
     await this.rtc.localTracks.audioTrack.setDevice(this.currentMic.deviceId);
   }
-async subscribe(user, mediaType) {
-      // subscribe to a remote user
-      await this.rtc.client.subscribe(user, mediaType);
-      console.log('subscribe success');
-      if (mediaType === 'audio') {
-        console.log('SUBSCRIBED SOUND IS PLAYING !');
-        user.audioTrack.play();
-      }else if(mediaType === 'video'){
-        console.log('SUBSCRIBED VIDEO IS PLAYING !');
-        if(user.uid==this.remoteUserId+2){
-          console.log('remote stream is screen share and subscribed !');
-          this.enableScreenShareView();
-          let screenTrack = this.rtc.remoteTracks.screenTrack=user.videoTrack;
-          this.screenRemoteCalls.push(screenTrack);
-          setTimeout(()=>{
-            screenTrack.play(this.screenCallId);
-          },1000)
-        }else{
-          console.log('remote stream is camera stream and subscribed!');
-          let id = user.uid;
-          this.remoteCalls.push(id);
-          
-          console.log('REMOTE VIDEO STREAM');
+  async subscribe(user, mediaType) {
+    // subscribe to a remote user
+    await this.rtc.client.subscribe(user, mediaType);
+    console.log('subscribe success');
+    if (mediaType === 'audio') {
+      console.log('SUBSCRIBED SOUND IS PLAYING !');
+      user.audioTrack.play();
+    } else if (mediaType === 'video') {
+      console.log('SUBSCRIBED VIDEO IS PLAYING !');
+      if (user.uid == this.remoteUserId + 2) {
+        console.log('remote stream is screen share and subscribed !');
+        this.enableScreenShareView();
+        let screenTrack = (this.rtc.remoteTracks.screenTrack = user.videoTrack);
+        this.screenRemoteCalls.push(screenTrack);
+        setTimeout(() => {
+          screenTrack.play(this.screenCallId);
+        }, 1000);
+      } else {
+        console.log('remote stream is camera stream and subscribed!');
+        let id = user.uid;
+        this.remoteCalls.push(id);
+
+        console.log('REMOTE VIDEO STREAM');
+        setTimeout(() => {
+          user.videoTrack.play('remote-playerlist');
+          let videoId = 'video' + id;
+          var vid: any = document.getElementById(videoId);
           setTimeout(() => {
-            user.videoTrack.play("remote-playerlist");  
-            let videoId = 'video' + id;
-            var vid: any = document.getElementById(videoId);
-            setTimeout(() => {
-              console.log('HEIGHT :' + vid.videoHeight);
-              console.log('WIDTH :' + vid.videoWidth);
-              this.remoteVideoWidth = vid.videoWidth;
-              this.remoteVideoHeight = vid.videoHeight;
-              if (!this.isMobile) {
-                if (this.remoteVideoWidth < 500) {
-                  let remoteVideoDiv = document.getElementById(id);
-                  remoteVideoDiv.style['left'] = 'unset';
-                  remoteVideoDiv.style['width'] = '40%';
-                  // remoteVideoDiv.style['top'] = 'unset';
-                }
-              } else if (this.isMobile) {
-                if (this.remoteVideoWidth > 450) {
-                  let remoteVideoDiv = document.getElementById(id);
-                  remoteVideoDiv.style['top'] = 'unset';
-                  remoteVideoDiv.style['height'] = '75%';
-                }
+            console.log('HEIGHT :' + vid.videoHeight);
+            console.log('WIDTH :' + vid.videoWidth);
+            this.remoteVideoWidth = vid.videoWidth;
+            this.remoteVideoHeight = vid.videoHeight;
+            if (!this.isMobile) {
+              if (this.remoteVideoWidth < 500) {
+                let remoteVideoDiv = document.getElementById(id);
+                remoteVideoDiv.style['left'] = 'unset';
+                remoteVideoDiv.style['width'] = '40%';
+                // remoteVideoDiv.style['top'] = 'unset';
               }
-            }, 1000);
+            } else if (this.isMobile) {
+              if (this.remoteVideoWidth > 450) {
+                let remoteVideoDiv = document.getElementById(id);
+                remoteVideoDiv.style['top'] = 'unset';
+                remoteVideoDiv.style['height'] = '75%';
+              }
+            }
           }, 1000);
-        }
+        }, 1000);
       }
+    }
   }
 
   async getMediaDevicesInfo() {
@@ -726,15 +730,15 @@ async subscribe(user, mediaType) {
   }
 
   assignClientHandlers() {
-    console.log('Initialising client handlers')
+    console.log('Initialising client handlers');
     let client: IAgoraRTCClient = this.rtc.client;
     client.on('user-published', async (user, mediaType) => {
-      console.log('MEDIA TYPE IS :'+ mediaType);
+      console.log('MEDIA TYPE IS :' + mediaType);
       const id = user.uid;
-      if(user.uid == this.remoteUserId){
+      if (user.uid == this.remoteUserId) {
         this.rtc.remoteClient = user;
         this.subscribe(user, mediaType);
-      }else if(user.uid== this.remoteUserId+2){
+      } else if (user.uid == this.remoteUserId + 2) {
         this.rtc.remoteScreenClient = user;
         this.subscribe(user, mediaType);
       }
@@ -742,7 +746,7 @@ async subscribe(user, mediaType) {
     client.on('user-unpublished', (user, mediaType) => {
       if (mediaType === 'video') {
         const id = user.uid;
-        this.rtc.remoteClient=null;
+        this.rtc.remoteClient = null;
       }
     });
     client.on('connection-state-change', (curState, revState, reason) => {
@@ -752,22 +756,22 @@ async subscribe(user, mediaType) {
       //   this.meetingComponent.endCall();
       // }
     });
-    client.on('user-joined',(user)=>{
+    client.on('user-joined', (user) => {
       console.log('USER JOINED !!');
-      if(!this.rtc.screenClient || user.uid!=this.rtc.screenClient.uid){
-        this.peerOnline=true;
+      if (!this.rtc.screenClient || user.uid != this.rtc.screenClient.uid) {
+        this.peerOnline = true;
         this.enableRemoteJoinedView();
-        console.log('enabling remote joined view')
+        console.log('enabling remote joined view');
       }
     });
-    client.on('user-left',(user)=>{
+    client.on('user-left', (user) => {
       console.log('USER LEFT !');
-      if(user.uid==this.remoteUserId+2){
-        this.screenRemoteCalls=[];
-        this.rtc.remoteTracks.screenTrack=null;
+      if (user.uid == this.remoteUserId + 2) {
+        this.screenRemoteCalls = [];
+        this.rtc.remoteTracks.screenTrack = null;
         this.disableScreenShareView();
-      }else if(user.uid!=this.userId+2){
-        this.peerOnline=false;
+      } else if (user.uid != this.userId + 2) {
+        this.peerOnline = false;
         this.enableNoRemoteView();
       }
     });
@@ -800,8 +804,6 @@ async subscribe(user, mediaType) {
   //   }
   // }
   //----------------------------- Stream start and stop functions---------------------------------------------
-  
-
 
   //route user to login page if not authenticated
   redirectUser() {
@@ -844,6 +846,7 @@ async subscribe(user, mediaType) {
         .subscribe((res) => {
           this.localStream.stop();
           this.subscription1.unsubscribe();
+          console.log('end call 3');
           this.endCall();
         });
     }
@@ -954,8 +957,6 @@ async subscribe(user, mediaType) {
   //----------------------------------------------------------------------------------------------------------
   //--------------------------------------stream Handlers----------------------------------------------------
 
-
-
   //Pre local Camera stream Handlers
   private assignPreLocalStreamHandlers(stream: Stream): void {
     //the user has allowed the media access to the camera
@@ -1057,26 +1058,28 @@ async subscribe(user, mediaType) {
   }
   //Screen Stream Init
 
-
   //-----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------join and publish functions----------------------------------------------
   //camera client join with uid
- async join(meetingId,userId){
-    await this.rtc.client.join(this.AppId,meetingId, null,userId).then(() => {
+  async join(meetingId, userId) {
+    await this.rtc.client.join(this.AppId, meetingId, null, userId).then(() => {
       console.log('CLIENT JOINED !');
     });
-}
+  }
 
   //screen client join with sid : (uid+2)
-  async screenClientJoin(meetingId,userId){
-    await this.rtc.screenClient.join(this.AppId,meetingId, null,userId).then(() => {
-      console.log('SCREEN CLIENT JOINED !');
-    });
-}
+  async screenClientJoin(meetingId, userId) {
+    await this.rtc.screenClient
+      .join(this.AppId, meetingId, null, userId)
+      .then(() => {
+        console.log('SCREEN CLIENT JOINED !');
+      });
+  }
   // ------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------- control button functions --------------------------------------------
   stopStream() {
     if (confirm('Are you sure you want to cancel !')) {
+      console.log('end call 1');
       this.endCall();
     }
   }
@@ -1084,8 +1087,8 @@ async subscribe(user, mediaType) {
     //closing all screen sharing streams if any
 
     if (this.rtc.localTracks.screenTrack != null) {
-      let screenTrack:ILocalVideoTrack =this.rtc.localTracks.screenTrack;
-      if(this.rtc.screenClient!=null){
+      let screenTrack: ILocalVideoTrack = this.rtc.localTracks.screenTrack;
+      if (this.rtc.screenClient != null) {
         this.rtc.screenClient.unpublish(screenTrack);
         this.rtc.screenClient.leave();
         this.rtc.screenClient = null;
@@ -1103,17 +1106,17 @@ async subscribe(user, mediaType) {
       this.preLocalMicStream.stop();
       this.preLocalMicStream.close();
     }
-    if (this.rtc.localTracks.videoTrack!=null) {
-      let cameraTrack:ICameraVideoTrack = this.rtc.localTracks.videoTrack;
+    if (this.rtc.localTracks.videoTrack != null) {
+      let cameraTrack: ICameraVideoTrack = this.rtc.localTracks.videoTrack;
       this.rtc.client.unpublish(cameraTrack);
       cameraTrack.stop();
       cameraTrack.close();
-      this.rtc.localTracks.videoTrack=null;
+      this.rtc.localTracks.videoTrack = null;
     }
 
     //unpublishing the mic stream
     if (this.rtc.localTracks.audioTrack != null) {
-      let audioTrack:IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
+      let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
       this.rtc.client.unpublish(audioTrack);
       audioTrack.stop();
       audioTrack.close();
@@ -1142,7 +1145,8 @@ async subscribe(user, mediaType) {
     if (this.ws != null) {
       this.ws.disconnect();
     }
-
+    console.log('feedback dialog 2');
+    this.openFeedbackDialog();
     //routing to dashboard
     if (this.meeting.role == 'Expert') {
       this.router.navigate(['home/tutor-dashboard']);
@@ -1221,33 +1225,33 @@ async subscribe(user, mediaType) {
     }
   }
 
-  preMeetingCameraOff(){
-    let videoTrack:ICameraVideoTrack=this.rtc.localTracks.videoTrack;
+  preMeetingCameraOff() {
+    let videoTrack: ICameraVideoTrack = this.rtc.localTracks.videoTrack;
 
-    if(this.muteHostVideoStatus == 'unmute host video'){
+    if (this.muteHostVideoStatus == 'unmute host video') {
       this.localVideoOn = false;
       videoTrack.setEnabled(false);
-      document.getElementById("agora_local").style.display='none';
+      document.getElementById('agora_local').style.display = 'none';
     }
   }
   muteVideo() {
     console.log(this.localVideoOn);
     console.log(this.muteHostVideoStatus);
-    let videoTrack:ICameraVideoTrack = this.rtc.localTracks.videoTrack;
+    let videoTrack: ICameraVideoTrack = this.rtc.localTracks.videoTrack;
     if (this.muteHostVideoStatus == 'mute host video') {
       this.localVideoOn = false;
       videoTrack.setEnabled(false);
-      document.getElementById("agora_local").style.display='none';
+      document.getElementById('agora_local').style.display = 'none';
       this.muteHostVideoStatus = 'unmute host video';
     } else if (this.muteHostVideoStatus == 'unmute host video') {
       this.localVideoOn = true;
       videoTrack.setEnabled(true);
-      document.getElementById("agora_local").style.display='block';
+      document.getElementById('agora_local').style.display = 'block';
       this.muteHostVideoStatus = 'mute host video';
     }
   }
 
-  preMeetingMicOff(){
+  preMeetingMicOff() {
     let audioTrack: IMicrophoneAudioTrack = this.rtc.localTracks.audioTrack;
 
     if (this.muteHostAudioStatus == 'unmute host mic') {
@@ -1275,8 +1279,8 @@ async subscribe(user, mediaType) {
     } else {
       this.disableScreenShareView();
       this.hostScreenShareStatus = false;
-      let screenClient:IAgoraRTCClient = this.rtc.screenClient;
-      let screenShareVideo:ILocalVideoTrack = this.rtc.localTracks.screenTrack; 
+      let screenClient: IAgoraRTCClient = this.rtc.screenClient;
+      let screenShareVideo: ILocalVideoTrack = this.rtc.localTracks.screenTrack;
       screenClient.unpublish(this.rtc.localTracks.screenTrack);
       screenClient.leave();
       screenShareVideo.close();
@@ -1291,23 +1295,27 @@ async subscribe(user, mediaType) {
       mode: 'rtc',
       codec: 'h264',
     });
-    this.screenClientJoin(this.meetingId,this.userId+2);
-    let screenStream:ILocalVideoTrack = this.rtc.localTracks.screenTrack = await AgoraRTC.createScreenVideoTrack({
-      encoderConfig: {
-        frameRate: 15,
-        height: 720,
-        width: 1280
-      },
-    },"disable");
+    this.screenClientJoin(this.meetingId, this.userId + 2);
+    let screenStream: ILocalVideoTrack = (this.rtc.localTracks.screenTrack =
+      await AgoraRTC.createScreenVideoTrack(
+        {
+          encoderConfig: {
+            frameRate: 15,
+            height: 720,
+            width: 1280,
+          },
+        },
+        'disable'
+      ));
     this.assignScreenTrackHandlers(screenStream);
     this.rtc.localTracks.screenTrack.play(this.localScreenCallId);
     this.rtc.screenClient.publish(this.rtc.localTracks.screenTrack).publish();
   }
-  assignScreenTrackHandlers(screenTrack:ILocalVideoTrack){
-    screenTrack.on("track-ended",()=>{
+  assignScreenTrackHandlers(screenTrack: ILocalVideoTrack) {
+    screenTrack.on('track-ended', () => {
       console.log('SCREEN STREAM HAS BEEN STOPPED !');
       this.screenShare();
-    })
+    });
   }
   openChatWindow() {
     if (this.chatOpen == false) {
@@ -1484,7 +1492,6 @@ async subscribe(user, mediaType) {
   }
   // -------------------------------------------Device Utility Functions----------------------------------------
 
-
   //getting default device name out of list of connected devices
   getDefaultDeviceName(devices) {
     let deviceGroupId: string = '';
@@ -1545,7 +1552,7 @@ async subscribe(user, mediaType) {
           }
         }
         if (mediaNotAllowed == true) {
-          this.openDialog('MediaAccess');
+          this.openMediaAccessDialog('MediaAccess');
         }
       });
     }
@@ -1589,7 +1596,7 @@ async subscribe(user, mediaType) {
       console.log('NO REMOTE STREAM PRESENT !');
     }
   }
-  openDialog(title) {
+  openMediaAccessDialog(title) {
     this.dialogConfig.data = {
       title: title,
     };
@@ -1608,6 +1615,40 @@ async subscribe(user, mediaType) {
         this.dialogConfig
       );
     }
+  }
+  openFeedbackDialog() {
+    this.httpService
+      .isFeedbackEligible(this.meetingId, this.userId)
+      .subscribe((res) => {
+        console.log('is feedback eligible :', res);
+        if(res==true){
+          this.dialogConfig.height = 'auto';
+          this.dialogConfig.width = '70vw';
+          let role = this.loginService.getLoginType();
+          if (role) {
+            this.dialogConfig.data = {
+              role: this.loginService.getLoginType(),
+            };
+          }
+        
+          if(!this.feedbackDialogRef||this.feedbackDialogRef.getState()===MatDialogState.CLOSED){
+            this.feedbackDialogRef = this.dialog.open(
+              FeedbackDialogComponent,
+              this.dialogConfig
+            );
+            this.feedbackDialogRef.afterClosed().subscribe((res) => {
+              let feedback: FeedbackModel = res;
+              if (feedback) {
+                feedback.userId = this.userId;
+                feedback.bookingId = this.bookingDetails.bid.toString();
+                this.httpService.saveFeedback(feedback).subscribe((res) => {
+                  console.log('feedback saved successfully !');
+                });
+              }
+            });
+          }
+        } 
+      });
   }
   //------------------------------------------------------------------------------------------------------------------------
 }

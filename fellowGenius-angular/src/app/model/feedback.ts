@@ -1,9 +1,10 @@
 export class FeedbackModel{
-    meetingId:string;
-    userId:string;
+    bookingId:String;
+    userId:String;
+    time:Date;
     role:String;
     rating:String;
-    like:String[];
-    dislike:String[];
+    likes:String[];
+    dislikes:String[];
     review:String;
 }

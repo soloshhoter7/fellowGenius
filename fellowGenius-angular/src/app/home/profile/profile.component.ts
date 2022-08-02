@@ -339,7 +339,6 @@ export class ProfileComponent implements OnInit {
     if (this.appInfo[0] != null && this.appInfo[1] != null) {
       let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
       let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;
-      // console.log(gstMultiplier,this.appInfo[0].value)
       this.GSTValue = Math.abs(this.round(percent / gstMultiplier - percent));
       this.commission = Math.abs(
         this.round(
@@ -350,8 +349,6 @@ export class ProfileComponent implements OnInit {
       this.actualEarning = Math.abs(
         this.round(percent - this.GSTValue - this.commission)
       );
-      // this.GSTValue=this.round((percent*(gstMultiplier))-percent);
-      // this.commission=Math.abs(this.round(percent/commissionMultiplier-percent));
     }
   }
   round(num) {

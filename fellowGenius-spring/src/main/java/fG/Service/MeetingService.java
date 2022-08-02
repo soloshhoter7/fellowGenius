@@ -941,27 +941,37 @@ public class MeetingService {
 				return bookingDetails.isLearnerFeedbackDone();
 			}
 			if(bookingDetails.getTutorId().equals(Integer.valueOf(userId))&&bookingDetails.getExpertJoinTime()!=null){
-				return bookingDetails.isLearnerFeedbackDone();
+				return bookingDetails.isExpertFeedbackDone();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public void saveFeedback(BookingFeedbackModel feedbackModel) {
 		Integer userId = Integer.valueOf(feedbackModel.getUserId());
 		String role = feedbackModel.getRole();
 		feedbackModel.setTime(new Date());
-		BookingDetails bookingDetails = repBooking.meetingIdExists(feedbackModel.getBookingId());
+		BookingDetails bookingDetails = repBooking.bidExists(Integer.valueOf(feedbackModel.getBookingId()));
+		System.out.println(bookingDetails);
 		if(bookingDetails!=null){
+			System.out.println("reached here !!");
+			System.out.println(bookingDetails.getStudentId().equals(userId)+":"+role.equals("Learner")+":"+!bookingDetails.isExpertFeedbackDone());
+			System.out.println(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& !bookingDetails.isLearnerFeedbackDone());
 			if(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& !bookingDetails.isLearnerFeedbackDone()){
 				bookingDetails.setLearnerFeedBack(new Gson().toJson(feedbackModel));
 				bookingDetails.setLearnerFeedbackDone(true);
+				System.out.println("reached here !");
 				repBooking.save(bookingDetails);
+				System.out.println("feedback saved !"+bookingDetails.getLearnerFeedBack());
 			}
+			System.out.println(bookingDetails.getTutorId().equals(userId)+":"+role.equals("Expert")+":"+!bookingDetails.isExpertFeedbackDone());
+			System.out.println(bookingDetails.getTutorId().equals(userId)&&role.equals("Expert")&& !bookingDetails.isExpertFeedbackDone());
 			if(bookingDetails.getTutorId().equals(userId)&&role.equals("Expert")&& !bookingDetails.isExpertFeedbackDone()){
 				bookingDetails.setExpertFeedback(new Gson().toJson(feedbackModel));
 				bookingDetails.setExpertFeedbackDone(true);
+				System.out.println("reached here !");
 				repBooking.save(bookingDetails);
+				System.out.println("feedback saved !"+bookingDetails.getExpertFeedback());
 			}
 		}
 	}

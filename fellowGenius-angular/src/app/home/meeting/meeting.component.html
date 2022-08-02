@@ -33,17 +33,6 @@
         </button>
         <!-- Modal Header -->
         <div class="modal-header">Device Info</div>
-        <!-- Modal Body -->
-        <!-- <div style="display: flex;">
-          <button class="btn" style="margin: 5px;" (click)="changeOutputDevice()">CHANGE OUTPUT DEVICE</button>
-          <button class="btn" style="margin: 5px;" (click)="checkIfAudioPlaying()">CHECK REMOTE AUDIO STATUS</button>
-        </div>
-        <div>
-          <div class="form-group">
-            <input type="text" placeholder="Enter Device Id to switch" class="form-control" [(ngModel)]="inputAudioOutputDeviceId">
-          </div>
-          <button class="btn" (click)="setAudioOutputDevice()">Switch</button>
-        </div> -->
         
         <div class="modal-body">
           <div class="body-message">
@@ -69,30 +58,6 @@
               }}</span>
               <span *ngIf="!micAccessAllowed">Microphone is off</span>
             </div>
-
-            <!-- <div *ngIf='isInMeeting'>
-              Remote Audio Level : {{remoteAudioLevel}}
-              <hr/>
-              Camera Streams :
-              <div>
-                local
-                <div *ngFor="let stream of localStreams">{{stream}}</div>
-              </div>
-              <div>
-                Remote
-                <div *ngFor="let stream of remoteCalls">{{stream}}</div>
-              </div>
-              Mic Streams:
-              <div>
-                local
-                <div *ngFor="let stream of localMicStreams">{{stream}}</div>
-              </div>
-              <div>
-                Remote
-                <div *ngFor="let stream of micRemoteCalls">{{stream}}</div>
-              </div>
-              <hr/>
-            </div> -->
           </div>
         </div>
       </div>

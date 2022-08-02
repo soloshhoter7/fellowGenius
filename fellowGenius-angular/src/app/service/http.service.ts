@@ -1048,12 +1048,12 @@ export class HttpService {
   }
   saveFeedback(feedback:FeedbackModel): Observable<Object> {
     return this.http.post(
-      this.backendUrl + '/fellowGenius/updatePassword',
+      this.backendUrl + '/fellowGenius/meeting/saveFeedback',
       feedback
     );
   }
   isFeedbackEligible(meetingId,userId):Observable<Object>{
-    return this.http.get<Object>(this.backendUrl+'/fellowgenius/meeting/isFeedbackEleigible',{
+    return this.http.get<Object>(this.backendUrl+'/fellowGenius/meeting/isFeedbackEligible',{
       params:{
         meetingId:meetingId,
         userId:userId

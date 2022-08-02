@@ -123,6 +123,7 @@ import { SessionComponent } from './home/session/session.component';
 import { EventsDashboardComponent } from './facade/events-dashboard/events-dashboard.component';
 import { AdminEventsComponent } from './admin-portal/admin-home/admin-events/admin-events.component';
 import { EventDetailComponent } from './facade/events-dashboard/event-detail/event-detail.component';
+import { FeedbackDialogComponent } from './home/meeting/feedback-dialog/feedback-dialog.component';
 
 
 
@@ -208,6 +209,7 @@ import { EventDetailComponent } from './facade/events-dashboard/event-detail/eve
     EventsDashboardComponent,
     AdminEventsComponent,
     EventDetailComponent,
+    FeedbackDialogComponent,
   ],
   imports: [
   
