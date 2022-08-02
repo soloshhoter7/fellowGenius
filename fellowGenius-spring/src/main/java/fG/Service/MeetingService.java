@@ -480,6 +480,24 @@ public class MeetingService {
 		return isBeforeTime((ArrayList<BookingDetails>) meetingDao.fetchLiveMeetingListStudent(sid));
 	}
 
+	public ResponseModel deleteBooking(Integer bookingId){
+		BookingDetails bookingDetails=repBooking.bidExists(bookingId);
+
+		// decrement lesson completed of student
+		StudentProfile studentProfile=repStudentProfile.idExist(bookingDetails.getStudentId());
+		studentProfile.setLessonCompleted(studentProfile.getLessonCompleted()-1);
+		repStudentProfile.save(studentProfile);
+
+		//decrement lesson completed of tutor
+		TutorProfileDetails tutorProfileDetails=repTutorProfileDetails.bookingIdExist(bookingDetails.getTutorId());
+		tutorProfileDetails.setLessonCompleted(tutorProfileDetails.getLessonCompleted()-1);
+		repTutorProfileDetails.save(tutorProfileDetails);
+
+		repBooking.deleteBooking(bookingId);
+		System.out.println("Meeting successfully deleted");
+		return new ResponseModel("booking deleted successfully");
+	}
+
 	// for deleting the booking if it is not accepted by the teacher
 	public ResponseModel deleteMyBooking(Integer bookingId) throws ParseException {
 		Integer remainingTime = calculateRemainingTimeToCancel(repBooking.bidExists(bookingId));
@@ -912,11 +930,22 @@ public class MeetingService {
 		}
 	}
 
+	public BookingInvoiceModel bookingToInvoice(BookingDetailsModel booking){
+		BookingInvoiceModel bookingInvoice=new BookingInvoiceModel();
+		bookingInvoice.setDateOfMeeting(booking.getDateOfMeeting());
+		bookingInvoice.setExpertName(booking.getTutorName());
+		bookingInvoice.setLearnerName(booking.getStudentName());
+		bookingInvoice.setSubject(booking.getSubject());
+		bookingInvoice.setTotalAmount(booking.getAmount());
+		//methods to set actual Amount, commission and gst
+		return bookingInvoice;
+	}
+
 	public Resource generateInvoice(BookingDetailsModel booking,HttpServletRequest request) 
 			throws DocumentException, IOException{
-		
+		BookingInvoiceModel bookingInvoice=bookingToInvoice(booking);
 		try {
-            Path file = Paths.get(pdfService.generatePdf(booking).getAbsolutePath());
+            Path file = Paths.get(pdfService.generatePdf(bookingInvoice).getAbsolutePath());
             System.out.println(file);
             Resource resource = new UrlResource(file.toUri());
             

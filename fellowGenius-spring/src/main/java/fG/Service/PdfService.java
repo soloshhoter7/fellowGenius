@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import fG.Model.BookingInvoiceModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
-
-import fG.Model.BookingDetailsModel;
 
 
 @Service
@@ -27,8 +26,8 @@ public class PdfService {
         this.templateEngine = templateEngine;
     }
 
-    public File generatePdf(BookingDetailsModel bookings) throws IOException, DocumentException {
-        Context context = getContext(bookings);
+    public File generatePdf(BookingInvoiceModel bookingInvoice) throws IOException, DocumentException {
+        Context context = getContext(bookingInvoice);
         String html = loadAndFillTemplate(context);
         return renderPdf(html);
     }
@@ -46,9 +45,9 @@ public class PdfService {
         return file;
     }
 
-    private Context getContext(BookingDetailsModel booking) {
+    private Context getContext(BookingInvoiceModel bookingInvoice) {
         Context context = new Context();
-        context.setVariable("bookingDetails", booking);
+        context.setVariable("bookingInvoice", bookingInvoice);
         return context;
     }
 
