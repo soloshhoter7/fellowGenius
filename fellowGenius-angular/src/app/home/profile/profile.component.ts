@@ -336,6 +336,8 @@ export class ProfileComponent implements OnInit {
     console.log(value);
   }
   onPercentChange(percent: number) {
+    console.log('Percent is ');
+    console.log(percent);
     if (this.appInfo[0] != null && this.appInfo[1] != null) {
       let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
       let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;

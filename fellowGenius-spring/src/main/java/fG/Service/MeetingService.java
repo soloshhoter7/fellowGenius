@@ -484,18 +484,27 @@ public class MeetingService {
 		BookingDetails bookingDetails=repBooking.bidExists(bookingId);
 
 		// decrement lesson completed of student
-		StudentProfile studentProfile=repStudentProfile.idExist(bookingDetails.getStudentId());
-		studentProfile.setLessonCompleted(studentProfile.getLessonCompleted()-1);
-		repStudentProfile.save(studentProfile);
+		if(bookingDetails!=null){
+			StudentProfile studentProfile=repStudentProfile.idExist(bookingDetails.getStudentId());
+			if(studentProfile!=null){
+				studentProfile.setLessonCompleted(studentProfile.getLessonCompleted()-1);
+				repStudentProfile.save(studentProfile);
+			}
 
-		//decrement lesson completed of tutor
-		TutorProfileDetails tutorProfileDetails=repTutorProfileDetails.bookingIdExist(bookingDetails.getTutorId());
-		tutorProfileDetails.setLessonCompleted(tutorProfileDetails.getLessonCompleted()-1);
-		repTutorProfileDetails.save(tutorProfileDetails);
+			//decrement lesson completed of tutor
+			TutorProfileDetails tutorProfileDetails=repTutorProfileDetails.bookingIdExist(bookingDetails.getTutorId());
+			if(tutorProfileDetails!=null){
+				tutorProfileDetails.setLessonCompleted(tutorProfileDetails.getLessonCompleted()-1);
+				repTutorProfileDetails.save(tutorProfileDetails);
+			}
 
-		repBooking.deleteBooking(bookingId);
-		System.out.println("Meeting successfully deleted");
-		return new ResponseModel("booking deleted successfully");
+			repBooking.deleteBooking(bookingId);
+			System.out.println("Meeting successfully deleted");
+			return new ResponseModel("booking deleted successfully");
+		}else{
+			return new ResponseModel("booking not found");
+		}
+
 	}
 
 	// for deleting the booking if it is not accepted by the teacher
@@ -930,6 +939,7 @@ public class MeetingService {
 		}
 	}
 
+
 	public BookingInvoiceModel bookingToInvoice(BookingDetailsModel booking){
 		BookingInvoiceModel bookingInvoice=new BookingInvoiceModel();
 		bookingInvoice.setDateOfMeeting(booking.getDateOfMeeting());
@@ -938,6 +948,27 @@ public class MeetingService {
 		bookingInvoice.setSubject(booking.getSubject());
 		bookingInvoice.setTotalAmount(booking.getAmount());
 		//methods to set actual Amount, commission and gst
+
+		AppInfo commissionPercent=repAppInfo.keyExist("commission");
+		AppInfo gstPercent=repAppInfo.keyExist("GST_value");
+		double gstMultiplier=1+(Double.parseDouble(gstPercent.getValue())/100);
+
+		double commissionMultiplier=1+(Double.parseDouble(commissionPercent.getValue())/100);
+
+		double gstValue=booking.getAmount() - booking.getAmount()/gstMultiplier;
+		gstValue=Math.round(gstValue*100.0)/100.0;
+
+		double commissionValue=booking.getAmount()/gstMultiplier-booking.getAmount()/gstMultiplier/commissionMultiplier;
+		commissionValue=Math.round(commissionValue*100.0)/100.0;
+		double actualEarning=booking.getAmount()-gstValue-commissionValue;
+        actualEarning=Math.round(actualEarning*100.0)/100.0;
+
+
+		bookingInvoice.setActualAmount(actualEarning);
+		bookingInvoice.setGSTFees(gstValue);
+		bookingInvoice.setPlatformFees(commissionValue);
+		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100.0)/100.0);
+		System.out.println(bookingInvoice);
 		return bookingInvoice;
 	}
 

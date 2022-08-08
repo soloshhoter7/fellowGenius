@@ -98,12 +98,12 @@ CIN U74999DL2020PTC365351
                     <tr>
                         <td class="td-bill"> <span th:text="${bookingInvoice.subject}"></span> with <span th:text="${bookingInvoice.expertName}"></span> </td>
                         <td  class="td-bill">999294</td>
-                        <td  class="td-bill">3000.00</td>
+                        <td  class="td-bill"><span th:text="${bookingInvoice.totalAmount}"></span></td>
                         <td  class="td-bill">12.5%</td>
-                        <td  class="td-bill">282.49</td>
+                        <td  class="td-bill"><span th:text="${bookingInvoice.platformFees}"></span></td>
                         <td  class="td-bill">18%</td>
-                        <td  class="td-bill">457.63</td>
-                        <td  class="td-bill">2259.88</td>
+                        <td  class="td-bill"><span th:text="${bookingInvoice.GSTFees}"></span></td>
+                        <td  class="td-bill"><span th:text="${bookingInvoice.actualAmount}"></span></td>
                     </tr>
                 </table>
             </div>
@@ -124,19 +124,19 @@ CIN U74999DL2020PTC365351
            			<table class="table-payment">
                     <tr>
                         <td style="padding-right: 150px;">Sub Total</td>
-                        <td><b>2259.88</b></td>
+                        <td><b><span th:text="${bookingInvoice.actualAmount}"></span></b></td>
                     </tr>
                     <tr>
                         <td style="padding-right: 150px;">Commission (12.5%)</td>
-                        <td><b>282.49</b></td>
+                        <td><b><span th:text="${bookingInvoice.platformFees}"></span></b></td>
                     </tr>
                     <tr>
                         <td style="padding-right: 150px;">GST (18%)</td>
-                        <td><b>457.63</b></td>
+                        <td><b><span th:text="${bookingInvoice.GSTFees}"></span></b></td>
                     </tr>
                     <tr>
                         <td style="padding-right: 150px;">Total</td>
-                        <td><b>3000.00</b></td>
+                        <td><b><span th:text="${bookingInvoice.totalAmount}"></span></b></td>
                     </tr>
                 </table>	
            			</td>
