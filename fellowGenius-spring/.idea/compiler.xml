@@ -13,6 +13,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.4.2.Final/mapstruct-processor-1.4.2.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.4.2.Final/mapstruct-1.4.2.Final.jar" />
         </processorPath>
+        <module name="fellowGenius-spring" />
         <module name="fellowGenius" />
       </profile>
     </annotationProcessing>
@@ -20,6 +21,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="fellowGenius" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="fellowGenius-spring" options="-parameters -Amapstruct.defaultComponentModel=spring" />
     </option>
   </component>
 </project>

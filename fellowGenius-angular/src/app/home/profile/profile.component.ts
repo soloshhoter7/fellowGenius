@@ -192,7 +192,7 @@ export class ProfileComponent implements OnInit {
 
     $('#chooseCategory').on('change', function () {
       let value: string = $(this).val();
-      console.log('choosen domain :', value);
+      
       if (value == 'Others') {
         window.angularComponentReference.zone.run(() => {
           window.angularComponentReference.changeOtherDomain();
@@ -205,7 +205,7 @@ export class ProfileComponent implements OnInit {
     });
     $('#chooseSubCategory').on('change', function () {
       let value = $(this).val();
-      console.log('choosen topic :', value);
+     
       if (value == 'Others') {
         window.angularComponentReference.zone.run(() => {
           window.angularComponentReference.changeOtherTopic();
@@ -226,8 +226,7 @@ export class ProfileComponent implements OnInit {
       this.userDob = this.userDob = this.formatDateFromString(
         this.tutorProfile.dateOfBirth
       );
-      console.log(this.userDob);
-      console.log(this.tutorProfileDetails);
+     
       this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
       if (this.tutorProfileDetails.educationalQualifications != null) {
         this.educationQualifications =
@@ -244,14 +243,13 @@ export class ProfileComponent implements OnInit {
         this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
       }
 
-      console.log(this.tutorProfileDetails);
+     
       this.getEarningAppInfo();
     } else {
       setTimeout(() => {
         this.tutorProfile = this.tutorService.getTutorDetials();
         this.userDob = this.formatDateFromString(this.tutorProfile.dateOfBirth);
-        console.log(this.userDob);
-        console.log(this.tutorProfile);
+        
         this.tutorProfileDetails = this.tutorService.getTutorProfileDetails();
         if (this.tutorProfileDetails.educationalQualifications != null) {
           this.educationQualifications =
@@ -267,7 +265,7 @@ export class ProfileComponent implements OnInit {
         if (this.tutorProfileDetails.profilePictureUrl != null) {
           this.profilePictureUrl = this.tutorProfileDetails.profilePictureUrl;
         }
-        console.log(this.tutorProfileDetails);
+        
         this.getEarningAppInfo();
       }, 1000);
     }
@@ -280,8 +278,7 @@ export class ProfileComponent implements OnInit {
     this.otherTopicSelected = false;
     this.textDomain = '';
     this.textTopic = '';
-    console.log(this.selectedCategory);
-    console.log(this.selectedSubCategory);
+   
   }
 
   formatDateFromString(dateString) {
@@ -316,26 +313,25 @@ export class ProfileComponent implements OnInit {
   getEarningAppInfo() {
     this.httpService.getEarningAppInfo().subscribe((res) => {
       this.appInfo = res;
-      console.log(this.appInfo);
+     
       if (
         this.tutorProfileDetails.price1 != null &&
         this.appInfo[0] != null &&
         this.appInfo[1] != null
       ) {
-        console.log('here');
+        
         this.onPercentChange(parseInt(this.tutorProfileDetails.price1));
       }
     });
   }
   onDomainChange(value) {
-    console.log('selected');
-    console.log(value);
+    
   }
   onTopicChange(value) {
-    console.log('selected');
-    console.log(value);
+   
   }
   onPercentChange(percent: number) {
+   
     if (this.appInfo[0] != null && this.appInfo[1] != null) {
       let gstMultiplier = 1 + parseFloat(this.appInfo[1].value) / 100;
       let commissionMultiplier = 1 + parseFloat(this.appInfo[0].value) / 100;
@@ -451,8 +447,7 @@ export class ProfileComponent implements OnInit {
     return formattedDate;
   }
   saveExpertBasicProfile(form: any) {
-    console.log(form);
-    console.log(form.value.userDob);
+   
     this.userId = this.cookieService.get('userId');
     if (this.userId && this.expertises.length > 0) {
       this.tutorProfile.tid = this.userId;
@@ -460,13 +455,13 @@ export class ProfileComponent implements OnInit {
       this.tutorProfile.dateOfBirth = this.formatDobFromMoment(
         form.value.userDob
       );
-      console.log(this.tutorProfile.dateOfBirth);
+     
       this.tutorProfile.fullName = form.value.fullName;
       this.tutorProfile.bookingId =
         this.tutorService.getTutorDetials().bookingId;
       this.tutorProfile.profilePictureUrl = this.profilePictureUrl;
 
-      console.log(this.tutorProfile);
+      
 
       this.tutorProfileDetails.tid = this.userId;
       this.tutorProfileDetails.educationalQualifications =
@@ -493,7 +488,7 @@ export class ProfileComponent implements OnInit {
         form.value.currentDesignation;
       this.tutorProfileDetails.upiID = form.value.upiID;
       this.tutorProfileDetails.gst = form.value.gst;
-      console.log(this.tutorProfileDetails);
+     
 
       this.calculateProfileCompleted();
       this.httpService
@@ -583,8 +578,7 @@ export class ProfileComponent implements OnInit {
     for (let i = 0; i < fields.length; i++) {
       const brr = fields[i].split('&');
       if (arr[0] == brr[0]) {
-        console.log(arr[0], brr[0]);
-        console.log('Matched !!');
+        
         return true;
       }
     }
@@ -800,7 +794,7 @@ export class ProfileComponent implements OnInit {
             this.priceForExpertise = '';
           }
         } else {
-          console.log('Inside topic not selected');
+        
           this.topicNotSelected = true;
           this.errorText = 'Please add Topic !';
         }
@@ -855,7 +849,7 @@ export class ProfileComponent implements OnInit {
         if (this.selectedCategory) {
           this.domainNotSelected = false;
           if (this.textTopic != '') {
-            console.log(this.selectedCategory + ':' + this.textTopic);
+           
             this.topicNotSelected = false;
             this.errorText = '';
             if (
@@ -895,7 +889,7 @@ export class ProfileComponent implements OnInit {
             this.errorText = 'Please enter a topic name !';
             this.topicNotSelected = true;
           }
-          console.log('we have a selected category !');
+          
         } else {
           this.errorText = 'Please choose a domain !';
           this.domainNotSelected = true;
@@ -1002,7 +996,7 @@ export class ProfileComponent implements OnInit {
         this.duplicateEducationArea = true;
       }
     } else {
-      console.log('called');
+      
       this.invalidEducationDetails = true;
     }
   }

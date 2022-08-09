@@ -129,7 +129,7 @@ export class ConnectComponent implements OnInit {
   appInfo:AppInfo;
   revisedAmount: number;
   remainingFGCredit: number;
-  coupons: CouponResponse[];
+  coupons: CouponResponse[]=[];
   constructor(
     private profileService: ProfileService,
     private meetingSevice: MeetingService,
@@ -382,7 +382,7 @@ export class ConnectComponent implements OnInit {
       modal: {
         ondismiss: () => {
           this.zone.run(() => {
-            console.log('payment failed');
+            
             this.isLoading = false;
           });
         },
@@ -404,12 +404,12 @@ export class ConnectComponent implements OnInit {
   }
   findDomain(subject) {
     var subjectPrice;
-    console.log(subject);
+  
     for (let area of this.teacherProfile.areaOfExpertise) {
       if (area.subCategory == subject) {
-        console.log('found!!');
+       
         this.selectedDomain = area.category;
-        console.log(area.category, this.selectedDomain);
+       
         subjectPrice = area.price;
       }
     }
@@ -419,7 +419,7 @@ export class ConnectComponent implements OnInit {
       (this.bookingDetails.duration / 60) *
       parseInt(this.teacherProfile.price1);
 
-      console.log('Dynamic price '+ this.payableAmount);
+     
     
       for(let i=0;i<this.coupons.length;i++){
         if(this.coupons[i].couponApplied){
@@ -432,10 +432,10 @@ export class ConnectComponent implements OnInit {
   calculateMaxRedeemedFGCredit(){
     this.httpService.getRedeemedCreditPercentage().subscribe((res) => {
       this.appInfo = res;
-      console.log(this.appInfo);
+    
       let CreditMultiplier=parseFloat(this.appInfo.value)/100;
       this.maxFGCreditRedeemed=CreditMultiplier*(this.payableAmount);
-      console.log(this.maxFGCreditRedeemed);
+      
       this.isFGCreditEligible();
     });
     
@@ -443,20 +443,20 @@ export class ConnectComponent implements OnInit {
 
   isFGCreditEligible(){
     this.httpService.getFGCreditsOfUser(this.loggedUserId).subscribe((res) => {
-      console.log(res);
+      
       if(this.maxFGCreditRedeemed>=res&&res>0){
         this.isCreditEligible=true;
         this.FGCredit=res;
         this.remainingFGCredit=0;
       }else if(res>=this.maxFGCreditRedeemed&&this.maxFGCreditRedeemed>0){
-        console.log("Inside the less expert fees");
+        
         this.isCreditEligible=true;
         this.FGCredit=this.maxFGCreditRedeemed;
         this.remainingFGCredit=res-this.FGCredit;
       }else{
         this.isCreditEligible=false;
       }
-      console.log("Credit Eligible "+ this.isCreditEligible);
+     
 
       if(this.isCreditApplied){
         this.totalAmount=this.payableAmount;
@@ -540,7 +540,7 @@ export class ConnectComponent implements OnInit {
         }
      }      
       
-      console.log(this.bookingDetails);
+      
       this.createBookingService();
     }
   }
@@ -611,19 +611,23 @@ export class ConnectComponent implements OnInit {
       this.teacherProfile.profilePictureUrl;
     this.bookingDetails.studentId =
       this.studentService.getStudentProfileDetails().sid;
-    console.log(this.expertCode);
+    
     this.bookingDetails.expertCode = this.expertCode;
    // this.calculatePrice();
     this.findDomain(this.bookingDetails.subject);
    
     this.bookingDetails.domain = this.selectedDomain;
     this.processingPayment = false;
-    for(let coupon of this.coupons){
-      if(coupon.couponApplied){
-        this.bookingDetails.couponCode=coupon.code;
+    
+    if(this.coupons.length>0){
+      for(let coupon of this.coupons){
+        if(coupon.couponApplied){
+          this.bookingDetails.couponCode=coupon.code;
+        }
       }
+      
     }
-    console.log(this.bookingDetails);
+    
     // this.httpService.isBookingValid(this.bookingDetails).subscribe((res) => {
     //   console.log('is bookind valid ->', res);
     //   if (res) {
@@ -647,7 +651,6 @@ export class ConnectComponent implements OnInit {
         }
      }      
       
-      console.log(this.bookingDetails);
       this.createBookingService();
     }
     
