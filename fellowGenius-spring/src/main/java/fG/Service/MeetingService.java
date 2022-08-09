@@ -1,7 +1,6 @@
 package fG.Service;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -14,11 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
 import fG.Entity.*;
-import fG.Enum.TaskDefinitonType;
 import fG.Model.*;
 import fG.Repository.*;
 import fG.Utils.MiscellaneousUtils;
-import fG.Utils.MoneyToWords;
+import fG.Utils.NumberToWords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -40,7 +38,7 @@ public class MeetingService {
 	private SimpMessageSendingOperations messagingTemplate;
 
 	@Autowired
-	private MoneyToWords moneyToWords;
+	private NumberToWords numberToWords;
 
 	@Autowired
 	MeetingDao meetingDao;
@@ -973,15 +971,10 @@ public class MeetingService {
 		bookingInvoice.setGSTFees(gstValue);
 		bookingInvoice.setPlatformFees(commissionValue);
 		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100.0)/100.0);
-		System.out.println(bookingInvoice);
-
 
         //number to words
 		long actualAmountLong=(long)Math.round(bookingInvoice.getActualAmount());
-
-		System.out.println(moneyToWords.convert(actualAmountLong));
-
-		bookingInvoice.setActualAmountWords(moneyToWords.convert(actualAmountLong));
+		bookingInvoice.setActualAmountWords(numberToWords.convert(actualAmountLong));
 
 		return bookingInvoice;
 	}

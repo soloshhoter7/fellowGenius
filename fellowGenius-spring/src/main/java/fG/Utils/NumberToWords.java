@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.text.DecimalFormat;
 
 @Component
-public class MoneyToWords {
+public class NumberToWords {
 
     public static final String[] tensNames = {
             "",
