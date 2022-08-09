@@ -844,7 +844,7 @@ export class MeetingComponent implements OnInit {
       this.httpService
         .updateBookingStatus(this.bookingDetails.bid, 'Successful')
         .subscribe((res) => {
-          this.localStream.stop();
+         // this.localStream.stop();
           this.subscription1.unsubscribe();
           console.log('end call 3');
           this.endCall();

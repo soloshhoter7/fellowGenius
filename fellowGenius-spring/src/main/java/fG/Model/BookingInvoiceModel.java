@@ -26,4 +26,6 @@ public class BookingInvoiceModel {
     double GSTFees;
 
     double totalAmount;
+
+    String actualAmountWords;
 }
