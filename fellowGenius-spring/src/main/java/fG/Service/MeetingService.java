@@ -292,7 +292,7 @@ public class MeetingService {
 			
 		}
 		
-		return (meetingBooked!=null)?true:false;
+		return meetingBooked != null;
 	}
 
 	void updateMeetingsSetUpInReferrals(String meetingId) {
@@ -572,11 +572,7 @@ public class MeetingService {
 		}
 		if (bookingExceptionFound || !checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date)) {
 			return false;
-		} else if (!bookingExceptionFound && checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date)) {
-			return true;
-		} else {
-			return false;
-		}
+		} else return !bookingExceptionFound && checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date);
 	}
 
 	public boolean checkIfExpertIsAvailableInTime(Integer sh, Integer sm, Integer eh, Integer em, Integer tid,
@@ -587,8 +583,8 @@ public class MeetingService {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
-		Date bookingStartDateTime = (Date) sdf.parse(date);
-		Date bookingEndDateTime = (Date) sdf.parse(date);
+		Date bookingStartDateTime = sdf.parse(date);
+		Date bookingEndDateTime = sdf.parse(date);
 		bookingStartDateTime.setHours(sh);
 		bookingStartDateTime.setMinutes(sm);
 		bookingEndDateTime.setHours(eh);
@@ -627,7 +623,7 @@ public class MeetingService {
 		System.out.println("currentDateWithTime_>" + currentDateWithTime.getTime());
 		for (BookingDetails meeting : bookings) {
 //			Date bookingDate = new Date(meeting.getDateOfMeeting());
-			Date bookingDate = (Date) formatter.parse(meeting.getDateOfMeeting());
+			Date bookingDate = formatter.parse(meeting.getDateOfMeeting());
 			System.out.println("booking date_>" + bookingDate);
 			if (bookingDate.before(currentDate.getTime())) {
 				System.out.println("before date");

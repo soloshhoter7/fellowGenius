@@ -37,7 +37,7 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE booking_details SET approval_status=?2 WHERE bid=?1", nativeQuery = true)
-	public void saveUpdate(Integer bid,String approvalStatus);
+    void saveUpdate(Integer bid, String approvalStatus);
 
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='Pending'", nativeQuery=true)
 	List<BookingDetails> findStudentBookings(Integer sid);

@@ -26,7 +26,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtUtil {
-  private String SECRET_KEY = "secret";
+  private final String SECRET_KEY = "secret";
   
   public String extractUsername(String token) {
 	  return extractClaim(token,Claims::getSubject);
@@ -60,11 +60,7 @@ public class JwtUtil {
   }
   public Boolean checkTokenIfExpired(String token) {
 	  DecodedJWT jwt = JWT.decode(token);
-		if( jwt.getExpiresAt().before(new Date())) {
-		    return true;
-		}else {
-			return false;
-		}
+	  return jwt.getExpiresAt().before(new Date());
   }
   public String Auth0ExtractClaim(String token,String claim) {
 	  DecodedJWT jwt = JWT.decode(token);

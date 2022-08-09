@@ -88,11 +88,7 @@ public class UserController {
 //	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerTutor")
 	public boolean saveTutorProfile(@RequestBody TutorProfileModel tutorModel) throws IOException {
-		if (service.saveTutorProfile(tutorModel)) {
-			return true;
-		} else {
-			return false;
-		}
+        return service.saveTutorProfile(tutorModel);
 	}
 
 	@RequestMapping(value = "/registerExpert", produces = "application/JSON")

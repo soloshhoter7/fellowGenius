@@ -19,7 +19,7 @@ import com.lowagie.text.DocumentException;
 @Service
 public class PdfService {
 	private static final String PDF_RESOURCES = "/pdf-resources/";
-    private SpringTemplateEngine templateEngine;
+    private final SpringTemplateEngine templateEngine;
 
     @Autowired
     public PdfService(SpringTemplateEngine templateEngine) {

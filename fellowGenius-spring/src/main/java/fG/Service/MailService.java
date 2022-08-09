@@ -85,9 +85,7 @@ public class MailService {
 	}
 	boolean isGmail(String email) {
 		if(email!=null) {
-			if(email.contains("@gmail")) {
-				return true;
-			}
+            return email.contains("@gmail");
 		}
 		return false;
 	}

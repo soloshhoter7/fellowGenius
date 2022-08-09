@@ -25,8 +25,8 @@ public class TutorProfileDetailsModel {
 	String currentOrganisation;
 	String currentDesignation;
 	ArrayList<String> previousOrganisations = new ArrayList<>();
-	ArrayList<expertise> areaOfExpertise = new ArrayList<expertise>();;
-	Integer profileCompleted;
+	ArrayList<expertise> areaOfExpertise = new ArrayList<expertise>();
+    Integer profileCompleted;
 	Integer yearsOfExperience;
 	String linkedInProfile;
 	String gst;

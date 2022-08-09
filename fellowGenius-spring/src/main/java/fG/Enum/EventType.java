@@ -1,5 +1,5 @@
 package fG.Enum;
 
 public enum EventType {
-    WEBINAR,NORMAL;
+    WEBINAR,NORMAL
 }

@@ -802,11 +802,7 @@ public class UserService implements UserDetailsService {
 
 	// checking on student login
 	public boolean onStudentLogin(StudentLoginModel studentLoginModel) {
-		if (dao.onStudentLogin(studentLoginModel)) {
-			return true;
-		} else {
-			return false;
-		}
+		return dao.onStudentLogin(studentLoginModel);
 	}
 
 	// for getting student details after login
@@ -1059,11 +1055,7 @@ public class UserService implements UserDetailsService {
 			ArrayList<ScheduleTime> schedule = getTutorTimeAvailabilityTimeArray(
 					tutProfileDetails.getBookingId().toString());
 //			ArrayList<ScheduleTime> schedule = new ArrayList<ScheduleTime>();
-			if (schedule != null && schedule.size() != 0) {
-				tutorModel.setIsWeeklyCalendarUpdated(true);
-			} else {
-				tutorModel.setIsWeeklyCalendarUpdated(false);
-			}
+			tutorModel.setIsWeeklyCalendarUpdated(schedule != null && schedule.size() != 0);
 			tutListModel.add(tutorModel);
 		}
 		return tutListModel;
@@ -1149,11 +1141,7 @@ public class UserService implements UserDetailsService {
 		socialLogin.setEmail(socialLoginModel.getEmail());
 		socialLogin.setFullName(socialLoginModel.getFullName());
 		socialLogin.setId(socialLoginModel.getId());
-		if (dao.saveSocialLogin(socialLogin)) {
-			return true;
-		} else {
-			return false;
-		}
+		return dao.saveSocialLogin(socialLogin);
 	}
 
 	// for saving tutor Availability Schedule
@@ -1260,11 +1248,7 @@ public class UserService implements UserDetailsService {
 
 	// fetch if the tutor is available ?
 	public boolean getTutorIsAvailable(String bookingId) {
-		if (dao.getTutorAvailabilitySchedule(Integer.valueOf(bookingId)).getIsAvailable().equals("yes")) {
-			return true;
-		} else {
-			return false;
-		}
+		return dao.getTutorAvailabilitySchedule(Integer.valueOf(bookingId)).getIsAvailable().equals("yes");
 	}
 
 	@Override
@@ -1312,11 +1296,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean checkUserExists(String email) {
-		if (repUsers.emailExist(email) != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return repUsers.emailExist(email) != null;
 	}
 
 	public boolean sendResetLink(String email) {
@@ -1654,11 +1634,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean saveFeaturedExpert(FeaturedExpertsModel fe) {
-		if (repFeaturedExperts.save(copyFeaturedExperts(fe)) != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return repFeaturedExperts.save(copyFeaturedExperts(fe)) != null;
 	}
 
 	public void deleteFeaturedExpert(FeaturedExpertsModel fe) {
@@ -1710,11 +1686,7 @@ public class UserService implements UserDetailsService {
 		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		ArrayList<ScheduleTime> timeArray = scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(),
 				Integer.valueOf(tid));
-		if (timeArray != null && timeArray.size() != 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return timeArray != null && timeArray.size() != 0;
 	}
 
 	public void notifyNoScheduleExpert(Integer tid) throws ParseException {

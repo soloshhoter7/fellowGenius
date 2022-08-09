@@ -87,11 +87,7 @@ public class Dao {
 	
 	// for saving user profile
 		public boolean saveUserLogin(Users user) {
-			if (repUsers.save(user) != null) {
-				return true;
-			} else {
-				return false;
-			}
+			return repUsers.save(user) != null;
 		}
 		
 	// for saving student profile details
@@ -111,28 +107,16 @@ public class Dao {
 
 	// for saving student login details
 	public boolean saveStudentLogin(StudentLogin studentLogin) {
-		if (repStudentLogin.save(studentLogin) != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return repStudentLogin.save(studentLogin) != null;
 	}
 
 	// for validating student login
 	public boolean onStudentLogin(StudentLoginModel studentLogin) {
-		if (repStudentLogin.validation(studentLogin.getEmail(), studentLogin.getPassword()) != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return repStudentLogin.validation(studentLogin.getEmail(), studentLogin.getPassword()) != null;
 	}
     
 	public boolean findStudentBySid(Integer sid) {
-		if(repStudentLogin.idExists(sid)!=null) {
-			return true;
-		}else {
-			return false;
-		}
+		return repStudentLogin.idExists(sid) != null;
 	}
 	// for getting student details after login
 	public StudentProfile getStudentDetails(String userId) {
