@@ -39,7 +39,7 @@
                     <td class="fld_status" >
                       <div class="td_btn" style="justify-content: left;">
                         <a href="javascript:void(0)"
-                        href="#{{pendingTransaction.userId}}"
+                        href="#{{pendingTransaction.bookingId}}"
                         data-toggle="modal">
                         <button
                         [disabled]="isUpiIdNotAvailable(pendingTransaction)"
@@ -54,7 +54,7 @@
                     <!-- Modal Starts-->
                     <div
                 class="modal fade join__Modal"
-                id="{{pendingTransaction.userId}}"
+                id="{{pendingTransaction.bookingId}}"
                 tabindex="-1"
                 role="dialog"
                 aria-labelledby="myLargeModalLabel"
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-md-8">
                               <input
-                              type="text"
+                              type="number"
                               id="paidAmount"
                               name="paidAmount"
                               ngModel
@@ -94,7 +94,7 @@
                               #paidAmount=ngModel
                               required
                               maxlength="50"
-                              
+                              pattern="^[1-9]\d*$"
                             />
                             </div>
                           </div>
@@ -118,7 +118,10 @@
                             </div>
                           </div>
                         
-                          
+                          <span
+                      class="help-block"
+                     *ngIf="partialMeetingTransaction"
+                      >Partial payment not allowed for meeting fees</span>
                         
                       </div>
 

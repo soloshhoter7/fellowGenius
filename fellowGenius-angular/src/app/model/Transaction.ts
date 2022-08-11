@@ -5,6 +5,8 @@ export class Transaction{
 
     public context:String;
 
+    public meetingId:String;
+
     public totalPaidAmount:number;
 
     public remainingAmount:number;

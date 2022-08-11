@@ -123,8 +123,7 @@ public class MeetingController {
 	(@RequestBody BookingDetailsModel booking,HttpServletRequest request) throws ParseException{
 		System.out.println("Inside generateInvoice of Booking method of meeting controller");
 		System.out.println(booking);
-		
-		
+
 		try {
 			Resource resource = meetingService.generateInvoice(booking, request);
 	        String contentType = null;

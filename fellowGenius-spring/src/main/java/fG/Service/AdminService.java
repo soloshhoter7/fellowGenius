@@ -2,25 +2,17 @@ package fG.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import fG.Entity.*;
+import fG.Enum.TransactionContext;
+import fG.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import fG.Entity.BookingDetails;
-import fG.Entity.ReferralActivity;
-import fG.Entity.Transactions;
-import fG.Entity.TutorAvailabilitySchedule;
-import fG.Entity.TutorProfile;
-import fG.Entity.TutorProfileDetails;
-import fG.Entity.UserReferrals;
-import fG.Entity.Users;
 import fG.Model.AdminReferralInfoModel;
 import fG.Model.BookingDetailsModel;
 import fG.Model.ReferralActivityAnalytics;
@@ -31,13 +23,6 @@ import fG.Model.TransactionsModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
 import fG.Model.UserReferralInfoModel;
-import fG.Repository.repositoryReferralActivity;
-import fG.Repository.repositoryTransactions;
-import fG.Repository.repositoryTutorAvailabilitySchedule;
-import fG.Repository.repositoryTutorProfile;
-import fG.Repository.repositoryTutorProfileDetails;
-import fG.Repository.repositoryUserReferrals;
-import fG.Repository.repositoryUsers;
 
 @Service
 public class AdminService {
@@ -47,10 +32,15 @@ public class AdminService {
 	
 	@Autowired
 	repositoryUserReferrals repUserReferrals;
-	
+
+	@Autowired
+	repositoryBooking repBooking;
 	@Autowired
 	repositoryUsers repUsers;
-	
+
+	@Autowired
+	repositoryAppInfo repAppInfo;
+
 	@Autowired 
 	repositoryTransactions repTransactions;
 	
@@ -89,7 +79,7 @@ public class AdminService {
 		ArrayList<AdminReferralInfoModel> adminReferralInfoList=
 				new ArrayList<AdminReferralInfoModel>();
 		List<UserReferrals> userReferralsList=repUserReferrals.findAll();
-		//System.out.println(userReferralsList);
+
 		if(userReferralsList!=null) {
 			
 			for(UserReferrals userReferral:userReferralsList) {
@@ -101,7 +91,7 @@ public class AdminService {
 					referrerUserModel.setUserId(String.valueOf(referrerUser.getUserId()));
 					referrerUserModel.setEmail(referrerUser.getEmail());
 					referrerUserModel.setFullName(userService.fetchUserName(referrerUser.getUserId(),referrerUser.getRole()));
-					//System.out.println(ReferrerUserModel);	
+
 				}
 				
 				
@@ -158,7 +148,7 @@ public class AdminService {
 				ArrayList<BookingDetailsModel> meetingCompletedInfoList=
 						new ArrayList<BookingDetailsModel>();
 		List<BookingDetails> referredUsersMeetingsCompleted=userReferral.getMeetingCompleted();
-		//System.out.println(referredUsersMeetingsCompleted);
+
 			if(referredUsersMeetingsCompleted!=null) {
 				
 				for(BookingDetails referredUsersMeetingCompleted:referredUsersMeetingsCompleted) {
@@ -175,9 +165,9 @@ public class AdminService {
 					meetingCompletedInfoObject.setDateOfMeeting(referredUsersMeetingCompleted.getDateOfMeeting());
 					meetingCompletedInfoObject.setCreationTime(sdf.format(referredUsersMeetingCompleted.getCreatedDate()));
 					meetingCompletedInfoList.add(meetingCompletedInfoObject);
-					//System.out.println(meetingCompletedInfoObject);
+
 				}
-				//System.out.println(meetingCompletedInfoList);
+
 
 			}
 								
@@ -187,7 +177,7 @@ public class AdminService {
 				adminReferralInfoObject.setMeetingsSetupInfo(meetingSetupInfoList);
 				adminReferralInfoObject.setReferrerPaymentDue(referrerPaymentDue);
 				adminReferralInfoObject.setMeetingsCompletedInfo(meetingCompletedInfoList);
-				System.out.println(adminReferralInfoObject);
+
 				adminReferralInfoList.add(adminReferralInfoObject);
 			}
 		}
@@ -207,7 +197,7 @@ public class AdminService {
 					TransactionsModel transaction=new TransactionsModel();
 					transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
 					transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
-					transaction.setContext("Referral");
+					transaction.setContext(TransactionContext.REFERRAL);
 					transaction.setRemainingAmount(ur.getPaymentDue());
 					transaction.setTotalPaidAmount(getTotalPaidAmount(ur.getUser()));
 					transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
@@ -217,34 +207,43 @@ public class AdminService {
 			}
 		}
 		
-		System.out.println(transactionsList);
+		//fetch unpaid expert also.
+		ArrayList<TransactionsModel> fetchUnpaidExpertsList=fetchUnpaidExpertBookings();
+
+		transactionsList.addAll(fetchUnpaidExpertsList);
+
 		return transactionsList;
 	}
 
 	public boolean addTransaction(TransactionsModel transaction) {
 		// TODO Auto-generated method stub
-		System.out.println("Transaction Model is "+ transaction);
+
 		Transactions transactionObj=new Transactions();
-		Users user=repUsers.idExists(Integer.parseInt(transaction.getUserId()));
-		transactionObj.setPaidToUserId(user);
 		transactionObj.setTransactionDate(new Date());
 		transactionObj.setPaidAmount(transaction.getPaidAmount());
-		transactionObj.setContext("Referral");
+		transactionObj.setContext(transaction.getContext());
 		transactionObj.setUpiId(transaction.getUpiId());
 		transactionObj.setTransactionId(transaction.getTransactionId());
-		System.out.println(transactionObj);
+		Users user=repUsers.idExists(Integer.parseInt(transaction.getUserId()));
+		transactionObj.setPaidToUserId(user);
 		repTransactions.save(transactionObj);
-		
-		//deduct the value from payment due
-		UserReferrals ur=repUserReferrals.findByUserId(user.getUserId());
-		System.out.println("User Referral is "+ ur);
-		if(ur!=null) {
-			int modifiedPaymentDue=(int) (ur.getPaymentDue()-transaction.getPaidAmount());
-			System.out.println("Modified Payment is "+ modifiedPaymentDue);
-			ur.setPaymentDue(modifiedPaymentDue);
-			repUserReferrals.save(ur);
+
+		if(transaction.getContext()==TransactionContext.REFERRAL){
+
+			//deduct the value from payment due
+			UserReferrals ur=repUserReferrals.findByUserId(user.getUserId());
+			if(ur!=null) {
+				int modifiedPaymentDue=(int) (ur.getPaymentDue()-transaction.getPaidAmount());
+				ur.setPaymentDue(modifiedPaymentDue);
+				repUserReferrals.save(ur);
+			}
+		}else if(transaction.getContext()==TransactionContext.MEETING_FEES){
+			// update the booking details status
+			repBooking.saveExpertTransactionId(transaction.getBookingId(),transaction.getTransactionId());
+		}else{
+			return false;
 		}
-		System.out.println("Modified User Referral is "+ ur);
+
 		return true;
 	}
 
@@ -267,7 +266,7 @@ public class AdminService {
 			}
 	
 		}
-		System.out.println(transactionsList);
+
 		return transactionsList;
 	}
 
@@ -395,5 +394,67 @@ public class AdminService {
 			return new ResponseModel("User already set the password");
 		}
 	}
-	
+
+    public ArrayList<TransactionsModel> fetchUnpaidExpertBookings() {
+		List<BookingDetails> unpaidExpertBookingsList=repBooking.fetchUnpaidExperts();
+		ArrayList<TransactionsModel> unpaidExpertsTransactionList=new ArrayList<>();
+		if(unpaidExpertBookingsList!=null){
+			for(BookingDetails bd:unpaidExpertBookingsList){
+				TransactionsModel transactionsModel=BookingToTransactionsModel(bd);
+				if(transactionsModel!=null){
+					unpaidExpertsTransactionList.add(transactionsModel);
+				}
+			}
+		}
+		return unpaidExpertsTransactionList;
+    }
+
+	public TransactionsModel BookingToTransactionsModel(BookingDetails bookingDetails){
+		TransactionsModel transactionModel=new TransactionsModel();
+
+		transactionModel.setName(bookingDetails.getTutorName());
+		transactionModel.setContext(TransactionContext.MEETING_FEES);
+		transactionModel.setBookingId(bookingDetails.getBid().toString());
+
+		TutorProfileDetails tutorProfileDetails=repTutorProfileDetails.bookingIdExist(bookingDetails.getTutorId());
+		transactionModel.setUserId(tutorProfileDetails.getTid().toString());
+		if(tutorProfileDetails!=null){
+			transactionModel.setUpiId(tutorProfileDetails.getUpiId());
+		}else{
+			transactionModel.setUpiId("Tutor N/A");
+		}
+
+		Map<String,Double> earnings=getEarnings(bookingDetails.getAmount());  //600
+		if(earnings!=null){
+			transactionModel.setRemainingAmount(earnings.get("actualEarning"));
+		}
+			return transactionModel;
+	}
+
+	public Map<String, Double> getEarnings(double bookingFees){
+		AppInfo commissionPercent=repAppInfo.keyExist("commission");
+		AppInfo gstPercent=repAppInfo.keyExist("GST_value");
+		double gstMultiplier=1+(Double.parseDouble(gstPercent.getValue())/100);
+
+		double commissionMultiplier=1+(Double.parseDouble(commissionPercent.getValue())/100);
+
+		double gstValue=bookingFees - bookingFees/gstMultiplier;
+		gstValue=Math.round(gstValue*100.0)/100.0;
+
+		double commissionValue=bookingFees/gstMultiplier-bookingFees/gstMultiplier/commissionMultiplier;
+		commissionValue=Math.round(commissionValue*100.0)/100.0;
+		double actualEarning=bookingFees-gstValue-commissionValue;
+		actualEarning=Math.round(actualEarning*100.0)/100.0;
+
+		Map<String,Double> earnings=new HashMap<>();
+		earnings.put("actualEarning",actualEarning);
+		earnings.put("commissionFees",commissionValue);
+		earnings.put("GSTFees",gstValue);
+
+		return earnings;
+	}
+
+	public void payExpertTransaction(TransactionsModel payExpertTransaction) {
+		repBooking.saveExpertTransactionId(payExpertTransaction.getBookingId(),payExpertTransaction.getTransactionId());
+	}
 }
