@@ -17,6 +17,7 @@ export class TransactionsInfoComponent implements OnInit {
   totalPayableUser:number;
   totalPayableAmount:number=0;
   partialMeetingTransaction: boolean=false;
+  totalPayableTransactions: number;
   constructor(private httpService: HttpService,
               private adminService:AdminService,
               private snackBar:MatSnackBar) { }
@@ -53,11 +54,14 @@ export class TransactionsInfoComponent implements OnInit {
     }
 
     calculateTotalPendingAmountAndUsers(){
-      this.totalPayableUser=this.pendingTransactions.length;
+      this.totalPayableTransactions=this.pendingTransactions.length;
       for(let pendingTransaction of this.pendingTransactions){
         this.totalPayableAmount=this.totalPayableAmount+ pendingTransaction.remainingAmount;
       }
+        this.totalPayableAmount=parseFloat(this.totalPayableAmount.toFixed(2));
+      const uniqueArray=[...new Set(this.pendingTransactions.map(item=>item.userId))];
      
+     this.totalPayableUser=uniqueArray.length;
     }
 
   isUpiIdNotAvailable(transaction:Transaction){
@@ -69,18 +73,8 @@ export class TransactionsInfoComponent implements OnInit {
   }
 
   onAddTransaction(transaction:Transaction,form: NgForm){
-   
-    if(transaction.context=='MEETING_FEES' && form.value.paidAmount<transaction.remainingAmount){
-      
-      this.partialMeetingTransaction=true;
-    }else{
-      transaction.transactionId=form.value.transactionId;
-     if(transaction.remainingAmount<form.value.paidAmount){
-        transaction.paidAmount=form.value.paidAmount;
-       }else{
-       transaction.paidAmount=form.value.paidAmount;
-      }
-     
+    transaction.paidAmount=transaction.remainingAmount;
+    transaction.transactionId=form.value.transactionId;
     
     this.httpService.addTransaction(transaction).subscribe(
       (res)=>{
@@ -88,9 +82,8 @@ export class TransactionsInfoComponent implements OnInit {
         this.initialisePendingTransactions();
         this.initialisePreviousTransactions();
       }
-    )
+    );
     $(".close").click();
-    }
 
      
   }

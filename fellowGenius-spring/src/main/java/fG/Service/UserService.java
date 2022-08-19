@@ -2029,7 +2029,12 @@ public class UserService implements UserDetailsService {
 		
 	}
 
-	
 
-	
+	public void generateInvoiceMail(String bookingId) {
+		BookingDetails bookingDetails=repBooking.bidExists(Integer.valueOf(bookingId));
+
+		if(bookingDetails!=null){
+			mailService.generateInvoiceMail(bookingDetails);
+		}
+	}
 }

@@ -125,10 +125,11 @@ public class MeetingController {
 		System.out.println(booking);
 
 		try {
-			Resource resource = meetingService.generateInvoice(booking, request);
+			Resource resource = meetingService.generateInvoice(booking);
 	        String contentType = null;
 	        try {
 	            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+				System.out.println("Content type is "+ contentType);
 	        } catch (IOException ex) {
 	        }
 	        // Fallback to the default content type if type could not be determined
@@ -381,4 +382,8 @@ public class MeetingController {
 	 	meetingService.saveFeedback(feedbackModel);
 	}
 
+	@GetMapping(value = "/invoiceapi")
+	public void generateInvoiceMail(String bookingId){
+		userService.generateInvoiceMail(bookingId);
+	}
 }

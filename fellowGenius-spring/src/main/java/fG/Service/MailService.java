@@ -1,9 +1,11 @@
 package fG.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -13,10 +15,14 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.lowagie.text.DocumentException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +36,7 @@ import fG.Model.ContactUsModel;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryUsers;
+
 
 @Service
 public class MailService {
@@ -790,6 +797,7 @@ public class MailService {
 		});
 		
 			String to = "navjeetkumar.007@gmail.com";
+
 			try {
 				MimeMessage message = new MimeMessage(session);
 				MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -963,4 +971,84 @@ public class MailService {
 		return true;
 	}
 
+	public void generateInvoiceMail(BookingDetails booking) {
+
+		InitiateMailService("support@fellowgenius.com");
+		String from = senderEmail;
+		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, senderPassword);
+			}
+		});
+		try{
+
+			MimeMessage message = new MimeMessage(session);
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//			String mailContent="<img src='cid:logoImage'/>";
+			helper.setFrom(from);
+			Resource pdfResource=meetingService.generateInvoice(meetingService.copyBookingDetailsToBookingDetailsModel(booking));
+
+			ByteArrayResource pdfAttachment=new ByteArrayResource(IOUtils.toByteArray(pdfResource.getInputStream()));
+			helper.addAttachment("invoice.pdf",pdfAttachment);
+
+			StudentProfile stuProfile = userDao.getStudentProfile(booking.getStudentId());
+			helper.setTo(stuProfile.getEmail());
+
+			String recipientName = booking.getStudentName();
+			String name = booking.getTutorName();
+			String topic = booking.getSubject() + " : " + booking.getDomain();
+			String startTime = "";
+			String link = rootUrl + "home/student-dashboard";
+			if (booking.getStartTimeMinute().equals(0)) {
+				startTime += booking.getStartTimeHour();
+				startTime += ":00";
+			} else {
+				startTime += booking.getStartTimeHour();
+				startTime += ":" + booking.getStartTimeMinute();
+			}
+
+			String slot = booking.getDateOfMeeting() + " at " + startTime;
+			helper.setSubject("FellowGenius Meeting Request Accepted !");
+			String mailContent = "<html>\r\n" + "\r\n" + "<head>\r\n" + "\r\n" + "</head>\r\n" + "\r\n"
+					+ "<body>\r\n" + "\r\n" + "    <body>\r\n"
+					+ "        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n"
+					+ "            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n"
+					+ "                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n"
+					+ "                    <img src='cid:logoImage' style=\"width: 90px;\">\r\n"
+					+ "                </div>\r\n"
+					+ "                <div style=\"width: 100%; display: inline-block;\">\r\n"
+					+ "                    <h1 style=\"color: #202124; font-size: 22px; font-weight: 400;\">Expert has accepted the meeting request.</h1>\r\n"
+					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Hi "
+					+ recipientName + "</p>\r\n"
+					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Thank you for booking a meeting with FellowGenius. Please view the full details of your\r\n"
+					+ "meeting below. Ensure to check the details carefully and notify us of any errors.</p>\r\n"
+					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Expert Name - "
+					+ name + "<br>Topic - " + topic + "<br>Meeting Slot - " + slot + "<br>Amount - INR "
+					+ booking.getAmount() + "</p>\r\n"
+					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Use this link to connect - <a href=\""
+					+ link + "\">Go to Dashboard</a></p>\r\n"
+					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Have a productive discussion!<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
+					+ "                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
+					+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
+					+ "                </div>\r\n" + "            </div>\r\n" + "        </div>\r\n"
+					+ "    </body>\r\n" + "</body>\r\n" + "\r\n" + "</html>";
+			helper.setText(mailContent, true);
+
+//				message.setContent("<html><head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0 8px 16px 0 #90a4ae; width: 100%; height: auto; text-align: center; padding: 20px; margin-top: 10px; background: url(https://fellowgenius.com/search_right_bg.7af30faa440a7e6ab2bb.svg) no-repeat; background-size: contain; border: 1px solid #7d0f7d; border-radius: 8px; width: 650px; margin: 0 auto; background-position: left top;}.logo{background: url(https://fellowgenius.com/logo.2dbc598173218fe92921.svg) no-repeat; background-size: contain; height: 100px; display: block; float: right; width: 100px;}tr{padding: 10px;}td{padding: 5px; margin-right: 5px;}</style></head><body> <div class=\"Box\"> <div class=\"box-header\"> <span class=\"logo\"></span> <span style=\"margin-bottom: 20px;color:#892687;width:100%;text-align: center;font-size:16px;font-weight:bold;text-transform: uppercase;\"> Request Accepted !</span> </div><div style=\"padding:20px;width: 350px; margin: 0 auto;\">"
+//						+ " <table> <tr> <td><b>Expert Name</b><br>"+booking.getTutorName()+"</td><td><b>Date</b><br>"+booking.getDateOfMeeting()+"</td></tr><tr> <td><b>Start Time</b><br>"+booking.getStartTimeHour() + ":"+ booking.getStartTimeMinute() +"</td><td><b>Duration</b><br>"+booking.getDuration()+"</td></tr></table> </div><p style=\"margin-top: 30px; font-size: 10px; text-align: center; width: 100%;\">This is an auto-generated message please don't reply back.</p></div><div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-2\"></div><div class=\"col-sm-7\"> </div><div class=\"com-sm-3\"></div></div></div></body></html>","text/html");
+			ClassPathResource resource = new ClassPathResource("logo.png");
+			helper.addInline("logoImage", resource);
+			Transport.send(message);
+
+		}catch (MessagingException e){
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (DocumentException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+
+	}
 }

@@ -948,6 +948,7 @@ public class MeetingService {
 
 	public BookingInvoiceModel bookingToInvoice(BookingDetailsModel booking){
 		BookingInvoiceModel bookingInvoice=new BookingInvoiceModel();
+		bookingInvoice.setBookingId(booking.getBid().toString());
 		bookingInvoice.setDateOfMeeting(booking.getDateOfMeeting());
 		bookingInvoice.setExpertName(booking.getTutorName());
 		bookingInvoice.setLearnerName(booking.getStudentName());
@@ -955,20 +956,21 @@ public class MeetingService {
 		bookingInvoice.setTotalAmount(booking.getAmount());
 		//methods to set actual Amount, commission and gst
 
+
 		Map<String,Double> earnings=adminService.getEarnings(booking.getAmount());
 		bookingInvoice.setActualAmount(earnings.get("actualEarning"));
-		bookingInvoice.setGSTFees(earnings.get("gstValue"));
-		bookingInvoice.setPlatformFees(earnings.get("commissionValue"));
+		bookingInvoice.setGSTFees(earnings.get("GSTFees"));
+		bookingInvoice.setPlatformFees(earnings.get("commissionFees"));
 		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100.0)/100.0);
 
         //number to words
-		long actualAmountLong=(long)Math.round(bookingInvoice.getActualAmount());
+		long actualAmountLong=(long)Math.round(bookingInvoice.getActualAmount()+bookingInvoice.getPlatformFees());
 		bookingInvoice.setActualAmountWords(numberToWords.convert(actualAmountLong));
 
 		return bookingInvoice;
 	}
 
-	public Resource generateInvoice(BookingDetailsModel booking,HttpServletRequest request) 
+	public Resource generateInvoice(BookingDetailsModel booking)
 			throws DocumentException, IOException{
 		BookingInvoiceModel bookingInvoice=bookingToInvoice(booking);
 		try {
