@@ -1779,20 +1779,24 @@ public class UserService implements UserDetailsService {
 				uam.setLoginTime(sdf.format(ua.getCreatedDate()));
 				loginData.add(uam);
 			}
-			Collections.sort(loginData, new Comparator<UserActivityModel>() {
-				@Override
-				public int compare(UserActivityModel o1, UserActivityModel o2) {
+			//sort in desc order of login date
+			Collections.sort(loginData,(o1, o2) -> {
 					try {
-						return (int) sdf.parse(o1.getLoginTime()).getTime()
-								- (int) sdf.parse(o2.getLoginTime()).getTime();
+						if(sdf.parse(o1.getLoginTime()).before(sdf.parse(o2.getLoginTime()))){
+							return 1;
+						} else if(sdf.parse(o1.getLoginTime()).after(sdf.parse(o2.getLoginTime()))){
+							return -1;
+						}else{
+							return 0;
+						}
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					return 0;
 				}
-			});
-			Collections.reverse(loginData);
+			);
+			//Collections.reverse(loginData);
 		}
 
 		return loginData;
@@ -1814,23 +1818,25 @@ public class UserService implements UserDetailsService {
 				uam.setReferralCode(user.getExpertCode());
 				signUpData.add(uam);
 			}
-			Collections.sort(signUpData, new Comparator<UserActivityModel>() {
-				@Override
-				public int compare(UserActivityModel o1, UserActivityModel o2) {
-					try {
-						return (int) sdf.parse(o2.getSignUpTime()).getTime()
-								- (int) sdf.parse(o1.getSignUpTime()).getTime();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+			Collections.sort(signUpData,(o1, o2) -> {
+						try {
+							if(sdf.parse(o1.getSignUpTime()).before(sdf.parse(o2.getSignUpTime()))){
+								return 1;
+							} else if(sdf.parse(o1.getSignUpTime()).after(sdf.parse(o2.getSignUpTime()))){
+								return -1;
+							}else{
+								return 0;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return 0;
 					}
-					return 0;
-				}
-			});
+			);
 
 		}
-		System.out.println("Sign up data here ");
-		System.out.println(signUpData);
+
 		return signUpData;
 	}
 	//fetching all previous meeting data
@@ -1844,21 +1850,25 @@ public class UserService implements UserDetailsService {
 				bkm = copyBookingDetailsToBookingDetailsModel(bk);
 				allBookingsModel.add(bkm);
 			}
-			Collections.sort(allBookingsModel, new Comparator<BookingDetailsModel>() {
-				@Override
-				public int compare(BookingDetailsModel o1, BookingDetailsModel o2) {
-					try {
-						return (int) sdf.parse(o2.getCreationTime()).getTime()
-								- (int) sdf.parse(o1.getCreationTime()).getTime();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+			Collections.sort(allBookingsModel,(o1, o2) -> {
+						try {
+							if(sdf.parse(o1.getCreationTime()).before(sdf.parse(o2.getCreationTime()))){
+								return 1;
+							} else if(sdf.parse(o1.getCreationTime()).after(sdf.parse(o2.getCreationTime()))){
+								return -1;
+							}else{
+								return 0;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return 0;
 					}
-					return 0;
-				}
-			});
+			);
 
 		}
+
 		return allBookingsModel;
 	}
 
