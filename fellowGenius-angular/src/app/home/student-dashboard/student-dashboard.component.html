@@ -144,7 +144,7 @@
                       <!-- <td class="fld_attch">Lorem.png</td> -->
                       <td
                         class="fld_action"
-                        *ngIf="element.approvalStatus == 'Pending'"
+                        *ngIf="element.approvalStatus == 'PENDING'"
                       >
                         <button
                           class="Modal__BTn"
@@ -158,7 +158,7 @@
                           <a
                             href="javascript:;"
                             class="delete_btn"
-                            *ngIf="element.approvalStatus == 'Pending'"
+                            *ngIf="element.approvalStatus == 'PENDING'"
                             (click)="deleteBooking(element)"
                             ><img
                               class="cancel_img"
@@ -170,7 +170,7 @@
                       </td>
                       <td
                         class="fld_action" style="display: flex;"
-                        *ngIf="element.approvalStatus == 'Accepted'"
+                        *ngIf="element.approvalStatus == 'ACCEPTED'"
                       >
                         <button
                           class="Modal__BTn"
@@ -202,7 +202,7 @@
                       </td>
                       <td
                         class="fld_action"
-                        *ngIf="element.approvalStatus == 'live'"
+                        *ngIf="element.approvalStatus == 'LIVE'"
                       >
                         <button
                           class="Modal__BTn"
@@ -288,7 +288,7 @@
               <a
                 href="javascript:;"
                 class="delete_btn"
-                *ngIf="selectedUpcomingMeeting.approvalStatus == 'Pending'"
+                *ngIf="selectedUpcomingMeeting.approvalStatus == 'PENDING'"
                 (click)="deleteBooking(selectedUpcomingMeeting)"
                 ><button class="cancel_btn" >Cancel 
                   <!-- <span>&#10005;</span>  -->
@@ -297,7 +297,7 @@
 
               <div
                 class="td_btn"
-                *ngIf="selectedUpcomingMeeting.approvalStatus == 'Accepted'"
+                *ngIf="selectedUpcomingMeeting.approvalStatus == 'ACCEPTED'"
               >
               <a
                 href="javascript:;"
@@ -316,7 +316,7 @@
               </div>
               <div
                 class="td_btn"
-                *ngIf="selectedUpcomingMeeting.approvalStatus == 'live'"
+                *ngIf="selectedUpcomingMeeting.approvalStatus == 'LIVE'"
               >
                 <button
                   class="table_btn green_btn join_btn"

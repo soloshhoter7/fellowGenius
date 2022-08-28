@@ -1,13 +1,16 @@
 package fG.Controller;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.servlet.http.HttpServletRequest;
 
 import fG.Model.*;
+import fG.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +24,6 @@ import com.lowagie.text.DocumentException;
 import fG.Configuration.JwtUtil;
 import fG.Entity.BookingDetails;
 import fG.Entity.ScheduleData;
-import fG.Service.MeetingService;
-import fG.Service.UserService;
 
 @RestController
 @RequestMapping("/fellowGenius/meeting")
@@ -35,7 +36,16 @@ public class MeetingController {
 	UserService userService;
 
 	@Autowired
+	SchedulerService schedulerService;
+
+	@Autowired
+	WhatsappService whatsappService;
+
+	@Autowired
 	private JwtUtil jwtUtil;
+
+	@Autowired
+	TaskDefinitionBean taskDefinitionBean;
 
 	// for sending verification email
 //		@PreAuthorize("hasAuthority('STUDENT') or hasAuthority('TUTOR')")
@@ -49,7 +59,7 @@ public class MeetingController {
 	// for saving booking
 	@PreAuthorize("hasAuthority('Learner')")
 	@RequestMapping(value = "/saveMeeting")
-	public boolean saveBooking(@RequestBody BookingDetailsModel booking) {
+	public boolean saveBooking(@RequestBody BookingDetailsModel booking) throws ParseException {
 		System.out.println("Booking model recieved "+booking);
 		return meetingService.saveBooking(booking);
 	}
@@ -63,21 +73,19 @@ public class MeetingController {
 		return meetingService.deleteMyBooking(bookingId);
 	}
 
-	@RequestMapping(value="/deleteBooking")
+	@DeleteMapping(value="/deleteBooking")
 	@ResponseBody
 	public ResponseModel deleteBooking(String bid) throws ParseException{
 		Integer bookingId = Integer.valueOf(bid);
 		return meetingService.deleteBooking(bookingId);
 	}
 	@PreAuthorize("hasAuthority('Learner') or hasAuthority('Expert')")
-	@RequestMapping(value = "/deleteBookingFromUrl")
+	@DeleteMapping(value = "/deleteBookingFromUrl")
 	@ResponseBody
 	public ResponseModel deleteBookingFromUrl(String token, String bid) throws ParseException {
-		System.out.println(token + "    " + bid);
 		Integer bookingId = Integer.valueOf(bid);
 		String userId = null;
 		if (token != null) {
-			System.out.println("entered here");
 			userId = jwtUtil.extractUsername(token);
 			return meetingService.deleteBookingFromUrl(userId, bookingId);
 		} else {
@@ -380,6 +388,23 @@ public class MeetingController {
 	public void saveFeedBack(@RequestBody BookingFeedbackModel feedbackModel){
 		System.out.println("feedback Model:"+feedbackModel);
 	 	meetingService.saveFeedback(feedbackModel);
+	}
+
+	@GetMapping(value="/testingSchedulerJobCreation")
+	public String createBookingJob(@RequestBody TaskDefinition t) throws ParseException {
+		return meetingService.createSchedulerTask(t);
+
+	}
+	@GetMapping(value="/fetchJobsCreated")
+	public Queue<TaskDefinition> fetchAllJobCreated(){
+		return taskDefinitionBean.getAllTaskDefinitions();
+	}
+
+	@GetMapping(value = "/sendWhatsappMessage")
+	public String sendWhatsappMessage() throws URISyntaxException {
+		String message = "Hey there ! sending example message to user";
+		String phoneNumber ="918076490605";
+		return whatsappService.sendWhatsappMessage(message,phoneNumber);
 	}
 
 }

@@ -14,7 +14,7 @@ export class bookingDetails {
   public meetingId: string;
   public studentName: string;
   public tutorName: string;
-  public approvalStatus: string = 'Pending';
+  public approvalStatus: string = 'PENDING';
   public isLive: boolean = false;
   public timeLeft: String = '';
   public bookingCase: number;

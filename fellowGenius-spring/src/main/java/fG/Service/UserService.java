@@ -1,5 +1,6 @@
 package fG.Service;
 
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,7 +57,6 @@ import fG.Model.Category;
 import fG.Model.FGCreditModel;
 import fG.Model.FeaturedExpertsModel;
 import fG.Model.NotificationModel;
-import fG.Model.ReferralActivityAnalytics;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
 import fG.Model.SocialLoginModel;
@@ -87,7 +87,6 @@ import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
-import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryUserActivity;
@@ -118,14 +117,6 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	AdminService adminService;
 
-	@Autowired
-	repositoryStudentLogin repStudentLogin;
-
-	@Autowired
-	repositoryTutorLogin repTutorLogin;
-
-	@Autowired
-	repositorySocialLogin repSocialLogin;
 
 	@Autowired
 	repositoryUsers repUsers;
@@ -181,12 +172,15 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	repositoryReferralActivity repReferralActivity;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
 	@Autowired
 	MailService mailService;
+
+	@Autowired
+	WhatsappService whatsappService;
 
 	public String getLatestReferralStatus(Integer userId,UserReferrals userRef) {
 		String status="";
@@ -257,26 +251,6 @@ public class UserService implements UserDetailsService {
 				urf.setTimeStamp(user.getCreatedDate());
 				referrerDetails.add(urf);
 			}
-			//for meetings setup
-//			for(BookingDetails b:meetingsSetup) {
-//				UserReferralInfoModel urf = new UserReferralInfoModel();
-//				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
-//				urf.setEmail(sp.getEmail());
-//				urf.setName(sp.getFullName());
-//				urf.setStatus("Meeting Setup");
-//				urf.setTimeStamp(b.getCreatedDate());
-//				referrerDetails.add(urf);
-//			}
-//			//for meetings completed
-//			for(BookingDetails b:meetingsCompleted) {
-//				UserReferralInfoModel urf = new UserReferralInfoModel();
-//				StudentProfile sp = repStudentProfile.idExist(b.getStudentId());
-//				urf.setEmail(sp.getEmail());
-//				urf.setName(sp.getFullName());
-//				urf.setStatus("Meeting Completed");
-//				urf.setTimeStamp(meetingService.calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute()));
-//				referrerDetails.add(urf);
-//			}
 		}
 		//sorting on the basis of timestamp
 		referrerDetails.sort((r1,r2) -> r1.getTimeStamp().compareTo(r2.getTimeStamp()));
@@ -438,6 +412,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean verifyExpert(String id) {
+		String whatsappMessage = "";
 		PendingTutorProfileDetails pt = repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
 		TutorProfile tutorProfile = new TutorProfile();
 		tutorProfile.setContact(pt.getContact());
@@ -456,6 +431,7 @@ public class UserService implements UserDetailsService {
 			user.setUserId(tutorProfile.getTid());
 			user.setSocialId(encoder.encode("N/A"));
 			user.setRole("Expert");
+
 			dao.saveUserLogin(user);
 			// creating tutor profile details tuple
 			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
@@ -467,14 +443,17 @@ public class UserService implements UserDetailsService {
 			tutProfileDetails.setReviewCount(0);
 //			tutProfileDetails.setPrice1("400");
 			tutProfileDetails.setBookingId(tutorProfile.getBookingId());
+
 			dao.saveTutorID(tutProfileDetails);
 			// creating tutor schedule tuple
 			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
 			tutSchedule.setTid(tutorProfile.getBookingId());
 			tutSchedule.setFullName(tutorProfile.getFullName());
 			tutSchedule.setIsAvailable("yes");
+
 			dao.saveTutorAvailbilitySchedule(tutSchedule);
 			userActivity.setUserId(user);
+
 			repUserActivity.save(userActivity);
 
 			tutProfileDetails.setTid(tutorProfile.getTid());
@@ -525,8 +504,7 @@ public class UserService implements UserDetailsService {
 				}
 			}
 
-//			tutProfileDetails.setAreaOfExpertise(areas);
-//			System.out.println(tutProfileDetails);
+
 			dao.updateTutorProfile(tutProfileDetails);
 
 			// to update the price of all the expertise of a user to the price1
@@ -538,16 +516,25 @@ public class UserService implements UserDetailsService {
 					dao.updateExpertiseArea(e);
 				}
 			}
+
 			repPendingTutorProfileDetails.deleteById(pt.getId());
+
 			mailService.sendVerifiedMail(tutorProfile.getEmail());
+			whatsappMessage = "Hey Admin, a new user "+tutorProfile.getFullName()+" has registered with email :"+tutorProfile.getEmail()+" " +
+					"and contact :"+tutorProfile.getContact()+" as an Expert.";
+			whatsappMessage+=" So the total number of users now are "+repUsers.count();
+			whatsappService.initiateWhatsAppMessage(whatsappMessage);
 			return true;
 		} else {
+
 			return false;
 		}
 	}
 
 	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
+		Integer totalUsersCount = Math.toIntExact(repUsers.count());
+		String whatsappMessage = "";
 		UserActivity userActivity = new UserActivity();
 		userActivity.setType("signup");
 		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
@@ -555,7 +542,6 @@ public class UserService implements UserDetailsService {
 		}
 		System.out.println(registrationModel);
 		if (registrationModel.getRole().equals("Learner")) {
-			System.out.println("Inside learner");
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());
 			studentProfile.setEmail(registrationModel.getEmail());
@@ -574,6 +560,8 @@ public class UserService implements UserDetailsService {
 				user.setUserId(studentProfile.getSid());
 				user.setRole("Learner");
 				user.setSocialId(encoder.encode("N/A"));
+				whatsappMessage = "Hey Admin, a new user "+studentProfile.getFullName()+" has registered with email :"+registrationModel.getEmail()+" " +
+						"and contact :"+registrationModel.getContact()+" as a Learner.";
 				//check if expert code is valid or not
 				if(parseReferralCode(registrationModel.getExpertCode())!="") {
 					user.setExpertCode(registrationModel.getExpertCode());
@@ -595,53 +583,14 @@ public class UserService implements UserDetailsService {
 						saveReferralActivity(user,registrationModel.getReferActivity());
 					}
 				}
+				whatsappMessage+=" So the total number of users now are "+repUsers.count();
+				whatsappService.initiateWhatsAppMessage(whatsappMessage);
 				return true;
 			} else {
 				return false;
 			}
-		} else if (registrationModel.getRole().equals("Expert")) {
-			TutorProfile tutorProfile = new TutorProfile();
-			tutorProfile.setContact(registrationModel.getContact());
-			tutorProfile.setEmail(registrationModel.getEmail());
-			tutorProfile.setFullName(registrationModel.getFullName());
-			tutorProfile.setBookingId(genUserBookingId());
-
-			if (dao.saveTutorProfile(tutorProfile)) {
-
-				Users user = new Users();
-				user.setEmail(registrationModel.getEmail());
-				user.setPassword(encoder.encode(registrationModel.getPassword()));
-				user.setUserId(tutorProfile.getTid());
-				user.setSocialId(encoder.encode("N/A"));
-				if (registrationModel.getSocialId() != null) {
-					user.setSocialId(encoder.encode(registrationModel.getSocialId()));
-				}
-				user.setRole("Expert");
-				dao.saveUserLogin(user);
-				// creating tutor profile details tuple
-				TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
-				tutProfileDetails.setTid(tutorProfile.getTid());
-				tutProfileDetails.setFullName(registrationModel.getFullName());
-				tutProfileDetails.setProfileCompleted(12);
-				tutProfileDetails.setLessonCompleted(0);
-				tutProfileDetails.setRating(0);
-				tutProfileDetails.setReviewCount(0);
-//				tutProfileDetails.setPrice1("400");
-				tutProfileDetails.setBookingId(tutorProfile.getBookingId());
-				dao.saveTutorID(tutProfileDetails);
-				// creating tutor schedule tuple
-				TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
-				tutSchedule.setTid(tutorProfile.getBookingId());
-				tutSchedule.setFullName(tutorProfile.getFullName());
-				tutSchedule.setIsAvailable("yes");
-				dao.saveTutorAvailbilitySchedule(tutSchedule);
-				userActivity.setUserId(user);
-				repUserActivity.save(userActivity);
-				return true;
-			} else {
-				return false;
-			}
-		} else {
+		}
+		 else {
 			return false;
 		}
 	}
@@ -779,32 +728,6 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-	// saving student registration details
-	public boolean saveStudentProfile(StudentProfileModel studentModel) {
-		StudentProfile studentProfile = new StudentProfile();
-		studentProfile.setContact(studentModel.getContact());
-		studentProfile.setDateOfBirth(studentModel.getDateOfBirth());
-		studentProfile.setEmail(studentModel.getEmail());
-		studentProfile.setFullName(studentModel.getFullName());
-//		studentProfile.setSubject(studentModel.getSubject());
-//		studentProfile.setGradeLevel(studentModel.getGradeLevel());
-		if (dao.saveStudentProfile(studentProfile)) {
-			StudentLogin studentLogin = new StudentLogin();
-			studentLogin.setPassword(encoder.encode(studentModel.getPassword()));
-			studentLogin.setEmail(studentModel.getEmail());
-			studentLogin.setStudentProfile(studentProfile);
-			dao.saveStudentLogin(studentLogin);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	// checking on student login
-	public boolean onStudentLogin(StudentLoginModel studentLoginModel) {
-		return dao.onStudentLogin(studentLoginModel);
-	}
-
 	// for getting student details after login
 	public StudentProfileModel getStudentDetails(String userId) {
 		StudentProfileModel stuProfileModel = new StudentProfileModel();
@@ -891,15 +814,6 @@ public class UserService implements UserDetailsService {
 		tutProfileDetails.setCurrentDesignation(tutorModel.getCurrentDesignation());
 		tutProfileDetails.setEarning(tutorProfileDetailsLoaded.getEarning());
 		// for setting the expertise areas
-		Integer minPrice = Integer.MAX_VALUE;
-		Integer maxPrice = 0;
-//		if (tutorProfileDetailsLoaded.getPrice1() != "400") {
-//			if (tutorProfileDetailsLoaded.getPrice2() != null && tutorProfileDetailsLoaded.getPrice1() != null) {
-//				minPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice2());
-//				maxPrice = Integer.valueOf(tutorProfileDetailsLoaded.getPrice1());
-//			}
-//		}
-
 		for (expertise area : tutorModel.getAreaOfExpertise()) {
 			ExpertiseAreas subject = new ExpertiseAreas();
 			SubcategoryList subCateg = repSubcategory.findSubCategoryByName(area.getSubCategory());
@@ -918,8 +832,6 @@ public class UserService implements UserDetailsService {
 			}
 		}
 
-//		tutProfileDetails.setAreaOfExpertise(areas);
-//		System.out.println(tutProfileDetails);
 		dao.updateTutorProfile(tutProfileDetails);
 
 		// to update the price of all the expertise of a user to the price1
@@ -931,15 +843,6 @@ public class UserService implements UserDetailsService {
 				dao.updateExpertiseArea(e);
 			}
 		}
-//		Integer profileCompleted = dao.getTutorProfileDetails(tutorModel.getTid()).getProfileCompleted();
-//		// updating profile completed percentage
-//		if (profileCompleted < 50) {
-//			dao.updateProfileCompleted(50, tutorModel.getTid());
-//		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() == null) {
-//			dao.updateProfileCompleted(50, tutorModel.getTid());
-//		} else if (profileCompleted.equals(50) && tutProfileDetails.getInstitute() != null) {
-//			dao.updateProfileCompleted(100, tutorModel.getTid());
-//		}
 	}
 
 	// saving registration details of tutor
@@ -1504,7 +1407,6 @@ public class UserService implements UserDetailsService {
 
 	public ResponseModel expertChoosePassword(String userId, String password) {
 
-		System.out.println(userId);
 		Users user = repUsers.idExists(Integer.valueOf(userId));
 		if (user != null) {
 			String newPassword = encoder.encode(password);
@@ -1849,8 +1751,7 @@ public class UserService implements UserDetailsService {
 		bkModel.setStudentId(booking.getStudentId());
 		bkModel.setStudentName(booking.getStudentName());
 		bkModel.setTutorName(booking.getTutorName());
-		bkModel.setApprovalStatus(booking.getApprovalStatus());
-		bkModel.setBookingCase(booking.getBookingCase());
+		bkModel.setApprovalStatus(booking.getApprovalStatus().name());
 		bkModel.setSubject(booking.getSubject());
 		bkModel.setDomain(booking.getDomain());
 		bkModel.setAmount(booking.getAmount());
@@ -1876,7 +1777,7 @@ public class UserService implements UserDetailsService {
 
 		bkModel.setExpertCode(booking.getExpertCode());
 		bkModel.setRazorpay_payment_id(booking.getRazorpay_payment_id());
-		bkModel.setIsRescheduled(booking.getIsRescheduled());
+		bkModel.setRescheduled(booking.isRescheduled());
 		return bkModel;
 	}
 

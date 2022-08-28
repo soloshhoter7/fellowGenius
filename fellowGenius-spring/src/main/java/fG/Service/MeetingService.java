@@ -1,5 +1,6 @@
 package fG.Service;
 
+import java.awt.print.Book;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
 import fG.Entity.*;
+import fG.Enum.MeetingStatus;
+import fG.Enum.TaskDefinitonType;
+import fG.Enum.WhatsappMessageType;
 import fG.Model.*;
 import fG.Repository.*;
 import fG.Utils.MiscellaneousUtils;
@@ -103,6 +107,9 @@ public class MeetingService {
 	@Autowired
 	SchedulerService taskSchedulerService;
 
+	@Autowired
+	NotificationService notificationService;
+
 	private UUID uuid;
 	
 	public void saveNotification(JsonObject msg) {
@@ -130,8 +137,7 @@ public class MeetingService {
 			bkModel.setTutorId(booking.getTutorId());
 			bkModel.setStudentName(booking.getStudentName());
 			bkModel.setTutorName(booking.getTutorName());
-			bkModel.setApprovalStatus(booking.getApprovalStatus());
-			bkModel.setBookingCase(booking.getBookingCase());
+			bkModel.setApprovalStatus(booking.getApprovalStatus().name());
 			bkModel.setSubject(booking.getSubject());
 			bkModel.setDomain(booking.getDomain());
 			bkModel.setAmount(booking.getAmount());
@@ -143,54 +149,8 @@ public class MeetingService {
 
 	}
 
-	public BookingDetailsModel copyBookingDetailsToBookingDetailsModel(BookingDetails booking) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		BookingDetailsModel bkModel = new BookingDetailsModel();
-		bkModel.setBid(booking.getBid());
-		bkModel.setDateOfMeeting(booking.getDateOfMeeting());
-		bkModel.setDescription(booking.getDescription());
-		bkModel.setDuration(booking.getDuration());
-		bkModel.setEndTimeHour(booking.getEndTimeHour());
-		bkModel.setEndTimeMinute(booking.getEndTimeMinute());
-		bkModel.setMeetingId(booking.getMeetingId());
-		bkModel.setStartTimeHour(booking.getStartTimeHour());
-		bkModel.setStartTimeMinute(booking.getStartTimeMinute());
-		bkModel.setStudentId(booking.getStudentId());
-		bkModel.setStudentName(booking.getStudentName());
-		bkModel.setTutorName(booking.getTutorName());
-		bkModel.setApprovalStatus(booking.getApprovalStatus());
-		bkModel.setBookingCase(booking.getBookingCase());
-		bkModel.setSubject(booking.getSubject());
-		bkModel.setDomain(booking.getDomain());
-		bkModel.setAmount(booking.getAmount());
-		bkModel.setPaidAmount(booking.getPaidAmount());
-		bkModel.setTutorProfilePictureUrl(booking.getTutorProfilePictureUrl());
-		bkModel.setCreationTime(sdf.format(booking.getCreatedDate()));
-		String start = booking.getStartTimeHour() + ":" + booking.getStartTimeMinute();
-		String end = booking.getEndTimeHour() + ":" + booking.getEndTimeMinute();
-		bkModel.setStartTime(start);
-		bkModel.setEndTime(end);
-		if (booking.getExpertJoinTime() != null) {
-			bkModel.setExpertJoinTime(sdf.format(booking.getExpertJoinTime()));
-		}
-		if (booking.getExpertLeavingTime() != null) {
-			bkModel.setExpertLeavingTime(sdf.format(booking.getExpertLeavingTime()));
-		}
-		if (booking.getLearnerJoinTime() != null) {
-			bkModel.setLearnerJoinTime(sdf.format(booking.getLearnerJoinTime()));
-		}
-		if (booking.getLearnerLeavingTime() != null) {
-			bkModel.setLearnerLeavingTime(sdf.format(booking.getLearnerLeavingTime()));
-		}
-
-		bkModel.setExpertCode(booking.getExpertCode());
-		bkModel.setRazorpay_payment_id(booking.getRazorpay_payment_id());
-		bkModel.setIsRescheduled(booking.getIsRescheduled());
-		return bkModel;
-	}
-
 	// to save the bookings requested by student
-	public boolean saveBooking(BookingDetailsModel bookingModel) {
+	public boolean saveBooking(BookingDetailsModel bookingModel) throws ParseException {
 		BookingDetails meetingBooked = null;
 		BookingDetails booking = new BookingDetails();
 		booking.setDateOfMeeting(bookingModel.getDateOfMeeting());
@@ -205,8 +165,7 @@ public class MeetingService {
 		booking.setTutorId(bookingModel.getTutorId());
 		booking.setStudentName(bookingModel.getStudentName());
 		booking.setTutorName(bookingModel.getTutorName());
-		booking.setApprovalStatus(bookingModel.getApprovalStatus());
-		booking.setBookingCase(bookingModel.getBookingCase());
+		booking.setApprovalStatus(MeetingStatus.valueOf(bookingModel.getApprovalStatus()));
 		booking.setSubject(bookingModel.getSubject());
 		booking.setDomain(bookingModel.getDomain());
 		booking.setAmount(bookingModel.getAmount());
@@ -231,13 +190,8 @@ public class MeetingService {
 
 		//check for coupon code.
 		if(meetingBooked!=null){
-			//create completion check job
-			String[] dateParts = booking.getDateOfMeeting().split("/");
-//			TaskDefinition taskDefinition = new TaskDefinition();
-//			taskDefinition.setData(booking.getMeetingId());
-//			taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
-//			taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute(),0));
-//			taskSchedulerService.scheduleATask(uuid.randomUUID().toString(),taskDefinitionBean,taskDefinition.getCronExpression());
+			createMeetingSchedulerJobs(booking);
+			notificationService.sendWhatsappNotifications(booking.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_BOOKED);
 			//check for coupon code.
 			Coupon coupon=repCoupon.couponCodeExists(meetingBooked.getCouponCode());
 			if(coupon!=null){
@@ -253,7 +207,6 @@ public class MeetingService {
 				AppInfo referralCredit=repAppInfo.keyExist("ReferralCredit");
 				user.setCredits(user.getCredits()+Integer.valueOf(referralCredit.getValue()));
 				repUsers.save(user);
-				System.out.println("FG Credit updated Successfully");
 				
 				//update this transaction in fg credit table
 				FGCredits credits=new FGCredits();
@@ -272,11 +225,8 @@ public class MeetingService {
 				Users user=repUsers.idExists(learner.getSid());
 				user.setCredits(user.getCredits()-creditsUsed);
 				repUsers.save(user);
-				System.out.println("FG Credit updated Successfully");
-				
 				//update this transaction in fg credit table
 				FGCredits credits=new FGCredits();
-				
 				credits.setUser(repUsers.idExists(learner.getSid()));
 				credits.setBookingDetails(meetingBooked);
 				credits.setType("WITHDRAW");
@@ -285,17 +235,56 @@ public class MeetingService {
 				repFGCredits.save(credits);
 				System.out.println("Credit Info : "+credits);
 			}
-			
-//			Integer learnerSessionCompleted = learner.getLessonCompleted()+1;
-//			learner.setLessonCompleted(learnerSessionCompleted);
 			repStudentProfile.save(learner);
-			
 			sendNotificationTutor(bookingModel.getTutorId(), booking);
 			updateMeetingsSetUpInReferrals(booking.getMeetingId());
 			
 		}
 		
 		return meetingBooked != null;
+	}
+	public void createMeetingSchedulerJobs(BookingDetails booking) throws ParseException {
+		//create completion check job
+		String[] dateParts = booking.getDateOfMeeting().split("/");
+
+		TaskDefinition taskDefinition = new TaskDefinition();
+		taskDefinition.setData(booking.getMeetingId());
+		taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
+		taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute(),0));
+		taskSchedulerService.scheduleATask(taskDefinition);
+
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		//Parsing the given String to Date object
+		Date currentTime = new Date();
+		Date meetingStartTime = formatter.parse(booking.getDateOfMeeting());
+		meetingStartTime.setHours(booking.getStartTimeHour());
+		meetingStartTime.setMinutes(booking.getStartTimeMinute());
+		Integer minutesPending = miscUtils.checkDiffBtwTimeInMinutes(currentTime,meetingStartTime);
+		//setting up notifications
+		 if(minutesPending>120){
+			 Map<Integer,Integer> startHoursAndMinutes = miscUtils.subtractFromTime(120,booking.getStartTimeHour(),booking.getStartTimeMinute());
+			 Map.Entry<Integer,Integer> startTime = startHoursAndMinutes.entrySet().iterator().next();
+			 taskDefinition.setActionType(TaskDefinitonType.CHECK_IF_PENDING_STATUS_ADMIN_2HR);
+			 taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),startTime.getKey(),startTime.getValue(),0));
+			 taskSchedulerService.scheduleATask(taskDefinition);
+		 }
+		 if(minutesPending>15){
+			Map<Integer,Integer> startHoursAndMinutes = miscUtils.subtractFromTime(15,booking.getStartTimeHour(),booking.getStartTimeMinute());
+			Map.Entry<Integer,Integer> startTime = startHoursAndMinutes.entrySet().iterator().next();
+			taskDefinition.setActionType(TaskDefinitonType.MEETING_NOTIFICATION_15);
+			taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),startTime.getKey(),startTime.getValue(),0));
+			taskSchedulerService.scheduleATask(taskDefinition);
+		}
+	}
+
+	public String createSchedulerTask(TaskDefinition t){
+		System.out.println(t);
+		TaskDefinition taskDefinition = new TaskDefinition();
+		taskDefinition.setData(t.getData());
+		taskDefinition.setActionType(t.getActionType());
+		taskDefinition.setCronExpression(t.getCronExpression());
+		taskSchedulerService.scheduleATask(taskDefinition);
+		return taskSchedulerService.fetchAllJobs();
 	}
 
 	void updateMeetingsSetUpInReferrals(String meetingId) {
@@ -321,7 +310,6 @@ public class MeetingService {
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<String> last2DatesInString = new ArrayList<String>();
-		System.out.println("Now is: " + new Date());
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
 		last2DatesInString.add(formatter.format(c.getTime()));
@@ -329,84 +317,58 @@ public class MeetingService {
 		last2DatesInString.add(formatter.format(c.getTime()));
 		c.add(Calendar.DATE, -1);
 		last2DatesInString.add(formatter.format(c.getTime()));
-		System.out.println(last2DatesInString);
 		for (String date : last2DatesInString) {
 			List<BookingDetails> bookings = repBooking.fetchBookingsForDate(date);
 			if (bookings != null && bookings.size() != 0) {
 				for (BookingDetails b : bookings) {
-					System.out.println("BOOKINGS FOUND !"+bookings);
-					
 					Date endDateTime = calculateDate(b.getDateOfMeeting(), b.getEndTimeHour(), b.getEndTimeMinute());
 					Date currentDate = new Date();
-					System.out.println(endDateTime+" : "+endDateTime.getTime());
-					System.out.println(currentDate+" : "+currentDate.getTime());
 					if (currentDate.getTime() > endDateTime.getTime()) {
-						if (b.getExpertJoinTime() == null) {
-							b.setApprovalStatus("expert_absent");
-						} else if (b.getLearnerJoinTime() == null) {
-							b.setApprovalStatus("learner_absent");
-						} else if (b.getExpertJoinTime() != null && b.getExpertLeavingTime() != null
-								&& b.getLearnerJoinTime() != null && b.getLearnerLeavingTime() != null) {
-							b.setApprovalStatus("completed");
-						}else if(b.getExpertJoinTime()==null&&b.getLearnerJoinTime()==null) {
-							b.setApprovalStatus("No one joined");
-						}
+						b.setApprovalStatus(miscUtils.findMeetingStatus(b));
 						repBooking.save(b);
-						if(b.getApprovalStatus().equals("completed")) {
-							System.out.println("BOOKING FOUND !");
-							//giving credit to user B (learner)
-							Users learner = repUsers.idExists(b.getStudentId());
-							
-							if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
-								
-								String refCode = b.getExpertCode();
-								String referrerUserId = userService.parseReferralCode(refCode);
-								UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referrerUserId));
-								List<BookingDetails> meetingsCompleted = ur.getMeetingCompleted();
-								List<BookingDetails> meetingsSetup = ur.getMeetingSetup();
-								System.out.println("FETCHED DETAILS !");
-//								System.out.println("MEETINGS SETUP : "+meetingsSetup);
-//								System.out.println("MEETINGS COMPLETED : "+meetingsCompleted);
-								if(!meetingsCompleted.contains(b)) {
-									Integer referralAmount = Integer.valueOf(repAppInfo.keyExist("ReferralAmount").getValue());
-									Integer amountDue=0;
-									if(ur.getPaymentDue()==0) {
-										
-										amountDue=ur.getPaymentDue()+referralAmount;
-										
-									}else {
-										
-										amountDue=ur.getPaymentDue()+referralAmount;
-									}
-									
-									ur.setPaymentDue(amountDue);
-									
-									Cashback cashback=new Cashback();
-									cashback.setUser(ur.getUser());
-									cashback.setBookingDetails(b);
-									cashback.setAmount(referralAmount);
-									cashback.setContext("Added Rs. "+referralAmount+" cashback as your referral completed meeting");
-									System.out.println("Cashback Info ");
-									repCashback.save(cashback);
-									
-									for(BookingDetails bs:meetingsSetup) {
-										if(bs.getBid().equals(b.getBid())) {
-											meetingsCompleted.add(b);
-											System.out.println("MEETING MATCHED !");
-										}
-									}
-									
-									ur.setMeetingCompleted(meetingsCompleted);
-									repUserReferral.save(ur);
-								}
-							}
+						if(b.getApprovalStatus().equals(MeetingStatus.COMPLETED)) {
+							assignReferralCashback(b);
 						}
 					}
 				}
 			}
 		}
 	}
+	void assignReferralCashback(BookingDetails b){
+		if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
 
+			String refCode = b.getExpertCode();
+			String referrerUserId = userService.parseReferralCode(refCode);
+			UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referrerUserId));
+			List<BookingDetails> meetingsCompleted = ur.getMeetingCompleted();
+			List<BookingDetails> meetingsSetup = ur.getMeetingSetup();
+			if(!meetingsCompleted.contains(b)) {
+				Integer referralAmount = Integer.valueOf(repAppInfo.keyExist("ReferralAmount").getValue());
+				Integer amountDue=0;
+				if(ur.getPaymentDue()==0) {
+					amountDue=ur.getPaymentDue()+referralAmount;
+				}else {
+					amountDue=ur.getPaymentDue()+referralAmount;
+				}
+				ur.setPaymentDue(amountDue);
+
+				Cashback cashback=new Cashback();
+				cashback.setUser(ur.getUser());
+				cashback.setBookingDetails(b);
+				cashback.setAmount(referralAmount);
+				repCashback.save(cashback);
+
+				for(BookingDetails bs:meetingsSetup) {
+					if(bs.getBid().equals(b.getBid())) {
+						meetingsCompleted.add(b);
+					}
+				}
+
+				ur.setMeetingCompleted(meetingsCompleted);
+				repUserReferral.save(ur);
+			}
+		}
+	}
 	Date calculateDate(String dateOfMeeting, int eh, int em) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = formatter.parse(dateOfMeeting);
@@ -445,7 +407,7 @@ public class MeetingService {
 	// for updating booking approval status
 	public boolean updateBookingStatus(String bid, String approvalStatus) {
 		BookingDetails booking = meetingDao.findBooking(Integer.valueOf(bid));
-		booking.setApprovalStatus(approvalStatus);
+		booking.setApprovalStatus(MeetingStatus.valueOf(approvalStatus));
 		Integer tid = booking.getTutorId();
 		TutorProfileDetails expert = repTutorProfileDetails.bookingIdExist(tid);
 		if (expert != null && approvalStatus.equals("Accepted")) {
@@ -489,20 +451,19 @@ public class MeetingService {
 		// decrement lesson completed of student
 		if(bookingDetails!=null){
 			StudentProfile studentProfile=repStudentProfile.idExist(bookingDetails.getStudentId());
-			if(studentProfile!=null){
+			if(studentProfile!=null&&studentProfile.getLessonCompleted()>0){
 				studentProfile.setLessonCompleted(studentProfile.getLessonCompleted()-1);
 				repStudentProfile.save(studentProfile);
 			}
 
 			//decrement lesson completed of tutor
 			TutorProfileDetails tutorProfileDetails=repTutorProfileDetails.bookingIdExist(bookingDetails.getTutorId());
-			if(tutorProfileDetails!=null){
+			if(tutorProfileDetails!=null&&tutorProfileDetails.getLessonCompleted()>0){
 				tutorProfileDetails.setLessonCompleted(tutorProfileDetails.getLessonCompleted()-1);
 				repTutorProfileDetails.save(tutorProfileDetails);
 			}
 
 			repBooking.deleteBooking(bookingId);
-			System.out.println("Meeting successfully deleted");
 			return new ResponseModel("booking deleted successfully");
 		}else{
 			return new ResponseModel("booking not found");
@@ -617,13 +578,6 @@ public class MeetingService {
 	public ArrayList<BookingDetails> isBeforeTime(ArrayList<BookingDetails> bookings) throws ParseException {
 		ArrayList<BookingDetails> eliminateList = new ArrayList<BookingDetails>();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-//		formatter.setTimeZone(TimeZone.getTimeZone("IST"));
-//		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
-//		Date currentDate = new Date(formatter.format(new Date()));
-//		System.out.println("current date ->"+formatter.format(currentDate));
-//		Date currentDateWithTime = new Date(sdf.format(new Date()));
-//		System.out.println("current date with time ->"+sdf.format(currentDateWithTime));
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 		Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("Asia/Kolkata"));
 		currentDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -689,14 +643,14 @@ public class MeetingService {
 
 	public String fetchBookingStatus(String bid) {
 		BookingDetails booking = repBooking.bidExists(Integer.valueOf(bid));
-		return booking.getApprovalStatus();
+		return booking.getApprovalStatus().name();
 	}
 
 	public ResponseModel canRescheduleMyBooking(String userId, Integer bookingId) throws ParseException {
 		BookingDetails bk = repBooking.bidExists(bookingId);
 
 		if (bk != null && bk.getStudentId().equals(Integer.valueOf(userId))) {
-			if (bk.getIsRescheduled().equals("true")) {
+			if (bk.isRescheduled()) {
 				return new ResponseModel("already rescheduled");
 			} else {
 				if (calculateRemainingTimeToCancel(bk) >= Integer
@@ -729,9 +683,10 @@ public class MeetingService {
 		if (endTimeHour <= 23 && endTimeMinute < 60) {
 			bk.setEndTimeHour(endTimeHour);
 			bk.setEndTimeMinute(endTimeMinute);
-			bk.setIsRescheduled("true");
+
 			if (isBookingValid(bk.getStartTimeHour(), bk.getStartTimeMinute(), bk.getEndTimeHour(),
 					bk.getEndTimeMinute(), bk.getTutorId(), bk.getDateOfMeeting())) {
+				bk.setRescheduled(true);
 				repBooking.save(bk);
 				return new ResponseModel("rescheduled successfully");
 			} else {
@@ -751,7 +706,7 @@ public class MeetingService {
 			TutorProfileDetails tut = repTutorProfileDetails.bookingIdExist(bk.getTutorId());
 			tut.setRescheduleRequests(tut.getRescheduleRequests() + 1);
 			mailService.sendRequestToReschedule(bk);
-			bk.setIsRescheduled("requested");
+			bk.setApprovalStatus(MeetingStatus.RESCHEDULE_REQUESTED);
 			repBooking.save(bk);
 			repTutorProfileDetails.save(tut);
 			return true;
@@ -761,15 +716,10 @@ public class MeetingService {
 	}
 
 	public ResponseModel deleteBookingFromUrl(String userId, Integer bookingId) throws ParseException {
-		System.out.println("in service");
 		BookingDetails bk = repBooking.bidExists(bookingId);
-		System.out.println(bk);
-		System.out.println(userId);
 		if (bk != null && bk.getStudentId().equals(Integer.valueOf(userId))) {
-			System.out.println("user matched and booking fetched!");
 			return deleteMyBooking(bookingId);
 		} else {
-			System.out.println("user not matched!");
 			return null;
 		}
 
@@ -969,7 +919,7 @@ public class MeetingService {
 		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100.0)/100.0);
 
         //number to words
-		long actualAmountLong=(long)Math.round(bookingInvoice.getActualAmount());
+		long actualAmountLong= Math.round(bookingInvoice.getActualAmount());
 		bookingInvoice.setActualAmountWords(numberToWords.convert(actualAmountLong));
 
 		return bookingInvoice;
@@ -1001,10 +951,10 @@ public class MeetingService {
 		BookingDetails bookingDetails = repBooking.meetingIdExists(meetingId);
 		if(bookingDetails!=null){
 			if(bookingDetails.getStudentId().equals(Integer.valueOf(userId))&&bookingDetails.getLearnerJoinTime()!=null){
-				return bookingDetails.isLearnerFeedbackDone();
+				return bookingDetails.getLearnerFeedBack()!=null;
 			}
 			if(bookingDetails.getTutorId().equals(Integer.valueOf(userId))&&bookingDetails.getExpertJoinTime()!=null){
-				return bookingDetails.isExpertFeedbackDone();
+				return bookingDetails.getExpertFeedback()!=null;
 			}
 		}
 		return true;
@@ -1017,24 +967,15 @@ public class MeetingService {
 		BookingDetails bookingDetails = repBooking.bidExists(Integer.valueOf(feedbackModel.getBookingId()));
 		System.out.println(bookingDetails);
 		if(bookingDetails!=null){
-			System.out.println("reached here !!");
-			System.out.println(bookingDetails.getStudentId().equals(userId)+":"+role.equals("Learner")+":"+!bookingDetails.isExpertFeedbackDone());
-			System.out.println(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& !bookingDetails.isLearnerFeedbackDone());
-			if(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& !bookingDetails.isLearnerFeedbackDone()){
+
+			if(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& bookingDetails.getLearnerFeedBack()==null){
 				bookingDetails.setLearnerFeedBack(new Gson().toJson(feedbackModel));
-				bookingDetails.setLearnerFeedbackDone(true);
-				System.out.println("reached here !");
 				repBooking.save(bookingDetails);
-				System.out.println("feedback saved !"+bookingDetails.getLearnerFeedBack());
 			}
-			System.out.println(bookingDetails.getTutorId().equals(userId)+":"+role.equals("Expert")+":"+!bookingDetails.isExpertFeedbackDone());
-			System.out.println(bookingDetails.getTutorId().equals(userId)&&role.equals("Expert")&& !bookingDetails.isExpertFeedbackDone());
-			if(bookingDetails.getTutorId().equals(userId)&&role.equals("Expert")&& !bookingDetails.isExpertFeedbackDone()){
+
+			if(bookingDetails.getTutorId().equals(userId)&&role.equals("Expert")&& bookingDetails.getExpertFeedback()==null){
 				bookingDetails.setExpertFeedback(new Gson().toJson(feedbackModel));
-				bookingDetails.setExpertFeedbackDone(true);
-				System.out.println("reached here !");
 				repBooking.save(bookingDetails);
-				System.out.println("feedback saved !"+bookingDetails.getExpertFeedback());
 			}
 		}
 	}

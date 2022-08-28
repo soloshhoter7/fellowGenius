@@ -330,9 +330,6 @@ export class StudentDashboardComponent implements OnInit {
         if (differenceMinutes <= 0) {
           if (list.indexOf(booking) != -1) {
             list.splice(list.indexOf(booking), 1);
-            this.httpService
-              .updateBookingStatus(booking.bid, 'completed')
-              .subscribe((res) => {});
           }
         }
       }, 5000);
@@ -386,10 +383,6 @@ export class StudentDashboardComponent implements OnInit {
           booking.timeLeft = null;
           if (Math.abs(differenceMinutes) > bookingDuration) {
             this.bookingList.splice(this.bookingList.indexOf(booking), 1);
-
-            // this.httpService
-            //   .updateBookingStatus(booking.bid, 'completed unattended')
-            //   .subscribe((res) => {});
           }
         }
       }, 5000);
@@ -526,7 +519,7 @@ export class StudentDashboardComponent implements OnInit {
           .fetchBookingStatus(myBooking.bid)
           .subscribe((res: any) => {
             console.log(res.status);
-            if (res.status == 'Pending' || res.status == 'Accepted') {
+            if (res.status == 'PENDING' || res.status == 'ACCEPTED') {
               this.httpService
                 .deleteMyBooking(myBooking.bid)
                 .subscribe((response: any) => {

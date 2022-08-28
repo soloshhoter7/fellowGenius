@@ -54,7 +54,6 @@ public class UserController {
 	@RequestMapping(value = "/expertChoosePassword")
 	@ResponseBody
 	public ResponseModel expertChoosePassword(@RequestBody String body) throws ParseException {
-
 		JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
 		String token = jsonObject.get("token").getAsString();
 		String password = jsonObject.get("password").getAsString();
@@ -79,13 +78,6 @@ public class UserController {
 		return service.getReferralInformation();
 	}
 
-//	// for getting student details after login
-//		@RequestMapping(value = "/sendDiwaliMail")
-//		public boolean sendDiwalimail() {
-//			return service.sendDiwaliMail();
-//		}
-	// for saving tutor registration details
-//	@PreAuthorize("hasAuthority('TUTOR')")
 	@RequestMapping(value = "/registerTutor")
 	public boolean saveTutorProfile(@RequestBody TutorProfileModel tutorModel) throws IOException {
         return service.saveTutorProfile(tutorModel);

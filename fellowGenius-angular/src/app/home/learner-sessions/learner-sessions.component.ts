@@ -93,7 +93,7 @@ export class LearnerSessionsComponent implements OnInit {
       if(data.cancelled == true){
         this.httpService.fetchBookingStatus(myBooking.bid).subscribe((res:any)=>{
           console.log(res.status);
-          if(res.status=='Pending'){
+          if(res.status=='PENDING'){
         this.httpService.deleteMyBooking(myBooking.bid).subscribe((response:any) => {
         if(response.response=='booking deleted successfully'){
         	this.initialiseUpcomingMeetings();
@@ -193,9 +193,6 @@ export class LearnerSessionsComponent implements OnInit {
         if (differenceMinutes <= 0) {
           if (list.indexOf(booking) != -1) {
             list.splice(list.indexOf(booking), 1);
-            this.httpService
-              .updateBookingStatus(booking.bid, 'completed')
-              .subscribe((res) => {});
           }
         }
       }, 5000);

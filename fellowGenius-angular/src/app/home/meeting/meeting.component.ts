@@ -406,8 +406,8 @@ export class MeetingComponent implements OnInit {
       console.log(this.userName, this.userEmail, this.userId);
       if (
         (this.loginService.getLoginType() == 'Expert' &&
-          this.bookingDetails.approvalStatus == 'Accepted') ||
-        this.bookingDetails.approvalStatus == 'Pending'
+          this.bookingDetails.approvalStatus == 'ACCEPTED') ||
+        this.bookingDetails.approvalStatus == 'PENDING'
       ) {
         console.log(
           'increasing duration for expert',
@@ -420,8 +420,8 @@ export class MeetingComponent implements OnInit {
       console.log('booking duration =>', this.bookingDetails.duration);
       if (
         timeLeft > this.bookingDetails.duration &&
-        (this.bookingDetails.approvalStatus == 'Accepted' ||
-          this.bookingDetails.approvalStatus == 'Pending')
+        (this.bookingDetails.approvalStatus == 'ACCEPTED' ||
+          this.bookingDetails.approvalStatus == 'PENDING')
       ) {
         this.meetingTimeInvalid = true;
         this.meetingTimeError = 'Meeting is not started yet!';
@@ -841,14 +841,10 @@ export class MeetingComponent implements OnInit {
     // console.log('time difference : '+Math.floor(this.timeDifference/60000));
     this.allocateTimeUnits(this.timeDifference);
     if (this.timeDifference <= 0) {
-      this.httpService
-        .updateBookingStatus(this.bookingDetails.bid, 'Successful')
-        .subscribe((res) => {
          // this.localStream.stop();
           this.subscription1.unsubscribe();
           console.log('end call 3');
           this.endCall();
-        });
     }
     let meetingUrl: string = '/meeting/' + this.bookingDetails.meetingId;
     if (minutesLeft < 5) {

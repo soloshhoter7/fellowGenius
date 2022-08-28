@@ -126,7 +126,7 @@ export class RescheduleMeetingComponent implements OnInit {
   }
   fetchData(){
     this.httpService.fetchBookingStatus(this.bid).subscribe((res:any)=>{
-      if(res.status=='Pending'){
+      if(res.status=='PENDING'){
         this.httpService.getTutorIsAvailable(this.userId).subscribe((res) => {
           if (res == true) {
             this.isTutorAvailable = true;

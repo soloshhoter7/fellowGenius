@@ -17,7 +17,6 @@ import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
 import fG.Entity.SubcategoryList;
 import fG.Entity.TutorAvailabilitySchedule;
-import fG.Entity.TutorLogin;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
 import fG.Entity.TutorVerification;
@@ -34,7 +33,6 @@ import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
-import fG.Repository.repositoryTutorLogin;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
 import fG.Repository.repositoryTutorVerification;
@@ -58,8 +56,7 @@ public class Dao {
 	@Autowired
 	repositoryTutorProfile repTutorProfile;
 
-	@Autowired
-	repositoryTutorLogin repTutorLogin;
+
 
 	@Autowired
 	repositoryTutorVerification repTutorVerification;
@@ -126,9 +123,11 @@ public class Dao {
 	// for saving tutor registration details
 	public boolean saveTutorProfile(TutorProfile tutorProfile) {
 		if (repTutorProfile.emailExist(tutorProfile.getEmail()) == null) {
+
 			repTutorProfile.save(tutorProfile);
 			return true;
 		} else {
+
 			return false;
 		}
 	}
@@ -138,10 +137,7 @@ public class Dao {
 		repTutorProfile.save(tutorProfile);
 	}
 
-	// for saving tutor login credentials
-	public void saveTutorLogin(TutorLogin tutorLogin) {
-		repTutorLogin.save(tutorLogin);
-	}
+
 
 //	// for validating tutor
 //	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {

@@ -26,7 +26,6 @@ public class BookingDetailsModel {
   String approvalStatus;
   String studentName;
   String tutorName;
-  Integer bookingCase;
   String subject;
   Integer amount;
   Integer paidAmount; //actual amount paid by user after applying credits if any
@@ -36,7 +35,8 @@ public class BookingDetailsModel {
   String razorpay_order_id;
   String razorpay_signature;
   String tutorProfilePictureUrl;
-  String isRescheduled;
+  boolean isRescheduled;
+  boolean isCancelled;
   String domain;
   String expertCode;
   String creationTime;
@@ -47,6 +47,4 @@ public class BookingDetailsModel {
   String expertLeavingTime;
   String learnerLeavingTime;
   String couponCode;
-
-  	
 }

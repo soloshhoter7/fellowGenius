@@ -38,17 +38,17 @@
                                                         minutes)</td>
                                                         <td class="fld_status">{{element.approvalStatus}}</td>
                                                       <!-- <td class="fld_attch">Lorem.png</td> -->
-                                                      <td class="fld_action" *ngIf="element.approvalStatus=='Pending'">
+                                                      <td class="fld_action" *ngIf="element.approvalStatus=='PENDING'">
                                                           <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingSess">
                                                               <i class="fas fa-angle-right"></i>
                                                           </button>
                                                           <div class="td_btn">
-                                                              <a href="javascript:;" class="delete_btn" *ngIf="element.approvalStatus == 'Pending'"
+                                                              <a href="javascript:;" class="delete_btn" *ngIf="element.approvalStatus == 'PENDING'"
                                                               (click)="deleteBooking(element)"><img src="../../../assets/images/delete-meeting.svg"></a>
                                                               <!-- <a href="javascript:;" class="restime_btn"><img src="../../../assets/images/reschedule-time.svg"></a> -->
                                                           </div>
                                                       </td>
-                                                      <td class="fld_action" *ngIf="element.approvalStatus=='Accepted'">
+                                                      <td class="fld_action" *ngIf="element.approvalStatus=='ACCEPTED'">
                                                         <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
                                                             <i class="fas fa-angle-right"></i>
                                                         </button>
@@ -56,7 +56,7 @@
                                                             <button class="table_btn green_btn join_btn" [disabled]="!element.isLive" (click)="onJoin(element)">Join</button>
                                                         </div>
                                                     </td>
-                                                    <td class="fld_action" *ngIf="element.approvalStatus=='live'">
+                                                    <td class="fld_action" *ngIf="element.approvalStatus=='LIVE'">
                                                         <button class="Modal__BTn" data-toggle="modal" data-target="#Popup__upcomingMeeting">
                                                             <i class="fas fa-angle-right"></i>
                                                         </button>

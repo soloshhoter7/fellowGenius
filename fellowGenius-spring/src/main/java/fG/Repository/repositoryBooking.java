@@ -31,7 +31,7 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value = "SELECT * FROM booking_details WHERE meeting_id=?1",nativeQuery=true)
 	BookingDetails meetingIdExists(String id);
 	
-	@Query(value = "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='Pending'", nativeQuery = true)   
+	@Query(value = "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='PENDING'", nativeQuery = true)
 	List<BookingDetails> bookingExist(String tutorId);
 	
 	@Transactional
@@ -39,32 +39,32 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value = "UPDATE booking_details SET approval_status=?2 WHERE bid=?1", nativeQuery = true)
     void saveUpdate(Integer bid, String approvalStatus);
 
-	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='Pending'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='PENDING'", nativeQuery=true)
 	List<BookingDetails> findStudentBookings(Integer sid);
 
-	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='Accepted'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='ACCEPTED'", nativeQuery=true)
 	List<BookingDetails> fetchApprovedList(Integer sid);
 	
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='Accepted'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='ACCEPTED'", nativeQuery=true)
 	List<BookingDetails> fetchApprovedListTutor(Integer tid);
 
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='live'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND approval_status='LIVE'", nativeQuery=true)
 	List<BookingDetails> fetchLiveMeetingListTutor(Integer tid);
     
-	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='live'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND approval_status='LIVE'", nativeQuery=true)
 	List<BookingDetails> fetchLiveMeetingListStudent(Integer sid);
 
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='Pending'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='PENDING'", nativeQuery=true)
 	List<BookingDetails> fetchAllTutorBookings(Integer tid);
 	
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='cancelled'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 AND NOT approval_status='CANCELLED'", nativeQuery=true)
 	List<BookingDetails> findAllTutorBookings(Integer tid);
-	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND NOT approval_status='Pending'", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 AND NOT approval_status='PENDING'", nativeQuery=true)
 	List<BookingDetails> fetchAllStudentBookings(Integer sid);
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE booking_details SET approval_status='cancelled' WHERE bid=?1", nativeQuery = true)
+	@Query(value = "UPDATE booking_details SET approval_status ='CANCELLED' WHERE bid=?1", nativeQuery = true)
 	Integer deleteMyBooking(Integer bookingId);
 
 	@Transactional
@@ -75,19 +75,19 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1", nativeQuery=true)
 	List<BookingDetails> fetchAllLinkedTutors(Integer userId);
 
-	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT (approval_status='Pending' OR approval_status='Accepted') && rating = 0", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT (approval_status='PENDING' OR approval_status='ACCEPTED') && rating = 0", nativeQuery=true)
 	List<BookingDetails> fetchPendingReviewsList(Integer studentId);
 	
-	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT (approval_status='Pending' OR approval_status='Accepted')", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE student_id=?1 &&  NOT (approval_status='PENDING' OR approval_status='ACCEPTED')", nativeQuery=true)
 	List<BookingDetails> fetchCompletedBookingStudent(Integer studentId);
 	
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT (approval_status='Pending' OR approval_status='Accepted')", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT (approval_status='PENDING' OR approval_status='ACCEPTED')", nativeQuery=true)
 	List<BookingDetails> fetchCompletedBookingExpert(Integer tid);
 	
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT approval_status='Pending' && NOT (rating = 0 OR rating = -1)", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 &&  NOT approval_status='PENDING' && NOT (rating = 0 OR rating = -1)", nativeQuery=true)
 	List<BookingDetails> fetchExpertRecentReviews(Integer tutorId);
 
-	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 && NOT (approval_status='Pending' OR approval_status='cancelled') && created_date BETWEEN ?2 and ?3", nativeQuery=true)
+	@Query(value= "SELECT * FROM booking_details WHERE tutor_id=?1 && NOT (approval_status='PENDING' OR approval_status='CANCELLED') && created_date BETWEEN ?2 and ?3", nativeQuery=true)
 	List<BookingDetails> fetchExpertMeetingsBetweenTwoDates(Integer tid,LocalDateTime start,LocalDateTime end);
 	
 	@Query(value= "SELECT * FROM booking_details WHERE date_of_meeting=?1", nativeQuery=true)

@@ -633,7 +633,7 @@ public class ScheduleService {
 			}
 			timePacket.setHours(sh);
 			timePacket.setMinutes(sm);
-			timePacket.setDate(date.toString());
+			timePacket.setDate(date);
 			timePacket.setTotalMinutes((sh * 60) + sm + nextDateValue);
 			timePacket.setFrame(frameCount);
 			System.out.println("time Packet ->" + timePacket);

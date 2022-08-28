@@ -241,13 +241,13 @@ export class TutorDashboardComponent implements OnInit {
     let index = this.bookingList.indexOf(booking);
     this.acceptingIndex = index;
     this.isLoading = true;
-    booking.approvalStatus = 'Accepted';
+    booking.approvalStatus = 'ACCEPTED';
     let status: string;
     if (booking.isRescheduled != 'requested') {
       this.httpService.fetchBookingStatus(booking.bid).subscribe((res: any) => {
         // let response=res;
         status = res.status;
-        if (status == 'Pending') {
+        if (status == 'PENDING') {
           this.httpService
             .updateBookingStatus(booking.bid, booking.approvalStatus)
             .subscribe((res) => {
@@ -332,7 +332,7 @@ export class TutorDashboardComponent implements OnInit {
   requestToReschedule(booking) {
     this.isRescheduleLoading = true;
     this.httpService.fetchBookingStatus(booking.bid).subscribe((res: any) => {
-      if (res.status == 'Pending' || res.status == 'Accepted') {
+      if (res.status == 'PENDING' || res.status == 'ACCEPTED') {
         this.httpService.requestToReschedule(booking.bid).subscribe((res) => {
           if (res) {
             this.snackBar.open(
@@ -649,9 +649,6 @@ export class TutorDashboardComponent implements OnInit {
         if (differenceMinutes <= 0) {
           if (list.indexOf(booking) != -1) {
             list.splice(list.indexOf(booking), 1);
-            this.httpService
-              .updateBookingStatus(booking.bid, 'completed')
-              .subscribe((res) => {});
           }
         }
       }, 5000);
@@ -672,8 +669,7 @@ export class TutorDashboardComponent implements OnInit {
     if (this.selectedBooking) {
       document.getElementById('closePopUpButton').click();
     }
-    console.log('reached host');
-    booking.approvalStatus = 'live';
+    booking.approvalStatus = 'LIVE';
     this.httpService
       .updateBookingStatus(booking.bid, booking.approvalStatus)
       .subscribe((res) => {

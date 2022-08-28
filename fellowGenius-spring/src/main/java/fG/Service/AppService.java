@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -181,6 +182,7 @@ public class AppService {
 			}
 		}
 	}
+
 	public ArrayList<AppInfoModel> fetchAllAppInfo() {
 		// TODO Auto-generated method stub
 		List<AppInfo> AppInfoList=repAppInfo.findAll();

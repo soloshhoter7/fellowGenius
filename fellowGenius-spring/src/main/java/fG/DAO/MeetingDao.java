@@ -99,7 +99,7 @@ public class MeetingDao {
 	public void initiateRefund(Integer bookingId) {
 		RefundBookings ref =new RefundBookings();
 		ref.setBid(repBooking.bidExists(bookingId));
-		ref.setRefundStatus("pending");
+		ref.setRefundStatus("PENDING");
 		repRefundBookings.save(ref);
 	}
 	

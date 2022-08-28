@@ -64,7 +64,7 @@ public class MailService {
 	static Properties props;
 	static Session session;
 
-	void InitiateMailService(String email) {
+	void InitiateMailService() {
 		props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
@@ -95,7 +95,7 @@ public class MailService {
 	}
 	// For sending OTP verification email
 	void sendVerificationEmail(String email, String otp) {
-		InitiateMailService("registration@fellowgenius.com");
+		InitiateMailService();
 		String from ="registration@fellowgenius.com";
 		String to = email;		
 		if (session == null) {
@@ -142,7 +142,7 @@ public class MailService {
 
 	// For sending notifications related to meeting
 	void sendNotificationTutor(Integer id, BookingDetails booking) {
-		InitiateMailService("meetings@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -155,7 +155,7 @@ public class MailService {
 //			String mailContent="<img src='cid:logoImage'/>";
 			helper.setFrom(from);
 
-			if (booking.getApprovalStatus().equals("Pending")) {
+			if (booking.getApprovalStatus().name().equals("PENDING")) {
 				TutorProfile tutProfile = userDao.fetchTutorProfileByBookingId(id);
 				String to = tutProfile.getEmail();
 
@@ -254,7 +254,7 @@ public class MailService {
 				helper.addInline("logoImage", resource);
 				Transport.send(message);
 
-			} else if (booking.getApprovalStatus().equals("live")) {
+			} else if (booking.getApprovalStatus().name().equals("LIVE")) {
 				StudentProfile stuProfile = userDao.getStudentProfile(id);
 
 				helper.setTo(stuProfile.getEmail());
@@ -316,7 +316,7 @@ public class MailService {
 	}
 
 	void sendRequestToReschedule(BookingDetails booking) {
-		InitiateMailService("meetings@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -389,7 +389,7 @@ public class MailService {
 	}
 
 	boolean sendVerifiedMail(String email) {
-		InitiateMailService("registration@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -451,7 +451,7 @@ public class MailService {
 	}
 	
 	void sendRejectedMail(String email,String name) {
-		InitiateMailService("registration@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -508,7 +508,7 @@ public class MailService {
 		
 	}
 	boolean sendResetMail(String email) {
-		InitiateMailService("support@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -679,8 +679,7 @@ public class MailService {
 	}
 	
 	boolean sendReferInviteMail(String[] users,String referCode,String referrerEmail) {
-		System.out.println("Inside mail service method of referInvite");
-		InitiateMailService("support@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -723,7 +722,7 @@ public class MailService {
 	}
 
 	public void sendExpertNoScheduleNotification(TutorProfile expert) {
-		InitiateMailService("support@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -779,7 +778,7 @@ public class MailService {
 		
 	}
 	public void sendBlankEmail() {
-		InitiateMailService("support@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -833,7 +832,7 @@ public class MailService {
 		
 	}
 	public void sendDiwaliMail(String email) {		
-		InitiateMailService("support@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -870,42 +869,9 @@ public class MailService {
 			}
 
 	}
-//	public static void SendMessageWithEmbeddedImages()
-//	{
-//	  String htmlMessage = "<html>\r\n" + 
-//				"    <body>\r\n" + 
-//				"        <div>\r\n" + 
-//				"            <img src=\"cid:diwaliPost\" style=\"width: 500px;\" alt=\"\">\r\n" + 
-//				"        </div>\r\n" + 
-//				"    </body>\r\n" + 
-//				"</html>";
-//	  SmtpClient client = new SmtpClient("mail.server.com");
-//	  MailMessage msg = new MailMessage("noreply@deventerprise.net",
-//	                                    "someone@deventerprise.net");
-//	  // Create the HTML view
-//	  AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
-//	                                               htmlMessage,
-//	                                               Encoding.UTF8,
-//	                                               MediaTypeNames.Text.Html);
-//	
-//	  LinkedResource img = new LinkedResource("\"C:\\Users\\drnic\\Downloads\\diwali_post.png\"", mediaType);
-//	  // Make sure you set all these values!!!
-//	  img.ContentId = "EmbeddedContent_1";
-//	  img.ContentType.MediaType = mediaType;
-//	  img.TransferEncoding = TransferEncoding.Base64;
-//	  img.ContentType.Name = img.ContentId;
-//	  img.ContentLink = new Uri("cid:" + img.ContentId);
-//	  htmlView.LinkedResources.Add(img);
-//	  //////////////////////////////////////////////////////////////
-//	  msg.AlternateViews.Add(plainView);
-//	  msg.AlternateViews.Add(htmlView);
-//	  msg.IsBodyHtml = true;
-//	  msg.Subject = "Some subject";
-//	  client.Send(msg);
-//	}
 	public boolean sendContactUsMail(ContactUsModel contactUsModel) {
 		
-		InitiateMailService("support@fellowgenius.com");
+		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -960,5 +926,78 @@ public class MailService {
 		}
 		return true;
 	}
+	public void meetingPrior15MinuteNotification(String to,String role,BookingDetails booking) {
+		InitiateMailService();
+		try {
+			MimeMessage message = new MimeMessage(session);
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			String from = senderEmail;
+			String recipientName="",name="",topic="",startTime="",endTime="",dashboardLink="",oppositeRole="";
+			if (booking.getStartTimeMinute().equals(0)) {
+				startTime += booking.getStartTimeHour()+":00";
+			} else {
+				startTime += booking.getStartTimeHour()+ ":" + booking.getStartTimeMinute();
+			}
+			if (booking.getEndTimeMinute().equals(0)) {
+				endTime += booking.getEndTimeHour() +":00" ;
+			} else {
+				endTime += booking.getEndTimeHour()+":" + booking.getEndTimeMinute();
+			}
+			String slot = booking.getDateOfMeeting()+" at "+startTime+" - "+endTime;
 
+			if(role.equals("Expert")){
+				recipientName = booking.getTutorName();
+				name = booking.getStudentName();
+				dashboardLink = rootUrl + "home/tutor-dashboard";
+				oppositeRole="Learner";
+			}else if(role.equals("Learner")){
+				recipientName = booking.getStudentName();
+				name = booking.getTutorName();
+				dashboardLink = rootUrl + "home/student-dashboard";
+				oppositeRole="Expert";
+			}
+
+
+			helper.setFrom(from);
+			helper.setTo(to);
+			helper.setSubject("Your FellowGenius meeting starts in 15 minutes");
+			String mailContent = "      <html>\n" +
+					"\t\t\t\t\t\t    <head>\n" +
+					"\t\t\t\t\t\t  </head>\n" +
+					"\t\t\t\t\t\t<body>\n" +
+					"\t\t\t\t\t\t    <body>\n" +
+					"\t\t\t\t\t\t        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\n" +
+					"\t\t\t\t\t\t            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\n" +
+					"\t\t\t\t\t\t                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\n" +
+					"\t\t\t\t\t\t                    <img src=\"cid:logoImage\" style=\"width: 90px;\">\n" +
+					"\t\t\t\t\t\t                </div>\n" +
+					"\t\t\t\t\t\t                <div style=\"width: 100%; display: inline-block;\">\n" +
+					"\t\t\t\t\t\t                   \n" +
+					"\t\t\t\t\t\t                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "+recipientName+"</p>\n" +
+					"\t\t\t\t\t\t                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Your meeting with "+name+" starts in 15 minutes. Please join the call on time to maximise the time available for discussion.</p>\n" +
+					"\t\t\t\t\t\t                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">\n" +
+					"                                                "+oppositeRole+" Name - "+name+"<br>\n" +
+					"                                                Meeting Slot - "+slot+"<br>\n" +
+					"                                                Payment Details - INR "+booking.getAmount()+" </p>\n" +
+					"                                            <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Use this link to go to <a href=\""+dashboardLink+"\">dashboard</a></p>\n" +
+					"\t\t\t\t\t\t                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Regards,<br>Team FellowGenius</p>\n" +
+					"\t\t\t\t\t\t                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\n" +
+					"\t\t\t\t\t\t                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\n" +
+					"\t\t\t\t\t\t                </div>\n" +
+					"\t\t\t\t\t\t            </div>\n" +
+					"\t\t\t\t\t\t        </div>\n" +
+					"\t\t\t\t\t\t    </body>\n" +
+					"\t\t\t\t\t\t</body>\n" +
+					"\t\t\t\t\t\t</html>";
+			helper.setText(mailContent, true);
+			ClassPathResource resource = new ClassPathResource("logo.png");
+			helper.addInline("logoImage", resource);
+			Transport.send(message);
+
+		}catch(MessagingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+	}
 }

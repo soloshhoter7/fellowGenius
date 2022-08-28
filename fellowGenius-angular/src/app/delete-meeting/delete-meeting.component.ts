@@ -37,7 +37,7 @@ export class DeleteMeetingComponent implements OnInit {
     this.isLoading=true;
     this.httpService.fetchBookingStatus(this.bid).subscribe((res:any)=>{
       console.log(res.status);
-      if(res.status=='Pending'){
+      if(res.status=='PENDING'){
       this.httpService.deleteBookingFromUrl(this.token,this.bid).subscribe((response:any) => {
       if(response.response=='booking deleted successfully'){
         this.isLoading=false;

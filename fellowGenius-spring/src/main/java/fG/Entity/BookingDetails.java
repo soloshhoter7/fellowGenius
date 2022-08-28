@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import fG.Enum.MeetingStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,56 +18,60 @@ import fG.Model.ScheduleTime;
 @Setter
 @Entity
 public class BookingDetails implements Serializable{
-	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(generator = "id_seq")
-	@GenericGenerator(
+	  private static final long serialVersionUID = 1L;
+	  @Id
+	  @GeneratedValue(generator = "id_seq")
+	  @GenericGenerator(
 			name = "id_seq", 
 			strategy = "fG.Service.IdGenerator")
 	  Integer bid;
 	  Integer endTimeHour;
 	  Integer endTimeMinute;
 	  Integer duration;
-	  String dateOfMeeting;	
 	  Integer startTimeHour;
 	  Integer startTimeMinute;
-	  String description;
 	  Integer studentId;
 	  Integer tutorId;
-	  @Column(name = "meeting_id", unique = true, nullable = false)
-	  String meetingId;
-	  String approvalStatus;
+	  Integer amount;
+	  Integer paidAmount;
+	  Integer bookingCase;
+	  Integer rating;
+
+	  @Enumerated(EnumType.STRING)
+	  MeetingStatus approvalStatus;
+
+	  String dateOfMeeting;
+	  String description;
 	  String studentName;
 	  String tutorName;
-	  Integer bookingCase;
 	  String Subject;
 	  String domain;
-	  Integer rating;
 	  String reviewText;
 	  String razorpay_payment_id;
 	  String razorpay_order_id;
 	  String razorpay_signature;
-	  Integer amount;
-	  Integer paidAmount;
 	  String tutorProfilePictureUrl;
-	  String isRescheduled="false";
-	  Date expertJoinTime;
-	  Date learnerJoinTime;
-	  Date expertLeavingTime;
-	  Date learnerLeavingTime;
-	  boolean isLearnerFeedbackDone = false;
-	  boolean isExpertFeedbackDone = false;
+	  String expertCode;
+ 	  String couponCode;
+	  @Column(name = "meeting_id", unique = true, nullable = false)
+	  String meetingId;
 	  @Lob
 	  String learnerFeedBack;
 	  @Lob
 	  String expertFeedback;
-	  String expertCode;
+
 	  @CreationTimestamp
 	  @CreatedDate
 	  @Temporal(TemporalType.TIMESTAMP)
 	  @Column(name="created_date")
 	  Date createdDate;
-	  String couponCode;
+	  Date expertJoinTime;
+	  Date learnerJoinTime;
+	  Date expertLeavingTime;
+	  Date learnerLeavingTime;
+
+	  boolean isRescheduled=false;
+	  boolean isCancelled=false;
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

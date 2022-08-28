@@ -500,7 +500,7 @@
                   #closePopUp
                   class="table_btn join_btn"
                   (click)="onJoin(selectedBooking)"
-                  *ngIf="selectedBooking.approvalStatus == 'live'"
+                  *ngIf="selectedBooking.approvalStatus == 'LIVE'"
                 >
                   Join
                 </button>
@@ -508,7 +508,7 @@
                   (click)="onHost(selectedBooking)"
                   [disabled]="!selectedBooking.isLive"
                   class="table_btn join_btn"
-                  *ngIf="selectedBooking.approvalStatus != 'live'"
+                  *ngIf="selectedBooking.approvalStatus != 'LIVE'"
                 >
                   Join
                 </button>
