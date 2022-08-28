@@ -37,13 +37,6 @@ export class PrevRouteService {
             subject: expert_domain,
           },
         });
-      } else if(prev_route == 'view-event'){
-        this.cookieService.delete('prev');
-        this.cookieService.delete('event_id');
-        this.router.navigate(['view-event'],
-        {
-          queryParams: { eventId: event_id},
-        })
       } 
        else if (prev_route == 'home') {
         this.cookieService.delete('prev');

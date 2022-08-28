@@ -36,9 +36,9 @@ export class EventsDashboardComponent implements OnInit {
   }
 
   viewEventDetail(upcomingEvent: Event){
-    this.router.navigate(['view-event'], {
-      queryParams: { eventId: upcomingEvent.eventId},
-    })
+    // this.router.navigate(['view-event'], {
+    //   queryParams: { eventId: upcomingEvent.eventId},
+    // })
   }
 
 }

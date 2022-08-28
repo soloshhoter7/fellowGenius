@@ -92,7 +92,15 @@ public interface repositoryBooking extends JpaRepository<BookingDetails,Integer>
 	
 	@Query(value= "SELECT * FROM booking_details WHERE date_of_meeting=?1", nativeQuery=true)
 	List<BookingDetails> fetchBookingsForDate(String date);
-	
+
+	@Query(value = "SELECT * FROM booking_details WHERE (approval_status IN ('completed','learner_absent')) AND is_expert_paid=0",nativeQuery = true)
+	List<BookingDetails> fetchUnpaidExperts();
+
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE booking_details SET is_expert_paid=1, expert_transaction_id=?2 WHERE bid=?1 ", nativeQuery=true)
+	void saveExpertTransactionId(String bookingId,String expertTransactionId);
+
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE booking_details SET rating=?2, review_text=?3 WHERE meeting_id=?1", nativeQuery = true)

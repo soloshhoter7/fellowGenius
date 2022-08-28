@@ -38,6 +38,9 @@ public class MeetingService {
 	private SimpMessageSendingOperations messagingTemplate;
 
 	@Autowired
+	private AdminService adminService;
+
+	@Autowired
 	private NumberToWords numberToWords;
 
 	@Autowired
@@ -945,6 +948,7 @@ public class MeetingService {
 
 	public BookingInvoiceModel bookingToInvoice(BookingDetailsModel booking){
 		BookingInvoiceModel bookingInvoice=new BookingInvoiceModel();
+		bookingInvoice.setBookingId(booking.getBid().toString());
 		bookingInvoice.setDateOfMeeting(booking.getDateOfMeeting());
 		bookingInvoice.setExpertName(booking.getTutorName());
 		bookingInvoice.setLearnerName(booking.getStudentName());
@@ -952,34 +956,21 @@ public class MeetingService {
 		bookingInvoice.setTotalAmount(booking.getAmount());
 		//methods to set actual Amount, commission and gst
 
-		AppInfo commissionPercent=repAppInfo.keyExist("commission");
-		AppInfo gstPercent=repAppInfo.keyExist("GST_value");
-		double gstMultiplier=1+(Double.parseDouble(gstPercent.getValue())/100);
 
-		double commissionMultiplier=1+(Double.parseDouble(commissionPercent.getValue())/100);
-
-		double gstValue=booking.getAmount() - booking.getAmount()/gstMultiplier;
-		gstValue=Math.round(gstValue*100.0)/100.0;
-
-		double commissionValue=booking.getAmount()/gstMultiplier-booking.getAmount()/gstMultiplier/commissionMultiplier;
-		commissionValue=Math.round(commissionValue*100.0)/100.0;
-		double actualEarning=booking.getAmount()-gstValue-commissionValue;
-        actualEarning=Math.round(actualEarning*100.0)/100.0;
-
-
-		bookingInvoice.setActualAmount(actualEarning);
-		bookingInvoice.setGSTFees(gstValue);
-		bookingInvoice.setPlatformFees(commissionValue);
+		Map<String,Double> earnings=adminService.getEarnings(booking.getAmount());
+		bookingInvoice.setActualAmount(earnings.get("actualEarning"));
+		bookingInvoice.setGSTFees(earnings.get("GSTFees"));
+		bookingInvoice.setPlatformFees(earnings.get("commissionFees"));
 		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100.0)/100.0);
 
         //number to words
-		long actualAmountLong=(long)Math.round(bookingInvoice.getActualAmount());
+		long actualAmountLong=(long)Math.round(bookingInvoice.getActualAmount()+bookingInvoice.getPlatformFees());
 		bookingInvoice.setActualAmountWords(numberToWords.convert(actualAmountLong));
 
 		return bookingInvoice;
 	}
 
-	public Resource generateInvoice(BookingDetailsModel booking,HttpServletRequest request) 
+	public Resource generateInvoice(BookingDetailsModel booking)
 			throws DocumentException, IOException{
 		BookingInvoiceModel bookingInvoice=bookingToInvoice(booking);
 		try {

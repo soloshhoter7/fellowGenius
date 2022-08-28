@@ -16,6 +16,8 @@ export class TransactionsInfoComponent implements OnInit {
   previousTransactions:Transaction[]=[];
   totalPayableUser:number;
   totalPayableAmount:number=0;
+  partialMeetingTransaction: boolean=false;
+  totalPayableTransactions: number;
   constructor(private httpService: HttpService,
               private adminService:AdminService,
               private snackBar:MatSnackBar) { }
@@ -34,7 +36,7 @@ export class TransactionsInfoComponent implements OnInit {
     this.adminService.pendingTransactionsChanged.subscribe(
       (pendingTransactionsList:Transaction[]) =>{
         this.pendingTransactions = pendingTransactionsList;
-        console.log('pending transaction list: ',this.pendingTransactions);
+       
         this.totalPayableAmount=0;
         this.calculateTotalPendingAmountAndUsers();
       }
@@ -46,17 +48,20 @@ export class TransactionsInfoComponent implements OnInit {
     this.adminService.previousTransactionsChanged.subscribe(
       (previousTransactionsList:Transaction[])=>{
         this.previousTransactions=previousTransactionsList;
-        console.log('previous transaction list: ',this.previousTransactions);
+   
       }
     )
     }
 
     calculateTotalPendingAmountAndUsers(){
-      this.totalPayableUser=this.pendingTransactions.length;
+      this.totalPayableTransactions=this.pendingTransactions.length;
       for(let pendingTransaction of this.pendingTransactions){
         this.totalPayableAmount=this.totalPayableAmount+ pendingTransaction.remainingAmount;
       }
-      console.log("Users info "+this.totalPayableUser+" "+ this.totalPayableAmount);
+        this.totalPayableAmount=parseFloat(this.totalPayableAmount.toFixed(2));
+      const uniqueArray=[...new Set(this.pendingTransactions.map(item=>item.userId))];
+     
+     this.totalPayableUser=uniqueArray.length;
     }
 
   isUpiIdNotAvailable(transaction:Transaction){
@@ -68,25 +73,18 @@ export class TransactionsInfoComponent implements OnInit {
   }
 
   onAddTransaction(transaction:Transaction,form: NgForm){
-    // console.log(transaction);
-    // console.log(form.value.payableAmount);
-
-     transaction.transactionId=form.value.transactionId;
-     if(transaction.remainingAmount<form.value.paidAmount){
-        transaction.paidAmount=form.value.paidAmount;
-       }else{
-       transaction.paidAmount=form.value.paidAmount;
-      }
-     console.log(transaction);
+    transaction.paidAmount=transaction.remainingAmount;
+    transaction.transactionId=form.value.transactionId;
     
     this.httpService.addTransaction(transaction).subscribe(
       (res)=>{
-        console.log(res);
-        console.log('success');
+        
         this.initialisePendingTransactions();
         this.initialisePreviousTransactions();
       }
-    )
+    );
     $(".close").click();
+
+     
   }
 }

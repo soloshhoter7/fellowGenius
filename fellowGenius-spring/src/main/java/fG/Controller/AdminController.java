@@ -6,12 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fG.Entity.PendingTutorProfileDetails;
 import fG.Model.AdminReferralInfoModel;
@@ -56,7 +53,7 @@ public class AdminController {
 	}
 	//fetching all the users data for excel sheet
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchAllUsersData")
+	@GetMapping(value = "/fetchAllUsersData")
 	@ResponseBody
 	public List<UserDataModel> fetchAllUsersData() {
 		return service.fetchAllUserData();
@@ -64,35 +61,35 @@ public class AdminController {
 
 	//fetching featured experts
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchFeaturedExperts")
+	@GetMapping(value = "/fetchFeaturedExperts")
 	public List<FeaturedExpertsModel> fetchFeaturedExpert() {
 		return service.fetchFeaturedExperts();
 	}
 
 	//saving featured experts
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/saveFeaturedExperts")
+	@PostMapping(value = "/saveFeaturedExperts")
 	public boolean saveFeaturedExpert(@RequestBody FeaturedExpertsModel fe) {
 		return service.saveFeaturedExpert(fe);
 	}
 	
 	//deleting featured experts
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/deleteFeaturedExperts")
+	@PostMapping(value = "/deleteFeaturedExperts")
 	public void deleteFeaturedExpert(@RequestBody FeaturedExpertsModel fe) {
 		service.deleteFeaturedExpert(fe);
 	}
 
 	//updating featured experts
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/updateFeaturedExperts")
+	@PostMapping(value = "/updateFeaturedExperts")
 	public boolean updateFeaturedExpert(@RequestBody List<FeaturedExpertsModel> fe) {
 		return service.updateFeaturedExperts(fe);
 	}
 	
 	//updating and adding expertise area
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/updateAndAddExpertiseArea")
+	@GetMapping(value = "/updateAndAddExpertiseArea")
 	@ResponseBody
 	public boolean updateAndAddExpertiseArea(String category, String subCategory) {
 		System.out.println(category + " : " + subCategory);
@@ -101,14 +98,14 @@ public class AdminController {
 	
 	//adding domain
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/addCategories", method = RequestMethod.POST)
+	@PostMapping(value = "/addCategories")
 	public boolean addNewCategory(@RequestBody Category category) {
 		return service.addNewCategory(category);
 	}
     
 	//adding topics under domain
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/addSubCategories", method = RequestMethod.POST)
+	@PostMapping(value = "/addSubCategories")
 	public boolean addNewSubCategories(@RequestBody Category category) {
 		System.out.println(category);
 		return service.addNewSubCategories(category);
@@ -116,53 +113,53 @@ public class AdminController {
 
 	//verifying expert
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/verifyExpert", produces = { "application/json" })
+	@GetMapping(value = "/verifyExpert", produces = { "application/json" })
 	public void verifyExpert(String id) throws IOException {
 		service.verifyExpert(id);
 	}
  
 	//rejecting expert
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/rejectExpert", produces = { "application/json" })
+	@GetMapping(value = "/rejectExpert", produces = { "application/json" })
 	public void rejectExpert(String id) throws IOException {
 		service.rejectExpert(id);
 	}
 	
 	//fetching user data analytics
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchUserDataAnalytics")
+	@GetMapping(value = "/fetchUserDataAnalytics")
 	public UserActivityAnalytics fetchUserData() {
 		return service.fetchUserDataAnalytics();
 	}
 	
 	//fetching Pending experts
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchPendingExperts")
+	@GetMapping(value = "/fetchPendingExperts")
 	public List<PendingTutorProfileDetails> fetchPendingExperts() {
 		return service.fetchPendingExperts();
 	}
 	
 	//sending a blank mail
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/sendBlankMail")
+	@GetMapping(value = "/sendBlankMail")
 	public void sendBlankMail() {
 		mailService.sendBlankEmail();
 	}
 	
 	//finding pending experts by their id
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/findPendingExpertById")
+	@GetMapping(value = "/findPendingExpertById")
 	public PendingTutorProfileDetails findPendingExpertById(String id) {
 		return service.findPendingExpertById(id);
 	}
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/updatePendingExpert", produces = "application/JSON")
+	@PostMapping(value = "/updatePendingExpert", produces = "application/JSON")
 	public void updatePendingExpert(@RequestBody TutorProfileDetailsModel tutorDetailsModel) {
 		service.updatePendingTutor(tutorDetailsModel);
 	}
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchAllExpertsList", produces = "application/JSON")
+	@GetMapping(value = "/fetchAllExpertsList", produces = "application/JSON")
 	@ResponseBody
 	public List<TutorProfileDetailsModel> fetchAllExpertsList() throws NumberFormatException, ParseException {
 		List<TutorProfileDetailsModel> tutorProfileDetails = service.fetchAllTutorList();
@@ -170,25 +167,25 @@ public class AdminController {
 	}
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/notifyAllExpertsWithNoSchedule")
+	@GetMapping(value = "/notifyAllExpertsWithNoSchedule")
 	public void notifyAllExpertsWithNoSchedule(String[] users) throws NumberFormatException, ParseException {
 		service.notifyAllExpertsWithNoSchedule(users);	
 	}
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchAllLoginData")
+	@GetMapping(value = "/fetchAllLoginData")
 	public ArrayList<UserActivityModel> fetchAllLoginData(){
 		return service.fetchAllLoginData();	
 	}
 
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchAllSignUpData")
+	@GetMapping(value = "/fetchAllSignUpData")
 	public ArrayList<UserActivityModel> fetchAllSignUpData() throws NumberFormatException, ParseException {
 		return service.fetchAllSignUpData();	
 	}
 	
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchAllMeetingData")
+	@GetMapping(value = "/fetchAllMeetingData")
 	public ArrayList<BookingDetailsModel> fetchAllMeetingsData() throws NumberFormatException, ParseException {
 		return service.fetchAllMeetingsData();	
 	}
@@ -196,56 +193,56 @@ public class AdminController {
 		
 	//fetching all referralActivity info for excel sheet
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/fetchAllReferralData")
+	@GetMapping(value="/fetchAllReferralData")
 	public ArrayList<ReferralDataModel> fetchAllReferralData() {
 		return adminService.fetchAllReferralData();
 	}
 	
 	//fetching referral data Analytics
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value = "/fetchReferralDataAnalytics")
+	@GetMapping(value = "/fetchReferralDataAnalytics")
 	public ReferralActivityAnalytics fetchReferralAnalytics()  {
 		return adminService.fetchReferralDataAnalytics();	
 	}
 	
 	//fetching all appInfo
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/fetchAllAppInfo")
+	@GetMapping(value="/fetchAllAppInfo")
 	public ArrayList<AppInfoModel> fetchAllAppInfo(){
 		return appService.fetchAllAppInfo();
 	}
 	
 	//updating appInfo
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/updateAppInfo")
+	@PostMapping(value="/updateAppInfo")
 	public boolean updateAppInfo(@RequestBody AppInfoModel appInfoModel) {
 		return appService.updateAppInfo(appInfoModel);
 	}
 	
 	//getting adminReferralInfo
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/fetchAdminReferralInfo")
+	@GetMapping(value="/fetchAdminReferralInfo")
 	public ArrayList<AdminReferralInfoModel> fetchAdminReferralInfo(){
 		return adminService.getAdminReferralInfo();
 	}
 	
 	//getting pending Transactions info
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/fetchPendingTransactionInfo")
+	@GetMapping(value="/fetchPendingTransactionInfo")
 	public ArrayList<TransactionsModel> fetchPendingTransactionsInfo(){
 		return adminService.getPendingTransactionsInfo();
 	}
 	
 	//add new Transaction
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/addTransaction")
+	@PostMapping(value="/addTransaction")
 	public boolean addTransaction(@RequestBody TransactionsModel transaction) {
 		return adminService.addTransaction(transaction);
 	}
 	
 	//getting previous Transactions
 	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/fetchPreviousTransactionsInfo")
+	@GetMapping(value="/fetchPreviousTransactionsInfo")
 	public ArrayList<TransactionsModel> fetchPreviousTransactions(){
 		return adminService.getPreviousTransactions();
 	}
@@ -260,5 +257,19 @@ public class AdminController {
 	@RequestMapping(value="/sendExpertVerficationMail")
 	public ResponseModel sendExpertVerificationMail(String userId) {
 		return adminService.sendExpertVerificationMail(userId);
+	}
+
+	//@PreAuthorize("hasAuthority('Admin')")
+	@GetMapping(value="/fetchUnpaidExperts")
+	public ResponseEntity<?> getUnpaidExperts(){
+		ArrayList<TransactionsModel> list=adminService.fetchUnpaidExpertBookings();
+		return ResponseEntity.ok(list);
+	}
+
+	//@PreAuthorize("hasAuthority('Admin')")
+	@PostMapping(value="/payExpert")
+	public ResponseEntity<String> payExperts(@RequestBody  TransactionsModel expertPaidtransaction){
+		adminService.payExpertTransaction(expertPaidtransaction);
+		return ResponseEntity.ok("successfully paid");
 	}
 }

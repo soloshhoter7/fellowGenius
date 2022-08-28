@@ -56,6 +56,11 @@ public class BookingDetails implements Serializable{
 	  Date learnerLeavingTime;
 	  boolean isLearnerFeedbackDone = false;
 	  boolean isExpertFeedbackDone = false;
+
+	  boolean isExpertPaid=false;
+
+	  String expertTransactionId;
+
 	  @Lob
 	  String learnerFeedBack;
 	  @Lob

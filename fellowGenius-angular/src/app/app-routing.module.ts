@@ -82,7 +82,6 @@ export const appRoutes: Routes = [
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'view-tutors', component: ExpertProfileComponent },
   { path:'events',component: EventsDashboardComponent},
-  { path: 'view-event',component: EventDetailComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'sign-up',

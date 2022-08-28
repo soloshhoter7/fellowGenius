@@ -958,6 +958,10 @@ export class HttpService {
     return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchPendingTransactionInfo');
   }
 
+  fetchPendingExpertPaidTransactionsInfo():Observable<Transaction[]>{
+    return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchUnpaidExperts');
+  }
+
   fetchPreviousTransactionsInfo():Observable<Transaction[]>{
     return this.http.get<Transaction[]>(this.backendUrl+'/fellowGenius/Admin/fetchPreviousTransactionsInfo');
   }
