@@ -2,6 +2,7 @@ package fG.Entity;
 
 import fG.Enum.EventStatus;
 import fG.Enum.EventType;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
 public class Event {
 
     @Id
@@ -72,118 +74,6 @@ public class Event {
         this.hosts = hosts;
         this.eventStatus = eventStatus;
         this.bannerUrl = bannerUrl;
-        this.eventDomain = eventDomain;
-    }
-
-    public UUID getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(UUID eventId) {
-        this.eventId = eventId;
-    }
-
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
-    }
-
-    public Date getEventStartTime() {
-        return eventStartTime;
-    }
-
-    public void setEventStartTime(Date eventStartTime) {
-        this.eventStartTime = eventStartTime;
-    }
-
-    public Date getEventEndTime() {
-        return eventEndTime;
-    }
-
-    public void setEventEndTime(Date eventEndTime) {
-        this.eventEndTime = eventEndTime;
-    }
-
-    public List<Users> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<Users> participants) {
-        this.participants = participants;
-    }
-
-    public String getEventTitle() {
-        return eventTitle;
-    }
-
-    public void setEventTitle(String eventTitle) {
-        this.eventTitle = eventTitle;
-    }
-
-    public String getEventDescription() {
-        return eventDescription;
-    }
-
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
-
-    public String getEventLink() {
-        return eventLink;
-    }
-
-    public void setEventLink(String eventLink) {
-        this.eventLink = eventLink;
-    }
-
-    public String getEventPassword() {
-        return eventPassword;
-    }
-
-    public void setEventPassword(String eventPassword) {
-        this.eventPassword = eventPassword;
-    }
-
-    public String getEventVenue() {
-        return eventVenue;
-    }
-
-    public void setEventVenue(String eventVenue) {
-        this.eventVenue = eventVenue;
-    }
-
-    public List<Users> getHosts() {
-        return hosts;
-    }
-
-    public void setHosts(List<Users> hosts) {
-        this.hosts = hosts;
-    }
-
-    public EventStatus getEventStatus() {
-        return eventStatus;
-    }
-
-    public void setEventStatus(EventStatus eventStatus) {
-        this.eventStatus = eventStatus;
-    }
-
-    public String getBannerUrl() {
-        return bannerUrl;
-    }
-
-    public void setBannerUrl(String bannerUrl) {
-        this.bannerUrl = bannerUrl;
-    }
-
-    public String getEventDomain() {
-        return eventDomain;
-    }
-
-    public void setEventDomain(String eventDomain) {
         this.eventDomain = eventDomain;
     }
 

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 import fG.Enum.MeetingStatus;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,6 +18,7 @@ import fG.Model.ScheduleTime;
 @Getter
 @Setter
 @Entity
+@Data
 public class BookingDetails implements Serializable{
 	  private static final long serialVersionUID = 1L;
 	  @Id

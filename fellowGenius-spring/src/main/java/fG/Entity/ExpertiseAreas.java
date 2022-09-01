@@ -1,5 +1,7 @@
 package fG.Entity;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Data
 @Table(name="ExpertiseAreas")
 public class ExpertiseAreas {
  
@@ -33,55 +36,5 @@ public class ExpertiseAreas {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id",nullable=false)
 	TutorProfileDetails userId;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	
-
-	public TutorProfileDetails getUserId() {
-		return userId;
-	}
-
-	public void setUserId(TutorProfileDetails userId) {
-		this.userId = userId;
-	}
-    
-	public Integer getPrice() {
-		return price;
-	}
-
-	public void setPrice(Integer price) {
-		this.price = price;
-	}
-
-	public CategoryList getCategory() {
-		return category;
-	}
-
-	public void setCategory(CategoryList category) {
-		this.category = category;
-	}
-
-	
-
-	public SubcategoryList getSubCategory() {
-		return subCategory;
-	}
-
-	public void setSubCategory(SubcategoryList subCategory) {
-		this.subCategory = subCategory;
-	}
-
-//	@Override
-//	public String toString() {
-//		return "ExpertiseAreas [id=" + id + ", category=" + category + ", subCategory=" + subCategory + ", price="
-//				+ price + ", userId=" + userId + "]";
-//	}
 
 }

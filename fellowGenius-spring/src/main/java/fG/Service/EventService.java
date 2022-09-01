@@ -10,24 +10,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 public class EventService {
 
     @Autowired
-    private repositoryEvent repEvent;
+    repositoryEvent repEvent;
 
     @Autowired
-    private EventMapper eventMapper;
+    EventMapper eventMapper;
 
     @Autowired
-    private repositoryUsers repUsers;
+    repositoryUsers repUsers;
+
     public EventModel saveEvent(EventModel eventDto){
         Event event=eventMapper.DtoToEntity(eventDto);
-        Event savedEvent=repEvent.save(event);
-        EventModel savedEventModel=eventMapper.EntityToDto(savedEvent);
+        repEvent.save(event);
         return eventDto;
     }
 
@@ -52,14 +51,11 @@ public class EventService {
         Users user=repUsers.idExists(Integer.parseInt(userId));
        
         Event existingEvent=repEvent.findById(UUID.fromString(eventId)).get();
-        
-        Event newEvent=null;
-        if(existingEvent!=null){
-            List<Users> participants=existingEvent.getParticipants();
-            participants.add(user);
-            existingEvent.setParticipants(participants);
-            newEvent=repEvent.save(existingEvent);
-        }
+
+        List<Users> participants=existingEvent.getParticipants();
+        participants.add(user);
+        existingEvent.setParticipants(participants);
+        repEvent.save(existingEvent);
 
         return true;
     }
@@ -71,12 +67,12 @@ public class EventService {
         Users user=repUsers.idExists(Integer.parseInt(userId));
 
         Event existingEvent=repEvent.findById(eventID).get();
-        Event newEvent=null;
-        if(existingEvent!=null&&user.getRole().equals("Expert")){
+
+        if(user.getRole().equals("Expert")){
             List<Users> hosts=existingEvent.getHosts();
             hosts.add(user);
             existingEvent.setHosts(hosts);
-            newEvent=repEvent.save(existingEvent);
+            repEvent.save(existingEvent);
             return true;
         }
 
@@ -85,28 +81,22 @@ public class EventService {
 
     public List<EventModel> getAllEvents() {
 
-        List<Event> allEvents=new ArrayList<>();
-
-        allEvents=repEvent.findAll();
+        List<Event> allEvents = repEvent.findAll();
         List<EventModel> allEventsList=allEvents.
                 stream()
                 .map(eventMapper::EntityToDto)
                 .collect(Collectors.toList());
-        System.out.println(allEventsList);
-        //System.out.println(allEvents);
         return allEventsList;
     }
 
 
 	public EventModel getEventById(String eventId) {
 		// TODO Auto-generated method stub
-		EventModel eventModel=null;
+		EventModel eventModel;
 		Event event=repEvent.findById(UUID.fromString(eventId)).get();
-		
-		if(event!=null) {
-			eventModel=eventMapper.EntityToDto(event);
-		}
-		return eventModel;
+
+        eventModel=eventMapper.EntityToDto(event);
+        return eventModel;
 	}
 
 
@@ -116,17 +106,11 @@ public class EventService {
 		 Users user=repUsers.idExists(Integer.parseInt(userId));
 	       
 	     Event existingEvent=repEvent.findById(UUID.fromString(eventId)).get();
-	     
-	     if(existingEvent!=null) {
-	    	 List<Users> participants=existingEvent.getParticipants();
-	    	 
-	    	 if(participants.contains(user)) {
-	    		 System.out.println("Already booked");
-	    		 return true;
-	    	 }
-	     }
-		return false;
-	}
+
+        List<Users> participants=existingEvent.getParticipants();
+
+        return participants.contains(user);
+    }
 
 
 }

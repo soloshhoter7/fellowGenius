@@ -18,7 +18,7 @@ import java.util.concurrent.ScheduledFuture;
 @Service
 public class SchedulerService {
     @Autowired
-    private TaskScheduler taskScheduler;
+    TaskScheduler taskScheduler;
 
     @Autowired
     repositoryTaskDefinitions repTaskDefinitions;
@@ -33,31 +33,30 @@ public class SchedulerService {
     @Autowired
     MiscellaneousUtils miscUtils;
 
-    private UUID uuid;
+    UUID uuid;
 
-    public String scheduleATask(TaskDefinition taskDefinition){
+    public void scheduleATask(TaskDefinition taskDefinition){
         String jobId = UUID.randomUUID().toString();
         taskDefinition.setId(jobId);
         taskDefinitionBean.setTaskDefinition(taskDefinition);
         Runnable tasklet = taskDefinitionBean;
-        System.out.println("Scheduling task with job id: " + jobId + " and cron expression: " + taskDefinition.getCronExpression());
         ScheduledFuture<?> scheduledTask = taskScheduler.schedule(tasklet, new CronTrigger(taskDefinition.getCronExpression(), TimeZone.getTimeZone(TimeZone.getDefault().getID())));
         TaskDefinitionDetails taskDefinitionDetails = new TaskDefinitionDetails(jobId,taskDefinition.getCronExpression(),taskDefinition.getActionType(),taskDefinition.getData());
         taskDefinitions.put(jobId,taskDefinitionDetails);
         jobsMap.put(jobId, scheduledTask);
-        return jobsMap.toString();
     }
 
     public String fetchAllJobs() {
         return jobsMap.toString();
     }
-public void removeScheduledTask(String jobId){
-    ScheduledFuture<?> scheduledTask = jobsMap.get(jobId);
-    if(scheduledTask!=null){
-        scheduledTask.cancel(true);
-        jobsMap.put(jobId,null);
+
+    public void removeScheduledTask(String jobId){
+        ScheduledFuture<?> scheduledTask = jobsMap.get(jobId);
+         if(scheduledTask!=null){
+             scheduledTask.cancel(true);
+             jobsMap.put(jobId,null);
+         }
     }
-}
 
     public void removeFromJobsMap(TaskDefinition taskDefinition){
         jobsMap.remove(taskDefinition.getId());
@@ -71,7 +70,6 @@ public void removeScheduledTask(String jobId){
                     taskDefinitions.remove(task.getKey());
                 }
         }
-        System.out.println("Before closing the application");
         for (Map.Entry<String,ScheduledFuture<?>> task : jobsMap.entrySet()){
             if(!task.getValue().isDone()){
                 repTaskDefinitions.save(taskDefinitions.get(task.getKey()));
@@ -85,12 +83,7 @@ public void removeScheduledTask(String jobId){
     public void fetchAllTasks(){
         List<TaskDefinitionDetails> taskDefinitionDetailsList = repTaskDefinitions.findAll();
         if(taskDefinitionDetailsList.size()>0){
-            Collections.sort(taskDefinitionDetailsList, new Comparator<TaskDefinitionDetails>() {
-                @Override
-                public int compare(TaskDefinitionDetails o1, TaskDefinitionDetails o2) {
-                    return (int) (miscUtils.cronToDate(o1.getCronExpression()).getTime()-miscUtils.cronToDate(o2.getCronExpression()).getTime());
-                }
-            });
+            taskDefinitionDetailsList.sort((o1, o2) -> (int) (miscUtils.cronToDate(o1.getCronExpression()).getTime() - miscUtils.cronToDate(o2.getCronExpression()).getTime()));
             for(TaskDefinitionDetails td : taskDefinitionDetailsList){
                 if(miscUtils.checkIfCronValid(td.getCronExpression())>=0){
                     TaskDefinition taskDefinition = new TaskDefinition();

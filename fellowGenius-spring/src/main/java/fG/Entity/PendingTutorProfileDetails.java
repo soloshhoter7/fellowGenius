@@ -12,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 
 import fG.Model.expertise;
+import lombok.Data;
 
 @Entity
+@Data
 public class PendingTutorProfileDetails {
 	
 	@Id
@@ -47,142 +49,7 @@ public class PendingTutorProfileDetails {
 	String linkedInProfile;
 	String upiId;
 	String gst;
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getFullName() {
-		return fullName;
-	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-	public String getInstitute() {
-		return institute;
-	}
-	public void setInstitute(String institute) {
-		this.institute = institute;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getContact() {
-		return contact;
-	}
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
-	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-	public ArrayList<String> getEducationalQualifications() {
-		return educationalQualifications;
-	}
-	public void setEducationalQualifications(ArrayList<String> educationalQualifications) {
-		this.educationalQualifications = educationalQualifications;
-	}
-	public String getPrice1() {
-		return price1;
-	}
-	public void setPrice1(String price1) {
-		this.price1 = price1;
-	}
-	public String getPrice2() {
-		return price2;
-	}
-	public void setPrice2(String price2) {
-		this.price2 = price2;
-	}
-	public String getPrice3() {
-		return price3;
-	}
-	public void setPrice3(String price3) {
-		this.price3 = price3;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public String getSpeciality() {
-		return speciality;
-	}
-	public void setSpeciality(String speciality) {
-		this.speciality = speciality;
-	}
 
-	public String getProfilePictureUrl() {
-		return profilePictureUrl;
-	}
-	public void setProfilePictureUrl(String profilePictureUrl) {
-		this.profilePictureUrl = profilePictureUrl;
-	}
-	public String getProfessionalSkills() {
-		return professionalSkills;
-	}
-	public void setProfessionalSkills(String professionalSkills) {
-		this.professionalSkills = professionalSkills;
-	}
-	public String getCurrentOrganisation() {
-		return currentOrganisation;
-	}
-	public void setCurrentOrganisation(String currentOrganisation) {
-		this.currentOrganisation = currentOrganisation;
-	}
-	public String getCurrentDesignation() {
-		return currentDesignation;
-	}
-	public void setCurrentDesignation(String currentDesignation) {
-		this.currentDesignation = currentDesignation;
-	}
-	public ArrayList<String> getPreviousOrganisations() {
-		return previousOrganisations;
-	}
-	public void setPreviousOrganisations(ArrayList<String> previousOrganisations) {
-		this.previousOrganisations = previousOrganisations;
-	}
-
-	
-	public ArrayList<expertise> getAreaOfExpertise() {
-		return areaOfExpertise;
-	}
-	public void setAreaOfExpertise(ArrayList<expertise> areaOfExpertise) {
-		this.areaOfExpertise = areaOfExpertise;
-	}
-	public Integer getYearsOfExperience() {
-		return yearsOfExperience;
-	}
-	public void setYearsOfExperience(Integer yearsOfExperience) {
-		this.yearsOfExperience = yearsOfExperience;
-	}
-	public String getLinkedInProfile() {
-		return linkedInProfile;
-	}
-	public void setLinkedInProfile(String linkedInProfile) {
-		this.linkedInProfile = linkedInProfile;
-	}
-	public String getUpiId() {
-		return upiId;
-	}
-	public void setUpiId(String upiId) {
-		this.upiId = upiId;
-	}
-	
-	public String getGst() {
-		return gst;
-	}
-	public void setGst(String gst) {
-		this.gst = gst;
-	}
 	@Override
 	public String toString() {
 		return "PendingTutorProfileDetails [id=" + id + ", fullName=" + fullName + ", institute=" + institute

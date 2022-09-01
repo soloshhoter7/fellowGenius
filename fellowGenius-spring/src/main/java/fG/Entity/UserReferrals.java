@@ -14,10 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
+@Data
 public class UserReferrals implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -43,58 +45,6 @@ public class UserReferrals implements Serializable {
 
 	
 	private Integer paymentDue = 0;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Users getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
-
-	public List<Users> getReferCompleted() {
-		return referCompleted;
-	}
-
-	public void setReferCompleted(List<Users> referCompleted) {
-		this.referCompleted = referCompleted;
-	}
-
-	public List<BookingDetails> getMeetingSetup() {
-		return meetingSetup;
-	}
-
-	public void setMeetingSetup(List<BookingDetails> meetingSetup) {
-		this.meetingSetup = meetingSetup;
-	}
-
-	public List<BookingDetails> getMeetingCompleted() {
-		return meetingCompleted;
-	}
-
-	public void setMeetingCompleted(List<BookingDetails> meetingCompleted) {
-		this.meetingCompleted = meetingCompleted;
-	}
-
-	public Integer getPaymentDue() {
-		return paymentDue;
-	}
-
-	public void setPaymentDue(Integer paymentDue) {
-		this.paymentDue = paymentDue;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	@Override
 	public String toString() {

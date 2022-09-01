@@ -60,11 +60,11 @@ public class AdminService {
     MailService mailService;
 	
 	@Autowired
-	private BCryptPasswordEncoder encoder;
+	BCryptPasswordEncoder encoder;
 
 	public TutorProfileDetailsModel getTutorProfileDetails(Integer tid) {
-		TutorProfileDetailsModel tut = new TutorProfileDetailsModel();
-		TutorProfileModel tutP = new TutorProfileModel();
+		TutorProfileDetailsModel tut;
+		TutorProfileModel tutP;
 		tut = userService.getTutorProfileDetails(tid);
 		tutP = userService.getTutorDetails(tid.toString());
 		tut.setEmail(tutP.getEmail());
@@ -77,111 +77,108 @@ public class AdminService {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		// TODO Auto-generated method stub
 		ArrayList<AdminReferralInfoModel> adminReferralInfoList=
-				new ArrayList<AdminReferralInfoModel>();
+				new ArrayList<>();
 		List<UserReferrals> userReferralsList=repUserReferrals.findAll();
 
-		if(userReferralsList!=null) {
-			
-			for(UserReferrals userReferral:userReferralsList) {
-				//1st part-referrer info
-				Users referrerUser=userReferral.getUser();
-				ReferrerInfoModel referrerUserModel=new ReferrerInfoModel();
-				if(referrerUser!=null) {
-					
-					referrerUserModel.setUserId(String.valueOf(referrerUser.getUserId()));
-					referrerUserModel.setEmail(referrerUser.getEmail());
-					referrerUserModel.setFullName(userService.fetchUserName(referrerUser.getUserId(),referrerUser.getRole()));
+		for(UserReferrals userReferral:userReferralsList) {
+			//1st part-referrer info
+			Users referrerUser=userReferral.getUser();
+			ReferrerInfoModel referrerUserModel=new ReferrerInfoModel();
+			if(referrerUser!=null) {
 
-				}
-				
-				
-				//2nd part-userReferredInfo
-				ArrayList<UserReferralInfoModel> userReferredInfoList=
-						new ArrayList<UserReferralInfoModel>();
-				List<Users> referredUsers=userReferral.getReferCompleted();
-				if(referredUsers!=null) {
-					
-					for(Users referredUser:referredUsers) {
-						
-						UserReferralInfoModel userReferredInfoObject=new UserReferralInfoModel();
-						userReferredInfoObject.setUserId(String.valueOf(referredUser.getUserId()));
-						userReferredInfoObject.setEmail(referredUser.getEmail());
-						userReferredInfoObject.setName(userService.fetchUserName(referredUser.getUserId(),referredUser.getRole()));
-						
-						userReferredInfoList.add(userReferredInfoObject);
-					}
-					
-				}
-				
-							
-				//3rd part
-				ArrayList<BookingDetailsModel> meetingSetupInfoList=
-						new ArrayList<BookingDetailsModel>();
-				List<BookingDetails> referredUsersMeetingsSetup=userReferral.getMeetingSetup();
-				
-				if(referredUsersMeetingsSetup!=null) {
-				
-					for(BookingDetails referredUsersMeetingSetup:referredUsersMeetingsSetup) {
-						BookingDetailsModel meetingSetupInfoObject=new BookingDetailsModel();
-						meetingSetupInfoObject.setBid(referredUsersMeetingSetup.getBid());
-						meetingSetupInfoObject.setStudentName(referredUsersMeetingSetup.getStudentName());
-						meetingSetupInfoObject.setTutorName(referredUsersMeetingSetup.getTutorName());
-						meetingSetupInfoObject.setStartTimeHour(referredUsersMeetingSetup.getStartTimeHour());
-						meetingSetupInfoObject.setStartTimeMinute(referredUsersMeetingSetup.getStartTimeMinute());
-						meetingSetupInfoObject.setEndTimeHour(referredUsersMeetingSetup.getEndTimeHour());
-						meetingSetupInfoObject.setEndTimeMinute(referredUsersMeetingSetup.getEndTimeMinute());
-						meetingSetupInfoObject.setDuration(referredUsersMeetingSetup.getDuration());
-						meetingSetupInfoObject.setAmount(referredUsersMeetingSetup.getAmount());
-						meetingSetupInfoObject.setDateOfMeeting(referredUsersMeetingSetup.getDateOfMeeting());
-						meetingSetupInfoObject.setCreationTime(sdf.format(referredUsersMeetingSetup.getCreatedDate()));
-						meetingSetupInfoList.add(meetingSetupInfoObject);
-					
-					}
-
-				}
-								
-				//4th part-referrerPaymentDue
-				Integer referrerPaymentDue=userReferral.getPaymentDue();
-				
-				
-				//5th part-meetingsCompleted
-				ArrayList<BookingDetailsModel> meetingCompletedInfoList=
-						new ArrayList<BookingDetailsModel>();
-		List<BookingDetails> referredUsersMeetingsCompleted=userReferral.getMeetingCompleted();
-
-			if(referredUsersMeetingsCompleted!=null) {
-				
-				for(BookingDetails referredUsersMeetingCompleted:referredUsersMeetingsCompleted) {
-					BookingDetailsModel meetingCompletedInfoObject=new BookingDetailsModel();
-					meetingCompletedInfoObject.setBid(referredUsersMeetingCompleted.getBid());
-					meetingCompletedInfoObject.setStudentName(referredUsersMeetingCompleted.getStudentName());
-					meetingCompletedInfoObject.setTutorName(referredUsersMeetingCompleted.getTutorName());
-					meetingCompletedInfoObject.setStartTimeHour(referredUsersMeetingCompleted.getStartTimeHour());
-					meetingCompletedInfoObject.setStartTimeMinute(referredUsersMeetingCompleted.getStartTimeMinute());
-					meetingCompletedInfoObject.setEndTimeHour(referredUsersMeetingCompleted.getEndTimeHour());
-					meetingCompletedInfoObject.setEndTimeMinute(referredUsersMeetingCompleted.getEndTimeMinute());
-					meetingCompletedInfoObject.setDuration(referredUsersMeetingCompleted.getDuration());
-					meetingCompletedInfoObject.setAmount(referredUsersMeetingCompleted.getAmount());
-					meetingCompletedInfoObject.setDateOfMeeting(referredUsersMeetingCompleted.getDateOfMeeting());
-					meetingCompletedInfoObject.setCreationTime(sdf.format(referredUsersMeetingCompleted.getCreatedDate()));
-					meetingCompletedInfoList.add(meetingCompletedInfoObject);
-
-				}
-
+				referrerUserModel.setUserId(String.valueOf(referrerUser.getUserId()));
+				referrerUserModel.setEmail(referrerUser.getEmail());
+				referrerUserModel.setFullName(userService.fetchUserName(referrerUser.getUserId(),referrerUser.getRole()));
 
 			}
-								
-				AdminReferralInfoModel adminReferralInfoObject=new AdminReferralInfoModel();
-				adminReferralInfoObject.setReferrerInfo(referrerUserModel);
-				adminReferralInfoObject.setUserReferredInfo(userReferredInfoList);
-				adminReferralInfoObject.setMeetingsSetupInfo(meetingSetupInfoList);
-				adminReferralInfoObject.setReferrerPaymentDue(referrerPaymentDue);
-				adminReferralInfoObject.setMeetingsCompletedInfo(meetingCompletedInfoList);
 
-				adminReferralInfoList.add(adminReferralInfoObject);
+
+			//2nd part-userReferredInfo
+			ArrayList<UserReferralInfoModel> userReferredInfoList=
+					new ArrayList<>();
+			List<Users> referredUsers=userReferral.getReferCompleted();
+			if(referredUsers!=null) {
+
+				for(Users referredUser:referredUsers) {
+
+					UserReferralInfoModel userReferredInfoObject=new UserReferralInfoModel();
+					userReferredInfoObject.setUserId(String.valueOf(referredUser.getUserId()));
+					userReferredInfoObject.setEmail(referredUser.getEmail());
+					userReferredInfoObject.setName(userService.fetchUserName(referredUser.getUserId(),referredUser.getRole()));
+
+					userReferredInfoList.add(userReferredInfoObject);
+				}
+
 			}
+
+
+			//3rd part
+			ArrayList<BookingDetailsModel> meetingSetupInfoList=
+					new ArrayList<>();
+			List<BookingDetails> referredUsersMeetingsSetup=userReferral.getMeetingSetup();
+
+			if(referredUsersMeetingsSetup!=null) {
+
+				for(BookingDetails referredUsersMeetingSetup:referredUsersMeetingsSetup) {
+					BookingDetailsModel meetingSetupInfoObject=new BookingDetailsModel();
+					meetingSetupInfoObject.setBid(referredUsersMeetingSetup.getBid());
+					meetingSetupInfoObject.setStudentName(referredUsersMeetingSetup.getStudentName());
+					meetingSetupInfoObject.setTutorName(referredUsersMeetingSetup.getTutorName());
+					meetingSetupInfoObject.setStartTimeHour(referredUsersMeetingSetup.getStartTimeHour());
+					meetingSetupInfoObject.setStartTimeMinute(referredUsersMeetingSetup.getStartTimeMinute());
+					meetingSetupInfoObject.setEndTimeHour(referredUsersMeetingSetup.getEndTimeHour());
+					meetingSetupInfoObject.setEndTimeMinute(referredUsersMeetingSetup.getEndTimeMinute());
+					meetingSetupInfoObject.setDuration(referredUsersMeetingSetup.getDuration());
+					meetingSetupInfoObject.setAmount(referredUsersMeetingSetup.getAmount());
+					meetingSetupInfoObject.setDateOfMeeting(referredUsersMeetingSetup.getDateOfMeeting());
+					meetingSetupInfoObject.setCreationTime(sdf.format(referredUsersMeetingSetup.getCreatedDate()));
+					meetingSetupInfoList.add(meetingSetupInfoObject);
+
+				}
+
+			}
+
+			//4th part-referrerPaymentDue
+			Integer referrerPaymentDue=userReferral.getPaymentDue();
+
+
+			//5th part-meetingsCompleted
+			ArrayList<BookingDetailsModel> meetingCompletedInfoList=
+					new ArrayList<>();
+	List<BookingDetails> referredUsersMeetingsCompleted=userReferral.getMeetingCompleted();
+
+		if(referredUsersMeetingsCompleted!=null) {
+
+			for(BookingDetails referredUsersMeetingCompleted:referredUsersMeetingsCompleted) {
+				BookingDetailsModel meetingCompletedInfoObject=new BookingDetailsModel();
+				meetingCompletedInfoObject.setBid(referredUsersMeetingCompleted.getBid());
+				meetingCompletedInfoObject.setStudentName(referredUsersMeetingCompleted.getStudentName());
+				meetingCompletedInfoObject.setTutorName(referredUsersMeetingCompleted.getTutorName());
+				meetingCompletedInfoObject.setStartTimeHour(referredUsersMeetingCompleted.getStartTimeHour());
+				meetingCompletedInfoObject.setStartTimeMinute(referredUsersMeetingCompleted.getStartTimeMinute());
+				meetingCompletedInfoObject.setEndTimeHour(referredUsersMeetingCompleted.getEndTimeHour());
+				meetingCompletedInfoObject.setEndTimeMinute(referredUsersMeetingCompleted.getEndTimeMinute());
+				meetingCompletedInfoObject.setDuration(referredUsersMeetingCompleted.getDuration());
+				meetingCompletedInfoObject.setAmount(referredUsersMeetingCompleted.getAmount());
+				meetingCompletedInfoObject.setDateOfMeeting(referredUsersMeetingCompleted.getDateOfMeeting());
+				meetingCompletedInfoObject.setCreationTime(sdf.format(referredUsersMeetingCompleted.getCreatedDate()));
+				meetingCompletedInfoList.add(meetingCompletedInfoObject);
+
+			}
+
+
 		}
-		
+
+			AdminReferralInfoModel adminReferralInfoObject=new AdminReferralInfoModel();
+			adminReferralInfoObject.setReferrerInfo(referrerUserModel);
+			adminReferralInfoObject.setUserReferredInfo(userReferredInfoList);
+			adminReferralInfoObject.setMeetingsSetupInfo(meetingSetupInfoList);
+			adminReferralInfoObject.setReferrerPaymentDue(referrerPaymentDue);
+			adminReferralInfoObject.setMeetingsCompletedInfo(meetingCompletedInfoList);
+
+			adminReferralInfoList.add(adminReferralInfoObject);
+		}
+
 		return adminReferralInfoList;
 	}
 	
@@ -189,24 +186,22 @@ public class AdminService {
 
 	public ArrayList<TransactionsModel> getPendingTransactionsInfo() {
 		// TODO Auto-generated method stub
-		ArrayList<TransactionsModel> transactionsList=new ArrayList<TransactionsModel>();
+		ArrayList<TransactionsModel> transactionsList=new ArrayList<>();
 		List<UserReferrals> referralsList=repUserReferrals.findAll();
-		if(referralsList!=null) {
-			for(UserReferrals ur:referralsList) {
-				if(ur.getPaymentDue()>0) {
-					TransactionsModel transaction=new TransactionsModel();
-					transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
-					transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
-					transaction.setContext(TransactionContext.REFERRAL);
-					transaction.setRemainingAmount(ur.getPaymentDue());
-					transaction.setTotalPaidAmount(getTotalPaidAmount(ur.getUser()));
-					transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
-					transaction.setTransactionId("");
-					transactionsList.add(transaction);
-				}
+		for(UserReferrals ur:referralsList) {
+			if(ur.getPaymentDue()>0) {
+				TransactionsModel transaction=new TransactionsModel();
+				transaction.setUserId(String.valueOf(ur.getUser().getUserId()));
+				transaction.setName(userService.fetchUserName(ur.getUser().getUserId(),ur.getUser().getRole()));
+				transaction.setContext(TransactionContext.REFERRAL);
+				transaction.setRemainingAmount(ur.getPaymentDue());
+				transaction.setTotalPaidAmount(getTotalPaidAmount(ur.getUser()));
+				transaction.setUpiId(userService.fetchUpiId(ur.getUser()));
+				transaction.setTransactionId("");
+				transactionsList.add(transaction);
 			}
 		}
-		
+
 		//fetch unpaid expert also.
 		ArrayList<TransactionsModel> fetchUnpaidExpertsList=fetchUnpaidExpertBookings();
 
@@ -249,22 +244,19 @@ public class AdminService {
 
 	public ArrayList<TransactionsModel> getPreviousTransactions() {
 		// TODO Auto-generated method stub
-		ArrayList<TransactionsModel> transactionsList=new ArrayList<TransactionsModel>();
+		ArrayList<TransactionsModel> transactionsList=new ArrayList<>();
 		
 		List<Transactions> repTransactionList=repTransactions.findAll();
-		if(repTransactionList!=null) {
-			for(Transactions repTransaction:repTransactionList) {
-				TransactionsModel transactions=new TransactionsModel();
-				transactions.setUserId(String.valueOf(repTransaction.getPaidToUserId().getUserId()));
-				transactions.setContext(repTransaction.getContext());
-				transactions.setName(userService.fetchUserName(repTransaction.getPaidToUserId().getUserId(),
-						repTransaction.getPaidToUserId().getRole()));
-				transactions.setPaidAmount(repTransaction.getPaidAmount());
-				transactions.setTransactionId(repTransaction.getTransactionId());
-				transactions.setUpiId(repTransaction.getUpiId());
-				transactionsList.add(transactions);
-			}
-	
+		for(Transactions repTransaction:repTransactionList) {
+			TransactionsModel transactions=new TransactionsModel();
+			transactions.setUserId(String.valueOf(repTransaction.getPaidToUserId().getUserId()));
+			transactions.setContext(repTransaction.getContext());
+			transactions.setName(userService.fetchUserName(repTransaction.getPaidToUserId().getUserId(),
+					repTransaction.getPaidToUserId().getRole()));
+			transactions.setPaidAmount(repTransaction.getPaidAmount());
+			transactions.setTransactionId(repTransaction.getTransactionId());
+			transactions.setUpiId(repTransaction.getUpiId());
+			transactionsList.add(transactions);
 		}
 
 		return transactionsList;
@@ -279,7 +271,6 @@ public class AdminService {
 	    referralAnalytics.setReferralMailCount(referredUsers.size());
 	    referredUsers=repReferralActivity.findAllWhatsappActivities();
 	    referralAnalytics.setReferralWhatsappCount(referredUsers.size());
-	    System.out.println("Referral Analytics "+ referralAnalytics);
 		return referralAnalytics;
 	}
 
@@ -291,47 +282,40 @@ public class AdminService {
 		Double sumOfPaidAmount=0.0;
 		
 		List<Transactions> transactionsList=repTransactions.findAll();
-		
-		if(transactionsList!=null) {
-			for(Transactions tr:transactionsList) {
-				if(tr.getPaidToUserId().getUserId()==user.getUserId()) {
-					sumOfPaidAmount=sumOfPaidAmount+tr.getPaidAmount();
-				}
-			}	
+
+		for(Transactions tr:transactionsList) {
+			if(Objects.equals(tr.getPaidToUserId().getUserId(), user.getUserId())) {
+				sumOfPaidAmount=sumOfPaidAmount+tr.getPaidAmount();
+			}
 		}
-		
-		
-		System.out.println(sumOfPaidAmount);
+
 		return sumOfPaidAmount;
 
 	}
 
 	public ArrayList<ReferralDataModel> fetchAllReferralData() {
 		// TODO Auto-generated method stub
-		ArrayList<ReferralDataModel> referralDataList=new ArrayList<ReferralDataModel>();
+		ArrayList<ReferralDataModel> referralDataList=new ArrayList<>();
 		List<ReferralActivity> referralActivities=repReferralActivity.findAll();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		if(referralActivities!=null) {
-			
-			for(ReferralActivity ra:referralActivities) {
-				
-				ReferralDataModel referralData=new ReferralDataModel();
-				
-				Users user=ra.getUserId();
-				referralData.setUserId(String.valueOf(user.getUserId()));
-				referralData.setFullName(userService.fetchUserName(user.getUserId(),user.getRole()));
-				referralData.setExpertCode(user.getExpertCode());
-				referralData.setPlatformType(ra.getType());
-				referralData.setSignUpTime(sdf.format(ra.getCreatedDate()));
-				
-				Users referrerUser=repUsers.idExists(Integer.valueOf(userService.parseReferralCode(user.getExpertCode())));
-				referralData.setReferredUser(userService.fetchUserName(referrerUser.getUserId(), referrerUser.getRole()));
-				
-				referralDataList.add(referralData);
-			}
-			
+
+		for(ReferralActivity ra:referralActivities) {
+
+			ReferralDataModel referralData=new ReferralDataModel();
+
+			Users user=ra.getUserId();
+			referralData.setUserId(String.valueOf(user.getUserId()));
+			referralData.setFullName(userService.fetchUserName(user.getUserId(),user.getRole()));
+			referralData.setExpertCode(user.getExpertCode());
+			referralData.setPlatformType(ra.getType());
+			referralData.setSignUpTime(sdf.format(ra.getCreatedDate()));
+
+			Users referrerUser=repUsers.idExists(Integer.valueOf(userService.parseReferralCode(user.getExpertCode())));
+			referralData.setReferredUser(userService.fetchUserName(referrerUser.getUserId(), referrerUser.getRole()));
+
+			referralDataList.add(referralData);
 		}
-		System.out.println("Referral Excel data "+ referralDataList);
+
 		return referralDataList;
 	}
 
@@ -363,16 +347,12 @@ public class AdminService {
 						if (lastNotificationTime == null) {
 							sch.setNoScheduleNotificationTime(now);
 							repTutorAvailabilitySchedule.save(sch);
-//							experts.add(tut);
 							mailService.sendExpertNoScheduleNotification(tut);
 						} else {
 							long duration = now.getTime() - lastNotificationTime.getTime();
 							long diffInDays = TimeUnit.MILLISECONDS.toDays(duration);
 							if (diffInDays >= 6) {
-//								experts.add(tut);
 								mailService.sendExpertNoScheduleNotification(tut);
-							} else {
-								System.out.println("less than 7 days !");
 							}
 						}
 					}
@@ -418,13 +398,9 @@ public class AdminService {
 
 		TutorProfileDetails tutorProfileDetails=repTutorProfileDetails.bookingIdExist(bookingDetails.getTutorId());
 		transactionModel.setUserId(tutorProfileDetails.getTid().toString());
-		if(tutorProfileDetails!=null){
-			transactionModel.setUpiId(tutorProfileDetails.getUpiId());
-		}else{
-			transactionModel.setUpiId("Tutor N/A");
-		}
+		transactionModel.setUpiId(tutorProfileDetails.getUpiId());
 
-		Map<String,Double> earnings=getEarnings(bookingDetails.getAmount());  //600
+		Map<String,Double> earnings=getEarnings(bookingDetails.getAmount());
 		if(earnings!=null){
 			transactionModel.setRemainingAmount(earnings.get("actualEarning"));
 		}

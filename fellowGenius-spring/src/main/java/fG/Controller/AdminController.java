@@ -247,11 +247,7 @@ public class AdminController {
 		return adminService.getPreviousTransactions();
 	}
 	
-	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/deleteUser")
-	public void deleteUser(String userId) {
-		service.deleteUser(userId);
-	}
+
 	
 	@PreAuthorize("hasAuthority('Admin')")
 	@RequestMapping(value="/sendExpertVerficationMail")

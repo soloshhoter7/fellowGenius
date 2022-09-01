@@ -1,5 +1,7 @@
 package fG.Entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -14,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
+@Data
 public class FGCredits {
 
 	@Id
@@ -53,63 +56,6 @@ public class FGCredits {
 		this.bookingDetails = bookingDetails;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Users getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	public BookingDetails getBookingDetails() {
-		return bookingDetails;
-	}
-
-	public void setBookingDetails(BookingDetails bookingDetails) {
-		this.bookingDetails = bookingDetails;
-	}
-
-	public Date getCreditDate() {
-		return creditDate;
-	}
-
-	@Override
-	public String toString() {
-		return "FGCredits [id=" + id + ", user=" + user + ", creditDate=" + creditDate + ", context=" + context
-				+ ", type=" + type + ", amount=" + amount + ", bookingDetails=" + bookingDetails + "]";
-	}
 
 		
 }

@@ -572,13 +572,6 @@ export class HttpService {
     );
   }
 
-  //for saving using social login details
-  saveSocialLogin(socialLogin: socialLogin): Observable<object> {
-    return this.http.post(
-      this.backendUrl + '/fellowGenius/registerSocialLogin',
-      socialLogin
-    );
-  }
 
   //for login using social login details
   checkSocialLogin(email: string): Observable<Object> {

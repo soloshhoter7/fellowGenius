@@ -1,6 +1,9 @@
 package fG.Service;
 
-import fG.Entity.*;
+import fG.Entity.BookingDetails;
+import fG.Entity.StudentProfile;
+import fG.Entity.TutorProfile;
+import fG.Entity.TutorProfileDetails;
 import fG.Enum.MeetingStatus;
 import fG.Enum.WhatsappMessageType;
 import fG.Model.TaskDefinition;
@@ -9,19 +12,14 @@ import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
 import fG.Utils.MiscellaneousUtils;
-import org.hibernate.service.spi.InjectService;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
-import java.util.concurrent.ScheduledFuture;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 
 
 @Configurable
@@ -30,22 +28,22 @@ public class TaskDefinitionBean implements Runnable{
     private final List<TaskDefinition> taskDefinitionArrayList = new ArrayList<>();
 
     @Autowired
-    private repositoryBooking repBooking;
+    repositoryBooking repBooking;
 
     @Autowired
-    private repositoryStudentProfile repStudentProfile;
+    repositoryStudentProfile repStudentProfile;
 
     @Autowired
-    private repositoryTutorProfileDetails repTutorProfileDetails;
+    repositoryTutorProfileDetails repTutorProfileDetails;
 
     @Autowired
-    private repositoryTutorProfile repTutorProfile;
+    repositoryTutorProfile repTutorProfile;
 
     @Autowired
-    private MiscellaneousUtils miscUtils;
+    MiscellaneousUtils miscUtils;
 
     @Autowired
-    private MailService mailService;
+     MailService mailService;
 
     @Autowired
     SchedulerService schedulerService;
@@ -70,7 +68,7 @@ public class TaskDefinitionBean implements Runnable{
                         break;
                     case CHECK_IF_PENDING_STATUS_ADMIN_2HR:
                         if(b.getApprovalStatus().equals(MeetingStatus.PENDING)){
-                            notificationService.sendWhatsappNotifications(b.getMeetingId(), WhatsappMessageType.ADMIN_MEETING_STATUS_PENDING);
+                            notificationService.sendMeetingWhatsappNotifications(b.getMeetingId(), WhatsappMessageType.ADMIN_MEETING_STATUS_PENDING);
                         }
                         break;
                     case MEETING_COMPLETION:
@@ -83,7 +81,7 @@ public class TaskDefinitionBean implements Runnable{
                                 repTutorProfileDetails.save(expert);
                             }
                             repBooking.save(b);
-                            notificationService.sendWhatsappNotifications(b.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_COMPLETION);
+                            notificationService.sendMeetingWhatsappNotifications(b.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_COMPLETION);
                         break;
                 }
                 schedulerService.removeFromJobsMap(taskDefinition);
@@ -91,22 +89,13 @@ public class TaskDefinitionBean implements Runnable{
         }
     }
 
-    public TaskDefinition getLatestTaskDefinition(){
-        return taskDefinitionArrayList.remove(0);
-    }
     public List<TaskDefinition> getAllTaskDefinitions(){
         return taskDefinitionArrayList;
     }
     public void setTaskDefinition(TaskDefinition taskDefinition){
         if(!this.taskDefinitionArrayList.contains(taskDefinition)){
             this.taskDefinitionArrayList.add(taskDefinition);
-            Collections.sort(taskDefinitionArrayList, new Comparator<TaskDefinition>() {
-
-                @Override
-                public int compare(TaskDefinition o1, TaskDefinition o2) {
-                    return 0;
-                }
-            });
+            taskDefinitionArrayList.sort((o1, o2) -> (int) (miscUtils.cronToDate(o1.getCronExpression()).getTime() - miscUtils.cronToDate(o2.getCronExpression()).getTime()));
         }
     }
 }

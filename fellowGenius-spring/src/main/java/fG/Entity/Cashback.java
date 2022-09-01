@@ -1,5 +1,7 @@
 package fG.Entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -15,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
+@Data
 @Table(name="cashback")
 public class Cashback {
 
@@ -50,56 +53,6 @@ public class Cashback {
 		this.context = context;
 		this.amount = amount;
 		this.bookingDetails = bookingDetails;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Users getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	public BookingDetails getBookingDetails() {
-		return bookingDetails;
-	}
-
-	public void setBookingDetails(BookingDetails bookingDetails) {
-		this.bookingDetails = bookingDetails;
-	}
-
-	public Date getCashbackDate() {
-		return cashbackDate;
-	}
-
-	@Override
-	public String toString() {
-		return "Cashback [id=" + id + ", user=" + user + ", cashbackDate=" + cashbackDate + ", context=" + context
-				+ ", amount=" + amount + ", bookingDetails=" + bookingDetails + "]";
 	}
 
 	

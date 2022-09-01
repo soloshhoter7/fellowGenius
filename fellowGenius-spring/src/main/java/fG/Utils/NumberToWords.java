@@ -68,7 +68,7 @@ public class NumberToWords {
         // 0 to 999 999 999 999
         if (number == 0) { return "zero"; }
 
-        String snumber = Long.toString(number);
+        String snumber;
 
         // pad with "0"
         String mask = "000000000000";

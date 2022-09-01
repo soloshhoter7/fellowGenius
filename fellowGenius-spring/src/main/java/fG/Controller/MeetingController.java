@@ -1,17 +1,14 @@
 package fG.Controller;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import javax.servlet.http.HttpServletRequest;
 
 import fG.Model.*;
 import fG.Service.*;
-import fG.Utils.MiscellaneousUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +21,7 @@ import com.lowagie.text.DocumentException;
 
 import fG.Configuration.JwtUtil;
 import fG.Entity.BookingDetails;
-import fG.Entity.ScheduleData;
+import fG.Model.ScheduleData;
 
 @RestController
 @RequestMapping("/fellowGenius/meeting")

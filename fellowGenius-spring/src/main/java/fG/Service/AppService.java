@@ -85,11 +85,8 @@ public class AppService {
 	}
 	@PostConstruct
 	public void addCategoriesAndSubCategories(){
-		
-//	
 		if(repCategory.findAll().isEmpty()) {
-		System.out.println("saving categories and sub categories in user service");
-		List<String> categories = new ArrayList<String>();
+		List<String> categories = new ArrayList<>();
 		categories.add("Sales and Business Development");
 		categories.add("Marketing");
 		categories.add("Finance");
@@ -193,7 +190,6 @@ public class AppService {
 			appDTO.setValue(appInfo.getValue());
 			result.add(appDTO);
 		}
-		System.out.println(result);
 		return result;
 	}
 	public boolean updateAppInfo(AppInfoModel appInfoModel) {
@@ -203,7 +199,6 @@ public class AppService {
 		
 		AppInfo appInfo=repAppInfo.keyExist(key);
 		appInfo.setValue(updatedValue);
-		System.out.println(appInfo);
 		repAppInfo.save(appInfo);
 		return true;
 	}

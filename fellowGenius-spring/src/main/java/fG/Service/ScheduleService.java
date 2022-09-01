@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import fG.DAO.MeetingDao;
 import fG.Entity.BookingDetails;
-import fG.Entity.ScheduleData;
+import fG.Model.ScheduleData;
 import fG.Model.KeyValueModel;
 import fG.Model.ScheduleTime;
 
