@@ -5,8 +5,10 @@
         
         <div class="Referal__dashbrd white__bg">
           <div class="sec__title">
-            <h3>Total Users to be paid: {{totalPayableUser }}</h3>
+            <h3>Total Transactions to be paid: {{totalPayableTransactions }}</h3>
+            <h3>Total Users to be paid: {{totalPayableUser}}</h3>
             <h3>Total Payable amount : {{totalPayableAmount }}</h3>
+
             <h3>Pending Transactions</h3>           
         </div>
           <div class="referal__table">
@@ -26,7 +28,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let pendingTransaction of pendingTransactions">
+                  <tr *ngFor="let pendingTransaction of pendingTransactions;let i=index">
                     <td class="fld_name">
                       <div class="nme_style">{{pendingTransaction.userId}}</div>
                     </td>
@@ -39,7 +41,7 @@
                     <td class="fld_status" >
                       <div class="td_btn" style="justify-content: left;">
                         <a href="javascript:void(0)"
-                        href="#{{pendingTransaction.userId}}"
+                        href="#{{i}}"
                         data-toggle="modal">
                         <button
                         [disabled]="isUpiIdNotAvailable(pendingTransaction)"
@@ -54,7 +56,7 @@
                     <!-- Modal Starts-->
                     <div
                 class="modal fade join__Modal"
-                id="{{pendingTransaction.userId}}"
+                id="{{i}}"
                 tabindex="-1"
                 role="dialog"
                 aria-labelledby="myLargeModalLabel"
@@ -82,19 +84,19 @@
                           
                           <div class="row" style="margin-top:10px">
                             <div class="col-md-4">
-                              Amount Paid
+                              Amount Paid {{pendingTransaction.remainingAmount}}
                             </div>
                             <div class="col-md-8">
                               <input
-                              type="text"
+                              type="number"
                               id="paidAmount"
                               name="paidAmount"
-                              ngModel
+                              [value]="pendingTransaction.remainingAmount"
                               class="form-control"
-                              #paidAmount=ngModel
                               required
                               maxlength="50"
-                              
+                              pattern="^[1-9]\d*$"
+                              disabled
                             />
                             </div>
                           </div>
@@ -118,7 +120,10 @@
                             </div>
                           </div>
                         
-                          
+                          <span
+                      class="help-block"
+                     *ngIf="partialMeetingTransaction"
+                      >Partial payment not allowed for meeting fees</span>
                         
                       </div>
 

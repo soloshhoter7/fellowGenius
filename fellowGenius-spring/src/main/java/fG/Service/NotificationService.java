@@ -45,24 +45,28 @@ public class NotificationService {
             String slot = booking.getDateOfMeeting()+" at "+startTime+" - "+endTime;
             String message = "";
             String bookingDetails = "Meeting Id :"+booking.getMeetingId()+" " +
-                    "Learner :"+booking.getStudentName()+" " +
-                    "Expert :"+booking.getTutorName()+" " +
-                    "Time :"+slot+"" +
-                    "Learner Number :"+repStudentProfile.idExist(booking.getStudentId()).getContact()+"" +
-                    "Expert Number :"+repTutorProfile.idExist(repTutorProfileDetails.bookingIdExist(booking.getTutorId()).getTid()).getContact();
-            switch(messageType){
-                case ADMIN_MEETING_BOOKED:
+                    " Learner :"+booking.getStudentName()+" " +
+                    " Expert :"+booking.getTutorName()+" " +
+                    " Time :"+slot+"" +
+                    " Learner Number :"+repStudentProfile.idExist(booking.getStudentId()).getContact()+"" +
+                    " Expert Number :"+repTutorProfile.idExist(repTutorProfileDetails.bookingIdExist(booking.getTutorId()).getTid()).getContact();
+            switch(messageType.name()){
+                case "ADMIN_MEETING_BOOKED":
                     message+="Hey Admin, a new meeting has been booked with following details "+bookingDetails+"" +
                             " Amount : INR "+booking.getAmount();
-                case ADMIN_MEETING_COMPLETION:
+                    break;
+                case "ADMIN_MEETING_COMPLETION":
                     message+="Hey Admin, meeting with following details :"+bookingDetails+"" +
                             " has been completed with status as :"+bookingStatus.name();
-                case ADMIN_MEETING_STATUS_PENDING:
+                    break;
+                case "ADMIN_MEETING_STATUS_PENDING":
                     message+="Hey Admin, meeting with following details : "+bookingDetails+"" +
                             "is still PENDING. please ask the Expert to approve.";
-                case ADMIN_MEETING_STARTS_15MIN:
+                    break;
+                case "ADMIN_MEETING_STARTS_15MIN":
                     message+="Hey Admin, meeting with following details : "+bookingDetails+"" +
                             " starts in 15 minutes.";
+                    break;
             }
             whatsappService.initiateWhatsAppMessage(message);
 

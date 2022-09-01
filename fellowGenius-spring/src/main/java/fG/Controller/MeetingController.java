@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import fG.Model.*;
 import fG.Service.*;
+import fG.Utils.MiscellaneousUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -131,13 +132,13 @@ public class MeetingController {
 	(@RequestBody BookingDetailsModel booking,HttpServletRequest request) throws ParseException{
 		System.out.println("Inside generateInvoice of Booking method of meeting controller");
 		System.out.println(booking);
-		
-		
+
 		try {
-			Resource resource = meetingService.generateInvoice(booking, request);
+			Resource resource = meetingService.generateInvoice(booking);
 	        String contentType = null;
 	        try {
 	            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+				System.out.println("Content type is "+ contentType);
 	        } catch (IOException ex) {
 	        }
 	        // Fallback to the default content type if type could not be determined
@@ -390,21 +391,10 @@ public class MeetingController {
 	 	meetingService.saveFeedback(feedbackModel);
 	}
 
-	@GetMapping(value="/testingSchedulerJobCreation")
-	public String createBookingJob(@RequestBody TaskDefinition t) throws ParseException {
-		return meetingService.createSchedulerTask(t);
-
-	}
-	@GetMapping(value="/fetchJobsCreated")
-	public Queue<TaskDefinition> fetchAllJobCreated(){
+	@GetMapping(value="/fetchAllJobs")
+	@ResponseBody
+	public List<TaskDefinition> fetchAllJobs(){
 		return taskDefinitionBean.getAllTaskDefinitions();
-	}
-
-	@GetMapping(value = "/sendWhatsappMessage")
-	public String sendWhatsappMessage() throws URISyntaxException {
-		String message = "Hey there ! sending example message to user";
-		String phoneNumber ="918076490605";
-		return whatsappService.sendWhatsappMessage(message,phoneNumber);
 	}
 
 }

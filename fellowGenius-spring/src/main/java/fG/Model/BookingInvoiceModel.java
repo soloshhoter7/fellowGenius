@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 public class BookingInvoiceModel {
 
+    String bookingId;
     String dateOfMeeting;
 
     String expertName;

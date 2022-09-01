@@ -42,6 +42,9 @@ public class MeetingService {
 	private SimpMessageSendingOperations messagingTemplate;
 
 	@Autowired
+	private AdminService adminService;
+
+	@Autowired
 	private NumberToWords numberToWords;
 
 	@Autowired
@@ -243,15 +246,54 @@ public class MeetingService {
 		
 		return meetingBooked != null;
 	}
+	public BookingDetailsModel copyBookingDetailsToBookingDetailsModel(BookingDetails booking) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		BookingDetailsModel bkModel = new BookingDetailsModel();
+		bkModel.setBid(booking.getBid());
+		bkModel.setDateOfMeeting(booking.getDateOfMeeting());
+		bkModel.setDescription(booking.getDescription());
+		bkModel.setDuration(booking.getDuration());
+		bkModel.setEndTimeHour(booking.getEndTimeHour());
+		bkModel.setEndTimeMinute(booking.getEndTimeMinute());
+		bkModel.setMeetingId(booking.getMeetingId());
+		bkModel.setStartTimeHour(booking.getStartTimeHour());
+		bkModel.setStartTimeMinute(booking.getStartTimeMinute());
+		bkModel.setStudentId(booking.getStudentId());
+		bkModel.setStudentName(booking.getStudentName());
+		bkModel.setTutorName(booking.getTutorName());
+		bkModel.setApprovalStatus(booking.getApprovalStatus().name());
+		bkModel.setSubject(booking.getSubject());
+		bkModel.setDomain(booking.getDomain());
+		bkModel.setAmount(booking.getAmount());
+		bkModel.setPaidAmount(booking.getPaidAmount());
+		bkModel.setTutorProfilePictureUrl(booking.getTutorProfilePictureUrl());
+		bkModel.setCreationTime(sdf.format(booking.getCreatedDate()));
+		String start = booking.getStartTimeHour() + ":" + booking.getStartTimeMinute();
+		String end = booking.getEndTimeHour() + ":" + booking.getEndTimeMinute();
+		bkModel.setStartTime(start);
+		bkModel.setEndTime(end);
+		if (booking.getExpertJoinTime() != null) {
+			bkModel.setExpertJoinTime(sdf.format(booking.getExpertJoinTime()));
+		}
+		if (booking.getExpertLeavingTime() != null) {
+			bkModel.setExpertLeavingTime(sdf.format(booking.getExpertLeavingTime()));
+		}
+		if (booking.getLearnerJoinTime() != null) {
+			bkModel.setLearnerJoinTime(sdf.format(booking.getLearnerJoinTime()));
+		}
+		if (booking.getLearnerLeavingTime() != null) {
+			bkModel.setLearnerLeavingTime(sdf.format(booking.getLearnerLeavingTime()));
+		}
+
+		bkModel.setExpertCode(booking.getExpertCode());
+		bkModel.setRazorpay_payment_id(booking.getRazorpay_payment_id());
+		bkModel.setRescheduled(booking.isRescheduled());
+		return bkModel;
+	}
+
 	public void createMeetingSchedulerJobs(BookingDetails booking) throws ParseException {
 		//create completion check job
 		String[] dateParts = booking.getDateOfMeeting().split("/");
-
-		TaskDefinition taskDefinition = new TaskDefinition();
-		taskDefinition.setData(booking.getMeetingId());
-		taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
-		taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute(),0));
-		taskSchedulerService.scheduleATask(taskDefinition);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		//Parsing the given String to Date object
@@ -260,21 +302,32 @@ public class MeetingService {
 		meetingStartTime.setHours(booking.getStartTimeHour());
 		meetingStartTime.setMinutes(booking.getStartTimeMinute());
 		Integer minutesPending = miscUtils.checkDiffBtwTimeInMinutes(currentTime,meetingStartTime);
+		TaskDefinition taskDefinition = new TaskDefinition();
 		//setting up notifications
 		 if(minutesPending>120){
+			 taskDefinition = new TaskDefinition();
 			 Map<Integer,Integer> startHoursAndMinutes = miscUtils.subtractFromTime(120,booking.getStartTimeHour(),booking.getStartTimeMinute());
 			 Map.Entry<Integer,Integer> startTime = startHoursAndMinutes.entrySet().iterator().next();
+			 taskDefinition.setData(booking.getMeetingId());
 			 taskDefinition.setActionType(TaskDefinitonType.CHECK_IF_PENDING_STATUS_ADMIN_2HR);
 			 taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),startTime.getKey(),startTime.getValue(),0));
 			 taskSchedulerService.scheduleATask(taskDefinition);
 		 }
 		 if(minutesPending>15){
-			Map<Integer,Integer> startHoursAndMinutes = miscUtils.subtractFromTime(15,booking.getStartTimeHour(),booking.getStartTimeMinute());
+			 taskDefinition = new TaskDefinition();
+			 Map<Integer,Integer> startHoursAndMinutes = miscUtils.subtractFromTime(15,booking.getStartTimeHour(),booking.getStartTimeMinute());
 			Map.Entry<Integer,Integer> startTime = startHoursAndMinutes.entrySet().iterator().next();
+			 taskDefinition.setData(booking.getMeetingId());
 			taskDefinition.setActionType(TaskDefinitonType.MEETING_NOTIFICATION_15);
 			taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),startTime.getKey(),startTime.getValue(),0));
 			taskSchedulerService.scheduleATask(taskDefinition);
 		}
+
+		taskDefinition = new TaskDefinition();
+		taskDefinition.setData(booking.getMeetingId());
+		taskDefinition.setActionType(TaskDefinitonType.MEETING_COMPLETION);
+		taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),booking.getEndTimeHour(),booking.getEndTimeMinute()+1,0));
+		taskSchedulerService.scheduleATask(taskDefinition);
 	}
 
 	public String createSchedulerTask(TaskDefinition t){
@@ -545,7 +598,7 @@ public class MeetingService {
 		}
 		if (bookingExceptionFound || !checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date)) {
 			return false;
-		} else return !bookingExceptionFound && checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date);
+		} else return checkIfExpertIsAvailableInTime(sh, sm, eh, em, tid, date);
 	}
 
 	public boolean checkIfExpertIsAvailableInTime(Integer sh, Integer sm, Integer eh, Integer em, Integer tid,
@@ -567,7 +620,7 @@ public class MeetingService {
 			Date schEndTime = new Date(sch.getEndTime());
 			if (bookingStartDateTime.getTime() >= schStartTime.getTime()
 					&& bookingEndDateTime.getTime() <= schEndTime.getTime()) {
-				System.out.println("Time matcheddd");
+
 				return true;
 			}
 		}
@@ -891,6 +944,7 @@ public class MeetingService {
 
 	public BookingInvoiceModel bookingToInvoice(BookingDetailsModel booking){
 		BookingInvoiceModel bookingInvoice=new BookingInvoiceModel();
+		bookingInvoice.setBookingId(booking.getBid().toString());
 		bookingInvoice.setDateOfMeeting(booking.getDateOfMeeting());
 		bookingInvoice.setExpertName(booking.getTutorName());
 		bookingInvoice.setLearnerName(booking.getStudentName());
@@ -898,34 +952,21 @@ public class MeetingService {
 		bookingInvoice.setTotalAmount(booking.getAmount());
 		//methods to set actual Amount, commission and gst
 
-		AppInfo commissionPercent=repAppInfo.keyExist("commission");
-		AppInfo gstPercent=repAppInfo.keyExist("GST_value");
-		double gstMultiplier=1+(Double.parseDouble(gstPercent.getValue())/100);
 
-		double commissionMultiplier=1+(Double.parseDouble(commissionPercent.getValue())/100);
-
-		double gstValue=booking.getAmount() - booking.getAmount()/gstMultiplier;
-		gstValue=Math.round(gstValue*100.0)/100.0;
-
-		double commissionValue=booking.getAmount()/gstMultiplier-booking.getAmount()/gstMultiplier/commissionMultiplier;
-		commissionValue=Math.round(commissionValue*100.0)/100.0;
-		double actualEarning=booking.getAmount()-gstValue-commissionValue;
-        actualEarning=Math.round(actualEarning*100.0)/100.0;
-
-
-		bookingInvoice.setActualAmount(actualEarning);
-		bookingInvoice.setGSTFees(gstValue);
-		bookingInvoice.setPlatformFees(commissionValue);
-		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100.0)/100.0);
+		Map<String,Double> earnings=adminService.getEarnings(booking.getAmount());
+		bookingInvoice.setActualAmount(Math.round(earnings.get("actualEarning")*100)/100);
+		bookingInvoice.setGSTFees(Math.round(earnings.get("GSTFees")*100)/100);
+		bookingInvoice.setPlatformFees(Math.round(earnings.get("commissionFees")*100)/100);
+		bookingInvoice.setTotalAmount(Math.round(booking.getAmount()*100)/100);
 
         //number to words
-		long actualAmountLong= Math.round(bookingInvoice.getActualAmount());
+		long actualAmountLong= Math.round(bookingInvoice.getActualAmount()+bookingInvoice.getPlatformFees());
 		bookingInvoice.setActualAmountWords(numberToWords.convert(actualAmountLong));
 
 		return bookingInvoice;
 	}
 
-	public Resource generateInvoice(BookingDetailsModel booking,HttpServletRequest request) 
+	public Resource generateInvoice(BookingDetailsModel booking)
 			throws DocumentException, IOException{
 		BookingInvoiceModel bookingInvoice=bookingToInvoice(booking);
 		try {

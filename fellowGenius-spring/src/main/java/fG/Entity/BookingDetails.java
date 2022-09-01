@@ -55,6 +55,11 @@ public class BookingDetails implements Serializable{
  	  String couponCode;
 	  @Column(name = "meeting_id", unique = true, nullable = false)
 	  String meetingId;
+
+	  boolean isExpertPaid=false;
+
+	  String expertTransactionId;
+
 	  @Lob
 	  String learnerFeedBack;
 	  @Lob

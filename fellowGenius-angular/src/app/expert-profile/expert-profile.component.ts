@@ -124,7 +124,7 @@ export class ExpertProfileComponent implements OnInit {
         this.cookieService.set("expert_userId",this.userId);
         this.cookieService.set("expert_domain",this.selectedDomain);
       }else{
-        this.cookieService.set("prev","view-event");
+       // this.cookieService.set("prev","view-event");
         this.cookieService.set("event_id",this.eventId);
       }
       this.httpService

@@ -5,14 +5,12 @@ import fG.Model.TaskDefinition;
 import fG.Repository.repositoryTaskDefinitions;
 import fG.Utils.MiscellaneousUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
@@ -31,6 +29,9 @@ public class SchedulerService {
 
     @Autowired
     TaskDefinitionBean taskDefinitionBean;
+
+    @Autowired
+    MiscellaneousUtils miscUtils;
 
     private UUID uuid;
 
@@ -84,13 +85,21 @@ public void removeScheduledTask(String jobId){
     public void fetchAllTasks(){
         List<TaskDefinitionDetails> taskDefinitionDetailsList = repTaskDefinitions.findAll();
         if(taskDefinitionDetailsList.size()>0){
+            Collections.sort(taskDefinitionDetailsList, new Comparator<TaskDefinitionDetails>() {
+                @Override
+                public int compare(TaskDefinitionDetails o1, TaskDefinitionDetails o2) {
+                    return (int) (miscUtils.cronToDate(o1.getCronExpression()).getTime()-miscUtils.cronToDate(o2.getCronExpression()).getTime());
+                }
+            });
             for(TaskDefinitionDetails td : taskDefinitionDetailsList){
-                TaskDefinition taskDefinition = new TaskDefinition();
-                taskDefinition.setCronExpression(td.getCronExpression());
-                taskDefinition.setData(td.getData());
-                taskDefinition.setActionType(td.getActionType());
-                taskDefinition.setId(td.getId());
-                scheduleATask(taskDefinition);
+                if(miscUtils.checkIfCronValid(td.getCronExpression())>=0){
+                    TaskDefinition taskDefinition = new TaskDefinition();
+                    taskDefinition.setCronExpression(td.getCronExpression());
+                    taskDefinition.setData(td.getData());
+                    taskDefinition.setActionType(td.getActionType());
+                    taskDefinition.setId(td.getId());
+                    scheduleATask(taskDefinition);
+                }
             }
             repTaskDefinitions.deleteAll();
         }
