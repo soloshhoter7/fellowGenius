@@ -1,13 +1,20 @@
 package fG.Service;
 
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import fG.Enum.WhatsappMessageType;
+import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Service
@@ -23,7 +30,8 @@ public class WhatsappService {
         }
     }
 
-    public void sendWhatsappMessage(String message, String recipientPhoneNumber) {
+    public String sendWhatsappMessage(String message,String recipientPhoneNumber) {
+        RestTemplate restTemplate = new RestTemplate();
         String payload = "{\n" +
                 "    \"message\": {\n" +
                 "        \"channel\": \"WABA\",\n" +
@@ -56,15 +64,16 @@ public class WhatsappService {
 
         String url = "https://rcmapi.instaalerts.zone/services/rcm/sendMessage";
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        Map<String, String> map = new HashMap<>();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        Map map = new HashMap<String, String>();
         map.put("Content-Type", "application/json");
         map.put("Authentication","Bearer "+ApiKey);
         headers.setAll(map);
 
 
         HttpEntity<String> request = new HttpEntity<>(payload, headers);
-        new RestTemplate().postForObject(url, request, String.class);
+        String response = new RestTemplate().postForObject(url,request,String.class);
+        return response;
 
     }
 }

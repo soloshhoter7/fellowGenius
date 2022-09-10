@@ -1,4 +1,4 @@
-package fG.Model;
+package fG.Entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

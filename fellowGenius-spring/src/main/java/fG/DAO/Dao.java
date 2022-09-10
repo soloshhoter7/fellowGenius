@@ -11,23 +11,31 @@ import com.google.gson.Gson;
 import fG.Entity.BookingDetails;
 import fG.Entity.CategoryList;
 import fG.Entity.ExpertiseAreas;
-import fG.Model.ScheduleData;
+import fG.Entity.ScheduleData;
+import fG.Entity.SocialLogin;
+import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
 import fG.Entity.SubcategoryList;
 import fG.Entity.TutorAvailabilitySchedule;
 import fG.Entity.TutorProfile;
 import fG.Entity.TutorProfileDetails;
+import fG.Entity.TutorVerification;
 import fG.Entity.Users;
+import fG.Model.StudentLoginModel;
 import fG.Model.TutorAvailabilityScheduleModel;
+import fG.Model.TutorVerificationModel;
 import fG.Repository.repositoryBooking;
 import fG.Repository.repositoryCategory;
 import fG.Repository.repositoryExpertiseAreas;
 import fG.Repository.repositoryLearningAreas;
+import fG.Repository.repositorySocialLogin;
+import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
 import fG.Repository.repositoryTutorProfile;
 import fG.Repository.repositoryTutorProfileDetails;
+import fG.Repository.repositoryTutorVerification;
 import fG.Repository.repositoryUsers;
 
 @Component
@@ -39,6 +47,8 @@ public class Dao {
 	@Autowired
 	repositoryStudentProfile repStudentProfile;
 
+	@Autowired
+	repositoryStudentLogin repStudentLogin;
 
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
@@ -47,11 +57,18 @@ public class Dao {
 	repositoryTutorProfile repTutorProfile;
 
 
+
+	@Autowired
+	repositoryTutorVerification repTutorVerification;
+
+	@Autowired
+	repositorySocialLogin repSocialLogin;
+
 	@Autowired
 	repositoryTutorAvailabilitySchedule repTutorSchedule;
 	
 	@Autowired
-	repositoryLearningAreas repLearningAreas;
+	repositoryLearningAreas repLearingAreas;
 	
 	@Autowired
 	repositoryExpertiseAreas repExpertiseAreas;
@@ -66,9 +83,9 @@ public class Dao {
 	repositoryCategory repCategory;
 	
 	// for saving user profile
-	public void saveUserLogin(Users user) {
-		repUsers.save(user);
-	}
+		public boolean saveUserLogin(Users user) {
+			return repUsers.save(user) != null;
+		}
 		
 	// for saving student profile details
 	public boolean saveStudentProfile(StudentProfile studentProfile) {
@@ -78,6 +95,25 @@ public class Dao {
 		} else {
 			return false;
 		}
+	}
+	
+	// for getting tutor profile with tid
+	public TutorProfile getTutorProfile(Integer tid) {
+		return repTutorProfile.idExist(tid);
+	}
+
+	// for saving student login details
+	public boolean saveStudentLogin(StudentLogin studentLogin) {
+		return repStudentLogin.save(studentLogin) != null;
+	}
+
+	// for validating student login
+	public boolean onStudentLogin(StudentLoginModel studentLogin) {
+		return repStudentLogin.validation(studentLogin.getEmail(), studentLogin.getPassword()) != null;
+	}
+    
+	public boolean findStudentBySid(Integer sid) {
+		return repStudentLogin.idExists(sid) != null;
 	}
 	// for getting student details after login
 	public StudentProfile getStudentDetails(String userId) {
@@ -101,6 +137,17 @@ public class Dao {
 		repTutorProfile.save(tutorProfile);
 	}
 
+
+
+//	// for validating tutor
+//	public boolean onTutorLogin(TutorLoginModel tutorLoginModel) {
+//		if (repTutorLogin.validation(tutorLoginModel.getEmail(), tutorLoginModel.getPassword()) != null) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+
 	// for updating tutor profile details
 	public void updateTutorProfile(TutorProfileDetails tutor) {
 		repTutorProfileDetails.save(tutor);
@@ -112,7 +159,7 @@ public class Dao {
 	// for getting tutors list whose profile completed is 100% for finding tutors 
 	public List<TutorProfileDetails> getTutorList(String subject) {
 		System.out.println("subject : "+subject);
-		List<TutorProfileDetails> tutors = new ArrayList<>();
+		List<TutorProfileDetails> tutors = new ArrayList<TutorProfileDetails>();
 		CategoryList categ = repCategory.findCategory(subject);
 		System.out.println("categ : "+categ);
 		if(categ!=null) {
@@ -141,6 +188,20 @@ public class Dao {
 
 	}
 
+	// for saving tutor Verification Details
+	public void saveTutorVerification(TutorVerification tutorVerification) {
+		repTutorVerification.save(tutorVerification);
+	}
+
+	// for updating tutor verification
+	public boolean updateTutorVerification(TutorVerificationModel tutorVerify) {
+		repTutorVerification.updateTutorVerification(tutorVerify.getCountry(), tutorVerify.getState(),
+				tutorVerify.getIdType(), tutorVerify.getIdNumber(), tutorVerify.getIdDocUrl(),
+				tutorVerify.getEducationType(), tutorVerify.getEducationInstitution(), tutorVerify.getFieldOfStudy(),
+				tutorVerify.getEducationDocUrl(), tutorVerify.getTid());
+		return true;
+	}
+
 	// for getting tutor profile details
 	public TutorProfileDetails getTutorProfileDetails(Integer tid) {
 		System.out.println("oeee"+repTutorProfileDetails.idExist(tid));
@@ -158,6 +219,51 @@ public class Dao {
 		repTutorProfileDetails.updateProfileCompleted(profileCompleted, tid);
 	}
 
+	// for saving social login details
+	public boolean saveSocialLogin(SocialLogin socialLogin) {
+		if (repTutorProfile.emailExist(socialLogin.getEmail()) != null) {
+			return false;
+		} else {
+			TutorProfile tutProf = new TutorProfile();
+			tutProf.setEmail(socialLogin.getEmail());
+			tutProf.setFullName(socialLogin.getFullName());
+			repTutorProfile.save(tutProf);
+			TutorProfile tProfile = repTutorProfile.emailExist(socialLogin.getEmail());
+			Integer tid = tProfile.getTid();
+			socialLogin.setTid(tid);
+
+			repSocialLogin.save(socialLogin);
+
+			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
+			tutProfileDetails.setTid(tid);
+			tutProfileDetails.setFullName(socialLogin.getFullName());
+			tutProfileDetails.setProfileCompleted(12);
+			repTutorProfileDetails.save(tutProfileDetails);
+
+			TutorVerification tutVerification = new TutorVerification();
+			tutVerification.setTid(tid);
+			repTutorVerification.save(tutVerification);
+
+			TutorAvailabilitySchedule tutSchedule = new TutorAvailabilitySchedule();
+			tutSchedule.setTid(tid);
+			tutSchedule.setFullName(socialLogin.getFullName());
+			tutSchedule.setIsAvailable("yes");
+			repTutorSchedule.save(tutSchedule);
+			return true;
+		}
+
+	}
+	
+//	// for checking social login if id already exists
+//	public boolean checkSocialLogin(String email) {
+//		if (repSocialLogin.checkSocialLogin(email) != null) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//
+//	}
+
 	// for saving and updating tutor availability schedule
 	public void saveTutorAvailbilitySchedule(TutorAvailabilitySchedule tutSchedule) {
 		repTutorSchedule.save(tutSchedule);
@@ -167,6 +273,7 @@ public class Dao {
 	public TutorAvailabilityScheduleModel getTutorAvailabilitySchedule(Integer tid) {
 		TutorAvailabilityScheduleModel tutScheduleModel = new TutorAvailabilityScheduleModel();
 		ArrayList<ScheduleData> availableSchedules = new ArrayList<ScheduleData>();
+		System.out.println("HEYYY THEREEE");
 		TutorAvailabilitySchedule Schedule = repTutorSchedule.idExist(tid);
 		if (Schedule.getAllAvailabilitySchedule() != null) {
 			for (String schd : Schedule.getAllAvailabilitySchedule()) {
@@ -181,17 +288,21 @@ public class Dao {
 	}
 
 	// for updating student profile
-	public void updateStudentProfile(StudentProfile studentProfile) {
-		repStudentProfile.save(studentProfile);
+	public boolean updateStudentProfile(StudentProfile studentProfile) {
+		repStudentProfile.save(studentProfile);	
+		return true;
 
 	}
 
 	// for fetching top tutor list
 	public ArrayList<TutorProfileDetails> fetchTopTutorList(String subject) {
 		ArrayList<TutorProfileDetails> topTutors = repTutorProfileDetails.fetchTopTutorList(subject);
-		ArrayList<TutorProfileDetails> eliminatingTutors = new ArrayList<>();
+		ArrayList<TutorProfileDetails> eliminatingTutors = new ArrayList<TutorProfileDetails>();
 		for (TutorProfileDetails availableTeacher : topTutors) {
-			if (!checkTutorAvailability(availableTeacher.getTid())) {
+			int index = topTutors.indexOf(availableTeacher);
+
+			if (checkTutorAvailability(availableTeacher.getTid()) == false) {
+
 				eliminatingTutors.add(availableTeacher);
 			}
 		}
@@ -201,8 +312,15 @@ public class Dao {
 
 	// for checking tutor availability status
 	public boolean checkTutorAvailability(Integer tid) {
-		TutorAvailabilitySchedule schedule = repTutorSchedule.fetchAvailableTutor(tid);
-		return schedule != null;
+		TutorAvailabilitySchedule schedule = new TutorAvailabilitySchedule();
+		schedule = repTutorSchedule.fetchAvailableTutor(tid);
+
+		if (schedule == null) {
+			System.out.println("found null");
+			return false;
+		} else {
+			return true;
+		}
 
 	}
 
@@ -216,9 +334,19 @@ public class Dao {
 		return repStudentProfile.idExist(sid);
 	}
 
+	//
+//	public boolean learningAreasCount(ArrayList<String> learningAreas) {
+//		System.out.println(learningAreas);
+//		for(String learnAreas: learningAreas) {
+//			System.out.println(learnAreas);
+//			repLearningAreasCount.learningAreasCount(learnAreas);
+//		}
+//		return true;
+//	}
+
 	public void subtractArea(int id, String subject, String role) {
 		if(role.equals("Learner")) {
-			repLearningAreas.deleteSubject(id, subject);
+			repLearingAreas.deleteSubject(id, subject);
 		}else if(role.equals("Expert")) {
 			Integer subCategId;
 			SubcategoryList sc = repSubCategory.findSubCategoryByName(subject);
@@ -231,9 +359,9 @@ public class Dao {
 
 	public List<TutorProfileDetails> fetchAllLinkedTutors(Integer userId) {
 		List<BookingDetails> bookinglist = repBooking.fetchAllLinkedTutors(userId);
-		List<TutorProfileDetails> tutorsList = new ArrayList<>();
+		List<TutorProfileDetails> tutorsList = new ArrayList<TutorProfileDetails>();
 		for(BookingDetails id: bookinglist) {
-			if(tutorsList.stream().noneMatch(o->o.getBookingId().equals(id.getTutorId()))) {
+			if(!tutorsList.stream().filter(o->o.getBookingId().equals(id.getTutorId())).findFirst().isPresent()) {
 				tutorsList.add(repTutorProfileDetails.bookingIdExist(id.getTutorId()));		
 			}
 		}
@@ -242,7 +370,8 @@ public class Dao {
 
 	public List<TutorProfileDetails> filtersApplied(String[] subjects, String[] price, Integer[] ratings,Integer categId,String[] domains) {
 		
-		List<ExpertiseAreas> domainWiseFilters = new ArrayList<>();
+		List<ExpertiseAreas> domainWiseFilters = new ArrayList<ExpertiseAreas>();
+		System.out.println(subjects.length +".......SUBJECTS LENGTH.......................................");
 		if(domains.length != 0) {		
 			//Filtering tutors on the basis of domain first
 			for(String domain: domains) {
@@ -258,9 +387,9 @@ public class Dao {
 		
 		
 		if(subjects.length>0 && price.length>0) {
-			List<ExpertiseAreas> subjectWiseFilters  = new ArrayList<>();
-			List<TutorProfileDetails> priceWiseTutors = new ArrayList<>();
-			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<>();
+			List<ExpertiseAreas> subjectWiseFilters  = new ArrayList<ExpertiseAreas>();
+			List<TutorProfileDetails> priceWiseTutors = new ArrayList<TutorProfileDetails>();
+			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
 			
 			// fetch all tutors for required subject
 			for(String subject: subjects) {
@@ -299,9 +428,9 @@ public class Dao {
 		
 		//CASE 2
 		else if(subjects.length>0 && price.length==0) {
-			List<ExpertiseAreas> subjectWiseFilters  = new ArrayList<>();
-			List<TutorProfileDetails> subjectWiseTutors = new  ArrayList<>();
-			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<>();
+			List<ExpertiseAreas> subjectWiseFilters  = new ArrayList<ExpertiseAreas>(); 
+			List<TutorProfileDetails> subjectWiseTutors = new  ArrayList<TutorProfileDetails>();
+			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
 			
 			
 			for(String subject: subjects) {
@@ -323,12 +452,18 @@ public class Dao {
 					subjectWiseTutors.add(domainWiseFilt.getUserId());
 				}
 			}
-
+			
+				
+			System.out.println(subjectWiseTutors);
+			System.out.println(subjectWiseTutors.size()+".................jsagjhsdgajsgdhajahsgdjahsgdjahg..................");
+			
 			if(ratings.length==0) {
 				return subjectWiseTutors;
 			}else {
 				for(TutorProfileDetails ratingWise: subjectWiseTutors) {
 					Integer rating = ratingWise.getRating();
+					System.out.println("................................................");
+					System.out.println(rating);
 					if(rating>=ratings[0]) {
 						ratingWiseTutors.add(ratingWise);
 					}
@@ -340,9 +475,9 @@ public class Dao {
 		//CASE 3
 		else if(subjects.length==0 && price.length>0) {
 			 
-			List<TutorProfileDetails> priceWiseTutors = new ArrayList<>();
-			List<ExpertiseAreas> priceWiseFilters = new ArrayList<>();
-			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<>();
+			List<TutorProfileDetails> priceWiseTutors = new ArrayList<TutorProfileDetails>();
+			List<ExpertiseAreas> priceWiseFilters = new ArrayList<ExpertiseAreas>();
+			List<TutorProfileDetails> ratingWiseTutors = new ArrayList<TutorProfileDetails>();
 			
 			for(String priceRange: price) {
 				Integer lowerValue = Integer.valueOf(priceRange.split("-")[0]);

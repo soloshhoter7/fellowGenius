@@ -1,9 +1,16 @@
 package fG.Service;
 
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import fG.Mapper.BookingDetailsMapper;
@@ -30,7 +37,9 @@ import fG.Entity.LearningAreas;
 import fG.Entity.Notification;
 import fG.Entity.PendingTutorProfileDetails;
 import fG.Entity.ReferralActivity;
-import fG.Model.ScheduleData;
+import fG.Entity.ScheduleData;
+import fG.Entity.SocialLogin;
+import fG.Entity.StudentLogin;
 import fG.Entity.StudentProfile;
 import fG.Entity.SubcategoryList;
 import fG.Entity.TutorAvailabilitySchedule;
@@ -50,10 +59,13 @@ import fG.Model.FeaturedExpertsModel;
 import fG.Model.NotificationModel;
 import fG.Model.ResponseModel;
 import fG.Model.ScheduleTime;
+import fG.Model.SocialLoginModel;
+import fG.Model.StudentLoginModel;
 import fG.Model.StudentProfileModel;
 import fG.Model.TutorAvailabilityScheduleModel;
 import fG.Model.TutorProfileDetailsModel;
 import fG.Model.TutorProfileModel;
+import fG.Model.TutorVerificationModel;
 import fG.Model.UserActivityAnalytics;
 import fG.Model.UserActivityModel;
 import fG.Model.UserDataModel;
@@ -70,6 +82,8 @@ import fG.Repository.repositoryFeaturedExperts;
 import fG.Repository.repositoryNotification;
 import fG.Repository.repositoryPendingTutorProfileDetails;
 import fG.Repository.repositoryReferralActivity;
+import fG.Repository.repositorySocialLogin;
+import fG.Repository.repositoryStudentLogin;
 import fG.Repository.repositoryStudentProfile;
 import fG.Repository.repositorySubCategoryList;
 import fG.Repository.repositoryTutorAvailabilitySchedule;
@@ -170,13 +184,19 @@ public class UserService implements UserDetailsService {
 
 	public String getLatestReferralStatus(Integer userId,UserReferrals userRef) {
 		String status="";
+		System.out.println("Referred user id "+userId);
 		List<BookingDetails> meetingsCompleted=userRef.getMeetingCompleted();
+		//System.out.println("Referred Meeting Completed "+ meetingsCompleted);
 		List<BookingDetails> meetingsSetup=userRef.getMeetingSetup();
+		//System.out.println("Referred Meeting Setup "+ meetingsSetup);
 		List<Users> registeredUsers=userRef.getReferCompleted();
+		//System.out.println("Referred Users : "+ registeredUsers);
 		//check for meeting completed
 		for(BookingDetails meetCompleted:meetingsCompleted) {
+			//System.out.println("meeting id: "+meetCompleted.getStudentId());
 			if(meetCompleted.getStudentId().equals(userId)) {
 				status="Meeting Completed";
+				//System.out.println(status);
 				return status;
 			}
 		}
@@ -185,30 +205,38 @@ public class UserService implements UserDetailsService {
 		for(BookingDetails meetSetup:meetingsSetup) {
 			if(meetSetup.getStudentId().equals(userId)) {
 				status="Meeting Setup";
+				//System.out.println(status);
 				return status;
 			}
 		}
+		
+		//check for offer expired
+		
+		
 		//check for registered and offer expired
 		for(Users user:registeredUsers) {
 			if(user.getUserId().equals(userId)) {
 			Integer diffInTime=meetingService.findDaysFromRegistration(user.getUserId(), new Date());
 			AppInfo thresholdTime=repAppInfo.keyExist("ReferralExpirationTime");
 			
-			if(diffInTime > Integer.parseInt(thresholdTime.getValue())) {
+			if(diffInTime > Integer.valueOf(thresholdTime.getValue())) {
 				status="Offer Expired";
 			}else {
 				status="Registered";
 			}
 				return status;
 			}
+			
+			
 		}
 		
 		return status;
 	}
 	
-	public List<UserReferralInfoModel> getUserReferralInformationEvents(String userId){
-		List<UserReferralInfoModel> referrerDetails = new ArrayList<>();
+	public List<UserReferralInfoModel> getUserReferralInformationEvents(String userId) throws ParseException{
+		List<UserReferralInfoModel> referrerDetails = new ArrayList<UserReferralInfoModel>();
 		UserReferrals userRef = repUserReferrals.findByUserId(Integer.valueOf(userId));
+		System.out.println(userRef);
 		//getting user referral information events
 		//getting the registered people with timestamp
 		if(userRef!=null) {
@@ -225,13 +253,14 @@ public class UserService implements UserDetailsService {
 			}
 		}
 		//sorting on the basis of timestamp
-		referrerDetails.sort(Comparator.comparing(UserReferralInfoModel::getTimeStamp));
+		referrerDetails.sort((r1,r2) -> r1.getTimeStamp().compareTo(r2.getTimeStamp()));
 		Collections.reverse(referrerDetails);
+		System.out.println(referrerDetails);
 		return referrerDetails;
 	}
 	
 	public boolean savePendingTutor(TutorProfileDetailsModel tutorModel)
-			throws IllegalArgumentException{
+			throws IllegalArgumentException, IllegalAccessException {
 		PendingTutorProfileDetails ptLoaded = repPendingTutorProfileDetails.emailExist(tutorModel.getEmail());
 		if (ptLoaded == null) {
 			// saving pt to generate id
@@ -307,15 +336,18 @@ public class UserService implements UserDetailsService {
 		tutProfileDetails.setPrice2(tutorModel.getPrice2());
 		tutProfileDetails.setPrice3(tutorModel.getPrice3());
 		tutProfileDetails.setAreaOfExpertise(tutorModel.getAreaOfExpertise());
+		System.out.println(tutProfileDetails);
 		repPendingTutorProfileDetails.save(tutProfileDetails);
 	}
 
 	public String validateUser(String email, String password, String method) {
+		System.out.println(email + " : " + password + " : " + method);
 		Users userLogin = repUsers.emailExist(email);
 		Date lastLogin = new Date();
 		UserActivity userActivity = new UserActivity();
 		if (userLogin != null) {
 			if (encoder.matches("social", method)) {
+				System.out.println("entered social");
 				userActivity.setUserId(userLogin);
 				userActivity.setType("login");
 				userLogin.setLastLogin(lastLogin);
@@ -325,15 +357,18 @@ public class UserService implements UserDetailsService {
 
 					repUsers.save(userLogin);
 					repUserActivity.save(userActivity);
+					System.out.println("social id exists and matches");
 					return String.valueOf(userLogin.getUserId());
 				} else {
 					return null;
 				}
 			} else if (encoder.matches("manual", method)) {
+				System.out.println("entered manual");
 				userActivity.setUserId(userLogin);
-
+				userActivity.setType("login");
 				userLogin.setLastLogin(lastLogin);
 				if (encoder.matches(password, userLogin.getPassword())) {
+					System.out.println("password matches!");
 					repUsers.save(userLogin);
 					repUserActivity.save(userActivity);
 					return String.valueOf(userLogin.getUserId());
@@ -376,8 +411,8 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public void verifyExpert(String id) {
-		String whatsappMessage;
+	public boolean verifyExpert(String id) {
+		String whatsappMessage = "";
 		PendingTutorProfileDetails pt = repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
 		TutorProfile tutorProfile = new TutorProfile();
 		tutorProfile.setContact(pt.getContact());
@@ -448,6 +483,8 @@ public class UserService implements UserDetailsService {
 //			TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 			TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorProfile.getTid());
 			// for setting the expertise areas
+			Integer minPrice = Integer.MAX_VALUE;
+			Integer maxPrice = 0;
 
 			for (expertise area : pt.getAreaOfExpertise()) {
 				ExpertiseAreas subject = new ExpertiseAreas();
@@ -457,8 +494,9 @@ public class UserService implements UserDetailsService {
 					subject.setSubCategory(subCateg);
 					subject.setCategory(subCateg.getCategory());
 					subject.setPrice(area.getPrice());
-					if (tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
-							.noneMatch(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory()))) {
+					if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
+							.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory()))
+							.findFirst().isPresent()) {
 						tutProfileDetails.getAreaOfExpertise().add(subject);
 
 					}
@@ -486,17 +524,23 @@ public class UserService implements UserDetailsService {
 					"and contact :"+tutorProfile.getContact()+" as an Expert.";
 			whatsappMessage+=" So the total number of users now are "+repUsers.count();
 			whatsappService.initiateWhatsAppMessage(whatsappMessage);
+			return true;
+		} else {
+
+			return false;
 		}
 	}
 
 	// for registering a user
 	public boolean saveUserProfile(registrationModel registrationModel) {
-		String whatsappMessage;
+		Integer totalUsersCount = Math.toIntExact(repUsers.count());
+		String whatsappMessage = "";
 		UserActivity userActivity = new UserActivity();
 		userActivity.setType("signup");
 		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
 			return false;
 		}
+		System.out.println(registrationModel);
 		if (registrationModel.getRole().equals("Learner")) {
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());
@@ -504,21 +548,22 @@ public class UserService implements UserDetailsService {
 			studentProfile.setFullName(registrationModel.getFullName());
 			//check if expert code is valid or not
 			
-			if(!Objects.equals(parseReferralCode(registrationModel.getExpertCode()), "") ||registrationModel.getExpertCode()!=null) {
+			if(parseReferralCode(registrationModel.getExpertCode())!=""||registrationModel.getExpertCode()!=null) {
 				studentProfile.setExpertCode(registrationModel.getExpertCode());
 			}
 			studentProfile.setUpiID(registrationModel.getUpiId());
 			if (dao.saveStudentProfile(studentProfile)) {
+				System.out.println("Inside save student profile");
 				Users user = new Users();
 				user.setEmail(registrationModel.getEmail());
 				user.setPassword(encoder.encode(registrationModel.getPassword()));
 				user.setUserId(studentProfile.getSid());
 				user.setRole("Learner");
 				user.setSocialId(encoder.encode("N/A"));
-				whatsappMessage = "Hey Admin, a new user "+studentProfile.getFullName()+" has registered with email :"+studentProfile.getEmail()+" " +
-						"and contact :"+studentProfile.getContact()+" as a Learner.";
+				whatsappMessage = "Hey Admin, a new user "+studentProfile.getFullName()+" has registered with email :"+registrationModel.getEmail()+" " +
+						"and contact :"+registrationModel.getContact()+" as a Learner.";
 				//check if expert code is valid or not
-				if(!Objects.equals(parseReferralCode(registrationModel.getExpertCode()), "")) {
+				if(parseReferralCode(registrationModel.getExpertCode())!="") {
 					user.setExpertCode(registrationModel.getExpertCode());
 				}
 				// user.setExpertCode(registrationModel.getExpertCode());
@@ -531,7 +576,9 @@ public class UserService implements UserDetailsService {
 				repUserActivity.save(userActivity);
 				
 				if(user.getExpertCode()!=null) {
+					System.out.println("User expert code: "+user.getExpertCode());
 					if(isValidFormatForReferralCode(user.getExpertCode())) {
+						System.out.println("Inside valid format");
 						updateReferralCompleted(parseReferralCode(user.getExpertCode()),user);
 						saveReferralActivity(user,registrationModel.getReferActivity());
 					}
@@ -550,35 +597,52 @@ public class UserService implements UserDetailsService {
 	
 	private void saveReferralActivity(Users user, String referActivityType) {
 		// TODO Auto-generated method stub
+		System.out.println("Refer Activity Type "+ referActivityType);
+		String referType=referActivityType.trim();
+		System.out.println(referActivityType.equals("LI"));
+		System.out.println(referType.equals("LI"));
 		if(!referActivityType.equals("NO")) {
 			ReferralActivity referralActivity=new ReferralActivity();
 			referralActivity.setUserId(user);
-			switch (referActivityType) {
-				case "MA":
-					referralActivity.setType("MAIL");
-					break;
-				case "LI":
-					referralActivity.setType("LINKEDIN");
-					break;
-				case "WA":
-					referralActivity.setType("WHATSAPP");
-					break;
+			
+			if(referActivityType.equals("MA")) {
+				referralActivity.setType("MAIL");
+			}else if(referActivityType.equals("LI")) {
+				System.out.println("Inside the linkedin method");
+				referralActivity.setType("LINKEDIN");
+			}else if(referActivityType.equals("WA")){
+				referralActivity.setType("WHATSAPP");
+			}else {
+				
 			}
+			System.out.println("Refer Activity Object :"+referralActivity);
 			repReferralActivity.save(referralActivity);
+			System.out.println(referralActivity);
+		}else {
+			System.out.println("User has not come via refer URLs");
 		}
 	}
 
 	void updateReferralCompleted(String userId,Users user){
-		if(userId!=null&& !userId.equals("")) {
+		if(userId!=null&&userId!="") {
+			System.out.println(repUserReferrals.findByUserId(Integer.valueOf(userId)));
 			UserReferrals  ur = repUserReferrals.findByUserId(Integer.valueOf(userId));
 			if(ur==null) {
+				System.out.println("user referral is null");
 				ur = new UserReferrals();
 			}
 			ur.setUser(repUsers.idExists(Integer.valueOf(userId)));
 			List<Users> refers = ur.getReferCompleted();
 			refers.add(user);
 			ur.setReferCompleted(refers);
+			System.out.println("completed till here");
+			System.out.println("completed till here");
+			System.out.println("completed till here");
+			System.out.println("completed till here");
+			System.out.println("User referral here");
 			repUserReferrals.save(ur);
+			
+			
 		}
 		
 	}
@@ -587,14 +651,19 @@ public class UserService implements UserDetailsService {
 		//will work in 2022 only 🤣🤣
 		return code.matches("FG22[A-Z]{2}[\\d]{4}");
 	}
-
+	
+	public boolean getReferralInformation() {
+		System.out.println("referralInformation : "+repUserReferrals.findByUserId(Integer.valueOf(765270902)));
+		return false;
+	}
+	
 	//returns the valid userId after parsing refCode
 	public String parseReferralCode(String refCode){
 //		String refCode = "FG21SS0902";     //input string
 		String lastFourDigits = "";
 				//substring containing last 4 characters
 		String rawInitials = "";
-		String userInitials;
+		String userInitials="";
 		if(refCode!=null) {
 			
 		
@@ -604,15 +673,19 @@ public class UserService implements UserDetailsService {
 		    rawInitials = refCode.substring(4,6); 
 		} 
 		List<Users> matchingUsers = repUsers.findByLast4Digits(lastFourDigits);
+		Integer userId=0;
 		
 		if(matchingUsers.size()>0) {
-			for (Users matchingUser : matchingUsers) {
-				Users user = new Users();
-				user = matchingUser;
+			for(int i=0;i<matchingUsers.size();i++) {
+				Users user= new Users();
+				user = matchingUsers.get(i);
+				System.out.println("user email:"+user.getEmail());
+				System.out.println("raw Initials :"+rawInitials);
 				userInitials = genInitials(fetchUserName(user.getUserId(), user.getRole()));
 				userInitials = userInitials.toUpperCase();
-				if (rawInitials.equals(userInitials)) {
-					return user.getUserId().toString();
+				System.out.println("user initials :"+userInitials);
+				if(rawInitials.equals(userInitials)) {
+					 return user.getUserId().toString();
 				}
 			}
 		}
@@ -621,23 +694,29 @@ public class UserService implements UserDetailsService {
 		
 	}
 	String genInitials(String fullName) {
-		StringBuilder initials= new StringBuilder();
+		String initials="";
 		if(fullName.length()>1) {
 			String[] name = fullName.split("\\s+");
+			System.out.println("The name array is ");
+			for(String n:name) {
+				System.out.print(n + " ");
+			}
 			if(name.length>2) { //TSK
-				initials.append(name[0].charAt(0));
-				initials.append(name[name.length - 1].charAt(0));
+				initials+=name[0].charAt(0);
+				initials+=name[name.length-1].charAt(0);
 			}else if(name.length==1) { //TT
-				initials.append(name[0].charAt(0));
-				initials.append(name[0].charAt(0));
+				initials+=name[0].charAt(0);
+				initials+=name[0].charAt(0);
 			}else { //TK,SK or SS
 				for(String n:name) {
-					initials.append(n.charAt(0));
+					initials+=n.charAt(0);
 				}
 			}
 			
 		}
-		return initials.toString();
+		System.out.println("The initials are : "+ initials);
+		return initials;
+		
 	}
 	public Integer genUserBookingId() {
 		IdGenerator id = new IdGenerator();
@@ -652,7 +731,7 @@ public class UserService implements UserDetailsService {
 	// for getting student details after login
 	public StudentProfileModel getStudentDetails(String userId) {
 		StudentProfileModel stuProfileModel = new StudentProfileModel();
-		StudentProfile stuProfile;
+		StudentProfile stuProfile = new StudentProfile();
 		stuProfile = dao.getStudentDetails(userId);
 		stuProfileModel.setSid(stuProfile.getSid());
 		stuProfileModel.setContact(stuProfile.getContact());
@@ -693,7 +772,8 @@ public class UserService implements UserDetailsService {
 			LearningAreas subject = new LearningAreas();
 			subject.setUserId(studentProfile);
 			subject.setSubject(area);
-			if (studentProfileLoaded.getLearningAreas().stream().noneMatch(o -> o.getSubject().equals(area))) {
+			if (!studentProfileLoaded.getLearningAreas().stream().filter(o -> o.getSubject().equals(area)).findFirst()
+					.isPresent()) {
 				studentProfile.getLearningAreas().add(subject);
 			}
 		}
@@ -705,7 +785,8 @@ public class UserService implements UserDetailsService {
 
 	// saving updating details of tutor
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
-			throws IllegalArgumentException{
+			throws IllegalArgumentException, IllegalAccessException {
+		System.out.println("here =>> " + tutorModel);
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 		TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
 		tutProfileDetails.setTid(tutorModel.getTid());
@@ -741,8 +822,9 @@ public class UserService implements UserDetailsService {
 				subject.setSubCategory(subCateg);
 				subject.setCategory(subCateg.getCategory());
 				subject.setPrice(area.getPrice());
-				if (tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
-						.noneMatch(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory()))) {
+				if (!tutorProfileDetailsLoaded.getAreaOfExpertise().stream()
+						.filter(o -> o.getSubCategory().getSubCategoryName().equals(area.getSubCategory())).findFirst()
+						.isPresent()) {
 					tutProfileDetails.getAreaOfExpertise().add(subject);
 
 				}
@@ -830,6 +912,7 @@ public class UserService implements UserDetailsService {
 	public TutorProfileModel getTutorDetails(String userId) {
 		TutorProfileModel tutorProfileModel = new TutorProfileModel();
 		TutorProfile tutorProfile = dao.getTutorDetails(userId);
+		System.out.println("tutorProfile => " + tutorProfile);
 		tutorProfileModel.setContact(tutorProfile.getContact());
 		tutorProfileModel.setDateOfBirth(tutorProfile.getDateOfBirth());
 		tutorProfileModel.setEmail(tutorProfile.getEmail());
@@ -837,13 +920,14 @@ public class UserService implements UserDetailsService {
 		tutorProfileModel.setTid(tutorProfile.getTid());
 		tutorProfileModel.setProfilePictureUrl(tutorProfile.getProfilePictureUrl());
 		tutorProfileModel.setBookingId(tutorProfile.getBookingId());
+		System.out.println("tutorProfileModel =>" + tutorProfileModel);
 		return tutorProfileModel;
 	}
 
 	// for getting the list of teachers with 100% profile completion
 	public List<TutorProfileDetailsModel> getTutorList(String subject) {
-		List<TutorProfileDetailsModel> tutListModel = new ArrayList<>();
-		List<TutorProfileDetails> tutList;
+		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
+		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
 		if (!subject.equals("*")) {
 			tutList = dao.getTutorList(subject);
 			for (TutorProfileDetails tutProfileDetails : tutList) {
@@ -855,6 +939,7 @@ public class UserService implements UserDetailsService {
 		} else {
 			tutList = repTutorProfileDetails.findAll();
 			for (TutorProfileDetails tutProfileDetails : tutList) {
+				//TutorProfileDetailsModel tutorModel=copyTutorProfileDetails(tutProfileDetails);
 				TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 				tutListModel.add(tutorModel);
 			}
@@ -863,10 +948,11 @@ public class UserService implements UserDetailsService {
 	}
 
 	public List<TutorProfileDetailsModel> fetchAllTutorList() throws NumberFormatException, ParseException {
-		List<TutorProfileDetailsModel> tutListModel = new ArrayList<>();
-		List<TutorProfileDetails> tutList;
+		List<TutorProfileDetailsModel> tutListModel = new ArrayList<TutorProfileDetailsModel>();
+		List<TutorProfileDetails> tutList = new ArrayList<TutorProfileDetails>();
 		tutList = repTutorProfileDetails.findAll();
 		for (TutorProfileDetails tutProfileDetails : tutList) {
+			//TutorProfileDetailsModel tutorModel=copyTutorProfileDetails(tutProfileDetails);
 			TutorProfileDetailsModel tutorModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 			tutorModel.setLastLogin(returnLastLoginTime(tutProfileDetails.getTid()));
 			ArrayList<ScheduleTime> schedule = getTutorTimeAvailabilityTimeArray(
@@ -879,7 +965,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public String returnLastLoginTime(Integer userId) {
-		String lastLogin;
+		String lastLogin = "";
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 		Users user = repUsers.idExists(userId);
 		if (user.getLastLogin() != null) {
@@ -890,9 +976,20 @@ public class UserService implements UserDetailsService {
 		return lastLogin;
 	}
 
+	// for updating tutor verification
+	public boolean updateTutorVerification(TutorVerificationModel tutorVerify) {
+		if (dao.updateTutorVerification(tutorVerify) == true) {
+			dao.updateProfileCompleted(99, tutorVerify.getTid());
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// getting tutor profile details with tutor bookingId
 	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(Integer bookingId) {
 		TutorProfileDetails tutProfileDetails = dao.fetchTutorProfileDetailsByBookingId(bookingId);
+		//TutorProfileDetailsModel tutProfileDetailsModel=copyTutorProfileDetails(tutProfileDetails);
 		TutorProfileDetailsModel tutProfileDetailsModel = tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 		tutProfileDetailsModel.setTid(null);
 		return tutProfileDetailsModel;
@@ -904,10 +1001,56 @@ public class UserService implements UserDetailsService {
 		return tutorProfileDetailsMapper.EntityToDto(tutProfileDetails);
 	}
 
+	// from copying content of tutorProfileDetails entity to model
+	public TutorProfileDetailsModel copyTutorProfileDetails(TutorProfileDetails tutProfileDetails) {
+		TutorProfileDetailsModel tutorProfileDetailsModel = new TutorProfileDetailsModel();
+		tutorProfileDetailsModel.setTid(tutProfileDetails.getTid());
+		tutorProfileDetailsModel.setFullName(tutProfileDetails.getFullName());
+		tutorProfileDetailsModel.setInstitute(tutProfileDetails.getInstitute());
+		tutorProfileDetailsModel.setEducationalQualifications(tutProfileDetails.getEducationalQualifications());
+		tutorProfileDetailsModel.setPrice1(tutProfileDetails.getPrice1());
+		tutorProfileDetailsModel.setPrice2(tutProfileDetails.getPrice2());
+		tutorProfileDetailsModel.setPrice3(tutProfileDetails.getPrice3());
+		tutorProfileDetailsModel.setDescription(tutProfileDetails.getDescription());
+		tutorProfileDetailsModel.setSpeciality(tutProfileDetails.getSpeciality());
+		tutorProfileDetailsModel.setRating(tutProfileDetails.getRating());
+		tutorProfileDetailsModel.setReviewCount(tutProfileDetails.getReviewCount());
+		tutorProfileDetailsModel.setLessonCompleted(tutProfileDetails.getLessonCompleted());
+		tutorProfileDetailsModel.setProfilePictureUrl(tutProfileDetails.getProfilePictureUrl());
+		tutorProfileDetailsModel.setProfessionalSkills(tutProfileDetails.getProfessionalSkills());
+		tutorProfileDetailsModel.setCurrentOrganisation(tutProfileDetails.getCurrentOrganisation());
+		tutorProfileDetailsModel.setPreviousOrganisations(tutProfileDetails.getPreviousOrganisations());
+		tutorProfileDetailsModel.setProfileCompleted(tutProfileDetails.getProfileCompleted());
+		tutorProfileDetailsModel.setYearsOfExperience(tutProfileDetails.getYearsOfExperience());
+		tutorProfileDetailsModel.setLinkedInProfile(tutProfileDetails.getLinkedInProfile());
+		tutorProfileDetailsModel.setBookingId(tutProfileDetails.getBookingId());
+		tutorProfileDetailsModel.setUpiID(tutProfileDetails.getUpiId());
+		tutorProfileDetailsModel.setGst(tutProfileDetails.getGst());
+		tutorProfileDetailsModel.setCurrentDesignation(tutProfileDetails.getCurrentDesignation());
+		for (ExpertiseAreas area : tutProfileDetails.getAreaOfExpertise()) {
+			expertise exp = new expertise();
+			exp.setCategory(area.getCategory().getCategoryName());
+			exp.setSubCategory(area.getSubCategory().getSubCategoryName());
+			exp.setPrice(area.getPrice());
+			tutorProfileDetailsModel.getAreaOfExpertise().add(exp);
+		}
+		System.out.println(tutorProfileDetailsModel);
+		return tutorProfileDetailsModel;
+	}
+
+	// for saving social login details
+	public boolean registerSocialLogin(SocialLoginModel socialLoginModel) {
+		SocialLogin socialLogin = new SocialLogin();
+		socialLogin.setEmail(socialLoginModel.getEmail());
+		socialLogin.setFullName(socialLoginModel.getFullName());
+		socialLogin.setId(socialLoginModel.getId());
+		return dao.saveSocialLogin(socialLogin);
+	}
 
 	// for saving tutor Availability Schedule
 	public void saveTutorAvailabilitySchedule(TutorAvailabilityScheduleModel tutorAvailabilityScheduleModel) {
-		ArrayList<String> availableSchedules = new ArrayList<>();
+		ArrayList<String> availableSchedules = new ArrayList<String>();
+		System.out.println(tutorAvailabilityScheduleModel.getAllAvailabilitySchedule());
 		for (ScheduleData schedule : tutorAvailabilityScheduleModel.getAllAvailabilitySchedule()) {
 			availableSchedules.add(schedule.serialize());
 		}
@@ -970,8 +1113,9 @@ public class UserService implements UserDetailsService {
 	public ArrayList<ScheduleData> getStudentSchedule(String sid) throws ParseException {
 		ArrayList<BookingDetails> bookings = (ArrayList<BookingDetails>) meetingDao
 				.fetchAllStudentBookings(Integer.valueOf(sid));
-		ArrayList<ScheduleData> bookingSchedule = new ArrayList<>();
+		ArrayList<ScheduleData> bookingSchedule = new ArrayList<ScheduleData>();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		System.out.println("bookings array size ->" + bookings.size());
 		for (int i = 0; i < bookings.size(); i++) {
 			BookingDetails booking = bookings.get(i);
 
@@ -1000,6 +1144,7 @@ public class UserService implements UserDetailsService {
 		String otp = String.valueOf((m + new Random().nextInt(9 * m)));
 		mailService.sendVerificationEmail(email, otp);
 		String otpFinal = encoder.encode(otp);
+		System.out.println(otpFinal);
 		return new AuthenticationResponse(otpFinal);
 
 	}
@@ -1025,7 +1170,7 @@ public class UserService implements UserDetailsService {
 
 	public List<TutorProfileDetailsModel> fetchAllLinkedTutors(Integer userId) {
 		List<TutorProfileDetails> tutors = dao.fetchAllLinkedTutors(userId);
-		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<>();
+		List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 		for (TutorProfileDetails tutor : tutors) {
 			tutorsModel.add(tutorProfileDetailsMapper.EntityToDto(tutor));
 		}
@@ -1044,7 +1189,7 @@ public class UserService implements UserDetailsService {
 		if (tutors == null) {
 			return null;
 		} else {
-			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<>();
+			List<TutorProfileDetailsModel> tutorsModel = new ArrayList<TutorProfileDetailsModel>();
 			for (TutorProfileDetails tutor : tutors) {
 				tutorsModel.add(tutorProfileDetailsMapper.EntityToDto(tutor));
 			}
@@ -1066,6 +1211,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean updatePassword(String userId, String password) {
+		System.out.println(userId);
 		if (repUsers.idExists(Integer.valueOf(userId)) != null) {
 			String newPassword = encoder.encode(password);
 			repUsers.updatePassword(Integer.valueOf(userId), newPassword);
@@ -1079,14 +1225,13 @@ public class UserService implements UserDetailsService {
 	public boolean addNewCategory(Category category) {
 		// TODO Auto-generated method stub
 		CategoryList newCategory = new CategoryList();
-		List<CategoryList> allCategories;
+		List<CategoryList> allCategories = new ArrayList<CategoryList>();
 		allCategories = repCategory.findAll();
 		int categoryFoundFlag = 0;
 		if (allCategories.size() > 0) {
 			for (CategoryList c : allCategories) {
 				if (c.getCategoryName().equals(category.getCategory())) {
 					categoryFoundFlag = 1;
-					break;
 				}
 			}
 		}
@@ -1101,11 +1246,13 @@ public class UserService implements UserDetailsService {
 
 	public List<Category> getAllCategories() {
 		List<CategoryList> categoryEntity = repCategory.findAll();
-		List<Category> categoryModel = new ArrayList<>();
-		for (CategoryList c : categoryEntity) {
-			Category newC = new Category();
-			newC.setCategory(c.getCategoryName());
-			categoryModel.add(newC);
+		List<Category> categoryModel = new ArrayList<Category>();
+		if (categoryEntity != null) {
+			for (CategoryList c : categoryEntity) {
+				Category newC = new Category();
+				newC.setCategory(c.getCategoryName());
+				categoryModel.add(newC);
+			}
 		}
 		return categoryModel;
 	}
@@ -1125,9 +1272,10 @@ public class UserService implements UserDetailsService {
 
 	public List<Category> getSubCategories(String category) {
 		CategoryList categ = repCategory.findCategory(category);
-		List<Category> subCategsModel = new ArrayList<>();
+		List<Category> subCategsModel = new ArrayList<Category>();
 		if (categ != null) {
 			List<SubcategoryList> subCategs = repSubcategory.findSubCategories(categ.getCategoryId());
+			System.out.println(subCategs);
 			if (subCategs != null) {
 				for (SubcategoryList sc : subCategs) {
 					Category cat = new Category();
@@ -1142,20 +1290,22 @@ public class UserService implements UserDetailsService {
 	}
 
 	public List<Category> getAllSubCategories() {
-		List<Category> categModel = new ArrayList<>();
+		List<Category> categModel = new ArrayList<Category>();
 		List<SubcategoryList> subCategs = repSubcategory.findAll();
-		for (SubcategoryList sc : subCategs) {
-			Category categ = new Category();
-			categ.setCategory(sc.getCategory().getCategoryName());
-			categ.setSubCategory(sc.getSubCategoryName());
-			categModel.add(categ);
+		if (subCategs != null) {
+			for (SubcategoryList sc : subCategs) {
+				Category categ = new Category();
+				categ.setCategory(sc.getCategory().getCategoryName());
+				categ.setSubCategory(sc.getSubCategoryName());
+				categModel.add(categ);
+			}
 		}
 		return categModel;
 	}
 
 	// for fetching notifications using userId
 	public List<NotificationModel> fetchNotifications(String userId) {
-		List<NotificationModel> notifList = new ArrayList<>();
+		List<NotificationModel> notifList = new ArrayList<NotificationModel>();
 		if (userId != null) {
 			List<Notification> notifications = repNotification.notificationExist(userId);
 			if (notifications != null) {
@@ -1179,13 +1329,19 @@ public class UserService implements UserDetailsService {
 					notifList.add(nModel);
 				}
 			}
-			notifList.sort((n1, n2) -> n2.getTimestamp().compareTo(n1.getTimestamp()));
+			if (notifList != null) {
+				Collections.sort(notifList, new Comparator<NotificationModel>() {
+					public int compare(NotificationModel n1, NotificationModel n2) {
+						return n2.getTimestamp().compareTo(n1.getTimestamp());
+					}
+				});
+			}
 		}
 		return notifList;
 	}
 
 	public List<AppInfoModel> getEarningAppInfo() {
-		List<AppInfoModel> appInfoList = new ArrayList<>();
+		List<AppInfoModel> appInfoList = new ArrayList<AppInfoModel>();
 		List<AppInfo> appInfo = repAppInfo.typeExist("Earnings");
 		if (appInfo != null) {
 			for (AppInfo ai : appInfo) {
@@ -1234,13 +1390,16 @@ public class UserService implements UserDetailsService {
 	}
 
 	public List<PendingTutorProfileDetails> fetchPendingExperts() {
-		List<PendingTutorProfileDetails> result = new ArrayList<>();
+		List<PendingTutorProfileDetails> result = new ArrayList<PendingTutorProfileDetails>();
 		List<PendingTutorProfileDetails> pendingTutors = repPendingTutorProfileDetails.findAll();
-		for (PendingTutorProfileDetails tut : pendingTutors) {
-			if (repUsers.emailExist(tut.getEmail()) == null) {
-				result.add(tut);
-			} else {
-				repPendingTutorProfileDetails.delete(tut);
+		List<PendingTutorProfileDetails> toBeDeleted = new ArrayList<PendingTutorProfileDetails>();
+		if (pendingTutors != null) {
+			for (PendingTutorProfileDetails tut : pendingTutors) {
+				if (repUsers.emailExist(tut.getEmail()) == null) {
+					result.add(tut);
+				} else {
+					repPendingTutorProfileDetails.delete(tut);
+				}
 			}
 		}
 		return result;
@@ -1274,13 +1433,14 @@ public class UserService implements UserDetailsService {
 			sc.setCategory(fetchedCategory);
 			sc.setSubCategoryName(subCategory);
 			repSubcategory.save(sc);
+			return true;
 		} else {
 			SubcategoryList sc = new SubcategoryList();
 			sc.setCategory(categ);
 			sc.setSubCategoryName(subCategory);
 			repSubcategory.save(sc);
+			return true;
 		}
-		return true;
 	}
 
 	public String fetchUserName(Integer userId, String role) {
@@ -1296,63 +1456,87 @@ public class UserService implements UserDetailsService {
 	}
 
 	public String fetchExpertiseString(Integer userId) {
-		StringBuilder expertise = new StringBuilder();
+		String expertise = "";
 		TutorProfileDetails tut = new TutorProfileDetails();
 		tut = repTutorProfileDetails.idExist(userId);
 		if (tut.getAreaOfExpertise() != null) {
 			Integer count = 0;
 			for (ExpertiseAreas expa : tut.getAreaOfExpertise()) {
 				count++;
-				expertise.append(expa.getCategory().getCategoryName());
-				expertise.append(" : ");
-				expertise.append(expa.getSubCategory().getSubCategoryName());
+				expertise += expa.getCategory().getCategoryName();
+				expertise += " : ";
+				expertise += expa.getSubCategory().getSubCategoryName();
 				if (!count.equals(tut.getAreaOfExpertise().size())) {
-					expertise.append(" , ");
+					expertise += " , ";
 				}
 			}
 		}
-		return expertise.toString();
+		return expertise;
 	}
 
+	public List<String> fetchExpertiseList(Integer userId) {
+		List<String> expertise = new ArrayList<String>();
+		TutorProfileDetails tut = new TutorProfileDetails();
+		tut = repTutorProfileDetails.idExist(userId);
+		if (tut.getAreaOfExpertise() != null) {
+
+			for (ExpertiseAreas expa : tut.getAreaOfExpertise()) {
+				String expt = "";
+				expt += expa.getCategory().getCategoryName();
+				expt += " : ";
+				expt += expa.getSubCategory().getSubCategoryName();
+				expertise.add(expt);
+			}
+		}
+		return expertise;
+	}
 
 	public List<UserDataModel> fetchAllUserData() {
 		List<Users> allUsers = repUsers.findAll();
-		List<UserDataModel> result = new ArrayList<>();
-		for (Users u : allUsers) {
-			UserDataModel ud = new UserDataModel();
-			ud.setEmail(u.getEmail());
-			ud.setRole(u.getRole());
-			ud.setFullName(fetchUserName(u.getUserId(), u.getRole()));
-			ud.setUserId(u.getUserId().toString());
-			if (u.getRole().equals("Expert")) {
-				TutorProfileDetails tut = new TutorProfileDetails();
-				tut = repTutorProfileDetails.idExist(u.getUserId());
-				ud.setUpiID(tut.getUpiId());
-				ud.setExpertises(fetchExpertiseString(u.getUserId()));
+		List<UserDataModel> result = new ArrayList<UserDataModel>();
+		if (allUsers != null) {
+			for (Users u : allUsers) {
+				UserDataModel ud = new UserDataModel();
+				ud.setEmail(u.getEmail());
+				ud.setRole(u.getRole());
+				ud.setFullName(fetchUserName(u.getUserId(), u.getRole()));
+				ud.setUserId(u.getUserId().toString());
+				if (u.getRole().equals("Expert")) {
+					TutorProfileDetails tut = new TutorProfileDetails();
+					tut = repTutorProfileDetails.idExist(u.getUserId());
+					ud.setUpiID(tut.getUpiId());
+					ud.setExpertises(fetchExpertiseString(u.getUserId()));
+				}
+				if (u.getRole().equals("Learner")) {
+					StudentProfile su = repStudentProfile.idExist(u.getUserId());
+					ud.setUpiID(su.getUpiID());
+					ud.setExpertCode(u.getExpertCode());
+				}
+				result.add(ud);
 			}
-			if (u.getRole().equals("Learner")) {
-				StudentProfile su = repStudentProfile.idExist(u.getUserId());
-				ud.setUpiID(su.getUpiID());
-				ud.setExpertCode(u.getExpertCode());
-			}
-			result.add(ud);
 		}
 
 		return result;
 	}
 
+	public String validateAdmin(String email, String password, String method) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public List<FeaturedExpertsModel> fetchFeaturedExperts() {
-		List<FeaturedExpertsModel> expertsDTO = new ArrayList<>();
+		List<FeaturedExpertsModel> expertsDTO = new ArrayList<FeaturedExpertsModel>();
 		List<FeaturedExperts> experts = repFeaturedExperts.findAll();
-		for (FeaturedExperts e : experts) {
-			expertsDTO.add(copyFeaturedExpertsToDTO(e));
+		if (experts != null) {
+			for (FeaturedExperts e : experts) {
+				expertsDTO.add(copyFeaturedExpertsToDTO(e));
+			}
 		}
 		return expertsDTO;
 	}
 
 	public boolean saveFeaturedExpert(FeaturedExpertsModel fe) {
-		repFeaturedExperts.save(copyFeaturedExperts(fe));
-		return true;
+		return repFeaturedExperts.save(copyFeaturedExperts(fe)) != null;
 	}
 
 	public void deleteFeaturedExpert(FeaturedExpertsModel fe) {
@@ -1401,9 +1585,9 @@ public class UserService implements UserDetailsService {
 
 	// to check if expert has a schedule within a week
 	public boolean checkIfExpertHasSchedule(Integer tid) throws ParseException {
-		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(tid);
+		TutorAvailabilityScheduleModel tutorSchedule = dao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		ArrayList<ScheduleTime> timeArray = scheduleService.getTimeArray(tutorSchedule.getAllAvailabilitySchedule(),
-				tid);
+				Integer.valueOf(tid));
 		return timeArray != null && timeArray.size() != 0;
 	}
 
@@ -1424,15 +1608,19 @@ public class UserService implements UserDetailsService {
 					if (lastNotificationTime == null) {
 						sch.setNoScheduleNotificationTime(now);
 						repTutorAvailabilitySchedule.save(sch);
+//						experts.add(tut);
 						mailService.sendExpertNoScheduleNotification(tut);
 					} else {
 						long duration = now.getTime() - lastNotificationTime.getTime();
 						long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
 						if (diffInHours >= 24) {
+//							experts.add(tut);
 							sch.setNoScheduleNotificationTime(now);
 							repTutorAvailabilitySchedule.save(sch);
 							mailService.sendExpertNoScheduleNotification(tut);
 							
+						} else {
+							System.out.println("less than 24 hours !");
 						}
 					}
 				}
@@ -1445,12 +1633,13 @@ public class UserService implements UserDetailsService {
 	// notify all experts with no schedule
 	public void notifyAllExpertsWithNoSchedule(String[] users) throws NumberFormatException, ParseException {
 		for (String user : users) {
+			System.out.println("notifying expert :" + user);
 			notifyNoScheduleExpert(Integer.valueOf(user));
 		}
 	}
 	//fetching last 50 login data
 	public ArrayList<UserActivityModel> fetchAllLoginData() {
-		ArrayList<UserActivityModel> loginData = new ArrayList<>();
+		ArrayList<UserActivityModel> loginData = new ArrayList<UserActivityModel>();
 		List<UserActivity> userActivities = repUserActivity.findAllLoginAcitivities();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		if (userActivities != null) {
@@ -1465,21 +1654,22 @@ public class UserService implements UserDetailsService {
 				loginData.add(uam);
 			}
 			//sort in desc order of login date
-			loginData.sort((o1, o2) -> {
-				try {
-					if (sdf.parse(o1.getLoginTime()).before(sdf.parse(o2.getLoginTime()))) {
-						return 1;
-					} else if (sdf.parse(o1.getLoginTime()).after(sdf.parse(o2.getLoginTime()))) {
-						return -1;
-					} else {
-						return 0;
+			Collections.sort(loginData,(o1, o2) -> {
+					try {
+						if(sdf.parse(o1.getLoginTime()).before(sdf.parse(o2.getLoginTime()))){
+							return 1;
+						} else if(sdf.parse(o1.getLoginTime()).after(sdf.parse(o2.getLoginTime()))){
+							return -1;
+						}else{
+							return 0;
+						}
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					return 0;
 				}
-				return 0;
-			});
+			);
 			//Collections.reverse(loginData);
 		}
 
@@ -1487,7 +1677,7 @@ public class UserService implements UserDetailsService {
 	}
 	//fetching last 50 sign up data
 	public ArrayList<UserActivityModel> fetchAllSignUpData() {
-		ArrayList<UserActivityModel> signUpData = new ArrayList<>();
+		ArrayList<UserActivityModel> signUpData = new ArrayList<UserActivityModel>();
 		List<UserActivity> userActivities = repUserActivity.findAllSignUpAcitivities();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		if (userActivities != null) {
@@ -1502,21 +1692,22 @@ public class UserService implements UserDetailsService {
 				uam.setReferralCode(user.getExpertCode());
 				signUpData.add(uam);
 			}
-			signUpData.sort((o1, o2) -> {
-				try {
-					if (sdf.parse(o1.getSignUpTime()).before(sdf.parse(o2.getSignUpTime()))) {
-						return 1;
-					} else if (sdf.parse(o1.getSignUpTime()).after(sdf.parse(o2.getSignUpTime()))) {
-						return -1;
-					} else {
+			Collections.sort(signUpData,(o1, o2) -> {
+						try {
+							if(sdf.parse(o1.getSignUpTime()).before(sdf.parse(o2.getSignUpTime()))){
+								return 1;
+							} else if(sdf.parse(o1.getSignUpTime()).after(sdf.parse(o2.getSignUpTime()))){
+								return -1;
+							}else{
+								return 0;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						return 0;
 					}
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return 0;
-			});
+			);
 
 		}
 
@@ -1525,28 +1716,32 @@ public class UserService implements UserDetailsService {
 	//fetching all previous meeting data
 	public ArrayList<BookingDetailsModel> fetchAllMeetingsData() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		ArrayList<BookingDetailsModel> allBookingsModel = new ArrayList<>();
+		ArrayList<BookingDetailsModel> allBookingsModel = new ArrayList<BookingDetailsModel>();
 		List<BookingDetails> allBookings = repBooking.findAll();
-		for (BookingDetails bk : allBookings) {
-			BookingDetailsModel bkm = new BookingDetailsModel();
-			bkm = copyBookingDetailsToBookingDetailsModel(bk);
-			allBookingsModel.add(bkm);
-		}
-		allBookingsModel.sort((o1, o2) -> {
-			try {
-				if (sdf.parse(o1.getCreationTime()).before(sdf.parse(o2.getCreationTime()))) {
-					return 1;
-				} else if (sdf.parse(o1.getCreationTime()).after(sdf.parse(o2.getCreationTime()))) {
-					return -1;
-				} else {
-					return 0;
-				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (allBookings != null) {
+			for (BookingDetails bk : allBookings) {
+				BookingDetailsModel bkm = new BookingDetailsModel();
+				bkm = copyBookingDetailsToBookingDetailsModel(bk);
+				allBookingsModel.add(bkm);
 			}
-			return 0;
-		});
+			Collections.sort(allBookingsModel,(o1, o2) -> {
+						try {
+							if(sdf.parse(o1.getCreationTime()).before(sdf.parse(o2.getCreationTime()))){
+								return 1;
+							} else if(sdf.parse(o1.getCreationTime()).after(sdf.parse(o2.getCreationTime()))){
+								return -1;
+							}else{
+								return 0;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return 0;
+					}
+			);
+
+		}
 
 		return allBookingsModel;
 	}
@@ -1607,15 +1802,21 @@ public class UserService implements UserDetailsService {
 			TutorProfileDetails tpd=repTutorProfileDetails.idExist(user.getUserId());
 			upiId=tpd.getUpiId();
 		}
-		if(upiId.equals("")) {
+		
+		if(upiId.equals("")||upiId==null) {
 			upiId="NOT_AVAILABLE";
 		}
+		
+		//System.out.println(upiId);
 		return upiId;
 	}
 
 	public Integer getFGCreditsOfUser( String userId ) {
 		// TODO Auto-generated method stub
+		System.out.println("User id "+Integer.valueOf(userId));
+		
 		Users user=repUsers.idExists(Integer.valueOf(userId));
+		System.out.println("User objects of FG Credit"+user);
 		Integer FGCredits=0;
 		if(user!=null) {
 			if(user.getCredits()==null) {
@@ -1625,6 +1826,7 @@ public class UserService implements UserDetailsService {
 			
 			FGCredits=user.getCredits();
 		}
+		System.out.println("FG Credits of User " + FGCredits);
 		return FGCredits;
 	}
 
@@ -1644,6 +1846,8 @@ public class UserService implements UserDetailsService {
 			cashback.setRedeemedCashback(adminService.getTotalPaidAmount(user));
 			cashback.setTotalCashback(cashback.getRedeemedCashback()+cashback.getRemainingCashback());
 		}
+		
+		System.out.println(cashback);
 		return cashback;
 	}
 
@@ -1680,23 +1884,38 @@ public class UserService implements UserDetailsService {
 		// TODO Auto-generated method stub
 		List<Cashback> repCashbackList=repCashback.findByUserId(Integer.valueOf(userId));
 		
-		ArrayList<CashbackInfo> cashbackList=new ArrayList<>();
+		ArrayList<CashbackInfo> cashbackList=new ArrayList<CashbackInfo>();
 		
 		for(Cashback cashback:repCashbackList) {
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			CashbackInfo cashbackModel=new CashbackInfo();
 			cashbackModel.setDate(formatter.format(cashback.getCashbackDate()));
+			
 			BookingDetails booking=cashback.getBookingDetails();
 			cashbackModel.setReferredUserName(booking.getStudentName());
+			
 			cashbackModel.setContext(cashback.getContext());
+			
 		    cashbackModel.setAmount(cashback.getAmount());
+		    
+		    System.out.println("Cashback Model "+cashbackModel);
+		    
 		    cashbackList.add(cashbackModel);
 		}
 		return cashbackList;
 	}
 
+	public void deleteUser(String userId) {
+		
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+
 	public void generateInvoiceMail(String bookingId) {
 		BookingDetails bookingDetails=repBooking.bidExists(Integer.valueOf(bookingId));
+
 		if(bookingDetails!=null){
 			mailService.generateInvoiceMail(bookingDetails);
 		}

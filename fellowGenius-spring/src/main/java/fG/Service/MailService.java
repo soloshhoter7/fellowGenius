@@ -1,22 +1,27 @@
 package fG.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import javax.activation.DataSource;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.lowagie.text.DocumentException;
-import fG.Enum.MeetingStatus;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -41,7 +46,6 @@ public class MailService {
 
 	@Autowired
 	MeetingService meetingService;
-
 	@Autowired
 	repositoryUsers repUsers;
 	
@@ -50,18 +54,19 @@ public class MailService {
 
 	@Autowired
 	repositoryTutorProfile repTutorProfile;
-
 	@Autowired
-	JwtUtil jwtUtil;
+	private JwtUtil jwtUtil;
 
 	@Value("${senderEmail}")
 	String senderEmail;
-
 	@Value("${senderPassword}")
 	String senderPassword;
 	
 	@Value("${rootUrl}")
 	String rootUrl;
+	
+	@Autowired
+	private Environment env;
 
 	static Properties props;
 	static Session session;
@@ -74,17 +79,35 @@ public class MailService {
 		props.put("mail.smtp.port", 587);
 		// for dev version and deployment
 
+//	    props.setProperty("mail.transport.protocol", "smtp");     
+//	    props.setProperty("mail.host", "smtp.gmail.com");  
+//	    props.put("mail.smtp.auth", "true");  
+//	    props.put("mail.smtp.port", "465");  
+//	    props.put("mail.debug", "true");  
+//	    props.put("mail.smtp.socketFactory.port", "465");  
+//	    props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");  
+//	    props.put("mail.smtp.socketFactory.fallback", "false");  
+
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(senderEmail, senderPassword);
 			}
 		});
 	}
-
+	boolean isGmail(String email) {
+		if(email!=null) {
+            return email.contains("@gmail");
+		}
+		return false;
+	}
 	// For sending OTP verification email
 	void sendVerificationEmail(String email, String otp) {
 		InitiateMailService();
 		String from ="registration@fellowgenius.com";
+		String to = email;		
+		if (session == null) {
+			System.out.println("SESSION IS NULL");
+		}
 		try {
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -115,6 +138,8 @@ public class MailService {
 			ClassPathResource resource = new ClassPathResource("logo.png");
 			helper.addInline("logoImage", resource);
 			Transport.send(message);
+
+			System.out.println("Sent message successfully....");
 
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -186,7 +211,7 @@ public class MailService {
 				helper.addInline("logoImage", resource);
 				Transport.send(message);
 
-			} else if (booking.getApprovalStatus().equals(MeetingStatus.ACCEPTED)) {
+			} else if (booking.getApprovalStatus().equals("Accepted")) {
 				StudentProfile stuProfile = userDao.getStudentProfile(id);
 				helper.setTo(stuProfile.getEmail());
 
@@ -283,6 +308,8 @@ public class MailService {
 				helper.setText(mailContent, true);
 				Transport.send(message);
 
+				System.out.println("Email sent successfully....");
+
 			}
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -368,7 +395,7 @@ public class MailService {
 		}
 	}
 
-	void sendVerifiedMail(String email) {
+	boolean sendVerifiedMail(String email) {
 		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
@@ -378,49 +405,55 @@ public class MailService {
 		});
 		Users user = repUsers.emailExist(email);
 		TutorProfile tutor = repTutorProfile.idExist(user.getUserId());
-		String token = generateTokenForMail(user.getUserId().toString(), "Expert");
-		String directUrl = rootUrl + "sign-up-expert?token=" + token;
-		String faqUrl = rootUrl + "faq";
-		String recipientName = tutor.getFullName();
-		try {
-			MimeMessage message = new MimeMessage(session);
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		if (user != null) {
+			String token = generateTokenForMail(user.getUserId().toString(), "Expert");
+			String directUrl = rootUrl + "sign-up-expert?token=" + token;
+			String faqUrl = rootUrl + "faq";
+			String to = email;
+			String recipientName = tutor.getFullName();
+			try {
+				MimeMessage message = new MimeMessage(session);
+				MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-			helper.setFrom(senderEmail);
-			helper.setTo(email);
-			helper.setSubject("Welcome to FellowGenius");
-			String mailContent = "<html>\r\n" + "    <head>\r\n" + "    </head>\r\n" + "<body>\r\n"
-					+ "    <body>\r\n"
-					+ "        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n"
-					+ "            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n"
-					+ "                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n"
-					+ "                    <img src='cid:logoImage' style=\"width: 90px;\">\r\n"
-					+ "                </div>\r\n"
-					+ "                <div style=\"width: 100%; display: inline-block;\">\r\n"
-					+ "                    <h1 style=\"color: #202124; font-size: 22px; font-weight: 400;\">Expert Profile Verified.</h1>\r\n"
-					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "
-					+ recipientName + "</p>\r\n"
-					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">We welcome you to the esteemed community of FellowGenius experts\r\n"
-					+ "                    </p>\r\n"
-					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Please take a few minutes to choose your password in order to complete your profile and set your available timeslot. This will help the learners to discover you faster and connect easily</p>\r\n"
-					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Use this link to start - <a href=\""
-					+ directUrl + "\">Choose password</a></p>\r\n"
-					+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Meanwhile, you can check out these links <a href=\""
-					+ faqUrl
-					+ "\">FAQ</a> to know more about FellowGenius.<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
-					+ "                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
-					+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
-					+ "                </div>\r\n" + "            </div>\r\n" + "        </div>\r\n"
-					+ "    </body>\r\n" + "</body>\r\n" + "</html>";
+				helper.setFrom(senderEmail);
+				helper.setTo(to);
+				helper.setSubject("Welcome to FellowGenius");
+				String mailContent = "<html>\r\n" + "    <head>\r\n" + "    </head>\r\n" + "<body>\r\n"
+						+ "    <body>\r\n"
+						+ "        <div style=\"width:100%; background-color: #F7F7F7; display: inline-block; font-family: 'Roboto', sans-serif;\">\r\n"
+						+ "            <div style=\"max-width: 500px; height: auto; background-color: #fff; border-radius: 20px; padding: 30px; margin: 3em auto;\">\r\n"
+						+ "                <div style=\"width: 100%; display: inline-block; margin-bottom: 20px;\">\r\n"
+						+ "                    <img src='cid:logoImage' style=\"width: 90px;\">\r\n"
+						+ "                </div>\r\n"
+						+ "                <div style=\"width: 100%; display: inline-block;\">\r\n"
+						+ "                    <h1 style=\"color: #202124; font-size: 22px; font-weight: 400;\">Expert Profile Verified.</h1>\r\n"
+						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "
+						+ recipientName + "</p>\r\n"
+						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">We welcome you to the esteemed community of FellowGenius experts\r\n"
+						+ "                    </p>\r\n"
+						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Please take a few minutes to choose your password in order to complete your profile and set your available timeslot. This will help the learners to discover you faster and connect easily</p>\r\n"
+						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Use this link to start - <a href=\""
+						+ directUrl + "\">Choose password</a></p>\r\n"
+						+ "                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Meanwhile, you can check out these links <a href=\""
+						+ faqUrl
+						+ "\">FAQ</a> to know more about FellowGenius.<br /><br>Regards,<br><br />Team FellowGenius</p>\r\n"
+						+ "                    <hr style=\"margin: 25px 0; border-top: 1px solid #f7f7f7;\">\r\n"
+						+ "                    <p style=\"text-align: center; font-size: 14px; color: #B5B3B3; margin-bottom: 0;\">Questions? <a style=\"color: #EC008C;\" href=\"mailto:support@fellowgenius.com\" >We're here to help.</a></p>\r\n"
+						+ "                </div>\r\n" + "            </div>\r\n" + "        </div>\r\n"
+						+ "    </body>\r\n" + "</body>\r\n" + "</html>";
+				
+				helper.setText(mailContent, true);
+				ClassPathResource resource = new ClassPathResource("logo.png");
+				helper.addInline("logoImage", resource);
+				Transport.send(message);
 
-			helper.setText(mailContent, true);
-			ClassPathResource resource = new ClassPathResource("logo.png");
-			helper.addInline("logoImage", resource);
-			Transport.send(message);
-
-		} catch (MessagingException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -434,12 +467,14 @@ public class MailService {
 		});
 		
 			String Url = rootUrl;
-		try {
+			String to = email;
+			String recipientName = name;
+			try {
 				MimeMessage message = new MimeMessage(session);
 				MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 				helper.setFrom(senderEmail);
-				helper.setTo(email);
+				helper.setTo(to);
 				helper.setSubject("FellowGenius Application Status Update");
 				String mailContent = "<html>\r\n" + 
 						"    <head>\r\n" + 
@@ -452,7 +487,7 @@ public class MailService {
 						"                    <img src=\"cid:logoImage\" style=\"width: 90px;\">\r\n" + 
 						"                </div>\r\n" + 
 						"                <div style=\"width: 100%; display: inline-block;\">\r\n" + 
-						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "+ name +"</p>\r\n" +
+						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Dear "+recipientName+"</p>\r\n" + 
 						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">We appreciate your interest in FellowGenius and the time you invested in sharing your details with us.\r\n" + 
 						"                    </p>\r\n" + 
 						"                    <p style=\"font-size: 14px; line-height: 1.75; color: #313745;\">Based on the screening of the details provided by you, we regret to inform you that we will not be able to take your request to enroll as the FellowGenius's expert.\r\n" + 
@@ -491,13 +526,16 @@ public class MailService {
 		if (user != null) {
 			String token = user.getUserId().toString();
 			String directUrl = rootUrl + "reset-password?token=" + token;
+			System.out.println(directUrl);
+			String to = email;
+
 			try {
 				MimeMessage message = new MimeMessage(session);
 				MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 				
 				helper.setFrom(from);
-				helper.setTo(email);
+				helper.setTo(to);
 				helper.setSubject("FellowGenius Password Reset");
 				String mailContent = "<html>\r\n" + "  <head> </head>\r\n" + "\r\n" + "  <body>\r\n" + "    <div\r\n"
 						+ "      style=\"\r\n" + "        width: 100%;\r\n" + "        background-color: #f7f7f7;\r\n"
@@ -658,32 +696,39 @@ public class MailService {
 		boolean result=true;
 		
 		String directUrl=rootUrl+"sign-up?pt=MA";
-
+		
+		System.out.println(directUrl);
+		
 		//send email to all user one by one
 		Users userObj=repUsers.emailExist(referrerEmail);
-		String senderFullName="";
-		if(userObj.getRole().equals("Learner")) {
-			StudentProfile student=repStudentProfile.emailExist(referrerEmail);
-			senderFullName=student.getFullName();
-		}else if(userObj.getRole().equals("Expert")) {
-			TutorProfile tutor=repTutorProfile.emailExist(referrerEmail);
-			senderFullName=tutor.getFullName();
-		}else {
-			result=false;
+		System.out.println(userObj.toString());
+		if(userObj!=null) {
+			String senderFullName="";
+			if(userObj.getRole().equals("Learner")) {
+				StudentProfile student=repStudentProfile.emailExist(referrerEmail);
+				senderFullName=student.getFullName();
+			}else if(userObj.getRole().equals("Expert")) {
+				TutorProfile tutor=repTutorProfile.emailExist(referrerEmail);
+				senderFullName=tutor.getFullName();
+			}else {
+				System.out.println("Invalid user");
+				result=false;
+			}
+			for(String user:users) {
+				
+				
+				String to = user;
+				ReferInviteMail(from, to, senderFullName, referCode, directUrl);
+			}
+			
+			//after this send a confirmation mail to sender that referred mail has been sent	
+			ReferConfirmationMail(from, referrerEmail, referCode, senderFullName);
 		}
-		for(String user:users) {
-
-
-			ReferInviteMail(from, user, senderFullName, referCode, directUrl);
-		}
-
-		//after this send a confirmation mail to sender that referred mail has been sent
-		ReferConfirmationMail(from, referrerEmail, referCode, senderFullName);
-
+		
 		return result;
 	}
 
-	public void sendExpertNoScheduleNotification(@NotNull TutorProfile expert) {
+	public void sendExpertNoScheduleNotification(TutorProfile expert) {
 		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
@@ -802,13 +847,14 @@ public class MailService {
 				return new PasswordAuthentication(from, senderPassword);
 			}
 		});
-
-		try {
+		
+			String to = email;
+			try {
 				MimeMessage message = new MimeMessage(session);
 				MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 				helper.setFrom(senderEmail);
-				helper.setTo(email);
+				helper.setTo(to);
 				helper.setSubject("Happy Diwali from FellowGenius");
 				String mailContent = "<html>\r\n" + 
 						"    <body>\r\n" + 
@@ -846,8 +892,9 @@ public class MailService {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
 			helper.setFrom(from);
-
-			helper.setTo(from);
+			
+			String to=from;
+			helper.setTo(to);
 			
 			helper.setSubject("FellowGenius Contact Us Message Notification !");
 			String mailContent = "<html>\r\n" + "<head>   \r\n" + "    <style>\r\n" + "   \r\n" + "    </style>\r\n"
@@ -893,7 +940,7 @@ public class MailService {
 			MimeMessage message = new MimeMessage(session);
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			String from = senderEmail;
-			String recipientName="",name="",startTime="",endTime="",dashboardLink="",oppositeRole="";
+			String recipientName="",name="",topic="",startTime="",endTime="",dashboardLink="",oppositeRole="";
 			if (booking.getStartTimeMinute().equals(0)) {
 				startTime += booking.getStartTimeHour()+":00";
 			} else {
@@ -1024,6 +1071,8 @@ public class MailService {
 					+ "    </body>\r\n" + "</body>\r\n" + "\r\n" + "</html>";
 			helper.setText(mailContent, true);
 
+//				message.setContent("<html><head> <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css\"/> <style>.Box{box-shadow: 0 8px 16px 0 #90a4ae; width: 100%; height: auto; text-align: center; padding: 20px; margin-top: 10px; background: url(https://fellowgenius.com/search_right_bg.7af30faa440a7e6ab2bb.svg) no-repeat; background-size: contain; border: 1px solid #7d0f7d; border-radius: 8px; width: 650px; margin: 0 auto; background-position: left top;}.logo{background: url(https://fellowgenius.com/logo.2dbc598173218fe92921.svg) no-repeat; background-size: contain; height: 100px; display: block; float: right; width: 100px;}tr{padding: 10px;}td{padding: 5px; margin-right: 5px;}</style></head><body> <div class=\"Box\"> <div class=\"box-header\"> <span class=\"logo\"></span> <span style=\"margin-bottom: 20px;color:#892687;width:100%;text-align: center;font-size:16px;font-weight:bold;text-transform: uppercase;\"> Request Accepted !</span> </div><div style=\"padding:20px;width: 350px; margin: 0 auto;\">"
+//						+ " <table> <tr> <td><b>Expert Name</b><br>"+booking.getTutorName()+"</td><td><b>Date</b><br>"+booking.getDateOfMeeting()+"</td></tr><tr> <td><b>Start Time</b><br>"+booking.getStartTimeHour() + ":"+ booking.getStartTimeMinute() +"</td><td><b>Duration</b><br>"+booking.getDuration()+"</td></tr></table> </div><p style=\"margin-top: 30px; font-size: 10px; text-align: center; width: 100%;\">This is an auto-generated message please don't reply back.</p></div><div class=\"container-fluid\"> <div class=\"row\"> <div class=\"col-sm-2\"></div><div class=\"col-sm-7\"> </div><div class=\"com-sm-3\"></div></div></div></body></html>","text/html");
 			ClassPathResource resource = new ClassPathResource("logo.png");
 			helper.addInline("logoImage", resource);
 			Transport.send(message);
@@ -1031,7 +1080,9 @@ public class MailService {
 		}catch (MessagingException e){
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		} catch (DocumentException | IOException e) {
+		} catch (DocumentException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 

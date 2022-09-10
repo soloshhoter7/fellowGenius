@@ -1,25 +1,6 @@
 package fG.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.lowagie.text.DocumentException;
-import fG.DAO.Dao;
-import fG.DAO.MeetingDao;
-import fG.Entity.*;
-import fG.Enum.MeetingStatus;
-import fG.Enum.TaskDefinitonType;
-import fG.Enum.WhatsappMessageType;
-import fG.Model.*;
-import fG.Repository.*;
-import fG.Utils.MiscellaneousUtils;
-import fG.Utils.NumberToWords;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
+import java.awt.print.Book;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,17 +10,42 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.google.gson.Gson;
+import fG.Entity.*;
+import fG.Enum.MeetingStatus;
+import fG.Enum.TaskDefinitonType;
+import fG.Enum.WhatsappMessageType;
+import fG.Model.*;
+import fG.Repository.*;
+import fG.Utils.MiscellaneousUtils;
+import fG.Utils.NumberToWords;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.google.gson.JsonObject;
+import com.lowagie.text.DocumentException;
+
+import fG.DAO.Dao;
+import fG.DAO.MeetingDao;
+
 import static java.lang.Integer.parseInt;
 
 @Service
 public class MeetingService {
-
+	@Autowired
+	private SimpMessageSendingOperations messagingTemplate;
 
 	@Autowired
-	AdminService adminService;
+	private AdminService adminService;
 
 	@Autowired
-	NumberToWords numberToWords;
+	private NumberToWords numberToWords;
 
 	@Autowired
 	MeetingDao meetingDao;
@@ -49,6 +55,9 @@ public class MeetingService {
 
 	@Autowired
 	repositoryTutorProfileDetails repTutorProfileDetails;
+
+	@Autowired
+	repositoryTutorAvailabilitySchedule repTutorAvailabilitySchedule;
 
 	@Autowired
 	ScheduleService scheduleService;
@@ -96,10 +105,15 @@ public class MeetingService {
 	MiscellaneousUtils miscUtils;
 
 	@Autowired
+	TaskDefinitionBean taskDefinitionBean;
+
+	@Autowired
 	SchedulerService taskSchedulerService;
 
 	@Autowired
 	NotificationService notificationService;
+
+	private UUID uuid;
 	
 	public void saveNotification(JsonObject msg) {
 		Notification notification = new Notification(msg.get("entityType").getAsInt(),
@@ -140,7 +154,7 @@ public class MeetingService {
 
 	// to save the bookings requested by student
 	public boolean saveBooking(BookingDetailsModel bookingModel) throws ParseException {
-		BookingDetails meetingBooked;
+		BookingDetails meetingBooked = null;
 		BookingDetails booking = new BookingDetails();
 		booking.setDateOfMeeting(bookingModel.getDateOfMeeting());
 		booking.setDescription(bookingModel.getDescription());
@@ -170,8 +184,8 @@ public class MeetingService {
 			AppInfo thresholdCost = repAppInfo.keyExist("ReferralMeetingCost");
 			AppInfo thresholdTime = repAppInfo.keyExist("ReferralExpirationTime");
 			Integer diffInTime = findDaysFromRegistration(booking.getStudentId(), new Date());
-			if (booking.getPaidAmount() >= Integer.parseInt(thresholdCost.getValue())
-					&& diffInTime <= Integer.parseInt(thresholdTime.getValue())) {
+			if (booking.getPaidAmount() >= Integer.valueOf(thresholdCost.getValue())
+					&& diffInTime <= Integer.valueOf(thresholdTime.getValue())) {
 				booking.setExpertCode(getReferralCodeFromUser(booking.getStudentId()));
 			}
 		}
@@ -180,7 +194,7 @@ public class MeetingService {
 		//check for coupon code.
 		if(meetingBooked!=null){
 			createMeetingSchedulerJobs(booking);
-			notificationService.sendMeetingWhatsappNotifications(booking.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_BOOKED);
+			notificationService.sendWhatsappNotifications(booking.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_BOOKED);
 			//check for coupon code.
 			Coupon coupon=repCoupon.couponCodeExists(meetingBooked.getCouponCode());
 			if(coupon!=null){
@@ -194,7 +208,7 @@ public class MeetingService {
 				//update credit field of b in user table
 				Users user=repUsers.idExists(learner.getSid());
 				AppInfo referralCredit=repAppInfo.keyExist("ReferralCredit");
-				user.setCredits(user.getCredits()+Integer.parseInt(referralCredit.getValue()));
+				user.setCredits(user.getCredits()+Integer.valueOf(referralCredit.getValue()));
 				repUsers.save(user);
 				
 				//update this transaction in fg credit table
@@ -202,9 +216,10 @@ public class MeetingService {
 				credits.setUser(repUsers.idExists(learner.getSid()));
 				credits.setBookingDetails(meetingBooked);
 				credits.setType("DEPOSIT");
-				credits.setAmount(Integer.parseInt(referralCredit.getValue()));
+				credits.setAmount(Integer.valueOf(referralCredit.getValue()));
 				credits.setContext("Added "+referralCredit.getValue()+" FG for signing up via refer code");
 				repFGCredits.save(credits);
+				System.out.println("Credit Info : "+credits);
 			}
 			
 			// if user has paid some amount by FG Credit
@@ -221,6 +236,7 @@ public class MeetingService {
 				credits.setAmount(creditsUsed);
 				credits.setContext("Withdrawn "+creditsUsed+" FG for setting up meeting via refer code");
 				repFGCredits.save(credits);
+				System.out.println("Credit Info : "+credits);
 			}
 			repStudentProfile.save(learner);
 			sendNotificationTutor(bookingModel.getTutorId(), booking);
@@ -286,7 +302,7 @@ public class MeetingService {
 		meetingStartTime.setHours(booking.getStartTimeHour());
 		meetingStartTime.setMinutes(booking.getStartTimeMinute());
 		Integer minutesPending = miscUtils.checkDiffBtwTimeInMinutes(currentTime,meetingStartTime);
-		TaskDefinition taskDefinition;
+		TaskDefinition taskDefinition = new TaskDefinition();
 		//setting up notifications
 		 if(minutesPending>120){
 			 taskDefinition = new TaskDefinition();
@@ -314,14 +330,24 @@ public class MeetingService {
 		taskSchedulerService.scheduleATask(taskDefinition);
 	}
 
+	public String createSchedulerTask(TaskDefinition t){
+		System.out.println(t);
+		TaskDefinition taskDefinition = new TaskDefinition();
+		taskDefinition.setData(t.getData());
+		taskDefinition.setActionType(t.getActionType());
+		taskDefinition.setCronExpression(t.getCronExpression());
+		taskSchedulerService.scheduleATask(taskDefinition);
+		return taskSchedulerService.fetchAllJobs();
+	}
+
 	void updateMeetingsSetUpInReferrals(String meetingId) {
 		BookingDetails booking = repBooking.meetingIdExists(meetingId);
 		String referralCode = booking.getExpertCode();
 
-		if (referralCode != null && !referralCode.equals("")) {
+		if (referralCode != null && referralCode != "") {
 			if (userService.isValidFormatForReferralCode(referralCode)) {
 				String referralUserId = userService.parseReferralCode(referralCode);
-				if (!Objects.equals(referralUserId, "")) {
+				if (referralUserId != "") {
 					UserReferrals ur = repUserReferral.findByUserId(Integer.valueOf(referralUserId));
 					List<BookingDetails> bks = ur.getMeetingSetup();
 					bks.add(booking);
@@ -336,7 +362,7 @@ public class MeetingService {
 	@Scheduled(cron = "0 32 17 1/1 * *")
 	void updateMeetingCompleted() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		ArrayList<String> last2DatesInString = new ArrayList<>();
+		ArrayList<String> last2DatesInString = new ArrayList<String>();
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
 		last2DatesInString.add(formatter.format(c.getTime()));
@@ -362,7 +388,7 @@ public class MeetingService {
 		}
 	}
 	void assignReferralCashback(BookingDetails b){
-		if(b.getExpertCode()!=null&& !Objects.equals(b.getExpertCode(), "")) {
+		if(b.getExpertCode()!=null&&b.getExpertCode()!="") {
 
 			String refCode = b.getExpertCode();
 			String referrerUserId = userService.parseReferralCode(refCode);
@@ -371,7 +397,12 @@ public class MeetingService {
 			List<BookingDetails> meetingsSetup = ur.getMeetingSetup();
 			if(!meetingsCompleted.contains(b)) {
 				Integer referralAmount = Integer.valueOf(repAppInfo.keyExist("ReferralAmount").getValue());
-				int amountDue = ur.getPaymentDue()+referralAmount;
+				Integer amountDue=0;
+				if(ur.getPaymentDue()==0) {
+					amountDue=ur.getPaymentDue()+referralAmount;
+				}else {
+					amountDue=ur.getPaymentDue()+referralAmount;
+				}
 				ur.setPaymentDue(amountDue);
 
 				Cashback cashback=new Cashback();
@@ -400,6 +431,7 @@ public class MeetingService {
 	}
 
 	Integer findDaysFromRegistration(Integer userId, Date current) {
+		Integer difference_days = 0;
 		Users user = repUsers.idExists(userId);
 		Date signUpTime = user.getCreatedDate();
 		Calendar cal = Calendar.getInstance();
@@ -435,7 +467,8 @@ public class MeetingService {
 //			expert.setLessonCompleted(expert.getLessonCompleted() + 1);
 			expert.setEarning(expert.getEarning() + booking.getAmount());
 			repTutorProfileDetails.save(expert);
-		};
+		}
+		System.out.println(booking);
 		sendNotificationTutor(booking.getStudentId(), booking);
 		return meetingDao.updateBookingStatus(Integer.valueOf(bid), approvalStatus);
 	}
@@ -506,39 +539,55 @@ public class MeetingService {
 		}
 	}
 
-	public Integer calculateRemainingTimeToCancel(@NotNull BookingDetails bk) throws ParseException {
+	public Integer calculateRemainingTimeToCancel(BookingDetails bk) throws ParseException {
+		Integer timeRemaining = 0;
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
 		// todayDate string
 		Date todayTime = new Date();
+		System.out.println("date ===>" + bk.getDateOfMeeting());
 		Date meetingTime = formatter.parse(bk.getDateOfMeeting());
 		meetingTime.setHours(bk.getStartTimeHour());
 		meetingTime.setMinutes(bk.getStartTimeMinute());
+		System.out.println(todayTime);
+		System.out.println(meetingTime);
 
 		long difference_In_Time = meetingTime.getTime() - todayTime.getTime();
 		long difference_In_Minutes = (difference_In_Time / (1000 * 60));
+		System.out.println(difference_In_Minutes);
 		return (int) difference_In_Minutes;
 	}
 
 	// to check if the booking is Valid
 	public boolean isBookingValid(Integer sh, Integer sm, Integer eh, Integer em, Integer tid, String date)
 			throws ParseException {
+		System.out.println("is booking valid -->> start time :" + sh + ":" + sm + " end time :" + eh + ":" + em
+				+ " Date :" + date + " tid :" + tid);
 		ArrayList<BookingDetails> tutorBookings = (ArrayList<BookingDetails>) meetingDao.fetchApprovedListTutor(tid);
 		ArrayList<ScheduleTime> timeSlots = scheduleService.createTimeSlots(sh, sm, eh, em, date);
-		boolean bookingExceptionFound = false;
+		Boolean bookingExceptionFound = false;
+		Boolean calendarExceptionFound = false;
 		Integer endMinutes = (eh * 60) + em;
 
 		outerloop: for (BookingDetails booking : tutorBookings) {
 			if (booking.getDateOfMeeting().equals(date)) {
 
+				System.out.println("date Matches");
+				System.out.println(booking.getStartTimeHour() + " / " + booking.getStartTimeMinute());
 				if (eh > booking.getStartTimeHour()) {
+					System.out.println("end time > start time of booking");
 					for (ScheduleTime slot : timeSlots) {
-						int minutes = slot.getHours() * 60 + slot.getMinutes();
-						if (!endMinutes.equals(minutes)) {
+						System.out.println("SLOT");
+						Integer minutes = 0;
+						minutes = slot.getHours() * 60 + slot.getMinutes();
+						if (endMinutes != minutes) {
+							System.out.println("entered");
+							System.out.println(slot.getHours() + " / " + slot.getMinutes());
 							if ((slot.getHours().equals(booking.getStartTimeHour()))
 									&& (slot.getMinutes().equals(booking.getStartTimeMinute()))) {
+								System.out.println("MAtched");
 								bookingExceptionFound = true;
 								break outerloop;
 							}
@@ -554,9 +603,10 @@ public class MeetingService {
 
 	public boolean checkIfExpertIsAvailableInTime(Integer sh, Integer sm, Integer eh, Integer em, Integer tid,
 			String date) throws ParseException {
-		TutorAvailabilityScheduleModel tutorSchedule = userDao.getTutorAvailabilitySchedule(tid);
+		TutorAvailabilityScheduleModel tutorSchedule = userDao.getTutorAvailabilitySchedule(Integer.valueOf(tid));
 		List<ScheduleData> expertSch = tutorSchedule.getAllAvailabilitySchedule();
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
 		Date bookingStartDateTime = sdf.parse(date);
@@ -579,7 +629,7 @@ public class MeetingService {
 	}
 
 	public ArrayList<BookingDetails> isBeforeTime(ArrayList<BookingDetails> bookings) throws ParseException {
-		ArrayList<BookingDetails> eliminateList = new ArrayList<>();
+		ArrayList<BookingDetails> eliminateList = new ArrayList<BookingDetails>();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
 		Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("Asia/Kolkata"));
@@ -587,21 +637,33 @@ public class MeetingService {
 		currentDate.set(Calendar.MINUTE, 0);
 		currentDate.set(Calendar.SECOND, 0);
 		currentDate.set(Calendar.MILLISECOND, 0);
+		System.out.println("currentDate_>" + currentDate.getTime());
 		Calendar currentDateWithTime = Calendar.getInstance(TimeZone.getTimeZone("Asia/Kolkata"));
+		System.out.println("currentDateWithTime_>" + currentDateWithTime.getTime());
 		for (BookingDetails meeting : bookings) {
+//			Date bookingDate = new Date(meeting.getDateOfMeeting());
 			Date bookingDate = formatter.parse(meeting.getDateOfMeeting());
+			System.out.println("booking date_>" + bookingDate);
 			if (bookingDate.before(currentDate.getTime())) {
+				System.out.println("before date");
 				eliminateList.add(meeting);
 			}
 			if (bookingDate.equals(currentDate.getTime())) {
-				int meetingMinutes = meeting.getEndTimeHour() * 60 + meeting.getEndTimeMinute();
-				int currentMinutes = currentDateWithTime.getTime().getHours() * 60
+				System.out.println("Date equals");
+				Integer meetingMinutes = meeting.getEndTimeHour() * 60 + meeting.getEndTimeMinute();
+				Integer currentMinutes = currentDateWithTime.getTime().getHours() * 60
 						+ currentDateWithTime.getTime().getMinutes();
+				System.out.println("current minutes->" + currentMinutes + "meeting Minutes ->" + meetingMinutes);
+				System.out.println("-------------->" + currentDateWithTime.getTime().getHours() + ":"
+						+ currentDateWithTime.getTime().getMinutes());
 				if (currentMinutes > meetingMinutes) {
+					System.out.println("current time is greater");
 					eliminateList.add(meeting);
 				}
 			}
 		}
+		System.out.println("eliminate meetings ->" + eliminateList);
+		System.out.println("bookings ->" + bookings);
 		bookings.removeAll(eliminateList);
 
 		return bookings;
@@ -617,7 +679,7 @@ public class MeetingService {
 	}
 
 	public List<BookingDetailsModel> fetchExpertRecentReviews(Integer tid) {
-		List<BookingDetailsModel> bookings = new ArrayList<>();
+		List<BookingDetailsModel> bookings = new ArrayList<BookingDetailsModel>();
 		List<BookingDetails> meetings = repBooking.fetchExpertRecentReviews(tid);
 		if (meetings != null) {
 			for (BookingDetails booking : meetings) {
@@ -645,7 +707,7 @@ public class MeetingService {
 				return new ResponseModel("already rescheduled");
 			} else {
 				if (calculateRemainingTimeToCancel(bk) >= Integer
-						.parseInt(repAppInfo.keyExist("reschedule_time").getValue())) {
+						.valueOf(repAppInfo.keyExist("reschedule_time").getValue())) {
 					return new ResponseModel("rescheduling possible");
 				} else {
 					return new ResponseModel("rescheduling time limit exceeded");
@@ -665,8 +727,8 @@ public class MeetingService {
 		Integer duration = bk.getDuration();
 		Integer hoursToBeAdded = duration / 60;
 		Integer minutesToBeAdded = duration % 60;
-		int endTimeHour = bk.getStartTimeHour() + hoursToBeAdded;
-		int endTimeMinute = bk.getStartTimeMinute() + minutesToBeAdded;
+		Integer endTimeHour = bk.getStartTimeHour() + hoursToBeAdded;
+		Integer endTimeMinute = bk.getStartTimeMinute() + minutesToBeAdded;
 		if (endTimeMinute / 60 > 0) {
 			endTimeHour += (endTimeMinute / 60);
 			endTimeMinute = endTimeMinute % 60;
@@ -693,7 +755,7 @@ public class MeetingService {
 	public boolean requestToReschedule(Integer bookingId) throws ParseException {
 		BookingDetails bk = repBooking.bidExists(bookingId);
 		Integer rmt = calculateRemainingTimeToCancel(bk);
-		if (rmt >= Integer.parseInt(repAppInfo.keyExist("reschedule_time").getValue())) {
+		if (rmt >= Integer.valueOf(repAppInfo.keyExist("reschedule_time").getValue())) {
 			TutorProfileDetails tut = repTutorProfileDetails.bookingIdExist(bk.getTutorId());
 			tut.setRescheduleRequests(tut.getRescheduleRequests() + 1);
 			mailService.sendRequestToReschedule(bk);
@@ -719,17 +781,19 @@ public class MeetingService {
 	public EarningDataModel fetchEarningData(String tid) {
 		TutorProfileDetails exp = repTutorProfileDetails.bookingIdExist(Integer.valueOf(tid));
 		EarningDataModel result = new EarningDataModel();
-		ArrayList<Integer> uniqueLearner = new ArrayList<>();
+		ArrayList<Integer> uniqueLearner = new ArrayList<Integer>();
 		if (exp != null) {
 			LocalDateTime now = LocalDateTime.now();
 //		    LocalDateTime then = now.minusDays(1);
-			ArrayList<KeyValueModel> weeklyEarningData = new ArrayList<>();
-			ArrayList<KeyValueModel> monthlyEarningData = new ArrayList<>();
-			ArrayList<KeyValueModel> yearlyEarningData = new ArrayList<>();
+			ArrayList<KeyValueModel> weeklyEarningData = new ArrayList<KeyValueModel>();
+			ArrayList<KeyValueModel> monthlyEarningData = new ArrayList<KeyValueModel>();
+			ArrayList<KeyValueModel> yearlyEarningData = new ArrayList<KeyValueModel>();
 			// for weekly Data
 
 			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Calcutta"));
+			System.out.println(calendar.getTime());
 			int dayCount = calendar.get(Calendar.DAY_OF_WEEK);
+			System.out.println(dayCount + ".............................");
 
 			for (int i = 1; i <= dayCount; i++) {
 				Integer earning = 0;
@@ -738,9 +802,10 @@ public class MeetingService {
 				day.setKeyName(now.minusDays(i - 1).getDayOfWeek().toString().substring(0, 3));
 				List<BookingDetails> bk = repBooking.fetchExpertMeetingsBetweenTwoDates(exp.getBookingId(), then,
 						now.minusDays(i - 1));
+				System.out.println(then + " : " + bk);
 				if (bk != null) {
 					for (BookingDetails booking : bk) {
-						if (!booking.getApprovalStatus().equals(MeetingStatus.CANCELLED)) {
+						if (!booking.getApprovalStatus().equals("cancelled")) {
 							if (!uniqueLearner.contains(booking.getStudentId())) {
 								uniqueLearner.add(booking.getStudentId());
 							}
@@ -765,7 +830,7 @@ public class MeetingService {
 						now.minusMonths(i - 1));
 				if (bk != null) {
 					for (BookingDetails booking : bk) {
-						if (!booking.getApprovalStatus().equals(MeetingStatus.CANCELLED)) {
+						if (!booking.getApprovalStatus().equals("cancelled")) {
 							if (!uniqueLearner.contains(booking.getStudentId())) {
 								uniqueLearner.add(booking.getStudentId());
 							}
@@ -786,7 +851,7 @@ public class MeetingService {
 						now.minusYears(i - 1));
 				if (bk != null) {
 					for (BookingDetails booking : bk) {
-						if (!booking.getApprovalStatus().equals(MeetingStatus.CANCELLED)) {
+						if (!booking.getApprovalStatus().equals("cancelled")) {
 							if (!uniqueLearner.contains(booking.getStudentId())) {
 								uniqueLearner.add(booking.getStudentId());
 							}
@@ -795,7 +860,7 @@ public class MeetingService {
 					}
 				}
 				year.setValueName(earning.toString());
-				if (Integer.parseInt(year.getKeyName()) >= 2021) {
+				if (Integer.valueOf(year.getKeyName()) >= 2021) {
 					yearlyEarningData.add(year);
 				}
 
@@ -817,14 +882,22 @@ public class MeetingService {
 		} else {
 			return null;
 		}
+
+//		System.out.println(repBooking.fetchExpertMeetingsBetweenTwoDates(then,now));
 	}
 
 	public List<?> findTutorCompletedBookings(String tid) {
-		return repBooking.fetchCompletedBookingExpert(Integer.valueOf(tid));
+		
+		List<BookingDetails> tutorCompletedMeetingsList=repBooking.fetchCompletedBookingExpert(Integer.valueOf(tid));
+	
+		return tutorCompletedMeetingsList;
 	}
 
 	public List<?> findStudentCompletedBookings(String sid) {
-		return repBooking.fetchCompletedBookingStudent(Integer.valueOf(sid));
+	
+		List<BookingDetails> studentCompletedMeetingsList=repBooking.fetchCompletedBookingStudent(Integer.valueOf(sid));
+	
+		return studentCompletedMeetingsList;
 	}
 
 	public void meetingMemberJoined(String meetingId, String userId) throws ParseException {
@@ -869,7 +942,7 @@ public class MeetingService {
 	}
 
 
-	public BookingInvoiceModel bookingToInvoice(@NotNull BookingDetailsModel booking){
+	public BookingInvoiceModel bookingToInvoice(BookingDetailsModel booking){
 		BookingInvoiceModel bookingInvoice=new BookingInvoiceModel();
 		bookingInvoice.setBookingId(booking.getBid().toString());
 		bookingInvoice.setDateOfMeeting(booking.getDateOfMeeting());
@@ -898,13 +971,17 @@ public class MeetingService {
 		BookingInvoiceModel bookingInvoice=bookingToInvoice(booking);
 		try {
             Path file = Paths.get(pdfService.generatePdf(bookingInvoice).getAbsolutePath());
+            System.out.println(file);
             Resource resource = new UrlResource(file.toUri());
             
             if (resource.exists()) {
                 return resource;
+            } else {
+               System.out.println("Resource not found");
             }
-
-		} catch (DocumentException | IOException ex) {
+            
+        } catch (DocumentException | IOException ex) {
+        	System.out.println("Exception and resource not found");
             ex.printStackTrace();
         }
 		
@@ -929,6 +1006,7 @@ public class MeetingService {
 		String role = feedbackModel.getRole();
 		feedbackModel.setTime(new Date());
 		BookingDetails bookingDetails = repBooking.bidExists(Integer.valueOf(feedbackModel.getBookingId()));
+		System.out.println(bookingDetails);
 		if(bookingDetails!=null){
 
 			if(bookingDetails.getStudentId().equals(userId)&&role.equals("Learner")&& bookingDetails.getLearnerFeedBack()==null){

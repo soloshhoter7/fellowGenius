@@ -28,14 +28,13 @@ import java.util.stream.Collectors;
 public class CouponService {
 
     @Autowired
-    repositoryCoupon repCoupon;
+    private repositoryCoupon repCoupon;
 
     @Autowired
-    repositoryStudentProfile repStudentProfile;
+    private repositoryStudentProfile repStudentProfile;
 
     @Autowired
-    repositoryCouponCondition repositoryCouponCondition;
-
+    private repositoryCouponCondition repositoryCouponCondition;
     public CouponResponse createCoupon(CouponPayload couponPayload) {
         CouponResponse couponResponse=new CouponResponse();
         Coupon coupon=PayloadToEntity(couponPayload);
@@ -85,6 +84,7 @@ public class CouponService {
         Date date=null;
         try {
             date= dateformat.parse(stringDate);
+            System.out.println(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -92,29 +92,48 @@ public class CouponService {
     }
 
     public List<CouponResponse> fetchAllCoupons(){
-        List<CouponResponse> couponResponses;
+
+        List<CouponResponse> couponResponses=new ArrayList<>();
+
         List<Coupon> couponsListsAll=repCoupon.findCouponsByConsumers(CouponEligibleConsumers.ALL.toString());
+
         couponResponses=couponsListsAll.stream().map(this::couponToDto).collect(Collectors.toList());
         return couponResponses;
     }
 
     public List<CouponResponse> fetchSelectiveCoupons(String userId) {
+
         List<Coupon> couponsList=new ArrayList<>();
-        List<CouponResponse> couponResponses;
-        List<Coupon> couponsListValidSelective=repCoupon.findCouponsByConsumers(CouponEligibleConsumers.SELECTIVE.toString());
+
+        List<CouponResponse> couponResponses=new ArrayList<>();
+
+       List<Coupon> couponsListValidSelective=repCoupon.findCouponsByConsumers(CouponEligibleConsumers.SELECTIVE.toString());
+
         for(Coupon coupon: couponsListValidSelective){
+
                     //check for conditions
                     List<CouponCondition> couponConditions=coupon.getCouponCondition();
                     boolean flag=true;
                     for(CouponCondition couponCondition:couponConditions){
-                        if ("NUMBEROFBOOKINGS".equals(couponCondition.getConditionType().toString())) {
-                            //check if no of bookings is equal to value given
-                            StudentProfile studentProfile = repStudentProfile.idExist(Integer.valueOf(userId));
-                            if (studentProfile.getLessonCompleted() > Integer.parseInt(couponCondition.getValue())) {
-                                flag = false;
+
+                        switch (couponCondition.getConditionType().toString()){
+
+                            case "NUMBEROFBOOKINGS":{
+
+                                //check if no of bookings is equal to value given
+
+                                StudentProfile studentProfile=repStudentProfile.idExist(Integer.valueOf(userId));
+
+                                if(studentProfile.getLessonCompleted()>Integer.valueOf(couponCondition.getValue())){
+                                    flag=false;
+                                }
+
+                                break;
                             }
                         }
+
                     }
+
                     if(flag){ //it means conditions are checked
 
                         couponsList.add(coupon);
@@ -140,8 +159,10 @@ public class CouponService {
 
         Coupon coupon=repCoupon.findById(UUID.fromString(couponId)).get();
 
-        coupon.setCouponConsumersCount(coupon.getCouponConsumersCount()+1);
-        repCoupon.save(coupon);
+        if(coupon!=null){
+            coupon.setCouponConsumersCount(coupon.getCouponConsumersCount()+1);
+            repCoupon.save(coupon);
+        }
 
     }
 
@@ -149,7 +170,9 @@ public class CouponService {
 
         Coupon coupon=repCoupon.findById(UUID.fromString(couponId)).get();
 
-        repCoupon.delete(coupon);
+        if(coupon!=null){
+            repCoupon.delete(coupon);
+        }
     }
 
 }

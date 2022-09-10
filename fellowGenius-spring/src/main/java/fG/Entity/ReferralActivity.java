@@ -14,12 +14,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
-@Data
 public class ReferralActivity implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -50,6 +48,48 @@ public class ReferralActivity implements Serializable{
 		this.userId = userId;
 		this.type = type;
 		this.createdDate = createdDate;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "ReferralActivity [id=" + id + ", userId=" + userId + ", type=" + type + ", createdDate=" + createdDate
+				+ "]";
 	}
 
 }

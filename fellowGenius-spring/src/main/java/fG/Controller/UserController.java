@@ -75,7 +75,7 @@ public class UserController {
 
 	@RequestMapping(value = "/blankApi")
 	public boolean hitBlankApi() {
-		return true;
+		return service.getReferralInformation();
 	}
 
 	@RequestMapping(value = "/registerTutor")
@@ -103,6 +103,12 @@ public class UserController {
 	@ResponseBody
 	public TutorProfileDetailsModel fetchBookingTutorProfileDetails(String bookingId) {
 		return service.fetchBookingTutorProfileDetails(Integer.valueOf(bookingId));
+	}
+
+	// register social login
+	@RequestMapping(value = "/registerSocialLogin")
+	public boolean registerSocialLogin(@RequestBody SocialLoginModel socialLoginModel) {
+		return service.registerSocialLogin(socialLoginModel);
 	}
 
 	@RequestMapping(value = "/helloKarma")
@@ -217,6 +223,14 @@ public class UserController {
 	public void editTutorBasicInfo(@RequestBody TutorProfileModel tutorProfileModel) throws IOException {
 		service.editTutorBasicInfo(tutorProfileModel);
 
+	}
+
+	// for updating tutor Verification
+	@PreAuthorize("hasAuthority('Expert')")
+	@RequestMapping(value = "/updateTutorVerification", produces = "application/JSON")
+	public void updateTutorVerification(@RequestBody TutorVerificationModel tutorVerify) throws IOException {
+		System.out.println(tutorVerify.getTid());
+		service.updateTutorVerification(tutorVerify);
 	}
 
 	// for updating basic info of tutor

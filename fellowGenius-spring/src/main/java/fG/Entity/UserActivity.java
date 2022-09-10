@@ -14,14 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import fG.Model.ScheduleTime;
 
 @Entity
-@Data
 public class UserActivity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -39,6 +37,43 @@ public class UserActivity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date")
 	Date createdDate;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	@Override
+	public String toString() {
+		return "UserActivity [id=" + id + ", type=" + type + ", createdDate=" + createdDate + "]";
+	}
 
 	@Override
 	public boolean equals(Object anObject) {

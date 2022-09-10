@@ -13,21 +13,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificationService {
     @Autowired
-    repositoryBooking repBooking;
+    private repositoryBooking repBooking;
 
     @Autowired
-    repositoryTutorProfile repTutorProfile;
+    private repositoryTutorProfile repTutorProfile;
 
     @Autowired
-    repositoryStudentProfile repStudentProfile;
+    private repositoryStudentProfile repStudentProfile;
 
     @Autowired
-    repositoryTutorProfileDetails repTutorProfileDetails;
+    private repositoryTutorProfileDetails repTutorProfileDetails;
 
     @Autowired
-    WhatsappService whatsappService;
+    private WhatsappService whatsappService;
 
-    public void sendMeetingWhatsappNotifications(String meetingId, WhatsappMessageType messageType){
+    public void sendWhatsappNotifications(String meetingId, WhatsappMessageType messageType){
         BookingDetails booking = repBooking.meetingIdExists(meetingId);
         if(booking!=null){
             MeetingStatus bookingStatus = booking.getApprovalStatus();
@@ -69,7 +69,7 @@ public class NotificationService {
                     break;
             }
             whatsappService.initiateWhatsAppMessage(message);
+
         }
     }
-
 }
