@@ -2,12 +2,11 @@ package fG.Utils;
 
 import fG.Entity.BookingDetails;
 import fG.Enum.MeetingStatus;
+import fG.Enum.WhatsappMessageType;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MiscellaneousUtils {
@@ -54,7 +53,33 @@ public class MiscellaneousUtils {
             return MeetingStatus.INAPPROPRIATE;
         }
     }
-
+    public String findRoleOnBasisOfWhatsappMessageType(WhatsappMessageType messageType){
+        String[] split = messageType.name().split("_",2);
+        switch (split[0]){
+            case "L":
+                return "Learner";
+            case "E":
+                return "Expert";
+            case "ADMIN":
+                return "Admin";
+            default:
+                return null;
+        }
+    }
+    public List<String> getStartAndEndTime(BookingDetails booking){
+        String startTime="",endTime="";
+        if (booking.getStartTimeMinute().equals(0)) {
+            startTime += booking.getStartTimeHour()+":00";
+        } else {
+            startTime += booking.getStartTimeHour()+ ":" + booking.getStartTimeMinute();
+        }
+        if (booking.getEndTimeMinute().equals(0)) {
+            endTime += booking.getEndTimeHour() +":00" ;
+        } else {
+            endTime += booking.getEndTimeHour()+":" + booking.getEndTimeMinute();
+        }
+        return Arrays.asList(startTime,endTime);
+    }
     public Map<Integer,Integer> subtractFromTime(Integer minutes,Integer startHour,Integer startMinutes){
         Map<Integer,Integer> hoursAndMinutes = new HashMap<>();
         Integer totalMinutes = (startHour*60)+startMinutes;
@@ -66,4 +91,29 @@ public class MiscellaneousUtils {
         long diff = d2.getTime() - d1.getTime();
         return (int)(diff / (60 * 1000) % 60);
     }
+
+    public String validAndCorrectPhoneNumber(String s){
+        String result="";
+        int length=s.length();
+        if(length == 13 && (s.substring(0,3)).equals("+91")){
+            result="91"+ s.substring(3);
+        }else if (length == 12 && (s.substring(0,2)).equals("91")){
+            result=s.substring(0);
+        }else if(length == 11 && (s.substring(0,1).equals("0"))){
+            result="91"+s.substring(1);
+        }else if(length==10){
+            result="91"+ s.substring(0);
+        }else{
+            result="Invalid";
+        }
+        return result;
+    }
+    public String parameterToJSON(List<String> parameters){
+        JSONObject obj=new JSONObject();
+        for(String parameter: parameters){
+            obj.put(String.valueOf(parameters.indexOf(parameter)),parameter);
+        }
+        return obj.toString();
+    }
+
 }

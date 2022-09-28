@@ -4,6 +4,7 @@ import java.awt.print.Book;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.BasicPermission;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -194,7 +195,8 @@ public class MeetingService {
 		//check for coupon code.
 		if(meetingBooked!=null){
 			createMeetingSchedulerJobs(booking);
-			notificationService.sendWhatsappNotifications(booking.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_BOOKED);
+			notificationService.sendAdminWhatsappNotifications(booking.getMeetingId(),WhatsappMessageType.ADMIN_MEETING_BOOKED);
+
 			//check for coupon code.
 			Coupon coupon=repCoupon.couponCodeExists(meetingBooked.getCouponCode());
 			if(coupon!=null){
@@ -239,6 +241,8 @@ public class MeetingService {
 				System.out.println("Credit Info : "+credits);
 			}
 			repStudentProfile.save(learner);
+			notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.E_MEET_REQUEST);
+			notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.L_MEET_CREATE);
 			sendNotificationTutor(bookingModel.getTutorId(), booking);
 			updateMeetingsSetUpInReferrals(booking.getMeetingId());
 			
@@ -304,12 +308,12 @@ public class MeetingService {
 		Integer minutesPending = miscUtils.checkDiffBtwTimeInMinutes(currentTime,meetingStartTime);
 		TaskDefinition taskDefinition = new TaskDefinition();
 		//setting up notifications
-		 if(minutesPending>120){
+		 if(minutesPending>180){
 			 taskDefinition = new TaskDefinition();
 			 Map<Integer,Integer> startHoursAndMinutes = miscUtils.subtractFromTime(120,booking.getStartTimeHour(),booking.getStartTimeMinute());
 			 Map.Entry<Integer,Integer> startTime = startHoursAndMinutes.entrySet().iterator().next();
 			 taskDefinition.setData(booking.getMeetingId());
-			 taskDefinition.setActionType(TaskDefinitonType.CHECK_IF_PENDING_STATUS_ADMIN_2HR);
+			 taskDefinition.setActionType(TaskDefinitonType.CHECK_IF_PENDING_STATUS_ADMIN_3HR);
 			 taskDefinition.setCronExpression(miscUtils.generateCronExpression(parseInt(dateParts[0]),parseInt(dateParts[1]),startTime.getKey(),startTime.getValue(),0));
 			 taskSchedulerService.scheduleATask(taskDefinition);
 		 }
@@ -470,9 +474,19 @@ public class MeetingService {
 		}
 		System.out.println(booking);
 		sendNotificationTutor(booking.getStudentId(), booking);
+		sendMeetingWhatsappNotification(booking);
 		return meetingDao.updateBookingStatus(Integer.valueOf(bid), approvalStatus);
 	}
-
+	void sendMeetingWhatsappNotification(BookingDetails booking){
+		switch(booking.getApprovalStatus().name()){
+			case "ACCEPTED":
+				notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.L_MEET_CONFIRM);
+				break;
+			case "LIVE":
+				notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.L_MEET_E_START);
+				break;
+		}
+	}
 	// for finding students pending bookings
 	public List<?> findStudentBookings(Integer sid) throws ParseException {
 		return isBeforeTime((ArrayList<BookingDetails>) meetingDao.findStudentBookings(sid));

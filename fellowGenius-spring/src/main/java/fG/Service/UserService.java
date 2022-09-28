@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import fG.Enum.WhatsappMessageType;
 import fG.Mapper.BookingDetailsMapper;
 import fG.Mapper.TutorProfileDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +183,9 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	WhatsappService whatsappService;
 
+	@Autowired
+	NotificationService notificationService;
+
 	public String getLatestReferralStatus(Integer userId,UserReferrals userRef) {
 		String status="";
 		System.out.println("Referred user id "+userId);
@@ -226,10 +230,7 @@ public class UserService implements UserDetailsService {
 			}
 				return status;
 			}
-			
-			
 		}
-		
 		return status;
 	}
 	
@@ -524,6 +525,7 @@ public class UserService implements UserDetailsService {
 					"and contact :"+tutorProfile.getContact()+" as an Expert.";
 			whatsappMessage+=" So the total number of users now are "+repUsers.count();
 			whatsappService.initiateWhatsAppMessage(whatsappMessage);
+			notificationService.sendUserWhatsappMessage(user,null,WhatsappMessageType.E_PROFILE_VERIFY);
 			return true;
 		} else {
 
@@ -540,7 +542,6 @@ public class UserService implements UserDetailsService {
 		if (repUsers.emailExist(registrationModel.getEmail()) != null) {
 			return false;
 		}
-		System.out.println(registrationModel);
 		if (registrationModel.getRole().equals("Learner")) {
 			StudentProfile studentProfile = new StudentProfile();
 			studentProfile.setContact(registrationModel.getContact());
@@ -574,7 +575,6 @@ public class UserService implements UserDetailsService {
 				
 				userActivity.setUserId(user);
 				repUserActivity.save(userActivity);
-				
 				if(user.getExpertCode()!=null) {
 					System.out.println("User expert code: "+user.getExpertCode());
 					if(isValidFormatForReferralCode(user.getExpertCode())) {
@@ -585,6 +585,7 @@ public class UserService implements UserDetailsService {
 				}
 				whatsappMessage+=" So the total number of users now are "+repUsers.count();
 				whatsappService.initiateWhatsAppMessage(whatsappMessage);
+				notificationService.sendUserWhatsappMessage(user,null, WhatsappMessageType.L_REG);
 				return true;
 			} else {
 				return false;
@@ -635,11 +636,6 @@ public class UserService implements UserDetailsService {
 			List<Users> refers = ur.getReferCompleted();
 			refers.add(user);
 			ur.setReferCompleted(refers);
-			System.out.println("completed till here");
-			System.out.println("completed till here");
-			System.out.println("completed till here");
-			System.out.println("completed till here");
-			System.out.println("User referral here");
 			repUserReferrals.save(ur);
 			
 			
@@ -786,7 +782,6 @@ public class UserService implements UserDetailsService {
 	// saving updating details of tutor
 	public void updateTutorProfileDetails(TutorProfileDetailsModel tutorModel)
 			throws IllegalArgumentException, IllegalAccessException {
-		System.out.println("here =>> " + tutorModel);
 		TutorProfileDetails tutProfileDetails = new TutorProfileDetails();
 		TutorProfileDetails tutorProfileDetailsLoaded = dao.getTutorProfileDetails(tutorModel.getTid());
 		tutProfileDetails.setTid(tutorModel.getTid());
