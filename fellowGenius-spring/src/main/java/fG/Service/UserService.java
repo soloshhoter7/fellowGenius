@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import fG.Configuration.JwtUtil;
 import fG.Enum.WhatsappMessageType;
 import fG.Mapper.BookingDetailsMapper;
 import fG.Mapper.TutorProfileDetailsMapper;
@@ -99,6 +100,9 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	Dao dao;
+
+	@Autowired
+	private JwtUtil jwtUtil;
 
 	@Autowired
 	TutorProfileDetailsMapper tutorProfileDetailsMapper;
@@ -413,6 +417,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean verifyExpert(String id) {
+
 		String whatsappMessage = "";
 		PendingTutorProfileDetails pt = repPendingTutorProfileDetails.idExist(Integer.valueOf(id));
 		TutorProfile tutorProfile = new TutorProfile();
@@ -519,18 +524,22 @@ public class UserService implements UserDetailsService {
 			}
 
 			repPendingTutorProfileDetails.deleteById(pt.getId());
-
-			mailService.sendVerifiedMail(tutorProfile.getEmail());
+			String token = generateTokenForMail(user.getUserId().toString(), "Expert");
+			mailService.sendVerifiedMail(tutorProfile.getEmail(),token);
 			whatsappMessage = "Hey Admin, a new user "+tutorProfile.getFullName()+" has registered with email :"+tutorProfile.getEmail()+" " +
 					"and contact :"+tutorProfile.getContact()+" as an Expert.";
 			whatsappMessage+=" So the total number of users now are "+repUsers.count();
 			whatsappService.initiateWhatsAppMessage(whatsappMessage);
-			notificationService.sendUserWhatsappMessage(user,null,WhatsappMessageType.E_PROFILE_VERIFY);
+			notificationService.sendUserWhatsappMessage(user,null,token,WhatsappMessageType.E_PROFILE_VERIFY);
 			return true;
 		} else {
 
 			return false;
 		}
+	}
+
+	public String generateTokenForMail(String id, String role) {
+		return jwtUtil.generateToken(id, role);
 	}
 
 	// for registering a user
@@ -585,7 +594,7 @@ public class UserService implements UserDetailsService {
 				}
 				whatsappMessage+=" So the total number of users now are "+repUsers.count();
 				whatsappService.initiateWhatsAppMessage(whatsappMessage);
-				notificationService.sendUserWhatsappMessage(user,null, WhatsappMessageType.L_REG);
+				notificationService.sendUserWhatsappMessage(user,null,null, WhatsappMessageType.L_REG);
 				return true;
 			} else {
 				return false;

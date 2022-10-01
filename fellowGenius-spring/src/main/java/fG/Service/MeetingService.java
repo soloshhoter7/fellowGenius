@@ -241,8 +241,8 @@ public class MeetingService {
 				System.out.println("Credit Info : "+credits);
 			}
 			repStudentProfile.save(learner);
-			notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.E_MEET_REQUEST);
-			notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.L_MEET_CREATE);
+			notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),null,WhatsappMessageType.E_MEET_REQUEST);
+			notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),null,WhatsappMessageType.L_MEET_CREATE);
 			sendNotificationTutor(bookingModel.getTutorId(), booking);
 			updateMeetingsSetUpInReferrals(booking.getMeetingId());
 			
@@ -480,10 +480,10 @@ public class MeetingService {
 	void sendMeetingWhatsappNotification(BookingDetails booking){
 		switch(booking.getApprovalStatus().name()){
 			case "ACCEPTED":
-				notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.L_MEET_CONFIRM);
+				notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),null,WhatsappMessageType.L_MEET_CONFIRM);
 				break;
 			case "LIVE":
-				notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),WhatsappMessageType.L_MEET_E_START);
+				notificationService.sendUserWhatsappMessage(null,booking.getMeetingId(),null,WhatsappMessageType.L_MEET_E_START);
 				break;
 		}
 	}

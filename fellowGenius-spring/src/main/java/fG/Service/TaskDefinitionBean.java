@@ -67,13 +67,13 @@ public class TaskDefinitionBean implements Runnable{
                     case MEETING_NOTIFICATION_15:
                         mailService.meetingPrior15MinuteNotification(learner.getEmail(), "Learner", b);
                         mailService.meetingPrior15MinuteNotification(expertProfile.getEmail(), "Expert", b);
-                        notificationService.sendUserWhatsappMessage(null,b.getMeetingId(),WhatsappMessageType.L_MEET_REMIND_15);
-                        notificationService.sendUserWhatsappMessage(null,b.getMeetingId(),WhatsappMessageType.E_MEET_REMIND_15);
+                        notificationService.sendUserWhatsappMessage(null,b.getMeetingId(),null,WhatsappMessageType.L_MEET_REMIND_15);
+                        notificationService.sendUserWhatsappMessage(null,b.getMeetingId(),null,WhatsappMessageType.E_MEET_REMIND_15);
                         break;
                     case CHECK_IF_PENDING_STATUS_ADMIN_3HR:
                         if(b.getApprovalStatus().equals(MeetingStatus.PENDING)){
                             notificationService.sendAdminWhatsappNotifications(b.getMeetingId(), WhatsappMessageType.ADMIN_MEETING_STATUS_PENDING);
-                            notificationService.sendUserWhatsappMessage(null,b.getMeetingId(),WhatsappMessageType.E_MEET_REQUEST_REMIND_180);
+                            notificationService.sendUserWhatsappMessage(null,b.getMeetingId(),null,WhatsappMessageType.E_MEET_REQUEST_REMIND_180);
                         }
                         break;
                     case MEETING_COMPLETION:

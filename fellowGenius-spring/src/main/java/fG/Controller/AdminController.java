@@ -253,11 +253,11 @@ public class AdminController {
 		service.deleteUser(userId);
 	}
 	
-	@PreAuthorize("hasAuthority('Admin')")
-	@RequestMapping(value="/sendExpertVerficationMail")
-	public ResponseModel sendExpertVerificationMail(String userId) {
-		return adminService.sendExpertVerificationMail(userId);
-	}
+//	@PreAuthorize("hasAuthority('Admin')")
+//	@RequestMapping(value="/sendExpertVerficationMail")
+//	public ResponseModel sendExpertVerificationMail(String userId) {
+//		return adminService.sendExpertVerificationMail(userId);
+//	}
 
 	//@PreAuthorize("hasAuthority('Admin')")
 	@GetMapping(value="/fetchUnpaidExperts")

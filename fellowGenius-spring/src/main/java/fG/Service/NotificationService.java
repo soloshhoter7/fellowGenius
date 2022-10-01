@@ -76,7 +76,7 @@ public class NotificationService {
 
         }
     }
-    public void sendUserWhatsappMessage(Users user, String meetingId, WhatsappMessageType messageType){
+    public void sendUserWhatsappMessage(Users user, String meetingId,String tokenId, WhatsappMessageType messageType){
         BookingDetails booking = null;
         String learnerMeetingDetails = "";
         String expertMeetingDetails ="";
@@ -90,7 +90,7 @@ public class NotificationService {
             expertMeetingDetails = booking.getStudentName()+" at "+meetingTimings.get(0)+" on "+booking.getDateOfMeeting()+" for "+booking.getSubject();
         }
         List<String> parameters = new ArrayList<>();
-
+        List<String> buttonPayloads=new ArrayList<>();
           switch(recipientRole){
               case "Learner":
                   if(user!=null){
@@ -115,8 +115,11 @@ public class NotificationService {
           }
         switch(messageType.name()){
             case "L_REG":
+                parameters.add(recipientName);
+                break;
             case "E_PROFILE_VERIFY":
                 parameters.add(recipientName);
+                buttonPayloads.add(tokenId);
                 break;
             case "L_MEET_CREATE":
                 assert booking != null;
@@ -150,6 +153,8 @@ public class NotificationService {
             default:
                 break;
         }
-        whatsappService.sendPlainTextTemplateMessages(messageType.name(),parameters,recipientPhoneNumber);
+
+        
+        whatsappService.sendPlainTextTemplateMessages(messageType.name(),parameters,buttonPayloads,recipientPhoneNumber);
     }
 }

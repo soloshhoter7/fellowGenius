@@ -395,7 +395,7 @@ public class MailService {
 		}
 	}
 
-	boolean sendVerifiedMail(String email) {
+	boolean sendVerifiedMail(String email,String token) {
 		InitiateMailService();
 		String from = senderEmail;
 		session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
@@ -406,7 +406,7 @@ public class MailService {
 		Users user = repUsers.emailExist(email);
 		TutorProfile tutor = repTutorProfile.idExist(user.getUserId());
 		if (user != null) {
-			String token = generateTokenForMail(user.getUserId().toString(), "Expert");
+
 			String directUrl = rootUrl + "sign-up-expert?token=" + token;
 			String faqUrl = rootUrl + "faq";
 			String to = email;
