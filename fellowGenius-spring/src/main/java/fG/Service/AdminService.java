@@ -384,16 +384,16 @@ public class AdminService {
 		}
 	}
 
-	public ResponseModel sendExpertVerificationMail(String userId) {
-		Users user = repUsers.idExists(Integer.valueOf(userId));
-
-		if(user!=null&&encoder.matches("N/A", user.getPassword())) {
-			mailService.sendVerifiedMail(user.getEmail());
-			return new ResponseModel("Mail sent");
-		}else {
-			return new ResponseModel("User already set the password");
-		}
-	}
+//	public ResponseModel sendExpertVerificationMail(String userId) {
+//		Users user = repUsers.idExists(Integer.valueOf(userId));
+//
+//		if(user!=null&&encoder.matches("N/A", user.getPassword())) {
+//			//mailService.sendVerifiedMail(user.getEmail());
+//			return new ResponseModel("Mail sent");
+//		}else {
+//			return new ResponseModel("User already set the password");
+//		}
+//	}
 
     public ArrayList<TransactionsModel> fetchUnpaidExpertBookings() {
 		List<BookingDetails> unpaidExpertBookingsList=repBooking.fetchUnpaidExperts();

@@ -70,10 +70,24 @@ public class WhatsappService {
         String url = "https://rcmapi.instaalerts.zone/services/rcm/sendMessage";
         return callPostApi(payload, url);
     }
-    public void sendPlainTextTemplateMessages(String templateId,List<String> parameters,String recipientPhoneNumber){
+    public void sendPlainTextTemplateMessages(String templateId,List<String> parameters,List<String> buttonPayloads,String recipientPhoneNumber){
         String validRecipientPhoneNumber = miscUtils.validAndCorrectPhoneNumber(recipientPhoneNumber);
         templateId = templateId.toLowerCase(Locale.ROOT);
         String jsonParams = miscUtils.parameterToJSON(parameters);
+        String buttonparams="";
+        if(buttonPayloads.size()>0){
+            buttonparams="\"buttons\": {\n" +
+                    "                    \"actions\": [\n" +
+                    "                        {\n" +
+                    "                            \"type\": \"url\",\n" +
+                    "                            \"index\": \"0\",\n" +
+                    "                            \"payload\": \""+ buttonPayloads.get(0) +"\"\n" +
+                    "                        }\n" +
+                    "                    ]\n" +
+                    "                }";
+            jsonParams=jsonParams+",";
+        }
+
         if(!validRecipientPhoneNumber.equals("Invalid")){
             System.out.println("opt in result :"+optInMobileNumber(validRecipientPhoneNumber));
             String payload = "{\n" +
@@ -81,10 +95,11 @@ public class WhatsappService {
                     " \"channel\": \"WABA\",\n" +
                     " \"content\": {\n" +
                     " \"preview_url\": false,\n" +
-                    " \"type\": \"TEMPLATE\",\n" +
-                    " \"template\": {\n" +
+                    " \"type\": \"MEDIA_TEMPLATE\",\n" +
+                    " \"mediaTemplate\": {\n" +
                     " \"templateId\": \""+templateId+"\",\n" +
-                    " \"parameterValues\":"+jsonParams+"\n" +
+                    " \"bodyParameterValues\":"+jsonParams+"\n" +
+                    buttonparams+
                     " }\n" +
                     " },\n" +
                     " \"recipient\": {\n" +
@@ -107,6 +122,7 @@ public class WhatsappService {
                     " \"version\": \"v1.0.9\"\n" +
                     " }\n" +
                     "}\n";
+           // System.out.println("Payload is "+payload);
             String url = "https://rcmapi.instaalerts.zone/services/rcm/sendMessage";
             System.out.println("send message res:"+callPostApi(payload,url));
         }
